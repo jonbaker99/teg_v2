@@ -11,6 +11,8 @@ from fastapi.templating import Jinja2Templates
 
 from github import GithubException
 
+from teg_analysis.reporting.newspaper_edition import available_rounds as _report_available_rounds
+
 from teg_analysis.constants import HANDICAPS_CSV
 from teg_analysis.core.players import get_name_to_code
 from teg_analysis.io import read_text_file
@@ -268,7 +270,6 @@ LATEST_ROUND_TABS = [
     ("scoreboard", "Scoreboards"),
     ("scorecard", "Scorecard"),
     ("bestball", "Bestball / Worstball"),
-    ("report", "Report"),
     ("scoring", "Scoring"),
     ("streaks", "Streaks"),
     ("records", "Records & PBs"),
@@ -403,17 +404,6 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                 logger.exception("_latest_round_tab_context failed")
                 sections.append({"title": "Records & PBs", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
-        elif tab == "report":
-            html = _render_report([
-                f"teg_{teg_num}_round_{round_num}_report_styled.md",
-                f"round_reports/TEG{teg_num}_R{round_num}_report.md",
-                f"round_reports/teg_{teg_num}_round_{round_num}_report.md",
-            ])
-            if html:
-                return {"report_html": html}
-            return {"report_html": None,
-                    "report_message": f"No report available for TEG {teg_num} Round {round_num}."}
-
         elif tab == "scoring":
             field = score_type if score_type in ("GrossVP", "Stableford") else "GrossVP"
             mode = display_mode if display_mode in ("count", "pct") else "count"
@@ -478,6 +468,15 @@ def latest_round_page(request: Request, teg: Optional[int] = Query(None),
         "tabs": LATEST_ROUND_TABS,
         "active_tab": "scoreboard",
         "context_header": context_header,
+        # {teg: [rounds with a newspaper round report]} for every TEG this
+        # page can show — drives the Report link (a real navigation to
+        # /teg-reports?teg=N&round=R, not an HTMX tab) and its visibility.
+        # The TEG select and round pills both swap #lr-content via HTMX
+        # without a page reload, and the Report link sits outside that swap
+        # target, so this whole map ships up front rather than being
+        # refetched per selection (same reasoning as /results' report_tegs).
+        "report_rounds_map": {t: list(_report_available_rounds(t)) for t in teg_numbers
+                               if _report_available_rounds(t)},
         **ctx,
     })
 

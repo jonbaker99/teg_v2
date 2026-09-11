@@ -51,9 +51,42 @@
         {{ tab_label }}
     </button>
     {% endfor %}
+    {# Report is last, and a REAL link (not an HTMX tab) straight to this
+       round's newspaper report — same reasoning as /results' Report tab.
+       Hidden unless this TEG/round actually has one. #}
+    <a id="lr-report-tab" class="tab-underline"
+       href="/teg-reports?teg={{ selected_teg }}&round={{ selected_round }}"
+       {% if selected_round not in report_rounds_map.get(selected_teg, []) %}hidden{% endif %}>Report<span class="tab-arrow" aria-hidden="true">&nearr;</span></a>
 </div>
 
 <div id="lr-content" class="section-panel">
     {% include "partials/latest_round_tab.html" %}
 </div>
+
+{# The tab row lives outside #lr-content, so an HTMX TEG/round change never
+   re-renders it — keep the Report link's target and visibility in sync here. #}
+<script>
+(function () {
+    var reportRounds = {{ report_rounds_map | tojson }};
+    var tab = document.getElementById('lr-report-tab');
+    var tegSelect = document.getElementById('lr-teg-select');
+    var roundInput = document.getElementById('lr-round-select');
+    if (!tab || !tegSelect || !roundInput) return;
+    function sync() {
+        var teg = parseInt(tegSelect.value, 10);
+        var round = parseInt(roundInput.value, 10);
+        tab.href = '/teg-reports?teg=' + teg + '&round=' + round;
+        var rounds = reportRounds[teg] || [];
+        tab.hidden = rounds.indexOf(round) === -1;
+    }
+    tegSelect.addEventListener('change', sync);
+    // Round pills set #lr-round-select via their own onclick before firing
+    // the HTMX request — a change event there doesn't bubble from a script
+    // assignment, so hook the same pills directly.
+    document.querySelectorAll('#lr-round-pills .pill').forEach(function (btn) {
+        btn.addEventListener('click', function () { setTimeout(sync, 0); });
+    });
+    sync();
+})();
+</script>
 {% endblock %}

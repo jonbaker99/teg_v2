@@ -408,7 +408,9 @@ def round_draft_writer_system(is_final_round: bool) -> str:
 
 _ROUND_DRAFT_WRITER_SYSTEM_BASE = """You are writing ONE SECTION of a round-of-golf report — a \
 single storyline, not the whole report. Plain, clear, factual prose. NOT the final voice: do \
-not try to be funny, do not reach for a compelling turn of phrase. 150-250 words.
+not try to be funny, do not reach for a compelling turn of phrase. 110-180 words — a round has \
+far less material than a tournament, and the prose should not pad to fill space the facts do \
+not need.
 
 You are given `subject` (a label — a starting point, not a fact source), `evidence` (the \
 specific beats this storyline is built from — the ONLY source of facts), and `context` (venue, \

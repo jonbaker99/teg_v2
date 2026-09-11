@@ -92,11 +92,29 @@ dependency order:
    `round_story`'s subject. New tests: `tests/test_round_storyline.py` (22, including the leak
    guard against real TEG data) plus round-specific additions to
    `tests/test_newspaper_edition.py`/`test_reporting_prompts.py`/`test_webapp_pages.py`.
-   **Known pre-existing gap, not introduced here:** `authoring.restyle_voice`'s composed system
-   prompt (`RESTYLE_CONTRACT + voice + WRITER_FAITHFULNESS + WRITER_OUTPUT_RULE`) never includes
-   `SENTENCE_DISCIPLINE`, so the em-dash ban does not reach the voice pass — confirmed on the
-   *tournament* storyline-first reports too (`teg_14_report_storylinefirst.md` has 3), so this
-   predates the round work and isn't round-specific. Not fixed here (out of scope for this to-do).
+   **Follow-up fixes, same day, on Jon's read of the first three reports:**
+   - **The em-dash gap above — fixed.** `restyle_voice` now composes `RESTYLE_CONTRACT +
+     SENTENCE_DISCIPLINE + voice + WRITER_FAITHFULNESS + WRITER_OUTPUT_RULE`, mirroring
+     `build_writer_system`'s reasoning: the ban belongs in the fixed contract half, not inside a
+     caller-supplied voice that could shed it. Fixes both pipelines — tournament and round — since
+     both call the same function. Re-run on all three validation reports: prose dropped to zero
+     em-dashes; the one or two that remained were in plan-generated section headings, the same
+     pre-existing, accepted exception the tournament pipeline already documents.
+   - **Length trimmed.** Jon's read: "very slightly too long." `ROUND_DRAFT_WRITER_SYSTEM`'s
+     per-section target dropped from 150–250 words to 110–180 — the tournament script's target,
+     untouched, since a tournament has proportionately more material. One line changed, no new
+     judgment calls about what to cut. Effect on the three validation reports: 823→716,
+     1076→840, 1065→926 words (78–87% of original). Quality read as unchanged at the shorter
+     length — wit and factual precision both held up on a re-read.
+   - **Round scores added to the at-a-glance rail, as their own tables, above the cumulative
+     standings.** The data (`render.build_round_scores_data`, refactored out of the existing
+     markdown-block builder so both share one sort/format) was already being written into the
+     styled markdown; it just wasn't reaching the edition. `newspaper_edition._parse_round_scores`
+     reads it, `_rail_html` renders it in a new block before the standings row, which now shows the
+     **cumulative** total again (it had briefly shown round-only figures, to compensate for round
+     scores having nowhere else to live — no longer needed once they got their own table). No
+     regeneration needed for the three validation reports — the underlying data was already on
+     disk; only the parser/renderer changed.
    **Not done, deliberately:** no backfill. Only the three validation TEGs above have round
    storyline artefacts; the other 8 TEGs with published (legacy or 2025-vintage) round reports are
    untouched, and a full backfill is a separate, costed decision once more of this has been read.
