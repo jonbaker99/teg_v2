@@ -154,7 +154,10 @@ def result_label(grossvp: int, sc: int, par: int) -> str:
         return _RESULT_NAMES[grossvp]
     if grossvp < -3:
         return "albatross or better"
-    return f"{int(grossvp):+d} (blow-up)"
+    # Beyond septuple bogey there's no named term — the raw over-par figure
+    # already conveys it (e.g. "12 (+9)"); "(blow-up)" was decorative and
+    # read oddly in the Notable Achievements / Rare feats text (2026-09-11).
+    return f"{int(grossvp):+d}"
 
 
 def hole_evidence(row, metric: str = "stableford") -> dict:

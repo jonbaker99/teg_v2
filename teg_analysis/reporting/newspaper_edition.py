@@ -19,14 +19,17 @@ Two source files per TEG:
 in `build_edition`). Only TEGs with storyline-first artefacts have one —
 whichever `available_tegs()` finds.
 
-`render_desktop_html(edition, rail="s2")` ports the desktop composite's JS
-(E1/E2 "auto" composition, fill "f1") to Python 1:1 — see
-`webapp/report_layout_prototypes/composite.html`'s `render()`/`renderE1`/
-`renderE2`. It is a straight port so it stays trivially comparable to the
-prototype if the prototype changes. E3 (a third arrangement, added for the
-`/teg-reports-preview` switch matrix — see that route's docstring) and the
-`rail` parameter (S1/S2, from `elements.html`'s `railVariants()`) are not in
-the prototype and only exist here.
+`render_desktop_html(edition, rail="s2")` renders the desktop layout: a lead
+article plus sub-articles packed into full-width rows by `plan_rows` (see
+that function's docstring). This used to dispatch through three named
+"arrangements" (E1/E2/E3), ported 1:1 from `webapp/report_layout_prototypes/
+composite.html`'s JS; that system produced broken layouts whenever the
+leftover sub-article count didn't divide evenly into rows of 3, so it was
+replaced (2026-09-11) by explicit row packing that never leaves a partial
+row. The prototype is retained only as frozen historical reference — see
+that folder's README — and is not kept in sync with this module. The `rail`
+parameter (S1/S2, from `elements.html`'s `railVariants()`) is not in the
+prototype and only exists here.
 """
 
 from __future__ import annotations
@@ -34,7 +37,6 @@ from __future__ import annotations
 import html
 import json
 import re
-import statistics
 from functools import lru_cache
 from typing import Any, NamedTuple
 
@@ -476,6 +478,62 @@ def _resolve_section(heading: str, content: str, plan: dict[str, Any]
     return [_degraded_storyline(heading)]
 
 
+def derive_descriptor(storyline: dict, kicker: str) -> str:
+    """Deterministic fallback for `descriptor` when the plan predates the field
+    (all 17 TEGs as of 2026-09). Matches the storyline's own text against the
+    TEG's actual player field; no venue/course matching (too unreliable without
+    an LLM judgement call) -- falls back to the bare kicker rather than guessing
+    wrong. See prompts.DESCRIPTOR_RULE for the rule this approximates.
+    """
+    if kicker == "TROPHY":
+        return "TROPHY"
+
+    from teg_analysis.core.players import get_player_dict
+
+    display_names = {
+        " ".join(part.capitalize() if part.isupper() else part for part in raw.split())
+        for raw in get_player_dict().values()
+    }
+
+    def _names_in(text: str) -> list[tuple[int, str]]:
+        lower_text = text.lower()
+        return sorted(
+            (idx, name)
+            for name in display_names
+            for idx in [lower_text.find(name.lower())]
+            if idx != -1
+        )
+
+    if "GREEN JACKET" in kicker or "WOODEN SPOON" in kicker:
+        headline = storyline.get("chosen_headline", "")
+        if _names_in(headline):
+            # Already unambiguous -- the winner/loser is named in the headline.
+            return kicker
+        # Not in the headline. This deterministic path has no separate concept
+        # of who the actual jacket/spoon winner IS, so it cannot confirm a name
+        # found only in `subject` is really the winner -- but `subject` is an
+        # editor-written label that in practice centres on that player, so a
+        # single unambiguous name found there is a reasonable signal. Anything
+        # less clean (zero or multiple names) falls back to the bare kicker
+        # rather than guessing wrong.
+        subject_names = _names_in(storyline.get("subject", ""))
+        if len(subject_names) == 1:
+            return f"{kicker} | {subject_names[0][1].upper()}"
+        return kicker
+
+    if kicker != "SIDEBAR":
+        return kicker
+
+    text = f"{storyline.get('chosen_headline', '')} {storyline.get('subject', '')}"
+    found = _names_in(text)
+    names = [name.upper() for _, name in found]
+    if len(names) == 1:
+        return names[0]
+    if len(names) == 2:
+        return " | ".join(names)
+    return "SIDEBAR"
+
+
 def _parse_articles(
     article_sections: list[tuple[str, str]], plan: dict[str, Any]
 ) -> list[dict[str, Any]]:
@@ -488,6 +546,18 @@ def _parse_articles(
             {k for k, _ in matches}, key=lambda k: _KICKER_PRIORITY.index(k)
         )
         kicker = " & ".join(kickers)
+
+        # Prefer an explicit editor-authored `descriptor` (prompts.DESCRIPTOR_RULE);
+        # fall back to the deterministic approximation for plans written before
+        # the field existed. Joined the same way `kickers` are, deduplicating
+        # when a merged section's storylines resolve to the identical descriptor.
+        descriptors = []
+        for k, s in matches:
+            d = s.get("descriptor") or derive_descriptor(s, k)
+            if d not in descriptors:
+                descriptors.append(d)
+        descriptor = " & ".join(descriptors)
+
         compelling = max(s["compelling_score"] for _, s in matches)
         humour = max(s["humour_score"] for _, s in matches)
 
@@ -506,6 +576,7 @@ def _parse_articles(
         articles.append(
             {
                 "kicker": kicker,
+                "descriptor": descriptor,
                 "headline": headline,
                 "standfirst": standfirst,
                 "paragraphs": paragraphs,
@@ -699,23 +770,10 @@ def build_edition(teg: int,
 
 
 # ---------------------------------------------------------------------------
-# Desktop renderer — a 1:1 port of composite.html's JS (arrangement "auto",
-# fill "f1"). See that file's `render()`, `renderE1`, `renderE2`,
-# `chooseArrangement`, `chooseSecondStory`.
+# Desktop renderer.
 # ---------------------------------------------------------------------------
 
-E2_MIN_ARTICLES = 5
 CLEAR_MARGIN = 2
-
-# E3 (long sub-story full width, after a 2-up row) fires when there are
-# exactly 3 sub-articles and the longest is at least this many times the
-# median of the other two's word counts. Measured on the three real editions
-# (longest ÷ median-of-rest):
-#   TEG 16: 430 / 273 / 250 words -> 1.64
-#   TEG 18: 409 / 247 / 225 words -> 1.73
-#   TEG 14: 289 / 249 / 232 / 220 words -> 1.20 (5 articles -> E2 regardless)
-# 1.4 sits clear of TEG 14's 1.20 and well under TEG 16/18's ratios.
-LONG_STORY_RATIO = 1.4
 
 
 def _esc(s: Any) -> str:
@@ -731,11 +789,14 @@ def _paragraphs_html(paragraphs: list[str]) -> str:
 
 
 def _masthead_html(edition: dict[str, Any]) -> str:
+    # "The TEG" (2026-09-11): a fake newspaper name read as a gimmick. The
+    # masthead now names the actual tournament ("TEG 16"); the dateline moves
+    # to venue/year only, since the TEG number no longer needs repeating there.
     d = edition["dateline"]
     return (
         '<header class="masthead"><div class="mh-row">'
-        '<span class="wordmark">The TEG</span>'
-        f'<span class="dateline">{_esc(d["teg"])} &middot; {_esc(d["venue"])} &middot; {_esc(d["year"])}</span>'
+        f'<span class="wordmark">{_esc(d["teg"])}</span>'
+        f'<span class="dateline">{_esc(d["venue"])} &middot; {_esc(d["year"])}</span>'
         '</div><div class="mh-rule"></div></header>'
     )
 
@@ -743,7 +804,7 @@ def _masthead_html(edition: dict[str, Any]) -> str:
 def _lead_head_html(lead: dict[str, Any]) -> str:
     standfirst = f'<p class="lead-standfirst">{_esc(lead["standfirst"])}</p>' if lead["standfirst"] else ""
     return (
-        f'<p class="kicker">{_esc(lead["kicker"])}</p>'
+        f'<p class="kicker">{_esc(lead.get("descriptor") or lead["kicker"])}</p>'
         f'<h1 class="lead-headline">{_esc(lead["headline"])}</h1>'
         f"{standfirst}"
     )
@@ -799,12 +860,11 @@ def _results_strip_html(edition: dict[str, Any]) -> str:
     return f'<div class="r3"><ul class="r-list">{_result_items_html(edition)}</ul></div>'
 
 
-def _sub_card_html(a: dict[str, Any], extra: str = "") -> str:
+def _sub_card_html(a: dict[str, Any]) -> str:
     standfirst = f'<p class="sub-standfirst">{_esc(a["standfirst"])}</p>' if a["standfirst"] else ""
-    cls = f" {extra}" if extra else ""
     return (
-        f'<article class="sub-card{cls}">'
-        f'<p class="kicker">{_esc(a["kicker"])}</p>'
+        '<article class="sub-card">'
+        f'<p class="kicker">{_esc(a.get("descriptor") or a["kicker"])}</p>'
         f'<h2 class="sub-headline">{_esc(a["headline"])}</h2>'
         f"{standfirst}"
         f'<div class="sub-body">{_paragraphs_html(a["paragraphs"])}</div></article>'
@@ -812,10 +872,16 @@ def _sub_card_html(a: dict[str, Any], extra: str = "") -> str:
 
 
 def _appendix_html(edition: dict[str, Any]) -> str:
-    rows = "".join(
-        f'<tr><td>R{s["round"]}</td><td>{_esc(s["trophy"])}</td><td>{_esc(s["jacket"])}</td></tr>'
-        for s in edition["standings"]
-    )
+    # The cumulative/round-score standings tables were dropped 2026-09-11: they
+    # duplicate the round-by-round and leaderboard views shown better elsewhere
+    # in the app. `edition["standings"]` is still parsed and kept — the rail's
+    # "Final" Trophy/Green Jacket lines (`_rail_html`) still read it.
+    #
+    # Given a kicker + headline + standfirst treatment (2026-09-11, prototyped
+    # against TEG 4/17/18 as the heavy/light cases) instead of a lone eyebrow
+    # label, so it reads as a section on the page rather than an afterthought.
+    # Categories flow through ruled CSS columns (`.apx-flow`) instead of a
+    # fixed 2-up grid, so 2 categories and 4 don't force the same split.
     by: dict[str, list[str]] = {}
     order: list[str] = []
     for r in edition["records"]:
@@ -823,19 +889,17 @@ def _appendix_html(edition: dict[str, Any]) -> str:
             by[r["category"]] = []
             order.append(r["category"])
         by[r["category"]].append(r["text"])
-    recs = "".join(
-        f'<div class="recs-group"><p class="recs-cat">{_esc(c)}</p><ul class="recs">'
+    groups = "".join(
+        f'<div class="apx-grp"><p class="apx-cat">{_esc(c)}</p><ul class="apx-list">'
         + "".join(f"<li>{_esc(t)}</li>" for t in by[c])
         + "</ul></div>"
         for c in order
     )
     return (
         '<section class="appendix">'
-        '<div class="apx-standings"><h3 class="apx-h">Standings by round</h3>'
-        '<div class="table-scroll"><table class="stab">'
-        "<thead><tr><th>Rd</th><th>Trophy</th><th>Green Jacket</th></tr></thead>"
-        f"<tbody>{rows}</tbody></table></div></div>"
-        f'<div><h3 class="apx-h">Personal bests &amp; records</h3><div class="apx-records">{recs}</div></div>'
+        '<p class="kicker">Records &amp; Personal Bests</p>'
+        f'<h3 class="apx-hl">Notable achievements: {_esc(edition["dateline"]["teg"])}</h3>'
+        f'<div class="apx-flow">{groups}</div>'
         "</section>"
     )
 
@@ -852,21 +916,67 @@ def _choose_second_story(subs: list[dict[str, Any]]) -> dict[str, Any] | None:
     return jacket
 
 
-def choose_arrangement(edition: dict[str, Any]) -> str:
-    """"e1" (classic front), "e2" (second lead) or "e3" (2-up row + a long
-    sub-story full width) — the CSS class the caller puts on the `.paper`
-    element, since the E1/E2/E3 rules are keyed on it."""
-    articles = edition["articles"]
-    if len(articles) >= E2_MIN_ARTICLES:
-        return "e2"
-    subs = [a for a in articles if not a["is_lead"]]
-    if len(subs) == 3:
-        by_words = sorted(a["words"] for a in subs)
-        longest = by_words[-1]
-        median_rest = statistics.median(by_words[:-1])
-        if median_rest and longest >= LONG_STORY_RATIO * median_rest:
-            return "e3"
-    return "e1"
+#: Chunk sizes for what's left after taking groups of 3, keyed by remainder
+#: count. A size-1 tail here only happens when exactly one sub-article is
+#: left over with nothing to pair it with.
+_TAIL_CHUNKS: dict[int, list[int]] = {0: [], 1: [1], 2: [2], 3: [3], 4: [2, 2]}
+
+
+def _chunk_remaining(rest: list[dict[str, Any]]) -> list[list[dict[str, Any]]]:
+    """Pack `rest` (already sorted by word count descending) into rows of 3,
+    with the tail adjusted per `_TAIL_CHUNKS` so no row of size 1 is ever
+    produced by leftover count."""
+    rows: list[list[dict[str, Any]]] = []
+    i = 0
+    n = len(rest)
+    while n - i > 4:
+        rows.append(rest[i:i + 3])
+        i += 3
+    sizes = _TAIL_CHUNKS[n - i]
+    tail = rest[i:]
+    j = 0
+    for size in sizes:
+        rows.append(tail[j:j + size])
+        j += size
+    return rows
+
+
+def plan_rows(subs: list[dict[str, Any]]) -> list[list[dict[str, Any]]]:
+    """Pack sub-articles into display rows of 1, 2 or 3 items each, so a CSS
+    grid row is always exactly as wide as the items in it — never a partial
+    row with empty trailing cells, and never two stories stacked in one
+    column.
+
+    The first row is the promoted "second lead" (see `_choose_second_story`),
+    alone, full width — unless there is no clear standout, in which case it
+    becomes the first item of a 2-row instead (a size-1 row is reserved for a
+    genuine standout).
+
+    The rest are packed greedily into rows of 3, except the tail is adjusted
+    so no row of size 1 is ever produced by leftover count: e.g. 4 remaining
+    -> [2, 2], not [3, 1]. 1 remaining (with no promoted story at all) is the
+    only case that legitimately produces a lone final row.
+
+    Within the packed rows (not the promoted row), articles are sorted by
+    word count descending before chunking, so each row groups similar-length
+    stories together and finishes at roughly the same visual height, reducing
+    blank space under short stories sitting next to long ones.
+    """
+    if not subs:
+        return []
+    promoted = _choose_second_story(subs)
+    rest = sorted((a for a in subs if a is not promoted), key=lambda a: -a["words"])
+    return [[promoted]] + _chunk_remaining(rest)
+
+
+def _subs_rows_html(rows: list[list[dict[str, Any]]]) -> str:
+    parts = []
+    for i, row in enumerate(rows):
+        cards = "".join(_sub_card_html(a) for a in row)
+        parts.append(f'<div class="subs-row cols-{len(row)}">{cards}</div>')
+        if i < len(rows) - 1:
+            parts.append('<div class="thin-rule"></div>')
+    return "".join(parts)
 
 
 def _main_html(edition: dict[str, Any], lead: dict[str, Any], rail: str) -> str:
@@ -884,62 +994,8 @@ def _main_html(edition: dict[str, Any], lead: dict[str, Any], rail: str) -> str:
     return head + f'<div class="main-split">{_lead_body_html(lead)}{_rail_html(edition)}</div>'
 
 
-def _render_e1(
-    edition: dict[str, Any], lead: dict[str, Any], subs: list[dict[str, Any]], rail: str = "s2"
-) -> str:
-    row = "".join(_sub_card_html(a) for a in subs[:3])
-    overflow = "".join(_sub_card_html(a, "wide") for a in subs[3:])
-    return (
-        _masthead_html(edition)
-        + _main_html(edition, lead, rail)
-        + '<div class="deck-rule"></div>'
-        + f'<div class="subs">{row}{overflow}</div>'
-        + _appendix_html(edition)
-    )
-
-
-def _render_e2(
-    edition: dict[str, Any], lead: dict[str, Any], subs: list[dict[str, Any]], rail: str = "s2"
-) -> str:
-    second = _choose_second_story(subs)
-    rest = "".join(_sub_card_html(a) for a in subs if a is not second)
-    second_html = _sub_card_html(second, "second") if second else ""
-    rest_block = f'<div class="thin-rule"></div><div class="subs">{rest}</div>' if rest else ""
-    return (
-        _masthead_html(edition)
-        + _main_html(edition, lead, rail)
-        + '<div class="deck-rule"></div>'
-        + f'<div class="second-lead">{second_html}</div>'
-        + rest_block
-        + _appendix_html(edition)
-    )
-
-
-def _render_e3(
-    edition: dict[str, Any], lead: dict[str, Any], subs: list[dict[str, Any]], rail: str = "s2"
-) -> str:
-    """Two shorter subs in a 2-up row (existing compelling/humour order
-    preserved), then the longest sub full width, after the row."""
-    long_story = max(subs, key=lambda a: a["words"])
-    shorter = [a for a in subs if a is not long_story]
-    row = "".join(_sub_card_html(a) for a in shorter)
-    long_html = _sub_card_html(long_story, "long")
-    return (
-        _masthead_html(edition)
-        + _main_html(edition, lead, rail)
-        + '<div class="deck-rule"></div>'
-        + f'<div class="subs">{row}</div>'
-        + '<div class="thin-rule"></div>'
-        + f'<div class="long-lead">{long_html}</div>'
-        + _appendix_html(edition)
-    )
-
-
-_RENDERERS = {"e1": _render_e1, "e2": _render_e2, "e3": _render_e3}
-
-
 def render_desktop_html(edition: dict[str, Any], rail: str = "s2") -> str:
-    """Render the `.paper` inner HTML for the desktop composite (auto/f1).
+    """Render the `.paper` inner HTML for the desktop layout.
 
     `rail` is "s2" (default — results + final standings beside the lead) or
     "s1" (no rail — results as a full-width strip, standings only in the
@@ -948,6 +1004,11 @@ def render_desktop_html(edition: dict[str, Any], rail: str = "s2") -> str:
     """
     lead = next(a for a in edition["articles"] if a["is_lead"])
     subs = [a for a in edition["articles"] if not a["is_lead"]]
-    arrangement = choose_arrangement(edition)
-    renderer = _RENDERERS[arrangement]
-    return renderer(edition, lead, subs, rail)
+    rows = plan_rows(subs)
+    return (
+        _masthead_html(edition)
+        + _main_html(edition, lead, rail)
+        + '<div class="deck-rule"></div>'
+        + _subs_rows_html(rows)
+        + _appendix_html(edition)
+    )

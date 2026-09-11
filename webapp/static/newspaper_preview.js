@@ -44,8 +44,8 @@
   function mastheadHtml() {
     var d = edition.dateline;
     return '<header class="m-masthead"><div class="m-mh-row">' +
-      '<span class="m-wordmark">The TEG</span>' +
-      '<span class="m-dateline">' + esc(d.teg) + " &middot; " + esc(d.venue) + " &middot; " + esc(d.year) + "</span>" +
+      '<span class="m-wordmark">' + esc(d.teg) + "</span>" +
+      '<span class="m-dateline">' + esc(d.venue) + " &middot; " + esc(d.year) + "</span>" +
       "</div><div class=\"m-mh-rule\"></div></header>";
   }
   function resultsHtml() {
@@ -61,9 +61,8 @@
       '<ul class="m-r-list">' + items + "</ul></div>";
   }
   function appendixHtml(open) {
-    var rows = edition.standings.map(function (s) {
-      return "<tr><td>R" + s.round + "</td><td>" + esc(s.trophy) + "</td><td>" + esc(s.jacket) + "</td></tr>";
-    }).join("");
+    // Standings tables dropped 2026-09-11: they duplicate the round-by-round
+    // and leaderboard views shown better elsewhere in the app. Records only.
     var by = {}, order = [];
     edition.records.forEach(function (r) {
       if (!by[r.category]) { by[r.category] = []; order.push(r.category); }
@@ -75,22 +74,19 @@
     }).join("");
     var body = open
       ? '<div class="m-apx-body" id="apx-body">' +
-          '<div class="m-apx-sec"><div class="table-scroll"><table class="stab">' +
-            "<thead><tr><th>Rd</th><th>Trophy</th><th>Green Jacket</th></tr></thead>" +
-            "<tbody>" + rows + "</tbody></table></div></div>" +
-          '<div class="m-apx-sec">' + recs + "</div>" +
-        "</div>"
+          '<h3 class="m-apx-hl">Notable achievements: ' + esc(edition.dateline.teg) + '</h3>' +
+          '<div class="m-apx-sec">' + recs + "</div></div>"
       : "";
     return '<section class="m-apx"><button type="button" class="m-apx-btn" data-apx="1" aria-expanded="' +
       (open ? "true" : "false") + '" aria-controls="apx-body">' +
-      '<span class="m-apx-h">Standings &amp; records</span>' +
+      '<span class="m-apx-h">Records &amp; Personal Bests</span>' +
       '<span class="acc-sign" aria-hidden="true">' + (open ? "−" : "+") + "</span></button>" + body + "</section>";
   }
 
   function renderIndex() {
     var items = subs.map(function (a, i) {
       return '<button type="button" class="idx-item" data-open="' + (i + 1) + '">' +
-        '<p class="kicker">' + esc(a.kicker) + "</p>" +
+        '<p class="kicker">' + esc(a.descriptor || a.kicker) + "</p>" +
         '<h2 class="m-hl">' + esc(a.headline) + "</h2>" +
         '<span class="idx-foot"><span class="m-meta">' + readTime(a.words) + "</span>" +
         '<span class="chev" aria-hidden="true">Read &rarr;</span></span></button>';
@@ -99,7 +95,7 @@
     return '<div class="scroller" id="scroller">' +
       mastheadHtml() + resultsHtml() +
       '<button type="button" class="idx-lead" data-open="0">' +
-        '<p class="kicker">' + esc(lead.kicker) + "</p>" +
+        '<p class="kicker">' + esc(lead.descriptor || lead.kicker) + "</p>" +
         '<h1 class="m-hl">' + esc(lead.headline) + "</h1>" +
         (lead.standfirst ? '<p class="m-sf">' + esc(lead.standfirst) + "</p>" : "") +
         '<span class="lead-cta"><span class="m-meta">' + readTime(lead.words) + "</span>" +
@@ -123,7 +119,7 @@
       '<div class="topbar"><button type="button" data-index="1">&larr; Front page</button>' +
         '<span class="tb-title">' + esc(edition.dateline.teg) + "</span></div>" +
       '<article class="article">' +
-        '<p class="kicker">' + esc(a.kicker) + "</p>" +
+        '<p class="kicker">' + esc(a.descriptor || a.kicker) + "</p>" +
         '<h1 class="m-hl" id="screen-title" tabindex="-1">' + esc(a.headline) + "</h1>" +
         (a.standfirst ? '<p class="m-sf">' + esc(a.standfirst) + "</p>" : "") +
         '<div class="m-body">' + paragraphsHtml(a.paragraphs) + "</div>" +

@@ -220,6 +220,12 @@ class DraftedStoryline(BaseModel):
     humour_score: int = Field(ge=1, le=10)  # your own rating of how genuinely FUNNY
                             # this storyline is to tell — not how dramatic or important.
                             # See the humour requirement in SYSTEM_PROMPT.
+    descriptor: str = ""   # the printed story-descriptor badge — see prompts.DESCRIPTOR_RULE.
+                            # NOT the machine `kicker` (TROPHY/GREEN JACKET/WOODEN SPOON/SIDEBAR)
+                            # used for filtering and lead selection — this is purely what prints.
+                            # Defaulted empty for the same reason as chosen_headline/standfirst:
+                            # DraftedStoryline is also embedded in the legacy StoryPlan, whose
+                            # schema has already been rejected once by the API as too large.
 
 
 class VehicleFitResponse(BaseModel):
@@ -316,6 +322,7 @@ the tournament and being gently ribbed.
 WHAT IS WORTH PUTTING IN THE PLAN — the writer can only use what you select:
 """ + prompts.RANKING_RULE + """
 """ + prompts.NAMING_RULE + """
+""" + prompts.DOUBLE_RULE + """
 
 THE SPINE — the report is built around the three competitions, in this priority order:
 1. The Trophy — the main event. The scoring metric varies by era: **Stableford** \
@@ -789,6 +796,8 @@ the tournament and being gently ribbed.
 WHAT IS WORTH PUTTING IN THE PLAN — the writer can only use what you select:
 """ + prompts.RANKING_RULE + """
 """ + prompts.NAMING_RULE + """
+""" + prompts.DESCRIPTOR_RULE + """
+""" + prompts.DOUBLE_RULE + """
 
 THE SPINE — the report is built around the three competitions, in this priority order:
 1. The Trophy — the main event. The scoring metric varies by era: **Stableford** \
@@ -1053,6 +1062,10 @@ the stake — NOT to restate the headline in longer words, and NOT to duplicate 
 reader should get the headline, then the standfirst, then want to read on — if the \
 standfirst already told them the ending, it did its job wrong.
 
+  Every `DraftedStoryline` ALSO needs `descriptor`: the badge line printed above the \
+headline, identifying WHO or WHAT the story is actually about — see the DESCRIPTOR rule \
+above for the exact naming logic (player name(s), a course, or a competition name).
+
 - `body_fallback`: **"none" is the default and the common case** — the trophy/jacket/ \
 spoon anatomy stories stand alone as the report's spine, with `discovered_storylines` \
 adding 0-3 more. Use `"player_by_player"` or `"round_by_round"` ONLY when \
@@ -1171,6 +1184,8 @@ def check_storyline_plan_consistency(plan: StorylinePlan, bundle: dict) -> list[
                 f"{len(s.chosen_headline.split())} words (want 3-8): {s.chosen_headline!r}")
         if not s.standfirst:
             warnings.append(f"storyline {s.subject!r} has no standfirst")
+        if not s.descriptor:
+            warnings.append(f"storyline {s.subject!r} has no descriptor")
 
     mandatory = {b["id"] for b in bundle.get("beats", []) if b.get("mandatory")}
     missed = sorted(mandatory - cited_beat_ids)
@@ -1501,6 +1516,11 @@ def assemble_bundle(teg_num: int, mode: str = "balanced", tone: str = "house",
     from teg_analysis.reporting.win_anatomy import build_win_anatomy
     win_anatomy = build_win_anatomy(teg_num)
 
+    # Whether this TEG's Trophy and Green Jacket went to the same player, and
+    # how many times that's happened before — grounds prompts.DOUBLE_RULE.
+    from teg_analysis.reporting.history_context import build_double_context
+    double_context = build_double_context(teg_num)
+
     bundle = {
         "teg": teg_num,
         "tone": tone,
@@ -1508,6 +1528,7 @@ def assemble_bundle(teg_num: int, mode: str = "balanced", tone: str = "house",
         "venue": venue,
         "competition_arcs": arcs,
         "win_anatomy": win_anatomy,
+        "double": double_context,
         "player_history": player_history,
         "player_course_history": player_course_history,
         "player_relationships": player_relationships,

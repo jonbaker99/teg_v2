@@ -234,3 +234,47 @@ def build_win_counts(teg_num: int, df: Optional[pd.DataFrame] = None) -> dict:
             "spoon_count": int((winners["HMM Wooden Spoon"] == player).sum()),
         }
     return out
+
+
+def build_double_context(teg_num: int, df: Optional[pd.DataFrame] = None) -> dict:
+    """Whether this TEG's Trophy and Green Jacket went to the same player — the
+    'double' — and how many times that has happened before in TEG history.
+
+    Returns {"is_double": bool, "player": str | None, "prior_doubles": int,
+    "prior_double_tegs": list[int]}. `prior_doubles` counts TEGs strictly before
+    `teg_num` where the same player won both; `player` is that TEG's name if
+    `is_double` else None. Grounds `prompts.DOUBLE_RULE`'s "how rare" claim in a
+    real figure rather than leaving the writer to guess or invent one.
+    """
+    if df is None:
+        from teg_analysis.core.data_loader import load_all_data
+        df = load_all_data()
+
+    through_df = df[df["TEGNum"] <= teg_num]
+    if through_df.empty:
+        return {"is_double": False, "player": None, "prior_doubles": 0,
+                "prior_double_tegs": []}
+
+    from teg_analysis.analysis.history import get_teg_winners
+    winners = get_teg_winners(through_df)
+    # `winners` has no TEGNum column (dropped by the merge in get_teg_winners),
+    # but is sorted ascending by TEGNum and its 'TEG' label is "TEG {n}" — parse
+    # the number back out rather than re-deriving TEGNum another way.
+    winners = winners.copy()
+    winners["_teg_num"] = winners["TEG"].str.extract(r"(\d+)").astype(int)
+
+    is_double_mask = winners["TEG Trophy"] == winners["Green Jacket"]
+
+    prior_mask = is_double_mask & (winners["_teg_num"] < teg_num)
+    prior_double_tegs = sorted(winners.loc[prior_mask, "_teg_num"].tolist())
+
+    this_row = winners[winners["_teg_num"] == teg_num]
+    is_double = bool(is_double_mask.loc[this_row.index[0]]) if not this_row.empty else False
+    player = this_row.iloc[0]["TEG Trophy"] if is_double else None
+
+    return {
+        "is_double": is_double,
+        "player": player,
+        "prior_doubles": len(prior_double_tegs),
+        "prior_double_tegs": prior_double_tegs,
+    }

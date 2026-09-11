@@ -1,9 +1,9 @@
 """Unit tests for the newspaper edition's pure layout/parsing rules:
-`choose_arrangement` and `split_value_qualifier`.
+`plan_rows` and `split_value_qualifier`.
 
 Synthetic edition dicts only — no real artefact files, no network. See
-`webapp/report_layout_prototypes/README.md` -> "Desktop composition" for the
-E1/E2/E3 rule this pins.
+`plan_rows`'s docstring (teg_analysis/reporting/newspaper_edition.py) for the
+row-packing rule this pins.
 """
 from __future__ import annotations
 
@@ -14,45 +14,79 @@ pytestmark = [pytest.mark.unit]
 from teg_analysis.reporting.newspaper_edition import (
     _degraded_storyline,
     _resolve_section,
-    choose_arrangement,
+    _totals_only,
+    derive_descriptor,
+    plan_rows,
     split_value_qualifier,
 )
 
 
-def _article(words: int, is_lead: bool = False, kicker: str = "SIDEBAR") -> dict:
+def _article(words: int, kicker: str = "SIDEBAR") -> dict:
     return {
         "words": words,
-        "is_lead": is_lead,
-        "kicker": "TROPHY" if is_lead else kicker,
+        "is_lead": False,
+        "kicker": kicker,
         "compelling": 5,
         "humour": 5,
     }
 
 
-def _edition(sub_words: list[int]) -> dict:
-    articles = [_article(300, is_lead=True)] + [_article(w) for w in sub_words]
-    return {"articles": articles}
+def _row_sizes(subs: list[dict]) -> list[int]:
+    return [len(row) for row in plan_rows(subs)]
 
 
-def test_five_or_more_articles_is_e2():
-    edition = _edition([250, 240, 230, 220])  # + lead = 5 articles
-    assert choose_arrangement(edition) == "e2"
+def test_two_remaining_subs_pack_as_promoted_plus_one_row():
+    # 3 total subs (one promoted) -> remainder 2 -> [1],[2]
+    subs = [_article(100, "GREEN JACKET"), _article(90), _article(80)]
+    assert _row_sizes(subs) == [1, 2]
 
 
-def test_three_subs_one_long_is_e3():
-    # 430 / 273 / 250 -> longest is 1.64x the median of the other two.
-    edition = _edition([430, 273, 250])
-    assert choose_arrangement(edition) == "e3"
+def test_three_remaining_subs_pack_as_promoted_plus_one_row():
+    # 4 total subs -> remainder 3 -> [1],[3]
+    subs = [_article(100, "GREEN JACKET"), _article(90), _article(80), _article(70)]
+    assert _row_sizes(subs) == [1, 3]
 
 
-def test_three_subs_similar_length_is_e1():
-    edition = _edition([260, 250, 240])
-    assert choose_arrangement(edition) == "e1"
+def test_four_remaining_subs_split_into_two_rows_of_two():
+    # 5 total subs -> remainder 4 -> [1],[2,2] not [1],[3,1]
+    subs = [_article(100, "GREEN JACKET"), _article(90), _article(80),
+            _article(70), _article(60)]
+    assert _row_sizes(subs) == [1, 2, 2]
 
 
-def test_two_subs_is_e1():
-    edition = _edition([260, 240])
-    assert choose_arrangement(edition) == "e1"
+def test_six_remaining_subs_split_into_two_rows_of_three():
+    # 7 total subs -> remainder 6 -> [1],[3,3]
+    subs = [_article(100, "GREEN JACKET")] + [_article(90 - i) for i in range(6)]
+    assert _row_sizes(subs) == [1, 3, 3]
+
+
+def test_no_subs_produces_no_rows():
+    assert plan_rows([]) == []
+
+
+def test_one_sub_with_no_pair_is_a_lone_row():
+    # No promotable "second lead" case doesn't arise once there's at least one
+    # sub (_choose_second_story always returns something) — with exactly one
+    # sub, that sub IS the promoted row and there is no remainder.
+    subs = [_article(50)]
+    assert _row_sizes(subs) == [1]
+
+
+def test_rows_are_sorted_by_word_count_within_the_packed_rows():
+    subs = [_article(100, "GREEN JACKET"), _article(50), _article(90), _article(70)]
+    rows = plan_rows(subs)
+    assert [a["words"] for a in rows[1]] == [90, 70, 50]
+
+
+# ---------------------------------------------------------------------------
+# _totals_only — still used by the rail's "Final" standings summary, even
+# though the appendix's standings tables were dropped 2026-09-11.
+# ---------------------------------------------------------------------------
+
+
+def test_totals_only_strips_the_round_score_bracket():
+    row = "SN 156 (R4: 43) | DM 148 (R4: 38)"
+    assert _totals_only(row) == "SN 156 | DM 148"
 
 
 
@@ -232,3 +266,104 @@ def test_dropped_articles_never_reach_the_page():
     edition = {"teg": 14, "articles": [], "dropped_articles": [_scored(1, 1)]}
     assert "dropped_articles" not in for_page(edition)
     assert for_page(edition)["teg"] == 14
+
+
+# ---------------------------------------------------------------------------
+# derive_descriptor: deterministic descriptor fallback for the 17 existing
+# reports written before `descriptor` existed on the plan (2026-09-11). See
+# prompts.DESCRIPTOR_RULE for the rule this approximates.
+# ---------------------------------------------------------------------------
+def test_derive_descriptor_trophy_is_always_bare_trophy():
+    storyline = {"chosen_headline": "Whatever Headline", "subject": "whatever"}
+    assert derive_descriptor(storyline, "TROPHY") == "TROPHY"
+
+
+def test_derive_descriptor_sidebar_with_one_real_player_returns_that_name():
+    # David Mullin is a real player in data/players.csv.
+    storyline = {"chosen_headline": "Mullin Finds Another Gear",
+                 "subject": "David Mullin has a career day at the Stadium Course"}
+    assert derive_descriptor(storyline, "SIDEBAR") == "DAVID MULLIN"
+
+
+def test_derive_descriptor_sidebar_with_two_real_players_returns_pipe_separated():
+    storyline = {"chosen_headline": "Baker and Mullin Trade Blows",
+                 "subject": "Jon Baker and David Mullin fight it out"}
+    assert derive_descriptor(storyline, "SIDEBAR") == "JON BAKER | DAVID MULLIN"
+
+
+def test_derive_descriptor_sidebar_with_zero_players_falls_back_to_sidebar():
+    storyline = {"chosen_headline": "The Weather Wins the Day",
+                 "subject": "Rain and wind dominate the round"}
+    assert derive_descriptor(storyline, "SIDEBAR") == "SIDEBAR"
+
+
+def test_derive_descriptor_sidebar_with_three_or_more_players_falls_back_to_sidebar():
+    storyline = {"chosen_headline": "A Chaotic Final Round",
+                 "subject": "Jon Baker, David Mullin and Henry Meller all collapse"}
+    assert derive_descriptor(storyline, "SIDEBAR") == "SIDEBAR"
+
+
+def test_derive_descriptor_green_jacket_named_in_headline_stays_bare():
+    storyline = {"chosen_headline": "David Mullin Reclaims the Jacket",
+                 "subject": "David Mullin wins the Green Jacket back"}
+    assert derive_descriptor(storyline, "GREEN JACKET") == "GREEN JACKET"
+
+
+def test_derive_descriptor_green_jacket_two_names_in_subject_stays_bare():
+    """Real TEG 6 case: the headline names no one by full name (a bare surname
+    doesn't count), and `subject` mentions two players — too ambiguous to pick
+    a winner from, so it falls back to the bare kicker rather than guessing."""
+    storyline = {"chosen_headline": "Mullin Reclaims the Jacket at the Ninth",
+                 "subject": "David Mullin wins a third straight Green Jacket "
+                            "after his worst gross round to date briefly "
+                            "handed Jon Baker the lead"}
+    assert derive_descriptor(storyline, "GREEN JACKET") == "GREEN JACKET"
+
+
+def test_derive_descriptor_wooden_spoon_named_only_in_subject_appends_player():
+    storyline = {"chosen_headline": "Two Tens at El Prat Settle It",
+                 "subject": "Henry Meller answers a career-best Round 2 with a "
+                            "Round 3 containing two 10s, and takes a third "
+                            "Wooden Spoon by 17"}
+    assert derive_descriptor(storyline, "WOODEN SPOON") == "WOODEN SPOON | HENRY MELLER"
+
+
+def test_derive_descriptor_green_jacket_with_no_name_anywhere_stays_bare():
+    storyline = {"chosen_headline": "A Round for the Ages", "subject": "A great round"}
+    assert derive_descriptor(storyline, "GREEN JACKET") == "GREEN JACKET"
+
+
+def test_parse_articles_prefers_explicit_descriptor_over_the_fallback():
+    """An explicit `descriptor` on the storyline (LLM-authored going forward)
+    must win over `derive_descriptor`, never be silently recomputed."""
+    from teg_analysis.reporting.newspaper_edition import _parse_articles
+
+    plan = {
+        "trophy_storyline": {
+            "subject": "David Mullin wins again",
+            "chosen_headline": "Mullin Wins Again",
+            "standfirst": "",
+            "compelling_score": 9,
+            "humour_score": 3,
+            "descriptor": "TROPHY",
+        },
+        "jacket_storyline": {"subject": "j", "chosen_headline": "", "standfirst": "",
+                             "compelling_score": 1, "humour_score": 1},
+        "spoon_storyline": {"subject": "s", "chosen_headline": "", "standfirst": "",
+                            "compelling_score": 1, "humour_score": 1},
+        "discovered_storylines": [
+            {"subject": "David Mullin also does something else",
+             "chosen_headline": "Mullin Does Something Else",
+             "standfirst": "", "compelling_score": 5, "humour_score": 5,
+             "descriptor": "THE EXPLICIT ONE"},
+        ],
+    }
+    sections = [
+        ("David Mullin wins again", "<!-- storyline: trophy -->\nBody text."),
+        ("David Mullin also does something else", "<!-- storyline: d0 -->\nMore body."),
+    ]
+    articles = _parse_articles(sections, plan)
+    by_headline = {a["headline"]: a for a in articles}
+    assert by_headline["Mullin Does Something Else"]["descriptor"] == "THE EXPLICIT ONE"
+    # Sanity: the trophy one also keeps its explicit descriptor, not a re-derivation.
+    assert by_headline["Mullin Wins Again"]["descriptor"] == "TROPHY"

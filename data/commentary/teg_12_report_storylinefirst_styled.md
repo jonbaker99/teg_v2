@@ -124,5 +124,5 @@ He then played the rest of the round rather well, which is the cruellest detail 
   <li>Gregg Williams runs up a 11 (septuple bogey) at the 13th (R3) — his career-worst on a par-4</li>
   <li>Stuart Neumann runs up a 12 (septuple bogey) at the 15th (R1) — a new TEG-record worst on a par-5; his career-worst on a par-5</li>
   <li>Stuart Neumann runs up a 10 (sextuple bogey) at the 13th (R1) — his career-worst on a par-4</li>
-  <li>John Patterson runs up a 12 (+8 (blow-up)) at the 4th (R1) — a new TEG-record worst on a par-4; his career-worst on a par-4</li>
+  <li>John Patterson runs up a 12 (+8) at the 4th (R1) — a new TEG-record worst on a par-4; his career-worst on a par-4</li>
 </ul></div>

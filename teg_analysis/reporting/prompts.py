@@ -430,6 +430,71 @@ Every later mention in the same report uses the short form: "the Trophy", "the J
 
 
 # ---------------------------------------------------------------------------
+# Story descriptor badges. Added 2026-09-11: the printed badge above every
+# story's headline was always the generic machine kicker (TROPHY / GREEN
+# JACKET / WOODEN SPOON / SIDEBAR), even when the story itself was really
+# about one specific player or course. A reader scanning badges before
+# headlines learned nothing beyond "which competition slot", which is the
+# least interesting fact about a discovered story.
+#
+# Editor-only: this sets the plan's `descriptor` field, which is a print
+# concern. The machine `kicker` itself must never change — it is what
+# `filter_articles`/`is_competition_article`/`_choose_second_story` match on.
+# ---------------------------------------------------------------------------
+DESCRIPTOR_RULE = """- **Give every story a descriptor that names who or what it is actually \
+about**, not just which competition slot it fills. This is the short badge line printed \
+above the headline.
+- A story about ONE player and nothing else -> that player's full name in capitals, e.g. \
+`JON BAKER`. Never a bare surname — apply NAMING_RULE's ambiguity check: if the field has \
+two players sharing that surname, this must not collapse to the shared surname alone.
+- A story about EXACTLY TWO players (a head-to-head, a joint collapse, etc.) -> both full \
+names, pipe-separated, e.g. `ALEX BAKER | JON BAKER`.
+- A story genuinely about A COURSE (the course's own character or record, not a player who \
+happened to play well there) -> the course name in capitals, e.g. `STADIUM COURSE`. Do not \
+force a player name into a course story just to have one.
+- The Trophy story -> always `TROPHY`, unmodified. Its own competition kicker is always \
+sufficiently identifying.
+- The Green Jacket or Wooden Spoon story -> the competition name alone (`GREEN JACKET`, \
+`WOODEN SPOON`) if the winning/losing player is ALREADY unambiguously named in the story's \
+own chosen headline; otherwise the competition name plus the player, pipe-separated: \
+`WOODEN SPOON | HENRY MELLER`.
+- Anything that fits none of the above — genuinely mixed-subject, or nothing distinct \
+enough to name — -> `SIDEBAR`.
+- Every name obeys NAMING_RULE.
+Worked examples from a real TEG 6 report: a discovered story about one player -> \
+`JON BAKER`; a discovered story about the course -> `STADIUM COURSE`; the Wooden Spoon \
+story where the loser (Henry Meller) is NOT named in its headline ("Two Tens at El Prat \
+Settle It") -> `WOODEN SPOON | HENRY MELLER`; the Green Jacket story where the winner IS \
+named in its headline ("Mullin Reclaims the Jacket at the Ninth") -> stays `GREEN JACKET`, \
+no player appended, since the headline already names him."""
+
+
+# ---------------------------------------------------------------------------
+# The double. Added 2026-09-11: when one player wins both the Trophy and the
+# Green Jacket in the same TEG, that is a genuine, rare achievement — prior
+# reports have buried it or missed it entirely. Grounded in real data via
+# `history_context.build_double_context` so any rarity claim is a real
+# figure, never an invented one.
+#
+# Both writer- and editor-facing: unlike DESCRIPTOR_RULE this changes what
+# the PROSE says, not a plan-only print field, so it has to reach whoever
+# drafts the Trophy story's actual paragraphs as well as whoever plans it.
+# ---------------------------------------------------------------------------
+DOUBLE_RULE = """- **State the double, and state it first.** Where the supplied `double` data shows \
+the Trophy and Green Jacket were won by the same player this TEG, the Trophy story's FIRST \
+paragraph must say so explicitly and treat it as the achievement it is. Do not bury it, and \
+do not mention it only in a later paragraph or not at all.
+- Any claim about rarity ("the Nth double in TEG history", "only the second time...") must \
+come only from the supplied `double` figures (`prior_doubles` / `prior_double_tegs`) — never \
+invented. This follows the same rule as SHARED_FAITHFULNESS: use only supplied data, never \
+invent.
+- The headline MAY build around the double where the story's existing headline has no \
+stronger plot of its own. A headline built around an actual turn or detail — not just \
+"X won the trophy" — should keep it: a double is worth stating in the opening paragraph \
+regardless, but is not automatically worth displacing a better headline for."""
+
+
+# ---------------------------------------------------------------------------
 # Stroke index. Craft rather than faithfulness, but duplicated in both writers.
 # ---------------------------------------------------------------------------
 STROKE_INDEX_RULE = """- **Stroke index (SI) for hole colour.** Beat hole evidence may include an `si` field. \

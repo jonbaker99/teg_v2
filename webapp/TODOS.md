@@ -8,20 +8,19 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 - [ ] **Bestball/worstball on `/latest-round`** — show best/worst bestball and worstball positions in the round-in-context page.
 - [ ] **`/scoring/matrix`** - score type as pills; TEG / Round / 9 as tabs
-- [ ] **Newspaper report layout — switch `/teg-reports` over** — the design is settled (desktop
-  E1/E2/E3 composite, mobile pattern A) and is wired into the site at `/teg-reports-preview` (not
-  linked from nav, `/teg-reports` untouched). Parser lives in
+- [ ] **PRIORITY (2026-09-11): Newspaper report layout — switch `/teg-reports` over.** It's now
+  better than the pre-existing tournament reporting (row-packed layout, normalised type, descriptor
+  badges, the double rule, a redesigned records appendix) and is wired into the site at
+  `/teg-reports-preview` (not linked from nav, `/teg-reports` untouched). Parser lives in
   `teg_analysis/reporting/newspaper_edition.py` (`build_edition`, `render_desktop_html`,
-  `choose_arrangement`), shared by the preview route and the CLI script. Only TEG 14/16/18 have
-  storyline-first artefacts, so the preview's TEG switcher is limited to those; other TEG numbers
-  fall back to the newest available, same convention as `/teg-reports`'s own dropdown.
-  Remaining before the switch-over: (1) the other 14 TEGs have **no** storyline-first artefacts, so
-  a straight replacement needs them generated first — a real LLM-cost task (styling no longer
-  requires a legacy plan, `teg_analysis/TODOS.md`, so nothing else blocks it); (2) decide whether
+  `plan_rows`), shared by the preview route and the CLI script. All 17 completed TEGs now have
+  storyline-first artefacts, so the preview's TEG switcher covers all of them.
+  Remaining before the switch-over: (1) decide whether
   `/teg-reports-preview` replaces `/teg-reports` outright or the two coexist, and update
-  `webapp/routes/reports.py` / `teg_reports.html` accordingly; (3) a real design pass on the
+  `webapp/routes/reports.py` / `teg_reports.html` accordingly; (2) a real design pass on the
   preview's own chrome (currently a bare TEG-switcher bar, not part of the settled design).
   Design record: `webapp/report_layout_prototypes/README.md`. Pipeline context: `DATA_FLOW.md` §10.
+  First of four sequenced to-dos — see `teg_analysis/reporting/STATUS.md` → START HERE → *Next*.
 
 
 - [x] **`editions.json` going stale whenever a styled report changes** — **fixed 2026-09-10.** It
@@ -132,7 +131,17 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 ## Planned enhancements
 
-- [ ] **Remote report generation (admin-triggered)** — no webapp UI/route currently triggers the `teg_analysis/reporting/` pipeline; report generation is a local/manual process (run the pipeline via script/notebook with `ANTHROPIC_API_KEY`, then get the output file onto the Railway volume) before it's viewable at `/teg-reports` or the Report tabs. Add an admin-triggered generate flow (e.g. a button on `/admin` that runs the pipeline as a background task and writes/syncs the resulting `..._report_styled.md`). (Note: the separate *viewing* bug — reports not appearing on Railway at all — was diagnosed and fixed 2026-07-12; see `teg_analysis/reporting/STATUS.md` → "Known issues". This item is about generation only.)
+- [ ] **Remote/on-the-fly report generation, tournament AND round (the clubhouse use case)** — no
+  webapp UI/route currently triggers the `teg_analysis/reporting/` pipeline; generation is a
+  local/manual process (run the pipeline via script/notebook with `ANTHROPIC_API_KEY`, then get the
+  output file onto the Railway volume) before it's viewable at `/teg-reports` or the Report tabs.
+  The goal is a live report as soon as scores are in while still in the clubhouse — add an
+  admin-triggered generate flow (e.g. a button on `/admin` that runs the pipeline as a background
+  task and writes/syncs the resulting `..._report_styled.md`), fast enough that "as soon as the
+  scores are in" is real, for both the tournament pipeline and the round-report equivalent once #3
+  in `teg_analysis/reporting/STATUS.md` → START HERE → *Next* exists. (Note: the separate *viewing*
+  bug — reports not appearing on Railway at all — was diagnosed and fixed 2026-07-12; see
+  `teg_analysis/reporting/STATUS.md` → "Known issues". This item is about generation only.)
 
 - [ ] **Hole-level score correction** — inline editor to fix individual hole scores after entry. Not built in either app: Streamlit's `data_edit.py` and the webapp's `/admin/edit-data` both only cover metadata CSVs (round info, handicaps, etc.), not raw hole-level scores. Not a Streamlit-retirement blocker (Streamlit never had this either) — a standalone future enhancement.
 

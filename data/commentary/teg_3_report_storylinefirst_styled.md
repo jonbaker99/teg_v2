@@ -119,7 +119,7 @@ He finished 16 over net, and collected the Wooden Spoon. He had, at various mome
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
   <li>Stuart Neumann runs up a 10 (sextuple bogey) at the 17th (R4) — his career-worst on a par-4</li>
-  <li>Henry Meller runs up a 12 (+8 (blow-up)) at the 17th (R1) — a new TEG-record worst on a par-4; his career-worst on a par-4</li>
+  <li>Henry Meller runs up a 12 (+8) at the 17th (R1) — a new TEG-record worst on a par-4; his career-worst on a par-4</li>
   <li>Henry Meller runs up a 10 (quintuple bogey) at the 3rd (R3) — his career-worst on a par-5</li>
   <li>David Mullin runs up a 9 (quintuple bogey) at the 17th (R2) — his career-worst on a par-4</li>
 </ul></div>

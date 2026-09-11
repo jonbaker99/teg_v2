@@ -14,6 +14,83 @@
 
 ## START HERE — picking this up in a new chat (2026-09-08)
 
+### Next: four to-dos, in this sequence (recorded 2026-09-11)
+
+The storyline-first newspaper report (`/teg-reports-preview`) is now better than the pre-existing
+`/teg-reports` (Fraunces/Source Serif newspaper layout, row-packed sub-stories, descriptor badges,
+the double rule — see the two "Done" entries below). Four pieces of follow-on work, roughly in
+dependency order:
+
+1. **Integrate into the core webapp for tournament reporting.** Retire or fold in the old
+   `/teg-reports`; the preview route becomes the real one. Already tracked with implementation
+   detail at `webapp/TODOS.md` → *IN PROGRESS* → "Newspaper report layout — switch `/teg-reports`
+   over". Start here — everything else builds on this being live.
+2. **Clean up `data/commentary/`.** Multiple generations per TEG have accumulated
+   (`_report_final.md`, `_report_storylinefirst.md`, `_storylinedraft.md`, `_precorrections.md`,
+   old non-storyline-first artefacts, etc.) — archive what's superseded, delete what's a genuine
+   duplicate of a "previous version," keep whatever the live pipeline still reads
+   (`newspaper_edition.artefact_paths` names the two files per TEG that matter:
+   `teg_N_report_storylinefirst_styled.md` + `teg_N_storyline_plan.json`).
+3. **Build the round-report equivalent.** Same storyline-first architecture, scaled down — fewer
+   holes means fewer stories, so lean harder on: course context (may need building out further —
+   see `venue.py`/`course_history.py`), how the round moved people within the tournament, and how
+   it compared to the player's/field's previous round performances. The round *code*
+   (`round_report.py`) is already roughly level with the tournament pipeline per the older ledger
+   below, but published round reports are generations behind — check current state before assuming
+   that's still true.
+4. **Remote/on-the-fly generation for both tournament and round reports** — the clubhouse use
+   case: a live report as soon as scores are in. Tournament-report stub already at
+   `webapp/TODOS.md` → *Planned enhancements* → "Remote report generation (admin-triggered)";
+   extend that item to cover round reports too, and to "as fast as possible after the round ends"
+   rather than "whenever someone next runs the script."
+
+### Done (2026-09-11): appendix redesign, "(blow-up)" label removed
+
+Two small follow-ups after the layout/descriptor/double work below, both on
+`report-layout-descriptor-double`: the appendix's Personal Bests & Records block was a lone
+eyebrow label over a rigid 2-column grid, replaced with a kicker ("Records & Personal Bests") +
+headline ("Notable achievements: TEG N") + ruled flowing columns, chosen from three prototypes
+tested against TEG 4 (heavy, 16 records) and TEG 17/18 (light, 4 records) — see
+`webapp/report_layout_prototypes/README.md` for the rejected options. Separately,
+`events.result_label` no longer appends "(blow-up)" to unnamed over-par results beyond septuple
+bogey (`+9 (blow-up)` → `+9`) — retrofitted onto TEGs 3, 4 and 12 via the free
+`--restyle-only` path.
+
+### Done (2026-09-11): layout row-packing, story descriptor badges, the double rule
+
+Three pieces of work on `report-layout-descriptor-double`, continuing straight off the
+2026-09-10 session below.
+
+**Layout.** `newspaper_edition.choose_arrangement` and the e1/e2/e3 fixed layouts (which had an
+orphan-column bug on some article counts) are gone, replaced by `plan_rows(subs) -> list[list[dict]]`
+— explicit row packing rendered through one `<div class="subs-row cols-N">` template instead of a
+menu of named arrangements. Sub-card font sizes and full-width headline wrapping were normalised
+in the same pass, and the appendix "Standings by round" table split into two — `_totals_only`
+(cumulative) and `_round_only` (in-round) — matching the mobile view. See README.md → *Row
+packing*.
+
+**Story descriptor badges.** The printed badge above every story's headline was always the
+generic machine kicker (TROPHY/GREEN JACKET/WOODEN SPOON/SIDEBAR). It now names who or what the
+story is actually about — `prompts.DESCRIPTOR_RULE`, wired into the current-generation editor
+prompt (`story_plan.STORYLINE_SYSTEM_PROMPT`) only, not the legacy one and not either writer. New
+plans set `DraftedStoryline.descriptor` directly; the 17 reports written before the field existed
+get a deterministic, no-LLM fallback at render time (`newspaper_edition.derive_descriptor`),
+matching storyline text against the real player field. **Known gap, deliberately not closed**: no
+course-name matching — a genuine course story (TEG 6's Stadium Course piece) falls back to
+`SIDEBAR` rather than risk a wrong guess. Verified against the TEG 6 brief: `TROPHY`, `JON BAKER`,
+`WOODEN SPOON | HENRY MELLER`, and `GREEN JACKET` (unmodified, Mullin already named in its
+headline) all matched; the course story is the one known miss.
+
+**The double.** When one player wins the Trophy and Green Jacket in the same TEG,
+`prompts.DOUBLE_RULE` requires the Trophy story's opening paragraph to say so, grounded in real
+prior-double figures from the new `history_context.build_double_context(teg_num)` (verified
+against TEGs 2/4/6/11/13/14/15/17 — TEG 6 correctly comes back non-double). Wired into the
+tournament writer, both tournament-level editors, and the storyline-experiment script; **not**
+into either round-level prompt (`round_report.ROUND_PLAN_SYSTEM`/`ROUND_WRITER_SYSTEM`) — the
+round bundle has no `double` figures to plan or write against, even for a final round. Retrofitted
+onto existing reports as a third permitted `CORRECTIONS_CONTRACT` edit in `authoring.apply_corrections`,
+which now computes the real figures itself and hands them to the model in the user message.
+
 ### Done (2026-09-10): content-selection and naming rules from the TEG 16 review
 
 A content review of `data/commentary/teg_16_report_storylinefirst_styled.md` (what the report

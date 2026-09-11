@@ -116,9 +116,57 @@ def test_shared_blocks_are_not_duplicated_within_a_prompt(name):
     prompt = ALL_PROMPTS[name]
     for block_name in ("VOICE_CORE", "NAMED_PRINCIPLES", "SHARED_FAITHFULNESS",
                        "STROKE_INDEX_RULE", "HOUSE_VOICE_SUMMARY",
-                       "RANKING_RULE", "NAMING_RULE"):
+                       "RANKING_RULE", "NAMING_RULE", "DESCRIPTOR_RULE", "DOUBLE_RULE"):
         block = getattr(prompts, block_name)
         assert prompt.count(block) <= 1, f"{name} contains {block_name} more than once"
+
+
+# ---------------------------------------------------------------------------
+# DESCRIPTOR_RULE (2026-09-11): sets `DraftedStoryline.descriptor`, a plan-only
+# print field the writers never see. Editor-only by design — unlike
+# RANKING_RULE/NAMING_RULE this must NOT reach either writer prompt.
+#
+# `PLANNER_PROMPTS["tournament editor"]` points at `story_plan.SYSTEM_PROMPT`,
+# the LEGACY editor prompt whose schema (`StoryPlan`) has no `descriptor`
+# field and never asked for `chosen_headline`/`standfirst` either — so
+# DESCRIPTOR_RULE is deliberately wired only into `story_plan.
+# STORYLINE_SYSTEM_PROMPT`, the current-generation editor prompt, which is
+# asserted directly here rather than through PLANNER_PROMPTS.
+# ---------------------------------------------------------------------------
+def test_descriptor_rule_is_in_the_current_generation_editor_prompt():
+    assert prompts.DESCRIPTOR_RULE in story_plan.STORYLINE_SYSTEM_PROMPT
+
+
+def test_descriptor_rule_is_not_in_the_legacy_editor_prompt():
+    """The legacy `SYSTEM_PROMPT` never asks for `chosen_headline`/`standfirst`
+    either — same schema-size reasoning applies to `descriptor`."""
+    assert prompts.DESCRIPTOR_RULE not in story_plan.SYSTEM_PROMPT
+
+
+def test_descriptor_rule_is_editor_only():
+    """DESCRIPTOR_RULE assigns the plan's `descriptor` field — writers never touch
+    kicker/descriptor, so unlike RANKING_RULE/NAMING_RULE this must NOT reach them."""
+    for name, prompt in WRITER_PROMPTS.items():
+        assert prompts.DESCRIPTOR_RULE not in prompt, f"{name} should not carry DESCRIPTOR_RULE"
+
+
+# ---------------------------------------------------------------------------
+# DOUBLE_RULE (2026-09-11): the Trophy+Green Jacket double. Both writer- and
+# editor-facing, unlike DESCRIPTOR_RULE — it changes report prose, not just a
+# plan field. Excluded from the round-level prompts: see the code comments on
+# `round_report.ROUND_PLAN_SYSTEM` / `ROUND_WRITER_SYSTEM` for why (the round
+# bundle carries no `double` figures to plan or write against).
+# ---------------------------------------------------------------------------
+def test_double_rule_reaches_both_tournament_writer_and_both_editors():
+    assert prompts.DOUBLE_RULE in authoring.WRITER_CONTRACT
+    assert prompts.DOUBLE_RULE in story_plan.SYSTEM_PROMPT
+    assert prompts.DOUBLE_RULE in story_plan.STORYLINE_SYSTEM_PROMPT
+
+
+def test_double_rule_does_not_reach_round_level_prompts():
+    """Deliberate exclusion — the round bundle has no `double` figures."""
+    assert prompts.DOUBLE_RULE not in ROUND_WRITER_SYSTEM
+    assert prompts.DOUBLE_RULE not in ROUND_PLAN_SYSTEM
 
 
 def test_voice_and_faithfulness_stay_separate_concerns():

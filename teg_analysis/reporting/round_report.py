@@ -261,6 +261,16 @@ the history. They will spot any factual error instantly.
 WHAT IS WORTH PUTTING IN THE PLAN — the writer can only use what you select:
 """ + prompts.RANKING_RULE + """
 """ + prompts.NAMING_RULE + """
+# NOTE: prompts.DESCRIPTOR_RULE is deliberately NOT wired in here. It sets a
+# per-story `descriptor` badge field that only exists on `DraftedStoryline`
+# (the tournament-report schema); `RoundStoryPlan` has no kicker/descriptor
+# concept at all — a round report is a single narrative, not a newspaper of
+# separate story cards. There is no field for the model to put this in.
+#
+# NOTE: prompts.DOUBLE_RULE is also deliberately NOT wired in here — see the
+# matching comment on ROUND_WRITER_SYSTEM below. The round bundle
+# (`assemble_round_bundle`) has no `double` figures to plan against, even for
+# a final round.
 
 THIS IS A ROUND REPORT, NOT A TOURNAMENT REPORT.
 - The round is ONE day of the tournament: 18 holes, all players.
@@ -513,6 +523,15 @@ ROUND_WRITER_SYSTEM = "\n".join((
     prompts.STROKE_INDEX_RULE,
     prompts.RANKING_RULE,
     prompts.NAMING_RULE,
+    # prompts.DOUBLE_RULE deliberately NOT wired in here. It needs the
+    # tournament-wide `double` figures (prior_doubles / prior_double_tegs from
+    # `history_context.build_double_context`), which `assemble_round_bundle`
+    # does not compute or carry — a round bundle is scoped to one round's
+    # beats and that round's competition state, not tournament-history
+    # achievement stats. Even a final-round report, which does declare
+    # winners, has no plumbing for this bundle field; adding it would mean
+    # growing the round bundle for a case (the double) that the tournament
+    # report's Trophy story already owns and states properly.
     _ROUND_WRITER_RULES,
 ))
 
