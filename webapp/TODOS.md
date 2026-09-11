@@ -9,17 +9,14 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 - [ ] **Bestball/worstball on `/latest-round`** — show best/worst bestball and worstball positions in the round-in-context page.
 - [ ] **`/scoring/matrix`** - score type as pills; TEG / Round / 9 as tabs
 - [ ] **Newspaper report layout — switch `/teg-reports` over** — the design is settled (desktop
-  E1/E2/E3 composite, mobile pattern A) and is wired into the site at `/teg-reports-preview` (not
+  row-packed layout, mobile pattern A) and is wired into the site at `/teg-reports-preview` (not
   linked from nav, `/teg-reports` untouched). Parser lives in
   `teg_analysis/reporting/newspaper_edition.py` (`build_edition`, `render_desktop_html`,
-  `choose_arrangement`), shared by the preview route and the CLI script. Only TEG 14/16/18 have
-  storyline-first artefacts, so the preview's TEG switcher is limited to those; other TEG numbers
-  fall back to the newest available, same convention as `/teg-reports`'s own dropdown.
-  Remaining before the switch-over: (1) the other 14 TEGs have **no** storyline-first artefacts, so
-  a straight replacement needs them generated first — a real LLM-cost task (styling no longer
-  requires a legacy plan, `teg_analysis/TODOS.md`, so nothing else blocks it); (2) decide whether
+  `plan_rows`), shared by the preview route and the CLI script. All 17 completed TEGs now have
+  storyline-first artefacts, so the preview's TEG switcher covers all of them.
+  Remaining before the switch-over: (1) decide whether
   `/teg-reports-preview` replaces `/teg-reports` outright or the two coexist, and update
-  `webapp/routes/reports.py` / `teg_reports.html` accordingly; (3) a real design pass on the
+  `webapp/routes/reports.py` / `teg_reports.html` accordingly; (2) a real design pass on the
   preview's own chrome (currently a bare TEG-switcher bar, not part of the settled design).
   Design record: `webapp/report_layout_prototypes/README.md`. Pipeline context: `DATA_FLOW.md` §10.
 

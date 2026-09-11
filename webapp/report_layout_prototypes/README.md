@@ -197,3 +197,11 @@ loses to every component rule, so the per-rule workarounds could be reverted.
 - **Below 700px the document scrolls, not `.scroller`.** Scroll restore written to the inner
   element silently did nothing on an actual phone while working perfectly in the desktop preview
   frame. Anything touching scroll position needs `scrollHost()`.
+- **The production desktop renderer no longer uses named arrangements (E1/E2/E3) at all**
+  (2026-09-11) — it packs sub-articles into full-width rows instead (`plan_rows` in
+  `teg_analysis/reporting/newspaper_edition.py`), because the old fixed-arrangement system produced
+  broken layouts (an orphan single-story row) whenever the leftover count didn't divide evenly.
+  `composite.html`'s `chooseArrangement`/`renderE1`/`renderE2` (this file has no E3) predate that
+  change and are retained purely as frozen historical reference — they are not kept in sync with
+  the Python renderer, and `renderE3` here is a different, unrelated design from the one that
+  shipped.
