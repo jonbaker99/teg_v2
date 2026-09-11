@@ -63,6 +63,13 @@
 <p class="np-caption">{{ caption }}</p>
 {% endif %}
 
+{% if legacy_html %}
+{# A round this TEG hasn't been through the round-storyline pipeline for yet
+   — the old one-blob markdown render, `.teg-report` (/static/teg_reports.css,
+   loaded globally in base.html), not the newspaper layout. Temporary bridge
+   until backfill catches this round up — see reports.py's module docstring. #}
+<div class="teg-report">{{ legacy_html|safe }}</div>
+{% else %}
 {# .np-page is a scoping wrapper (fonts/colour variables + reset), not a
    full-bleed background — the paper texture lives on .np-paper itself, which
    floats as its own card on the site's normal page background. #}
@@ -75,6 +82,7 @@
 
 <script type="application/json" id="edition-data">{{ edition_json|safe }}</script>
 <script src="/static/newspaper_preview.js"></script>
+{% endif %}
 
 {% endif %}
 {% endif %}

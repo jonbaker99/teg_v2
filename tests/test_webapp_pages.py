@@ -51,11 +51,11 @@ def test_nav_page_renders(client, url):
 
 # ---------------------------------------------------------------------------
 # TEG Reports (newspaper edition — teg_analysis.reporting.newspaper_edition).
-# `?round=` is new (round_storyline.py, 2026-09-11); no real TEG has round
-# artefacts yet, so the round-selected case is exercised in
-# tests/test_round_storyline.py and tests/test_newspaper_edition.py against
-# synthetic data. What's guarded here is that the route accepts the param at
-# all and falls back gracefully when the round doesn't exist.
+# `?round=` (round_storyline.py, 2026-09-11) renders a round through the
+# newspaper layout for a round with a round-storyline edition (TEG 14 R2, TEG
+# 18 R3/R4 as of 2026-09-12 — see STATUS.md); every other playable round
+# falls back to the legacy one-blob markdown render (`_round_kind` in
+# webapp/routes/reports.py) rather than showing "no report".
 # ---------------------------------------------------------------------------
 def test_teg_reports_with_teg_param_renders(client):
     from teg_analysis.reporting.newspaper_edition import available_tegs
@@ -66,16 +66,47 @@ def test_teg_reports_with_teg_param_renders(client):
     _assert_ok_no_error(resp)
 
 
-def test_teg_reports_unknown_round_falls_back_to_tournament(client):
-    """A `round` not in `available_rounds(teg)` (true of every real TEG today,
-    since no round-storyline artefacts exist yet) must not error — it falls
-    back to the tournament report rather than 500ing."""
+def test_teg_reports_unreported_round_falls_back_to_tournament(client):
+    """A `round` with no report at all (new or legacy) must not error — it
+    falls back to the tournament report rather than 500ing."""
     from teg_analysis.reporting.newspaper_edition import available_tegs
     tegs = available_tegs()
     if not tegs:
         pytest.skip("no TEGs with storyline-first artefacts in this environment")
     resp = client.get("/teg-reports", params={"teg": tegs[0], "round": 99})
     _assert_ok_no_error(resp)
+
+
+def test_teg_reports_round_with_a_storyline_edition_uses_the_newspaper_layout(client):
+    from webapp.routes.reports import _round_kind
+    resp = client.get("/teg-reports", params={"teg": 14, "round": 2})
+    assert _round_kind(14, 2) == "new"
+    _assert_ok_no_error(resp)
+    assert 'class="np-paper' in resp.text
+    assert 'class="teg-report"' not in resp.text
+
+
+def test_teg_reports_round_without_a_storyline_edition_falls_back_to_legacy_markdown(client):
+    from webapp.routes.reports import _legacy_round_numbers, _round_kind
+    if not _legacy_round_numbers(14):
+        pytest.skip("no legacy round reports in this environment")
+    assert _round_kind(14, 1) == "legacy"
+    resp = client.get("/teg-reports", params={"teg": 14, "round": 1})
+    _assert_ok_no_error(resp)
+    assert 'class="teg-report"' in resp.text
+    assert 'class="np-paper' not in resp.text
+
+
+def test_teg_reports_round_pills_include_both_new_and_legacy_rounds(client):
+    """TEG 14 has one round-storyline edition (R2) and legacy reports for the
+    rest — the pill list must show every playable round, not just the new one."""
+    from webapp.routes.reports import _legacy_round_numbers
+    if not _legacy_round_numbers(14):
+        pytest.skip("no legacy round reports in this environment")
+    resp = client.get("/teg-reports", params={"teg": 14})
+    _assert_ok_no_error(resp)
+    for r in (1, 2, 3, 4):
+        assert f">R{r}<" in resp.text
 
 
 # ---------------------------------------------------------------------------

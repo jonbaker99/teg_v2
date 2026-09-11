@@ -118,6 +118,13 @@ dependency order:
    **Not done, deliberately:** no backfill. Only the three validation TEGs above have round
    storyline artefacts; the other 8 TEGs with published (legacy or 2025-vintage) round reports are
    untouched, and a full backfill is a separate, costed decision once more of this has been read.
+   **Legacy round fallback, so `/teg-reports` shows every playable round today, not just the
+   three regenerated ones (2026-09-12).** `webapp/routes/reports.py` now has a `_round_kind(teg,
+   round)` of `"new"` (round-storyline edition), `"legacy"` (falls back to the pre-2026-09-11
+   one-blob markdown render — `teg_N_round_R_report_styled.md`, then `round_reports/`, same
+   fallback chain and `.teg-report` CSS this page used before), or `"none"`. New always wins where
+   both exist. Deliberate, temporary bridge, not a second pipeline — dead code once backfill is
+   done, at which point delete it with `teg_reports.css` and `round_reports/`.
 4. **Remote/on-the-fly generation for both tournament and round reports** — the clubhouse use
    case: a live report as soon as scores are in. Tournament-report stub already at
    `webapp/TODOS.md` → *Planned enhancements* → "Remote report generation (admin-triggered)";
