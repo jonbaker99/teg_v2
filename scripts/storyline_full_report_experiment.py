@@ -176,7 +176,7 @@ def _fallback_sections(plan: dict, all_beats: list) -> list:
     return []
 
 
-# The two rules below are the SHARED constants, not a paraphrase. This prompt is
+# The three rules below are the SHARED constants, not a paraphrase. This prompt is
 # bespoke to the experiment — it is not built from `build_writer_system` — which
 # is exactly how it went on drafting sections under the pre-2026-09-10 rules
 # after those rules reached every production writer. Import them; don't retype
@@ -196,7 +196,8 @@ invent scores, margins, or comparisons not present in your input.
 
 WHAT IS WORTH SAYING, and how to name it:
 """ + prompts.RANKING_RULE + """
-""" + prompts.NAMING_RULE
+""" + prompts.NAMING_RULE + """
+""" + prompts.DOUBLE_RULE
 
 
 def draft_section(storyline: dict, evidence: list, context: dict, model: Optional[str] = None) -> str:

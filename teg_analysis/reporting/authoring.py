@@ -568,6 +568,7 @@ WRITER_CONTRACT = "\n".join((
     # "Baker" in a field containing two of them.
     prompts.RANKING_RULE,
     prompts.NAMING_RULE,
+    prompts.DOUBLE_RULE,
     # Readability is not a matter of register. Both of these sat in the voice
     # half until 2026-08-17, so a `voice=` swap dropped the em-dash ban and the
     # 11 economy rules along with the house humour, which is precisely backwards:

@@ -322,6 +322,7 @@ the tournament and being gently ribbed.
 WHAT IS WORTH PUTTING IN THE PLAN — the writer can only use what you select:
 """ + prompts.RANKING_RULE + """
 """ + prompts.NAMING_RULE + """
+""" + prompts.DOUBLE_RULE + """
 
 THE SPINE — the report is built around the three competitions, in this priority order:
 1. The Trophy — the main event. The scoring metric varies by era: **Stableford** \
@@ -796,6 +797,7 @@ WHAT IS WORTH PUTTING IN THE PLAN — the writer can only use what you select:
 """ + prompts.RANKING_RULE + """
 """ + prompts.NAMING_RULE + """
 """ + prompts.DESCRIPTOR_RULE + """
+""" + prompts.DOUBLE_RULE + """
 
 THE SPINE — the report is built around the three competitions, in this priority order:
 1. The Trophy — the main event. The scoring metric varies by era: **Stableford** \
