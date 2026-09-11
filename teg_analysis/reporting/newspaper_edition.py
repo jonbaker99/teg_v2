@@ -488,32 +488,44 @@ def derive_descriptor(storyline: dict, kicker: str) -> str:
     if kicker == "TROPHY":
         return "TROPHY"
 
-    if "GREEN JACKET" in kicker or "WOODEN SPOON" in kicker:
-        # This deterministic path has no separate concept of who the actual
-        # jacket/spoon winner IS -- it can only detect the already-fine case
-        # (the player is already named in the headline, so the bare kicker is
-        # unambiguous), not fill the gap when the name is missing. Either way
-        # the safe answer is the bare kicker: erring toward printing just the
-        # kicker rather than guessing a wrong name.
-        return kicker
-
-    if kicker != "SIDEBAR":
-        return kicker
-
     from teg_analysis.core.players import get_player_dict
 
     display_names = {
         " ".join(part.capitalize() if part.isupper() else part for part in raw.split())
         for raw in get_player_dict().values()
     }
+
+    def _names_in(text: str) -> list[tuple[int, str]]:
+        lower_text = text.lower()
+        return sorted(
+            (idx, name)
+            for name in display_names
+            for idx in [lower_text.find(name.lower())]
+            if idx != -1
+        )
+
+    if "GREEN JACKET" in kicker or "WOODEN SPOON" in kicker:
+        headline = storyline.get("chosen_headline", "")
+        if _names_in(headline):
+            # Already unambiguous -- the winner/loser is named in the headline.
+            return kicker
+        # Not in the headline. This deterministic path has no separate concept
+        # of who the actual jacket/spoon winner IS, so it cannot confirm a name
+        # found only in `subject` is really the winner -- but `subject` is an
+        # editor-written label that in practice centres on that player, so a
+        # single unambiguous name found there is a reasonable signal. Anything
+        # less clean (zero or multiple names) falls back to the bare kicker
+        # rather than guessing wrong.
+        subject_names = _names_in(storyline.get("subject", ""))
+        if len(subject_names) == 1:
+            return f"{kicker} | {subject_names[0][1].upper()}"
+        return kicker
+
+    if kicker != "SIDEBAR":
+        return kicker
+
     text = f"{storyline.get('chosen_headline', '')} {storyline.get('subject', '')}"
-    lower_text = text.lower()
-    found = sorted(
-        (idx, name)
-        for name in display_names
-        for idx in [lower_text.find(name.lower())]
-        if idx != -1
-    )
+    found = _names_in(text)
     names = [name.upper() for _, name in found]
     if len(names) == 1:
         return names[0]
