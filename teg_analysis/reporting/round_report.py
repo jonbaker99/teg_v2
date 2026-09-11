@@ -261,6 +261,11 @@ the history. They will spot any factual error instantly.
 WHAT IS WORTH PUTTING IN THE PLAN — the writer can only use what you select:
 """ + prompts.RANKING_RULE + """
 """ + prompts.NAMING_RULE + """
+# NOTE: prompts.DESCRIPTOR_RULE is deliberately NOT wired in here. It sets a
+# per-story `descriptor` badge field that only exists on `DraftedStoryline`
+# (the tournament-report schema); `RoundStoryPlan` has no kicker/descriptor
+# concept at all — a round report is a single narrative, not a newspaper of
+# separate story cards. There is no field for the model to put this in.
 
 THIS IS A ROUND REPORT, NOT A TOURNAMENT REPORT.
 - The round is ONE day of the tournament: 18 holes, all players.

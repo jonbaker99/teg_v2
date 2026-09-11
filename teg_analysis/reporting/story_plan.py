@@ -795,6 +795,7 @@ the tournament and being gently ribbed.
 WHAT IS WORTH PUTTING IN THE PLAN — the writer can only use what you select:
 """ + prompts.RANKING_RULE + """
 """ + prompts.NAMING_RULE + """
+""" + prompts.DESCRIPTOR_RULE + """
 
 THE SPINE — the report is built around the three competitions, in this priority order:
 1. The Trophy — the main event. The scoring metric varies by era: **Stableford** \
@@ -1058,6 +1059,10 @@ the stake — NOT to restate the headline in longer words, and NOT to duplicate 
 `why_it_matters` verbatim (they can share facts; they should not share a sentence). A \
 reader should get the headline, then the standfirst, then want to read on — if the \
 standfirst already told them the ending, it did its job wrong.
+
+  Every `DraftedStoryline` ALSO needs `descriptor`: the badge line printed above the \
+headline, identifying WHO or WHAT the story is actually about — see the DESCRIPTOR rule \
+above for the exact naming logic (player name(s), a course, or a competition name).
 
 - `body_fallback`: **"none" is the default and the common case** — the trophy/jacket/ \
 spoon anatomy stories stand alone as the report's spine, with `discovered_storylines` \
