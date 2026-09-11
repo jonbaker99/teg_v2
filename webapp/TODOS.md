@@ -8,13 +8,25 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 - [ ] **Bestball/worstball on `/latest-round`** — show best/worst bestball and worstball positions in the round-in-context page.
 - [ ] **`/scoring/matrix`** - score type as pills; TEG / Round / 9 as tabs
-- [ ] **`/latest-teg` and `/latest-round`'s Report tabs still read the stale `_report_styled.md` /
-  `_round_M_report_styled.md` markdown-blob artefacts** (`webapp/routes/latest.py`'s `_render_report`,
-  `LATEST_TEG_TABS`/`LATEST_ROUND_TABS`), unlike `/results` and `/leaderboard`'s Report tabs, which
-  now link to `/teg-reports` (2026-09-11). Point these at `/teg-reports?teg=N` (`&round=R` for the
-  round case — the newspaper page already supports round editions) the same way, then
-  `_render_report`, `/static/teg_reports.css` and the whole `_report_styled.md` read path become
-  fully dead and can be removed in one sweep.
+- [x] **`/latest-round`'s Report tab fixed the same way (2026-09-12).** It was an HTMX tab reading
+  the stale `teg_N_round_R_report_styled.md` blob, 4th of 7 tabs. Now it's the last item in the
+  tab row and a real link to `/teg-reports?teg=N&round=R` for the specific round being viewed,
+  hidden when that TEG/round has no newspaper edition. `latest.py` gained a `report_rounds_map`
+  (`{teg: [rounds with a report]}`, via `newspaper_edition.available_rounds`) passed to
+  `latest_round.html`, since the tab row sits outside `#lr-content` and both the TEG select and
+  round pills swap it via HTMX without a page reload. **Caught mid-build**: `#lr-round-select` and
+  `#lr-round-pills` are themselves replaced via `hx-swap-oob` on every tab swap
+  (`partials/latest_round_tab.html`), so an initial version that cached those element references /
+  attached click listeners directly to the pills went stale after the first swap. Fixed by
+  re-querying fresh inside `sync()` and driving it off `htmx:afterSwap` on `#lr-content` instead —
+  verified in a real browser (Playwright) that the link's `href`/hidden state stay correct across
+  round switches both directions, not just on first load. The old `tab == "report"` branch in
+  `_latest_round_tab_context` was deleted, not left dead.
+- [ ] **`/latest-teg`'s Report tab still reads the stale `teg_N_report_styled.md` markdown-blob
+  artefact** (`webapp/routes/latest.py`'s `_render_report`, `LATEST_TEG_TABS`), unlike `/results`,
+  `/leaderboard` and now `/latest-round`'s Report tabs. Point it at `/teg-reports?teg=N` the same
+  way (last tab, real link, hidden when no edition), then `_render_report`, `/static/teg_reports.css`
+  and the whole `_report_styled.md` read path become fully dead and can be removed in one sweep.
 - [x] **`/teg-reports` TEG select moved next to the Tournament/Round pills, and both pills now
   reflect what actually exists (2026-09-12).** The select used to sit in the page title row,
   separate from the pills below it; it's now in the same `.section-controls` row as the pills

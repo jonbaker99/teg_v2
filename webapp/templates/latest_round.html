@@ -64,27 +64,27 @@
 </div>
 
 {# The tab row lives outside #lr-content, so an HTMX TEG/round change never
-   re-renders it — keep the Report link's target and visibility in sync here. #}
+   re-renders it — keep the Report link's target and visibility in sync here.
+   #lr-round-select and #lr-round-pills are themselves replaced via hx-swap-oob
+   on every tab swap (partials/latest_round_tab.html), so cached element
+   references would go stale after the first swap — re-query fresh inside
+   sync() and drive it off htmx:afterSwap rather than per-control listeners. #}
 <script>
 (function () {
     var reportRounds = {{ report_rounds_map | tojson }};
-    var tab = document.getElementById('lr-report-tab');
-    var tegSelect = document.getElementById('lr-teg-select');
-    var roundInput = document.getElementById('lr-round-select');
-    if (!tab || !tegSelect || !roundInput) return;
     function sync() {
+        var tab = document.getElementById('lr-report-tab');
+        var tegSelect = document.getElementById('lr-teg-select');
+        var roundInput = document.getElementById('lr-round-select');
+        if (!tab || !tegSelect || !roundInput) return;
         var teg = parseInt(tegSelect.value, 10);
         var round = parseInt(roundInput.value, 10);
         tab.href = '/teg-reports?teg=' + teg + '&round=' + round;
         var rounds = reportRounds[teg] || [];
         tab.hidden = rounds.indexOf(round) === -1;
     }
-    tegSelect.addEventListener('change', sync);
-    // Round pills set #lr-round-select via their own onclick before firing
-    // the HTMX request — a change event there doesn't bubble from a script
-    // assignment, so hook the same pills directly.
-    document.querySelectorAll('#lr-round-pills .pill').forEach(function (btn) {
-        btn.addEventListener('click', function () { setTimeout(sync, 0); });
+    document.body.addEventListener('htmx:afterSwap', function (evt) {
+        if (evt.target && evt.target.id === 'lr-content') sync();
     });
     sync();
 })();
