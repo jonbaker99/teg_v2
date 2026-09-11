@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/static/newspaper_preview.css">
+{% endblock %}
+
 {% block page_title %}
 <div class="page-title-area">
     <span class="page-label">History</span>
@@ -11,17 +16,13 @@
 {% if not teg_numbers %}
 <div style="padding: 3rem 0; text-align: center;">
     <p style="font-size: 1.1rem; opacity: 0.6;">No reports available yet.</p>
-    <p style="font-size: 0.85rem; opacity: 0.4; margin-top: 0.5rem;">
-        Generate one via <code>teg_analysis.reporting.style_report(teg)</code>.
-    </p>
 </div>
 {% else %}
 
-{# ---- Selectors ---- #}
+{# TEG selector — sits in the site's own content area (grey/white, per theme),
+   above the newspaper "paper" card. Round reports are temporarily off (no
+   newspaper-layout equivalent yet — teg_analysis/reporting/STATUS.md). #}
 <div class="section-controls flex flex-wrap items-center gap-4">
-
-    {# TEG dropdown — lists every TEG with any report. Changing it resets to
-       that TEG's default piece (tournament if it exists, else round 1). #}
     <form method="get" action="/teg-reports">
         <select name="teg" class="theme-select" onchange="this.form.submit()">
             {% for n in teg_numbers %}
@@ -29,42 +30,29 @@
             {% endfor %}
         </select>
     </form>
-
-    {# Report-piece pills: one per available round + Tournament (if it exists). #}
-    <div class="pill-group" role="group" aria-label="Report">
-        {% for r in available_rounds %}
-        <a class="pill{% if report_type == 'round' and r == selected_round %} pill--active{% endif %}"
-           href="/teg-reports?teg={{ selected_teg }}&report_type=round&round={{ r }}">Round {{ r }}</a>
-        {% endfor %}
-        {% if has_tournament %}
-        <a class="pill{% if report_type == 'tournament' %} pill--active{% endif %}"
-           href="/teg-reports?teg={{ selected_teg }}&report_type=tournament">Tournament</a>
-        {% endif %}
-    </div>
-
-    {# Normal / Satire — tournament reports that have a satire draft. #}
-    {% if report_type == 'tournament' and satire_available %}
-    <div class="pill-group" role="group" aria-label="Variant">
-        <a class="pill{% if variant == 'normal' %} pill--active{% endif %}"
-           href="/teg-reports?teg={{ selected_teg }}&report_type=tournament&variant=normal">Normal</a>
-        <a class="pill{% if variant == 'satire' %} pill--active{% endif %}"
-           href="/teg-reports?teg={{ selected_teg }}&report_type=tournament&variant=satire">Satire</a>
-    </div>
-    {% endif %}
-
 </div>
 
-{# ---- Pre-TEG-8 caption ---- #}
-{% if caption %}
-<p class="text-sm opacity-60 mb-4 italic">{{ caption }}</p>
-{% endif %}
-
-{# ---- Report content ---- #}
 {% if no_report_message %}
 <p class="text-muted text-sm">{{ no_report_message }}</p>
-{% elif html %}
-<div class="teg-report">{{ html|safe }}</div>
+{% else %}
+
+{% if caption %}
+<p class="np-caption">{{ caption }}</p>
 {% endif %}
 
+{# .np-page is a scoping wrapper (fonts/colour variables + reset), not a
+   full-bleed background — the paper texture lives on .np-paper itself, which
+   floats as its own card on the site's normal page background. #}
+<div class="np-page pal-a sf-contrast">
+    <div class="np-desktop" id="desktop-stage">
+        <main class="np-paper rail-s2">{{ desktop_html|safe }}</main>
+    </div>
+    <div class="np-mobile" id="mobile-stage" aria-live="polite"></div>
+</div>
+
+<script type="application/json" id="edition-data">{{ edition_json|safe }}</script>
+<script src="/static/newspaper_preview.js"></script>
+
+{% endif %}
 {% endif %}
 {% endblock %}

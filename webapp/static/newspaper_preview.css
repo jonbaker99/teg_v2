@@ -1,9 +1,16 @@
-/* Newspaper report layout — preview page (/teg-reports-preview).
+/* Newspaper report layout — /teg-reports (webapp/templates/teg_reports.html).
  *
  * Ported from webapp/report_layout_prototypes/composite.html (desktop) and
  * mobile.html (mobile pattern A) — the settled design, see that folder's
  * README.md. Only the chosen pieces are here: E1/E2 desktop arrangements
  * (E3/G1-G3 were rejected) and mobile pattern A (B/C were not shipped).
+ *
+ * `.np-page` is a SCOPING wrapper (2026-09-11) — fonts/colour variables and
+ * a CSS reset for its contents — not a full-bleed page background. The site
+ * nav and page chrome (`base.html`) stay live around it; the report page
+ * lives on the site's normal grey/white background, and the newspaper "paper"
+ * card (`.np-paper`, below) is the thing that carries the cream colour and
+ * grain texture, floating on that background like any other content card.
  *
  * The prototypes switch look via buttons; this page switches on viewport
  * width instead — the breakpoint mobile.html itself uses for "this is a real
@@ -11,87 +18,45 @@
  */
 .np-page *{ box-sizing:border-box; }
 .np-page{
-  /* Palette/type variables live on the page wrapper (not :root) so a `.pal-*`
-   * class on the same element can override them — see PALETTE SWITCH below.
-   * These are T1 Broadsheet (elements.html .pal-a), the shipped default. */
-  --paper:#F6F3EA; --ink:#211D17; --ink-soft:#66604F; --accent:#7A2420; --accent2:#7A2420;
+  /* Palette/type variables live on the wrapper (not :root) so this scope
+   * never leaks into the rest of the page. T1 Broadsheet (elements.html
+   * .pal-a), the settled choice. */
+  --paper:#F6F3EA; --ink:#211D17; --ink-soft:#66604F; --ink-contrast:#63615C; --accent:#7A2420; --accent2:#7A2420;
   --rule:#C9C2AC; --tint:#EDE8D9;
   --font-display:'Fraunces',Georgia,'Times New Roman',serif;
   --font-body:'Source Serif 4',Georgia,'Times New Roman',serif;
   --font-mono:'IBM Plex Mono','Courier New',monospace;
   --font-contrast:'Libre Franklin',Arial,sans-serif;
-  margin:0; background:var(--paper); color:var(--ink); font-family:var(--font-body);
-  background-image: radial-gradient(rgba(33,29,23,0.05) 0.55px, transparent 0.55px);
-  background-size:3.4px 3.4px;
+  color:var(--ink); font-family:var(--font-body);
 }
 
 /* ==========================================================================
-   PALETTE SWITCH (provisional — see webapp/report_layout_prototypes/README.md
-   "Still to do"). Values copied verbatim from elements.html's .pal-a/b/c/d.
-   `.pal-a` restates the default so the switch is uniform; remove this block
-   and the `?pal=` param handling in report_preview.py once a palette is
-   chosen for good.
+   PALETTE — T1 Broadsheet (elements.html .pal-a), settled 2026-09-11.
+   `.pal-a` on <body> restates the values already on `.np-page` above so the
+   two other candidate palettes (b/c/d, and the sf-roman/sf-edge/sf-italic
+   standfirst treatments and rail-s1 layout that were compared against them)
+   could be dropped once chosen — see git history / elements.html for the
+   rejected options, not kept here as dead CSS.
    ========================================================================= */
 .pal-a{
-  --paper:#F6F3EA; --ink:#211D17; --ink-soft:#66604F; --accent:#7A2420; --accent2:#7A2420;
+  --paper:#F6F3EA; --ink:#211D17; --ink-soft:#66604F; --ink-contrast:#63615C; --accent:#7A2420; --accent2:#7A2420;
   --rule:#C9C2AC; --tint:#EDE8D9;
   --font-display:'Fraunces',Georgia,'Times New Roman',serif;
   --font-body:'Source Serif 4',Georgia,'Times New Roman',serif;
   --font-mono:'IBM Plex Mono','Courier New',monospace;
   --font-contrast:'Libre Franklin',Arial,sans-serif;
 }
-.pal-b{
-  --paper:#FBFAF8; --ink:#171A16; --ink-soft:#5D655B; --accent:#1F5B44; --accent2:#B4832B;
-  --rule:#E2E1DA; --tint:#F1F0EA;
-  --font-display:'Libre Franklin',Arial,sans-serif;
-  --font-body:'Lora',Georgia,'Times New Roman',serif;
-  --font-mono:'Libre Franklin',Arial,sans-serif;
-  --font-contrast:'Lora',Georgia,'Times New Roman',serif;
-}
-.pal-c{
-  --paper:#F3EFE2; --ink:#1B2430; --ink-soft:#56606D; --accent:#B32A2A; --accent2:#1F5C3F;
-  --rule:#CFC7AE; --tint:#EAE3CC;
-  --font-display:'Playfair Display',Georgia,serif;
-  --font-body:'Source Serif 4',Georgia,'Times New Roman',serif;
-  --font-mono:'IBM Plex Mono','Courier New',monospace;
-  --font-contrast:'Libre Franklin',Arial,sans-serif;
-}
-.pal-d{
-  --paper:#FAF9F6; --ink:#0E0E0C; --ink-soft:#514F49; --accent:#D3242C; --accent2:#F0BA1F;
-  --rule:#D8D5CC; --tint:#F0EEE7;
-  --font-display:'Anton','Arial Narrow',sans-serif;
-  --font-body:'Libre Franklin',Arial,sans-serif;
-  --font-mono:'IBM Plex Mono','Courier New',monospace;
-  --font-contrast:'Source Serif 4',Georgia,'Times New Roman',serif;
-}
 
 /* ==========================================================================
-   STANDFIRST SWITCH (provisional — see README.md "Still to do"). One class on
-   the page wrapper cascades to every standfirst. Font-size/margin stay on the
-   base .lead-standfirst/.sub-standfirst/.m-sf rules below; only style/colour/
-   edge vary here, from elements.html's H1 (italic), H2 (roman) and H4 (edge).
-   `sf-italic` reproduces today's look exactly. Remove alongside the `?sf=`
-   handling in report_preview.py once a treatment is chosen.
+   STANDFIRST — contrast treatment (elements.html H4-adjacent), settled
+   2026-09-11: the standfirst sets in `--font-contrast`, the opposite type
+   family from the headline's `--font-display`, upright, in a neutral grey
+   (`--ink-contrast`) rather than the warmer `--ink-soft` used elsewhere on
+   the page. A sans reads bigger than a serif at the same px, so the sizes
+   below are nudged down so the standfirst doesn't out-weigh the headline.
    ========================================================================= */
-.sf-italic .lead-standfirst,.sf-italic .sub-standfirst,.sf-italic .m-sf{
-  font-style:italic; color:var(--ink-soft); padding-left:0; border-left:none;
-}
-.sf-roman .lead-standfirst,.sf-roman .sub-standfirst,.sf-roman .m-sf{
-  font-style:normal; color:var(--ink-soft); padding-left:0; border-left:none;
-}
-.sf-edge .lead-standfirst,.sf-edge .sub-standfirst,.sf-edge .m-sf{
-  font-style:normal; color:var(--ink-soft); padding-left:0.9rem; border-left:3px solid var(--accent);
-}
-/* Contrast: the standfirst switches to `--font-contrast` — the opposite
- * type family from the headline's `--font-display` (a sans under a serif
- * headline, a serif under a sans one; see each `.pal-*` block above), always
- * upright. A sans reads bigger than a serif at the same px, so the sizes
- * below are nudged down from the italic/roman/edge default so the standfirst
- * doesn't out-weigh the headline; the three-class overrides for `.m-sf` beat
- * `.idx-lead .m-sf`/`.article .m-sf` on specificity regardless of source
- * order, so they can live in this switch block with the rest of `sf-*`. */
 .sf-contrast .lead-standfirst,.sf-contrast .sub-standfirst,.sf-contrast .m-sf{
-  font-family:var(--font-contrast); font-style:normal; font-weight:500; color:var(--ink-soft);
+  font-family:var(--font-contrast); font-style:normal; font-weight:500; color:var(--ink-contrast);
   padding-left:0; border-left:none; letter-spacing:0.003em;
 }
 .sf-contrast .lead-standfirst{ font-size:0.92rem; }
@@ -110,19 +75,11 @@
 .np-page table{ border-collapse:collapse; }
 .np-page :focus-visible{ outline:2.5px solid var(--accent); outline-offset:2px; }
 
-/* Provisional scaffolding for comparing presets during layout review — not
- * part of the design. Kept as one block so it is easy to delete outright
- * (together with the query-param handling in report_preview.py and the
- * `make_url`/switch markup in teg_reports_preview.html) once choices settle. */
-.np-switcher{
-  display:flex; flex-wrap:wrap; align-items:center; gap:0.5rem 1.2rem; padding:0.6rem 1rem;
-  background:#F4F3EF; border-bottom:1px solid #D8D6CE; font-family:var(--font-mono);
-  font-size:0.72rem; text-transform:uppercase; letter-spacing:0.06em;
+/* Pre-TEG-8 caption, printed above the paper card in the site's own type
+ * (not the newspaper scope) — it's a note about the report, not part of it. */
+.np-caption{
+  font-size:0.85rem; font-style:italic; opacity:0.65; margin:0 0 1rem;
 }
-.np-switcher .np-group{ display:flex; align-items:center; gap:0.35rem; }
-.np-switcher a{ color:var(--ink-soft); text-decoration:none; padding:0.2rem 0.5rem; border-radius:4px; }
-.np-switcher a.active{ background:var(--accent); color:#F4F3EF; }
-.np-switcher .np-label{ color:var(--ink-soft); opacity:0.7; margin-right:0.1rem; }
 
 /* ==========================================================================
    DESKTOP — lead + rail, sub-articles packed into full-width rows by

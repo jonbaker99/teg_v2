@@ -8,17 +8,23 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 - [ ] **Bestball/worstball on `/latest-round`** — show best/worst bestball and worstball positions in the round-in-context page.
 - [ ] **`/scoring/matrix`** - score type as pills; TEG / Round / 9 as tabs
-- [ ] **PRIORITY (2026-09-11): Newspaper report layout — switch `/teg-reports` over.** It's now
-  better than the pre-existing tournament reporting (row-packed layout, normalised type, descriptor
-  badges, the double rule, a redesigned records appendix) and is wired into the site at
-  `/teg-reports-preview` (not linked from nav, `/teg-reports` untouched). Parser lives in
-  `teg_analysis/reporting/newspaper_edition.py` (`build_edition`, `render_desktop_html`,
-  `plan_rows`), shared by the preview route and the CLI script. All 17 completed TEGs now have
-  storyline-first artefacts, so the preview's TEG switcher covers all of them.
-  Remaining before the switch-over: (1) decide whether
-  `/teg-reports-preview` replaces `/teg-reports` outright or the two coexist, and update
-  `webapp/routes/reports.py` / `teg_reports.html` accordingly; (2) a real design pass on the
-  preview's own chrome (currently a bare TEG-switcher bar, not part of the settled design).
+- [x] **Newspaper report layout — switched `/teg-reports` over (2026-09-11).** Tournament reports
+  now render through `teg_analysis/reporting/newspaper_edition.py` (`build_edition`,
+  `render_desktop_html`, `plan_rows`) at `/teg-reports` itself; `/teg-reports-preview` is retired.
+  `webapp/routes/reports.py` renders `templates/teg_reports.html`, which **extends `base.html`** —
+  site nav and chrome stay in place. `.np-page` is a scoping wrapper (fonts/colour variables, CSS
+  reset), not a page background; the TEG dropdown sits in the normal site content area below the
+  "History / TEG Reports" header, and the newspaper "paper" card (`.np-paper`, own cream colour +
+  grain texture + border/shadow) floats on the site's own grey/white page background beneath it,
+  like any other content card (Jon's call, after an initial standalone-page version read as
+  jarring). Round reports are **temporarily dropped from the UI entirely** (Jon's call, same
+  session) — no newspaper-layout equivalent exists yet (item 3 below); re-add a round path once
+  that lands, built the same way rather than reviving the old markdown renderer. The satire-draft
+  variant was also dropped from the UI (the drafts still exist on disk, unreachable from any
+  route). The provisional `?pal=`/`?sf=`/`?rail=` preview switches were locked to
+  `pal=a`/`sf=contrast`/`rail=s2` (the contrast standfirst gained its own neutral grey,
+  `--ink-contrast`, instead of reusing the warmer `--ink-soft`) and the switcher UI + the other
+  three palettes/standfirst treatments were removed from `newspaper_preview.css`.
   Design record: `webapp/report_layout_prototypes/README.md`. Pipeline context: `DATA_FLOW.md` §10.
   First of four sequenced to-dos — see `teg_analysis/reporting/STATUS.md` → START HERE → *Next*.
 

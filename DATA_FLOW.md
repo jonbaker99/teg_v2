@@ -40,10 +40,12 @@ artefacts sit side by side (full map: [§10](#10-report-build--scores--published
 
 - **Legacy five-stage** — `teg_N_story_plan.json` → `_dry_draft.md` → `_report_A_around_draft.md` →
   `_report_final.md` → `_report_styled.md`, the same set with a `round_R_` infix for round reports.
-  All 17 TEGs. `_report_styled.md` is the only one `/teg-reports` reads.
+  All 17 TEGs, but `_report_styled.md` is no longer read by any route — round reports (still legacy)
+  are temporarily unserved, and tournament reports moved to storyline-first (2026-09-11).
 - **Storyline-first** — `teg_N_storyline_plan.json` → `_report_storylinedraft.md` →
-  `_report_storylinefirst.md` → `_report_storylinefirst_styled.md`. TEGs 14, 16 and 18 only. These
-  are the input to the newspaper edition, not to `/teg-reports`.
+  `_report_storylinefirst.md` → `_report_storylinefirst_styled.md`. All 17 TEGs. `_storyline_plan.json`
+  + `_report_storylinefirst_styled.md` are the two artefacts `/teg-reports` reads, via
+  `newspaper_edition.build_edition()`.
 
 Plus experiment snapshots and archived generations. Two sibling directories are **gitignored and
 safe to delete**: `commentary/variants/<name>/` is a parallel artefact set for one model
@@ -344,11 +346,13 @@ live in `teg_analysis/reporting/README.md`; per-file detail in that folder's `AR
 | Runs via | `python -m teg_analysis.reporting.backfill --tegs N` | `python scripts/storyline_full_report_experiment.py --tegs N` |
 | Shape | one flowing document, rounds as blocks | one lead story + separate articles |
 | Final artefact | `teg_N_report_styled.md` | `teg_N_report_storylinefirst_styled.md` |
-| Reaches a reader via | `/teg-reports` — **live** | the newspaper edition — **not live yet**, see below |
+| Reaches a reader via | superseded — see below | the newspaper edition, `/teg-reports` — **live** |
 
-Neither has replaced the other. The legacy chain is what the site serves today; storyline-first is
-what the settled newspaper layout is built on, and switching `/teg-reports` over to it is the open
-decision (`webapp/report_layout_prototypes/README.md` → "Still to do").
+**`/teg-reports` switched over to the storyline-first / newspaper-edition path on 2026-09-11.** The
+legacy chain's final artefact (`teg_N_report_styled.md`) is no longer read by any route; only
+storyline-first's `teg_N_report_storylinefirst_styled.md` + `teg_N_storyline_plan.json` are. Round
+reports still run the legacy chain (no storyline-first round equivalent yet — see below) and are
+temporarily not served at all (`teg_analysis/reporting/STATUS.md` → START HERE → *Next*, item 2).
 
 ### The path
 
@@ -386,14 +390,12 @@ flowchart TD
     P --> G["GitHub repo"]
     G --> R["read_text_file()<br/>Railway volume, GitHub fallback"]
 
-    R --> W1["/teg-reports<br/>webapp/routes/reports.py<br/>markdown lib + teg_reports.css"]
     R --> NE["newspaper_edition.build_edition(teg)<br/>free, deterministic, NO LLM"]
 
-    NE --> W2["/teg-reports-preview<br/>webapp/routes/report_preview.py<br/>live, not linked from nav"]
+    NE --> W1["/teg-reports<br/>webapp/routes/reports.py<br/>render_desktop_html() + edition JSON"]
     NE --> PR["scripts/build_newspaper_edition<br/>→ editions.json + inlines it<br/>→ /report-layouts/ prototypes"]
 
     W1 --> BR["Browser"]
-    W2 -.-> BR
 ```
 
 ### Hop by hop
@@ -415,7 +417,7 @@ Everything above `assemble_bundle` is shared; everything below it forks.
 | 6L | `report_around_draft()` — the voice pass | `teg_N_report_A_around_draft.md` | 7L | **yes** |
 | 7L | `repetition_lint()` | `teg_N_report_final.md` — **canonical** | 8L, D3 | **yes** (Haiku) |
 | — | `verify_report()` — D3 mechanical checks | *(findings printed)* | you | no |
-| 8L | `style_report()` — standings, records, CSS hooks | `teg_N_report_styled.md` | `/teg-reports` | no |
+| 8L | `style_report()` — standings, records, CSS hooks | `teg_N_report_styled.md` | nothing live (round reports only, temporarily unserved) | no |
 
 **Storyline-first** — `scripts/storyline_full_report_experiment.py --tegs N` does 4S–7S. `--from` picks where to start and `--to` where to stop, so you only pay for the stages you are changing: `--from draft` re-enters at 5S reusing the plan, `--from voice` at 6S reusing the draft, `--to storylines` stops after 4S. Same freeze-and-restart idea as the legacy chain's restart recipes — full table in `teg_analysis/reporting/README.md` → *Running only the stages you need*:
 
@@ -431,8 +433,9 @@ Everything above `assemble_bundle` is shared; everything below it forks.
 runs on any TEG that has *either* plan, not just the three with both.
 
 **Round reports** run the same five stages against one round, writing the same filenames with a
-`round_R_` infix (`round_report.py`). `/teg-reports` reads them the same way. Storyline-first has no
-round equivalent.
+`round_R_` infix (`round_report.py`). Storyline-first has no round equivalent yet (tracked in
+`teg_analysis/reporting/STATUS.md`), and round reports are temporarily not served by any route
+(2026-09-11, pending that equivalent) — `round_report.py`'s output still lands on disk, just unread.
 
 **Publication** — the same for both, and it is *not* the app's write path:
 
@@ -440,14 +443,9 @@ round equivalent.
 |---|---|---|---|---|
 | 9 | `git push` — report generation is offline; nothing goes through `write_file` | GitHub | the webapp | no |
 | 10 | `read_text_file()` — volume first, GitHub fallback, caches the hit | Railway volume | the routes | no |
-| 11a | `/teg-reports` renders `teg_N_report_styled.md` through the `markdown` library | HTML | the reader | no |
-| 11b | `newspaper_edition.build_edition(teg)` parses the styled MD **plus** the storyline plan into one edition dict | *(memory)* | 12a, 12b | no |
-| 12a | `render_desktop_html()` + edition JSON → `/teg-reports-preview` | HTML | the reader — live, but not linked from the nav | no |
+| 11 | `newspaper_edition.build_edition(teg)` parses the styled MD **plus** the storyline plan into one edition dict | *(memory)* | 12a, 12b | no |
+| 12a | `render_desktop_html()` + edition JSON → `/teg-reports` (`webapp/routes/reports.py`, `templates/teg_reports.html`) | HTML | the reader — live | no |
 | 12b | `scripts/build_newspaper_edition` → writes `editions.json` **and** inlines it into the prototype pages (one command; `scripts/inline_editions` still runs standalone to re-inline without a rebuild) | `editions.json`, `composite.html` etc. | `/report-layouts/` | no |
-
-> `/teg-reports-preview` was unreachable for a merge regression (its router was dropped from
-> `webapp/app.py`); **fixed on `main` in `bb614c0`.** It renders, but is deliberately not linked
-> from the nav, and only TEGs 14/16/18 have the artefacts it needs.
 
 ### Three things that are easy to get wrong
 

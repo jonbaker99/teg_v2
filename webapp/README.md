@@ -751,12 +751,20 @@ HTML builders).
   light + dark) live in `mobile_mockups/` and are served at `/mockups/` when the
   webapp runs. Awaiting a direction decision before the broad implementation.
   The newspaper report layout lives in `report_layout_prototypes/`, served at
-  `/report-layouts/`. The design is settled — `composite.html` is the desktop
-  design and `mobile.html` the mobile one — and is wired in as a preview at
-  `/teg-reports-preview` (`routes/report_preview.py`; not linked from the nav,
-  `/teg-reports` itself untouched). Start at that folder's `README.md`, which
-  carries the chosen elements, the composition rule and what remains before
-  switching `/teg-reports` over to it.
+  `/report-layouts/` as the design record. The design is settled —
+  `composite.html` is the desktop design and `mobile.html` the mobile one —
+  and is live at `/teg-reports` for tournament reports (2026-09-11;
+  `routes/reports.py` builds the edition via
+  `teg_analysis.reporting.newspaper_edition` and renders
+  `templates/teg_reports.html`, which extends `base.html` — the site nav and
+  page chrome stay in place. `.np-page` scopes the newspaper design's fonts,
+  colours and CSS reset to its content only; the "paper" card
+  (`.np-paper`) carries the cream colour and grain texture and floats on the
+  site's own grey/white background, same as any other content card. Round
+  reports are temporarily dropped from the UI (no newspaper-layout
+  equivalent yet — tracked in `teg_analysis/reporting/STATUS.md`). Start at
+  `report_layout_prototypes/README.md` for the chosen elements and
+  composition rule.
   - **First slice shipped:** the **Scorecard** page now renders a portrait
     (holes-as-rows) layout on phones (`≤640px`) for all three views, with a
     Gross/Stableford toggle and dark-ready (inert) colour tokens. Desktop/iPad

@@ -13,7 +13,7 @@ from fastapi.templating import Jinja2Templates
 from webapp.routes import (
     leaderboard, charts, records, player, scorecard,
     history, latest, performance, scoring, scorecards,
-    eclectic, reports, report_preview, contents,
+    eclectic, reports, contents,
     admin, admin_round_setup, admin_teg_setup, admin_live_round, live_round,
     admin_new_round,
 )
@@ -74,9 +74,6 @@ app.include_router(performance.router)
 app.include_router(scoring.router)
 app.include_router(scorecards.router)
 app.include_router(reports.router)
-# Newspaper-layout preview page — NOT linked from base.html's nav. See
-# webapp/routes/report_preview.py and webapp/report_layout_prototypes/README.md.
-app.include_router(report_preview.router)
 app.include_router(contents.router)
 app.include_router(admin.router)
 app.include_router(admin_new_round.router)

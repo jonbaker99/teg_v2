@@ -634,10 +634,10 @@ def test_restyle_voice_composes_guardrails_from_the_shared_constant():
     from unittest.mock import patch
     from teg_analysis.reporting import authoring
 
-    src = open("data/commentary/teg_17_report_final.md").read()
+    src = open("data/commentary/archive 2026 v3/teg_17_report_final.md").read()
     with patch.object(authoring.llm, "generate_text", return_value=(src, {})) as m:
         authoring.restyle_voice(17, "VOICE: drier.", "unittest_tmp",
-                                style=False, verify=False)
+                                source_label="storylinedraft", style=False, verify=False)
     system = m.call_args[0][0]
     assert "restyle, not a rewrite" in system          # the contract
     assert "VOICE: drier." in system                    # the caller's voice
@@ -671,7 +671,7 @@ def test_restyle_voice_blames_only_faults_it_introduced():
     from teg_analysis.reporting import authoring
     import os
 
-    base = open("data/commentary/teg_17_report_final.md").read()
+    base = open("data/commentary/archive 2026 v3/teg_17_report_final.md").read()
     # 'all week' trips the not_a_week check — a TEG is four consecutive days.
     src = base + "\n\nThey played well all week.\n"
     src_path = "data/commentary/teg_17_report_unittest_src.md"
@@ -719,7 +719,7 @@ def test_standings_are_deterministic_when_players_are_tied():
 
 def test_style_text_is_idempotent():
     from teg_analysis.reporting.render import style_text
-    text = open("data/commentary/teg_17_report_final.md").read()
+    text = open("data/commentary/archive 2026 v3/teg_17_report_final.md").read()
     assert style_text(17, text) == style_text(17, text)
 
 

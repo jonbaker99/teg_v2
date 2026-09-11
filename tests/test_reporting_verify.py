@@ -173,8 +173,12 @@ def test_format_findings_counts_severities():
 # ---------------------------------------------------------------------------
 def test_verify_report_runs_against_a_real_report():
     # TEG 17 is current-vintage and has a complete artefact chain. (TEG 14, the
-    # usual anchor, is missing its report_final.md — known issue 14.)
-    findings = verify_report(17)
+    # usual anchor, is missing its report_final.md — known issue 14.) The legacy
+    # chain was archived to `archive 2026 v3/` once /teg-reports stopped reading
+    # it (2026-09-11); read from there rather than the (now storyline-first-only)
+    # canonical path.
+    text = open("data/commentary/archive 2026 v3/teg_17_report_final.md").read()
+    findings = verify_report(17, text=text)
     assert all(isinstance(f, Finding) for f in findings)
 
 
@@ -186,11 +190,13 @@ def test_teg10_r3_arithmetic_error_is_fixed():
     report generated before the em-dash ban trips it, which is the check working,
     not the arithmetic regressing. Same pattern as the TEG 5 beat-id guard below.
     """
-    findings = verify_report(10, round_num=3)
+    text = open("data/commentary/archive 2026 v3/teg_10_round_3_report_final.md").read()
+    findings = verify_report(10, round_num=3, text=text)
     assert [f for f in findings if f.rule == "arithmetic_claims"] == []
     assert [f for f in findings if f.severity == "error"] == []
 
 
 def test_teg5_beat_ids_are_stripped():
     """TEG 5 shipped 41 raw beat IDs to readers; they were removed."""
-    assert [f for f in verify_report(5) if f.rule == "no_beat_ids"] == []
+    text = open("data/commentary/archive 2026 v3/teg_5_report_final.md").read()
+    assert [f for f in verify_report(5, text=text) if f.rule == "no_beat_ids"] == []

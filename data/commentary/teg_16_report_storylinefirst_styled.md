@@ -1,4 +1,4 @@
-# Two Spoons, Then This {.report-title}
+# Never Headed: Neumann's Long Climb Ends at Estoril {.report-title}
 
 <p class="dateline">TEG 16 | Lisbon Coast, Portugal | 2023</p>
 
@@ -9,49 +9,66 @@
   <p><strong>Wooden Spoon:</strong> Alex Baker (3rd Spoon)</p>
 </section>
 
-## Stuart Neumann's first Trophy — 156 points, 13 clear, and never headed after the opening afternoon
+## Stuart Neumann, twice a Spoon holder and never a champion, leads the TEG 16 Trophy wire to wire and wins by 13
 <!-- storyline: trophy -->
 
-**Neumann's first Trophy**
+**Neumann leads from Troia onwards, and the margin only grows**
 
-Stuart Neumann won the Trophy at TEG 16 on the Lisbon Coast with 156 Stableford points, finishing 13 clear of Gregg Williams. It is the second-best of his own career. A man can wait a long time for a first Trophy. Neumann waited, and then won it by rather more than he needed to.
+Stuart Neumann won the TEG 16 Trophy with 156 Stableford points, finishing 13 clear of Gregg Williams. It is the second-highest total of his career.
 
-The margin was built early and never surrendered. He held the Trophy lead after round two at Troia, still held it after round three at Penha Longa, and carried it through the closing round at Estoril. Williams, meanwhile, led the TEG 16 Green Jacket standings at each of those same checkpoints. For three days the two of them occupied separate thrones, and neither gave an inch in his own.
+The lead was established early and never handed back. Neumann headed the standings after the second round at Troia, headed them again after the third at Penha Longa, and was still there when Estoril closed the matter. Williams led the Green Jacket on gross throughout the same stretch. The two competitions ran on parallel tracks and never once looked like meeting.
 
-The final round was not flawless. At Estoril's 8th, a par 4 and the hardest hole on the card at stroke index 1, Neumann took nine. A quintuple bogey. Worth no points at all, which is to say the hole may as well not have happened, and in scoring terms it did not. The lead never so much as shifted in its seat. That is what a cushion is for.
+The golf was not immaculate. He arrived at Estoril's 8th, a par four and the hardest hole on the card at stroke index 1, with the title effectively banked. He made nine. A quintuple bogey, worth no points whatsoever. It was an act of serene indifference to his own scorecard, the sort a man can afford when he is 13 points clear, and it cost him nothing beyond tidiness.
 
-Estoril otherwise gave him his best golf of the four days. His 92 there was a course personal best, 14 strokes better than the 106 he posted on his only previous visit in TEG 15. It was the one venue of the four where he improved on his own history, and he chose the day the Trophy was settled to do it.
+Estoril otherwise produced his best golf of the four days. His 92 there was a course personal best on his second visit, fourteen strokes better than the 106 he posted at the same venue in TEG 15. He did not improve on his previous marks at Penha Longa or Oitavos Dunes, and Troia was new ground for the whole field. But the Trophy is decided on points across four rounds, and nobody accumulated them as steadily as he did.
 
-## David Mullin: from the bottom of the Spoon race in R1 to the Estoril course record in R4
+## David Mullin answers a wrecked Penha Longa round with an 80 at Estoril, the lowest gross TEG has recorded on the course
+<!-- storyline: d0 -->
+
+**Mullin rewrites Estoril**
+
+David Mullin's tournament turned on a single afternoon. His third round at Penha Longa, the Robert Trent Jones Jr. mountain parkland at Sintra, came apart for a gross 98 and 30 Stableford points, thirteen strokes worse than his last visit and thirteen adrift of the 85 he had posted there in TEG 15. The damage was concentrated at the 16th, the hardest hole on the card, where he took eight for no points at all. He then made two pars to finish, which is the golfing equivalent of straightening the pictures on the way out of a burning house.
+
+What followed at Estoril was the best round TEG has recorded on the Mackenzie Ross parkland. Mullin went round in 80 gross, taking six strokes off the previous course record of 86 set across six earlier visits, and beating his own 94 there from TEG 15 by fourteen. It was worth 45 points, a fifteen-point improvement on the day before.
+
+It was not untroubled. A birdie at the 2nd and a par at the 3rd gave way to bogeys at the 4th and 5th and a double bogey at the 6th, before a birdie at the 7th arrested the decline. The scoring came in a burst through the middle: a bogey at the 11th and pars at the 12th and 13th brought nine points in three holes, and he closed with pars at the 16th and 17th.
+
+For context on how far he had travelled, Mullin had been bottom of the TEG 16 Wooden Spoon race by the 10th hole of round one, after a triple bogey at Oitavos Dunes.
+
+## Both Baker brothers come apart on the same stretch of Penha Longa's back nine, sharing a 10 and a 9 at the 12th
 <!-- storyline: d1 -->
 
-David Mullin's tournament ended a very long way from where it started. At Oitavos Dunes in the opening round he ran up a triple-bogey seven at the 10th, a stroke index 4 par four, and the zero points dropped him from second to fifth in the TEG 16 Wooden Spoon race. Fifth in the Spoon race is not a mid-table sort of fifth. It is the bottom of the pile. Round three at Penha Longa was worse in places: a quadruple-bogey eight at the 16th, the hardest hole on the card, after which he composed himself and parred 17 and 18 like a man tidying a room he had just set fire to. The round came to 30 points, and his 98 there was well adrift of his previous best at the course.
+The third round at Penha Longa, the Atlantic Course at Sintra, dismantled both Bakers in the same place, at the same time, with no apparent discrimination between them. The trouble began at the 11th, a par 4 and the hardest hole on the card, where Jon Baker and Alex Baker each made 6. It deepened at the 12th, a par 5 rated stroke index 17 and therefore, on paper, the gentlest hole on the property. Jon took 10, a quintuple bogey. Alex took 9. The stroke index had clearly been drawn up by an optimist.
 
-Estoril, on the Tuesday, was a different matter. Mullin birdied the 2nd and parred the 3rd, then wobbled through a bogey-bogey-double stretch at the 4th, 5th and 6th before a birdie at the 7th stopped the slide. The back nine simply held. Nine points from the 11th, 12th and 13th, with pars at 12 and 13, and two more pars at 16 and 17 to finish.
+Neither man found the exit quickly. Jon followed with a quadruple-bogey 8 at the 13th, completing a three-hole run from the 11th that cost him 11 shots to par and yielded exactly one Stableford point. Alex made 7 at the 13th and 7 again at the 14th, twelve shots dropped across four holes, with no net par anywhere between the 12th and the 14th.
 
-The total was 45 points, a 15-point improvement on round three. The gross number mattered more. His 80 set a new course record at Estoril, beating the previous mark of 86 established across six prior visits, and bettered his own best there, a 94 at TEG 15, by fourteen strokes. Four days earlier he had been last in the race for the Spoon. Golf is not a fair sport, but it is occasionally a generous one.
+Jon signed for 97 at a course where he had previously gone round in 85, twelve strokes better than this. Alex signed for 106, which matched his own best score at Penha Longa, set back in TEG 8. Consistency of a sort.
 
-## The Baker brothers and Penha Longa's 12th / Alex Baker's third Wooden Spoon, back-to-back, 127 points — and two all-time course-worst records to go with it
-<!-- storyline: d0,spoon -->
+Jon's difficulties travelled with him to Estoril the following day, where he took 8 at the par-4 11th, the second-hardest hole there. It is a measure of the round that he still came home in 93, three shots better than his previous best at the course.
 
-Alex Baker's tournament began badly and then declined to change course. In the first round at Oitavos Dunes he took nine at the 1st, nine at the 11th and ten at the 17th, signing for 113 gross. That is a new course-worst for Oitavos, beating the previous mark of 111 set across twelve prior visits. Twelve visits' worth of human frailty, surpassed before lunch on day one. At Troia the next day the damage was more concentrated: thirteen shots dropped over the five holes from the 13th to the 17th, three triples followed by two doubles.
-
-Round three took the field to Penha Longa, where both Bakers found the same piece of ground. Jon Baker made a double bogey six at the 11th, then took ten at the par-five 12th, a quintuple bogey and no points, and followed it with an eight at the 13th. Eleven shots gone in three holes, three holes without a net par. It was his only round of the tournament in which he failed to improve on a previous visit: 97 gross at a course where his prior best was 85.
-
-Alex was on the same holes, doing much the same thing at a marginally gentler gradient. Double bogey at the 11th, then a nine at the 12th for quadruple bogey, then a seven at the 13th and a seven at the 14th. Twelve shots dropped across four holes and, like his brother, three holes from the 12th onward without a net par. Whatever the 12th at Penha Longa is, it is in the family.
-
-The final round at Estoril separated them. Jon's one lapse came at the 11th, the hardest hole on the card, where he made an eight, and that was the extent of it. Alex's round was a lapse with holes attached. Nine at the 1st. Eight at the 3rd. Nine at the 6th. Fourteen shots bled over the six holes from the 5th to the 10th, every single one a double or worse, an unbroken run of ruin conducted with no apparent loss of composure. Then the 12th, a par four, where he took eleven. A septuple bogey, and the worst score he has ever recorded on a par four in his life. The round came to 107 gross, a second course-worst of the four days, exceeding Estoril's previous high of 106 across six prior visits. He finished on 127 points and collected the Wooden Spoon, his third, and the second in a row. He did not merely lose. He amended the record books at two separate venues while doing it.
-
-## Gregg Williams's second Green Jacket, +66, by 16 shots
+## Gregg Williams retains the Green Jacket with the lowest gross total of his TEG career, pulling 16 clear of David Mullin
 <!-- storyline: jacket -->
 
-Gregg Williams's second Green Jacket was never really in doubt, and the final margin, 16 shots clear of David Mullin, says as much. His gross total of +66 is comfortably the best of his own career. It was, by any measure, thoroughly deserved.
+**Williams takes the Jacket by 16, and does it with his best gross of all**
 
-It was also not tidy. Troia, a course none of the field had seen before, produced a 94 and two of his worst passages of the tournament: four holes from the 8th without a net par, then three straight doubles from the 13th, six gross shots gone in as many holes.
+Gregg Williams won the TEG 16 Green Jacket at +66, sixteen shots clear of David Mullin. It is the lowest gross total he has recorded in a TEG, the best of his career on that measure.
 
-Penha Longa on the Monday was similarly uneven. A triple at the 3rd and a double at the 4th were answered at once with a birdie at the short 5th, a repair immediately undone by a bogey-triple-double run through the 6th, 7th and 8th. He then steadied himself, playing the 11th through the 15th in level par and collecting nine points across the last three of those. His 87 was five worse than his previous visit here.
+It was not achieved cleanly. Troia, a first visit for the field, was where he leaked most: four holes without a net par from the 8th, then three consecutive double bogeys at 13, 14 and 15, six shots to par surrendered in a row and no sign of anybody stopping it. He signed for 94. At Penha Longa the next day he made a triple at the 3rd and a double at the 4th, then a birdie at the 5th to steady things, then a bogey, a triple and a double through 6 to 8 to unsteady them again. The round only settled late: five holes from the 11th without dropping a gross shot, including nine Stableford points across 13 to 15. His 87 was five worse than his previous best there.
 
-Estoril produced both his best round and his loudest mistake. The 80 was a course best by six on his only prior visit, and it arrived despite an eight at the par-four 14th, a quadruple bogey, and a double at the 9th that ended a run of three straight pars. He won the Jacket by 16. He did not avoid the wreckage. He was simply the man whose wreckage cost him least.
+The finish was the point. At Estoril he ran three pars from the 6th for another nine points, dropped a double at the 9th, and took eight at the par-four 14th. He still went round in 80, six better than his 86 there in TEG 15 and a course best. Mullin returned the same number on the same afternoon, which rather took the shine off the exclusivity, if not the Jacket.
+
+## Alex Baker takes a second consecutive Wooden Spoon and sets course-worst records at both Oitavos Dunes and Estoril on the way
+<!-- storyline: spoon -->
+
+**Baker's Spoon comes with two course records nobody wants**
+
+Alex Baker took the TEG 16 Wooden Spoon with 127 points, and collected two course-worst marks en route, which suggests a man committed to leaving a mark on the record books by any available method.
+
+The first arrived at once. His 113 gross at Oitavos Dunes in round one is the highest score recorded on the course, beating the previous worst of 111 set across twelve earlier visits. Three holes did most of it: a nine at the 1st, another nine at the 11th, and a ten at the 17th. It was also ten strokes worse than his own best at Oitavos, the 103 he posted in TEG 15.
+
+Troia, new to the roster, offered him a five-hole slide from the 13th to the 17th in which he dropped thirteen shots to par. Penha Longa produced a 106, level with his best previous round there, and by that stage level was a triumph.
+
+Estoril supplied the second record. Baker opened with a nine at the 1st, added an eight at the 3rd and a nine at the 6th, and between the 5th and the 10th leaked fourteen shots, three of those holes passing without a net par. Then came the 12th. Eleven strokes. A septuple bogey, and the worst score relative to par he has recorded on any hole in TEG history. The round finished at 107 gross, above Estoril's previous worst of 106 from six prior visits, and eight strokes adrift of the 99 he shot there in TEG 15. Two courses will remember him. Neither fondly.
 
 ## Standings by round
 

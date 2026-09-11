@@ -65,9 +65,10 @@ Everything else in `data/commentary/` is a snapshot or an experiment — see the
 
 ## The storyline-first files
 
-A parallel set, written only for **TEGs 14, 16 and 18** by
-`scripts/storyline_full_report_experiment.py --tegs N`. It never writes `report_final.md` or
-`report_styled.md`, so the two chains cannot collide.
+Written by `scripts/storyline_full_report_experiment.py --tegs N`, now present for every TEG 2–18
+(confirmed 2026-09-11 during the `data/commentary/` cleanup — stale here since before then, this
+section undercounted it as "TEGs 14, 16 and 18 only"). It never writes `report_final.md` or
+`report_styled.md`, so it never collided with the now-archived legacy chain.
 
 | File | What it is | Made by | Read by |
 |---|---|---|---|
@@ -569,25 +570,28 @@ fall flat on a blowout; 17 and 12 are the natural second picks.
 
 ## Everything else in the folder
 
-Decoder for the ~40 other files. None of these are read by anything; they're history.
+**Cleaned up 2026-09-11** (`teg_analysis/reporting/STATUS.md` → START HERE, item 2), once `/teg-reports`
+stopped reading the legacy chain for tournaments. 308 of the ~383 loose top-level files moved into
+`archive 2026 v3/` unmodified (filenames unchanged); 7 zero-value prompt/inspection dumps were deleted
+outright. What's left loose per TEG is only the current storyline-first pipeline's own files — see
+[The storyline-first files](#the-storyline-first-files). None of the patterns below are read by
+anything; they're history, now living in `archive 2026 v3/` rather than loose.
 
 | Pattern | What it is |
 |---|---|
-| `..._report_styled.md` | **the live report** — what the site renders |
+| `..._dry_draft.md`, `..._report_A_around_draft.md`, `..._report_final.md`, `..._report_styled.md`, `..._story_plan.json` | **the legacy round-by-round chain**, every TEG — archived once `/teg-reports` moved to the storyline-first newspaper edition and nothing in the tournament path read it any more. Round-level equivalents (`..._round_R_*`, TEGs 8/9/10/11/14/18) went with it, since round reports are off in the UI (STATUS.md item 1) |
 | `..._report_pre{X}.md` | a snapshot of the report **before** change X landed. `prevehicles`, `prepayoff`, `preclose`, `pretighten`, `pre_detailed_baseline`, `pre_phaseA` |
-| `..._report_humour{6,8,8b}.md` | the **unsettled humour-dial A/B** (TEGs 14 and 18). `8b` is the Brooker-only variant. Read these against `report_styled.md` to settle it |
+| `..._report_humour{6,8,8b}.md` | the **unsettled humour-dial A/B** (TEGs 14 and 18). `8b` is the Brooker-only variant |
 | `..._report_{detailed,light}.md` | the dry-draft density A/B. **Settled: detailed won** |
 | `..._report_{tightened,step1,baseline,buggy}.md` | one-off experiment outputs |
 | `..._report_{B_single_pass,C_critique_revise}.md` | the rejected authoring alternatives. C fabricated a "countback" — that's why the around-draft route won |
-| `..._tournament_v{0..5}_*.md` | the voice ladder (`existing` → `baseline` → `restraint` → `economy` → `observer` → `gravitas`). Gravitas won |
-| `..._storyline_plan.json`, `..._report_storyline{draft,first}.md` | **the storyline-first chain** (TEGs 14/16/18) — a live parallel set, not history. See [The storyline-first files](#the-storyline-first-files) |
-| `..._story_plan_prompt.md` | dry-run dump of the assembled prompt + bundle. Free to regenerate |
-| `..._storyline_plan_prompt.md` | dry-run dump of the storyline-plan prompt. Free to regenerate |
-| `storyline_experiment_teg_N.json` | output of `scripts/storyline_experiment.py`, the discovery trial. History |
-| `..._notable_events.md`, `..._venue_context.md` | inspection dumps of Stage 2. Free |
+| `..._tournament_v{0..5}_*.md`, `..._round_2_v{0..5}_*.md` | the voice ladder (`existing` → `baseline` → `restraint` → `economy` → `observer` → `gravitas`). Gravitas won |
+| `..._report_{brooker,herron,dialed,v2,v3,trial,budget,cap,rhythm}.md` (+ `_styled`) | other voice/structure A/Bs, TEGs 9/10/12/17 |
+| `..._story_plan_prompt.md`, `..._storyline_plan_prompt.md`, `..._notable_events.md`, `..._venue_context.md` | dry-run/inspection dumps, free to regenerate — **deleted**, not archived (2026-09-11) |
+| `storyline_experiment_teg_N.json`, `context_experiment_teg_N.json`, `telling_experiment_teg_N*.json`, `interweave_experiment.json`, `voice_tone_experiment.json` | outputs of the one-off `scripts/storyline_*_experiment.py` trials. Archived |
 | `variants/<name>/` | **a whole parallel artefact set for one model** (`variants/gpt5/`, `variants/gemini/`) written when `TEG_REPORT_VARIANT` / `--variant` / `--paste NAME` is set. Legacy-five and storyline-first filenames alike, plus a `manifest.json` recording provider, requested model and timings. **Gitignored** — promote the one you want with `paths.promote_variant(name, teg)` and commit that. Nothing reads a variant automatically |
-| `archive 2026 v1/`, `archive 2026 v2/` | full snapshots of two earlier generations of the library |
-| `archive 2025/`, `drafts/`, `round_reports/` | the pre-pipeline 2025 system. Still the webapp's fallback read paths |
+| `archive 2026 v1/`, `archive 2026 v2/`, `archive 2026 v3/` | full snapshots of three earlier generations of the library (v3 added 2026-09-11, this cleanup) |
+| `archive 2025/`, `drafts/`, `round_reports/` | the pre-pipeline 2025 system. **Still read directly by `webapp/routes/history.py` and `webapp/routes/latest.py`'s "Report" tabs** (not `/teg-reports`, which moved to `newspaper_edition` — see STATUS.md item 1) as their fallback when the now-archived legacy chain is missing. Every TEG's History "Report" tab therefore now serves this 2025-vintage prose instead of the current storyline-first report; TEG 2 has no `drafts/` fallback at all, so its tab shows nothing. Not yet migrated — flagged in STATUS.md item 2 |
 
 **Not under `data/commentary/` at all:** `data/llm_mailbox/` holds the prompt hand-off for `--plan` and
 `--paste` runs — one directory per run, each with `run.json`, per-call `request.md` / `response.*` and
