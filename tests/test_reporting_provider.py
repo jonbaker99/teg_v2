@@ -109,6 +109,34 @@ def test_api_provider_without_key_says_how_to_avoid_it(monkeypatch):
             llm._client()
 
 
+def test_truncated_structured_output_raises_a_diagnosable_error(monkeypatch):
+    """2026-09-12: `messages.parse` returns `parsed_output=None` (no exception)
+    when the model exhausts `max_tokens` — on a weak-model/large-schema call,
+    entirely on thinking — before completing the tool-call. Left unchecked,
+    every caller's next line (`plan.model_dump()`) failed with an opaque
+    `AttributeError: 'NoneType' object has no attribute 'model_dump'`, and the
+    caller's `json.dump(plan.model_dump(), f, ...)` had already truncated its
+    output file to empty by the time that AttributeError fired. This must
+    raise here instead, before any caller sees `None`."""
+    from unittest.mock import MagicMock
+
+    class UsageDetails:
+        thinking_tokens = 20000
+    fake_resp = MagicMock()
+    fake_resp.parsed_output = None
+    fake_resp.stop_reason = "max_tokens"
+    fake_resp.usage.output_tokens = 20000
+    fake_resp.usage.output_tokens_details = UsageDetails()
+
+    fake_client = MagicMock()
+    fake_client.messages.parse.return_value = fake_resp
+    monkeypatch.setattr(llm, "_client", lambda: fake_client)
+
+    with llm.use_provider("api"):
+        with pytest.raises(RuntimeError, match="max_tokens"):
+            llm.generate_structured("SYS", "USER", Tiny, max_tokens=20000)
+
+
 # ---------------------------------------------------------------------------
 # The hand-off
 # ---------------------------------------------------------------------------

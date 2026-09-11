@@ -224,6 +224,27 @@ def _api_structured(system: str, user: str, schema: Type[BaseModel],
         messages=[{"role": "user", "content": user}],
         output_format=schema,
     )
+    if resp.parsed_output is None:
+        # `messages.parse` does not raise on truncation — it returns a response
+        # with `parsed_output=None` when the model hits `max_tokens` before
+        # completing the structured tool-call, or the completion otherwise
+        # fails to validate against `schema`. Left unchecked, every caller's
+        # next line (`plan.model_dump()`) fails with an opaque
+        # `AttributeError: 'NoneType' object has no attribute 'model_dump'`
+        # that gives no hint why — found 2026-09-12 diagnosing exactly that on
+        # a Sonnet round-plan call that spent all 20000 max_tokens on thinking
+        # (adaptive thinking has no separate budget; a weaker model reasoning
+        # harder over the same schema can exhaust the ceiling before ever
+        # emitting output). Raise here, with the one fact that explains it.
+        raise RuntimeError(
+            f"generate_structured: model {model!r} returned no parsed output "
+            f"(stop_reason={resp.stop_reason!r}, output_tokens="
+            f"{resp.usage.output_tokens}/{max_tokens}, thinking_tokens="
+            f"{resp.usage.output_tokens_details.thinking_tokens if resp.usage.output_tokens_details else '?'}). "
+            f"Most likely cause: max_tokens exhausted by thinking before any "
+            f"output — try a stronger model for this call, or reduce the "
+            f"input bundle."
+        )
     return resp.parsed_output, resp.usage
 
 
