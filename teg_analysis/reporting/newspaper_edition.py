@@ -899,7 +899,6 @@ def _appendix_html(edition: dict[str, Any]) -> str:
         '<section class="appendix">'
         '<p class="kicker">Records &amp; Personal Bests</p>'
         f'<h3 class="apx-hl">Notable achievements: {_esc(edition["dateline"]["teg"])}</h3>'
-        '<p class="apx-standfirst">Every personal best, worst and rare feat this edition produced.</p>'
         f'<div class="apx-flow">{groups}</div>'
         "</section>"
     )

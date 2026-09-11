@@ -223,9 +223,7 @@
      naturally instead of forcing the same two columns. */
   .appendix{ border-top:1px solid var(--rule); margin-top:2rem; padding:1.7rem var(--pad) 2.3rem; }
   .apx-hl{ font-family:var(--font-display); font-weight:700; font-size:1.4rem; line-height:1.15;
-    color:var(--ink); margin:0 0 0.4rem; text-wrap:balance; }
-  .apx-standfirst{ font-family:var(--font-body); font-size:0.9rem; color:var(--ink-soft);
-    margin:0 0 1.3rem; max-width:70ch; }
+    color:var(--ink); margin:0 0 1.3rem; text-wrap:balance; }
   .apx-flow{ columns:2; column-gap:2.2rem; column-rule:1px solid var(--rule); }
   .apx-grp{ break-inside:avoid; margin-bottom:1.1rem; }
   .apx-cat{ font-family:var(--font-mono); font-weight:600; font-size:0.68rem; letter-spacing:0.09em;
