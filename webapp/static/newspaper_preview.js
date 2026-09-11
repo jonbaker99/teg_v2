@@ -73,11 +73,13 @@
         by[c].map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul></div>";
     }).join("");
     var body = open
-      ? '<div class="m-apx-body" id="apx-body"><div class="m-apx-sec">' + recs + "</div></div>"
+      ? '<div class="m-apx-body" id="apx-body">' +
+          '<h3 class="m-apx-hl">Notable achievements: ' + esc(edition.dateline.teg) + '</h3>' +
+          '<div class="m-apx-sec">' + recs + "</div></div>"
       : "";
     return '<section class="m-apx"><button type="button" class="m-apx-btn" data-apx="1" aria-expanded="' +
       (open ? "true" : "false") + '" aria-controls="apx-body">' +
-      '<span class="m-apx-h">Records</span>' +
+      '<span class="m-apx-h">Records &amp; Personal Bests</span>' +
       '<span class="acc-sign" aria-hidden="true">' + (open ? "−" : "+") + "</span></button>" + body + "</section>";
   }
 

@@ -216,16 +216,25 @@
   .sub-body p{ font-family:var(--font-body); font-size:0.895rem; line-height:1.53; color:var(--ink); }
   .sub-body p + p{ margin-top:0.75em; }
 
+  /* Appendix: kicker + headline + standfirst like any other section on the
+     page (2026-09-11 — was a lone eyebrow label over a rigid 2-up grid,
+     which read as an afterthought). Categories flow through ruled columns
+     instead of a fixed split, so a light TEG and a heavy one both settle
+     naturally instead of forcing the same two columns. */
   .appendix{ border-top:1px solid var(--rule); margin-top:2rem; padding:1.7rem var(--pad) 2.3rem; }
-  .apx-records{ display:grid; grid-template-columns:repeat(2,1fr); gap:0 2.5rem; align-items:start; }
-  .apx-h{ font-family:var(--font-mono); font-size:0.7rem; font-weight:700; letter-spacing:0.11em;
-    text-transform:uppercase; color:var(--accent); margin-bottom:0.7rem; }
-  .recs-group + .recs-group{ margin-top:0.95rem; }
-  .recs-cat{ font-family:var(--font-body); font-weight:700; font-size:0.78rem; margin-bottom:0.3rem; }
-  .recs li{ font-family:var(--font-body); font-size:0.845rem; color:var(--ink-soft); position:relative;
-    padding-left:0.9rem; line-height:1.45; }
-  .recs li + li{ margin-top:0.3rem; }
-  .recs li::before{ content:"—"; position:absolute; left:0; color:var(--accent); }
+  .apx-hl{ font-family:var(--font-display); font-weight:700; font-size:1.4rem; line-height:1.15;
+    color:var(--ink); margin:0 0 0.4rem; text-wrap:balance; }
+  .apx-standfirst{ font-family:var(--font-body); font-size:0.9rem; color:var(--ink-soft);
+    margin:0 0 1.3rem; max-width:70ch; }
+  .apx-flow{ columns:2; column-gap:2.2rem; column-rule:1px solid var(--rule); }
+  .apx-grp{ break-inside:avoid; margin-bottom:1.1rem; }
+  .apx-cat{ font-family:var(--font-mono); font-weight:600; font-size:0.68rem; letter-spacing:0.09em;
+    text-transform:uppercase; color:var(--ink-soft); margin:0 0 0.4rem; padding-bottom:0.3rem;
+    border-bottom:1px solid var(--rule); }
+  .apx-list{ list-style:none; margin:0; padding:0; }
+  .apx-list li{ font-family:var(--font-body); font-size:0.87rem; line-height:1.5; color:var(--ink);
+    position:relative; padding-left:0.9rem; margin-bottom:0.5rem; }
+  .apx-list li::before{ content:"—"; position:absolute; left:0; color:var(--accent); }
 
   /* Row packing: `plan_rows` (newspaper_edition.py) chunks sub-articles into
      rows of 1, 2 or 3 so a grid row is always exactly as wide as its items —
@@ -347,6 +356,8 @@
     text-transform:uppercase; color:var(--accent); }
   .acc-sign{ font-family:var(--font-mono); font-size:0.8rem; font-weight:700; color:var(--accent); }
   .m-apx-body{ padding:0 var(--pad) 1.5rem; }
+  .m-apx-hl{ font-family:var(--font-display); font-weight:700; font-size:1.05rem; line-height:1.2;
+    color:var(--ink); margin:0 0 0.9rem; text-wrap:balance; }
   .m-apx-sec + .m-apx-sec{ margin-top:1.2rem; }
   .recs-cat{ font-family:var(--font-body); font-weight:700; font-size:0.8rem; margin-bottom:0.3rem; }
   .recs li{ font-family:var(--font-body); font-size:0.86rem; color:var(--ink-soft); position:relative;

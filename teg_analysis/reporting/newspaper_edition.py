@@ -876,6 +876,12 @@ def _appendix_html(edition: dict[str, Any]) -> str:
     # duplicate the round-by-round and leaderboard views shown better elsewhere
     # in the app. `edition["standings"]` is still parsed and kept — the rail's
     # "Final" Trophy/Green Jacket lines (`_rail_html`) still read it.
+    #
+    # Given a kicker + headline + standfirst treatment (2026-09-11, prototyped
+    # against TEG 4/17/18 as the heavy/light cases) instead of a lone eyebrow
+    # label, so it reads as a section on the page rather than an afterthought.
+    # Categories flow through ruled CSS columns (`.apx-flow`) instead of a
+    # fixed 2-up grid, so 2 categories and 4 don't force the same split.
     by: dict[str, list[str]] = {}
     order: list[str] = []
     for r in edition["records"]:
@@ -883,15 +889,18 @@ def _appendix_html(edition: dict[str, Any]) -> str:
             by[r["category"]] = []
             order.append(r["category"])
         by[r["category"]].append(r["text"])
-    recs = "".join(
-        f'<div class="recs-group"><p class="recs-cat">{_esc(c)}</p><ul class="recs">'
+    groups = "".join(
+        f'<div class="apx-grp"><p class="apx-cat">{_esc(c)}</p><ul class="apx-list">'
         + "".join(f"<li>{_esc(t)}</li>" for t in by[c])
         + "</ul></div>"
         for c in order
     )
     return (
         '<section class="appendix">'
-        f'<div><h3 class="apx-h">Personal bests &amp; records</h3><div class="apx-records">{recs}</div></div>'
+        '<p class="kicker">Records &amp; Personal Bests</p>'
+        f'<h3 class="apx-hl">Notable achievements: {_esc(edition["dateline"]["teg"])}</h3>'
+        '<p class="apx-standfirst">Every personal best, worst and rare feat this edition produced.</p>'
+        f'<div class="apx-flow">{groups}</div>'
         "</section>"
     )
 
