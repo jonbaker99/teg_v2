@@ -220,6 +220,12 @@ class DraftedStoryline(BaseModel):
     humour_score: int = Field(ge=1, le=10)  # your own rating of how genuinely FUNNY
                             # this storyline is to tell — not how dramatic or important.
                             # See the humour requirement in SYSTEM_PROMPT.
+    descriptor: str = ""   # the printed story-descriptor badge — see prompts.DESCRIPTOR_RULE.
+                            # NOT the machine `kicker` (TROPHY/GREEN JACKET/WOODEN SPOON/SIDEBAR)
+                            # used for filtering and lead selection — this is purely what prints.
+                            # Defaulted empty for the same reason as chosen_headline/standfirst:
+                            # DraftedStoryline is also embedded in the legacy StoryPlan, whose
+                            # schema has already been rejected once by the API as too large.
 
 
 class VehicleFitResponse(BaseModel):
@@ -1171,6 +1177,8 @@ def check_storyline_plan_consistency(plan: StorylinePlan, bundle: dict) -> list[
                 f"{len(s.chosen_headline.split())} words (want 3-8): {s.chosen_headline!r}")
         if not s.standfirst:
             warnings.append(f"storyline {s.subject!r} has no standfirst")
+        if not s.descriptor:
+            warnings.append(f"storyline {s.subject!r} has no descriptor")
 
     mandatory = {b["id"] for b in bundle.get("beats", []) if b.get("mandatory")}
     missed = sorted(mandatory - cited_beat_ids)
