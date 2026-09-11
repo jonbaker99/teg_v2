@@ -16,6 +16,7 @@ from teg_analysis.reporting.newspaper_edition import (
     _resolve_section,
     _round_only,
     _totals_only,
+    derive_descriptor,
     plan_rows,
     split_value_qualifier,
 )
@@ -281,3 +282,104 @@ def test_dropped_articles_never_reach_the_page():
     edition = {"teg": 14, "articles": [], "dropped_articles": [_scored(1, 1)]}
     assert "dropped_articles" not in for_page(edition)
     assert for_page(edition)["teg"] == 14
+
+
+# ---------------------------------------------------------------------------
+# derive_descriptor: deterministic descriptor fallback for the 17 existing
+# reports written before `descriptor` existed on the plan (2026-09-11). See
+# prompts.DESCRIPTOR_RULE for the rule this approximates.
+# ---------------------------------------------------------------------------
+def test_derive_descriptor_trophy_is_always_bare_trophy():
+    storyline = {"chosen_headline": "Whatever Headline", "subject": "whatever"}
+    assert derive_descriptor(storyline, "TROPHY") == "TROPHY"
+
+
+def test_derive_descriptor_sidebar_with_one_real_player_returns_that_name():
+    # David Mullin is a real player in data/players.csv.
+    storyline = {"chosen_headline": "Mullin Finds Another Gear",
+                 "subject": "David Mullin has a career day at the Stadium Course"}
+    assert derive_descriptor(storyline, "SIDEBAR") == "DAVID MULLIN"
+
+
+def test_derive_descriptor_sidebar_with_two_real_players_returns_pipe_separated():
+    storyline = {"chosen_headline": "Baker and Mullin Trade Blows",
+                 "subject": "Jon Baker and David Mullin fight it out"}
+    assert derive_descriptor(storyline, "SIDEBAR") == "JON BAKER | DAVID MULLIN"
+
+
+def test_derive_descriptor_sidebar_with_zero_players_falls_back_to_sidebar():
+    storyline = {"chosen_headline": "The Weather Wins the Day",
+                 "subject": "Rain and wind dominate the round"}
+    assert derive_descriptor(storyline, "SIDEBAR") == "SIDEBAR"
+
+
+def test_derive_descriptor_sidebar_with_three_or_more_players_falls_back_to_sidebar():
+    storyline = {"chosen_headline": "A Chaotic Final Round",
+                 "subject": "Jon Baker, David Mullin and Henry Meller all collapse"}
+    assert derive_descriptor(storyline, "SIDEBAR") == "SIDEBAR"
+
+
+def test_derive_descriptor_green_jacket_named_in_headline_stays_bare():
+    storyline = {"chosen_headline": "David Mullin Reclaims the Jacket",
+                 "subject": "David Mullin wins the Green Jacket back"}
+    assert derive_descriptor(storyline, "GREEN JACKET") == "GREEN JACKET"
+
+
+def test_derive_descriptor_green_jacket_two_names_in_subject_stays_bare():
+    """Real TEG 6 case: the headline names no one by full name (a bare surname
+    doesn't count), and `subject` mentions two players — too ambiguous to pick
+    a winner from, so it falls back to the bare kicker rather than guessing."""
+    storyline = {"chosen_headline": "Mullin Reclaims the Jacket at the Ninth",
+                 "subject": "David Mullin wins a third straight Green Jacket "
+                            "after his worst gross round to date briefly "
+                            "handed Jon Baker the lead"}
+    assert derive_descriptor(storyline, "GREEN JACKET") == "GREEN JACKET"
+
+
+def test_derive_descriptor_wooden_spoon_named_only_in_subject_appends_player():
+    storyline = {"chosen_headline": "Two Tens at El Prat Settle It",
+                 "subject": "Henry Meller answers a career-best Round 2 with a "
+                            "Round 3 containing two 10s, and takes a third "
+                            "Wooden Spoon by 17"}
+    assert derive_descriptor(storyline, "WOODEN SPOON") == "WOODEN SPOON | HENRY MELLER"
+
+
+def test_derive_descriptor_green_jacket_with_no_name_anywhere_stays_bare():
+    storyline = {"chosen_headline": "A Round for the Ages", "subject": "A great round"}
+    assert derive_descriptor(storyline, "GREEN JACKET") == "GREEN JACKET"
+
+
+def test_parse_articles_prefers_explicit_descriptor_over_the_fallback():
+    """An explicit `descriptor` on the storyline (LLM-authored going forward)
+    must win over `derive_descriptor`, never be silently recomputed."""
+    from teg_analysis.reporting.newspaper_edition import _parse_articles
+
+    plan = {
+        "trophy_storyline": {
+            "subject": "David Mullin wins again",
+            "chosen_headline": "Mullin Wins Again",
+            "standfirst": "",
+            "compelling_score": 9,
+            "humour_score": 3,
+            "descriptor": "TROPHY",
+        },
+        "jacket_storyline": {"subject": "j", "chosen_headline": "", "standfirst": "",
+                             "compelling_score": 1, "humour_score": 1},
+        "spoon_storyline": {"subject": "s", "chosen_headline": "", "standfirst": "",
+                            "compelling_score": 1, "humour_score": 1},
+        "discovered_storylines": [
+            {"subject": "David Mullin also does something else",
+             "chosen_headline": "Mullin Does Something Else",
+             "standfirst": "", "compelling_score": 5, "humour_score": 5,
+             "descriptor": "THE EXPLICIT ONE"},
+        ],
+    }
+    sections = [
+        ("David Mullin wins again", "<!-- storyline: trophy -->\nBody text."),
+        ("David Mullin also does something else", "<!-- storyline: d0 -->\nMore body."),
+    ]
+    articles = _parse_articles(sections, plan)
+    by_headline = {a["headline"]: a for a in articles}
+    assert by_headline["Mullin Does Something Else"]["descriptor"] == "THE EXPLICIT ONE"
+    # Sanity: the trophy one also keeps its explicit descriptor, not a re-derivation.
+    assert by_headline["Mullin Wins Again"]["descriptor"] == "TROPHY"
