@@ -1,0 +1,196 @@
+{
+  "title": "Twelve, Ten, Ten — and the Trophy: John Patterson Survives Catalonia",
+  "title_candidates": [
+    "Twelve, Ten, Ten — and the Trophy: John Patterson Survives Catalonia",
+    "The Wreckage of PGA Catalunya",
+    "Damage Limitation: How John Patterson Won TEG 12",
+    "Everybody Detonated; One Man Detonated Cheapest"
+  ],
+  "theme": "PGA Catalunya took a hammer to all six men — a course record, a course worst, an eleven, two twelves, quadruple bogeys by the dozen — and the TEG 12 Trophy went to the man whose disasters cost him least and whose good stretches were biggest.",
+  "tone": "house",
+  "opening_hook": "Open cold on John Patterson's 12 at the 4th at the Tour course in Round 1 — TEG's worst-ever return on a par 4, made on the second-hardest hole on the card — and then reveal that the man who signed for it won the TEG 12 Trophy by ten with a personal-best 172 points. Non-chronological: the gap between the wreckage and the result IS the report.",
+  "narrative_vehicles": [
+    "catalogue",
+    "tragic_arc",
+    "comeback"
+  ],
+  "competitions": [
+    {
+      "name": "Trophy (Stableford)",
+      "winner_or_loser": "John Patterson"
+    },
+    {
+      "name": "Green Jacket (Gross)",
+      "winner_or_loser": "Jon Baker"
+    },
+    {
+      "name": "Wooden Spoon",
+      "winner_or_loser": "David Mullin"
+    }
+  ],
+  "trophy_storyline": {
+    "subject": "How John Patterson won the TEG 12 Trophy by ten with three blow-up holes, two best-in-field rounds and a personal-best 172 points",
+    "why_it_matters": "It is Patterson's first Trophy since TEG 9 — he took the Wooden Spoon in TEG 10 — and it was a personal-best total that he built himself rather than inherited.",
+    "shape": "Setup: Gregg Williams led the TEG 12 Trophy after Round 1 and again after Round 2, a single point clear, and was still two to the good as late as the 3rd hole of Round 3 — while Patterson was quietly detonating, a 12 at the 4th in R1, a 10 at the 15th in R2, a 10 at the 3rd in R3. Turn: Patterson took the lead outright at the 4th in Round 3 and never gave it back, piling up 19 points across holes 12-17 for a round of 45 that was best in the field and took nine points out of Williams in a single afternoon, while Williams was losing an 11 at the 13th. Resolution: 40 points in Round 4, best in the field again, for 172 and a margin of ten; Patterson never finished a round worse than third of six and was the steadiest man in the field, and he set personal bests at both courses along the way — 96 at the Tour in R1, 95 at the Stadium in R3.",
+    "beat_ids": [
+      "b02",
+      "b28",
+      "b70",
+      "b66",
+      "b49",
+      "b45",
+      "b03",
+      "b21",
+      "b27"
+    ],
+    "headline_candidates": [
+      "Three Blow-Ups, One Trophy, Ten Clear",
+      "Patterson Wrecks Himself, Wins Anyway",
+      "The 12 That Cost Patterson Nothing"
+    ],
+    "chosen_headline": "Three Blow-Ups, One Trophy, Ten Clear",
+    "standfirst": "John Patterson made TEG's worst-ever par 4 on the first afternoon and still left Girona with a personal-best 172 points, the steadiest card in the field and a ten-point cushion over Gregg Williams.",
+    "compelling_score": 9,
+    "humour_score": 7
+  },
+  "jacket_storyline": {
+    "subject": "Jon Baker's TEG 12 Green Jacket: twenty-three holes in front, one hole behind, then a course record 89 to finish",
+    "why_it_matters": "Jon Baker retains the Jacket with a gross total that stands third in all TEG history, and breaks the Stadium course record that had survived fifteen prior visits.",
+    "shape": "Setup: Jon Baker had led the TEG 12 Green Jacket from the 16th hole of Round 1, best in the field on day one, and carried it 23 holes across three rounds. Turn: Gregg Williams took it from him at the 3rd at the Stadium in Round 3 and held it for precisely one hole — Jon Baker had it back at the 4th and was never headed again, going best in the field in three of the four rounds. Resolution: an 89 in Round 4, a new PGA Catalunya Stadium course record beating the 90 that had stood across fifteen prior visits, and a personal-best +63 gross total, eight clear of David Mullin.",
+    "beat_ids": [
+      "b04",
+      "cr01",
+      "b17",
+      "b09",
+      "b32"
+    ],
+    "headline_candidates": [
+      "Jon Baker Breaks The Stadium Record",
+      "Eighty-Nine: The Stadium Falls At Last",
+      "One Hole Behind, Then Untouchable"
+    ],
+    "chosen_headline": "Jon Baker Breaks The Stadium Record",
+    "standfirst": "Beaten to the gross lead by Gregg Williams for exactly one hole in Round 3, Jon Baker answered immediately and closed with an 89 that no TEG player had bettered at the Stadium in fifteen visits.",
+    "compelling_score": 8,
+    "humour_score": 4
+  },
+  "spoon_storyline": {
+    "subject": "David Mullin, winner of eight Green Jackets, collects a second consecutive Wooden Spoon after losing ten shots in three holes",
+    "why_it_matters": "The reigning Spoon holder walked into the TEG 12 Wooden Spoon having spent three rounds safely above Alex Baker, and lost it inside forty minutes on the fourth morning.",
+    "shape": "Setup: David Mullin sat fifth of six after each of the first three rounds, with Alex Baker propping up the field throughout, and he had already banked a new personal best at the Tour course — 84 gross in Round 2, off the back of four straight gross pars from the 5th. Turn: a 30-point Round 3, ten worse than his Round 2, brought him level with the trouble, and then at the 3rd in Round 4 came a nine, at the 4th an eight, at the 5th a double — ten gross shots gone in three holes, and the bottom of the Spoon race changed hands decisively and permanently. Resolution: 14 points across holes 11-14 that afternoon proved he could still play; it left him four adrift of Alex Baker on 139 and holding the Spoon for a second TEG running, and a third time in all.",
+    "beat_ids": [
+      "b23",
+      "b40",
+      "b44",
+      "b43",
+      "b13",
+      "b14",
+      "b37",
+      "b05",
+      "b06",
+      "b39",
+      "b47"
+    ],
+    "headline_candidates": [
+      "Ten Shots, Three Holes, One Spoon",
+      "Mullin Loses It Before The Fifth Tee",
+      "The Jacket King Keeps The Spoon"
+    ],
+    "chosen_headline": "Ten Shots, Three Holes, One Spoon",
+    "standfirst": "Safely fifth for three rounds, David Mullin shipped a nine, an eight and a double at the start of Round 4 and became the first man since himself to hold the Wooden Spoon two TEGs running.",
+    "compelling_score": 8,
+    "humour_score": 8
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Stuart Neumann's TEG 12: the worst round in the Tour course's history in Round 1, the only eagle of the tournament in Round 4",
+      "why_it_matters": "Neumann set a course worst that stood against ten prior visits, then produced the single rarest shot of the tournament and an all-time TEG record with it.",
+      "shape": "Setup: Round 1 at the Tour course brought a 12 at the par-5 15th — TEG's worst-ever return on a par 5 — and a 10 at the 13th, the hardest hole on the card, for a 105 that no TEG player had ever been worse than there. Turn: the pattern held into Round 3 at the Stadium, ten shots bled across holes 14-17 including a nine at the 15th, and by Sunday he was three shots into another slide. Resolution: at the Stadium's 15th in Round 4 he holed for a three on a par 5 — the only eagle recorded anywhere in TEG 12, an all-time TEG record for eagles in a single TEG, and the end of the bleeding; he also set personal bests at both courses this TEG.",
+      "beat_ids": [
+        "cr02",
+        "b07",
+        "b11",
+        "b20",
+        "b30",
+        "b01",
+        "b08",
+        "sc01",
+        "b35",
+        "b34"
+      ],
+      "headline_candidates": [
+        "Neumann's Twelve, Then Neumann's Eagle",
+        "105, And Then The Only Eagle",
+        "The Worst Par Five, The Best Shot"
+      ],
+      "chosen_headline": "Neumann's Twelve, Then Neumann's Eagle",
+      "standfirst": "Stuart Neumann signed for a 105 that no TEG player has ever been worse than at the Tour course, then holed the only eagle of TEG 12 at the Stadium's 15th on the final afternoon.",
+      "compelling_score": 8,
+      "humour_score": 8
+    },
+    {
+      "subject": "Gregg Williams played the best gross golf of his TEG career and lost the Trophy by ten, undone by three holes in Round 3",
+      "why_it_matters": "Williams, a three-time Trophy winner, set personal bests at both courses and a personal-best gross total, and still finished ten behind — the collapse that decided the tournament was his.",
+      "shape": "Setup: Williams opened with 84 at the Tour course, a personal-best gross round of +12 and eight shots better than his last visit, and led the Trophy after Round 1 and Round 2. Turn: at the Stadium in Round 3 he made a nine at the 4th, then bled twelve gross shots across holes 11-13, the last of them an 11 at the 13th — his worst-ever return on a par 4 — and the lead he had held since Thursday was gone within the hour. Resolution: he recovered enough to post a new Stadium personal best of 92 in Round 4 and finish on a personal-best +76 gross for the tournament, which is a fine consolation and not a Trophy.",
+      "beat_ids": [
+        "b12",
+        "b22",
+        "b15",
+        "b03",
+        "b21",
+        "b26",
+        "b17"
+      ],
+      "headline_candidates": [
+        "Two Personal Bests, One Eleven",
+        "Williams Peaks And Still Loses By Ten",
+        "The 13th Took Everything From Williams"
+      ],
+      "chosen_headline": "Two Personal Bests, One Eleven",
+      "standfirst": "Gregg Williams led the TEG 12 Trophy for two rounds and change and posted the best gross golf of his career; three holes at the Stadium on Saturday cost him twelve shots and the tournament.",
+      "compelling_score": 8,
+      "humour_score": 6
+    },
+    {
+      "subject": "Alex Baker spent three rounds at the bottom of the Wooden Spoon race and escaped it, with his best-ever round at the Stadium",
+      "why_it_matters": "The man who was last in the field after every one of the first three rounds finished four points clear of the Spoon without ever leading anything.",
+      "shape": "Setup: Alex Baker dropped to the bottom of the Spoon race at the 2nd hole of Round 1 with a seven on a par 3, and returned there in Round 1, Round 2 and twice in Round 3 — quadruple bogeys at the 10th and 13th at the Tour course, eleven shots bled across holes 6-9 in Round 2, nine more across the closing four holes of Round 3. Turn: the recoveries were always there too — a birdie at the 10th to stop the Round 2 bleeding, twelve points across holes 2-5, nine across 13-15 — and in Round 4 at the Stadium he put together a 93, a personal best there by seven shots and thirteen better than his last visit. Resolution: he never troubled the top of anything, but on Sunday afternoon the Spoon quietly moved four points away from him and onto David Mullin.",
+      "beat_ids": [
+        "b50",
+        "b29",
+        "b16",
+        "b24",
+        "b25",
+        "b36",
+        "b38",
+        "b41",
+        "b42",
+        "b10",
+        "b31",
+        "b33",
+        "b46",
+        "b18",
+        "b19"
+      ],
+      "headline_candidates": [
+        "Bottom For Three Rounds, Then Spared",
+        "Alex Baker Hands The Spoon Over",
+        "Last, Last, Last — And Safe"
+      ],
+      "chosen_headline": "Bottom For Three Rounds, Then Spared",
+      "standfirst": "Alex Baker propped up the field after all three of the opening rounds, then produced his best round at the Stadium by seven shots and finished four points clear of the Wooden Spoon.",
+      "compelling_score": 7,
+      "humour_score": 8
+    }
+  ],
+  "body_fallback": "none",
+  "prominent_vehicle": "catalogue",
+  "prominent_palette": "venue_character",
+  "vehicle_fit_response": {
+    "top_scored_vehicle": "inversion",
+    "taken_up": false,
+    "note": "The 23-hole gross lead changing hands is real, but it lasted exactly one hole and Jon Baker still retained the Jacket — nothing genuinely inverted; the week's story is the field's blow-up epidemic and the champion who survived his own.a"
+  },
+  "why_the_champion_won": "Built, not inherited: John Patterson was best in the field in Rounds 3 and 4, took nine points out of Gregg Williams in Round 3 alone, never finished a round worse than third of six, and was the steadiest man in the field — even an ordinary round in place of Williams's worst would not have flipped it.",
+  "storyline_note": ""
+}

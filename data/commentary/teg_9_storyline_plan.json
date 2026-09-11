@@ -1,0 +1,195 @@
+{
+  "title": "A Record 168, and Four Holes That Settled It: John Patterson Wins TEG 9",
+  "title_candidates": [
+    "A Record 168, and Four Holes That Settled It: John Patterson Wins TEG 9",
+    "Level at the 14th: John Patterson Holds Off Alex Baker for the TEG 9 Trophy",
+    "Highs and Horrors on the Lisbon Coast: Patterson's 168, Mullin's Course Record, Alex Baker's 115",
+    "Two Best-in-Field Rounds: How John Patterson Posted the Biggest Trophy Total TEG Has Seen"
+  ],
+  "theme": "A tournament of violent swings — the highest Trophy total in TEG history, the second-best round ever, a new course record and a new course-worst all from the same six men on the same two courses — won by the player whose peaks landed on the right days, while the only metronome in the field quietly took the Jacket.",
+  "tone": "house — subverted gravitas, British English, tongue-in-cheek but exact; restraint and specific numbers, escalation reserved for the blow-ups",
+  "opening_hook": "Open at the 14th at Praia D'El Rey in R4, with Alex Baker level with John Patterson and four holes to play — the tournament genuinely tied at that instant — then rewind, because the round that actually won it had been played two rounds earlier.",
+  "narrative_vehicles": [
+    "redemption_arc",
+    "counterfactual",
+    "inevitability"
+  ],
+  "competitions": [
+    {
+      "name": "TEG 9 Trophy",
+      "winner_or_loser": "John Patterson"
+    },
+    {
+      "name": "TEG 9 Green Jacket",
+      "winner_or_loser": "David Mullin"
+    },
+    {
+      "name": "TEG 9 Wooden Spoon",
+      "winner_or_loser": "Stuart Neumann"
+    }
+  ],
+  "trophy_storyline": {
+    "subject": "John Patterson's record 168: two best-in-field rounds either side of an R3 wobble that let Alex Baker draw level with four holes left",
+    "why_it_matters": "It is the highest Trophy total TEG has recorded, and despite the six-point margin the outcome was genuinely level with four holes of the tournament remaining.",
+    "shape": "Setup: a first-ever look at Royal Óbidos produced 38 points and a sextuple-bogey 10 at the SI-1 4th (b61), leaving Patterson one behind Jon Baker after R1. Turn: 49 points at Praia D'El Rey in R2 — the second-best round in TEG history (b08), 17 of them across holes 9-13 (b44) — put him ten clear, before a 34 in R3 (b49), his only round in the bottom half, cut the lead to three and set up a last-round scrap. Resolution: Alex Baker drew level at the 14th in R4 and then bled 11 shots over 14-17 (b16) while Patterson answered with 47, best in the field again (b45), for 168 and a personal-best gross total of +88 (b34, b38, b01).",
+    "beat_ids": [
+      "b01",
+      "b08",
+      "b44",
+      "b49",
+      "b45",
+      "b16",
+      "b38",
+      "b61",
+      "b34"
+    ],
+    "headline_candidates": [
+      "John Patterson's 168 Sets a TEG Record",
+      "Level at Fourteen, John Patterson Wins by Six",
+      "John Patterson Wins It Twice at Praia D'El Rey"
+    ],
+    "chosen_headline": "John Patterson's 168 Sets a TEG Record",
+    "standfirst": "Best-in-field rounds of 49 and 47 at Praia D'El Rey framed a Round 3 stumble that let Alex Baker level the TEG 9 Trophy with four holes left to play.",
+    "compelling_score": 9,
+    "humour_score": 5
+  },
+  "jacket_storyline": {
+    "subject": "David Mullin's seventh Green Jacket: best in the field in all four rounds, a new Royal Óbidos course record, and Jon Baker's career-best gross beaten by ten",
+    "why_it_matters": "Mullin's +67 is the lowest gross total in TEG history, won with a Jacket lead he held from the first round to the last, in a competition he has now won in each of the last four TEGs as well.",
+    "shape": "Setup: Mullin opened with 87 gross at Royal Óbidos — a new course record, beating the previous mark of 90 set across six prior visits (cr01) — and by the 18th of R1 the gross lead was his outright and never changed hands again. Turn: the only threats came from his own card, a quintuple-bogey 9 at the 10th in R3 (b15) and a quadruple-bogey 8 at the 1st in R4 (b17), each answered immediately — three untroubled pars at 2-4 and nine points from 7-9 in R4 (b40, b21, b23). Resolution: best in the field in all four rounds, +67 by ten (b04), with Jon Baker posting the best gross total of his career, +77, and finishing nowhere near him (b33, b25).",
+    "beat_ids": [
+      "cr01",
+      "b04",
+      "b15",
+      "b17",
+      "b21",
+      "b23",
+      "b40",
+      "b25",
+      "b33"
+    ],
+    "headline_candidates": [
+      "David Mullin's Course Record Kills the Jacket Race",
+      "David Mullin Wins a Seventh Green Jacket",
+      "An 87 on Day One Ended It"
+    ],
+    "chosen_headline": "David Mullin's Course Record Kills the Jacket Race",
+    "standfirst": "His 87 at Royal Óbidos in Round 1 broke a mark that had stood through six visits and handed him a gross lead nobody touched — Jon Baker's career-best +77 finished ten adrift.",
+    "compelling_score": 7,
+    "humour_score": 4
+  },
+  "spoon_storyline": {
+    "subject": "Stuart Neumann's back-to-back Wooden Spoon: bottom of the field after all four rounds and 16 adrift, despite improving every time out",
+    "why_it_matters": "He arrived as the reigning Wooden Spoon holder and never once climbed off the bottom of the TEG 9 Trophy table, finishing 16 points behind Gregg Williams, the next man up.",
+    "shape": "Setup: 23 points and +42 gross at Royal Óbidos in R1, a round in which his front nine beat his back nine by 11 points (b50); he was bottom of the Spoon race by the 15th and stayed there for the rest of the tournament. Turn: he then got steadily better — 30, then 37 in R3, with nine points across 6-8 and twelve across 10-13 (b43, b24), and a new personal best at Royal Óbidos of 98 gross, an improvement of exactly one shot. Resolution: R4 brought the best golf of his tournament, 16 points across 11-15 including a birdie at the 13th and four holes without dropping a gross shot (b07, b11) — before an 8 at the 16th and a ruinous walk in; 127 points, and a second Spoon in a row (b39).",
+    "beat_ids": [
+      "b39",
+      "b50",
+      "b07",
+      "b11",
+      "b24",
+      "b43"
+    ],
+    "headline_candidates": [
+      "Stuart Neumann Improves Daily, Finishes Last Anyway",
+      "Sixteen Adrift and Second Spoon Running",
+      "Stuart Neumann's Personal Best Buys Him Nothing"
+    ],
+    "chosen_headline": "Stuart Neumann Improves Daily, Finishes Last Anyway",
+    "standfirst": "The reigning Wooden Spoon holder climbed from 23 points to 37, set a personal best at Royal Óbidos and still ended TEG 9 sixteen points behind the next man up.",
+    "compelling_score": 7,
+    "humour_score": 8
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Alex Baker goes from a Royal Óbidos course-worst 115 to twin personal-best 44-point rounds at Praia D'El Rey and second in the Trophy",
+      "why_it_matters": "The man who posted the worst gross round ever recorded at Royal Óbidos finished runner-up with the best gross total of his career, and was level for the lead with four holes to play.",
+      "shape": "Setup: R1 was 115 gross at Royal Óbidos, a new course-worst beating the previous 108 across six prior visits (cr02), his own worst gross round to date at +43 (b37), complete with a septuple-bogey 11 at the 14th (b18) and a quintuple-bogey 9 at the SI-2 12th (b29) — and bottom of the Spoon race by the 2nd. Turn: at Praia D'El Rey in R2 he posted 44 points and +27 gross, personal bests on both counts (b13, b14), and a 100 that beat his prior best there of 109 by nine. Resolution: in R4 he matched those figures exactly, 44 points and +27 again (b02, b03), survived quadruple-bogey 8s at the 6th and the SI-3 15th (b09, b06), drew level for the Trophy lead at the 14th — then bled 11 shots across 14-17 (b16) and settled for second and a personal-best gross total of +127 (b31).",
+      "beat_ids": [
+        "cr02",
+        "b18",
+        "b37",
+        "b29",
+        "b13",
+        "b14",
+        "b02",
+        "b03",
+        "b06",
+        "b09",
+        "b16",
+        "b31",
+        "b10",
+        "b47"
+      ],
+      "headline_candidates": [
+        "Alex Baker's Opening 115 Cost Him the Trophy",
+        "From Course-Worst 115 to Career-Best 127",
+        "Alex Baker Posted the Same 44 Twice"
+      ],
+      "chosen_headline": "Alex Baker's Opening 115 Cost Him the Trophy",
+      "standfirst": "He set a new Royal Óbidos course-worst in Round 1, then matched personal bests of 44 points at Praia D'El Rey twice over — and was level for the lead with four holes remaining.",
+      "compelling_score": 9,
+      "humour_score": 6
+    },
+    {
+      "subject": "The big-number ledger: Gregg Williams's 11 at the 7th, his 10 at the 9th, and a field that could not stop signing for nines",
+      "why_it_matters": "Gregg Williams carded an 11 and a 10 in the same tournament and still recorded the best gross total of his career, which is the clearest measure of what the rest of his previous TEGs looked like.",
+      "shape": "Setup: the defending Trophy champion opened at Royal Óbidos with a quintuple-bogey 9 at the 1st, added a sextuple-bogey 9 at the 15th (b35) and a 9 at the 18th (b42 for company from Jon Baker) — a round that cost him nothing much because everyone else was at it too. Turn: a sextuple-bogey 10 at the SI-4 9th in R2 (b28), a quadruple-bogey 7 at the 15th in R3 (b36), and then the centrepiece — 11 at the par-5 7th in R4 (b12), his worst hole relative to par on record. Resolution: none of it stopped a personal-best gross total of +115 (b32), while Jon Baker's quadruple-bogey 9 at the SI-1 17th in R4 (b05) and David Mullin's quintuple-bogey 9 at the 10th in R3 (b15) kept the ledger ticking over.",
+      "beat_ids": [
+        "b35",
+        "b42",
+        "b28",
+        "b36",
+        "b12",
+        "b32",
+        "b05",
+        "b20",
+        "b15"
+      ],
+      "headline_candidates": [
+        "An Eleven, a Ten and a Personal Best",
+        "Gregg Williams Takes Eleven and Improves",
+        "The TEG 9 Ledger of Enormous Numbers"
+      ],
+      "chosen_headline": "An Eleven, a Ten and a Personal Best",
+      "standfirst": "Gregg Williams took eleven shots at the 7th at Praia D'El Rey and still finished TEG 9 with the best gross total of his career — and he was far from the only man making a mess.",
+      "compelling_score": 7,
+      "humour_score": 9
+    },
+    {
+      "subject": "Jon Baker leads after R1 with a personal best at Royal Óbidos, then loses his tournament in three holes on the same course",
+      "why_it_matters": "He recorded the best gross total of his career and a course personal best and came away with fourth in the Trophy and yet another Green Jacket runner-up finish.",
+      "shape": "Setup: 89 gross at Royal Óbidos in R1, nine shots better than his previous best there, was enough to lead the Trophy by one despite a quadruple-bogey 9 at the last (b42). Turn: in R3 he took 16 points from the opening five holes (b22) and then played 10, 11 and 12 in double, quadruple and double — eight shots gone, three holes without a net par (b46, b48, b20) — leaving his front nine ten points clear of his back nine (b19). Resolution: a 9 at the SI-1 17th in R4 (b05) finished the argument; a career-best gross total of +77 (b33) bought him fourth in the Trophy and second in the Jacket once more.",
+      "beat_ids": [
+        "b19",
+        "b22",
+        "b46",
+        "b48",
+        "b20",
+        "b42",
+        "b05",
+        "b33",
+        "b27"
+      ],
+      "headline_candidates": [
+        "Three Holes Undo Jon Baker at Royal Óbidos",
+        "Career-Best Gross, Nothing To Show For It",
+        "Jon Baker Leads, Then Plays 10, 11, 12"
+      ],
+      "chosen_headline": "Three Holes Undo Jon Baker at Royal Óbidos",
+      "standfirst": "He led the TEG 9 Trophy after Round 1 with his best-ever score at the course, then dropped eight shots in three holes in Round 3 and never recovered his footing.",
+      "compelling_score": 6,
+      "humour_score": 5
+    }
+  ],
+  "body_fallback": "none",
+  "prominent_vehicle": "redemption_arc",
+  "prominent_palette": "records",
+  "vehicle_fit_response": {
+    "top_scored_vehicle": "redemption_arc",
+    "taken_up": true,
+    "note": "Taken up — Patterson's poor R3 into a best-in-field 47 (b45) is literally the mechanism of the win, and Alex Baker's course-worst 115 into twin personal bests is the report's strongest subplot; counterfactual rides alongside for the level-at-the-14th finish, inevitability for Mullin's wire-to-wire Jacket.'.'"
+  },
+  "why_the_champion_won": "John Patterson built it: best-in-field rounds of 49 and 47 at Praia D'El Rey either side of a 34 in R3 that let Alex Baker level with four holes to play, beating Alex Baker head-to-head in three of the four rounds — and Alex Baker's own opening round at Royal Óbidos was so bad that a merely ordinary one in its place would have taken the Trophy off him.",
+  "storyline_note": ""
+}

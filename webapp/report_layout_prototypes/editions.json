@@ -192,6 +192,380 @@
     ]
   },
   {
+    "teg": 3,
+    "title": "Eighteen Shots of Daylight: Jon Baker's First Trophy",
+    "dateline": {
+      "teg": "TEG 3",
+      "venue": "Algarve, Portugal",
+      "year": "2010"
+    },
+    "results": [
+      {
+        "label": "Trophy Winner",
+        "value": "Jon Baker \u2014 winner at -18, by 18",
+        "lead": true,
+        "runner_up": "Runner-up: David Mullin",
+        "value_name": "Jon Baker",
+        "value_qual": "\u2014 winner at -18, by 18"
+      },
+      {
+        "label": "Green Jacket",
+        "value": "David Mullin \u2014 winner at +72, by 12",
+        "lead": false,
+        "runner_up": "Runner-up: Stuart Neumann",
+        "value_name": "David Mullin",
+        "value_qual": "\u2014 winner at +72, by 12"
+      },
+      {
+        "label": "Wooden Spoon",
+        "value": "Henry Meller \u2014 loser at +16 net VP",
+        "lead": false,
+        "runner_up": "Next above: Stuart Neumann",
+        "value_name": "Henry Meller",
+        "value_qual": "\u2014 loser at +16 net VP"
+      }
+    ],
+    "articles": [
+      {
+        "kicker": "TROPHY",
+        "headline": "Baker Settles It in Round One",
+        "standfirst": "Jon Baker had never won a thing in TEG; by the end of the opening round at Boavista the only live question was the size of the margin.",
+        "paragraphs": [
+          "Jon Baker won the TEG 3 Trophy at 18 under par net, 18 shots clear of David Mullin. It was his first. After the opening day the margin never really looked like closing, and the remaining three rounds were conducted largely as a formality with witnesses.",
+          "The first round set the tone: nine under net, the best round recorded in TEG history to that point. The gross figure behind it, +19, was the third-best gross round then on record, and the 90 it produced was a Boavista personal best. His previous best over three prior visits to the Lagos parkland was 100. That is a 17-stroke improvement on his last time round the place, which is less a step forward than a change of species.",
+          "Round two brought two under. Round three brought seven under, which at the time stood as the second-best round in TEG history. The middle of it did the damage. Across holes 6 to 10 Baker took seven shots off par net, playing them in two over gross with strokes in hand at almost every turn, the golf of a man who has read the rulebook and found it agreeable.",
+          "He then closed the same round with a nine at the 18th. A quintuple bogey. It cost him three net shots and made no difference at all to the outcome. A lead of that size permits the occasional gesture, and this was a magnificent one, delivered without apology and without consequence.",
+          "He led the Trophy after round three, with Mullin leading the TEG 3 Green Jacket. A further four-shot net gain through holes 7 to 9 on the final day removed any remaining question. What was left was not a contest but an escort."
+        ],
+        "words": 288,
+        "compelling": 8,
+        "humour": 4,
+        "is_lead": true
+      },
+      {
+        "kicker": "SIDEBAR",
+        "headline": "Boavista's 17th Eats Three Men",
+        "standfirst": "A short par four rated the second-easiest hole at Boavista took a 12 off Henry Meller, a 9 off David Mullin and a 10 off Stuart Neumann in the space of four rounds.",
+        "paragraphs": [
+          "The 17th at Boavista Golf & Spa Resort is a par 4 carrying stroke index 17, which makes it the second-easiest hole on Howard Swan's parkland layout in Lagos. Across the four rounds of TEG 3, played there from 5 to 8 October 2010, it collected three of the trip's worst individual scores. It has no reputation whatsoever. It has, on the evidence, a body count.",
+          "Henry Meller went first. In round one he took 12 shots at the hole, eight over par and, after handicap, seven over net. It is the worst score relative to par that Meller has recorded, and the worst any player has recorded against par in TEG history.",
+          "David Mullin followed in round two with a 9, a quintuple bogey and five over par, also the heaviest single-hole loss of his own career. Stuart Neumann completed the set in round four, running up a 10 for a sextuple bogey, six over par, likewise a personal worst. Three men, three careers, three new low points, all filed at the same undistinguished address.",
+          "The oddity is that none of the three found Boavista difficult overall. All had played the course three times before this trip, and all three set new course bests during it: Mullin an 85 in round three, Meller an 89 in round two, Neumann an 89 in round three. Each improved on his previous visit, Mullin by four strokes, Neumann by three, Meller by two. The 17th simply took its own toll, quietly, as it always had."
+        ],
+        "words": 253,
+        "compelling": 7,
+        "humour": 9,
+        "is_lead": false
+      },
+      {
+        "kicker": "SIDEBAR",
+        "headline": "Four Quadruples and a Personal Best",
+        "standfirst": "Gregg Williams dropped thirteen shots over the last four holes of R1 and twelve in four holes of R2 \u2014 then went round Boavista in 97, his best there yet.",
+        "paragraphs": [
+          "Gregg Williams spent four days at Boavista swinging between the two extremes of his game, apparently at random. Round one ended in collapse: triple bogeys at the 15th, 16th and 17th, then a quadruple-bogey 8 at the last. Thirteen shots gone in four holes, and not a single net par among them.",
+          "Round two produced the same shape, relocated to the middle of the card. A triple at the 8th, a double at the 9th, a quadruple-bogey 8 at the 10th and a triple at the 11th. Twelve shots dropped across another four-hole stretch without a net par, undoing at a stroke the run at the 3rd, 4th and 5th that had put him four net shots to the good. He has a gift for building things and a matching gift for standing near them afterwards.",
+          "Round three began just as badly, with a quadruple-bogey 7 at the par-3 2nd, which dropped him to the bottom of the TEG 3 Wooden Spoon race. What followed was the best golf of his life. Williams signed for 97, four under net par: his best gross round at Boavista on his sixth visit to the course, eight strokes better than his previous visit and well inside the 105 he had managed at TEG 2. It stands as the third-best round in TEG history to date, and nobody who watched round one saw it coming.",
+          "Round four returned to type, with quadruple bogeys at the 3rd, the 7th and the 12th."
+        ],
+        "words": 247,
+        "compelling": 7,
+        "humour": 8,
+        "is_lead": false
+      },
+      {
+        "kicker": "WOODEN SPOON",
+        "headline": "A 12, an 89, and the Spoon",
+        "standfirst": "Henry Meller played the best round anyone managed in TEG 3 and still finished four adrift of Stuart Neumann, retaining the Wooden Spoon he brought with him from TEG 2.",
+        "paragraphs": [
+          "Henry Meller's TEG 3 contained both the worst hole yet recorded and one of the best rounds. At Boavista's 17th in round one he took 12 on a par four, eight over, the heaviest single-hole loss to par in TEG history to that point and the worst of his own career. It dropped him to the bottom of the TEG 3 Wooden Spoon race, a position he had been loitering near in any case.",
+          "The next day he shot 18 over gross for a net score of two under par. That is 89 strokes, the second-best round and second-best gross round in TEG history to date. It was also his best score at Boavista, two shots better than the 91 he had managed on his previous visit in TEG 2, on a course he was playing for the seventh time. For one afternoon he was the finest golfer in the field, and he had the decency not to mention it.",
+          "Round three undid it, methodically and without hurry. A triple bogey at the 1st. A 10 at the par-five 3rd. A quadruple bogey at the 6th. That sent him back to last in the Spoon race, the bleeding stopped only by a birdie at the 11th; he was far stronger on the front nine than the back. Round four brought another quadruple bogey, at the 7th, before three straight gross pars from the 12th, by which point the arithmetic had long since stopped listening.",
+          "He finished 16 over net, and collected the Wooden Spoon. He had, at various moments, the best round of the tournament and the worst hole in the history of the thing. Only one of them came with a prize."
+        ],
+        "words": 283,
+        "compelling": 7,
+        "humour": 8,
+        "is_lead": false
+      },
+      {
+        "kicker": "GREEN JACKET",
+        "headline": "Mullin Rewrites Boavista, Loses His Crown",
+        "standfirst": "Stripped of the Trophy he won in TEG 2, David Mullin responded with the lowest gross round in Boavista's history and a Green Jacket won by twelve.",
+        "paragraphs": [
+          "David Mullin took the TEG 3 Green Jacket at +72 gross, twelve clear of Stuart Neumann, over four rounds played on the same Howard Swan parkland at Boavista in the Algarve in October 2010.",
+          "The tone was set in the opening round. Mullin's +17 gross was, at that point, the best gross round anyone had recorded in TEG competition. By the third round he had bettered it himself. That 85 gross, +14, was a new Boavista course record, taking four strokes off the 89 that had stood across fifteen previous visits to the course. It was also a personal course best, since the 89 in question was his own, set in TEG 2. He has now beaten himself and everybody else with a single card. In net terms the round came in at \u22124, the third-best round in TEG history to date. Neumann answered on the same day with +18 gross, but the gap was already too wide to be addressed by good manners.",
+          "It was not a flawless trip. In the second round Mullin ran up a 9 at the 17th, a quintuple bogey and his worst return on a par 4. In the final round he took 7 at the par-three 11th. Neither cost him anything material. With a twelve-shot margin over Neumann, the Jacket had been decided long before the errors were entitled to an opinion."
+        ],
+        "words": 229,
+        "compelling": 7,
+        "humour": 4,
+        "is_lead": false
+      }
+    ],
+    "standings": [
+      {
+        "round": 1,
+        "trophy": "JB -9 | DM -1 | SN +4 | GW +5 | HM +8",
+        "jacket": "DM +17 | JB +19 | SN +22 | HM +28 | GW +35"
+      },
+      {
+        "round": 2,
+        "trophy": "JB -11 (R2: -2) | DM +2 (R2: +3) | GW +6 (R2: +1) | HM +6 (R2: -2) | SN +7 (R2: +3)",
+        "jacket": "DM +38 (R2: +21) | SN +43 (R2: +21) | JB +45 (R2: +26) | HM +46 (R2: +18) | GW +66 (R2: +31)"
+      },
+      {
+        "round": 3,
+        "trophy": "JB -18 (R3: -7) | DM -2 (R3: -4) | GW +2 (R3: -4) | SN +7 (R3: 0) | HM +12 (R3: +6)",
+        "jacket": "DM +52 (R3: +14) | SN +61 (R3: +18) | JB +66 (R3: +21) | HM +72 (R3: +26) | GW +92 (R3: +26)"
+      },
+      {
+        "round": 4,
+        "trophy": "JB -18 (R4: 0) | DM 0 (R4: +2) | GW +7 (R4: +5) | SN +12 (R4: +5) | HM +16 (R4: +4)",
+        "jacket": "DM +72 (R4: +20) | SN +84 (R4: +23) | JB +94 (R4: +28) | HM +96 (R4: +24) | GW +127 (R4: +35)"
+      }
+    ],
+    "records": [
+      {
+        "category": "TEG records",
+        "text": "Jon Baker's -7 is the 2nd-best round in TEG history to date (R3)"
+      },
+      {
+        "category": "TEG records",
+        "text": "Gregg Williams's -4 is the 3rd-best round in TEG history to date (R3)"
+      },
+      {
+        "category": "TEG records",
+        "text": "Henry Meller's -2 is the 2nd-best round in TEG history to date (R2)"
+      },
+      {
+        "category": "TEG records",
+        "text": "Henry Meller's +18 (gross) is the 2nd-best Gross round in TEG history to date (R2)"
+      },
+      {
+        "category": "TEG records",
+        "text": "Stuart Neumann's +18 (gross) is the 3rd-best Gross round in TEG history to date (R3)"
+      },
+      {
+        "category": "TEG records",
+        "text": "Jon Baker's -9 is the best round in TEG history to date (R1)"
+      },
+      {
+        "category": "TEG records",
+        "text": "David Mullin's +14 (gross) is the best Gross round in TEG history to date (R3)"
+      },
+      {
+        "category": "TEG records",
+        "text": "Jon Baker's +19 (gross) is the 3rd-best Gross round in TEG history to date (R1)"
+      },
+      {
+        "category": "TEG records",
+        "text": "David Mullin's -4 is the 3rd-best round in TEG history to date (R3)"
+      },
+      {
+        "category": "TEG records",
+        "text": "Jon Baker's -2 is the 2nd-best round in TEG history to date (R2)"
+      },
+      {
+        "category": "TEG records",
+        "text": "David Mullin's +17 (gross) is the best Gross round in TEG history to date (R1)"
+      },
+      {
+        "category": "TEG records",
+        "text": "David Mullin's -1 is the 3rd-best round in TEG history to date (R1)"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Jon Baker's -18 net-vs-par is a personal Trophy best"
+      },
+      {
+        "category": "Rare feats",
+        "text": "Stuart Neumann runs up a 10 (sextuple bogey) at the 17th (R4) \u2014 his career-worst on a par-4"
+      },
+      {
+        "category": "Rare feats",
+        "text": "Henry Meller runs up a 12 (+8 (blow-up)) at the 17th (R1) \u2014 a new TEG-record worst on a par-4; his career-worst on a par-4"
+      },
+      {
+        "category": "Rare feats",
+        "text": "Henry Meller runs up a 10 (quintuple bogey) at the 3rd (R3) \u2014 his career-worst on a par-5"
+      },
+      {
+        "category": "Rare feats",
+        "text": "David Mullin runs up a 9 (quintuple bogey) at the 17th (R2) \u2014 his career-worst on a par-4"
+      }
+    ]
+  },
+  {
+    "teg": 4,
+    "title": "Seven Ahead at the Eighth, Eight Behind at the End",
+    "dateline": {
+      "teg": "TEG 4",
+      "venue": "East Sussex, England",
+      "year": "2011"
+    },
+    "results": [
+      {
+        "label": "Trophy Winner",
+        "value": "David Mullin (winner, +9, by 8 over Jon Baker)",
+        "lead": true,
+        "runner_up": "Runner-up: Jon Baker",
+        "value_name": "David Mullin",
+        "value_qual": "(winner, +9, by 8 over Jon Baker)"
+      },
+      {
+        "label": "Green Jacket",
+        "value": "David Mullin (winner, +81, by 19 over Stuart Neumann)",
+        "lead": false,
+        "runner_up": "Runner-up: Stuart Neumann",
+        "value_name": "David Mullin",
+        "value_qual": "(winner, +81, by 19 over Stuart Neumann)"
+      },
+      {
+        "label": "Wooden Spoon",
+        "value": "Gregg Williams (loser, +40 net VP, by 5 from Henry Meller)",
+        "lead": false,
+        "runner_up": "Next above: Henry Meller",
+        "value_name": "Gregg Williams",
+        "value_qual": "(loser, +40 net VP, by 5 from Henry Meller)"
+      }
+    ],
+    "articles": [
+      {
+        "kicker": "TROPHY",
+        "headline": "Baker Leads by Seven, Loses by Eight",
+        "standfirst": "David Mullin never finished a round worse than second of five, and when the defending champion came apart between the 9th and the 16th at Bletchingley there was only one man in position to pick it up.",
+        "paragraphs": [
+          "David Mullin won the TEG 4 Trophy at +9 net against par, eight clear of Jon Baker. It is the lowest Trophy total recorded in TEG history, and his own best. He managed it by declining, at any stage, to do anything of interest: rounds of 91, 94, 88 and 91 at Ashdown, Lingfield, Crowborough and Bletchingley, and no collapse requiring explanation. In this company, that amounts to a philosophical position.",
+          "The drama belonged to Baker, and it travelled in the opposite direction. He arrived at the final round at Bletchingley in contention, birdied the par-3 2nd to move into the outright lead, and then eagled the par-4 8th, a two on a hole he was getting a shot at, and the only eagle struck by anyone in TEG 4. He stood on the summit, seven ahead, surveying the view. Nobody had told him the summit was a ledge.",
+          "What followed occupied eight holes. Baker played 9 through 16 in 27 shots over par, and the itemisation has a certain grandeur: double bogeys at the 9th, 13th and 16th, triple bogeys at the 10th, 11th and 14th, a nine at the par-3 12th and an eleven at the par-5 15th. Both of those are the worst he has made on a par 3 and a par 5. He went seven consecutive holes, the 9th to the 15th, without a net par. He never stopped playing golf. He simply stopped scoring at it.",
+          "The round finished at +9 net, a 12-shot swing from his -3 at Crowborough the day before. His gross total of +113 was still a personal best, which is the sort of consolation one accepts quietly and does not mention again."
+        ],
+        "words": 283,
+        "compelling": 9,
+        "humour": 6,
+        "is_lead": true
+      },
+      {
+        "kicker": "WOODEN SPOON",
+        "headline": "Twenty-Eight Blow-Ups Buy One Spoon",
+        "standfirst": "Gregg Williams slid from third to fifth over four rounds, set an all-time TEG record for triple-bogeys-plus and finished 5 adrift of Henry Meller, who had taken the last two Spoons.",
+        "paragraphs": [
+          "Gregg Williams finished the 2011 trip to East Sussex and Surrey at +40 net against par, which was enough to hand him the TEG 4 Wooden Spoon. The number that will outlast the result is 28. That is how many triple bogeys or worse he assembled across four rounds. It is an all-time TEG record, and it is not a close one.",
+          "They arrived in clusters. At Royal Ashdown Forest in round one he bled 22 shots over the closing nine holes, with four triple bogeys among them. At Crowborough he lost 18 shots in the first six holes, including quadruple bogeys at the 2nd, 4th and 5th; by the time he walked to the 7th tee he was eighteen over for the day and had played six holes. The final round at Bletchingley was the worst of it: a triple, a quad and a nine at the par-five 6th cost 13 shots in four holes, and the closing stretch from the 13th leaked another 16. The round came in at +15 net and +43 gross, both the worst of his career to date.",
+          "The bottom of the Spoon race did change hands late. Williams dropped to last at the 6th in the final round, and Henry Meller relieved him of the position at the 11th with a ten at the par five. The relief proved temporary. Williams was holding it at the end.",
+          "One consolation: his gross aggregate of +152 was, at that point, the best he had recorded. A personal best constructed almost entirely from triple bogeys is still a personal best."
+        ],
+        "words": 264,
+        "compelling": 7,
+        "humour": 8,
+        "is_lead": false
+      },
+      {
+        "kicker": "GREEN JACKET",
+        "headline": "Nineteen Clear: Mullin Makes It Three",
+        "standfirst": "Top of the gross after every round, Mullin's +81 is the lowest total TEG has seen \u2014 and Stuart Neumann's personal-best +100 was nowhere near it.",
+        "paragraphs": [
+          "David Mullin won the TEG 4 Green Jacket with a gross total of +81, the lowest gross aggregate recorded in TEG to that point and the best of his own career. The margin was 19 strokes over Stuart Neumann. Eighty-one shots more than the four courses asked for, and it was the finest golf TEG had seen. The standard is what it is.",
+          "The four rounds of the 2011 tournament took the field around East Sussex and Surrey, none of the courses previously visited: Royal Ashdown Forest, Lingfield Park, Crowborough Beacon and Bletchingley. Mullin's card read 91 at Ashdown, 94 at Lingfield, 88 at Crowborough and 91 at Bletchingley. No round worse than 94, and only one above 91.",
+          "The Crowborough round was the centrepiece. Mullin's 88 there came in at +17 against par, the second-best gross round in TEG history at the time, and it was his only sub-90 score of the trip. Crowborough, a heathland course with eight holes redesigned by Alister MacKenzie, gave up nothing similar to anyone else.",
+          "Neumann's tournament deserves separating from the margin. His +100 gross total was a personal best, built on rounds of 96, 99, 94 and 94, improving in each of the last three rounds. In most editions that would have been a competitive number. Here it was second place by nineteen, comfortably clear of the rest, and never once within hailing distance of the Jacket. He did everything that was asked of him. It was simply the wrong tournament to do it in."
+        ],
+        "words": 253,
+        "compelling": 6,
+        "humour": 3,
+        "is_lead": false
+      }
+    ],
+    "standings": [
+      {
+        "round": 1,
+        "trophy": "JB +2 | DM +5 | GW +8 | SN +10 | HM +14",
+        "jacket": "DM +23 | JB +26 | SN +28 | HM +32 | GW +36"
+      },
+      {
+        "round": 2,
+        "trophy": "DM +9 (R2: +4) | JB +11 (R2: +9) | GW +15 (R2: +7) | HM +16 (R2: +2) | SN +19 (R2: +9)",
+        "jacket": "DM +45 (R2: +22) | HM +52 (R2: +20) | SN +55 (R2: +27) | JB +59 (R2: +33) | GW +71 (R2: +35)"
+      },
+      {
+        "round": 3,
+        "trophy": "DM +8 (R3: -1) | JB +8 (R3: -3) | SN +24 (R3: +5) | GW +25 (R3: +10) | HM +29 (R3: +13)",
+        "jacket": "DM +62 (R3: +17) | SN +78 (R3: +23) | JB +80 (R3: +21) | HM +83 (R3: +31) | GW +109 (R3: +38)"
+      },
+      {
+        "round": 4,
+        "trophy": "DM +9 (R4: +1) | JB +17 (R4: +9) | SN +28 (R4: +4) | HM +35 (R4: +6) | GW +40 (R4: +15)",
+        "jacket": "DM +81 (R4: +19) | SN +100 (R4: +22) | HM +107 (R4: +24) | JB +113 (R4: +33) | GW +152 (R4: +43)"
+      }
+    ],
+    "records": [
+      {
+        "category": "TEG records",
+        "text": "David Mullin's +9 net-vs-par is the best Trophy total in TEG history"
+      },
+      {
+        "category": "TEG records",
+        "text": "David Mullin's +81 is the best Gross total in TEG history"
+      },
+      {
+        "category": "TEG records",
+        "text": "David Mullin's +17 (gross) is the 2nd-best Gross round in TEG history to date (R3)"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Gregg Williams's +152 is a personal Gross best"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Henry Meller's +107 is a personal Gross best"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Jon Baker's +113 is a personal Gross best"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Stuart Neumann's +100 is a personal Gross best"
+      },
+      {
+        "category": "Personal worsts",
+        "text": "Gregg Williams's worst round to date: +15 (R4)"
+      },
+      {
+        "category": "Personal worsts",
+        "text": "Gregg Williams's worst Gross round to date: +43 (R4)"
+      },
+      {
+        "category": "Personal worsts",
+        "text": "Jon Baker's worst round to date: +9 (R2)"
+      },
+      {
+        "category": "Rare feats",
+        "text": "Henry Meller runs up a 12 (+9 (blow-up)) at the 11th (R1) \u2014 a new TEG-record worst on a par-3; his career-worst on a par-3"
+      },
+      {
+        "category": "Rare feats",
+        "text": "Jon Baker runs up a 11 (sextuple bogey) at the 15th (R4) \u2014 his career-worst on a par-5"
+      },
+      {
+        "category": "Rare feats",
+        "text": "Jon Baker runs up a 9 (sextuple bogey) at the 12th (R4) \u2014 his career-worst on a par-3"
+      },
+      {
+        "category": "Rare feats",
+        "text": "Jon Baker eagles the par-4 8th (R4)"
+      },
+      {
+        "category": "Rare feats",
+        "text": "Henry Meller runs up a 10 (quintuple bogey) at the 15th (R4) \u2014 his career-worst on a par-5"
+      },
+      {
+        "category": "Rare feats",
+        "text": "Henry Meller runs up a 10 (quintuple bogey) at the 11th (R4) \u2014 his career-worst on a par-5"
+      }
+    ]
+  },
+  {
     "teg": 5,
     "title": "The Great Reversal: Gregg Williams by Two as David Mullin Takes the Spoon",
     "dateline": {
@@ -893,21 +1267,6 @@
         "compelling": 7,
         "humour": 8,
         "is_lead": false
-      },
-      {
-        "kicker": "SIDEBAR",
-        "headline": "Quinta da Marinha Bites Back",
-        "standfirst": "TEG 8's only repeat venue took an 8 or worse from four of the six in R3, cut the Trophy lead from 11 to 5 and briefly relieved David Mullin of the Green Jacket.",
-        "paragraphs": [
-          "The second visit to Quinta da Marinha, on the Friday, quietly repossessed most of what the field had built at Penha Longa. Four of the six players ran up an 8 or worse: Stuart Neumann took 11 at the par-five 10th, Alex Baker 10 at the par-four 8th, Gregg Williams 10 at the par-five 11th, and David Mullin 8 at the 12th.",
-          "Neumann's damage came in bulk, which is his preferred format: 17 shots dropped over the first five holes, including a 10 at the 1st, then 13 more across the 9th, 10th and 11th. Alex Baker bled 13 shots from the 7th to the 10th and added a quadruple bogey at the 12th. Williams gave back 14 shots between the 8th and the 11th.",
-          "The scoring told the story plainly. Mullin signed for 26 points, the worst round of his career, ten fewer than the 36 he posted in round two. Williams fell from 41 points to 29. Mullin also lost the TEG 8 Green Jacket lead at the 13th, having held it for 36 holes since the 13th of round one; Jon Baker took it over, his 89 the lowest gross return of the day's field on the course.",
-          "After three rounds Williams led the TEG 8 Trophy on Stableford, level with the player behind him, while Jon Baker held the Jacket."
-        ],
-        "words": 224,
-        "compelling": 7,
-        "humour": 7,
-        "is_lead": false
       }
     ],
     "standings": [
@@ -956,6 +1315,773 @@
       {
         "category": "Rare feats",
         "text": "Stuart Neumann runs up a 8 (quintuple bogey) at the 14th (R1) \u2014 his career-worst on a par-3"
+      }
+    ]
+  },
+  {
+    "teg": 9,
+    "title": "A Record 168, and Four Holes That Settled It: John Patterson Wins TEG 9",
+    "dateline": {
+      "teg": "TEG 9",
+      "venue": "Lisbon Coast, Portugal",
+      "year": "2016"
+    },
+    "results": [
+      {
+        "label": "Trophy Winner",
+        "value": "John Patterson (winner, 168 pts, by 6 from Alex Baker)",
+        "lead": true,
+        "runner_up": "Runner-up: Alex Baker",
+        "value_name": "John Patterson",
+        "value_qual": "(winner, 168 pts, by 6 from Alex Baker)"
+      },
+      {
+        "label": "Green Jacket",
+        "value": "David Mullin (winner, +67, by 10 from Jon Baker)",
+        "lead": false,
+        "runner_up": "Runner-up: Jon Baker",
+        "value_name": "David Mullin",
+        "value_qual": "(winner, +67, by 10 from Jon Baker)"
+      },
+      {
+        "label": "Wooden Spoon",
+        "value": "Stuart Neumann (loser, 127 pts)",
+        "lead": false,
+        "runner_up": "Next above: Gregg Williams",
+        "value_name": "Stuart Neumann",
+        "value_qual": "(loser, 127 pts)"
+      }
+    ],
+    "articles": [
+      {
+        "kicker": "TROPHY",
+        "headline": "John Patterson's 168 Sets a TEG Record",
+        "standfirst": "Best-in-field rounds of 49 and 47 at Praia D'El Rey framed a Round 3 stumble that let Alex Baker level the TEG 9 Trophy with four holes left to play.",
+        "paragraphs": [
+          "John Patterson won the TEG 9 Trophy with 168 points, six clear of Alex Baker, and no one in the history of the TEG has signed for more. It was also a personal best on gross, at +88, and it came on his first visit to either course on the Lisbon Coast rota.",
+          "The tournament did not begin cleanly. At Royal \u00d3bidos in round one he took 10 at the 4th. A sextuple bogey. A blank. He then went out the following day at Praia D'El Rey and returned 49 points, the second-highest round ever recorded in the TEG. The heart of it was five holes, the 9th to the 13th: bogey, par, par, birdie, par, worth 17 points on its own. No explanation was offered for a man doing both of those things in the same tournament, and none was demanded.",
+          "Round three at Royal \u00d3bidos removed most of the cushion. He posted 34 points, a fall of 15 on the previous day, and enough to invite Alex Baker back into a conversation Baker had no business rejoining. Patterson answered with 47 in the final round back at Praia D'El Rey, a swing of 13 in the other direction. The shape of his four days is less a leaderboard than a seismograph.",
+          "Baker's own finish settled the margin. Over holes 14 to 17 he went double bogey, quadruple bogey, triple bogey, double bogey. Eleven shots dropped in four holes. He had drawn level with four to play and then dismantled that position with real thoroughness. The six points on the final scoreboard were written there."
+        ],
+        "words": 266,
+        "compelling": 9,
+        "humour": 5,
+        "is_lead": true
+      },
+      {
+        "kicker": "SIDEBAR",
+        "headline": "Alex Baker's Opening 115 Cost Him the Trophy",
+        "standfirst": "He set a new Royal \u00d3bidos course-worst in Round 1, then matched personal bests of 44 points at Praia D'El Rey twice over \u2014 and was level for the lead with four holes remaining.",
+        "paragraphs": [
+          "Alex Baker's TEG 9 began with the worst round Royal \u00d3bidos has ever witnessed. His 115 gross on the Friday beat a previous course-worst of 108, a mark that had stood through six prior visits, and it was also the worst gross round of his own career at +43. Two holes did most of the damage: a nine at the 12th and an eleven at the 14th, the latter the worst he has ever scored relative to par on a par four. An eleven on a par four is not a golf hole. It is a project.",
+          "What followed was somebody else entirely. At Praia D'El Rey on the Saturday he posted 44 points and +27 gross, both personal bests, and he then reproduced both figures exactly in Monday's final round. The Monday 44 came despite quadruple bogeys at the 6th and the 15th, and that four-hole stretch from the 14th to the 17th that cost him eleven shots to par. He played his best golf and his worst golf in the same afternoon, and the card simply averaged them out.",
+          "The trip left him with course bests at both venues. His 100 at Praia D'El Rey improved on a previous best of 109 there and was nine strokes better than his last visit. His 102 at Royal \u00d3bidos, in the third round, bettered the 108 he had managed on his only previous trip. Across the four rounds his gross total of +127 was the lowest he has recorded in a TEG, a personal best in the TEG 9 Green Jacket. All of it genuine progress. None of it available on the Friday."
+        ],
+        "words": 273,
+        "compelling": 9,
+        "humour": 6,
+        "is_lead": false
+      },
+      {
+        "kicker": "SIDEBAR",
+        "headline": "An Eleven, a Ten and a Personal Best",
+        "standfirst": "Gregg Williams took eleven shots at the 7th at Praia D'El Rey and still finished TEG 9 with the best gross total of his career \u2014 and he was far from the only man making a mess.",
+        "paragraphs": [
+          "Gregg Williams spent TEG 9 assembling holes that other men encounter only while asleep. It began at Royal \u00d3bidos in round one, where he took nine at the par-three 15th, six over par and a personal worst against par. At Praia D'El Rey the next day he ran up a 10 at the ninth, another six over. Back at \u00d3bidos in round three, the 15th found him a second time, this time for a seven. Then, in the final round, the par-five seventh at Praia D'El Rey produced an 11. Six over again, and the largest single number of his four days. All four were worth precisely nothing in Stableford terms, which at least lent them a certain consistency.",
+          "He had company. Jon Baker signed for three nines: at the par-five 18th in round one, the 11th in round three, and the 17th in the final round, stroke index one, each a quadruple bogey. David Mullin contributed a quintuple-bogey nine at the 10th at \u00d3bidos in round three, his own worst hole relative to par.",
+          "The oddity is that the ledger did not derail Williams. He finished with a gross total of +115, the best figure of his career in the TEG 9 Green Jacket standings, and his 97 at Royal \u00d3bidos was a course best, three strokes better than his previous visit there. The books balanced. Nobody is quite sure how."
+        ],
+        "words": 232,
+        "compelling": 7,
+        "humour": 9,
+        "is_lead": false
+      },
+      {
+        "kicker": "WOODEN SPOON",
+        "headline": "Stuart Neumann Improves Daily, Finishes Last Anyway",
+        "standfirst": "The reigning Wooden Spoon holder climbed from 23 points to 37, set a personal best at Royal \u00d3bidos and still ended TEG 9 sixteen points behind the next man up.",
+        "paragraphs": [
+          "Stuart Neumann took the TEG 9 Wooden Spoon for the second tournament running, finishing in Portugal on 127 Stableford points, bottom of the field after all four rounds and 16 adrift.",
+          "The pattern was set in the opening round at Royal \u00d3bidos, where he managed 23 points and distributed them with no sense of fairness whatsoever. Seventeen on the front nine. Six on the back. An 11-point gap between two halves of the same round, played consecutively, by the same person. There was nothing there to build on.",
+          "There were better passages later. In the third round, back at Royal \u00d3bidos, he picked up nine points across holes 6 to 8, three points on each, and then 12 more in a four-hole run from the 10th, holding a point a hole through two bogeys and two pars. That round produced a gross 98, one stroke better than the 99 he had posted on his only previous visit to the course in TEG 7, and his best score at Royal \u00d3bidos.",
+          "His strongest stretch came on the final day at Praia D'El Rey, where holes 11 to 15 yielded 16 points, the run built on four holes without dropping a shot to par and a birdie at the 13th. He also signed for 98 there, though that was some way off his form on the same course in TEG 7, when he had gone round in 84, 14 strokes fewer than his last visit.",
+          "The improvement was real. He got better every time out and finished last after every round anyway. The Spoon was never in doubt, and it never left the room."
+        ],
+        "words": 272,
+        "compelling": 7,
+        "humour": 8,
+        "is_lead": false
+      },
+      {
+        "kicker": "GREEN JACKET",
+        "headline": "David Mullin's Course Record Kills the Jacket Race",
+        "standfirst": "His 87 at Royal \u00d3bidos in Round 1 broke a mark that had stood through six visits and handed him a gross lead nobody touched \u2014 Jon Baker's career-best +77 finished ten adrift.",
+        "paragraphs": [
+          "David Mullin won the TEG 9 Green Jacket, his seventh, with a gross total of +67, ten clear of Jon Baker. It is the lowest gross total recorded in TEG history and Mullin's own career best.",
+          "The tone was set on the opening day at Royal \u00d3bidos, where Mullin shot 87 to set a course record. The previous mark, across six prior visits by the field, was 90, which was also the best Mullin had managed there himself. Three strokes better than his last visit, it was a course personal best as well as a record.",
+          "The four rounds were not flawless, and it would be a disservice to the man to pretend otherwise. In the third round, back at Royal \u00d3bidos, he ran up a nine at the par-four 10th, a quintuple bogey and the worst he has posted on a par four. He then opened the final round at Praia D'El Rey with an eight at the 1st, which is a bold way to begin a coronation. He recovered from both with the bearing of someone who had never entertained the alternative. At Praia D'El Rey he played the 2nd, 3rd and 4th in par, then took nine Stableford points from three straight pars at the 7th, 8th and 9th.",
+          "Baker's runner-up finish came with a personal-best gross total of +77, and his own course best of 89 at Royal \u00d3bidos, nine strokes better than his previous visit there. It was not close to enough."
+        ],
+        "words": 247,
+        "compelling": 7,
+        "humour": 4,
+        "is_lead": false
+      }
+    ],
+    "standings": [
+      {
+        "round": 1,
+        "trophy": "JB 39 | DM 38 | JP 38 | AB 32 | GW 31 | SN 23",
+        "jacket": "DM +15 | JB +17 | JP +28 | GW +35 | SN +42 | AB +43"
+      },
+      {
+        "round": 2,
+        "trophy": "JP 87 (R2: 49) | DM 77 (R2: 39) | AB 76 (R2: 44) | JB 76 (R2: 37) | GW 67 (R2: 36) | SN 53 (R2: 30)",
+        "jacket": "DM +29 (R2: +14) | JB +36 (R2: +19) | JP +42 (R2: +14) | GW +63 (R2: +28) | AB +70 (R2: +27) | SN +74 (R2: +32)"
+      },
+      {
+        "round": 3,
+        "trophy": "JP 121 (R3: 34) | AB 118 (R3: 42) | DM 110 (R3: 33) | JB 110 (R3: 34) | GW 105 (R3: 38) | SN 90 (R3: 37)",
+        "jacket": "DM +51 (R3: +22) | JB +58 (R3: +22) | JP +71 (R3: +29) | GW +88 (R3: +25) | AB +100 (R3: +30) | SN +100 (R3: +26)"
+      },
+      {
+        "round": 4,
+        "trophy": "JP 168 (R4: 47) | AB 162 (R4: 44) | DM 148 (R4: 38) | JB 146 (R4: 36) | GW 143 (R4: 38) | SN 127 (R4: 37)",
+        "jacket": "DM +67 (R4: +16) | JB +77 (R4: +19) | JP +88 (R4: +17) | GW +115 (R4: +27) | SN +125 (R4: +25) | AB +127 (R4: +27)"
+      }
+    ],
+    "records": [
+      {
+        "category": "TEG records",
+        "text": "John Patterson's 168 pts is the best Trophy total in TEG history"
+      },
+      {
+        "category": "TEG records",
+        "text": "David Mullin's +67 is the best Gross total in TEG history"
+      },
+      {
+        "category": "TEG records",
+        "text": "John Patterson's 49 pts is the 2nd-best round in TEG history to date (R2)"
+      },
+      {
+        "category": "TEG records",
+        "text": "John PATTERSON \u2014 30 Stableford on the Back nine (R2) is the best Back nine Stableford in TEG history"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Alex Baker posts a personal-best round: 44 pts (R4, R2)"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Alex Baker posts a personal-best Gross round: +27 (R4, R2)"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Alex Baker's +127 is a personal Gross best"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Gregg Williams's +115 is a personal Gross best"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Jon Baker's +77 is a personal Gross best"
+      },
+      {
+        "category": "Personal bests",
+        "text": "John Patterson's +88 is a personal Gross best"
+      },
+      {
+        "category": "Personal bests",
+        "text": "John PATTERSON \u2014 30 Stableford on the Back nine (R2) is a personal-best Back nine Stableford"
+      },
+      {
+        "category": "Personal bests",
+        "text": "John PATTERSON \u2014 +2 Gross on the Back nine (R2) is a personal-best Back nine Gross"
+      },
+      {
+        "category": "Personal worsts",
+        "text": "Alex Baker's worst Gross round to date: +43 (R1)"
+      },
+      {
+        "category": "Rare feats",
+        "text": "Gregg Williams runs up a 11 (sextuple bogey) at the 7th (R4) \u2014 his career-worst on a par-5"
+      },
+      {
+        "category": "Rare feats",
+        "text": "David Mullin runs up a 9 (quintuple bogey) at the 10th (R3) \u2014 his career-worst on a par-4"
+      },
+      {
+        "category": "Rare feats",
+        "text": "Alex Baker runs up a 11 (septuple bogey) at the 14th (R1) \u2014 his career-worst on a par-4"
+      },
+      {
+        "category": "Rare feats",
+        "text": "Gregg Williams runs up a 9 (sextuple bogey) at the 15th (R1) \u2014 his career-worst on a par-3"
+      },
+      {
+        "category": "Rare feats",
+        "text": "Stuart Neumann runs up a 8 (quintuple bogey) at the 15th (R1) \u2014 his career-worst on a par-3"
+      }
+    ]
+  },
+  {
+    "teg": 10,
+    "title": "Two Records at Boavista: Alex Baker Wins the TEG 10 Trophy by Eleven",
+    "dateline": {
+      "teg": "TEG 10",
+      "venue": "Algarve, Portugal",
+      "year": "2017"
+    },
+    "results": [
+      {
+        "label": "Trophy Winner",
+        "value": "Alex Baker (1st Trophy)",
+        "lead": true,
+        "runner_up": "Runner-up: Gregg Williams",
+        "value_name": "Alex Baker",
+        "value_qual": "(1st Trophy)"
+      },
+      {
+        "label": "Green Jacket",
+        "value": "David Mullin (8th Jacket)",
+        "lead": false,
+        "runner_up": "Runner-up: Jon Baker",
+        "value_name": "David Mullin",
+        "value_qual": "(8th Jacket)"
+      },
+      {
+        "label": "Wooden Spoon",
+        "value": "John Patterson (1st Spoon)",
+        "lead": false,
+        "runner_up": "Next above: Stuart Neumann",
+        "value_name": "John Patterson",
+        "value_qual": "(1st Spoon)"
+      }
+    ],
+    "articles": [
+      {
+        "kicker": "TROPHY",
+        "headline": "Alex Baker Ends the Waiting with 184",
+        "standfirst": "Twice a runner-up and once a Spoon holder, Alex Baker got better in every round and finished with the highest Trophy total TEG has recorded.",
+        "paragraphs": [
+          "Alex Baker won the TEG 10 Trophy with 184 points, 11 clear of Gregg Williams. It is the highest Trophy total in the history of the competition, and comfortably his own best. There is no asterisk to attach and no argument to be had.",
+          "It was assembled in instalments. At Palmares, a course nobody in the field had seen before, he posted a personal best of 45 points on the Praia/Alvor loop, with a personal-best gross of +23. The following day, on Alvor/Lagos, he improved: 47 points, +22 gross, both personal bests again. He achieved that while taking a 10 at the par-five 13th. Five over par. No points. He appears to have regarded the hole as a private matter and moved on without comment.",
+          "The lead changed hands in that third round. David Mullin had held it for 30 holes, from the 12th of round one, and surrendered it at the sixth at Palmares, where Baker's par drew him level. Nothing more dramatic than a par. Baker led after round three on points and was never behind again.",
+          "The final round at Boavista removed the last of the doubt. Baker scored 51 points, the best round anyone has posted in TEG to date, off a gross +17 that was another personal best. The middle stretch did the work: 21 points across holes five to ten, four pars and two bogeys measured against the strokes he was receiving. His gross total of +90 was also a personal best, closing four days in which almost every round he played was the finest of his career."
+        ],
+        "words": 264,
+        "compelling": 9,
+        "humour": 4,
+        "is_lead": true
+      },
+      {
+        "kicker": "WOODEN SPOON",
+        "headline": "Ten, Then Eleven, at Boavista's Eighth",
+        "standfirst": "John Patterson arrived as the TEG 9 Trophy holder and finished bottom of the field in every single round, 32 points behind Stuart Neumann.",
+        "paragraphs": [
+          "John Patterson collected the TEG 10 Wooden Spoon, finishing on 112 points after four rounds in the Algarve.",
+          "The ruin came in isolated detonations rather than gradual decay. Boavista's par-five 8th claimed him twice: a 10 in the opening round, then an 11 in the final round, the highest score he has ever recorded on a par five. On both occasions he left with nothing written down. In between, the 1st at Palmares \u2014 Praia / Alvor took a 10 off him in round two, and the 8th at Palmares \u2014 Alvor / Lagos another 10 in round three.",
+          "That third round holds the worst of it. From the 11th to the 15th he went triple bogey, quintuple bogey, triple bogey, quadruple bogey, quadruple bogey. Nineteen shots dropped in five holes. Five holes without a net par. One Stableford point extracted from the entire enterprise.",
+          "The return to Boavista brought no clemency. Beyond the 11 at the 8th, he took 8 at the 10th and 9 at the closing hole, finishing on 21 points and 40 over gross. Both are the worst figures of his career, as a round and in gross terms.",
+          "His best gross of the four days was the 102 in round one at Boavista, on what was his first visit to a course the group has now played twelve times. He will have the other eleven to think about."
+        ],
+        "words": 233,
+        "compelling": 8,
+        "humour": 8,
+        "is_lead": false
+      },
+      {
+        "kicker": "GREEN JACKET",
+        "headline": "David Mullin Breaks Boavista, Then the Record Book",
+        "standfirst": "A 75 in R1 decided the TEG 10 Green Jacket before the field had settled; Jon Baker's personal-best gross total of +63 still lost by 12.",
+        "paragraphs": [
+          "David Mullin won the TEG 10 Green Jacket at +51 gross, 12 clear of Jon Baker. It is the lowest gross total ever returned in a TEG, and his own best.",
+          "The matter was largely settled on the opening day. At Boavista, on his eleventh visit, Mullin went round in 75 gross, +4. It is the best gross round in TEG history and a new course record, beating the previous mark of 82 set across 50 prior visits. It was also 23 strokes better than his last outing there. The same round yielded 49 Stableford points, the second-best round TEG has seen. Across the four days he recorded 6 birdies or better and 34 pars or better, both all-time records.",
+          "He was not immaculate. Having taken 42 points in round two at Palmares - Praia / Alvor, he managed 31 on the Alvor / Lagos loop the next day, a drop of 11, and closed that round with a quadruple-bogey 8 at the par-four 18th. Even the man rewriting the record book is entitled to one lapse of concentration on a closing hole.",
+          "Jon Baker had the better of him once. His +10 gross at Palmares - Praia / Alvor in round two is the third-best gross round in TEG history. Baker also posted a personal-best gross total of +63 and a Boavista personal best of 86 in round four, improving on his previous 90. At no point did any of this trouble the leader."
+        ],
+        "words": 245,
+        "compelling": 8,
+        "humour": 4,
+        "is_lead": false
+      },
+      {
+        "kicker": "SIDEBAR",
+        "headline": "Two Rounds, Two Tens at the 18th",
+        "standfirst": "Stuart Neumann came to the Algarve with back-to-back Wooden Spoons behind him and dodged a third by 32 points, on merit that was almost entirely John Patterson's.",
+        "paragraphs": [
+          "Stuart Neumann arrived in the Algarve with a decade of Boavista behind him, ten prior visits and a best gross of 82 from TEG 5, and discovered that the closing hole had entered his life as an administrative problem. In round one at Boavista he took 10 at the last. Six over par, at a stroke index 5 hole, for nothing. Twenty-four hours later, on the first ever TEG visit to the Praia/Alvor loop at Palmares, he did it again. Another 10 at the 18th, another six over, another blank. These are two different holes on two different courses, and no hole in his career has ever cost him more shots against par than either of them. They arrived in consecutive rounds, like a debt and its interest.",
+          "The Palmares round did not reserve its unpleasantness for the finish. He was five over at the 13th for a 10, five over again at the 14th for a 9, and three over at the 15th. Thirteen shots in three holes, not one of them producing a net par. What makes it remarkable is what came directly before: par, bogey, par, par from the 9th to the 12th, 14 Stableford points in four holes. For a quarter of an hour the round looked entirely governable.",
+          "It closed at 105. His best of the trip, a 98, waited politely until the return to Boavista in round four."
+        ],
+        "words": 234,
+        "compelling": 7,
+        "humour": 9,
+        "is_lead": false
+      }
+    ],
+    "standings": [
+      {
+        "round": 1,
+        "trophy": "DM 49 | AB 41 | GW 38 | JB 37 | SN 32 | JP 29",
+        "jacket": "DM +4 | JB +18 | GW +25 | AB +28 | JP +31 | SN +36"
+      },
+      {
+        "round": 2,
+        "trophy": "DM 91 (R2: 42) | AB 86 (R2: 45) | GW 86 (R2: 48) | JB 82 (R2: 45) | SN 69 (R2: 37) | JP 64 (R2: 35)",
+        "jacket": "DM +15 (R2: +11) | JB +28 (R2: +10) | GW +39 (R2: +14) | AB +51 (R2: +23) | JP +56 (R2: +25) | SN +69 (R2: +33)"
+      },
+      {
+        "round": 3,
+        "trophy": "AB 133 (R3: 47) | GW 133 (R3: 47) | DM 122 (R3: 31) | JB 117 (R3: 35) | SN 105 (R3: 36) | JP 91 (R3: 27)",
+        "jacket": "DM +38 (R3: +23) | JB +48 (R3: +20) | GW +54 (R3: +15) | AB +73 (R3: +22) | JP +92 (R3: +36) | SN +98 (R3: +29)"
+      },
+      {
+        "round": 4,
+        "trophy": "AB 184 (R4: 51) | GW 173 (R4: 40) | DM 162 (R4: 40) | JB 157 (R4: 40) | SN 144 (R4: 39) | JP 112 (R4: 21)",
+        "jacket": "DM +51 (R4: +13) | JB +63 (R4: +15) | GW +76 (R4: +22) | AB +90 (R4: +17) | SN +125 (R4: +27) | JP +132 (R4: +40)"
+      }
+    ],
+    "records": [
+      {
+        "category": "TEG records",
+        "text": "Alex Baker's 184 pts is the best Trophy total in TEG history"
+      },
+      {
+        "category": "TEG records",
+        "text": "David Mullin's +51 is the best Gross total in TEG history"
+      },
+      {
+        "category": "TEG records",
+        "text": "Jon Baker's +10 (gross) is the 3rd-best Gross round in TEG history to date (R2)"
+      },
+      {
+        "category": "TEG records",
+        "text": "David Mullin's +4 (gross) is the best Gross round in TEG history to date (R1)"
+      },
+      {
+        "category": "TEG records",
+        "text": "David Mullin's 49 pts is the 2nd-best round in TEG history to date (R1)"
+      },
+      {
+        "category": "TEG records",
+        "text": "Alex Baker's 51 pts is the best round in TEG history to date (R4)"
+      },
+      {
+        "category": "TEG records",
+        "text": "David MULLIN \u2014 -1 Gross on the Back nine (R1) is the best Back nine Gross in TEG history"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Alex Baker posts a personal-best Gross round: +17 (R4)"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Alex Baker's +90 is a personal Gross best"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Gregg Williams's +76 is a personal Gross best"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Jon Baker's +63 is a personal Gross best"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Gregg Williams posts a personal-best round: 48 pts (R2)"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Gregg Williams posts a personal-best Gross round: +14 (R2)"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Alex Baker posts a personal-best round: 47 pts (R3)"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Alex Baker posts a personal-best Gross round: +22 (R3)"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Alex Baker posts a personal-best round: 45 pts (R2)"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Alex Baker posts a personal-best Gross round: +23 (R2)"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Alex BAKER \u2014 28 Stableford on the Front nine (R2) is a personal-best Front nine Stableford"
+      },
+      {
+        "category": "Personal bests",
+        "text": "David MULLIN \u2014 28 Stableford on the Back nine (R1) is a personal-best Back nine Stableford"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Jon BAKER \u2014 27 Stableford on the Front nine (R2) is a personal-best Front nine Stableford"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Alex BAKER \u2014 +6 Gross on the Front nine (R2) is a personal-best Front nine Gross"
+      },
+      {
+        "category": "Personal bests",
+        "text": "David MULLIN \u2014 -1 Gross on the Back nine (R1) is a personal-best Back nine Gross"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Jon BAKER \u2014 +1 Gross on the Front nine (R2) is a personal-best Front nine Gross"
+      },
+      {
+        "category": "Personal worsts",
+        "text": "John Patterson's worst round to date: 21 pts (R4)"
+      },
+      {
+        "category": "Personal worsts",
+        "text": "John Patterson's worst Gross round to date: +40 (R4)"
+      },
+      {
+        "category": "Rare feats",
+        "text": "John Patterson runs up a 11 (sextuple bogey) at the 8th (R4) \u2014 his career-worst on a par-5"
+      },
+      {
+        "category": "Rare feats",
+        "text": "Stuart Neumann runs up a 10 (sextuple bogey) at the 18th (R2) \u2014 his career-worst on a par-4"
+      },
+      {
+        "category": "Rare feats",
+        "text": "Stuart Neumann runs up a 10 (sextuple bogey) at the 18th (R1) \u2014 his career-worst on a par-4"
+      }
+    ]
+  },
+  {
+    "teg": 11,
+    "title": "Four Ahead at the Third, Six Behind at the Last: The Baker Brothers in Catalonia",
+    "dateline": {
+      "teg": "TEG 11",
+      "venue": "Catalonia, Spain",
+      "year": "2018"
+    },
+    "results": [
+      {
+        "label": "Trophy Winner",
+        "value": "Jon Baker (143 pts, by 6 from Alex Baker)",
+        "lead": true,
+        "runner_up": "Runner-up: Alex Baker",
+        "value_name": "Jon Baker",
+        "value_qual": "(143 pts, by 6 from Alex Baker)"
+      },
+      {
+        "label": "Green Jacket",
+        "value": "Jon Baker (+70, by 3 from David Mullin)",
+        "lead": false,
+        "runner_up": "Runner-up: David Mullin",
+        "value_name": "Jon Baker",
+        "value_qual": "(+70, by 3 from David Mullin)"
+      },
+      {
+        "label": "Wooden Spoon",
+        "value": "David Mullin (125 pts)",
+        "lead": false,
+        "runner_up": "Next above: John Patterson",
+        "value_name": "David Mullin",
+        "value_qual": "(125 pts)"
+      }
+    ],
+    "articles": [
+      {
+        "kicker": "TROPHY",
+        "headline": "Alex Baker's Four-Shot Lead Lasted Three Holes",
+        "standfirst": "Jon Baker had led the Trophy for 45 holes before losing it at El Prat, and needed only an ordinary 35 on the Stadium course to take it back by six as his brother's final round unravelled in three separate collapses.",
+        "paragraphs": [
+          "Jon Baker had held the TEG 11 Trophy lead since the fourth hole of the opening round. Forty-five holes at the top, spanning three rounds. It ended on the Saturday at El Prat's Azul course, quietly, with nobody making a fuss. Alex Baker drew level at the first, where even a bogey was worth three points \u2014 which tells you rather a lot about the Azul's opening hole. He took the lead outright at the 13th, the middle of three straight pars worth nine points across the 12th to the 14th.",
+          "Jon Baker was crossing the identical ground in the opposite direction. Double, double, triple at the 11th, 12th and 13th. Three holes without a net par, conducted with the air of a man discharging an obligation. The brothers finished the round tied at the top of the Trophy, with Jon Baker leading the TEG 11 Green Jacket.",
+          "The final round at PGA Catalunya's Stadium course dismantled Alex Baker methodically. He posted 27 points, the worst round of his TEG career to that point, and 34 over gross. Seven shots went in three holes from the 4th. Eight more went from the 12th. Eight again over the closing three, including a quadruple-bogey eight at the 17th, which matched the eight he had already taken at the 9th and thereby lent the round a pleasing symmetry. Jon Baker had a quadruple bogey of his own at the 13th. It cost him nothing whatsoever. He could have taken another and still had change. He won the Trophy on 143 points by six, which is what happens when a man's disasters are simply better timed than everyone else's."
+        ],
+        "words": 275,
+        "compelling": 9,
+        "humour": 6,
+        "is_lead": true
+      },
+      {
+        "kicker": "SIDEBAR",
+        "headline": "Patterson's Eleven, And The Spoon Dodged",
+        "standfirst": "John Patterson arrived as the holder of the Wooden Spoon, posted the worst gross round the Tour course has seen and a six-over eleven at its 15th, and somehow handed the trinket to somebody else.",
+        "paragraphs": [
+          "John Patterson's four days in Catalonia were defined by the holes that got away from him, and they got away in numbers. The opening round on the PGA Catalunya Stadium course produced four: a quintuple-bogey 9 at the 4th, a quadruple-bogey 8 at the 10th, another 9 at the 13th and an 8 at the 17th. Not one of them returned a Stableford point.",
+          "Round two on the Tour course was worse. At the par-five 15th he ran up an 11, a sextuple bogey and the highest score relative to par he has recorded in a TEG round. It contributed to a gross 103, a new course-worst at PGA Catalunya Tour, beating the previous mark of 101 set across five earlier visits. Five visits of groundwork, then, and one afternoon to surpass it all.",
+          "El Prat's Azul course offered a mixed day. He took a 9 at the 16th, but earlier gathered nine points in three holes with bogeys at the 8th, 9th and 10th. Three bogeys. His best sustained run of the trip.",
+          "The closing round back on the Stadium course kept faith with the pattern. He dropped seven shots across the 7th, 8th and 9th without a net par among them, then eight more between the 12th and 14th, before finishing with back-to-back pars at the 16th and 17th for a 99. And yet, having trailed the TEG 11 Trophy lead by 16 points at one stage, he closed to within eight by the finish."
+        ],
+        "words": 247,
+        "compelling": 8,
+        "humour": 9,
+        "is_lead": false
+      },
+      {
+        "kicker": "WOODEN SPOON",
+        "headline": "Eight Jackets, And Now A Spoon",
+        "standfirst": "David Mullin shot personal bests at both PGA Catalunya courses and came second in the gross, yet finished the Stableford ten points behind anyone else after El Prat's back nine and the Stadium's closing stretch took their cut.",
+        "paragraphs": [
+          "David Mullin finished bottom of the TEG 11 field, collecting the Wooden Spoon with 125 points across the four rounds in Catalonia. Ten points adrift of the man immediately above him, which is not a near miss.",
+          "The scorecard was not the flat line that last place implies, and this is the part he will want read aloud. On the Tour Course in round two he took 10 points from holes 8 to 10, closing the run with a birdie at the par-five 10th, and his 85 there was a personal best on the course, four strokes better than the 89 from his only previous visit in TEG 6. The Stadium Course produced the same pattern: a round-four 91, three shots inside the 94 he managed at the same venue in TEG 6, and another course best.",
+          "The damage came in bursts, and it came generously. El Prat's Azul Course, new to the group in round three, caught him at the par-three 6th, where a 7 went down as a quadruple bogey and a blank. It caught him again from the 11th to the 15th, five consecutive holes without a net par, costing seven points against his handicap. The final round ran the same shape backwards: three straight pars from the 1st for nine points, then seven gross shots dropped over the 15th, 16th and 17th to finish. By then the Spoon had been settled for some time. He gave it those three holes anyway."
+        ],
+        "words": 245,
+        "compelling": 8,
+        "humour": 8,
+        "is_lead": false
+      },
+      {
+        "kicker": "GREEN JACKET",
+        "headline": "Two Course Records, One Green Jacket",
+        "standfirst": "Jon Baker rewrote the gross records at both PGA Catalunya courses in successive days, and finally converted three near-misses into the Jacket at the expense of David Mullin, the holder of eight.",
+        "paragraphs": [
+          "Jon Baker won the TEG 11 Green Jacket at +70, three clear of David Mullin, and he did it on the back of two days that rearranged the record books at Camiral. His opening 90 gross on the PGA Catalunya Stadium Course was a new course record, taking five strokes off the previous mark of 94 set across five prior visits. On the Friday he did it again on the Tour Course, going round in 84 to beat the standing record of 89. Both were personal course bests by some distance: nine strokes better than his previous best of 99 on the Stadium Course, six better than his 90 on the Tour.",
+          "The lead was not held throughout. Baker took it at the fourth hole of round one and kept it for 37 holes, across three rounds, before Mullin relieved him of it at the fifth on the Saturday at El Prat's Azul Course, a course neither man had seen before. Baker's reply arrived immediately: three holes without a dropped gross shot at the seventh, eighth and ninth, capped by a birdie at the par-five ninth, worth ten Stableford points. Mullin had held the lead for the length of an average conversation.",
+          "Mullin opened the final round with three pars for nine points and posted 91 on the Stadium Course, his own best there. The three strokes stayed exactly where they were. At +70 it is the third-best gross total of Baker's career."
+        ],
+        "words": 243,
+        "compelling": 8,
+        "humour": 4,
+        "is_lead": false
+      },
+      {
+        "kicker": "SIDEBAR",
+        "headline": "Fourteen Shots Better, Still Detonating",
+        "standfirst": "Gregg Williams gave up a quintuple bogey or worse in all four rounds, including eleven shots in four holes on the final day, and still walked off the Stadium course with the best gross figure he has ever posted there.",
+        "paragraphs": [
+          "Gregg Williams arrived at PGA Catalunya's Stadium Course for his third visit and left with a course personal best. His 99 in the final round of TEG 11 was fourteen strokes better than the 113 he posted there in TEG 6, the only previous time he had played it. On the Tour Course he matched rather than beat his history: 92 in round two, exactly the number he shot on his last visit. El Prat's Azul Course was new ground, and he negotiated it in 95.",
+          "What did not change was the appointment. Once per round, Williams sets aside one hole and pays into it. In round one at the Stadium the tithe was eight at the par-three 5th, a quintuple bogey. On the Tour Course it was a ten at the par-five 15th. At El Prat, eight at the par-four 5th. And in the final round, nestled in the middle of that career-best 99, nine at the par-four 10th. Four rounds, four payments, no missed instalments.",
+          "That last one came inside the worst passage of his four days. From the 8th through the 11th at the Stadium on Sunday, Williams played four holes in eleven over par: double bogey, double bogey, the nine, then another double. Remove those four holes and the number would look considerably kinder. The improvement stands regardless, and he is entitled to it."
+        ],
+        "words": 228,
+        "compelling": 7,
+        "humour": 8,
+        "is_lead": false
+      }
+    ],
+    "standings": [
+      {
+        "round": 1,
+        "trophy": "JB 35 | AB 32 | GW 30 | DM 29 | JP 26",
+        "jacket": "JB +18 | DM +20 | AB +28 | GW +29 | JP +40"
+      },
+      {
+        "round": 2,
+        "trophy": "JB 76 (R2: 41) | AB 74 (R2: 42) | GW 69 (R2: 39) | DM 65 (R2: 36) | JP 60 (R2: 34)",
+        "jacket": "JB +30 (R2: +12) | DM +33 (R2: +13) | AB +48 (R2: +20) | GW +49 (R2: +20) | JP +71 (R2: +31)"
+      },
+      {
+        "round": 3,
+        "trophy": "AB 110 (R3: 36) | JB 108 (R3: 32) | GW 104 (R3: 35) | JP 99 (R3: 39) | DM 94 (R3: 29)",
+        "jacket": "JB +51 (R3: +21) | DM +54 (R3: +21) | AB +72 (R3: +24) | GW +72 (R3: +23) | JP +96 (R3: +25)"
+      },
+      {
+        "round": 4,
+        "trophy": "JB 143 (R4: 35) | AB 137 (R4: 27) | GW 136 (R4: 32) | JP 135 (R4: 36) | DM 125 (R4: 31)",
+        "jacket": "JB +70 (R4: +19) | DM +73 (R4: +19) | GW +99 (R4: +27) | AB +106 (R4: +34) | JP +123 (R4: +27)"
+      }
+    ],
+    "records": [
+      {
+        "category": "Personal worsts",
+        "text": "Alex Baker's worst round to date: 27 pts (R4)"
+      },
+      {
+        "category": "Rare feats",
+        "text": "John Patterson runs up a 11 (sextuple bogey) at the 15th (R2) \u2014 his career-worst on a par-5"
+      }
+    ]
+  },
+  {
+    "teg": 12,
+    "title": "Twelve, Ten, Ten \u2014 and the Trophy: John Patterson Survives Catalonia",
+    "dateline": {
+      "teg": "TEG 12",
+      "venue": "Catalonia, Spain",
+      "year": "2019"
+    },
+    "results": [
+      {
+        "label": "Trophy Winner",
+        "value": "John Patterson (winner, 172 pts, by 10 from Gregg Williams)",
+        "lead": true,
+        "runner_up": "Runner-up: Gregg Williams",
+        "value_name": "John Patterson",
+        "value_qual": "(winner, 172 pts, by 10 from Gregg Williams)"
+      },
+      {
+        "label": "Green Jacket",
+        "value": "Jon Baker (winner, +63, by 8 from David Mullin)",
+        "lead": false,
+        "runner_up": "Runner-up: David Mullin",
+        "value_name": "Jon Baker",
+        "value_qual": "(winner, +63, by 8 from David Mullin)"
+      },
+      {
+        "label": "Wooden Spoon",
+        "value": "David Mullin (loser, 139 pts, 4 behind Alex Baker)",
+        "lead": false,
+        "runner_up": "Next above: Alex Baker",
+        "value_name": "David Mullin",
+        "value_qual": "(loser, 139 pts, 4 behind Alex Baker)"
+      }
+    ],
+    "articles": [
+      {
+        "kicker": "TROPHY",
+        "headline": "Three Blow-Ups, One Trophy, Ten Clear",
+        "standfirst": "John Patterson made TEG's worst-ever par 4 on the first afternoon and still left Girona with a personal-best 172 points, the steadiest card in the field and a ten-point cushion over Gregg Williams.",
+        "paragraphs": [
+          "John Patterson won the TEG 12 Trophy with 172 Stableford points, ten clear of Gregg Williams. It is the highest total he has posted in a TEG. The record will show the margin. It will not show the manner.",
+          "The manner was appalling. In the first round on the PGA Catalunya Tour Course he arrived at the 4th, a par 4 played off stroke index 2, and departed it having taken 12. Eight over par. On one hole. It is the worst score against par he has ever recorded and the worst anyone has managed on a par 4 in TEG history, and he responded to it by continuing to play golf, which was arguably the only option available. He was not finished. A 10 at the 15th in round two. A 10 at the 3rd in round three. Three holes, no points at all, offered up like tithes.",
+          "The rest of his golf simply absorbed them, the way a large ledger absorbs a small fraud. Patterson took 19 points from holes 7 to 11 in round one, four pars in a row after a bogey at the 7th. He took 19 more from holes 12 to 17 on the Stadium Course in round three, including a birdie at the 15th. His best gross rounds \u2014 96 on the Tour Course and 95 on the Stadium \u2014 were course personal bests.",
+          "After three rounds the Trophy was level at the top, with Jon Baker leading the Green Jacket. Then Williams went to work on himself at the Stadium in round three, dropping 12 shots across holes 11 to 13 and capping it with an 11 at the 13th. That settled the margin. Patterson did not seize the Trophy so much as stand quietly to one side while the alternative dismantled itself."
+        ],
+        "words": 301,
+        "compelling": 9,
+        "humour": 7,
+        "is_lead": true
+      },
+      {
+        "kicker": "SIDEBAR",
+        "headline": "Neumann's Twelve, Then Neumann's Eagle",
+        "standfirst": "Stuart Neumann signed for a 105 that no TEG player has ever been worse than at the Tour course, then holed the only eagle of TEG 12 at the Stadium's 15th on the final afternoon.",
+        "paragraphs": [
+          "Stuart Neumann managed, over four days, to write his name into the record book at both ends of it.",
+          "He started at the wrong end. His 105 gross on the PGA Catalunya Tour course in Round 1 is the highest score recorded there in eleven visits, surpassing a course-worst of 103 that had presumably felt safe. Two holes did the heavy lifting: a 10 at the par-4 13th, and a 12 at the par-5 15th. Seven over on a single hole. The worst score against par of his career, and the worst any player has posted in TEG history.",
+          "What followed was a patient reconstruction. On the same course on Friday he took 13 points from holes 3 to 6, closing with a birdie at the 6th, and his 93 that day was a personal best on the Tour course, five strokes better than his previous 98. Round 3 on the Stadium course reintroduced doubt: ten shots dropped across holes 14 to 17, including a 9 at the 15th.",
+          "The 15th settled the account in Round 4. After a double bogey at the 13th and a bogey at the 14th, with nothing much apparently at stake, Neumann holed out for a three on the par 5. An eagle. The only one recorded by anyone in the tournament, and the first eagle logged in any TEG. His 96 that day was a Stadium course best, four better than his last visit. The man who held the worst round in the course's history also holds the first eagle in the competition's. Both facts are his. He is welcome to them."
+        ],
+        "words": 268,
+        "compelling": 8,
+        "humour": 8,
+        "is_lead": false
+      },
+      {
+        "kicker": "WOODEN SPOON",
+        "headline": "Ten Shots, Three Holes, One Spoon",
+        "standfirst": "Safely fifth for three rounds, David Mullin shipped a nine, an eight and a double at the start of Round 4 and became the first man since himself to hold the Wooden Spoon two TEGs running.",
+        "paragraphs": [
+          "David Mullin finished with 139 points and the TEG 12 Wooden Spoon, his second in succession. A man with eight Green Jackets does not arrive at the bottom by accident. He has to apply himself.",
+          "It had not begun that way. On the Tour course in round two he made four straight pars from the 5th through the 8th for 12 points, part of a 40-point round, and his 84 there was his best gross score on the Tour course in four visits. Round three, on the Stadium course, returned 30 points, a drop of ten on the previous day and the first sign that the structure was unsound.",
+          "The demolition came early on Sunday, and it was methodical. At the par-5 3rd he took nine strokes, a quadruple bogey, no points. At the par-4 4th he took eight, another quadruple bogey, another blank. A double bogey at the short 5th completed the set: ten shots lost in three holes and one solitary point to show for it. The nine at the 3rd was the shot that deposited him at the bottom of the Wooden Spoon standings. He remained there. There was no realistic route out and, to his credit, he did not pretend otherwise.",
+          "He then played the rest of the round rather well, which is the cruellest detail of all. From the 11th to the 14th he went par, birdie, par, birdie, 14 points without dropping a gross shot, and closed with a 92, his best Stadium round of the four days and one stroke off the 91 he shot there in TEG 11. It lifted him nowhere. The Spoon was already engraved."
+        ],
+        "words": 275,
+        "compelling": 8,
+        "humour": 8,
+        "is_lead": false
+      },
+      {
+        "kicker": "SIDEBAR",
+        "headline": "Two Personal Bests, One Eleven",
+        "standfirst": "Gregg Williams led the TEG 12 Trophy for two rounds and change and posted the best gross golf of his career; three holes at the Stadium on Saturday cost him twelve shots and the tournament.",
+        "paragraphs": [
+          "Gregg Williams arrived in Catalonia in 2019 and immediately produced the best gross round of his TEG career: +12 at PGA Catalunya's Tour Course in Round 1, an 84 that beat his previous best on the course by eight shots. Across the four rounds he finished at +76 gross, also a personal best. His 92 on the Stadium Course in Round 4 was a course best too, seven strokes better than his last visit.",
+          "For a time this was enough to put him in front. Jon Baker had led the TEG 12 Green Jacket from the 16th hole of Round 1, a run of 23 holes, and lost it to Williams at the 3rd in Round 3.",
+          "Round 3 on the Stadium Course was also where Williams lost it back, and rather more besides. He took nine at the par-four 4th, five over, and carried on with the composure of a man who considered the matter closed. Then, from the 11th, he played three holes in twelve over. A double bogey at the short 11th. A triple at the par-five 12th. An eleven at the par-four 13th, seven over on one hole and the worst score he has recorded on a par four. No net par came in the stretch, which at least kept the arithmetic tidy.",
+          "Three holes, then, cost him a tournament in which he otherwise played the best gross golf of his career. He will have the numbers to console him. They are very good numbers."
+        ],
+        "words": 249,
+        "compelling": 8,
+        "humour": 6,
+        "is_lead": false
+      },
+      {
+        "kicker": "GREEN JACKET",
+        "headline": "Jon Baker Breaks The Stadium Record",
+        "standfirst": "Beaten to the gross lead by Gregg Williams for exactly one hole in Round 3, Jon Baker answered immediately and closed with an 89 that no TEG player had bettered at the Stadium in fifteen visits.",
+        "paragraphs": [
+          "Jon Baker took the TEG 12 Green Jacket at +63, eight shots clear of David Mullin. It is the best gross total of his career and the third-lowest recorded in TEG history.",
+          "The lead was his from the 16th hole of the opening round at PGA Catalunya's Tour Course, and he held it for 23 holes across three rounds. It ended on the third hole of round three, the first day on the Stadium Course, where a par five at the 3rd was sufficient for Gregg Williams to move ahead of him. Baker did not appear to take this personally. He birdied the par-five 12th, parred the 13th, and went into the final round with the gap closed.",
+          "Sunday settled it. Baker went round the Stadium Course in 89 gross, a new course record. The previous mark was 90, set across 15 prior visits, and it belonged to Baker, from TEG 11. He beat the record. The record was his. There is no one else to thank. He also went three holes without dropping a shot to par from the 14th to the 16th, par at the 14th, par at the par-five 15th and par at the short 16th, through precisely the stretch where a round of that sort tends to evaporate.",
+          "It was the fifth TEG visit to the Stadium Course and the third to Catalonia. Williams also posted a course best there, 92 in the final round, which on any other day would have been the story."
+        ],
+        "words": 249,
+        "compelling": 8,
+        "humour": 4,
+        "is_lead": false
+      },
+      {
+        "kicker": "SIDEBAR",
+        "headline": "Bottom For Three Rounds, Then Spared",
+        "standfirst": "Alex Baker propped up the field after all three of the opening rounds, then produced his best round at the Stadium by seven shots and finished four points clear of the Wooden Spoon.",
+        "paragraphs": [
+          "Alex Baker's tournament began coming apart on the second hole of the first round at PGA Catalunya's Tour course. A par three. Stroke index 18, the easiest hole on the card. He took seven, a quadruple bogey, and thereby installed himself at the bottom of the TEG 12 Wooden Spoon race before most of the field had found their rhythm. He kept at it on the same lap: a 10 at the par-five 10th and an 8 at the 13th, the hardest hole on the course, which at least felt fairer.",
+          "The second round was a study in contrasts, in that it contained both golf and the absence of it. Baker took 12 points from holes 2 to 5 and nine more from 13 to 15. In between he bled 11 shots across holes 6 to 9, going double, triple, triple, triple, an escalation with no obvious brake, until a birdie at the 10th brought proceedings to a halt.",
+          "He had climbed back to fifth by the third round on the Stadium course, and then undid it with some care: an 8 at the 2nd, nine shots dropped over holes 2 to 4, and four straight holes without a net par from the 15th, the double bogey at the 17th returning him to the bottom rung he had worked so hard to vacate.",
+          "The Sunday reply was his best golf on the property. Baker's 93 at the Stadium was a course personal best, beating the 100 he had managed in TEG 11, and 13 strokes better than his previous visit. Thirteen strokes is a great deal of improvement. It also tells you where he started."
+        ],
+        "words": 275,
+        "compelling": 7,
+        "humour": 8,
+        "is_lead": false
+      }
+    ],
+    "standings": [
+      {
+        "round": 1,
+        "trophy": "GW 46 | JP 45 | JB 40 | SN 36 | DM 35 | AB 34",
+        "jacket": "GW +12 | JB +12 | DM +17 | JP +24 | AB +30 | SN +33"
+      },
+      {
+        "round": 2,
+        "trophy": "GW 88 (R2: 42) | JP 87 (R2: 42) | SN 80 (R2: 44) | JB 76 (R2: 36) | DM 75 (R2: 40) | AB 71 (R2: 37)",
+        "jacket": "GW +28 (R2: +16) | JB +28 (R2: +16) | DM +29 (R2: +12) | JP +48 (R2: +24) | AB +54 (R2: +24) | SN +54 (R2: +21)"
+      },
+      {
+        "round": 3,
+        "trophy": "JP 132 (R3: 45) | GW 124 (R3: 36) | SN 115 (R3: 35) | JB 110 (R3: 34) | DM 105 (R3: 30) | AB 103 (R3: 32)",
+        "jacket": "JB +46 (R3: +18) | DM +51 (R3: +22) | GW +56 (R3: +28) | JP +71 (R3: +23) | AB +83 (R3: +29) | SN +84 (R3: +30)"
+      },
+      {
+        "round": 4,
+        "trophy": "JP 172 (R4: 40) | GW 162 (R4: 38) | SN 155 (R4: 40) | JB 145 (R4: 35) | AB 143 (R4: 40) | DM 139 (R4: 34)",
+        "jacket": "JB +63 (R4: +17) | DM +71 (R4: +20) | GW +76 (R4: +20) | JP +96 (R4: +25) | AB +104 (R4: +21) | SN +108 (R4: +24)"
+      }
+    ],
+    "records": [
+      {
+        "category": "TEG records",
+        "text": "Jon Baker's +63 is the 3rd-best Gross total in TEG history"
+      },
+      {
+        "category": "Personal bests",
+        "text": "John Patterson's 172 pts is a personal Trophy best"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Gregg Williams posts a personal-best Gross round: +12 (R1)"
+      },
+      {
+        "category": "Personal bests",
+        "text": "Gregg Williams's +76 is a personal Gross best"
+      },
+      {
+        "category": "Rare feats",
+        "text": "Stuart Neumann eagles the par-5 15th (R4)"
+      },
+      {
+        "category": "Rare feats",
+        "text": "Gregg Williams runs up a 11 (septuple bogey) at the 13th (R3) \u2014 his career-worst on a par-4"
+      },
+      {
+        "category": "Rare feats",
+        "text": "Stuart Neumann runs up a 12 (septuple bogey) at the 15th (R1) \u2014 a new TEG-record worst on a par-5; his career-worst on a par-5"
+      },
+      {
+        "category": "Rare feats",
+        "text": "Stuart Neumann runs up a 10 (sextuple bogey) at the 13th (R1) \u2014 his career-worst on a par-4"
+      },
+      {
+        "category": "Rare feats",
+        "text": "John Patterson runs up a 12 (+8 (blow-up)) at the 4th (R1) \u2014 a new TEG-record worst on a par-4; his career-worst on a par-4"
       }
     ]
   },
@@ -1156,20 +2282,6 @@
         "compelling": 9,
         "humour": 5,
         "is_lead": true
-      },
-      {
-        "kicker": "SIDEBAR",
-        "headline": "The Sixteenth Strikes Twice",
-        "standfirst": "Two different courses, the same hole number, and the same catastrophic 10 \u2014 bookending a tournament Alex Baker otherwise nearly won.",
-        "paragraphs": [
-          "Two of Alex Baker's four rounds in Kent ended with a 10 on the card, and on both occasions the number arrived at a hole numbered 16. Different courses, different pars, no connection whatsoever beyond the obvious one. The first came in the opening round at Royal Cinque Ports, a quintuple bogey at the par-five 16th, stroke index 7, no Stableford points. The second, at Prince's on the Sunday, was worse in relative terms: a 10 at a par four, a sextuple bogey, on stroke index 17, the second-easiest hole on the card. Taking ten shots there requires a degree of commitment.",
-          "The Prince's 10 was the more painful for what preceded it. Alex Baker had played the 13th, 14th and 15th in par, par, par, three holes without dropping a gross shot, worth eleven Stableford points. The 16th erased the lot at a stroke. He was not alone in losing his footing there. Jon Baker arrived at the same hole having gone par-birdie-birdie-par-par from the 11th, and made a double bogey for no points.",
-          "These were the headline numbers, not the only ones. Alex Baker also had an 8 at the 11th at Royal Cinque Ports, a 9 at the 5th and an 8 at the 8th at Littlestone, and an 8 at the 10th at Prince's in round three. Five further holes returning nothing. His round-one 98 at Royal Cinque Ports was still four strokes better than his previous visit, which tells you a good deal about the previous visit."
-        ],
-        "words": 252,
-        "compelling": 7,
-        "humour": 7,
-        "is_lead": false
       },
       {
         "kicker": "GREEN JACKET",

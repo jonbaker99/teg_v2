@@ -1,0 +1,170 @@
+{
+  "title": "Two Records at Boavista: Alex Baker Wins the TEG 10 Trophy by Eleven",
+  "title_candidates": [
+    "Two Records at Boavista: Alex Baker Wins the TEG 10 Trophy by Eleven",
+    "Fifty-One and Seventy-Five: The Record Book Rewritten in Lagos",
+    "Alex Baker's 184 Ends the Waiting; David Mullin Breaks Boavista",
+    "From Runner-Up to Record Holder: Alex Baker Takes TEG 10"
+  ],
+  "theme": "A TEG bookended by the same course, at which the record book was rewritten twice: David Mullin's 75 gross in R1 and Alex Baker's 51 points in R4 — one man setting records and losing the Trophy, the other setting records and finally winning it.",
+  "tone": "house",
+  "opening_hook": "Open on the final afternoon at Boavista with Alex Baker's 51 points — the highest round in TEG history — then cut straight back to the same course three days earlier, where David Mullin went round in 75 and led everything. The tournament is the story of how the lead travelled between those two scorecards, so the climax and the prologue should sit side by side rather than in sequence.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "bookends",
+    "origin"
+  ],
+  "competitions": [
+    {
+      "name": "TEG 10 Trophy (Stableford)",
+      "winner_or_loser": "Alex Baker"
+    },
+    {
+      "name": "TEG 10 Green Jacket (Gross)",
+      "winner_or_loser": "David Mullin"
+    },
+    {
+      "name": "TEG 10 Wooden Spoon",
+      "winner_or_loser": "John Patterson"
+    }
+  ],
+  "trophy_storyline": {
+    "subject": "How Alex Baker turned two runner-up finishes into the highest Trophy total in TEG history, taking the lead at Palmares and never handing it back",
+    "why_it_matters": "Runner-up in each of the last two TEGs and a former Wooden Spoon collector, Alex Baker did not merely win his first Trophy — his 184 points is the highest Trophy total recorded.",
+    "shape": "Setup: eight points behind David Mullin after R1 at Boavista, Alex Baker then improved in every single round — 41, 45, 47, 51 — with personal bests in R2 (45 points, +23 gross) and R3 (47 points, +22 gross). Turn: at the 6th at Palmares - Alvor / Lagos in R3 he took the Trophy lead outright, ending Mullin's 30 straight holes in front, and held on despite a 10 at the 13th the same afternoon. Resolution: a closing 51 points at Boavista — the best round in TEG history, and a personal-best +17 gross — converted a contest into an 11-point win and a personal-best gross total of +90.",
+    "beat_ids": [
+      "b01",
+      "b09",
+      "b12",
+      "b15",
+      "b19",
+      "b20",
+      "b30",
+      "b41",
+      "b50",
+      "b51",
+      "b56",
+      "b57"
+    ],
+    "headline_candidates": [
+      "Alex Baker Ends the Waiting with 184",
+      "Fifty-One Points, and the Record Falls",
+      "Alex Baker Improves Four Times, Wins by Eleven"
+    ],
+    "chosen_headline": "Alex Baker Ends the Waiting with 184",
+    "standfirst": "Twice a runner-up and once a Spoon holder, Alex Baker got better in every round and finished with the highest Trophy total TEG has recorded.",
+    "compelling_score": 9,
+    "humour_score": 4
+  },
+  "jacket_storyline": {
+    "subject": "David Mullin's eighth Green Jacket, built on a Boavista course record in R1 and a gross lead Jon Baker twice out-scored but never seriously threatened",
+    "why_it_matters": "Mullin arrived on back-to-back Jacket wins and left with a course record, the lowest gross round in TEG history, two all-time TEG scoring-count records and the best Jacket total ever recorded.",
+    "shape": "Setup: R1 at Boavista, Mullin goes round in 75 gross — +4, the lowest gross round in TEG history, and a new course record beating an 82 that had stood across 50 prior visits — plus 49 points, and leads the Jacket by 14. Turn: the middle rounds wobble, a poor R3 finished off with a quadruple-bogey 8 at the 18th, while Jon Baker produces +10 at Palmares - Praia / Alvor, the 3rd-best gross round in TEG history, and outplays Mullin over two of the four rounds. Resolution: R4 back at Boavista restores order and the Jacket goes by 12 at +51, with 6 birdies and 34 pars across the tournament, both all-time TEG records; Jon Baker's personal-best gross total of +63 was still only second.",
+    "beat_ids": [
+      "b02",
+      "b05",
+      "b06",
+      "b08",
+      "b17",
+      "b25",
+      "b32",
+      "cr01",
+      "sc01",
+      "sc02"
+    ],
+    "headline_candidates": [
+      "David Mullin Breaks Boavista, Then the Record Book",
+      "Eighth Jacket, and a Course Record to Match",
+      "Seventy-Five at Boavista Settles It Early"
+    ],
+    "chosen_headline": "David Mullin Breaks Boavista, Then the Record Book",
+    "standfirst": "A 75 in R1 decided the TEG 10 Green Jacket before the field had settled; Jon Baker's personal-best gross total of +63 still lost by 12.",
+    "compelling_score": 8,
+    "humour_score": 4
+  },
+  "spoon_storyline": {
+    "subject": "The defending Trophy champion John Patterson finishes last in all four rounds and 32 points adrift, undone twice by the same hole at Boavista",
+    "why_it_matters": "Patterson came to the Algarve as the reigning Trophy holder from TEG 9 and left with the TEG 10 Wooden Spoon, last in every round and 32 points behind Stuart Neumann.",
+    "shape": "Setup: he was bottom of the Spoon race by the 4th hole of R1 and never climbed out, a 10 at Boavista's 8th — stroke index 2 — setting the register early, with a 10 at the 1st at Palmares the following round. Turn: R3 at Palmares - Alvor / Lagos, where he played the 11th to the 15th in 19 over par without a single net par, having already taken 10 at the 8th that morning. Resolution: a closing 21 points and +40 gross, his worst round on both counts, decorated with an 11 at the same Boavista 8th that had taken him for 10 in R1 and a 9 at the last.",
+    "beat_ids": [
+      "b18",
+      "b03",
+      "b04",
+      "b07",
+      "b10",
+      "b11",
+      "b14",
+      "b22",
+      "b29",
+      "b36",
+      "b38",
+      "b42",
+      "b44"
+    ],
+    "headline_candidates": [
+      "Ten, Then Eleven, at Boavista's Eighth",
+      "From Champion to Spoon in Four Rounds",
+      "The Defending Champion Finishes 32 Adrift"
+    ],
+    "chosen_headline": "Ten, Then Eleven, at Boavista's Eighth",
+    "standfirst": "John Patterson arrived as the TEG 9 Trophy holder and finished bottom of the field in every single round, 32 points behind Stuart Neumann.",
+    "compelling_score": 8,
+    "humour_score": 8
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Stuart Neumann, holder of back-to-back Wooden Spoons, escapes a third only because John Patterson was worse, while posting 10s at the 18th in consecutive rounds",
+      "why_it_matters": "The reigning Spoon holder avoided a third in a row without any obvious improvement of his own — his reprieve was somebody else's work entirely.",
+      "shape": "Setup: R1 at Boavista ends with a sextuple-bogey 10 at the 18th, which for most players would be the round's low point rather than its template. Turn: R2 at Palmares - Praia / Alvor, where he loses 13 shots across the 13th, 14th and 15th — a 10, a 9 and a 7, not a net par among them — and then signs off with another 10 at the 18th, the same number at the same hole on consecutive days, having earlier piled up 14 points in four holes from the 9th. Resolution: he finished 32 points clear of the Spoon, a margin that says considerably more about John Patterson than about Stuart Neumann.",
+      "beat_ids": [
+        "b35",
+        "b37",
+        "b46",
+        "b49",
+        "b52",
+        "b63",
+        "b77"
+      ],
+      "headline_candidates": [
+        "Two Rounds, Two Tens at the 18th",
+        "Neumann Escapes the Spoon Without Improving",
+        "Reprieved by Somebody Else's Disaster"
+      ],
+      "chosen_headline": "Two Rounds, Two Tens at the 18th",
+      "standfirst": "Stuart Neumann came to the Algarve with back-to-back Wooden Spoons behind him and dodged a third by 32 points, on merit that was almost entirely John Patterson's.",
+      "compelling_score": 7,
+      "humour_score": 9
+    },
+    {
+      "subject": "Gregg Williams plays the best scoring golf of his TEG career, leads the Trophy outright in R3, and still finishes eleven points behind Alex Baker",
+      "why_it_matters": "Williams set personal bests for a round (48 points), a gross round (+14) and a gross total (+76), briefly held the Trophy lead — and was beaten by 11.",
+      "shape": "Setup: a quintuple-bogey 9 at Boavista's 18th to close R1 leaves the three-time Trophy winner well adrift of David Mullin and Alex Baker. Turn: R2 at Palmares - Praia / Alvor brings 18 points in five holes from the 8th and a personal-best 48 points at +14 gross; by the 13th in R3 he has the Trophy lead outright, and he draws level again at the 5th in R4. Resolution: Alex Baker's closing 51 answers all of it, and the best gross total Williams has ever posted, +76, buys him second place by 11.",
+      "beat_ids": [
+        "b16",
+        "b26",
+        "b27",
+        "b33",
+        "b45"
+      ],
+      "headline_candidates": [
+        "Three Personal Bests, Still Eleven Short",
+        "Gregg Williams Led, Briefly, in Round Three",
+        "The Best Golf of Williams's TEG Career"
+      ],
+      "chosen_headline": "Three Personal Bests, Still Eleven Short",
+      "standfirst": "Gregg Williams, a three-time Trophy winner, produced the best scoring of his TEG career and ran into an Alex Baker who was simply better.",
+      "compelling_score": 7,
+      "humour_score": 4
+    }
+  ],
+  "body_fallback": "none",
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "records",
+  "vehicle_fit_response": {
+    "top_scored_vehicle": "origin",
+    "taken_up": true,
+    "note": "Alex Baker's first Trophy win is real and rides along as supporting framing, but the lead frame is the dual narrative: he and David Mullin both broke all-time TEG records at the same course four days apart, and the Trophy passed between them at the 6th in R3."
+  },
+  "why_the_champion_won": "He built it rather than inherited it: 41-45-47-51, better in every round, best in the field in R3 and R4, never worse than second of six, and a closing 51 points that no ordinary round from Gregg Williams could have answered.",
+  "storyline_note": ""
+}

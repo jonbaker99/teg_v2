@@ -1,0 +1,169 @@
+{
+  "title": "Seven Ahead at the Eighth, Eight Behind at the End",
+  "title_candidates": [
+    "Seven Ahead at the Eighth, Eight Behind at the End",
+    "Baker's Eight Holes at Bletchingley",
+    "The Easiest Hole on the Course, and the Trophy It Cost",
+    "Mullin Stands Still While the Field Falls Over"
+  ],
+  "theme": "A defending champion took himself apart over eight holes at Bletchingley while the steadiest man in the field simply stayed upright — and walked off with the lowest Trophy total and the lowest gross total TEG has recorded.",
+  "tone": "house",
+  "opening_hook": "Open in medias res on the 8th green at Bletchingley in R4: Jon Baker's 2 at the par-4 8th — the first eagle ever recorded in TEG — leaves him seven clear of David Mullin with ten holes to play. Hold there, then reveal what the next eight holes did to him. The climax matters far more than the build-up, and the eagle is the perfect false dawn.",
+  "narrative_vehicles": [
+    "counterfactual",
+    "tragic_arc",
+    "catalogue"
+  ],
+  "competitions": [
+    {
+      "name": "Trophy",
+      "winner_or_loser": "David Mullin"
+    },
+    {
+      "name": "Green Jacket",
+      "winner_or_loser": "David Mullin"
+    },
+    {
+      "name": "Wooden Spoon",
+      "winner_or_loser": "Gregg Williams"
+    }
+  ],
+  "trophy_storyline": {
+    "subject": "How David Mullin won the TEG 4 Trophy by standing still: Jon Baker led by seven at the 8th in R4, then bled 27 shots in eight holes",
+    "why_it_matters": "The Trophy was not won with a charge but inherited from a man who was seven clear with ten holes left, and Mullin's reward was the lowest Trophy total in TEG history at +9.",
+    "shape": "Setup: Jon Baker, the defending Trophy champion from TEG 3, led after R1, snatched the outright lead back at the 2nd in R4 with a birdie, and stretched it to seven by the 8th, where he holed a 2 at the par-4 for the first eagle in TEG history. Turn: from the 9th to the 16th he dropped 27 gross shots and went seven holes without a net par — a 9 at the par-3 12th, an 11 at the 15th — and David Mullin, who had not finished a round worse than second all tournament, retook the lead outright at the 12th without doing anything dramatic at all. Resolution: Mullin's +1 was the only best-in-field round of his tournament and the last one that mattered; Baker had outplayed him head-to-head in two of the four rounds, posted his own personal-best gross total of +113, and lost by 8.",
+    "beat_ids": [
+      "b01",
+      "b44",
+      "b10",
+      "sc01",
+      "b33",
+      "b02",
+      "b06",
+      "b08",
+      "b09",
+      "b13",
+      "b37",
+      "b34",
+      "b29",
+      "b26"
+    ],
+    "headline_candidates": [
+      "Baker Leads by Seven, Loses by Eight",
+      "Eight Holes Cost Baker the Trophy",
+      "Mullin Inherits a Record Trophy Total"
+    ],
+    "chosen_headline": "Baker Leads by Seven, Loses by Eight",
+    "standfirst": "David Mullin never finished a round worse than second of five, and when the defending champion came apart between the 9th and the 16th at Bletchingley there was only one man in position to pick it up.",
+    "compelling_score": 9,
+    "humour_score": 6
+  },
+  "jacket_storyline": {
+    "subject": "David Mullin leads the TEG 4 Green Jacket after every round and wins by 19 with the lowest gross total TEG has recorded",
+    "why_it_matters": "It is Mullin's third consecutive Jacket and the gross competition was effectively over by R1, which makes the manner of it — best in the field in three of four rounds — the only interesting part.",
+    "shape": "Setup: Mullin led the gross after the opening round at Ashdown and was never headed again, the last lead change of any kind coming at the 11th hole of R1. Turn: his +17 at Crowborough in R3 is the second-best gross round in TEG history to date, and it pushed the margin beyond argument. Resolution: he closed at +81, the lowest gross total TEG has recorded, 19 clear of Stuart Neumann — who posted a personal-best +100 of his own and was still beaten in all four rounds.",
+    "beat_ids": [
+      "b03",
+      "b23",
+      "b27"
+    ],
+    "headline_candidates": [
+      "Nineteen Clear: Mullin Makes It Three",
+      "Neumann's Personal Best Loses by Nineteen",
+      "Mullin Led the Gross From Ashdown Onwards"
+    ],
+    "chosen_headline": "Nineteen Clear: Mullin Makes It Three",
+    "standfirst": "Top of the gross after every round, Mullin's +81 is the lowest total TEG has seen — and Stuart Neumann's personal-best +100 was nowhere near it.",
+    "compelling_score": 6,
+    "humour_score": 3
+  },
+  "spoon_storyline": {
+    "subject": "Gregg Williams sinks from third to last across four rounds and sets an all-time TEG record for triple-bogeys-plus on the way to the TEG 4 Wooden Spoon",
+    "why_it_matters": "Williams had finished fourth and third in the two previous TEGs and had never been last; he arrived at Bletchingley one place off the bottom and left it 5 adrift, having assembled the most comprehensive collection of blow-ups TEG has recorded.",
+    "shape": "Setup: Williams was third at the end of R1 despite bleeding 22 shots over the closing nine at Ashdown, and third again after Lingfield, so nothing looked terminal. Turn: 18 shots gone over the first six holes at Crowborough dropped him to fourth, and then in R4 he ran up a 9 at the 6th, an 8 at the 5th and a 7 at the par-3 14th, hitting the bottom of the race at the 6th, being briefly rescued when Henry Meller took a 10 at the 11th, and sinking back to last for good at the 13th. Resolution: his +15 (a gross +43) is the worst round of his career, his 28 triple-bogeys-plus is an all-time TEG record, and the Spoon came with a personal-best gross total of +152 — the two facts sitting together with no comment required.",
+    "beat_ids": [
+      "b28",
+      "sc02",
+      "b04",
+      "b05",
+      "b24",
+      "b35",
+      "b16",
+      "b17",
+      "b18",
+      "b20",
+      "b30",
+      "b31",
+      "b38",
+      "b41",
+      "b43"
+    ],
+    "headline_candidates": [
+      "Twenty-Eight Blow-Ups Buy One Spoon",
+      "Williams Takes the Spoon at the 13th",
+      "Personal Best of +152 Wins Nothing"
+    ],
+    "chosen_headline": "Twenty-Eight Blow-Ups Buy One Spoon",
+    "standfirst": "Gregg Williams slid from third to fifth over four rounds, set an all-time TEG record for triple-bogeys-plus and finished 5 adrift of Henry Meller, who had taken the last two Spoons.",
+    "compelling_score": 7,
+    "humour_score": 8
+  },
+  "discovered_storylines": [
+    {
+      "subject": "The short holes did the damage in TEG 4: a 12, a 9 and a 7 on par threes, one of them on the easiest hole at Bletchingley",
+      "why_it_matters": "The three most humiliating single holes of the tournament all came on par threes, and one of them — the easiest hole on the Bletchingley card — is where the Trophy actually changed hands.",
+      "shape": "Setup: on the opening day at Ashdown, Henry Meller took 12 at the par-3 11th, SI 3, nine over par and the worst hole relative to par in TEG history to date. Turn: at Bletchingley in R4 the par-3 12th, stroke index 18 and the easiest hole on the course, took a 9 off Jon Baker — and that is the hole where David Mullin took the Trophy lead outright. Resolution: two holes later Gregg Williams put a 7 on the par-3 14th, SI 16, and the pattern was complete: on courses full of long par fives and MacKenzie-designed heathland, the wreckage was all on the little ones.",
+      "beat_ids": [
+        "b07",
+        "b09",
+        "b32"
+      ],
+      "headline_candidates": [
+        "The Par Threes Did the Damage",
+        "Meller's Twelve Still Stands Alone",
+        "Easiest Hole on the Card, Nine Shots"
+      ],
+      "chosen_headline": "The Par Threes Did the Damage",
+      "standfirst": "Henry Meller's 12 at Ashdown's 11th is the worst hole relative to par TEG has recorded, and at Bletchingley the shortest, easiest hole on the course was where Jon Baker's Trophy went.",
+      "compelling_score": 7,
+      "humour_score": 7
+    },
+    {
+      "subject": "Henry Meller, holder of the last two Wooden Spoons, keeps sinking to the bottom of the TEG 4 race and somehow escapes it",
+      "why_it_matters": "The reigning Spoon holder was bottom of the race in every round bar one, ran up two double-figure holes on the final day, and still finished 5 clear of it with a personal-best gross total.",
+      "shape": "Setup: Meller arrived with back-to-back Spoons and was at the bottom of the race by the 7th hole of R1, having taken 12 at Ashdown's 11th. Turn: a strong R2 at Lingfield — three straight net gains around the turn — was undone by a poor R3 at Crowborough, where he dropped eight shots from the 13th to the 15th and returned to last place at the 14th, and R4 brought a 10 at the 11th and another 10 at the 15th, dropping him to the bottom yet again. Resolution: Gregg Williams's own collapse at the 13th took the Spoon off him for good, and Meller signed off with a personal-best gross total of +107 — an escape achieved entirely by other people's failures.",
+      "beat_ids": [
+        "b25",
+        "b07",
+        "b11",
+        "b12",
+        "b14",
+        "b15",
+        "b16",
+        "b45",
+        "b46",
+        "b47",
+        "b49"
+      ],
+      "headline_candidates": [
+        "Two Tens and Still Not Last",
+        "Meller Escapes the Spoon at Last",
+        "The Reigning Spoon Holder Wriggles Free"
+      ],
+      "chosen_headline": "Two Tens and Still Not Last",
+      "standfirst": "Henry Meller opened with the worst hole in TEG history and kept dropping to the bottom of the Spoon race, but a personal-best +107 gross and Gregg Williams's final-round ruin left him 5 clear.",
+      "compelling_score": 7,
+      "humour_score": 7
+    }
+  ],
+  "body_fallback": "none",
+  "prominent_vehicle": "counterfactual",
+  "prominent_palette": "foreshadow_payoff",
+  "vehicle_fit_response": {
+    "top_scored_vehicle": "dual_narrative",
+    "taken_up": false,
+    "note": "Four outright leaders is real, but this was one man dismantling himself rather than two campaigns intertwined — counterfactual carries the R4 finish, with Jon Baker's collapse as the tragic arc inside it."
+  },
+  "why_the_champion_won": "Inherited rather than seized: David Mullin never finished a round worse than second of five and was the steadiest man in the field, so when Jon Baker — seven clear at the 8th in R4 — dropped 27 shots between the 9th and the 16th, Mullin's +1 was the best round in the field and enough; Baker beat him head-to-head in two of the four rounds and still lost by 8.",
+  "storyline_note": ""
+}

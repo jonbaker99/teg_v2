@@ -1,0 +1,172 @@
+{
+  "title": "Eighteen Shots of Daylight: Jon Baker's First Trophy",
+  "title_candidates": [
+    "Eighteen Shots of Daylight: Jon Baker's First Trophy",
+    "Baker's First, Settled in Round One",
+    "The Boavista Record Book, Rewritten",
+    "No Contest at Boavista"
+  ],
+  "theme": "A first-time champion who effectively won the thing on the opening day, at a course where every record in the book fell and where the second-easiest hole on the card quietly ruined everybody else.",
+  "tone": "house",
+  "opening_hook": "Open on Jon Baker's R1 -9 at Boavista — the best round in TEG history to date — and state flatly that the tournament ended there; the remaining three rounds were administration, conducted at a course busily surrendering records to everyone.",
+  "narrative_vehicles": [
+    "origin",
+    "catalogue",
+    "inevitability"
+  ],
+  "competitions": [
+    {
+      "name": "TEG 3 Trophy (Net VP)",
+      "winner_or_loser": "Jon Baker"
+    },
+    {
+      "name": "TEG 3 Green Jacket (Gross)",
+      "winner_or_loser": "David Mullin"
+    },
+    {
+      "name": "TEG 3 Wooden Spoon",
+      "winner_or_loser": "Henry Meller"
+    }
+  ],
+  "trophy_storyline": {
+    "subject": "How Jon Baker turned the best round in TEG history into an eighteen-shot procession at Boavista and a first Trophy",
+    "why_it_matters": "Baker had won nothing before TEG 3 — runner-up in TEG 2 was his high-water mark — and he settled this one before most of the field had finished unpacking.",
+    "shape": "Setup: Baker arrives with no Trophy and no Jacket to his name, and a prior best at Boavista of 100 gross. Turn: R1 goes -9 (b12), the best round in TEG history to date, off a 90 gross (b16) that is a new personal best at Boavista and 17 shots better than his last visit there — an eight-shot lead by nightfall, extended by -2 in R2 (b36) and -7 in R3 (b03), the latter built on the run from the 6th to the 10th where he piled up seven shots to par (b20). Resolution: level in R4, steadied by pars at the 8th and 9th through the 7th-to-9th stretch (b18, b23), and the Trophy by 18 (b02) — the quintuple-bogey 9 at the 18th in R3 (b42) reduced to a footnote by the size of the cushion (b27).",
+    "beat_ids": [
+      "b02",
+      "b12",
+      "b16",
+      "b36",
+      "b03",
+      "b20",
+      "b42",
+      "b18",
+      "b23",
+      "b27"
+    ],
+    "headline_candidates": [
+      "Baker Settles It in Round One",
+      "Eighteen Shots, No Argument",
+      "Baker's Record Round Ends the Contest"
+    ],
+    "chosen_headline": "Baker Settles It in Round One",
+    "standfirst": "Jon Baker had never won a thing in TEG; by the end of the opening round at Boavista the only live question was the size of the margin.",
+    "compelling_score": 8,
+    "humour_score": 4
+  },
+  "jacket_storyline": {
+    "subject": "David Mullin, dethroned as Trophy champion, answers with the lowest gross round Boavista has ever seen and the TEG 3 Green Jacket by twelve",
+    "why_it_matters": "The defending Trophy champion lost his crown to Baker and spent four rounds rewriting the gross record book instead, finishing with a course record nobody in fifteen prior visits had gone near.",
+    "shape": "Setup: Mullin leads the TEG 3 Green Jacket from the 4th hole of R1 and never gives it up, opening with a +17 gross that stood as the best gross round in TEG history to date (b45), alongside a -1 (b53). Turn: R2 is the one round he fails to win outright — Stuart Neumann matches him, helped by Mullin's quintuple-bogey 9 at the 17th (b30). Resolution: R3 produces 85 gross, +14 (b15, b21) — a new Boavista course record, beating the prior 89 set across fifteen previous visits (cr01) — and, despite a quadruple-bogey 7 at the 11th in R4 (b39), the Jacket is his by 12 (b10), with Neumann's own +18 in R3 (b11) the closest anyone got.",
+    "beat_ids": [
+      "b10",
+      "cr01",
+      "b15",
+      "b45",
+      "b21",
+      "b53",
+      "b30",
+      "b39",
+      "b11"
+    ],
+    "headline_candidates": [
+      "Mullin Rewrites Boavista, Loses His Crown",
+      "Course Record Consoles the Deposed Champion",
+      "Eighty-Five: The Lowest Boavista Has Given Up"
+    ],
+    "chosen_headline": "Mullin Rewrites Boavista, Loses His Crown",
+    "standfirst": "Stripped of the Trophy he won in TEG 2, David Mullin responded with the lowest gross round in Boavista's history and a Green Jacket won by twelve.",
+    "compelling_score": 7,
+    "humour_score": 4
+  },
+  "spoon_storyline": {
+    "subject": "Henry Meller follows a 12 at the 17th with the second-best round in TEG history, and still keeps the Wooden Spoon he already held",
+    "why_it_matters": "Meller arrived as the reigning Wooden Spoon holder from TEG 2 and produced, in the same tournament, the finest round of the TEG 3 field and its most spectacular single hole.",
+    "shape": "Setup: R1 unravels at the 17th, a par four rated the second-easiest hole on the course, where he takes 12 (b08) and drops to the bottom of the Spoon race (b33), the birdie at the 16th (b31) having promised otherwise. Turn: R2 is the best round in the field, -2 off 89 gross, +18 (b05, b06) — a personal best at Boavista and, at the time, the second-best round and second-best gross round in TEG history. Resolution: R3 undoes it in three holes — bottom of the Spoon race at the 1st (b26), a quintuple-bogey 10 at the 3rd (b22, b13), a quadruple 7 at the 6th, and a ten-shot split between the nines (b19, b14, b25); R4 offers an 8 at the 7th (b07) before three clean holes at 12-14 (b09, b17), and he signs off four adrift of Stuart Neumann with the Spoon at +16 (b24).",
+    "beat_ids": [
+      "b24",
+      "b08",
+      "b33",
+      "b05",
+      "b06",
+      "b13",
+      "b22",
+      "b26",
+      "b25",
+      "b19",
+      "b14",
+      "b07",
+      "b09",
+      "b17",
+      "b31"
+    ],
+    "headline_candidates": [
+      "A 12, an 89, and the Spoon",
+      "Meller Keeps the Spoon He Already Owned",
+      "Best Round in the Field, Last in the Standings"
+    ],
+    "chosen_headline": "A 12, an 89, and the Spoon",
+    "standfirst": "Henry Meller played the best round anyone managed in TEG 3 and still finished four adrift of Stuart Neumann, retaining the Wooden Spoon he brought with him from TEG 2.",
+    "compelling_score": 7,
+    "humour_score": 8
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Boavista's 17th, rated the second-easiest hole on the course, took a 12, a 9 and a 10 from three different players",
+      "why_it_matters": "The one hole where the stroke index offers no shelter did more visible damage across TEG 3 than any of the course's genuine brutes.",
+      "shape": "Setup: the 17th is a par four carrying stroke index 17 — on paper, the second-easiest hole at Boavista and a formality. Turn: Henry Meller goes eight over there in R1 for a 12 (b08); David Mullin follows with a quintuple-bogey 9 in R2 (b30); Stuart Neumann completes the set in R4 with a sextuple-bogey 10, his worst hole to par of the tournament (b01). Resolution: three men, three rounds, one short par four, and not one of the three catastrophes changed the destination of anything — which is precisely what makes them worth cataloguing.",
+      "beat_ids": [
+        "b08",
+        "b30",
+        "b01"
+      ],
+      "headline_candidates": [
+        "Boavista's 17th Eats Three Men",
+        "The Easiest Hole on the Card",
+        "Stroke Index 17: A Formal Warning"
+      ],
+      "chosen_headline": "Boavista's 17th Eats Three Men",
+      "standfirst": "A short par four rated the second-easiest hole at Boavista took a 12 off Henry Meller, a 9 off David Mullin and a 10 off Stuart Neumann in the space of four rounds.",
+      "compelling_score": 7,
+      "humour_score": 9
+    },
+    {
+      "subject": "Gregg Williams alternates four-hole collapses with a personal best at Boavista, producing the third-best round in TEG history between the wreckage",
+      "why_it_matters": "Williams was the tournament's most reliable source of quadruple bogeys and also, for one round, the second-best player in it — the same swing that ruined three rounds paid for the fourth.",
+      "shape": "Setup: R1 ends 15-18 in triple, triple, triple, quadruple — thirteen gross shots gone in four holes, with no net par among them (b41, b47), after a 7 at the 6th earlier. Turn: R2 repeats the shape at 8-11, twelve shots dropped in four holes including a quadruple 8 at the 10th (b32, b34), even though he had gained four shots to par at 3-5 (b50); then R3 arrives out of nowhere — -4 for 97 gross (b04), a personal best at Boavista, eight shots better than his last visit, despite a quadruple 7 at the 2nd that briefly dropped him to the bottom of the Spoon race (b38, b44). Resolution: R4 reverts to type with quadruple bogeys at the 3rd, 7th and 12th (b48, b46, b43) and nine more shots bled over the closing stretch, three bogeys at 4-6 the closest thing to serenity (b40).",
+      "beat_ids": [
+        "b04",
+        "b41",
+        "b47",
+        "b32",
+        "b34",
+        "b50",
+        "b38",
+        "b44",
+        "b48",
+        "b46",
+        "b43",
+        "b40"
+      ],
+      "headline_candidates": [
+        "Four Quadruples and a Personal Best",
+        "Williams Collapses, Repeats, Then Excels",
+        "Gregg Williams Bleeds Thirteen in Four Holes"
+      ],
+      "chosen_headline": "Four Quadruples and a Personal Best",
+      "standfirst": "Gregg Williams dropped thirteen shots over the last four holes of R1 and twelve in four holes of R2 — then went round Boavista in 97, his best there yet.",
+      "compelling_score": 7,
+      "humour_score": 8
+    }
+  ],
+  "body_fallback": "none",
+  "prominent_vehicle": "origin",
+  "prominent_palette": "records",
+  "vehicle_fit_response": {
+    "top_scored_vehicle": "inevitability",
+    "taken_up": true,
+    "note": "Kept as texture rather than frame — Baker led the Trophy from R1 to R4 and Mullin the Jacket likewise, but the report is about Baker's first win, so origin leads with inevitability underneath it."
+  },
+  "why_the_champion_won": "Jon Baker built it: best in the field in all four rounds and better than David Mullin head-to-head in all four, with a -9 opening round that bought an eight-shot lead he then extended every day — swingy round to round, never worse than second of five.",
+  "storyline_note": ""
+}
