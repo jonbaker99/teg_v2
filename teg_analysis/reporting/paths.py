@@ -141,16 +141,17 @@ def _artefact_names(teg_num: int, round_num: Optional[int] = None) -> list[str]:
     """
     if round_num is None:
         stem = f"teg_{teg_num}"
-        return [f"{stem}_story_plan.json", f"{stem}_dry_draft.md",
-                f"{stem}_report_A_around_draft.md", f"{stem}_report_final.md",
-                f"{stem}_report_styled.md",
-                # Storyline-first has no round equivalent, so these are tournament-only.
-                f"{stem}_storyline_plan.json", f"{stem}_report_storylinedraft.md",
-                f"{stem}_report_storylinefirst.md", f"{stem}_report_storylinefirst_styled.md"]
-    stem = f"teg_{teg_num}_round_{round_num}"
+    else:
+        stem = f"teg_{teg_num}_round_{round_num}"
+    # Both stems now get the same five legacy names plus the four
+    # storyline-first ones (`round_storyline.py`, added 2026-09-11, is the
+    # round equivalent of `story_plan.py`'s storyline-first chain — there is
+    # no longer a tournament-only asymmetry here).
     return [f"{stem}_story_plan.json", f"{stem}_dry_draft.md",
             f"{stem}_report_A_around_draft.md", f"{stem}_report_final.md",
-            f"{stem}_report_styled.md"]
+            f"{stem}_report_styled.md",
+            f"{stem}_storyline_plan.json", f"{stem}_report_storylinedraft.md",
+            f"{stem}_report_storylinefirst.md", f"{stem}_report_storylinefirst_styled.md"]
 
 
 def promote_variant(variant: str, teg_num: int, round_num: Optional[int] = None,

@@ -409,6 +409,24 @@ h1, h2, h3, h4, h5, h6 {
     border-bottom-color: var(--accent);
 }
 
+/* The Report tab (/results, /leaderboard) is a real <a>, not a <button> — a
+   full-page navigation to /teg-reports, not an HTMX swap, since the newspaper
+   report's typography/palette is deliberately unlike the rest of the site.
+   .tab-underline sets no `display`, so it's blockified as a flex item inside
+   .section-nav same as the buttons; only the two things a <button> gives for
+   free need restating. */
+a.tab-underline {
+    text-decoration: none;
+    text-align: center;
+}
+/* The arrow flags it as a real navigation (leaves this page), not a same-page
+   tab swap — differentiates it from its siblings on sight, per Jon's ask. */
+a.tab-underline .tab-arrow {
+    font-size: 0.8em;
+    margin-left: 0.2em;
+    opacity: 0.6;
+}
+
 /* Legacy aliases — use .tab-btn / .tab-btn--active instead */
 .btn-active {
     background-color: var(--btn-active-bg);

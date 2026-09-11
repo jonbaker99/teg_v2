@@ -83,8 +83,15 @@ is not a file: the edition dict is built per request by the webapp route, and on
 `scripts/build_newspaper_edition` persists it, to
 `webapp/report_layout_prototypes/editions.json` for the prototype pages.
 
-Round reports use the same five names with a `round_R_` infix:
+Round reports use the same five (legacy) names with a `round_R_` infix:
 `teg_18_round_3_report_final.md`.
+
+**Round storyline-first files** (`round_storyline.py`, 2026-09-11) take the same four
+storyline-first names above with the same `round_R_` infix — `teg_18_round_3_storyline_plan.json`,
+`_report_storylinedraft.md`, `_report_storylinefirst.md`, `_report_storylinefirst_styled.md`. Made
+by `scripts/storyline_round_report_experiment.py --tegs N --rounds R`; read by
+`newspaper_edition.build_edition(teg, round_num=R)`. Currently on disk only for TEG 14 R2 and TEG
+18 R3/R4 (the validation runs — see STATUS.md), not backfilled.
 
 ### "The bundle" is not a file
 
@@ -579,7 +586,7 @@ anything; they're history, now living in `archive 2026 v3/` rather than loose.
 
 | Pattern | What it is |
 |---|---|
-| `..._dry_draft.md`, `..._report_A_around_draft.md`, `..._report_final.md`, `..._report_styled.md`, `..._story_plan.json` | **the legacy round-by-round chain**, every TEG — archived once `/teg-reports` moved to the storyline-first newspaper edition and nothing in the tournament path read it any more. Round-level equivalents (`..._round_R_*`, TEGs 8/9/10/11/14/18) went with it, since round reports are off in the UI (STATUS.md item 1) |
+| `..._dry_draft.md`, `..._report_A_around_draft.md`, `..._report_final.md`, `..._report_styled.md`, `..._story_plan.json` | **the legacy round-by-round chain**, every TEG — archived once `/teg-reports` moved to the storyline-first newspaper edition and nothing in the tournament path read it any more. Round-level equivalents (`..._round_R_*`, TEGs 8/9/10/11/14/18) went with it at the time (round reports were off in the UI); round reports are back (STATUS.md item 3, 2026-09-11) via the round-storyline pipeline, not this archived chain |
 | `..._report_pre{X}.md` | a snapshot of the report **before** change X landed. `prevehicles`, `prepayoff`, `preclose`, `pretighten`, `pre_detailed_baseline`, `pre_phaseA` |
 | `..._report_humour{6,8,8b}.md` | the **unsettled humour-dial A/B** (TEGs 14 and 18). `8b` is the Brooker-only variant |
 | `..._report_{detailed,light}.md` | the dry-draft density A/B. **Settled: detailed won** |

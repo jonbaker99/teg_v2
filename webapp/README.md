@@ -761,8 +761,10 @@ HTML builders).
   colours and CSS reset to its content only; the "paper" card
   (`.np-paper`) carries the cream colour and grain texture and floats on the
   site's own grey/white background, same as any other content card. Round
-  reports are temporarily dropped from the UI (no newspaper-layout
-  equivalent yet — tracked in `teg_analysis/reporting/STATUS.md`). Start at
+  reports are back too (2026-09-11, `teg_analysis.reporting.round_storyline`)
+  — `teg_reports` takes an optional `round` query param and
+  `templates/teg_reports.html` grows a `.pill-group` of round links beside the
+  TEG select once `available_rounds(teg)` is non-empty. Start at
   `report_layout_prototypes/README.md` for the chosen elements and
   composition rule.
   - **First slice shipped:** the **Scorecard** page now renders a portrait

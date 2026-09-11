@@ -41,10 +41,16 @@
   }
   function readTime(words) { return Math.max(1, Math.ceil(words / 200)) + " min read"; }
 
+  function editionTitle() {
+    // "TEG 16" for a tournament edition, "TEG 16 · Round 2" for a round one —
+    // mirrors newspaper_edition._masthead_html / _appendix_title server-side.
+    var d = edition.dateline;
+    return d.round ? esc(d.teg) + " · Round " + d.round : esc(d.teg);
+  }
   function mastheadHtml() {
     var d = edition.dateline;
     return '<header class="m-masthead"><div class="m-mh-row">' +
-      '<span class="m-wordmark">' + esc(d.teg) + "</span>" +
+      '<span class="m-wordmark">' + editionTitle() + "</span>" +
       '<span class="m-dateline">' + esc(d.venue) + " &middot; " + esc(d.year) + "</span>" +
       "</div><div class=\"m-mh-rule\"></div></header>";
   }
@@ -74,7 +80,7 @@
     }).join("");
     var body = open
       ? '<div class="m-apx-body" id="apx-body">' +
-          '<h3 class="m-apx-hl">Notable achievements: ' + esc(edition.dateline.teg) + '</h3>' +
+          '<h3 class="m-apx-hl">Notable achievements: ' + editionTitle() + '</h3>' +
           '<div class="m-apx-sec">' + recs + "</div></div>"
       : "";
     return '<section class="m-apx"><button type="button" class="m-apx-btn" data-apx="1" aria-expanded="' +
@@ -117,7 +123,7 @@
     }
     return '<div class="scroller" id="scroller">' +
       '<div class="topbar"><button type="button" data-index="1">&larr; Front page</button>' +
-        '<span class="tb-title">' + esc(edition.dateline.teg) + "</span></div>" +
+        '<span class="tb-title">' + editionTitle() + "</span></div>" +
       '<article class="article">' +
         '<p class="kicker">' + esc(a.descriptor || a.kicker) + "</p>" +
         '<h1 class="m-hl" id="screen-title" tabindex="-1">' + esc(a.headline) + "</h1>" +

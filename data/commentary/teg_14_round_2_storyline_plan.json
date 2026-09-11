@@ -1,0 +1,86 @@
+{
+  "title": "Nine Clear on the Romney Marsh",
+  "title_candidates": [
+    "Nine Clear on the Romney Marsh",
+    "Littlestone Collects Its Debts",
+    "Seven Better, Thirteen Worse"
+  ],
+  "theme": "On the links's second TEG visit, David Mullin improved on his TEG 13 self by seven shots while the other three went backwards, and a three-point Trophy lead became nine.",
+  "tone": "house",
+  "opening_hook": "Littlestone's second TEG appearance was, in effect, a rematch against the men who played it in TEG 13 — and three of the four lost it. David Mullin was seven shots better than his previous self; Jon Baker was thirteen worse, Gregg Williams eleven, and Alex Baker finished on precisely the same 100 he managed last time, having taken a rather more adventurous route to it.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "ensemble",
+    "catalogue"
+  ],
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "course_history",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "David Mullin's 41-point, 85-gross round at Littlestone, a new personal best at the course by seven shots, built out of a scruffy front nine and a birdie finish",
+    "why_it_matters": "It is the round that turned a competitive TEG 14 into a procession after two days: 41 points to a field whose next best was 35, and the only score on the day that beat what its author had managed here in TEG 13.",
+    "shape": "Mullin opened untidily — a triple bogey at the 4th, a double at the 5th — before a birdie at the 7th stopped the bleeding and launched a long stretch of unbroken pars through the turn, 7-8, 10-11 and 13-14. The back nine sagged again with bogeys at the 15th and 16th and a double at the short 17th, at which point 85 looked unlikely; a birdie at the last secured it. Prior best here: 92, in TEG 13.",
+    "beat_ids": [
+      "r2_b06",
+      "r2_b08",
+      "r2_b09",
+      "r2_b10",
+      "r2_b11"
+    ],
+    "headline_candidates": [
+      "Mullin Rewrites His Littlestone Best",
+      "Forty-One Points on the Marsh",
+      "Seven Shots Better Than Before"
+    ],
+    "chosen_headline": "Mullin Rewrites His Littlestone Best",
+    "standfirst": "An 85 assembled from one triple bogey, one double at the 17th and a great many stubborn pars, and the only round on the day to better its author's TEG 13 effort at the same holes.",
+    "compelling_score": 8,
+    "humour_score": 5,
+    "descriptor": "DAVID MULLIN"
+  },
+  "race_story": {
+    "subject": "Alex Baker's six-point slide behind Mullin in the TEG 14 Trophy, and the narrowing of the Wooden Spoon gap between Jon Baker and Gregg Williams",
+    "why_it_matters": "Nothing changed hands and everything changed shape: the Trophy gap went from three to nine, the Green Jacket gap from five to twelve, and the only race that got tighter was the one nobody wants to win.",
+    "shape": "Alex Baker arrived three points behind having posted the field's second-best round on day one, and posted the field's second-best round again — 35 points — which, against Mullin's 41, cost him six and left him nine adrift with two rounds to play. The damage was front-loaded: twelve gross shots bled across holes 2-5, four consecutive holes without a net par, a quadruple-bogey 9 at the 5th. Behind him, Jon Baker's 29 points closed the Spoon gap on Gregg Williams from four to two, which is movement of a sort.",
+    "beat_ids": [
+      "r2_b04",
+      "r2_b03",
+      "r2_b05",
+      "r2_b02"
+    ],
+    "headline_candidates": [
+      "Three Becomes Nine at Littlestone",
+      "Alex Baker Loses Six Going Forwards",
+      "The Chase Quietly Falls Away"
+    ],
+    "chosen_headline": "Three Becomes Nine at Littlestone",
+    "standfirst": "Alex Baker was the second-best player on the course for the second day running and went backwards in the TEG 14 Trophy anyway, while at the other end Jon Baker hauled himself to within two of Gregg Williams in the TEG 14 Wooden Spoon.",
+    "compelling_score": 7,
+    "humour_score": 6,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Littlestone's revenge on the field — three of four players worse than their TEG 13 visit, and the day's modest definition of a good stretch",
+      "why_it_matters": "The course is the only constant between TEG 13 and TEG 14, and it beat almost everyone who came back: a links designed by the architect of Royal St George's, refined by Braid and MacKenzie, taking eleven shots off one man and thirteen off another.",
+      "shape": "Jon Baker shot 79 here in TEG 13, the best score any TEG player has managed at Littlestone; on Friday he signed for 92, and his statistical highlight of the day was two consecutive pars at the 14th and 15th. Gregg Williams went from 86 to 97. Alex Baker, via a quadruple-bogey 8 at the 8th and a quadruple-bogey 9 at the 5th, arrived at exactly the same 100 he posted last time, which is either consistency or a route march.",
+      "beat_ids": [
+        "r2_b07",
+        "r2_b01",
+        "r2_b02"
+      ],
+      "headline_candidates": [
+        "The Links Collects Its Debts",
+        "Three Men Go Backwards at Littlestone",
+        "Littlestone Remembers Everyone From TEG 13"
+      ],
+      "chosen_headline": "The Links Collects Its Debts",
+      "standfirst": "Jon Baker's 79 here in TEG 13 now looks like someone else's round entirely, and Alex Baker's identical 100 was reached by a distinctly more scenic path.",
+      "compelling_score": 7,
+      "humour_score": 7,
+      "descriptor": "LITTLESTONE"
+    }
+  ],
+  "race_state_note": "Two rounds remain, so nothing is settled: the Trophy and Green Jacket tables simply run in opposite orders below Mullin, with Alex Baker second on points and last on gross — a normal consequence of handicapping rather than anything strange. The Spoon is the only contest that got closer.",
+  "storyline_note": ""
+}

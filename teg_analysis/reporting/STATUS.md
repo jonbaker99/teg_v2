@@ -14,7 +14,7 @@
 
 ## START HERE — picking this up in a new chat (2026-09-08)
 
-### Next: two to-dos, in this sequence (items 1–2 done 2026-09-11)
+### Next: one to-do (items 1–3 done 2026-09-11)
 
 The storyline-first newspaper report (Fraunces/Source Serif newspaper layout, row-packed
 sub-stories, descriptor badges, the double rule — see the "Done" entries below) is now what
@@ -52,13 +52,54 @@ dependency order:
    Three tests referenced the archived path directly and were repointed to read from
    `archive 2026 v3/` rather than restoring the files (`test_reporting_schema_and_era.py`,
    `test_reporting_verify.py`); full suite re-run clean after, 584 passed / 20 skipped.
-3. **Build the round-report equivalent.** Same storyline-first architecture, scaled down — fewer
-   holes means fewer stories, so lean harder on: course context (may need building out further —
-   see `venue.py`/`course_history.py`), how the round moved people within the tournament, and how
-   it compared to the player's/field's previous round performances. The round *code*
-   (`round_report.py`) is already roughly level with the tournament pipeline per the older ledger
-   below, but published round reports are generations behind — check current state before assuming
-   that's still true.
+3. ~~Build the round-report equivalent.~~ **Done (2026-09-11).** New module
+   `teg_analysis/reporting/round_storyline.py` — same three-stage shape as the tournament pipeline
+   (plan → fact-isolated draft → voice pass), but a separate module rather than an extension of
+   `round_report.py`: that file's two prompts are test-pinned (`tests/test_reporting_prompts.py`)
+   to exclude `DESCRIPTOR_RULE`/`DOUBLE_RULE` on the premise "a round report is a single narrative,
+   not a newspaper of story cards" — this pipeline makes that premise false, so it needed its own
+   home rather than an exception next to the rule it contradicts. Two mandatory storylines instead
+   of three: `round_story` (the best round of the day, measured against the as-of-date all-time
+   round ranks already computed in `commentary.create_round_summary` — the direct answer to "how
+   did this round compare to previous ones") and `race_story` (how the round moved the Trophy /
+   Green Jacket / Wooden Spoon — a deterministic before/after diff of two
+   `round_report._competition_state_at_round` snapshots, not left to the model to compute; becomes
+   the winners-declared coronation story on the final round). `DESCRIPTOR_RULE` is wired into the
+   round editor unconditionally; `DOUBLE_RULE` only on the final round, since only the final-round
+   bundle carries real `double` figures (`history_context.build_double_context`) — mid-tournament
+   it stays excluded, for the same reason the legacy pipeline excludes it always.
+   **The correctness constraint that shaped the design:** a mid-tournament round bundle must not
+   know what happened in later rounds — the future clubhouse use case (item 4 below) will generate
+   these before later rounds exist. Several existing enrichment functions are whole-TEG-scoped and
+   would leak (`course_history.detect_course_records`, `build_player_course_history`,
+   `history_context.build_win_counts`, `win_anatomy.build_win_anatomy`) — both `course_history`
+   functions gained a `through_round=` parameter that bounds "prior" to earlier TEGs *or* earlier
+   rounds of the same TEG; win-anatomy/win-counts/double are included only when `is_final_round`.
+   `round_storyline._assert_no_future_rounds` walks the assembled bundle and raises if anything
+   still leaked through. `newspaper_edition.py` was generalised in place (not forked) to build a
+   round edition — `build_edition(teg, round_num=...)` — reusing the row-packer, anchor resolver,
+   filter and desktop/mobile renderers verbatim; all 35 pre-existing tournament tests pass
+   unchanged. `webapp/routes/reports.py` takes an optional `round` param;
+   `templates/teg_reports.html` grows a `.pill-group` of round links.
+   **Validated cold** on TEG 14 R2 (quiet mid-tournament — the hard case for the quality bar), TEG
+   18 R3 (a genuine Jacket lead change and Spoon flip — picked by scanning `race_movement` across
+   TEGs 8–18, not by memory), and TEG 18 R4 (final round). All three: zero new D3 findings from the
+   voice pass, zero dropped articles, correct lead switching, and — the actual proof the design
+   choices earned their cost — course context and round-comparison data visibly reaching the prose
+   ("his 97 was his best gross of the four days... three shots better than his last visit here,
+   though still eight adrift of the 89 he posted on a previous trip"), and the overlap-check
+   instruction correctly pivoting `race_story` to the player who lost ground rather than repeating
+   `round_story`'s subject. New tests: `tests/test_round_storyline.py` (22, including the leak
+   guard against real TEG data) plus round-specific additions to
+   `tests/test_newspaper_edition.py`/`test_reporting_prompts.py`/`test_webapp_pages.py`.
+   **Known pre-existing gap, not introduced here:** `authoring.restyle_voice`'s composed system
+   prompt (`RESTYLE_CONTRACT + voice + WRITER_FAITHFULNESS + WRITER_OUTPUT_RULE`) never includes
+   `SENTENCE_DISCIPLINE`, so the em-dash ban does not reach the voice pass — confirmed on the
+   *tournament* storyline-first reports too (`teg_14_report_storylinefirst.md` has 3), so this
+   predates the round work and isn't round-specific. Not fixed here (out of scope for this to-do).
+   **Not done, deliberately:** no backfill. Only the three validation TEGs above have round
+   storyline artefacts; the other 8 TEGs with published (legacy or 2025-vintage) round reports are
+   untouched, and a full backfill is a separate, costed decision once more of this has been read.
 4. **Remote/on-the-fly generation for both tournament and round reports** — the clubhouse use
    case: a live report as soon as scores are in. Tournament-report stub already at
    `webapp/TODOS.md` → *Planned enhancements* → "Remote report generation (admin-triggered)";

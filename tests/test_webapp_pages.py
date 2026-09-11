@@ -50,6 +50,35 @@ def test_nav_page_renders(client, url):
 
 
 # ---------------------------------------------------------------------------
+# TEG Reports (newspaper edition — teg_analysis.reporting.newspaper_edition).
+# `?round=` is new (round_storyline.py, 2026-09-11); no real TEG has round
+# artefacts yet, so the round-selected case is exercised in
+# tests/test_round_storyline.py and tests/test_newspaper_edition.py against
+# synthetic data. What's guarded here is that the route accepts the param at
+# all and falls back gracefully when the round doesn't exist.
+# ---------------------------------------------------------------------------
+def test_teg_reports_with_teg_param_renders(client):
+    from teg_analysis.reporting.newspaper_edition import available_tegs
+    tegs = available_tegs()
+    if not tegs:
+        pytest.skip("no TEGs with storyline-first artefacts in this environment")
+    resp = client.get("/teg-reports", params={"teg": tegs[0]})
+    _assert_ok_no_error(resp)
+
+
+def test_teg_reports_unknown_round_falls_back_to_tournament(client):
+    """A `round` not in `available_rounds(teg)` (true of every real TEG today,
+    since no round-storyline artefacts exist yet) must not error — it falls
+    back to the tournament report rather than 500ing."""
+    from teg_analysis.reporting.newspaper_edition import available_tegs
+    tegs = available_tegs()
+    if not tegs:
+        pytest.skip("no TEGs with storyline-first artefacts in this environment")
+    resp = client.get("/teg-reports", params={"teg": tegs[0], "round": 99})
+    _assert_ok_no_error(resp)
+
+
+# ---------------------------------------------------------------------------
 # Player profile
 # ---------------------------------------------------------------------------
 

@@ -58,10 +58,29 @@
   .nav .px-6 { padding-left: 14px; padding-right: 14px; }
   .nav { box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05); }
 
-  /* Tighter page frame: full-bleed feel, comfortable reading gutters. */
+  /* Edge-to-edge page frame (2026-09-11, Jon: "not convinced mobile pages
+     need a gutter... assume we can create a small gap through other, normal
+     means"). No page-level margin any more — .page-container and
+     .main-content both go to 0, and each component is responsible for its
+     own inset (a card's padding, a table's cell padding, etc). This was a
+     stacked pair before (.page-container's 1.5rem base-vars.css padding
+     PLUS main-content's own), so removing both fixes the "margins too wide"
+     complaint outright rather than by degrees.
+     Fast global fix bundled here: .page-title-area had no padding of its
+     own and relied entirely on that page-level margin, so title/label text
+     would otherwise sit flush against the screen edge on every page — the
+     one universal case cheap enough to fix now. Everything else that
+     assumed a page-level gutter (bare paragraphs, tables, etc.) is
+     unaudited — left for the full mobile UI review, per Jon. */
+  .page-container {
+    padding-inline: 0;
+  }
+  .page-title-area {
+    padding-inline: 0.75rem;
+  }
   .main-content {
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: 0;
+    padding-right: 0;
   }
   .page-title-area .page-title { font-size: 1.35rem; }
 

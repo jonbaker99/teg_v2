@@ -643,6 +643,8 @@ def test_restyle_voice_composes_guardrails_from_the_shared_constant():
     assert "VOICE: drier." in system                    # the caller's voice
     assert authoring.WRITER_FAITHFULNESS in system      # shared guardrails
     assert authoring.WRITER_OUTPUT_RULE in system
+    from teg_analysis.reporting import prompts
+    assert prompts.SENTENCE_DISCIPLINE in system        # em-dash ban, not shed by the voice
 
     import os
     os.remove("data/commentary/teg_17_report_unittest_tmp.md")

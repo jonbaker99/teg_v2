@@ -36,7 +36,8 @@ def _round_aggregates(df: pd.DataFrame) -> pd.DataFrame:
     ).reset_index()
 
 
-def build_player_course_history(teg_num: int, df: Optional[pd.DataFrame] = None) -> dict:
+def build_player_course_history(teg_num: int, df: Optional[pd.DataFrame] = None,
+                                through_round: Optional[int] = None) -> dict:
     """Per-player per-course history relative to prior TEGs.
 
     Returns a dict keyed by proper-case player name; each value is a dict keyed
@@ -54,6 +55,14 @@ def build_player_course_history(teg_num: int, df: Optional[pd.DataFrame] = None)
         - `is_course_pb_this_teg`: True if this TEG's best beats prior_best_gross
         - `summary_facts`: list of factual phrases the editor/writer can use
           verbatim as anchors — neutral, factual, no flourish
+
+    `through_round`: when given, scopes "this TEG" to rounds `<= through_round`
+    of `teg_num` and "prior" to rounds strictly before `(teg_num, through_round)`
+    — i.e. earlier TEGs OR earlier rounds of THIS TEG. Without it (the tournament
+    default), "this TEG" is every round of `teg_num` and "prior" is only earlier
+    TEGs, which is correct once the TEG is complete but a leak for a mid-
+    tournament round report (a TEG-4 course best set in R4 would surface in the
+    R2 report). Round callers MUST pass `through_round=round_num`.
     """
     if df is None:
         from teg_analysis.core.data_loader import load_all_data
@@ -61,6 +70,8 @@ def build_player_course_history(teg_num: int, df: Optional[pd.DataFrame] = None)
 
     rounds = _round_aggregates(df)
     current = rounds[rounds["TEGNum"] == teg_num]
+    if through_round is not None:
+        current = current[current["Round"] <= through_round]
     if current.empty:
         return {}
 
@@ -68,17 +79,26 @@ def build_player_course_history(teg_num: int, df: Optional[pd.DataFrame] = None)
 
     # Iterate over unique (player, course) pairs in the current TEG
     for (player, course), group in current.groupby(["Player", "Course"]):
-        # Player's best round on this course IN this TEG
+        # Player's best round on this course IN this TEG (bounded by through_round)
         best_row = group.loc[group["Gross"].idxmin()]
         this_teg_best_gross = int(best_row["Gross"])
         this_teg_best_round = int(best_row["Round"])
 
-        # Player's prior visits to this course (across all prior TEGs)
-        prior = rounds[
-            (rounds["Player"] == player)
-            & (rounds["Course"] == course)
-            & (rounds["TEGNum"] < teg_num)
-        ].sort_values(["TEGNum", "Round"])
+        # Player's prior visits to this course: earlier TEGs, plus (when
+        # through_round is set) earlier rounds of THIS TEG on the same course.
+        if through_round is not None:
+            prior = rounds[
+                (rounds["Player"] == player)
+                & (rounds["Course"] == course)
+                & ((rounds["TEGNum"] < teg_num)
+                   | ((rounds["TEGNum"] == teg_num) & (rounds["Round"] < through_round)))
+            ].sort_values(["TEGNum", "Round"])
+        else:
+            prior = rounds[
+                (rounds["Player"] == player)
+                & (rounds["Course"] == course)
+                & (rounds["TEGNum"] < teg_num)
+            ].sort_values(["TEGNum", "Round"])
 
         n_prior = len(prior)
         visit_count_through = n_prior + len(group)
@@ -151,12 +171,18 @@ def detect_course_records(
     teg_num: int,
     df: Optional[pd.DataFrame] = None,
     min_prior_visits: int = 3,
+    through_round: Optional[int] = None,
 ) -> list[dict]:
     """Detect new gross course records (good or bad) set during this TEG.
 
     A new record only "counts" if the course has been played at least
     `min_prior_visits` times across all TEGs before this one — otherwise
     the sample is too small for a "record" to be meaningful.
+
+    `through_round`: when given, "this TEG" is bounded to rounds `<= through_round`
+    and "prior" includes earlier rounds of THIS TEG on the same course, not just
+    earlier TEGs — see `build_player_course_history` for why this matters for a
+    mid-tournament round report. Round callers MUST pass `through_round=round_num`.
 
     Returns a list of beat-shaped dicts the bundle assembler can merge
     into the events list with mandatory=True:
@@ -179,8 +205,13 @@ def detect_course_records(
     events: list[dict] = []
 
     for course, group in rounds.groupby("Course"):
-        prior = group[group["TEGNum"] < teg_num]
-        current = group[group["TEGNum"] == teg_num]
+        if through_round is not None:
+            prior = group[(group["TEGNum"] < teg_num)
+                          | ((group["TEGNum"] == teg_num) & (group["Round"] < through_round))]
+            current = group[(group["TEGNum"] == teg_num) & (group["Round"] <= through_round)]
+        else:
+            prior = group[group["TEGNum"] < teg_num]
+            current = group[group["TEGNum"] == teg_num]
         if len(prior) < min_prior_visits or current.empty:
             continue
 

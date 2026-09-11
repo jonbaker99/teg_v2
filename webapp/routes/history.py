@@ -3,6 +3,7 @@
 import logging
 import re
 from pathlib import Path
+from typing import Optional
 
 import pandas as pd
 from fastapi import APIRouter, Request, Query
@@ -25,6 +26,7 @@ from teg_analysis.core.metadata import get_scorecard_data
 from teg_analysis.display.scorecards import (
     build_round_comparison_responsive,
 )
+from teg_analysis.reporting.newspaper_edition import available_tegs
 from webapp.deps import (
     cached_load_all_data,
     cached_round_data,
@@ -502,42 +504,9 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
             table_html = "".join(parts) if len(parts) > 1 else "<p class='text-muted'>No rounds found.</p>"
             return {"result_title": "Scorecards", "table_html": table_html, "raw_table": True}
 
-        if tab == "report":
-            import markdown as md_lib
-            from github import GithubException
-            from teg_analysis.io import read_text_file
-            # Prefer the styled report; fall back to the plain main report draft.
-            candidates = [
-                f"data/commentary/teg_{teg_num}_report_styled.md",
-                f"data/commentary/drafts/teg_{teg_num}_main_report.md",
-                f"data/commentary/teg_{teg_num}_main_report.md",
-            ]
-            text = None
-            for candidate in candidates:
-                try:
-                    text = read_text_file(candidate)
-                    break
-                except (FileNotFoundError, GithubException):
-                    continue
-            if text is not None:
-                html = md_lib.markdown(
-                    text,
-                    extensions=["extra", "sane_lists", "smarty", "toc"],
-                )
-                caption = ""
-                if int(teg_num) < 8:
-                    caption = ("<p class='text-muted text-sm'>NB: Before TEG 8 the TEG Trophy was "
-                               "decided by best net score (total net vs par), not Stableford points.</p>")
-                return {
-                    "result_title": "Report",
-                    "table_html": f'{caption}<div class="teg-report">{html}</div>',
-                }
-            return {
-                "result_title": "Report",
-                "table_html": (
-                    f"<p class='text-muted text-sm'>No report available yet for TEG {teg_num}.</p>"
-                ),
-            }
+        # (No `report` tab here: /results' Report tab is a link to /teg-reports,
+        # which renders the newspaper edition. The old markdown-blob render of
+        # data/commentary/teg_N_report_styled.md was removed with it.)
 
         rd_data = cached_round_data()
         teg_rd = rd_data[rd_data['TEGNum'] == teg_num]
@@ -616,9 +585,12 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
 
 
 @router.get("/results")
-def results_page(request: Request):
-    teg_num = get_default_teg_num()
+def results_page(request: Request, teg: Optional[int] = Query(None)):
     teg_numbers = get_available_teg_numbers()
+    # Deep-link support (e.g. from /teg-reports' "Back to Results" link) — an
+    # invalid/absent teg falls back to the default, same as every other page's
+    # teg-selector pattern.
+    teg_num = teg if teg in teg_numbers else get_default_teg_num()
     ctx = _results_context(teg_num, "net")
     return templates.TemplateResponse("results.html", {
         "request": request,
@@ -626,6 +598,11 @@ def results_page(request: Request):
         "teg_numbers": teg_numbers,
         "selected_teg": teg_num,
         "active_tab": "net",
+        # TEGs with a newspaper edition — drives whether the Report tab (a real
+        # link to /teg-reports, not an HTMX swap) is shown. lru_cached in
+        # newspaper_edition and cleared via deps.register_cache_clearer, so this
+        # is a dict lookup, not a filesystem/GitHub probe, after the first call.
+        "report_tegs": list(available_tegs()),
         **ctx,
     })
 

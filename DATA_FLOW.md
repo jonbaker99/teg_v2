@@ -350,9 +350,15 @@ live in `teg_analysis/reporting/README.md`; per-file detail in that folder's `AR
 
 **`/teg-reports` switched over to the storyline-first / newspaper-edition path on 2026-09-11.** The
 legacy chain's final artefact (`teg_N_report_styled.md`) is no longer read by any route; only
-storyline-first's `teg_N_report_storylinefirst_styled.md` + `teg_N_storyline_plan.json` are. Round
-reports still run the legacy chain (no storyline-first round equivalent yet — see below) and are
-temporarily not served at all (`teg_analysis/reporting/STATUS.md` → START HERE → *Next*, item 2).
+storyline-first's `teg_N_report_storylinefirst_styled.md` + `teg_N_storyline_plan.json` are.
+
+**Rounds got the same treatment the same day** — `teg_analysis/reporting/round_storyline.py`
+mirrors 4S–7S above but scoped to one round, with two mandatory storylines (`round_story`,
+`race_story`) instead of three and a leak guard ensuring a mid-tournament round's bundle cannot see
+later rounds. `newspaper_edition.build_edition(teg, round_num=R)` parses the round artefacts the
+same way; `/teg-reports?teg=N&round=R` serves it. Full detail:
+`teg_analysis/reporting/README.md` → "Round reports". The legacy round chain (4L–8L, `round_R_`
+infix) still exists and is what `backfill.py` runs for rounds, but nothing serves its output.
 
 ### The path
 
@@ -417,7 +423,7 @@ Everything above `assemble_bundle` is shared; everything below it forks.
 | 6L | `report_around_draft()` — the voice pass | `teg_N_report_A_around_draft.md` | 7L | **yes** |
 | 7L | `repetition_lint()` | `teg_N_report_final.md` — **canonical** | 8L, D3 | **yes** (Haiku) |
 | — | `verify_report()` — D3 mechanical checks | *(findings printed)* | you | no |
-| 8L | `style_report()` — standings, records, CSS hooks | `teg_N_report_styled.md` | nothing live (round reports only, temporarily unserved) | no |
+| 8L | `style_report()` — standings, records, CSS hooks | `teg_N_report_styled.md` | nothing live | no |
 
 **Storyline-first** — `scripts/storyline_full_report_experiment.py --tegs N` does 4S–7S. `--from` picks where to start and `--to` where to stop, so you only pay for the stages you are changing: `--from draft` re-enters at 5S reusing the plan, `--from voice` at 6S reusing the draft, `--to storylines` stops after 4S. Same freeze-and-restart idea as the legacy chain's restart recipes — full table in `teg_analysis/reporting/README.md` → *Running only the stages you need*:
 

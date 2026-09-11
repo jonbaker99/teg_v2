@@ -17,9 +17,13 @@ failure rather than a four-day silence.
 """
 import pytest
 
-from teg_analysis.reporting import authoring, prompts, round_report, story_plan
+from teg_analysis.reporting import authoring, prompts, round_report, round_storyline, story_plan
 from teg_analysis.reporting.authoring import WRITER_SYSTEM, WRITER_VOICE
 from teg_analysis.reporting.round_report import ROUND_PLAN_SYSTEM, ROUND_WRITER_SYSTEM
+from teg_analysis.reporting.round_storyline import (
+    ROUND_STORYLINE_SYSTEM_PROMPT, ROUND_DRAFT_WRITER_SYSTEM_PROMPT,
+    round_storyline_system, round_draft_writer_system,
+)
 from teg_analysis.reporting.story_plan import SYSTEM_PROMPT as TOURNAMENT_PLAN_SYSTEM
 
 # Changing this list is a real voice decision — it should show up in a diff.
@@ -37,7 +41,7 @@ def _named_prompt_constants():
     this test passed while `TIGHTEN_SYSTEM` — a fifth copy nobody had inventoried
     — went on naming Peck. An explicit list only guards what you remembered.
     """
-    for mod in (authoring, round_report, story_plan):
+    for mod in (authoring, round_report, round_storyline, story_plan):
         for attr, val in vars(mod).items():
             if isinstance(val, str) and attr.isupper() and len(val) > 200:
                 yield f"{mod.__name__.rsplit('.', 1)[-1]}.{attr}", val
@@ -52,8 +56,31 @@ WRITER_PROMPTS = {
 PLANNER_PROMPTS = {
     "tournament editor": TOURNAMENT_PLAN_SYSTEM,
     "round editor": ROUND_PLAN_SYSTEM,
+    "round storyline editor": ROUND_STORYLINE_SYSTEM_PROMPT,
 }
 ALL_PROMPTS = {**WRITER_PROMPTS, **PLANNER_PROMPTS}
+
+# The round storyline draft writer, like the tournament's `DRAFT_WRITER_SYSTEM`
+# (scripts/storyline_full_report_experiment.py), is deliberately voiceless —
+# fact-isolated prose the voice pass rewrites, not the final register. It
+# belongs in neither WRITER_PROMPTS (no VOICE_CORE/NAMED_PRINCIPLES to share)
+# nor PLANNER_PROMPTS (it writes prose, not a plan). Tested on its own axis:
+# it must carry the selection/naming rules and must NOT carry DESCRIPTOR_RULE
+# (editor-only, print-only field the writer never touches).
+DRAFT_WRITER_PROMPTS = {
+    "round storyline draft writer": ROUND_DRAFT_WRITER_SYSTEM_PROMPT,
+}
+
+
+@pytest.mark.parametrize("name", sorted(DRAFT_WRITER_PROMPTS))
+def test_draft_writer_carries_the_selection_and_naming_rules(name):
+    assert prompts.RANKING_RULE in DRAFT_WRITER_PROMPTS[name]
+    assert prompts.NAMING_RULE in DRAFT_WRITER_PROMPTS[name]
+
+
+@pytest.mark.parametrize("name", sorted(DRAFT_WRITER_PROMPTS))
+def test_draft_writer_never_carries_descriptor_rule(name):
+    assert prompts.DESCRIPTOR_RULE not in DRAFT_WRITER_PROMPTS[name]
 
 
 @pytest.mark.parametrize("name", sorted(ALL_PROMPTS))
@@ -143,6 +170,20 @@ def test_descriptor_rule_is_not_in_the_legacy_editor_prompt():
     assert prompts.DESCRIPTOR_RULE not in story_plan.SYSTEM_PROMPT
 
 
+def test_descriptor_rule_is_in_the_round_storyline_editor_prompt():
+    """`round_storyline.py` (2026-09-11): unlike the legacy `RoundStoryPlan`,
+    whose exclusion comment said 'a round report is a single narrative, not a
+    newspaper of story cards', this pipeline's output IS a newspaper of story
+    cards — `DraftedStoryline.descriptor` is a real field on its schema."""
+    assert prompts.DESCRIPTOR_RULE in ROUND_STORYLINE_SYSTEM_PROMPT
+
+
+def test_descriptor_rule_is_not_in_the_legacy_round_editor_prompt():
+    """The legacy `ROUND_PLAN_SYSTEM` premise still holds — see the comment on
+    `round_report.ROUND_PLAN_SYSTEM` for why it is deliberately excluded there."""
+    assert prompts.DESCRIPTOR_RULE not in ROUND_PLAN_SYSTEM
+
+
 def test_descriptor_rule_is_editor_only():
     """DESCRIPTOR_RULE assigns the plan's `descriptor` field — writers never touch
     kicker/descriptor, so unlike RANKING_RULE/NAMING_RULE this must NOT reach them."""
@@ -153,9 +194,20 @@ def test_descriptor_rule_is_editor_only():
 # ---------------------------------------------------------------------------
 # DOUBLE_RULE (2026-09-11): the Trophy+Green Jacket double. Both writer- and
 # editor-facing, unlike DESCRIPTOR_RULE — it changes report prose, not just a
-# plan field. Excluded from the round-level prompts: see the code comments on
-# `round_report.ROUND_PLAN_SYSTEM` / `ROUND_WRITER_SYSTEM` for why (the round
-# bundle carries no `double` figures to plan or write against).
+# plan field.
+#
+# Excluded from the LEGACY round-level prompts (`round_report.py`): see its
+# code comments for why — the legacy round bundle carries no `double` figures
+# to plan or write against, and that premise still holds unchanged.
+#
+# The premise SPLITS for the storyline-first round pipeline (`round_storyline.
+# py`, added 2026-09-11): mid-tournament it is excluded for the same reason —
+# `assemble_round_storyline_bundle` carries no `double` key until the TEG is
+# complete. On a FINAL round it IS included, both editor- and writer-facing —
+# the final round is the coronation, where a reader learns who won, and that
+# is exactly where burying a double is the failure DOUBLE_RULE exists to
+# prevent. The final-round bundle does carry `double` (from
+# `history_context.build_double_context`), so there is real data to ground it.
 # ---------------------------------------------------------------------------
 def test_double_rule_reaches_both_tournament_writer_and_both_editors():
     assert prompts.DOUBLE_RULE in authoring.WRITER_CONTRACT
@@ -163,10 +215,20 @@ def test_double_rule_reaches_both_tournament_writer_and_both_editors():
     assert prompts.DOUBLE_RULE in story_plan.STORYLINE_SYSTEM_PROMPT
 
 
-def test_double_rule_does_not_reach_round_level_prompts():
-    """Deliberate exclusion — the round bundle has no `double` figures."""
+def test_double_rule_does_not_reach_the_legacy_round_prompts():
+    """Deliberate exclusion — the legacy round bundle has no `double` figures."""
     assert prompts.DOUBLE_RULE not in ROUND_WRITER_SYSTEM
     assert prompts.DOUBLE_RULE not in ROUND_PLAN_SYSTEM
+
+
+def test_double_rule_is_absent_from_the_mid_tournament_round_storyline_prompts():
+    assert prompts.DOUBLE_RULE not in round_storyline_system(False)
+    assert prompts.DOUBLE_RULE not in round_draft_writer_system(False)
+
+
+def test_double_rule_reaches_the_final_round_storyline_prompts():
+    assert prompts.DOUBLE_RULE in round_storyline_system(True)
+    assert prompts.DOUBLE_RULE in round_draft_writer_system(True)
 
 
 def test_voice_and_faithfulness_stay_separate_concerns():
@@ -198,7 +260,9 @@ def test_the_sweep_actually_sees_the_known_prompts():
     found = set(ALL_PROMPT_CONSTANTS)
     for expected in ("authoring.WRITER_SYSTEM", "authoring.TIGHTEN_SYSTEM",
                      "round_report.ROUND_WRITER_SYSTEM", "round_report.ROUND_PLAN_SYSTEM",
-                     "story_plan.SYSTEM_PROMPT"):
+                     "story_plan.SYSTEM_PROMPT",
+                     "round_storyline.ROUND_STORYLINE_SYSTEM_PROMPT",
+                     "round_storyline.ROUND_DRAFT_WRITER_SYSTEM_PROMPT"):
         assert expected in found, f"prompt discovery missed {expected}"
 
 

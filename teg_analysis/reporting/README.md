@@ -20,12 +20,15 @@ establish which one you are in before reading anything else.
 | Editorial plan | `StoryPlan` → `teg_N_story_plan.json` | `StorylinePlan` → `teg_N_storyline_plan.json` |
 | Shape | one flowing document, rounds as blocks | one lead story plus separate articles |
 | Final artefact | `teg_N_report_styled.md` | `teg_N_report_storylinefirst_styled.md` |
-| Reaches a reader | `/teg-reports` — **live** | via the newspaper edition — **not live yet** |
+| Reaches a reader | no — superseded at `/teg-reports` (2026-09-11) | `/teg-reports` — **live**, via the newspaper edition |
 | Documented in | [The five stages](#the-five-stages) — most of this file | [Storyline-first pipeline](#storyline-first-pipeline--stages-and-outputs-2026-08-19) |
 
-**Neither has replaced the other.** The legacy chain is what the site serves; storyline-first is what
-the settled newspaper layout is built on. Switching `/teg-reports` over is the open decision —
-`webapp/report_layout_prototypes/README.md` → "Still to do".
+**Storyline-first has replaced the legacy chain at the reader-facing route.** `/teg-reports` renders
+through `newspaper_edition.build_edition`, which reads only the storyline-first artefacts — see
+`webapp/report_layout_prototypes/README.md` for the design record of the switch (2026-09-11). The
+legacy chain is still what `backfill.py` produces by default and is not deleted, but nothing serves
+it to a reader any more. (This table covers the tournament pipelines; the round-level equivalents
+are a section below, "Round reports — two pipelines, legacy and storyline-first".)
 
 They share everything up to the bundle: detection, 3-axis scoring, the context modules,
 `assemble_bundle`. Both write into `data/commentary/` side by side, and `prompts.py` is the single
@@ -846,19 +849,29 @@ Stage 5 also injects **deterministic data blocks** — the safety net that means
 
 Writes `teg_N_report_styled.md`. Idempotent. The styled MD plus `teg_reports.css` (in `streamlit/styles/` and `webapp/static/`) produces the visual styling; same file serves both UIs.
 
-## Round reports — `round_report.py`
+## Round reports — two pipelines, legacy and storyline-first
 
-A parallel, single-round pipeline with the same shape: `assemble_round_bundle` → `build_round_story_plan` (`ROUND_PLAN_SYSTEM`, `RoundStoryPlan`) → `generate_round_dry_draft` → `report_round_around_draft` → lint → `render.style_round_report`. `generate_round_report(teg, round)` runs the lot.
+### Legacy round pipeline — `round_report.py`
 
-Differences from the tournament pipeline: the bundle carries prior-round context and the competition state at the end of the round, not the whole tournament arc; `render.build_round_scores(teg, round)` puts a deterministic round-scores block at the top; there is no "Player-by-player summary" closing; the default structure is chronological/player-by-player; and the final round gets coronation-aware framing.
+A parallel, single-round pipeline with the same shape as the legacy tournament pipeline: `assemble_round_bundle` → `build_round_story_plan` (`ROUND_PLAN_SYSTEM`, `RoundStoryPlan`) → `generate_round_dry_draft` → `report_round_around_draft` → lint → `render.style_round_report`. `generate_round_report(teg, round)` runs the lot. Still the pipeline `backfill.py` calls for rounds.
 
-> **The code is level with the tournament pipeline; the published reports are not.** `RoundStoryPlan`
-> gained `narrative_vehicles`, `prominent_vehicle`, `prominent_palette` and `payoffs` on 2026-08-11,
-> and `ROUND_WRITER_SYSTEM` composes the same `prompts.VOICE_CORE` / `NAMED_PRINCIPLES` /
-> `SHARED_FAITHFULNESS` blocks as the tournament writer since 2026-08-15 — a real change to round
-> output, since the round writer had been stuck on a pre-Herron register. `NARRATIVE PULL` stays
-> tournament-only, deliberately. **None of this has been run**: all 18 published round reports predate
-> both changes. Generate one and read it before backfilling. See [STATUS.md](STATUS.md).
+Differences from the legacy tournament pipeline: the bundle carries prior-round context and the competition state at the end of the round, not the whole tournament arc; `render.build_round_scores(teg, round)` puts a deterministic round-scores block at the top; there is no "Player-by-player summary" closing; the default structure is chronological/player-by-player; and the final round gets coronation-aware framing. `ROUND_PLAN_SYSTEM`/`ROUND_WRITER_SYSTEM` deliberately exclude `prompts.DESCRIPTOR_RULE` and `DOUBLE_RULE` — the premise (a round report is one flowing narrative, not a newspaper of separate story cards) is still true for `RoundStoryPlan`'s output shape, and both exclusions are asserted by `tests/test_reporting_prompts.py`.
+
+Code and published reports are both dated: `RoundStoryPlan` gained `narrative_vehicles`/`prominent_vehicle`/`prominent_palette`/`payoffs` on 2026-08-11 and the voice blocks 2026-08-15, but no published round report has been regenerated since — all 18 predate both changes, and all still contain em-dashes (banned 2026-08-15). This pipeline is not where new round-report work should go; see the storyline-first pipeline below.
+
+### Storyline-first round pipeline — `round_storyline.py` (2026-09-11)
+
+The round-level equivalent of the tournament storyline-first pipeline (`story_plan.py` + `scripts/storyline_full_report_experiment.py`), ending in the same newspaper edition presentation, scaled down. Deliberately a **separate module** from `round_report.py` rather than an extension of it — see that file's exclusion comments above; this pipeline makes the opposite call on both rules, and sharing a module would put a prompt that carries a rule next to one test-pinned to exclude it.
+
+**Shape**: `assemble_round_storyline_bundle(teg, round)` → `build_round_storyline_plan` (`ROUND_STORYLINE_SYSTEM_PROMPT` / `RoundStorylinePlan`, one LLM call) → `build_round_storyline_draft` (per-storyline, fact-isolated, `ROUND_DRAFT_WRITER_SYSTEM_PROMPT`) → `authoring.restyle_voice(round_num=...)` (voice pass) → `newspaper_edition.build_edition(teg, round_num=...)` (free, deterministic). Orchestrated by `scripts/storyline_round_report_experiment.py`, same `--from`/`--to` stage-slicing as the tournament script, plus `--rounds` (run as a TEG × round cross-product) and `--dry-run` (write the composed prompt, no LLM call).
+
+**Two mandatory storylines**, not three: `round_story` (the best round of the day, grounded in the as-of-date all-time round ranks already computed by `commentary.create_round_summary` — never later rounds) and `race_story` (how the round moved the three competitions — a deterministic before/after diff of two `round_report._competition_state_at_round` snapshots, not left to the model — becoming the winners-declared coronation story on the final round). Plus 0–3 discovered storylines, same quality bar as the tournament pipeline. `DESCRIPTOR_RULE` reaches the round editor unconditionally; `DOUBLE_RULE` only on the final round, since only then does the bundle carry real `double` figures (`history_context.build_double_context`) — see `round_storyline.py`'s module docstring for the full reasoning, and `tests/test_reporting_prompts.py` for the assertions.
+
+**Leak safety is the central design constraint.** A mid-tournament round bundle must not know what happened in later rounds of the same TEG — the future clubhouse use case (STATUS.md item 4) generates a round report as soon as its scores are in, when later rounds don't exist. Several enrichment sources are whole-TEG-scoped and would otherwise leak (`course_history.detect_course_records`/`build_player_course_history`, `history_context.build_win_counts`, `win_anatomy.build_win_anatomy`, `tournament_shape`). The two `course_history` functions gained a `through_round=` parameter bounding "prior" to earlier TEGs *or* earlier rounds of this TEG; the win-anatomy/win-counts/double keys are added to the bundle only when `is_final_round`. `round_storyline._assert_no_future_rounds` walks the assembled bundle and raises if anything still leaked through — see `tests/test_round_storyline.py` for the tests against real TEG data.
+
+**Rendering**: `newspaper_edition.py` was generalised in place, not forked — `build_edition`, `artefact_paths`, `_split_body_sections`, `_slot_by_key`, `is_competition_article`, `_parse_articles`, `_choose_second_story` and `plan_rows` all take an optional round/kicker parameter and fall through to the tournament behaviour when it's absent, so all 35 pre-existing tournament tests pass unchanged. `render.style_round_text` (factored out of `style_round_report`, the same split `style_text` got from `style_report`) accepts an `appendix_heading` and `at_a_glance_html` so the round-storyline styled output carries a `## Round standings` heading (`newspaper_edition._split_body_sections` needs a heading to split on — `"Standings by round"` would be a false statement for one round) and an at-a-glance box computed **deterministically** from `_competition_state_at_round`/`round_ranks` (`round_storyline.build_round_results_for_glance`), never from the LLM's prose.
+
+Validated cold on TEG 14 R2 (quiet), TEG 18 R3 (genuine Jacket lead change and Spoon flip) and TEG 18 R4 (final round) — zero new D3 findings, zero dropped articles, course/comparison context visibly reaching the prose. See [STATUS.md](STATUS.md) → START HERE for the full validation writeup and the one known pre-existing gap found along the way (the voice pass's em-dash ban not reaching either storyline-first pipeline, tournament or round). **No backfill has been run** — only those three TEG/rounds have round-storyline artefacts.
 
 ## Batch generation — `backfill.py`
 
@@ -901,6 +914,12 @@ it never touches `report_final.md` or `report_styled.md`:
 | `teg_N_report_storylinedraft.md` | one plain, unvoiced section per storyline. **The right input for any tone/voice A/B** | one LLM call per storyline |
 | `teg_N_report_storylinefirst.md` | the same draft in the house voice | one LLM call |
 | `teg_N_report_storylinefirst_styled.md` | **what the newspaper edition parses** (+ tables, CSS hooks) | free |
+
+**Round-storyline artefacts** (`round_storyline.py`, 2026-09-11) use the identical four names with a
+`round_R_` infix (`teg_N_round_R_storyline_plan.json`, etc.) — same shape, same parser
+(`build_edition(teg, round_num=R)`), currently on disk only for TEG 14 R2 and TEG 18 R3/R4 (the
+validation runs; see STATUS.md). The legacy round names also take the `round_R_` infix, as noted
+above.
 
 Then `newspaper_edition.build_edition(teg)` turns the **styled file and the plan** into the edition object the
 layout renders — deterministic, no LLM. See

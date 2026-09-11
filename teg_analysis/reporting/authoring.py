@@ -1070,7 +1070,8 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
                   source_label: Optional[str] = None,
                   model: Optional[str] = None,
                   verify: bool = True,
-                  style: bool = True) -> dict:
+                  style: bool = True,
+                  round_num: Optional[int] = None) -> dict:
     """Rewrite a finished report's voice and save it under a variant name.
 
     Args:
@@ -1091,19 +1092,24 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
             introduced anything. That is `new_findings`.
         style: also write the styled variant, so it is directly comparable
             line-for-line with `report_styled.md` (default True).
+        round_num: when given, operates on `teg_N_round_R_report_*` artefacts
+            instead of `teg_N_report_*`, and styles via `render.style_round_text`
+            rather than `render.style_text`. Everything else — the contract, the
+            faithfulness rules, the D3 diff — is identical; only the filename
+            stem and the styling call change.
 
     Returns {teg, label, source_path, output_path, styled_path, usage,
     findings, new_findings}.
     """
     import os
 
-    from teg_analysis.reporting.render import style_text
     from teg_analysis.reporting.verify import verify_report
 
     label = _variant_label(label)
+    stem = f"teg_{teg_num}_round_{round_num}" if round_num is not None else f"teg_{teg_num}"
 
     src_name = f"report_{source_label}" if source_label else "report_final"
-    source_path = f"{output_dir()}/teg_{teg_num}_{src_name}.md"
+    source_path = f"{output_dir()}/{stem}_{src_name}.md"
     if not os.path.exists(source_path):
         # Several TEGs have had their report_final.md consumed into variant
         # filenames by past experiments (TEGs 10, 11, 13, 14, 18 as of
@@ -1111,41 +1117,67 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
         # Listing the real alternatives is more useful than "not found".
         import glob
         import re as _re
-        prefix = f"{output_dir()}/teg_{teg_num}_report_"
+        prefix = f"{output_dir()}/{stem}_report_"
         available = sorted(
             _re.sub(r"\.md$", "", os.path.basename(p)[len(os.path.basename(prefix)):])
             for p in glob.glob(f"{prefix}*.md")
             if not p.endswith("_styled.md"))
         raise FileNotFoundError(
-            f"{source_path} not found — TEG {teg_num} has no finished report to "
-            f"rewrite.\nPass source_label= one of: {available}\n"
+            f"{source_path} not found — TEG {teg_num}"
+            f"{f' round {round_num}' if round_num is not None else ''} has no "
+            f"finished report to rewrite.\nPass source_label= one of: {available}\n"
             f"'A_around_draft' is usually the right choice (the pre-lint text).")
 
     with open(source_path) as f:
         source_text = f.read()
 
-    system = (RESTYLE_CONTRACT + "\n\n" + voice_prompt.strip() + "\n\n"
+    # SENTENCE_DISCIPLINE (the em-dash ban + sentence-length rules) sits here,
+    # not inside `voice_prompt`, for the same reason `build_writer_system`
+    # keeps it in WRITER_CONTRACT rather than WRITER_VOICE: a caller-supplied
+    # voice must not be able to shed it. Its absence here was a real gap
+    # (found 2026-09-11): every `restyle_voice` output — tournament and round
+    # storyline-first alike — could carry em-dashes despite the ban, since
+    # neither RESTYLE_CONTRACT nor WRITER_FAITHFULNESS states it.
+    system = (RESTYLE_CONTRACT + "\n\n" + prompts.SENTENCE_DISCIPLINE + "\n\n"
+              + voice_prompt.strip() + "\n\n"
               + WRITER_FAITHFULNESS + "\n" + WRITER_OUTPUT_RULE)
     text, usage = llm.generate_text(system, source_text,
                                     model=model or llm.DEFAULT_MODEL,
                                     max_tokens=16000,
-                                    stage="restyle", label=f"teg{teg_num}")
+                                    stage="restyle",
+                                    label=f"teg{teg_num}" + (f"r{round_num}" if round_num is not None else ""))
     text = _strip_beat_ids(text)
 
-    output_path = f"{output_dir()}/teg_{teg_num}_report_{label}.md"
+    output_path = f"{output_dir()}/{stem}_report_{label}.md"
     with open(output_path, "w") as f:
         f.write(text)
 
     styled_path = None
     if style:
-        styled_path = f"{output_dir()}/teg_{teg_num}_report_{label}_styled.md"
+        styled_path = f"{output_dir()}/{stem}_report_{label}_styled.md"
+        if round_num is not None:
+            # round_num is only meaningful for the round STORYLINE pipeline
+            # (`round_storyline.py`) — the legacy round pipeline never calls
+            # `restyle_voice`. The at-a-glance box and the "Round standings"
+            # appendix heading are exactly what `newspaper_edition.build_edition`
+            # requires to parse this output into a round edition.
+            from teg_analysis.reporting.render import style_round_text, build_round_at_a_glance
+            from teg_analysis.reporting.round_storyline import build_round_results_for_glance
+            round_results, is_final = build_round_results_for_glance(teg_num, round_num)
+            at_a_glance = build_round_at_a_glance(round_results, is_final)
+            styled_text = style_round_text(teg_num, round_num, text,
+                                           appendix_heading="Round standings",
+                                           at_a_glance_html=at_a_glance)
+        else:
+            from teg_analysis.reporting.render import style_text
+            styled_text = style_text(teg_num, text)
         with open(styled_path, "w") as f:
-            f.write(style_text(teg_num, text))
+            f.write(styled_text)
 
     findings: list = []
     new_findings: list = []
     if verify:
-        found = verify_report(teg_num, text=text)
+        found = verify_report(teg_num, text=text, round_num=round_num)
         findings = [str(f) for f in found]
         # Faults the source already had are not this pass's doing. What matters
         # is whether rewriting introduced one — that is the exact failure that
@@ -1161,7 +1193,7 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
         def _key(f):
             return (f.rule, f.detail)
 
-        before = Counter(_key(f) for f in verify_report(teg_num, text=source_text))
+        before = Counter(_key(f) for f in verify_report(teg_num, text=source_text, round_num=round_num))
         new_findings = []
         for f in found:
             k = _key(f)

@@ -78,6 +78,11 @@ python -m scripts.export_cowork_kit --tegs 4,14,17 --out DIR # report kit for re
 #   teg_analysis/reporting/README.md -> "Running only the stages you need"
 python scripts/storyline_full_report_experiment.py --tegs 18
 
+# Storyline-first ROUND reports (round_storyline.py). Same stage flags, plus --rounds
+# (TEG x round cross-product) and --dry-run (write the prompt, no LLM call):
+#   teg_analysis/reporting/README.md -> "Round reports"
+python scripts/storyline_round_report_experiment.py --tegs 18 --rounds 1-4
+
 # Retrofit a new content rule onto reports already written, without a full rerun:
 #   teg_analysis/reporting/README.md -> "Retrofitting a new rule onto reports already written"
 python scripts/apply_report_rules.py --tegs 14,16,18 --restyle-only  # deterministic blocks only, no LLM

@@ -8,6 +8,39 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 - [ ] **Bestball/worstball on `/latest-round`** — show best/worst bestball and worstball positions in the round-in-context page.
 - [ ] **`/scoring/matrix`** - score type as pills; TEG / Round / 9 as tabs
+- [ ] **`/latest-teg` and `/latest-round`'s Report tabs still read the stale `_report_styled.md` /
+  `_round_M_report_styled.md` markdown-blob artefacts** (`webapp/routes/latest.py`'s `_render_report`,
+  `LATEST_TEG_TABS`/`LATEST_ROUND_TABS`), unlike `/results` and `/leaderboard`'s Report tabs, which
+  now link to `/teg-reports` (2026-09-11). Point these at `/teg-reports?teg=N` (`&round=R` for the
+  round case — the newspaper page already supports round editions) the same way, then
+  `_render_report`, `/static/teg_reports.css` and the whole `_report_styled.md` read path become
+  fully dead and can be removed in one sweep.
+- [x] **`/teg-reports` TEG select moved next to the Tournament/Round pills, and both pills now
+  reflect what actually exists (2026-09-12).** The select used to sit in the page title row,
+  separate from the pills below it; it's now in the same `.section-controls` row as the pills
+  (matching `/results`/`/leaderboard`'s own select-next-to-tabs pattern), same size/styling.
+  The Tournament pill only renders when the selected TEG actually has a tournament edition, and
+  each round pill only for rounds that actually exist — previously "Tournament" always showed
+  whenever any round existed, tournament edition or not. Fixed by a new
+  `newspaper_edition.available_report_tegs()` (tournament OR round, superset of the
+  tournament-only `available_tegs()`), which now drives the `/teg-reports` TEG dropdown — a TEG
+  whose only report is, say, R1 is now reachable at all (it wasn't before: the dropdown was built
+  from `available_tegs()`, tournament-only) and lands on R1 by default, showing only that pill.
+  `webapp/routes/reports.py` also gained a `has_tournament` context flag
+  (`newspaper_edition.has_edition(teg)`) for the pill-gating.
+- [x] **Report tab wired into `/results` and `/leaderboard` (2026-09-11).** Plan by Opus, implemented
+  by Sonnet. The tab is a real `<a>` to `/teg-reports?teg=N` — not an HTMX swap, since the report's
+  typography/palette is deliberately unlike the rest of the site and a full page transition reads
+  better than an in-place DOM swap — hidden when the TEG has no newspaper edition
+  (`newspaper_edition.available_tegs()`; the tab row lives outside the HTMX swap target, so a small
+  inline script keeps its `href`/visibility synced to the TEG dropdown). Carries a `↗` arrow
+  (`.tab-arrow`) to flag it as a real navigation before the click. The old in-page render of
+  `teg_N_report_styled.md` (`history.py`'s `tab == "report"` branch) was deleted, not left dead.
+  **And the reverse link**: `/teg-reports` now shows "← Back to Results" (tournament report) or
+  "← Back to Round N" (round report) next to the round pills, only when there's a specific
+  teg/round to deep-link to. That required teaching `/results` and `/latest-round` to accept
+  `?teg=`/`?round=` query params for the first time (both previously always opened on the default/
+  latest TEG) — `results_page`/`latest_round_page` in `history.py`/`latest.py`.
 - [x] **Newspaper report layout — switched `/teg-reports` over (2026-09-11).** Tournament reports
   now render through `teg_analysis/reporting/newspaper_edition.py` (`build_edition`,
   `render_desktop_html`, `plan_rows`) at `/teg-reports` itself; `/teg-reports-preview` is retired.
@@ -17,16 +50,29 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
   "History / TEG Reports" header, and the newspaper "paper" card (`.np-paper`, own cream colour +
   grain texture + border/shadow) floats on the site's own grey/white page background beneath it,
   like any other content card (Jon's call, after an initial standalone-page version read as
-  jarring). Round reports are **temporarily dropped from the UI entirely** (Jon's call, same
-  session) — no newspaper-layout equivalent exists yet (item 3 below); re-add a round path once
-  that lands, built the same way rather than reviving the old markdown renderer. The satire-draft
-  variant was also dropped from the UI (the drafts still exist on disk, unreachable from any
+  jarring). Round reports were **temporarily dropped from the UI entirely** (Jon's call, same
+  session) — no newspaper-layout equivalent existed yet; **re-added 2026-09-11**, see the entry
+  below. The satire-draft variant was also dropped from the UI (the drafts still exist on disk, unreachable from any
   route). The provisional `?pal=`/`?sf=`/`?rail=` preview switches were locked to
   `pal=a`/`sf=contrast`/`rail=s2` (the contrast standfirst gained its own neutral grey,
   `--ink-contrast`, instead of reusing the warmer `--ink-soft`) and the switcher UI + the other
   three palettes/standfirst treatments were removed from `newspaper_preview.css`.
   Design record: `webapp/report_layout_prototypes/README.md`. Pipeline context: `DATA_FLOW.md` §10.
   First of four sequenced to-dos — see `teg_analysis/reporting/STATUS.md` → START HERE → *Next*.
+
+- [x] **Round reports re-added — `teg_analysis/reporting/round_storyline.py` (2026-09-11).** The
+  round-storyline pipeline (plan → fact-isolated draft → voice pass, mirroring the tournament
+  pipeline but with two mandatory storylines — `round_story`, the best round of the day, and
+  `race_story`, how the round moved the three competitions, or the coronation on a final round)
+  lands `teg_N_round_R_storyline_plan.json` + the matching styled markdown, which
+  `newspaper_edition.py` (generalised, not forked — `build_edition(teg, round_num=...)`) parses
+  into a round edition exactly as it does a tournament one. `webapp/routes/reports.py`'s
+  `teg_reports` handler takes an optional `round` query param; `templates/teg_reports.html` grows
+  a `.pill-group` of round links beside the TEG select once `available_rounds(teg)` is non-empty.
+  Validated cold on TEG 14 R2 (quiet), TEG 18 R3 (Jacket lead change, Spoon flip) and TEG 18 R4
+  (final round) — zero D3 findings, zero dropped articles, correct lead switching (`round_story`
+  leads mid-tournament, `race_story` leads on the final round). Second and third of the four
+  sequenced to-dos. Detail: `teg_analysis/reporting/STATUS.md` → START HERE.
 
 
 - [x] **`editions.json` going stale whenever a styled report changes** — **fixed 2026-09-10.** It

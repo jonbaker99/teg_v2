@@ -113,43 +113,57 @@ DEFAULT_ARTICLE_FILTER = KEEP_EVERYTHING
 #: Jacket was. Only discovered stories (SIDEBAR) are filterable.
 COMPETITION_KICKERS = ("TROPHY", "GREEN JACKET", "WOODEN SPOON")
 
+#: The round pipeline's two mandatory storylines (`round_storyline.py`). Both
+#: variants are listed (mid-tournament / final round) because a mandatory-ness
+#: check must not depend on which one a given report happens to be.
+ROUND_MANDATORY_KICKERS = ("ROUND OF THE DAY", "FINAL ROUND", "THE RACES", "RESULT")
 
-def is_competition_article(article: dict[str, Any]) -> bool:
-    """Whether this article carries one of the three mandatory competitions.
+
+def is_competition_article(article: dict[str, Any],
+                           kickers: tuple[str, ...] = COMPETITION_KICKERS) -> bool:
+    """Whether this article carries one of the mandatory kickers.
 
     Substring, not equality: a merged cross-cut article joins its kickers with
     " & " ("WOODEN SPOON & SIDEBAR"), and one carrying a competition is still
-    mandatory. Same test `_choose_second_story` uses to find the Jacket.
+    mandatory. Same test `_choose_second_story` uses to find the promoted story.
+    `kickers` defaults to the tournament's three competitions; round editions
+    pass `ROUND_MANDATORY_KICKERS`.
     """
-    return any(k in article.get("kicker", "") for k in COMPETITION_KICKERS)
+    return any(k in article.get("kicker", "") for k in kickers)
 
 
 def filter_articles(articles: list[dict[str, Any]],
-                    article_filter: ArticleFilter) -> tuple[list, list]:
+                    article_filter: ArticleFilter,
+                    kickers: tuple[str, ...] = COMPETITION_KICKERS) -> tuple[list, list]:
     """Split `articles` into (kept, dropped).
 
-    Trophy, Green Jacket and Wooden Spoon are always kept, whatever they score.
-    The filter exists to thin the *discovered* stories, which are the ones the
-    editor chose to add; the competitions are the report's spine, and the lead is
-    one of them, which `render_desktop_html` requires anyway.
+    The mandatory stories (`kickers`) are always kept, whatever they score. The
+    filter exists to thin the *discovered* stories, which are the ones the
+    editor chose to add; the mandatory stories are the report's spine, and the
+    lead is one of them, which `render_desktop_html` requires anyway.
     """
     kept, dropped = [], []
     for a in articles:
-        keep = a.get("is_lead") or is_competition_article(a) or article_filter.keeps(a)
+        keep = a.get("is_lead") or is_competition_article(a, kickers) or article_filter.keeps(a)
         (kept if keep else dropped).append(a)
     return kept, dropped
 
 
-def artefact_paths(teg: int) -> tuple[str, str]:
-    """The two files an edition is built from, for `teg`."""
+def artefact_paths(teg: int, round_num: int | None = None) -> tuple[str, str]:
+    """The two files an edition is built from, for `teg` (or `teg`/`round_num`)."""
+    if round_num is not None:
+        stem = f"teg_{teg}_round_{round_num}"
+        return (f"{COMMENTARY_DIR}/{stem}_report_storylinefirst_styled.md",
+                f"{COMMENTARY_DIR}/{stem}_storyline_plan.json")
     return (f"{COMMENTARY_DIR}/teg_{teg}_report_storylinefirst_styled.md",
             f"{COMMENTARY_DIR}/teg_{teg}_storyline_plan.json")
 
 
 @lru_cache(maxsize=None)
-def has_edition(teg: int) -> bool:
-    """Whether `teg` has both storyline-first artefacts, so `build_edition` can run."""
-    for path in artefact_paths(teg):
+def has_edition(teg: int, round_num: int | None = None) -> bool:
+    """Whether `teg` (or `teg`/`round_num`) has both storyline-first artefacts,
+    so `build_edition` can run."""
+    for path in artefact_paths(teg, round_num):
         try:
             read_text_file(path)
         except Exception:      # noqa: BLE001 - missing, unreadable, or GitHub 404
@@ -183,13 +197,52 @@ def available_tegs() -> tuple[int, ...]:
     return tuple(t for t in candidates if has_edition(t))
 
 
+@lru_cache(maxsize=None)
+def available_rounds(teg: int) -> tuple[int, ...]:
+    """Rounds of `teg` with storyline-first round artefacts.
+
+    Probes R1..total_rounds (from `venue.build_venue_context`) rather than
+    directory-scanning, for the same Railway-volume reason as `available_tegs`.
+    """
+    try:
+        from teg_analysis.reporting.venue import build_venue_context
+        total_rounds = len(build_venue_context(teg).get("rounds", []))
+    except Exception:          # noqa: BLE001
+        return ()
+    return tuple(r for r in range(1, total_rounds + 1) if has_edition(teg, r))
+
+
+@lru_cache(maxsize=1)
+def available_report_tegs() -> tuple[int, ...]:
+    """TEGs with a report of ANY kind — tournament, round, or both.
+
+    Superset of `available_tegs()` (tournament-only): also includes a TEG
+    whose only report so far is a round one — tournament not yet generated,
+    or (for the current TEG) not possible yet because the tournament isn't
+    over. `webapp/routes/reports.py` drives the `/teg-reports` TEG dropdown
+    from this, not `available_tegs()`, so a round-only TEG is still reachable
+    (2026-09-12, Jon: the R1 pill should show even when it's the only report
+    that exists for that TEG — which requires the TEG itself to be selectable
+    first).
+    """
+    try:
+        completed = read_file(COMPLETED_TEGS_CSV)
+        candidates = sorted(int(n) for n in completed["TEGNum"].astype(int).unique())
+    except Exception:          # noqa: BLE001 - no CSV, unreadable, unexpected shape
+        return ()
+    return tuple(t for t in candidates if has_edition(t) or available_rounds(t))
+
+
 def clear_edition_caches() -> None:
     """Drop memoised artefact discovery, so newly generated reports are seen."""
     has_edition.cache_clear()
     available_tegs.cache_clear()
+    available_rounds.cache_clear()
+    available_report_tegs.cache_clear()
 
 # Priority order for combining kickers on a merged (" / "-joined) heading.
 _KICKER_PRIORITY = ["TROPHY", "GREEN JACKET", "WOODEN SPOON", "SIDEBAR"]
+_ROUND_KICKER_PRIORITY = ["FINAL ROUND", "ROUND OF THE DAY", "RESULT", "THE RACES", "SIDEBAR"]
 
 
 def _strip_html(text: str) -> str:
@@ -200,25 +253,39 @@ def _strip_html(text: str) -> str:
     return text
 
 
-def _parse_dateline(md: str) -> dict[str, str]:
+def _parse_dateline(md: str) -> dict[str, Any]:
+    """`TEG N | Area | Year` (tournament) or `TEG N | Round R | Date | Course`
+    (round — `render.build_round_dateline`). Returns `round: None` for the
+    tournament shape. Field names stay `venue`/`year` in both cases so
+    `_masthead_html` needs no branch — for a round they hold `course`/`date`
+    instead, which read fine in the same "X · Y" slot."""
     m = re.search(r'<p class="dateline">(.*?)</p>', md)
     if not m:
         raise ValueError("dateline not found")
     parts = [p.strip() for p in m.group(1).split("|")]
-    if len(parts) != 3:
-        raise ValueError(f"dateline did not split into 3 parts: {parts!r}")
-    teg, venue, year = parts
-    return {"teg": teg, "venue": venue, "year": year}
+    if len(parts) == 4:
+        teg, round_part, date, course = parts
+        round_m = re.search(r"\d+", round_part)
+        return {"teg": teg, "round": int(round_m.group()) if round_m else None,
+                "venue": course, "year": date}
+    if len(parts) == 3:
+        teg, venue, year = parts
+        return {"teg": teg, "round": None, "venue": venue, "year": year}
+    raise ValueError(f"dateline did not split into 3 or 4 parts: {parts!r}")
 
 
 def _parse_title(md: str) -> str:
-    m = re.search(r"^#\s+(.+?)\s*\{\.report-title\}\s*$", md, re.MULTILINE)
+    m = re.search(r"^#\s+(.+?)\s*\{\.(?:report-title|round-report-title)\}\s*$",
+                  md, re.MULTILINE)
     if not m:
         raise ValueError("title not found")
     return m.group(1).strip()
 
 
-def _parse_results(md: str) -> list[dict[str, Any]]:
+def _parse_results(md: str, require_lead: bool = True) -> list[dict[str, Any]]:
+    """`require_lead=False` for a mid-tournament round edition, where no result
+    line is a "winner" in the tournament sense — `render.build_round_at_a_glance`
+    tags a line `trophy-winner` only on a final round."""
     m = re.search(
         r'<section class="callout at-a-glance-box">(.*?)</section>', md, re.DOTALL
     )
@@ -243,16 +310,40 @@ def _parse_results(md: str) -> list[dict[str, Any]]:
         )
     if len(results) != 3:
         raise ValueError(f"expected 3 results lines, got {len(results)}: {results!r}")
-    if not any(r["lead"] for r in results):
+    if require_lead and not any(r["lead"] for r in results):
         raise ValueError("no result line flagged as lead (trophy-winner)")
     return results
 
 
-def _split_body_sections(md: str) -> tuple[list[tuple[str, str]], str]:
+_ROUND_SCORE_ENTRY_RE = re.compile(r"([A-Z]{2})\s+([+-]?\d+)")
+
+
+def _parse_round_scores(md: str) -> list[dict[str, Any]]:
+    """The `<p class="round-scores">` block (`render.build_round_scores`) —
+    round-only editions only, injected right after the dateline. Returns
+    `[{"header": str, "entries": [{"pl": str, "value": str}, ...]}, ...]`,
+    Trophy first then Gross. `[]` if absent (a tournament edition, or a round
+    report styled before this block existed)."""
+    out = []
+    for m in re.finditer(
+        r'<p class="round-scores"><span class="round-scores-header">(.*?):</span>\s*(.*?)</p>',
+        md,
+    ):
+        header = _strip_html(m.group(1))
+        row = _strip_html(m.group(2))
+        entries = [{"pl": pl, "value": val} for pl, val in _ROUND_SCORE_ENTRY_RE.findall(row)]
+        out.append({"header": header, "entries": entries})
+    return out
+
+
+def _split_body_sections(md: str, appendix_heading: str = "Standings by round"
+                         ) -> tuple[list[tuple[str, str]], str]:
     """Split the document on top-level `## ` headings. Returns
     (article_sections, appendix_markdown) where article_sections is a list of
-    (heading, content) pairs preceding "## Standings by round", and
-    appendix_markdown is the raw text from "## Standings by round" onward."""
+    (heading, content) pairs preceding `appendix_heading`, and appendix_markdown
+    is the raw text from `appendix_heading` onward. Round editions pass
+    `"Round standings"` (see `render.style_round_text`'s `appendix_heading`) —
+    "Standings by round" would be a false statement for one round."""
     heading_re = re.compile(r"^##\s+(.+?)\s*$", re.MULTILINE)
     matches = list(heading_re.finditer(md))
     if not matches:
@@ -268,11 +359,11 @@ def _split_body_sections(md: str) -> tuple[list[tuple[str, str]], str]:
 
     appendix_start = None
     for heading, content, start in sections:
-        if heading == "Standings by round":
+        if heading == appendix_heading:
             appendix_start = start
             break
     if appendix_start is None:
-        raise ValueError("'## Standings by round' heading not found")
+        raise ValueError(f"'## {appendix_heading}' heading not found")
 
     article_sections = [
         (heading, content) for heading, content, start in sections if start < appendix_start
@@ -404,15 +495,41 @@ def _plan_standfirst(matches: list[tuple[str, dict[str, Any]]]) -> str:
 _ANCHOR_RE = re.compile(r"<!--\s*storyline:\s*([a-z0-9,\s]+?)\s*-->", re.IGNORECASE)
 
 
+def _is_round_plan(plan: dict[str, Any]) -> bool:
+    """Round plans (`round_storyline.RoundStorylinePlan`) carry `round_story`/
+    `race_story`; tournament plans carry `trophy_storyline`/`jacket_storyline`/
+    `spoon_storyline`. Distinguishing by shape (rather than threading a
+    `round_num` down through every parser function) means `_slot_by_key` and
+    `_match_storyline` work on whichever plan they are handed."""
+    return "round_story" in plan
+
+
+def _round_kickers(plan: dict[str, Any]) -> dict[str, str]:
+    """Kicker labels for the two mandatory round storylines. Mid-tournament,
+    `round_story` leads (`ROUND OF THE DAY`) and `race_story` is the second
+    mandatory story (`THE RACES`); on a final round `race_story` — the
+    coronation — leads (`RESULT`) and `round_story` becomes the second
+    (`ROUND OF THE DAY` still, since it did not stop being the day's best round)."""
+    is_final = plan.get("is_final_round", False)
+    return {"round": "ROUND OF THE DAY",
+            "race": "RESULT" if is_final else "THE RACES"}
+
+
 def _slot_by_key(key: str, plan: dict[str, Any]) -> tuple[str, dict[str, Any]] | None:
-    """Resolve one anchor key. `trophy` / `jacket` / `spoon`, or `dN` for the
-    Nth discovered storyline. Returns None for a key the plan cannot satisfy —
-    an anchor pointing past the end of a regenerated plan degrades like a
-    missing one rather than raising."""
+    """Resolve one anchor key against either plan shape:
+    `trophy` / `jacket` / `spoon` (tournament) or `round` / `race` (round), or
+    `dN` for the Nth discovered storyline in either. Returns None for a key the
+    plan cannot satisfy — an anchor pointing past the end of a regenerated plan
+    degrades like a missing one rather than raising."""
     key = key.strip().lower()
-    fixed = {"trophy": ("TROPHY", "trophy_storyline"),
-             "jacket": ("GREEN JACKET", "jacket_storyline"),
-             "spoon": ("WOODEN SPOON", "spoon_storyline")}
+    if _is_round_plan(plan):
+        kickers = _round_kickers(plan)
+        fixed = {"round": (kickers["round"], "round_story"),
+                 "race": (kickers["race"], "race_story")}
+    else:
+        fixed = {"trophy": ("TROPHY", "trophy_storyline"),
+                 "jacket": ("GREEN JACKET", "jacket_storyline"),
+                 "spoon": ("WOODEN SPOON", "spoon_storyline")}
     if key in fixed:
         kicker, field = fixed[key]
         return kicker, plan[field]
@@ -440,12 +557,15 @@ def _anchor_matches(content: str, plan: dict[str, Any]
 def _match_storyline(subject: str, plan: dict[str, Any]) -> tuple[str, dict[str, Any]] | None:
     """Match a heading fragment (post ' / ' split) to its plan slot by exact
     subject string. Returns (kicker, storyline_dict), or None if nothing matches."""
-    if plan["trophy_storyline"]["subject"] == subject:
-        return "TROPHY", plan["trophy_storyline"]
-    if plan["jacket_storyline"]["subject"] == subject:
-        return "GREEN JACKET", plan["jacket_storyline"]
-    if plan["spoon_storyline"]["subject"] == subject:
-        return "WOODEN SPOON", plan["spoon_storyline"]
+    if _is_round_plan(plan):
+        kickers = _round_kickers(plan)
+        fixed = [(kickers["round"], plan["round_story"]), (kickers["race"], plan["race_story"])]
+    else:
+        fixed = [("TROPHY", plan["trophy_storyline"]), ("GREEN JACKET", plan["jacket_storyline"]),
+                 ("WOODEN SPOON", plan["spoon_storyline"])]
+    for kicker, storyline in fixed:
+        if storyline["subject"] == subject:
+            return kicker, storyline
     for storyline in plan["discovered_storylines"]:
         if storyline["subject"] == subject:
             return "SIDEBAR", storyline
@@ -535,15 +655,21 @@ def derive_descriptor(storyline: dict, kicker: str) -> str:
 
 
 def _parse_articles(
-    article_sections: list[tuple[str, str]], plan: dict[str, Any]
+    article_sections: list[tuple[str, str]], plan: dict[str, Any],
+    lead_kicker: str = "TROPHY", kicker_priority: list[str] | None = None,
 ) -> list[dict[str, Any]]:
+    """`lead_kicker` names the kicker whose article leads (default "TROPHY";
+    a round edition passes "ROUND OF THE DAY" mid-tournament or "RESULT" on a
+    final round). `kicker_priority` orders a merged section's `" & "`-joined
+    kickers — defaults to the tournament's `_KICKER_PRIORITY`."""
+    priority = kicker_priority if kicker_priority is not None else _KICKER_PRIORITY
     articles = []
     for heading, content in article_sections:
         matches = _resolve_section(heading, content, plan)
         content = _ANCHOR_RE.sub("", content)
 
         kickers = sorted(
-            {k for k, _ in matches}, key=lambda k: _KICKER_PRIORITY.index(k)
+            {k for k, _ in matches}, key=lambda k: priority.index(k)
         )
         kicker = " & ".join(kickers)
 
@@ -583,17 +709,17 @@ def _parse_articles(
                 "words": words,
                 "compelling": compelling,
                 "humour": humour,
-                "is_lead": kicker == "TROPHY",
+                "is_lead": kicker == lead_kicker,
             }
         )
 
-    # The Trophy section leads. Where it cannot be identified — a degraded
+    # The lead-kicker section leads. Where it cannot be identified — a degraded
     # section, or a plan/report pair that has drifted — the strongest article
     # leads instead. An edition that leads on the wrong story is a worse layout;
     # an edition that raises here is no page at all.
     leads = [a for a in articles if a["is_lead"]]
     if len(leads) != 1:
-        print(f"[newspaper_edition] WARNING: expected exactly 1 TROPHY lead article, "
+        print(f"[newspaper_edition] WARNING: expected exactly 1 {lead_kicker} lead article, "
               f"got {len(leads)}; leading on the strongest article instead.")
         articles.sort(key=lambda a: (-a["compelling"], -a["humour"]))
         for a in articles:
@@ -732,40 +858,79 @@ def for_page(edition: dict[str, Any]) -> dict[str, Any]:
     return {k: v for k, v in edition.items() if k not in _NON_PAGE_KEYS}
 
 
-def build_edition(teg: int,
+def build_edition(teg: int, round_num: int | None = None,
                   article_filter: ArticleFilter | None = None) -> dict[str, Any]:
-    """Read the two source artefacts for `teg` and return one edition dict.
+    """Read the two source artefacts for `teg` (or `teg`/`round_num`) and
+    return one edition dict.
 
     Raises FileNotFoundError (via `read_text_file`) if either artefact is
-    missing — callers should only call this for `teg in available_tegs()`.
+    missing — callers should only call this for `teg in available_tegs()`, or
+    `round_num in available_rounds(teg)`.
 
     `article_filter` decides which stories are printed; `None` uses
     `DEFAULT_ARTICLE_FILTER`, which prints all of them. Dropped ones are returned under `"dropped_articles"` rather than
     discarded, so the caller can say what it left out. Nothing on disk changes.
+
+    A round edition (`round_num` given) differs from a tournament one in four
+    ways, all resolved here rather than by the caller: the appendix heading
+    ("Round standings", not "Standings by round" — see `render.style_round_text`),
+    the at-a-glance box's lead requirement (none mid-tournament — no story is a
+    "winner" yet), which storyline leads (`round_story` mid-tournament,
+    `race_story` on a final round — a coronation is the front page), and which
+    storyline is promoted to the standalone second-lead row (whichever of the
+    two mandatory storylines is NOT leading). `_add_runners_up` is tournament-
+    only: it reads the FINAL standings for a Trophy/Jacket/Spoon runner-up,
+    which has no meaning mid-tournament. A round edition also carries
+    `round_scores` (`[]` for a tournament edition) — every player's own score
+    for just this round, parsed from `render.build_round_scores`'s block;
+    `_rail_html` renders it as its own mini-table, separate from and above the
+    cumulative standings row, which answers a different question ("who's
+    winning overall" vs "who had a good day").
     """
-    md_path, plan_path = artefact_paths(teg)
+    md_path, plan_path = artefact_paths(teg, round_num)
     md = read_text_file(md_path)
     plan = json.loads(read_text_file(plan_path))
+    is_round = round_num is not None
+    is_final_round = bool(plan.get("is_final_round")) if is_round else False
 
-    article_sections, appendix_md = _split_body_sections(md)
+    appendix_heading = "Round standings" if is_round else "Standings by round"
+    article_sections, appendix_md = _split_body_sections(md, appendix_heading)
 
-    results = _parse_results(md)
+    results = _parse_results(md, require_lead=(not is_round) or is_final_round)
     standings = _parse_standings(appendix_md)
-    _add_runners_up(results, standings)
+    if not is_round:
+        _add_runners_up(results, standings)
     _add_value_split(results)
 
+    if is_round:
+        kickers = _round_kickers(plan)
+        lead_kicker = kickers["race"] if is_final_round else kickers["round"]
+        preferred_kicker = kickers["round"] if is_final_round else kickers["race"]
+        kicker_priority = _ROUND_KICKER_PRIORITY
+        mandatory_kickers = ROUND_MANDATORY_KICKERS
+    else:
+        lead_kicker = "TROPHY"
+        preferred_kicker = "GREEN JACKET"
+        kicker_priority = _KICKER_PRIORITY
+        mandatory_kickers = COMPETITION_KICKERS
+
     articles, dropped = filter_articles(
-        _parse_articles(article_sections, plan),
-        DEFAULT_ARTICLE_FILTER if article_filter is None else article_filter)
+        _parse_articles(article_sections, plan, lead_kicker=lead_kicker,
+                        kicker_priority=kicker_priority),
+        DEFAULT_ARTICLE_FILTER if article_filter is None else article_filter,
+        kickers=mandatory_kickers)
     return {
         "teg": teg,
+        "round": round_num,
         "title": _parse_title(md),
         "dateline": _parse_dateline(md),
         "results": results,
+        "round_scores": _parse_round_scores(md) if is_round else [],
         "articles": articles,
         "dropped_articles": dropped,
         "standings": standings,
         "records": _parse_records(appendix_md),
+        "preferred_kicker": preferred_kicker,
     }
 
 
@@ -792,10 +957,13 @@ def _masthead_html(edition: dict[str, Any]) -> str:
     # "The TEG" (2026-09-11): a fake newspaper name read as a gimmick. The
     # masthead now names the actual tournament ("TEG 16"); the dateline moves
     # to venue/year only, since the TEG number no longer needs repeating there.
+    # A round edition's wordmark also names the round ("TEG 16 · Round 2").
     d = edition["dateline"]
+    wordmark = (_esc(d["teg"]) if d.get("round") is None
+               else f'{_esc(d["teg"])} &middot; Round {d["round"]}')
     return (
         '<header class="masthead"><div class="mh-row">'
-        f'<span class="wordmark">{_esc(d["teg"])}</span>'
+        f'<span class="wordmark">{wordmark}</span>'
         f'<span class="dateline">{_esc(d["venue"])} &middot; {_esc(d["year"])}</span>'
         '</div><div class="mh-rule"></div></header>'
     )
@@ -841,15 +1009,40 @@ def _totals_only(standings_row: str) -> str:
     return _ROUND_SCORE_BRACKET_RE.sub("", standings_row)
 
 
+def _round_scores_html(edition: dict[str, Any]) -> str:
+    """The round edition's own-round score tables (Trophy then Gross) — "who
+    had a good day", sitting above and separate from the cumulative standings
+    row below it ("who's winning overall"). `""` for a tournament edition, or
+    a round report styled before `round_scores` existed. Reuses `.rail-
+    standings`/`.sb-lab`/`.sb-row` — same divider/label/row styling as the
+    standings block below it, just a second instance of the same pattern."""
+    blocks = edition.get("round_scores")
+    if not blocks:
+        return ""
+    rows = "".join(
+        f'<p class="sb-lab">{_esc(b["header"])}</p>'
+        f'<p class="sb-row">{_esc(" | ".join(f"{e["pl"]} {e["value"]}" for e in b["entries"]))}</p>'
+        for b in blocks
+    )
+    return f'<div class="rail-standings">{rows}</div>'
+
+
 def _rail_html(edition: dict[str, Any]) -> str:
     items = _result_items_html(edition)
     last = edition["standings"][-1]
+    round_num = edition["dateline"].get("round")
+    label = "Final" if round_num is None else f"After R{round_num}"
+    # Always the CUMULATIVE total here, tournament and round alike — a round
+    # edition's own-round scores get their own table above this one
+    # (`_round_scores_html`), so this row no longer needs to double as both.
+    trophy_row, jacket_row = _totals_only(last["trophy"]), _totals_only(last["jacket"])
     return (
         '<aside class="rail">'
         f'<div class="r5"><p class="r5-title">At a glance</p><ul class="r-list">{items}</ul></div>'
+        f'{_round_scores_html(edition)}'
         '<div class="rail-standings">'
-        f'<p class="sb-lab">Final &middot; Trophy</p><p class="sb-row">{_esc(_totals_only(last["trophy"]))}</p>'
-        f'<p class="sb-lab">Final &middot; Green Jacket</p><p class="sb-row">{_esc(_totals_only(last["jacket"]))}</p>'
+        f'<p class="sb-lab">{label} &middot; Trophy</p><p class="sb-row">{_esc(trophy_row)}</p>'
+        f'<p class="sb-lab">{label} &middot; Green Jacket</p><p class="sb-row">{_esc(jacket_row)}</p>'
         "</div></aside>"
     )
 
@@ -869,6 +1062,11 @@ def _sub_card_html(a: dict[str, Any]) -> str:
         f"{standfirst}"
         f'<div class="sub-body">{_paragraphs_html(a["paragraphs"])}</div></article>'
     )
+
+
+def _appendix_title(edition: dict[str, Any]) -> str:
+    d = edition["dateline"]
+    return d["teg"] if d.get("round") is None else f'{d["teg"]}, Round {d["round"]}'
 
 
 def _appendix_html(edition: dict[str, Any]) -> str:
@@ -898,22 +1096,28 @@ def _appendix_html(edition: dict[str, Any]) -> str:
     return (
         '<section class="appendix">'
         '<p class="kicker">Records &amp; Personal Bests</p>'
-        f'<h3 class="apx-hl">Notable achievements: {_esc(edition["dateline"]["teg"])}</h3>'
+        f'<h3 class="apx-hl">Notable achievements: {_esc(_appendix_title(edition))}</h3>'
         f'<div class="apx-flow">{groups}</div>'
         "</section>"
     )
 
 
-def _choose_second_story(subs: list[dict[str, Any]]) -> dict[str, Any] | None:
+def _choose_second_story(subs: list[dict[str, Any]],
+                         preferred_kicker: str = "GREEN JACKET") -> dict[str, Any] | None:
+    """Promote `preferred_kicker`'s article to the standalone second-lead row,
+    unless a stronger story clears it by `CLEAR_MARGIN`. Tournament default is
+    the Green Jacket; a round edition passes whichever of its two mandatory
+    stories is NOT leading (`race`'s kicker mid-tournament, `round`'s on a
+    final round — see `build_edition`)."""
     if not subs:
         return None
-    jacket = next((a for a in subs if "GREEN JACKET" in a["kicker"]), None)
-    if jacket is None:
+    preferred = next((a for a in subs if preferred_kicker in a["kicker"]), None)
+    if preferred is None:
         return subs[0]
     top = subs[0]
-    if top is not jacket and top["compelling"] - jacket["compelling"] >= CLEAR_MARGIN:
+    if top is not preferred and top["compelling"] - preferred["compelling"] >= CLEAR_MARGIN:
         return top
-    return jacket
+    return preferred
 
 
 #: Chunk sizes for what's left after taking groups of 3, keyed by remainder
@@ -941,16 +1145,17 @@ def _chunk_remaining(rest: list[dict[str, Any]]) -> list[list[dict[str, Any]]]:
     return rows
 
 
-def plan_rows(subs: list[dict[str, Any]]) -> list[list[dict[str, Any]]]:
+def plan_rows(subs: list[dict[str, Any]],
+             preferred_kicker: str = "GREEN JACKET") -> list[list[dict[str, Any]]]:
     """Pack sub-articles into display rows of 1, 2 or 3 items each, so a CSS
     grid row is always exactly as wide as the items in it — never a partial
     row with empty trailing cells, and never two stories stacked in one
     column.
 
-    The first row is the promoted "second lead" (see `_choose_second_story`),
-    alone, full width — unless there is no clear standout, in which case it
-    becomes the first item of a 2-row instead (a size-1 row is reserved for a
-    genuine standout).
+    The first row is the promoted "second lead" (see `_choose_second_story`,
+    which `preferred_kicker` is passed straight through to), alone, full width
+    — unless there is no clear standout, in which case it becomes the first
+    item of a 2-row instead (a size-1 row is reserved for a genuine standout).
 
     The rest are packed greedily into rows of 3, except the tail is adjusted
     so no row of size 1 is ever produced by leftover count: e.g. 4 remaining
@@ -964,7 +1169,7 @@ def plan_rows(subs: list[dict[str, Any]]) -> list[list[dict[str, Any]]]:
     """
     if not subs:
         return []
-    promoted = _choose_second_story(subs)
+    promoted = _choose_second_story(subs, preferred_kicker)
     rest = sorted((a for a in subs if a is not promoted), key=lambda a: -a["words"])
     return [[promoted]] + _chunk_remaining(rest)
 
@@ -1004,7 +1209,7 @@ def render_desktop_html(edition: dict[str, Any], rail: str = "s2") -> str:
     """
     lead = next(a for a in edition["articles"] if a["is_lead"])
     subs = [a for a in edition["articles"] if not a["is_lead"]]
-    rows = plan_rows(subs)
+    rows = plan_rows(subs, preferred_kicker=edition.get("preferred_kicker", "GREEN JACKET"))
     return (
         _masthead_html(edition)
         + _main_html(edition, lead, rail)

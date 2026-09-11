@@ -2,6 +2,7 @@
 
 import logging
 from pathlib import Path
+from typing import Optional
 
 import pandas as pd
 import markdown as md_lib
@@ -448,12 +449,20 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
 
 
 @router.get("/latest-round")
-def latest_round_page(request: Request):
+def latest_round_page(request: Request, teg: Optional[int] = Query(None),
+                       round: Optional[int] = Query(None)):
     rd_data = cached_round_data()
-    teg_str, round_num = get_latest_round_defaults(rd_data)
-    teg_num = parse_teg_label(teg_str)
     teg_numbers = get_available_teg_numbers()
-    rounds = get_rounds_for_teg(teg_num)
+    # Deep-link support (e.g. from /teg-reports' "Back to Round N" link) — an
+    # invalid/absent teg or round falls back to the latest-played default.
+    if teg in teg_numbers:
+        teg_num = teg
+        rounds = get_rounds_for_teg(teg_num)
+        round_num = round if round in rounds else (rounds[-1] if rounds else 1)
+    else:
+        teg_str, round_num = get_latest_round_defaults(rd_data)
+        teg_num = parse_teg_label(teg_str)
+        rounds = get_rounds_for_teg(teg_num)
     context_header = _round_context_header(teg_num, int(round_num))
     ctx = _latest_round_tab_context(teg_num, int(round_num), "scoreboard")
     return templates.TemplateResponse("latest_round.html", {

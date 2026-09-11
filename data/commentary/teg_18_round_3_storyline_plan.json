@@ -1,0 +1,109 @@
+{
+  "title": "The Stadium Gives In",
+  "title_candidates": [
+    "The Stadium Gives In",
+    "Records at One End, Ruin at the Other",
+    "Eighty-Four and a Fall"
+  ],
+  "theme": "Spain's sternest test surrendered a new course record and three personal bests, while the one man who has always handled it fell apart.",
+  "tone": "house",
+  "opening_hook": "In twenty-seven previous TEG visits nobody had got round the Stadium Course in fewer than 89 shots; on a Monday in October, on the sixth visit of all, David Mullin took five off that mark and was not even the day's only story.",
+  "narrative_vehicles": [
+    "inversion",
+    "dual_narrative",
+    "ensemble"
+  ],
+  "prominent_vehicle": "inversion",
+  "prominent_palette": "course_history",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "David Mullin, bottom of the Trophy and holding the Wooden Spoon at breakfast, shoots 84 gross for a new PGA Catalunya Stadium course record and 44 Stableford points",
+    "why_it_matters": "The 84 beats the previous Stadium record of 89 set across 27 prior TEG visits, and takes seven shots off Mullin's own course best of 91 from TEG 11 — a rank-one fact in two directions at once, delivered by the man who began the day last in the TEG 18 Trophy.",
+    "shape": "Mullin started the day propping up the Trophy table and carrying the TEG 18 Wooden Spoon, and opened with three straight pars at the 1st, 2nd and 3rd for nine points. The middle of the round turned it: par at the 8th, bogey at the brutal stroke-index-one 9th and a birdie at the 10th, ten points in three holes, and the 84 was suddenly live. He signed for 44 points and 84 gross, a course record and a personal best at the venue, and vacated the Spoon position on the way to the bar.",
+    "beat_ids": [
+      "cr01",
+      "r3_b14",
+      "r3_b17",
+      "r3_b11",
+      "r3_b19"
+    ],
+    "headline_candidates": [
+      "Mullin's 84 Breaks the Stadium Record",
+      "Twenty-Seven Visits, One New Number",
+      "Mullin Lowers the Stadium Bar"
+    ],
+    "chosen_headline": "Mullin's 84 Breaks the Stadium Record",
+    "standfirst": "No TEG player had broken 89 here in twenty-seven attempts, and the man who managed it began the day bottom of the table in both directions.",
+    "compelling_score": 9,
+    "humour_score": 5,
+    "descriptor": "DAVID MULLIN"
+  },
+  "race_story": {
+    "subject": "Jon Baker hands the TEG 18 Green Jacket lead to Gregg Williams at the 2nd and drops to the bottom of the Wooden Spoon race on the same hole",
+    "why_it_matters": "Jon Baker arrived leading the Jacket by two and sitting one place clear of the Spoon; he left eight behind Gregg Williams and fourteen adrift at the bottom, and both changes were complete before the third green.",
+    "shape": "Jon Baker led the Green Jacket after two rounds and had a fortnight's worth of credit in hand; a triple bogey at the 2nd cost him the lead to Gregg Williams and dropped him to last in the Wooden Spoon race in a single stroke. A 9 at the 4th confirmed the direction of travel, and four consecutive double bogeys from the 15th to the 18th — eight shots gone over the closing stretch — turned a bad day into a structural one. His 28 points, eleven fewer than his 39 in round two, leave him 14 clear at the wrong end with one round to play, while Williams's 85 was a personal best at the course.",
+    "beat_ids": [
+      "r3_b10",
+      "r3_b07",
+      "r3_b08",
+      "r3_b13",
+      "r3_b15",
+      "r3_b16"
+    ],
+    "headline_candidates": [
+      "Jon Baker Loses Two Races Before Three",
+      "Four Closing Doubles Finish the Job",
+      "Jon Baker Surrenders the Jacket Early"
+    ],
+    "chosen_headline": "Jon Baker Loses Two Races Before Three",
+    "standfirst": "The Green Jacket changed hands and the Wooden Spoon changed owner on the same hole, and the closing four holes removed any argument.",
+    "compelling_score": 8,
+    "humour_score": 7,
+    "descriptor": "JON BAKER | GREGG WILLIAMS"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Alex Baker shoots 100 gross — seven worse than his last visit here — and still takes 44 points and extends his Trophy lead",
+      "why_it_matters": "The Trophy leader played the middle of his round like a man being mugged, bleeding twelve shots from the 6th to the 10th, then produced 21 points in six holes from the 11th to move his advantage from 11 to 12 with one round left.",
+      "shape": "Alex Baker was serene through five holes and then lost twelve shots in five, a triple at the 6th, three doubles, another triple at the 10th. From the 11th he found something: par, bogey, par, par, bogey, bogey — 21 points in six holes, including back-to-back pars at the 13th and 14th, two of the harder holes on the card. The 100 gross leaves him last in the Green Jacket and seven shots worse than his previous visit to the Stadium, and none of that touches the Trophy, where he now leads by 12.",
+      "beat_ids": [
+        "r3_b09",
+        "r3_b01",
+        "r3_b12"
+      ],
+      "headline_candidates": [
+        "Alex Baker Rescues a Ruined Round",
+        "Twenty-One Points in Six Holes",
+        "A Hundred Shots and a Bigger Lead"
+      ],
+      "chosen_headline": "Alex Baker Rescues a Ruined Round",
+      "standfirst": "Twelve shots disappeared between the 6th and the 10th, and the Trophy lead somehow came out of the afternoon one point larger.",
+      "compelling_score": 7,
+      "humour_score": 7,
+      "descriptor": "ALEX BAKER"
+    },
+    {
+      "subject": "Europe's elite championship test hands out three personal bests and four scores of 43 points or more in a single afternoon",
+      "why_it_matters": "The Stadium Course has never been generous in five previous TEG visits, yet David Mullin (84), Gregg Williams (85) and John Patterson (93) all set personal course bests on the same day and four of the five players cleared 43 points.",
+      "shape": "The Stadium arrived with a reputation built on European Tour championships and five previous TEG maulings, and spent the morning being politely dismantled. Gregg Williams parred the 2nd, 3rd, 4th and 5th for twelve points without dropping a gross shot, David Mullin did the same through the first three, and John Patterson quietly went two better than his previous best here. Only Jon Baker declined the invitation, and the scorecard read 44, 44, 43, 43 and then a long drop.",
+      "beat_ids": [
+        "r3_b03",
+        "r3_b05",
+        "r3_b17",
+        "r3_b14"
+      ],
+      "headline_candidates": [
+        "The Stadium Yields Three Personal Bests",
+        "Catalonia's Sternest Test Goes Quiet",
+        "Four Players Past Forty Points"
+      ],
+      "chosen_headline": "The Stadium Yields Three Personal Bests",
+      "standfirst": "A course that has resisted five previous TEG visits gave up its record and three career-best scores on the same October Monday.",
+      "compelling_score": 6,
+      "humour_score": 6,
+      "descriptor": "STADIUM COURSE"
+    }
+  ],
+  "race_state_note": "Alex Baker leads the Trophy by 12 with one round to play while sitting last in the Green Jacket on 88 — different competitions, different measures, no contradiction; Gregg Williams holds the Jacket by 8 over David Mullin, and Jon Baker's 14-shot deficit at the bottom of the Trophy table is the largest gap anywhere in the tournament.",
+  "storyline_note": ""
+}

@@ -91,8 +91,9 @@ a broadly-equivalent course summary).
 - [x] Chart-type switcher (Standard / Adjusted / Ranking) on net & gross race charts
 - [x] Wooden-spoon callout on net leaderboard
 - [x] Inline per-round scorecards
-- [x] Report tab: pre-TEG-8 scoring caption
-- [x] Report tab: fallback from `_report_styled.md` to `_main_report.md`
+- [x] Report tab: link to `/teg-reports?teg=N` (2026-09-11) — no longer an in-page
+  render of `_report_styled.md`; that artefact and its pre-TEG-8-caption/fallback
+  logic were removed along with it. Hidden when the TEG has no newspaper edition.
 - [ ] Vertical-line issue (stray rule near chart/table) — refinement-stage fix, cosmetic
 
 ### Player Rankings (`/player-rankings`)

@@ -19,17 +19,40 @@
 </div>
 {% else %}
 
-{# TEG selector — sits in the site's own content area (grey/white, per theme),
-   above the newspaper "paper" card. Round reports are temporarily off (no
-   newspaper-layout equivalent yet — teg_analysis/reporting/STATUS.md). #}
-<div class="section-controls flex flex-wrap items-center gap-4">
-    <form method="get" action="/teg-reports">
-        <select name="teg" class="theme-select" onchange="this.form.submit()">
-            {% for n in teg_numbers %}
-            <option value="{{ n }}" {% if n == selected_teg %}selected{% endif %}>TEG {{ n }}</option>
+{# One control row: TEG select, then Tournament/Round pills, then (right-
+   aligned) a way back into the normal app — same .section-controls pattern
+   as /results and /leaderboard, so the select and pills read as one family
+   (2026-09-12, Jon: TEG select should sit next to the Tournament/Round
+   pills, sized/styled the same). Tournament only shows when this TEG
+   actually has one; each round pill only for rounds that actually exist —
+   a TEG whose only report is R1 shows just "R1", nothing else. #}
+<div class="section-controls flex flex-wrap items-center justify-between gap-4">
+    <div class="flex flex-wrap items-center gap-4">
+        <form method="get" action="/teg-reports">
+            <select name="teg" class="theme-select" onchange="this.form.submit()">
+                {% for n in teg_numbers %}
+                <option value="{{ n }}" {% if n == selected_teg %}selected{% endif %}>TEG {{ n }}</option>
+                {% endfor %}
+            </select>
+        </form>
+        {% if has_tournament or round_numbers %}
+        <div class="pill-group" role="group" aria-label="Report">
+            {% if has_tournament %}
+            <a href="/teg-reports?teg={{ selected_teg }}"
+               class="pill{% if not selected_round %} pill--active{% endif %}">Tournament</a>
+            {% endif %}
+            {% for r in round_numbers %}
+            <a href="/teg-reports?teg={{ selected_teg }}&round={{ r }}"
+               class="pill{% if r == selected_round %} pill--active{% endif %}">R{{ r }}</a>
             {% endfor %}
-        </select>
-    </form>
+        </div>
+        {% endif %}
+    </div>
+    {% if back_link %}
+    <a href="{{ back_link }}" class="np-back-link">
+        <span aria-hidden="true">&larr;</span> Back to {{ back_label }}
+    </a>
+    {% endif %}
 </div>
 
 {% if no_report_message %}

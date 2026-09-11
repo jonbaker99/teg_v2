@@ -367,3 +367,137 @@ def test_parse_articles_prefers_explicit_descriptor_over_the_fallback():
     assert by_headline["Mullin Does Something Else"]["descriptor"] == "THE EXPLICIT ONE"
     # Sanity: the trophy one also keeps its explicit descriptor, not a re-derivation.
     assert by_headline["Mullin Wins Again"]["descriptor"] == "TROPHY"
+
+
+# ---------------------------------------------------------------------------
+# Round editions — generalised from the tournament-only functions above.
+# Synthetic plan/markdown only; the real end-to-end path (assemble ->
+# generate -> style -> build_edition) is exercised in the validation runs,
+# not here.
+# ---------------------------------------------------------------------------
+def _round_plan(is_final_round=False) -> dict:
+    def sl(subject: str) -> dict:
+        return {"subject": subject, "chosen_headline": "H", "standfirst": "S",
+                "compelling_score": 5, "humour_score": 5}
+    return {"round_story": sl("Round subject"), "race_story": sl("Race subject"),
+            "is_final_round": is_final_round,
+            "discovered_storylines": [sl("First discovered")]}
+
+
+def test_slot_by_key_resolves_round_and_race():
+    from teg_analysis.reporting.newspaper_edition import _slot_by_key
+    plan = _round_plan()
+    assert _slot_by_key("round", plan) == ("ROUND OF THE DAY", plan["round_story"])
+    assert _slot_by_key("race", plan) == ("THE RACES", plan["race_story"])
+
+
+def test_slot_by_key_race_kicker_is_result_on_final_round():
+    from teg_analysis.reporting.newspaper_edition import _slot_by_key
+    plan = _round_plan(is_final_round=True)
+    assert _slot_by_key("race", plan) == ("RESULT", plan["race_story"])
+
+
+def test_slot_by_key_trophy_against_a_round_plan_returns_none():
+    """A tournament anchor key against a round plan must not KeyError."""
+    from teg_analysis.reporting.newspaper_edition import _slot_by_key
+    assert _slot_by_key("trophy", _round_plan()) is None
+
+
+def test_round_anchor_resolves_regardless_of_heading_text():
+    plan = _round_plan()
+    matches = _resolve_section("Nothing to do with the plan",
+                               "<!-- storyline: race -->\n\nProse.", plan)
+    assert matches == [("THE RACES", plan["race_story"])]
+
+
+def test_round_dateline_parses_four_parts():
+    from teg_analysis.reporting.newspaper_edition import _parse_dateline
+    md = '<p class="dateline">TEG 16 | Round 2 | 12/06/2023 | Ganton</p>'
+    d = _parse_dateline(md)
+    assert d == {"teg": "TEG 16", "round": 2, "venue": "Ganton", "year": "12/06/2023"}
+
+
+def test_tournament_dateline_has_round_none():
+    from teg_analysis.reporting.newspaper_edition import _parse_dateline
+    md = '<p class="dateline">TEG 16 | Estoril | 2023</p>'
+    d = _parse_dateline(md)
+    assert d["round"] is None
+
+
+def test_round_title_matches_round_report_title_class():
+    from teg_analysis.reporting.newspaper_edition import _parse_title
+    md = "# A Quiet Wednesday {.round-report-title}\n\nBody."
+    assert _parse_title(md) == "A Quiet Wednesday"
+
+
+def test_split_body_sections_takes_a_round_appendix_heading():
+    from teg_analysis.reporting.newspaper_edition import _split_body_sections
+    md = ("## Round subject\nBody.\n\n"
+          "## Round standings\n**End of Round 2**\n\nstandings here\n")
+    sections, appendix = _split_body_sections(md, appendix_heading="Round standings")
+    assert sections == [("Round subject", "\nBody.\n\n")]
+    assert appendix.startswith("## Round standings")
+
+
+def test_totals_only_drops_the_round_score_bracket():
+    from teg_analysis.reporting.newspaper_edition import _totals_only
+    row = "SN 156 (R4: 43) | AB 140 (R4: 30)"
+    assert _totals_only(row) == "SN 156 | AB 140"
+
+
+def test_parse_round_scores_reads_the_round_scores_block():
+    from teg_analysis.reporting.newspaper_edition import _parse_round_scores
+    md = (
+        '<p class="round-scores"><span class="round-scores-header">Round Stableford:</span>'
+        ' SN 35 | DM 34 | AB 32</p>\n'
+        '<p class="round-scores"><span class="round-scores-header">Round Gross:</span>'
+        ' DM +22 | AB +26 | SN +30</p>'
+    )
+    parsed = _parse_round_scores(md)
+    assert parsed == [
+        {"header": "Round Stableford",
+         "entries": [{"pl": "SN", "value": "35"}, {"pl": "DM", "value": "34"},
+                    {"pl": "AB", "value": "32"}]},
+        {"header": "Round Gross",
+         "entries": [{"pl": "DM", "value": "+22"}, {"pl": "AB", "value": "+26"},
+                    {"pl": "SN", "value": "+30"}]},
+    ]
+
+
+def test_parse_round_scores_is_empty_without_the_block():
+    from teg_analysis.reporting.newspaper_edition import _parse_round_scores
+    assert _parse_round_scores("<p>no round scores here</p>") == []
+
+
+def test_round_scores_html_renders_before_standings_and_is_empty_for_tournaments():
+    from teg_analysis.reporting.newspaper_edition import _rail_html
+    round_edition = {
+        "dateline": {"round": 2},
+        "results": [],
+        "round_scores": [{"header": "Round Stableford",
+                          "entries": [{"pl": "SN", "value": "35"}]}],
+        "standings": [{"round": 2, "trophy": "SN 74 (R2: 35)", "jacket": "SN +40 (R2: +22)"}],
+    }
+    html = _rail_html(round_edition)
+    rs_idx = html.index("Round Stableford")
+    standings_idx = html.index("After R2")
+    assert rs_idx < standings_idx
+
+    tournament_edition = {**round_edition, "dateline": {"round": None}, "round_scores": []}
+    html2 = _rail_html(tournament_edition)
+    assert "Round Stableford" not in html2
+    assert "Final" in html2
+
+
+def test_choose_second_story_honours_preferred_kicker():
+    from teg_analysis.reporting.newspaper_edition import _choose_second_story
+    subs = [_article(100, "ROUND OF THE DAY"), _article(90, "THE RACES"), _article(80)]
+    assert _choose_second_story(subs, preferred_kicker="THE RACES")["kicker"] == "THE RACES"
+
+
+def test_is_competition_article_with_round_kickers():
+    from teg_analysis.reporting.newspaper_edition import (
+        ROUND_MANDATORY_KICKERS, is_competition_article,
+    )
+    assert is_competition_article(_article(1, "THE RACES"), ROUND_MANDATORY_KICKERS)
+    assert not is_competition_article(_article(1, "SIDEBAR"), ROUND_MANDATORY_KICKERS)

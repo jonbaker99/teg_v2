@@ -7,16 +7,48 @@
  *
  * `.np-page` is a SCOPING wrapper (2026-09-11) — fonts/colour variables and
  * a CSS reset for its contents — not a full-bleed page background. The site
- * nav and page chrome (`base.html`) stay live around it; the report page
- * lives on the site's normal grey/white background, and the newspaper "paper"
- * card (`.np-paper`, below) is the thing that carries the cream colour and
- * grain texture, floating on that background like any other content card.
+ * nav and page chrome (`base.html`) stay live around it; the newspaper
+ * "paper" card (`.np-paper`, below) is the thing that carries the cream
+ * colour and grain texture.
+ *
+ * On desktop the default theme (clean-page.css) wraps every page's content
+ * in a white card (`.main-content`: background, border-radius, box-shadow,
+ * padding) floating on the grey page background. `.np-paper` is already a
+ * card in its own right, so under that theme the report was a card inside a
+ * card. `body.np-host` (set by `reports.py` via the `newspaper_page` context
+ * flag) neutralises `.main-content` down to a plain layout box so `.np-paper`
+ * reads as THE page's card, not a second one nested inside it — see the
+ * NP-HOST block below. Mobile doesn't need this: `mobile.css`'s M1 pass
+ * already makes `.main-content` transparent/edge-to-edge for every page.
  *
  * The prototypes switch look via buttons; this page switches on viewport
  * width instead — the breakpoint mobile.html itself uses for "this is a real
  * phone, drop the simulator frame" (`max-width:700px`).
  */
 .np-page *{ box-sizing:border-box; }
+
+/* ==========================================================================
+   NP-HOST — desktop only (mobile's .main-content is already transparent,
+   see the file-header comment). Same specificity trick already used by
+   clean-page.css's own `body.ts-e2 .main-content` override (0,2,0), and this
+   stylesheet loads after every theme stylesheet in `base.html`'s <head>, so
+   it wins on source order too without needing `!important`. Covers light and
+   dark mode variants of clean-page.css / dark.css's `.main-content` rules.
+   ========================================================================= */
+@media (min-width:701px){
+  body.np-host .main-content{
+    background:transparent; box-shadow:none; border-radius:0;
+    margin-top:0; margin-bottom:0; padding-left:0; padding-right:0;
+    /* Tighten the top of the page (2026-09-11): main-content's own py-8
+       (Tailwind, 2rem) was adding to the gap already built into
+       .page-title-area and .np-desktop below — three paddings stacking
+       into one big block of empty space above the masthead. */
+    padding-top:0.5rem;
+  }
+  html[data-mode="dark"] body.np-host .main-content{ background:transparent; }
+  body.np-host .page-title-area{ padding-top:1rem; padding-bottom:0.5rem; }
+}
+
 .np-page{
   /* Palette/type variables live on the wrapper (not :root) so this scope
    * never leaks into the rest of the page. T1 Broadsheet (elements.html
@@ -81,6 +113,15 @@
   font-size:0.85rem; font-style:italic; opacity:0.65; margin:0 0 1rem;
 }
 
+/* Back-link to /results or /latest-round, in the site's own type (not the
+ * newspaper scope) — it's chrome, not content. Only rendered when reports.py
+ * could resolve a specific teg/round to deep-link to. */
+.np-back-link{
+  font-size:0.85rem; font-weight:500; text-decoration:none;
+  color:var(--text-muted, #666); white-space:nowrap;
+}
+.np-back-link:hover{ color:var(--accent, #7A2420); }
+
 /* ==========================================================================
    DESKTOP — lead + rail, sub-articles packed into full-width rows by
    `plan_rows` (teg_analysis/reporting/newspaper_edition.py). No named
@@ -89,7 +130,7 @@
 .np-desktop{ display:none; }
 
 @media (min-width:701px){
-  .np-desktop{ display:block; padding:2rem 1.5rem 3rem; }
+  .np-desktop{ display:block; padding:0.75rem 1.5rem 3rem; }
   .np-mobile{ display:none; }
 
   .np-paper{
@@ -223,7 +264,12 @@
 @media (max-width:700px){
   .np-mobile{
     display:block;
-    --pad:1.15rem;
+    /* The site page-level gutter is gone (.page-container, mobile.css,
+       2026-09-11) — every mobile page is edge-to-edge now, insetting
+       itself. --pad is this report's own inset, the only one it gets:
+       sized for a comfortable reading margin, not a sliver assuming
+       another gutter underneath it. */
+    --pad:0.9rem;
     color:var(--ink);
   }
   .np-desktop{ display:none; }
@@ -297,9 +343,9 @@
     padding:0.9rem var(--pad); text-align:left; cursor:pointer; min-height:44px; -webkit-tap-highlight-color:transparent; }
   .artnav button:first-child{ border-left:none; }
   .artnav button:disabled{ opacity:0.35; cursor:default; }
-  .artnav .an-lab{ font-family:var(--font-mono); font-size:0.58rem; letter-spacing:0.12em;
+  .artnav .an-lab{ display:block; font-family:var(--font-mono); font-size:0.58rem; letter-spacing:0.12em;
     text-transform:uppercase; color:var(--ink-soft); }
-  .artnav .an-hl{ font-family:var(--font-display); font-weight:700; font-size:0.88rem; line-height:1.2; margin-top:0.25rem; }
+  .artnav .an-hl{ display:block; font-family:var(--font-display); font-weight:700; font-size:0.88rem; line-height:1.2; margin-top:0.25rem; }
 
   /* appendix accordion, shared between index and article screens */
   .m-apx{ border-top:3px solid var(--ink); }

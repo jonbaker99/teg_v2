@@ -618,6 +618,43 @@ def style_report(teg_num: int) -> str:
 # ---------------------------------------------------------------------------
 # Round-report styling (Phase E)
 # ---------------------------------------------------------------------------
+def build_round_scores_data(teg_num: int, round_num: int) -> list[dict]:
+    """The structured data behind `build_round_scores`'s markdown block.
+
+    Returns `[{"header": str, "entries": [{"pl": str, "value": str}, ...]}, ...]`
+    — Trophy first (era-aware: "Round Stableford" sorted descending for TEG 8+,
+    "Round Net VP" sorted ascending, signed, for TEGs 1–7), then "Round Gross"
+    (always ascending). Empty list if no data. Shared by the markdown block
+    below and `newspaper_edition`'s round-scores rail tables — one source of
+    the sort/format so the two never drift apart.
+    """
+    from teg_analysis.analysis.commentary import create_round_summary
+    from teg_analysis.reporting.era import trophy_metric
+    rs = create_round_summary()
+    rs = rs[(rs["TEGNum"] == teg_num) & (rs["Round"] == round_num)].copy()
+    if rs.empty:
+        return []
+
+    metric = trophy_metric(teg_num)
+    gross = rs.sort_values(["Round_Score_Gross", "Pl"], ascending=[True, True])
+    gross_entries = [{"pl": r["Pl"], "value": _fmt_signed(int(r["Round_Score_Gross"]))}
+                     for _, r in gross.iterrows()]
+
+    if metric == "net_vs_par":
+        trophy_line = rs.sort_values(["Round_Score_NetVP", "Pl"], ascending=[True, True])
+        trophy_header = "Round Net VP"
+        trophy_entries = [{"pl": r["Pl"], "value": _fmt_signed(int(r["Round_Score_NetVP"]))}
+                          for _, r in trophy_line.iterrows()]
+    else:
+        stab = rs.sort_values(["Round_Score_Stableford", "Pl"], ascending=[False, True])
+        trophy_header = "Round Stableford"
+        trophy_entries = [{"pl": r["Pl"], "value": str(int(r["Round_Score_Stableford"]))}
+                          for _, r in stab.iterrows()]
+
+    return [{"header": trophy_header, "entries": trophy_entries},
+            {"header": "Round Gross", "entries": gross_entries}]
+
+
 def build_round_scores(teg_num: int, round_num: int) -> str:
     """Two-paragraph deterministic round-scores block for a single round.
 
@@ -627,44 +664,15 @@ def build_round_scores(teg_num: int, round_num: int) -> str:
     Net VP". Gross line always present, sorted by `Round_Score_Gross` ascending.
     Uses player codes (`Pl`). Returns empty string if no data.
     """
-    from teg_analysis.analysis.commentary import create_round_summary
-    from teg_analysis.reporting.era import trophy_metric
-    rs = create_round_summary()
-    rs = rs[(rs["TEGNum"] == teg_num) & (rs["Round"] == round_num)].copy()
-    if rs.empty:
+    blocks = build_round_scores_data(teg_num, round_num)
+    if not blocks:
         return ""
-
-    metric = trophy_metric(teg_num)
-    gross = rs.sort_values(["Round_Score_Gross", "Pl"], ascending=[True, True])
-    gross_str = " | ".join(
-        f"{r['Pl']} {_fmt_signed(int(r['Round_Score_Gross']))}"
-        for _, r in gross.iterrows()
-    )
-
-    if metric == "net_vs_par":
-        trophy_line = rs.sort_values(["Round_Score_NetVP", "Pl"], ascending=[True, True])
-        trophy_str = " | ".join(
-            f"{r['Pl']} {_fmt_signed(int(r['Round_Score_NetVP']))}"
-            for _, r in trophy_line.iterrows()
-        )
-        return (
-            f'<p class="round-scores"><span class="round-scores-header">Round Net VP:</span>'
-            f' {trophy_str}</p>\n'
-            f'<p class="round-scores"><span class="round-scores-header">Round Gross:</span>'
-            f' {gross_str}</p>'
-        )
-    else:
-        stab = rs.sort_values(["Round_Score_Stableford", "Pl"], ascending=[False, True])
-        stab_str = " | ".join(
-            f"{r['Pl']} {int(r['Round_Score_Stableford'])}"
-            for _, r in stab.iterrows()
-        )
-        return (
-            f'<p class="round-scores"><span class="round-scores-header">Round Stableford:</span>'
-            f' {stab_str}</p>\n'
-            f'<p class="round-scores"><span class="round-scores-header">Round Gross:</span>'
-            f' {gross_str}</p>'
-        )
+    lines = []
+    for b in blocks:
+        row = " | ".join(f'{e["pl"]} {e["value"]}' for e in b["entries"])
+        lines.append(f'<p class="round-scores"><span class="round-scores-header">'
+                     f'{b["header"]}:</span> {row}</p>')
+    return "\n".join(lines)
 
 
 def build_round_dateline(teg_num: int, round_num: int) -> str:
@@ -680,9 +688,41 @@ def build_round_dateline(teg_num: int, round_num: int) -> str:
             f'{r["Date"]} | {r["Course"]}</p>')
 
 
-def style_round_report(teg_num: int, round_num: int) -> str:
-    """Read `teg_N_round_R_report_final.md`, inject styling hooks, write
-    `..._styled.md`. Returns path.
+def build_round_at_a_glance(round_results: list[dict], is_final_round: bool) -> str:
+    """Round-report at-a-glance callout.
+
+    `round_results` is a list of `{"label": str, "value": str}` — e.g.
+    mid-tournament `[{"label": "Round of the day", "value": "David Mullin (43)"},
+    {"label": "Trophy lead", "value": "David Mullin, +6"}, ...]`, or on a final
+    round the real `Trophy Winner` / `Green Jacket` / `Wooden Spoon` lines,
+    matching `_build_at_a_glance`'s markup so `newspaper_edition._parse_results`
+    can read either box with the same regex.
+
+    The first entry is tagged `class="trophy-winner"` only when `is_final_round`
+    — that class is what the tournament parser's lead-detection keys off, and a
+    mid-tournament "round of the day" is not a winner.
+    """
+    if not round_results:
+        return ""
+    lines = [
+        '<section class="callout at-a-glance-box">',
+        '  <p class="at-a-glance-title">RESULTS</p>',
+    ]
+    for i, r in enumerate(round_results):
+        cls = ' class="trophy-winner"' if (is_final_round and i == 0) else ""
+        lines.append(f'  <p><strong>{r["label"]}:</strong><span{cls}> {r["value"]}</span></p>')
+    lines.append("</section>")
+    return "\n".join(lines)
+
+
+def style_round_text(teg_num: int, round_num: int, text: str, *,
+                     appendix_heading: Optional[str] = None,
+                     at_a_glance_html: Optional[str] = None) -> str:
+    """Apply the round styling pipeline to arbitrary round-report text.
+
+    Factored out of `style_round_report` the same way `style_text` was factored
+    out of `style_report` (`restyle_voice`'s round path needs this to style a
+    variant without writing it to `report_final.md` first).
 
     Layout:
         # Title  {.round-report-title}
@@ -695,14 +735,17 @@ def style_round_report(teg_num: int, round_num: int) -> str:
         <p class="standings">Trophy Standings: …</p>
         <p class="standings">Green Jacket Standings: …</p>
 
-    Idempotent: re-running on an already-styled file is a no-op.
+    `appendix_heading`: when given, the end-of-round standings are wrapped in
+    `## {appendix_heading}` + `**End of Round N**` before the two standings
+    lines, instead of being appended bare. The storyline-first round pipeline
+    needs this — `newspaper_edition._split_body_sections` requires a heading to
+    split the appendix on, and `_parse_standings` already matches exactly this
+    `**End of Round N**` + two `<p class="standings">` shape (it is what the
+    legacy `## Standings by round` tournament appendix emits per round). The
+    legacy round pipeline leaves this unset and keeps the bare block.
+
+    Idempotent: re-running on already-styled text is a no-op.
     """
-    final_path = f"{output_dir()}/teg_{teg_num}_round_{round_num}_report_final.md"
-    out_path = f"{output_dir()}/teg_{teg_num}_round_{round_num}_report_styled.md"
-
-    with open(final_path) as f:
-        text = f.read()
-
     # Tag the H1
     def repl_h1(m):
         line = m.group(0)
@@ -711,11 +754,11 @@ def style_round_report(teg_num: int, round_num: int) -> str:
         return f"{line.rstrip()} {{.round-report-title}}"
     text = re.sub(r"^# [^\n]+$", repl_h1, text, count=1, flags=re.MULTILINE)
 
-    # Insert dateline + round-scores after the H1 (once).
+    # Insert dateline + round-scores (+ at-a-glance, if given) after the H1 (once).
     if 'class="dateline"' not in text and 'class="round-scores"' not in text:
         dateline = build_round_dateline(teg_num, round_num)
         scores = build_round_scores(teg_num, round_num)
-        block_parts = [p for p in (dateline, scores) if p]
+        block_parts = [p for p in (dateline, scores, at_a_glance_html) if p]
         if block_parts:
             block = "\n\n" + "\n\n".join(block_parts) + "\n"
             text = re.sub(
@@ -729,11 +772,30 @@ def style_round_report(teg_num: int, round_num: int) -> str:
         end_standings = build_round_standings(teg_num).get(round_num, "")
         if end_standings:
             sep = "" if text.endswith("\n") else "\n"
-            text = text + sep + "\n" + end_standings + "\n"
+            if appendix_heading:
+                block = (f"## {appendix_heading}\n\n**End of Round {round_num}**\n\n"
+                          f"{end_standings}\n")
+            else:
+                block = end_standings + "\n"
+            text = text + sep + "\n" + block
 
     # Append the PBs / TEG records appendix scoped to this round (if any).
     text = _append_records(text, build_records_block(teg_num, round_num=round_num))
 
+    return text
+
+
+def style_round_report(teg_num: int, round_num: int) -> str:
+    """Read `teg_N_round_R_report_final.md`, apply `style_round_text`, write
+    `..._styled.md`. Returns path."""
+    final_path = f"{output_dir()}/teg_{teg_num}_round_{round_num}_report_final.md"
+    out_path = f"{output_dir()}/teg_{teg_num}_round_{round_num}_report_styled.md"
+
+    with open(final_path) as f:
+        text = f.read()
+
+    styled = style_round_text(teg_num, round_num, text)
+
     with open(out_path, "w") as f:
-        f.write(text)
+        f.write(styled)
     return out_path
