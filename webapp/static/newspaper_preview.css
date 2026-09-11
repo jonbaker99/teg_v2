@@ -125,8 +125,9 @@
 .np-switcher .np-label{ color:var(--ink-soft); opacity:0.7; margin-right:0.1rem; }
 
 /* ==========================================================================
-   DESKTOP — composite.html, arrangements E1/E2 only, fill F1 (nothing extra
-   below the standings rail).
+   DESKTOP — lead + rail, sub-articles packed into full-width rows by
+   `plan_rows` (teg_analysis/reporting/newspaper_edition.py). No named
+   arrangements any more — see that module's docstring for why.
    ========================================================================= */
 .np-desktop{ display:none; }
 
@@ -141,7 +142,7 @@
     border:1px solid #D3D0C6;
     box-shadow:0 1px 2px rgba(0,0,0,0.08), 0 18px 40px -20px rgba(0,0,0,0.35);
   }
-  .np-paper > *, .np-paper .main-split > *, .np-paper .subs > *{ min-width:0; }
+  .np-paper > *, .np-paper .main-split > *, .np-paper .subs-row > *{ min-width:0; }
 
   .masthead{ padding:1.5rem var(--pad) 0; }
   .mh-row{ display:flex; align-items:baseline; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
@@ -204,10 +205,10 @@
   .r3 .r-lead .r-value{ font-size:1.08rem; }
   .r3 .r-value{ font-size:0.98rem; }
 
-  .subs{ display:grid; }
-  .sub-card{ padding:0 1.55rem; border-left:1px solid var(--rule); }
-  .sub-card:first-child{ padding-left:0; border-left:none; }
-  .sub-card:last-child{ padding-right:0; }
+  .lead-head{ padding:1.35rem var(--pad) 0; }
+  .main-split{ display:grid; grid-template-columns:2fr 1fr; gap:2.2rem; padding:1.15rem var(--pad) 0; }
+  .deck-rule{ margin:1.9rem var(--pad) 0; border-top:3px solid var(--ink); }
+
   .sub-headline{ font-family:var(--font-display); font-weight:700; font-size:1.24rem; line-height:1.15;
     color:var(--ink); margin-top:0.35rem; text-wrap:balance; }
   .sub-standfirst{ font-family:var(--font-body); font-size:0.85rem; line-height:1.4; margin-top:0.4rem; }
@@ -232,52 +233,24 @@
   .recs li + li{ margin-top:0.3rem; }
   .recs li::before{ content:"—"; position:absolute; left:0; color:var(--accent); }
 
-  /* E1 — classic front: 3-up ruled row, a fourth story spans full width. */
-  .arr-e1 .lead-head{ padding:1.35rem var(--pad) 0; }
-  .arr-e1 .main-split{ display:grid; grid-template-columns:2fr 1fr; gap:2.2rem; padding:1.15rem var(--pad) 0; }
-  .arr-e1 .deck-rule{ margin:1.9rem var(--pad) 0; border-top:3px solid var(--ink); }
-  .arr-e1 .subs{ grid-template-columns:repeat(3,1fr); padding:1.5rem var(--pad) 0; }
-  .arr-e1 .sub-card.wide{
-    grid-column:1/-1; margin-top:1.7rem; padding:1.4rem 0 0;
-    border-left:none; border-top:1px solid var(--rule);
-  }
-  .arr-e1 .sub-card.wide .sub-headline{ font-size:1.5rem; }
-  .arr-e1 .sub-card.wide .sub-standfirst{ font-size:0.95rem; max-width:70ch; }
-  .arr-e1 .sub-card.wide .sub-body{ columns:3; column-gap:1.9rem; column-rule:1px solid var(--rule); }
-
-  /* E2 — second lead: strongest sub-article promoted full width; rest in a
-     narrow ruled row. */
-  .arr-e2 .lead-head{ padding:1.35rem var(--pad) 0; }
-  .arr-e2 .main-split{ display:grid; grid-template-columns:2fr 1fr; gap:2.2rem; padding:1.15rem var(--pad) 0; }
-  .arr-e2 .deck-rule{ margin:1.9rem var(--pad) 0; border-top:3px solid var(--ink); }
-  .arr-e2 .second-lead{ padding:1.5rem var(--pad) 0; }
-  .arr-e2 .sub-card.second{ padding:0; border-left:none; }
-  .arr-e2 .sub-card.second .sub-headline{ font-size:1.75rem; max-width:26ch; }
-  .arr-e2 .sub-card.second .sub-standfirst{ font-size:0.95rem; max-width:72ch; }
-  .arr-e2 .sub-card.second .sub-body{ columns:3; column-gap:1.9rem; column-rule:1px solid var(--rule); }
-  .arr-e2 .thin-rule{ margin:1.7rem var(--pad) 0; border-top:1px solid var(--rule); }
-  .arr-e2 .subs{ grid-template-columns:repeat(3,1fr); padding:1.4rem var(--pad) 0; }
-  .arr-e2 .subs .sub-headline{ font-size:1.15rem; }
-
-  /* E3 — long sub-story full width, after a 2-up row: fires when one
-     sub-article is materially longer than the other two (choose_arrangement,
-     LONG_STORY_RATIO). The two shorter subs sit side by side; the long one
-     runs full width below, styled like E2's promoted second lead. */
-  .arr-e3 .lead-head{ padding:1.35rem var(--pad) 0; }
-  .arr-e3 .main-split{ display:grid; grid-template-columns:2fr 1fr; gap:2.2rem; padding:1.15rem var(--pad) 0; }
-  .arr-e3 .deck-rule{ margin:1.9rem var(--pad) 0; border-top:3px solid var(--ink); }
-  .arr-e3 .subs{ grid-template-columns:repeat(2,1fr); padding:1.5rem var(--pad) 0; }
-  .arr-e3 .thin-rule{ margin:1.7rem var(--pad) 0; border-top:1px solid var(--rule); }
-  .arr-e3 .long-lead{ padding:1.5rem var(--pad) 0; }
-  .arr-e3 .sub-card.long{ padding:0; border-left:none; }
-  /* Wider measure than E2's second lead (26ch): E3's long story is
-     systematically the merged cross-cut section — being two storylines is
-     what makes it long enough to trip LONG_STORY_RATIO — so its `&`-joined
-     headline runs 98-117 chars, against E2's single-storyline length. At
-     26ch that wrapped to 4 lines on TEG 16 and 5 on TEG 18. */
-  .arr-e3 .sub-card.long .sub-headline{ font-size:1.75rem; max-width:42ch; }
-  .arr-e3 .sub-card.long .sub-standfirst{ font-size:0.95rem; max-width:72ch; }
-  .arr-e3 .sub-card.long .sub-body{ columns:3; column-gap:1.9rem; column-rule:1px solid var(--rule); }
+  /* Row packing: `plan_rows` (newspaper_edition.py) chunks sub-articles into
+     rows of 1, 2 or 3 so a grid row is always exactly as wide as its items —
+     never a partial row with empty trailing cells. Each row is its own grid
+     container, so `:first-child`/`:last-child` on `.sub-card` always target
+     correctly, unlike the old shared-grid arrangement system. */
+  .subs-row{ display:grid; padding:1.5rem var(--pad) 0; }
+  .subs-row.cols-3{ grid-template-columns:repeat(3,1fr); }
+  .subs-row.cols-2{ grid-template-columns:repeat(2,1fr); }
+  .subs-row.cols-1{ grid-template-columns:1fr; }
+  .subs-row .sub-card{ padding:0 1.55rem; border-left:1px solid var(--rule); }
+  .subs-row .sub-card:first-child{ padding-left:0; border-left:none; }
+  .subs-row .sub-card:last-child{ padding-right:0; }
+  /* cols-1 is the promoted "second lead" row — full width, no side padding,
+     body split into columns so it doesn't read as one long single column. */
+  .subs-row.cols-1 .sub-card{ padding:0; border-left:none; }
+  .subs-row.cols-1 .sub-body{ columns:3; column-gap:1.9rem; column-rule:1px solid var(--rule); }
+  .subs-row.cols-1 .sub-standfirst{ max-width:110ch; }
+  .subs-row + .thin-rule{ margin:1.7rem var(--pad) 0; border-top:1px solid var(--rule); }
 
   /* S1 — no rail: results become the full-width `.r3` strip above (in
      _main_html) and the lead body needs a third column so the measure stays
