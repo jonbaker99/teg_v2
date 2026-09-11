@@ -116,7 +116,7 @@ One consolation: his gross aggregate of +152 was, at that point, the best he had
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Henry Meller runs up a 12 (+9 (blow-up)) at the 11th (R1) — a new TEG-record worst on a par-3; his career-worst on a par-3</li>
+  <li>Henry Meller runs up a 12 (+9) at the 11th (R1) — a new TEG-record worst on a par-3; his career-worst on a par-3</li>
   <li>Jon Baker runs up a 11 (sextuple bogey) at the 15th (R4) — his career-worst on a par-5</li>
   <li>Jon Baker runs up a 9 (sextuple bogey) at the 12th (R4) — his career-worst on a par-3</li>
   <li>Jon Baker eagles the par-4 8th (R4)</li>

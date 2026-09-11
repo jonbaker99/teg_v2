@@ -39,7 +39,7 @@ def test_result_label_hole_in_one_overrides_grossvp_table():
 
 
 def test_result_label_blowup_fallback():
-    assert result_label(grossvp=8, sc=12, par=4) == "+8 (blow-up)"
+    assert result_label(grossvp=8, sc=12, par=4) == "+8"
 
 
 def test_hole_evidence_builds_expected_dict():
