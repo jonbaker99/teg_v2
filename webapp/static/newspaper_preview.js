@@ -60,9 +60,36 @@
     return '<div class="m-r5"><p class="m-r5-title">At a glance</p>' +
       '<ul class="m-r-list">' + items + "</ul></div>";
   }
+  // Mirrors _totals_only/_round_only in teg_analysis/reporting/newspaper_edition.py:
+  // standings rows carry each player's round score in brackets ("SN 156 (R4: 43)");
+  // the cumulative table strips the bracket, the round-only table swaps in the
+  // bracketed figure in place of the cumulative one. Round 1 rows have no bracket —
+  // they already show the round score, since cumulative equals round score there.
+  var ROUND_SCORE_BRACKET_RE = /\s*\(R\d+:[^)]*\)/g;
+  var ROUND_ENTRY_RE = /([A-Z]{2}\s+[+-]?\d+)\s*\(R\d+:\s*([+-]?\d+)\)/g;
+
+  function totalsOnly(row) {
+    return row.replace(ROUND_SCORE_BRACKET_RE, "");
+  }
+  function roundOnly(row) {
+    return row.replace(ROUND_ENTRY_RE, function (_, cumulative, roundScore) {
+      return cumulative.split(/\s+/)[0] + " " + roundScore;
+    });
+  }
+  function standingsTableHtml(rows) {
+    return '<div class="table-scroll"><table class="stab">' +
+      "<thead><tr><th>Rd</th><th>Trophy</th><th>Green Jacket</th></tr></thead>" +
+      "<tbody>" + rows + "</tbody></table></div>";
+  }
+
   function appendixHtml(open) {
-    var rows = edition.standings.map(function (s) {
-      return "<tr><td>R" + s.round + "</td><td>" + esc(s.trophy) + "</td><td>" + esc(s.jacket) + "</td></tr>";
+    var cumulativeRows = edition.standings.map(function (s) {
+      return "<tr><td>R" + s.round + "</td><td>" + esc(totalsOnly(s.trophy)) +
+        "</td><td>" + esc(totalsOnly(s.jacket)) + "</td></tr>";
+    }).join("");
+    var roundRows = edition.standings.map(function (s) {
+      return "<tr><td>R" + s.round + "</td><td>" + esc(roundOnly(s.trophy)) +
+        "</td><td>" + esc(roundOnly(s.jacket)) + "</td></tr>";
     }).join("");
     var by = {}, order = [];
     edition.records.forEach(function (r) {
@@ -75,9 +102,8 @@
     }).join("");
     var body = open
       ? '<div class="m-apx-body" id="apx-body">' +
-          '<div class="m-apx-sec"><div class="table-scroll"><table class="stab">' +
-            "<thead><tr><th>Rd</th><th>Trophy</th><th>Green Jacket</th></tr></thead>" +
-            "<tbody>" + rows + "</tbody></table></div></div>" +
+          '<div class="m-apx-sec">' + standingsTableHtml(cumulativeRows) + "</div>" +
+          '<div class="m-apx-sec">' + standingsTableHtml(roundRows) + "</div>" +
           '<div class="m-apx-sec">' + recs + "</div>" +
         "</div>"
       : "";
