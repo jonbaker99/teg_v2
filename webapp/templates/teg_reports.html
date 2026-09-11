@@ -29,7 +29,7 @@
 <div class="section-controls flex flex-wrap items-center justify-between gap-4">
     <div class="flex flex-wrap items-center gap-4">
         <form method="get" action="/teg-reports">
-            <select name="teg" class="theme-select" onchange="this.form.submit()">
+            <select name="teg" class="theme-select reports-teg-select" onchange="this.form.submit()">
                 {% for n in teg_numbers %}
                 <option value="{{ n }}" {% if n == selected_teg %}selected{% endif %}>TEG {{ n }}</option>
                 {% endfor %}

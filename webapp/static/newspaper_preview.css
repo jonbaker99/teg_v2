@@ -122,6 +122,15 @@
 }
 .np-back-link:hover{ color:var(--accent, #7A2420); }
 
+/* TEG select, sized/weighted to match the .pill buttons it sits next to
+ * (2026-09-12, Jon: font/colour didn't match) — .theme-select's sitewide
+ * defaults (400 weight, 12px) read as a visibly different, thinner control
+ * next to .pill's 500/600-weight, 13px labels. Scoped to this page rather
+ * than changed globally: .theme-select is shared by ~20 other pages. */
+.reports-teg-select{
+  font-weight:500; font-size:0.8125rem; color:var(--text-secondary, #555);
+}
+
 /* ==========================================================================
    DESKTOP — lead + rail, sub-articles packed into full-width rows by
    `plan_rows` (teg_analysis/reporting/newspaper_edition.py). No named
