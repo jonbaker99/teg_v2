@@ -1514,6 +1514,11 @@ def assemble_bundle(teg_num: int, mode: str = "balanced", tone: str = "house",
     from teg_analysis.reporting.win_anatomy import build_win_anatomy
     win_anatomy = build_win_anatomy(teg_num)
 
+    # Whether this TEG's Trophy and Green Jacket went to the same player, and
+    # how many times that's happened before — grounds prompts.DOUBLE_RULE.
+    from teg_analysis.reporting.history_context import build_double_context
+    double_context = build_double_context(teg_num)
+
     bundle = {
         "teg": teg_num,
         "tone": tone,
@@ -1521,6 +1526,7 @@ def assemble_bundle(teg_num: int, mode: str = "balanced", tone: str = "house",
         "venue": venue,
         "competition_arcs": arcs,
         "win_anatomy": win_anatomy,
+        "double": double_context,
         "player_history": player_history,
         "player_course_history": player_course_history,
         "player_relationships": player_relationships,
