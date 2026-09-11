@@ -1192,16 +1192,17 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
 # the writers and the editors, but the three storyline-first reports on disk
 # were written before them. The rules are cheap to apply to finished prose and
 # expensive to apply by regenerating — a full rerun re-rolls every subject,
-# headline and section, so it changes far more than the rule does.
+# headline and section, so it changes far more than the rule does. `DOUBLE_RULE`
+# (2026-09-11) is retrofitted the same way, as a narrowly-scoped third edit.
 #
-# SCOPE IS THE WHOLE POINT. Two edits are permitted and nothing else. A pass
+# SCOPE IS THE WHOLE POINT. Three edits are permitted and nothing else. A pass
 # that may rewrite freely is a fabrication opportunity, which is the verdict
 # that keeps critique-revise out of the default chain. D3 runs over the result
 # and `new_findings` isolates anything this pass introduced.
-CORRECTIONS_CONTRACT = """You are applying two specific editorial rules to a finished golf \
+CORRECTIONS_CONTRACT = """You are applying specific editorial rules to a finished golf \
 tournament report. This is a CORRECTIONS pass, not a rewrite and not a restyle.
 
-**You may make exactly two kinds of edit. Nothing else.**
+**You may make exactly three kinds of edit. Nothing else.**
 
 1. **Delete a rank claim that the ranking rule does not allow.** Remove the ranking clause and \
 leave the sentence grammatical. Where the sentence exists only to carry the rank, delete the \
@@ -1209,12 +1210,17 @@ sentence. Where the rank sits alongside a fact that IS allowed (a personal best,
 plain total), keep that fact and drop only the disallowed rank.
 2. **Expand a name or a first competition mention so it is unambiguous**, per the naming rule. \
 This is an expansion, never a substitution: the person and the competition stay the same.
+3. **Add one sentence stating the double**, only where the supplied data shows the Trophy and \
+Green Jacket went to the same player this TEG and the lead story's opening paragraph does not \
+already say so. State it plainly, using only the rarity figures supplied — invent nothing. This \
+is the one exception to "add nothing" below.
 
 **Everything else is frozen.** Same paragraphs, same order, same headings, same sentences, same \
 voice, same jokes. Reproduce any HTML comment (`<!-- ... -->`) exactly where it is: those are \
 machine-readable anchors, invisible to the reader, and dropping one breaks the newspaper layout. Every score, hole, margin, total, weekday, course name and record stays \
-exactly as written. Add nothing. Reorder nothing. Do not improve a sentence you were not sent \
-here to touch, and do not compensate for a deleted clause by writing a new one.
+exactly as written. Add nothing beyond the single sentence permitted above. Reorder nothing. Do \
+not improve a sentence you were not sent here to touch, and do not compensate for a deleted \
+clause by writing a new one.
 
 If the report already complies, return it unchanged. Returning the input verbatim is a correct \
 outcome, not a failure."""
@@ -1225,7 +1231,8 @@ def apply_corrections(teg_num: int, *, source_label: str = "storylinefirst",
                       model: Optional[str] = None,
                       verify: bool = True,
                       style: bool = True) -> dict:
-    """Apply `RANKING_RULE` + `NAMING_RULE` to a report already on disk. One call.
+    """Apply `RANKING_RULE` + `NAMING_RULE` + `DOUBLE_RULE` to a report already on
+    disk. One call.
 
     Args:
         teg_num: which TEG.
@@ -1272,9 +1279,19 @@ def apply_corrections(teg_num: int, *, source_label: str = "storylinefirst",
                           "THE RULES YOU ARE APPLYING:",
                           prompts.RANKING_RULE,
                           prompts.NAMING_RULE,
+                          prompts.DOUBLE_RULE,
                           WRITER_FAITHFULNESS,
                           WRITER_OUTPUT_RULE))
-    text, usage = llm.generate_text(system, source_text,
+    # DOUBLE_RULE needs real rarity figures to cite, unlike RANKING_RULE/
+    # NAMING_RULE which are pure selection/naming rules with no external data.
+    # Compute them the same way `assemble_bundle` does and hand them over in
+    # the user message so the model never has to guess a "Nth double" claim.
+    from teg_analysis.reporting.history_context import build_double_context
+    double_context = build_double_context(teg_num)
+    user_message = ("DOUBLE DATA (the only source for any rarity claim about "
+                    "the double):\n" + json.dumps(double_context, ensure_ascii=False)
+                    + "\n\n" + source_text)
+    text, usage = llm.generate_text(system, user_message,
                                     model=model or llm.DEFAULT_MODEL,
                                     max_tokens=16000,
                                     stage="corrections", label=f"teg{teg_num}")
