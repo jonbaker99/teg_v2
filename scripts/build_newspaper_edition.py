@@ -78,7 +78,7 @@ def main(argv=None) -> None:
         raise SystemExit("no TEG has storyline-first artefacts — nothing to build")
     print(f"Building editions for TEG {', '.join(str(t) for t in tegs)}")
     article_filter = _parse_args(argv)
-    editions = [build_edition(teg, article_filter) for teg in tegs]
+    editions = [build_edition(teg, article_filter=article_filter) for teg in tegs]
     if article_filter is not None:
         print(f"Filter: {article_filter.describe()}")
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
