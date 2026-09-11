@@ -478,6 +478,50 @@ def _resolve_section(heading: str, content: str, plan: dict[str, Any]
     return [_degraded_storyline(heading)]
 
 
+def derive_descriptor(storyline: dict, kicker: str) -> str:
+    """Deterministic fallback for `descriptor` when the plan predates the field
+    (all 17 TEGs as of 2026-09). Matches the storyline's own text against the
+    TEG's actual player field; no venue/course matching (too unreliable without
+    an LLM judgement call) -- falls back to the bare kicker rather than guessing
+    wrong. See prompts.DESCRIPTOR_RULE for the rule this approximates.
+    """
+    if kicker == "TROPHY":
+        return "TROPHY"
+
+    if "GREEN JACKET" in kicker or "WOODEN SPOON" in kicker:
+        # This deterministic path has no separate concept of who the actual
+        # jacket/spoon winner IS -- it can only detect the already-fine case
+        # (the player is already named in the headline, so the bare kicker is
+        # unambiguous), not fill the gap when the name is missing. Either way
+        # the safe answer is the bare kicker: erring toward printing just the
+        # kicker rather than guessing a wrong name.
+        return kicker
+
+    if kicker != "SIDEBAR":
+        return kicker
+
+    from teg_analysis.core.players import get_player_dict
+
+    display_names = {
+        " ".join(part.capitalize() if part.isupper() else part for part in raw.split())
+        for raw in get_player_dict().values()
+    }
+    text = f"{storyline.get('chosen_headline', '')} {storyline.get('subject', '')}"
+    lower_text = text.lower()
+    found = sorted(
+        (idx, name)
+        for name in display_names
+        for idx in [lower_text.find(name.lower())]
+        if idx != -1
+    )
+    names = [name.upper() for _, name in found]
+    if len(names) == 1:
+        return names[0]
+    if len(names) == 2:
+        return " | ".join(names)
+    return "SIDEBAR"
+
+
 def _parse_articles(
     article_sections: list[tuple[str, str]], plan: dict[str, Any]
 ) -> list[dict[str, Any]]:
@@ -490,6 +534,18 @@ def _parse_articles(
             {k for k, _ in matches}, key=lambda k: _KICKER_PRIORITY.index(k)
         )
         kicker = " & ".join(kickers)
+
+        # Prefer an explicit editor-authored `descriptor` (prompts.DESCRIPTOR_RULE);
+        # fall back to the deterministic approximation for plans written before
+        # the field existed. Joined the same way `kickers` are, deduplicating
+        # when a merged section's storylines resolve to the identical descriptor.
+        descriptors = []
+        for k, s in matches:
+            d = s.get("descriptor") or derive_descriptor(s, k)
+            if d not in descriptors:
+                descriptors.append(d)
+        descriptor = " & ".join(descriptors)
+
         compelling = max(s["compelling_score"] for _, s in matches)
         humour = max(s["humour_score"] for _, s in matches)
 
@@ -508,6 +564,7 @@ def _parse_articles(
         articles.append(
             {
                 "kicker": kicker,
+                "descriptor": descriptor,
                 "headline": headline,
                 "standfirst": standfirst,
                 "paragraphs": paragraphs,
@@ -732,7 +789,7 @@ def _masthead_html(edition: dict[str, Any]) -> str:
 def _lead_head_html(lead: dict[str, Any]) -> str:
     standfirst = f'<p class="lead-standfirst">{_esc(lead["standfirst"])}</p>' if lead["standfirst"] else ""
     return (
-        f'<p class="kicker">{_esc(lead["kicker"])}</p>'
+        f'<p class="kicker">{_esc(lead.get("descriptor") or lead["kicker"])}</p>'
         f'<h1 class="lead-headline">{_esc(lead["headline"])}</h1>'
         f"{standfirst}"
     )
@@ -809,7 +866,7 @@ def _sub_card_html(a: dict[str, Any]) -> str:
     standfirst = f'<p class="sub-standfirst">{_esc(a["standfirst"])}</p>' if a["standfirst"] else ""
     return (
         '<article class="sub-card">'
-        f'<p class="kicker">{_esc(a["kicker"])}</p>'
+        f'<p class="kicker">{_esc(a.get("descriptor") or a["kicker"])}</p>'
         f'<h2 class="sub-headline">{_esc(a["headline"])}</h2>'
         f"{standfirst}"
         f'<div class="sub-body">{_paragraphs_html(a["paragraphs"])}</div></article>'

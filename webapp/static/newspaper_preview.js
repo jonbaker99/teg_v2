@@ -116,7 +116,7 @@
   function renderIndex() {
     var items = subs.map(function (a, i) {
       return '<button type="button" class="idx-item" data-open="' + (i + 1) + '">' +
-        '<p class="kicker">' + esc(a.kicker) + "</p>" +
+        '<p class="kicker">' + esc(a.descriptor || a.kicker) + "</p>" +
         '<h2 class="m-hl">' + esc(a.headline) + "</h2>" +
         '<span class="idx-foot"><span class="m-meta">' + readTime(a.words) + "</span>" +
         '<span class="chev" aria-hidden="true">Read &rarr;</span></span></button>';
@@ -125,7 +125,7 @@
     return '<div class="scroller" id="scroller">' +
       mastheadHtml() + resultsHtml() +
       '<button type="button" class="idx-lead" data-open="0">' +
-        '<p class="kicker">' + esc(lead.kicker) + "</p>" +
+        '<p class="kicker">' + esc(lead.descriptor || lead.kicker) + "</p>" +
         '<h1 class="m-hl">' + esc(lead.headline) + "</h1>" +
         (lead.standfirst ? '<p class="m-sf">' + esc(lead.standfirst) + "</p>" : "") +
         '<span class="lead-cta"><span class="m-meta">' + readTime(lead.words) + "</span>" +
@@ -149,7 +149,7 @@
       '<div class="topbar"><button type="button" data-index="1">&larr; Front page</button>' +
         '<span class="tb-title">' + esc(edition.dateline.teg) + "</span></div>" +
       '<article class="article">' +
-        '<p class="kicker">' + esc(a.kicker) + "</p>" +
+        '<p class="kicker">' + esc(a.descriptor || a.kicker) + "</p>" +
         '<h1 class="m-hl" id="screen-title" tabindex="-1">' + esc(a.headline) + "</h1>" +
         (a.standfirst ? '<p class="m-sf">' + esc(a.standfirst) + "</p>" : "") +
         '<div class="m-body">' + paragraphsHtml(a.paragraphs) + "</div>" +
