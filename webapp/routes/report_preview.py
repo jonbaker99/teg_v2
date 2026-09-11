@@ -55,7 +55,6 @@ from teg_analysis.reporting.newspaper_edition import (
     clear_edition_caches,
     build_edition,
     for_page,
-    choose_arrangement,
     render_desktop_html,
 )
 
@@ -106,7 +105,7 @@ def teg_reports_preview(
         return templates.TemplateResponse(
             "teg_reports_preview.html",
             {"request": request, "teg_numbers": [], "selected_teg": None,
-             "arrangement": None, "desktop_html": None, "edition_json": None,
+             "desktop_html": None, "edition_json": None,
              "no_report_message": "No TEG has storyline-first artefacts yet."},
         )
     teg_numbers = sorted(editions_available, reverse=True)
@@ -117,7 +116,6 @@ def teg_reports_preview(
 
     edition = None
     desktop_html = None
-    arrangement = None
     edition_json = None
     no_report_message = None
 
@@ -127,7 +125,6 @@ def teg_reports_preview(
         no_report_message = f"No newspaper edition available for TEG {selected_teg} ({exc})."
 
     if edition is not None:
-        arrangement = choose_arrangement(edition)
         desktop_html = render_desktop_html(edition, rail=selected_rail)
         edition_json = json.dumps(for_page(edition))
 
@@ -145,7 +142,6 @@ def teg_reports_preview(
             "selected_pal": selected_pal,
             "selected_sf": selected_sf,
             "selected_rail": selected_rail,
-            "arrangement": arrangement,
             "desktop_html": desktop_html,
             "edition_json": edition_json,
             "no_report_message": no_report_message,

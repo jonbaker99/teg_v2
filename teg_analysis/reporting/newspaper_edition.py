@@ -19,14 +19,17 @@ Two source files per TEG:
 in `build_edition`). Only TEGs with storyline-first artefacts have one —
 whichever `available_tegs()` finds.
 
-`render_desktop_html(edition, rail="s2")` ports the desktop composite's JS
-(E1/E2 "auto" composition, fill "f1") to Python 1:1 — see
-`webapp/report_layout_prototypes/composite.html`'s `render()`/`renderE1`/
-`renderE2`. It is a straight port so it stays trivially comparable to the
-prototype if the prototype changes. E3 (a third arrangement, added for the
-`/teg-reports-preview` switch matrix — see that route's docstring) and the
-`rail` parameter (S1/S2, from `elements.html`'s `railVariants()`) are not in
-the prototype and only exist here.
+`render_desktop_html(edition, rail="s2")` renders the desktop layout: a lead
+article plus sub-articles packed into full-width rows by `plan_rows` (see
+that function's docstring). This used to dispatch through three named
+"arrangements" (E1/E2/E3), ported 1:1 from `webapp/report_layout_prototypes/
+composite.html`'s JS; that system produced broken layouts whenever the
+leftover sub-article count didn't divide evenly into rows of 3, so it was
+replaced (2026-09-11) by explicit row packing that never leaves a partial
+row. The prototype is retained only as frozen historical reference — see
+that folder's README — and is not kept in sync with this module. The `rail`
+parameter (S1/S2, from `elements.html`'s `railVariants()`) is not in the
+prototype and only exists here.
 """
 
 from __future__ import annotations
@@ -34,7 +37,6 @@ from __future__ import annotations
 import html
 import json
 import re
-import statistics
 from functools import lru_cache
 from typing import Any, NamedTuple
 
@@ -699,23 +701,10 @@ def build_edition(teg: int,
 
 
 # ---------------------------------------------------------------------------
-# Desktop renderer — a 1:1 port of composite.html's JS (arrangement "auto",
-# fill "f1"). See that file's `render()`, `renderE1`, `renderE2`,
-# `chooseArrangement`, `chooseSecondStory`.
+# Desktop renderer.
 # ---------------------------------------------------------------------------
 
-E2_MIN_ARTICLES = 5
 CLEAR_MARGIN = 2
-
-# E3 (long sub-story full width, after a 2-up row) fires when there are
-# exactly 3 sub-articles and the longest is at least this many times the
-# median of the other two's word counts. Measured on the three real editions
-# (longest ÷ median-of-rest):
-#   TEG 16: 430 / 273 / 250 words -> 1.64
-#   TEG 18: 409 / 247 / 225 words -> 1.73
-#   TEG 14: 289 / 249 / 232 / 220 words -> 1.20 (5 articles -> E2 regardless)
-# 1.4 sits clear of TEG 14's 1.20 and well under TEG 16/18's ratios.
-LONG_STORY_RATIO = 1.4
 
 
 def _esc(s: Any) -> str:
@@ -780,6 +769,23 @@ def _totals_only(standings_row: str) -> str:
     return _ROUND_SCORE_BRACKET_RE.sub("", standings_row)
 
 
+# The appendix's "Round scores" table wants the opposite swap: each player's
+# cumulative figure replaced by that round's own score, e.g. "SN 156 (R4: 43)"
+# -> "SN 43". Round 1 entries carry no bracket at all — the cumulative figure
+# already IS that round's score there — so they pass through unchanged.
+_ROUND_ENTRY_RE = re.compile(r"([A-Z]{2}\s+[+-]?\d+)\s*\(R\d+:\s*([+-]?\d+)\)")
+
+
+def _round_only(standings_row: str) -> str:
+    """The same row, with each player's cumulative figure swapped for that
+    round's own score. Round 1 rows have no bracket to swap — they already
+    show the round score, since cumulative equals round score there."""
+    def repl(m: re.Match) -> str:
+        code = m.group(1).split()[0]
+        return f"{code} {m.group(2)}"
+    return _ROUND_ENTRY_RE.sub(repl, standings_row)
+
+
 def _rail_html(edition: dict[str, Any]) -> str:
     items = _result_items_html(edition)
     last = edition["standings"][-1]
@@ -799,11 +805,10 @@ def _results_strip_html(edition: dict[str, Any]) -> str:
     return f'<div class="r3"><ul class="r-list">{_result_items_html(edition)}</ul></div>'
 
 
-def _sub_card_html(a: dict[str, Any], extra: str = "") -> str:
+def _sub_card_html(a: dict[str, Any]) -> str:
     standfirst = f'<p class="sub-standfirst">{_esc(a["standfirst"])}</p>' if a["standfirst"] else ""
-    cls = f" {extra}" if extra else ""
     return (
-        f'<article class="sub-card{cls}">'
+        '<article class="sub-card">'
         f'<p class="kicker">{_esc(a["kicker"])}</p>'
         f'<h2 class="sub-headline">{_esc(a["headline"])}</h2>'
         f"{standfirst}"
@@ -811,9 +816,24 @@ def _sub_card_html(a: dict[str, Any], extra: str = "") -> str:
     )
 
 
+def _standings_table_html(heading: str, rows_html: str) -> str:
+    return (
+        f'<div class="apx-standings"><h3 class="apx-h">{_esc(heading)}</h3>'
+        '<div class="table-scroll"><table class="stab">'
+        "<thead><tr><th>Rd</th><th>Trophy</th><th>Green Jacket</th></tr></thead>"
+        f"<tbody>{rows_html}</tbody></table></div></div>"
+    )
+
+
 def _appendix_html(edition: dict[str, Any]) -> str:
-    rows = "".join(
-        f'<tr><td>R{s["round"]}</td><td>{_esc(s["trophy"])}</td><td>{_esc(s["jacket"])}</td></tr>'
+    cumulative_rows = "".join(
+        f'<tr><td>R{s["round"]}</td><td>{_esc(_totals_only(s["trophy"]))}</td>'
+        f'<td>{_esc(_totals_only(s["jacket"]))}</td></tr>'
+        for s in edition["standings"]
+    )
+    round_rows = "".join(
+        f'<tr><td>R{s["round"]}</td><td>{_esc(_round_only(s["trophy"]))}</td>'
+        f'<td>{_esc(_round_only(s["jacket"]))}</td></tr>'
         for s in edition["standings"]
     )
     by: dict[str, list[str]] = {}
@@ -831,11 +851,9 @@ def _appendix_html(edition: dict[str, Any]) -> str:
     )
     return (
         '<section class="appendix">'
-        '<div class="apx-standings"><h3 class="apx-h">Standings by round</h3>'
-        '<div class="table-scroll"><table class="stab">'
-        "<thead><tr><th>Rd</th><th>Trophy</th><th>Green Jacket</th></tr></thead>"
-        f"<tbody>{rows}</tbody></table></div></div>"
-        f'<div><h3 class="apx-h">Personal bests &amp; records</h3><div class="apx-records">{recs}</div></div>'
+        + _standings_table_html("Cumulative standings by round", cumulative_rows)
+        + _standings_table_html("Round scores", round_rows)
+        + f'<div><h3 class="apx-h">Personal bests &amp; records</h3><div class="apx-records">{recs}</div></div>'
         "</section>"
     )
 
@@ -852,21 +870,67 @@ def _choose_second_story(subs: list[dict[str, Any]]) -> dict[str, Any] | None:
     return jacket
 
 
-def choose_arrangement(edition: dict[str, Any]) -> str:
-    """"e1" (classic front), "e2" (second lead) or "e3" (2-up row + a long
-    sub-story full width) — the CSS class the caller puts on the `.paper`
-    element, since the E1/E2/E3 rules are keyed on it."""
-    articles = edition["articles"]
-    if len(articles) >= E2_MIN_ARTICLES:
-        return "e2"
-    subs = [a for a in articles if not a["is_lead"]]
-    if len(subs) == 3:
-        by_words = sorted(a["words"] for a in subs)
-        longest = by_words[-1]
-        median_rest = statistics.median(by_words[:-1])
-        if median_rest and longest >= LONG_STORY_RATIO * median_rest:
-            return "e3"
-    return "e1"
+#: Chunk sizes for what's left after taking groups of 3, keyed by remainder
+#: count. A size-1 tail here only happens when exactly one sub-article is
+#: left over with nothing to pair it with.
+_TAIL_CHUNKS: dict[int, list[int]] = {0: [], 1: [1], 2: [2], 3: [3], 4: [2, 2]}
+
+
+def _chunk_remaining(rest: list[dict[str, Any]]) -> list[list[dict[str, Any]]]:
+    """Pack `rest` (already sorted by word count descending) into rows of 3,
+    with the tail adjusted per `_TAIL_CHUNKS` so no row of size 1 is ever
+    produced by leftover count."""
+    rows: list[list[dict[str, Any]]] = []
+    i = 0
+    n = len(rest)
+    while n - i > 4:
+        rows.append(rest[i:i + 3])
+        i += 3
+    sizes = _TAIL_CHUNKS[n - i]
+    tail = rest[i:]
+    j = 0
+    for size in sizes:
+        rows.append(tail[j:j + size])
+        j += size
+    return rows
+
+
+def plan_rows(subs: list[dict[str, Any]]) -> list[list[dict[str, Any]]]:
+    """Pack sub-articles into display rows of 1, 2 or 3 items each, so a CSS
+    grid row is always exactly as wide as the items in it — never a partial
+    row with empty trailing cells, and never two stories stacked in one
+    column.
+
+    The first row is the promoted "second lead" (see `_choose_second_story`),
+    alone, full width — unless there is no clear standout, in which case it
+    becomes the first item of a 2-row instead (a size-1 row is reserved for a
+    genuine standout).
+
+    The rest are packed greedily into rows of 3, except the tail is adjusted
+    so no row of size 1 is ever produced by leftover count: e.g. 4 remaining
+    -> [2, 2], not [3, 1]. 1 remaining (with no promoted story at all) is the
+    only case that legitimately produces a lone final row.
+
+    Within the packed rows (not the promoted row), articles are sorted by
+    word count descending before chunking, so each row groups similar-length
+    stories together and finishes at roughly the same visual height, reducing
+    blank space under short stories sitting next to long ones.
+    """
+    if not subs:
+        return []
+    promoted = _choose_second_story(subs)
+    rest = sorted((a for a in subs if a is not promoted), key=lambda a: -a["words"])
+    return [[promoted]] + _chunk_remaining(rest)
+
+
+def _subs_rows_html(rows: list[list[dict[str, Any]]]) -> str:
+    parts = []
+    for i, row in enumerate(rows):
+        cards = "".join(_sub_card_html(a) for a in row)
+        parts.append(f'<div class="subs-row cols-{len(row)}">{cards}</div>')
+        if i < len(rows) - 1:
+            parts.append('<div class="thin-rule"></div>')
+    return "".join(parts)
 
 
 def _main_html(edition: dict[str, Any], lead: dict[str, Any], rail: str) -> str:
@@ -884,62 +948,8 @@ def _main_html(edition: dict[str, Any], lead: dict[str, Any], rail: str) -> str:
     return head + f'<div class="main-split">{_lead_body_html(lead)}{_rail_html(edition)}</div>'
 
 
-def _render_e1(
-    edition: dict[str, Any], lead: dict[str, Any], subs: list[dict[str, Any]], rail: str = "s2"
-) -> str:
-    row = "".join(_sub_card_html(a) for a in subs[:3])
-    overflow = "".join(_sub_card_html(a, "wide") for a in subs[3:])
-    return (
-        _masthead_html(edition)
-        + _main_html(edition, lead, rail)
-        + '<div class="deck-rule"></div>'
-        + f'<div class="subs">{row}{overflow}</div>'
-        + _appendix_html(edition)
-    )
-
-
-def _render_e2(
-    edition: dict[str, Any], lead: dict[str, Any], subs: list[dict[str, Any]], rail: str = "s2"
-) -> str:
-    second = _choose_second_story(subs)
-    rest = "".join(_sub_card_html(a) for a in subs if a is not second)
-    second_html = _sub_card_html(second, "second") if second else ""
-    rest_block = f'<div class="thin-rule"></div><div class="subs">{rest}</div>' if rest else ""
-    return (
-        _masthead_html(edition)
-        + _main_html(edition, lead, rail)
-        + '<div class="deck-rule"></div>'
-        + f'<div class="second-lead">{second_html}</div>'
-        + rest_block
-        + _appendix_html(edition)
-    )
-
-
-def _render_e3(
-    edition: dict[str, Any], lead: dict[str, Any], subs: list[dict[str, Any]], rail: str = "s2"
-) -> str:
-    """Two shorter subs in a 2-up row (existing compelling/humour order
-    preserved), then the longest sub full width, after the row."""
-    long_story = max(subs, key=lambda a: a["words"])
-    shorter = [a for a in subs if a is not long_story]
-    row = "".join(_sub_card_html(a) for a in shorter)
-    long_html = _sub_card_html(long_story, "long")
-    return (
-        _masthead_html(edition)
-        + _main_html(edition, lead, rail)
-        + '<div class="deck-rule"></div>'
-        + f'<div class="subs">{row}</div>'
-        + '<div class="thin-rule"></div>'
-        + f'<div class="long-lead">{long_html}</div>'
-        + _appendix_html(edition)
-    )
-
-
-_RENDERERS = {"e1": _render_e1, "e2": _render_e2, "e3": _render_e3}
-
-
 def render_desktop_html(edition: dict[str, Any], rail: str = "s2") -> str:
-    """Render the `.paper` inner HTML for the desktop composite (auto/f1).
+    """Render the `.paper` inner HTML for the desktop layout.
 
     `rail` is "s2" (default — results + final standings beside the lead) or
     "s1" (no rail — results as a full-width strip, standings only in the
@@ -948,6 +958,11 @@ def render_desktop_html(edition: dict[str, Any], rail: str = "s2") -> str:
     """
     lead = next(a for a in edition["articles"] if a["is_lead"])
     subs = [a for a in edition["articles"] if not a["is_lead"]]
-    arrangement = choose_arrangement(edition)
-    renderer = _RENDERERS[arrangement]
-    return renderer(edition, lead, subs, rail)
+    rows = plan_rows(subs)
+    return (
+        _masthead_html(edition)
+        + _main_html(edition, lead, rail)
+        + '<div class="deck-rule"></div>'
+        + _subs_rows_html(rows)
+        + _appendix_html(edition)
+    )
