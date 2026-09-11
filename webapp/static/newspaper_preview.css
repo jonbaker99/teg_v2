@@ -217,15 +217,9 @@
   .sub-body p + p{ margin-top:0.75em; }
 
   .appendix{ border-top:1px solid var(--rule); margin-top:2rem; padding:1.7rem var(--pad) 2.3rem; }
-  .apx-standings{ margin-bottom:1.6rem; }
   .apx-records{ display:grid; grid-template-columns:repeat(2,1fr); gap:0 2.5rem; align-items:start; }
   .apx-h{ font-family:var(--font-mono); font-size:0.7rem; font-weight:700; letter-spacing:0.11em;
     text-transform:uppercase; color:var(--accent); margin-bottom:0.7rem; }
-  .table-scroll{ overflow-x:auto; max-width:100%; }
-  .stab{ width:100%; }
-  .stab th,.stab td{ text-align:left; padding:0.36rem 0.7rem 0.36rem 0; font-family:var(--font-mono);
-    font-size:0.755rem; white-space:nowrap; border-bottom:1px solid var(--rule); font-variant-numeric:tabular-nums; }
-  .stab th{ font-weight:700; font-size:0.63rem; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink-soft); }
   .recs-group + .recs-group{ margin-top:0.95rem; }
   .recs-cat{ font-family:var(--font-body); font-weight:700; font-size:0.78rem; margin-bottom:0.3rem; }
   .recs li{ font-family:var(--font-body); font-size:0.845rem; color:var(--ink-soft); position:relative;
@@ -354,11 +348,6 @@
   .acc-sign{ font-family:var(--font-mono); font-size:0.8rem; font-weight:700; color:var(--accent); }
   .m-apx-body{ padding:0 var(--pad) 1.5rem; }
   .m-apx-sec + .m-apx-sec{ margin-top:1.2rem; }
-  .table-scroll{ overflow-x:auto; max-width:100%; }
-  .stab{ width:100%; }
-  .stab th,.stab td{ text-align:left; padding:0.32rem 0.6rem 0.32rem 0; font-family:var(--font-mono);
-    font-size:0.68rem; white-space:nowrap; border-bottom:1px solid var(--rule); font-variant-numeric:tabular-nums; }
-  .stab th{ font-weight:700; font-size:0.58rem; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink-soft); }
   .recs-cat{ font-family:var(--font-body); font-weight:700; font-size:0.8rem; margin-bottom:0.3rem; }
   .recs li{ font-family:var(--font-body); font-size:0.86rem; color:var(--ink-soft); position:relative;
     padding-left:0.9rem; line-height:1.45; }

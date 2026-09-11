@@ -44,8 +44,8 @@
   function mastheadHtml() {
     var d = edition.dateline;
     return '<header class="m-masthead"><div class="m-mh-row">' +
-      '<span class="m-wordmark">The TEG</span>' +
-      '<span class="m-dateline">' + esc(d.teg) + " &middot; " + esc(d.venue) + " &middot; " + esc(d.year) + "</span>" +
+      '<span class="m-wordmark">' + esc(d.teg) + "</span>" +
+      '<span class="m-dateline">' + esc(d.venue) + " &middot; " + esc(d.year) + "</span>" +
       "</div><div class=\"m-mh-rule\"></div></header>";
   }
   function resultsHtml() {
@@ -60,37 +60,9 @@
     return '<div class="m-r5"><p class="m-r5-title">At a glance</p>' +
       '<ul class="m-r-list">' + items + "</ul></div>";
   }
-  // Mirrors _totals_only/_round_only in teg_analysis/reporting/newspaper_edition.py:
-  // standings rows carry each player's round score in brackets ("SN 156 (R4: 43)");
-  // the cumulative table strips the bracket, the round-only table swaps in the
-  // bracketed figure in place of the cumulative one. Round 1 rows have no bracket —
-  // they already show the round score, since cumulative equals round score there.
-  var ROUND_SCORE_BRACKET_RE = /\s*\(R\d+:[^)]*\)/g;
-  var ROUND_ENTRY_RE = /([A-Z]{2}\s+[+-]?\d+)\s*\(R\d+:\s*([+-]?\d+)\)/g;
-
-  function totalsOnly(row) {
-    return row.replace(ROUND_SCORE_BRACKET_RE, "");
-  }
-  function roundOnly(row) {
-    return row.replace(ROUND_ENTRY_RE, function (_, cumulative, roundScore) {
-      return cumulative.split(/\s+/)[0] + " " + roundScore;
-    });
-  }
-  function standingsTableHtml(rows) {
-    return '<div class="table-scroll"><table class="stab">' +
-      "<thead><tr><th>Rd</th><th>Trophy</th><th>Green Jacket</th></tr></thead>" +
-      "<tbody>" + rows + "</tbody></table></div>";
-  }
-
   function appendixHtml(open) {
-    var cumulativeRows = edition.standings.map(function (s) {
-      return "<tr><td>R" + s.round + "</td><td>" + esc(totalsOnly(s.trophy)) +
-        "</td><td>" + esc(totalsOnly(s.jacket)) + "</td></tr>";
-    }).join("");
-    var roundRows = edition.standings.map(function (s) {
-      return "<tr><td>R" + s.round + "</td><td>" + esc(roundOnly(s.trophy)) +
-        "</td><td>" + esc(roundOnly(s.jacket)) + "</td></tr>";
-    }).join("");
+    // Standings tables dropped 2026-09-11: they duplicate the round-by-round
+    // and leaderboard views shown better elsewhere in the app. Records only.
     var by = {}, order = [];
     edition.records.forEach(function (r) {
       if (!by[r.category]) { by[r.category] = []; order.push(r.category); }
@@ -101,15 +73,11 @@
         by[c].map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul></div>";
     }).join("");
     var body = open
-      ? '<div class="m-apx-body" id="apx-body">' +
-          '<div class="m-apx-sec">' + standingsTableHtml(cumulativeRows) + "</div>" +
-          '<div class="m-apx-sec">' + standingsTableHtml(roundRows) + "</div>" +
-          '<div class="m-apx-sec">' + recs + "</div>" +
-        "</div>"
+      ? '<div class="m-apx-body" id="apx-body"><div class="m-apx-sec">' + recs + "</div></div>"
       : "";
     return '<section class="m-apx"><button type="button" class="m-apx-btn" data-apx="1" aria-expanded="' +
       (open ? "true" : "false") + '" aria-controls="apx-body">' +
-      '<span class="m-apx-h">Standings &amp; records</span>' +
+      '<span class="m-apx-h">Records</span>' +
       '<span class="acc-sign" aria-hidden="true">' + (open ? "−" : "+") + "</span></button>" + body + "</section>";
   }
 

@@ -14,7 +14,6 @@ pytestmark = [pytest.mark.unit]
 from teg_analysis.reporting.newspaper_edition import (
     _degraded_storyline,
     _resolve_section,
-    _round_only,
     _totals_only,
     derive_descriptor,
     plan_rows,
@@ -80,29 +79,14 @@ def test_rows_are_sorted_by_word_count_within_the_packed_rows():
 
 
 # ---------------------------------------------------------------------------
-# _totals_only / _round_only — the appendix's two standings tables.
+# _totals_only — still used by the rail's "Final" standings summary, even
+# though the appendix's standings tables were dropped 2026-09-11.
 # ---------------------------------------------------------------------------
 
 
 def test_totals_only_strips_the_round_score_bracket():
     row = "SN 156 (R4: 43) | DM 148 (R4: 38)"
     assert _totals_only(row) == "SN 156 | DM 148"
-
-
-def test_round_only_swaps_in_the_bracketed_round_score():
-    row = "SN 156 (R4: 43) | DM 148 (R4: 38)"
-    assert _round_only(row) == "SN 43 | DM 38"
-
-
-def test_round_only_passes_round_one_rows_through_unchanged():
-    # Round 1 has no bracket — cumulative already equals the round score.
-    row = "JP 39 | JB 38 | DM 33"
-    assert _round_only(row) == row
-
-
-def test_round_only_handles_signed_scores():
-    row = "GW +37 (R2: +17) | JB +34 (R2: +14)"
-    assert _round_only(row) == "GW +17 | JB +14"
 
 
 

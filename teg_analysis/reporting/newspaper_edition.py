@@ -789,11 +789,14 @@ def _paragraphs_html(paragraphs: list[str]) -> str:
 
 
 def _masthead_html(edition: dict[str, Any]) -> str:
+    # "The TEG" (2026-09-11): a fake newspaper name read as a gimmick. The
+    # masthead now names the actual tournament ("TEG 16"); the dateline moves
+    # to venue/year only, since the TEG number no longer needs repeating there.
     d = edition["dateline"]
     return (
         '<header class="masthead"><div class="mh-row">'
-        '<span class="wordmark">The TEG</span>'
-        f'<span class="dateline">{_esc(d["teg"])} &middot; {_esc(d["venue"])} &middot; {_esc(d["year"])}</span>'
+        f'<span class="wordmark">{_esc(d["teg"])}</span>'
+        f'<span class="dateline">{_esc(d["venue"])} &middot; {_esc(d["year"])}</span>'
         '</div><div class="mh-rule"></div></header>'
     )
 
@@ -838,23 +841,6 @@ def _totals_only(standings_row: str) -> str:
     return _ROUND_SCORE_BRACKET_RE.sub("", standings_row)
 
 
-# The appendix's "Round scores" table wants the opposite swap: each player's
-# cumulative figure replaced by that round's own score, e.g. "SN 156 (R4: 43)"
-# -> "SN 43". Round 1 entries carry no bracket at all — the cumulative figure
-# already IS that round's score there — so they pass through unchanged.
-_ROUND_ENTRY_RE = re.compile(r"([A-Z]{2}\s+[+-]?\d+)\s*\(R\d+:\s*([+-]?\d+)\)")
-
-
-def _round_only(standings_row: str) -> str:
-    """The same row, with each player's cumulative figure swapped for that
-    round's own score. Round 1 rows have no bracket to swap — they already
-    show the round score, since cumulative equals round score there."""
-    def repl(m: re.Match) -> str:
-        code = m.group(1).split()[0]
-        return f"{code} {m.group(2)}"
-    return _ROUND_ENTRY_RE.sub(repl, standings_row)
-
-
 def _rail_html(edition: dict[str, Any]) -> str:
     items = _result_items_html(edition)
     last = edition["standings"][-1]
@@ -885,26 +871,11 @@ def _sub_card_html(a: dict[str, Any]) -> str:
     )
 
 
-def _standings_table_html(heading: str, rows_html: str) -> str:
-    return (
-        f'<div class="apx-standings"><h3 class="apx-h">{_esc(heading)}</h3>'
-        '<div class="table-scroll"><table class="stab">'
-        "<thead><tr><th>Rd</th><th>Trophy</th><th>Green Jacket</th></tr></thead>"
-        f"<tbody>{rows_html}</tbody></table></div></div>"
-    )
-
-
 def _appendix_html(edition: dict[str, Any]) -> str:
-    cumulative_rows = "".join(
-        f'<tr><td>R{s["round"]}</td><td>{_esc(_totals_only(s["trophy"]))}</td>'
-        f'<td>{_esc(_totals_only(s["jacket"]))}</td></tr>'
-        for s in edition["standings"]
-    )
-    round_rows = "".join(
-        f'<tr><td>R{s["round"]}</td><td>{_esc(_round_only(s["trophy"]))}</td>'
-        f'<td>{_esc(_round_only(s["jacket"]))}</td></tr>'
-        for s in edition["standings"]
-    )
+    # The cumulative/round-score standings tables were dropped 2026-09-11: they
+    # duplicate the round-by-round and leaderboard views shown better elsewhere
+    # in the app. `edition["standings"]` is still parsed and kept — the rail's
+    # "Final" Trophy/Green Jacket lines (`_rail_html`) still read it.
     by: dict[str, list[str]] = {}
     order: list[str] = []
     for r in edition["records"]:
@@ -920,9 +891,7 @@ def _appendix_html(edition: dict[str, Any]) -> str:
     )
     return (
         '<section class="appendix">'
-        + _standings_table_html("Cumulative standings by round", cumulative_rows)
-        + _standings_table_html("Round scores", round_rows)
-        + f'<div><h3 class="apx-h">Personal bests &amp; records</h3><div class="apx-records">{recs}</div></div>'
+        f'<div><h3 class="apx-h">Personal bests &amp; records</h3><div class="apx-records">{recs}</div></div>'
         "</section>"
     )
 
