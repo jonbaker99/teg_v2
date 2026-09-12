@@ -23,6 +23,11 @@ Visit `http://localhost:8000` in your browser. Use the theme switcher in the nav
   `TemplateResponse` calls to the modern `TemplateResponse(request, name, context)`
   signature, then drop the pins. (A related variant of this error also appears on
   Python 3.14 with jinja2 3.1.x — use Python 3.12/3.13 there.)
+- **Known gotcha — Railway runs Python 3.11, local dev is usually newer:** newer-only
+  syntax (e.g. PEP 701 nested-quote f-strings, valid from 3.12) parses locally and in
+  tests, then is a hard `SyntaxError` at import time on Railway — see CLAUDE.md's
+  "Local Python can outrun Railway's" invariant for the real incident this caused
+  (site-wide outage, 2026-09-12). Check before pushing: `python scripts/check_py311_compat.py`.
 
 ## Admin / data management
 

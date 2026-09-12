@@ -138,6 +138,19 @@ Enforced by a test guard. `teg_analysis/` must import cleanly with no UI package
 
 FastAPI threadpools them. `async def` handlers doing blocking work stall every polling phone. Use `async def` only to read a dynamic-keyed form, and wrap the heavy call in `run_in_threadpool`. See `webapp/README.md` → "Sync `def` handlers".
 
+### Local Python can outrun Railway's
+
+Railway deploys on Python 3.11; local dev environments are routinely newer (3.12–3.14) and silently
+accept syntax 3.11 rejects — e.g. PEP 701's relaxed f-string grammar (nested same-quote strings
+inside an f-string, Python 3.12+ only). Such code imports fine locally, passes local tests, and is a
+hard `SyntaxError` in production. If the broken module sits in `webapp.app`'s import graph, the
+whole app fails to start — Railway shows "Application failed to respond" with no traceback in the
+UI, only in the deploy log (real incident, 2026-09-12: `teg_analysis/reporting/newspaper_edition.py`
+imported at module load by `webapp/routes/leaderboard.py`; entire site down until the log was read
+and the syntax fixed). Avoid newer-only syntax in anything `teg_analysis/`/`webapp/` can import
+at request or import time. Check before pushing: `python scripts/check_py311_compat.py` (needs a
+Python 3.11 interpreter on PATH — `brew install python@3.11` if missing).
+
 ### Pandas strict dtypes
 
 `requirements.txt` pins `pandas>=3.0,<4.0`. Three patterns have caused production errors — all fixed, but avoid reintroducing them (re-verified 2026-08-13 on 3.0.5, identical to 2.x behaviour).
