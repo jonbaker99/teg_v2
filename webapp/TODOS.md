@@ -6,6 +6,16 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 ## IN PROGRESS
 
+- [x] **Review shared UI polish on `ui/shared-polish-review`** — navigation,
+  title alignment, mobile component insets, tab scroll cues and GET failure
+  feedback implemented; user approved for merge 2026-09-12. Automated browser
+  visual verification was unavailable. Follow-ups below retain unimplemented items.
+- [ ] **Page smoke test report fixture drift** —
+  `test_teg_reports_round_without_a_storyline_edition_falls_back_to_legacy_markdown`
+  assumes TEG 14 R1 is legacy, but current local data resolves it as new.
+  Pick a legacy round from available data rather than hardcoding that fixture.
+
+
 - [ ] **Bestball/worstball on `/latest-round`** — show best/worst bestball and worstball positions in the round-in-context page.
 - [ ] **`/scoring/matrix`** - score type as pills; TEG / Round / 9 as tabs
 - [x] **Remote/on-the-fly report generation — admin-triggered, the clubhouse use case (2026-09-12).**
@@ -135,6 +145,23 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 ## Bugs — fix before publish
 
 ## UI Changes
+
+- [ ] **Mobile table identity columns** — preserve table identity columns
+  explicitly rather than always pinning column one. Navigation buttons, tablet
+  breakpoint and shared mobile component insets shipped in the UI polish pass.
+- [ ] **Shared interaction states** — update tab/pill selection after successful
+  responses, with consistent loading/error/retry feedback; preserve public
+  filter/tab state in canonical page URLs so reload, sharing and Back work.
+- [ ] **Live entry save feedback** — score-write and polling failures currently
+  log to the console; show saved/pending/failed state and a recoverable retry path.
+- [ ] **UI development consistency** — replace Tailwind Play CDN with a pinned
+  static build (include classes emitted by analysis HTML builders); lazy-load
+  Plotly on chart pages; extract shared controls/table wrappers into macros;
+  add a small responsive component gallery and representative browser checks.
+- [ ] **Reconcile UI documentation** — README still describes mobile/dark mode
+  and report generation as unbuilt; design principles retain fit-content widths
+  and serif-caption claims. Align docs with shipped code and clarify typography
+  and accent rules before further redesigns.
 
 - [ ] **Prefer CSS bar charts over Plotly where feasible** — the bestball/worstball
   contribution bars (`build_bestball_contribution_bars`) use lightweight CSS bars

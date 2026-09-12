@@ -4,6 +4,14 @@ Current state and next priorities. Instructions and architecture live in `CLAUDE
 
 **Last updated:** 2026-09-08 (newspaper layout preview page fixed and its artefacts re-synced; report build documented end to end in `DATA_FLOW.md` §10; earlier content current as at 2026-07-12)
 
+## 2026-09-12 — Shared UI polish approved
+
+Working branch `ui/shared-polish-review`: button-based navigation, tablet
+hamburger, default title alignment, phone control/text insets and visible tab
+scrollbars. HTMX read requests expose busy state and dismissible failure
+feedback. No data-write changes. User reviewed and approved the UI for merge;
+automated browser visual verification was unavailable.
+
 ## Where things stand
 
 **`teg_analysis/`** — Phases 1–7 cleanup complete (all Streamlit imports removed; aggregation/streaks/scoring refactored; dead code removed). Merged to `main`. Canonical analysis layer, fully UI-agnostic.

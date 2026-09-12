@@ -847,3 +847,24 @@ HTML builders).
   on `/latest-teg` shows the TEG's best eclectic (by hole + total) in the
   eclectic scorecard format, ranked against all TEGs.
 
+
+## Shared UI behaviour
+
+`static/ui-polish.css` and `static/ui-polish.js` load through `base.html` after
+the themes and mobile stylesheet. Navigation uses button disclosures (click,
+Enter or Space; Escape and outside-click close them). The hamburger applies
+at ≤900px, while the bottom phone tab bar remains at ≤640px.
+
+The default title aligns with panel text on desktop. On phones, shared controls
+and named text classes receive a 12px component inset; data surfaces retain
+full width. Tab rows retain a thin scrollbar to suggest sideways scrolling.
+
+HTMX GET targets expose `aria-busy`; section panels dim while loading. Failed
+GETs show a dismissible message above content, cleared by successful recovery
+on the same target. Writes are not retried. Existing immediate tab/pill
+highlighting remains; synchronising selection with responses is separate work.
+
+Review `/leaderboard`, `/results`, `/latest-round`, `/records`, `/scorecard`,
+`/player`, and `/teg-reports` on desktop and phone widths. Also check 640–900px
+for navigation behaviour. User review approved this pass; automated browser
+visual verification was unavailable.

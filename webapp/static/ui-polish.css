@@ -1,0 +1,46 @@
+/* Shared shell polish, loaded after themes and mobile rules. */
+.nav-dropdown-btn, .nav-hamburger {
+    background: transparent;
+    border: 0;
+    font-family: inherit;
+    color: var(--nav-text);
+}
+.nav-hamburger { min-width: 44px; min-height: 44px; }
+:where(a, button, select, input):focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+/* Match the default title's text edge to the content panel's text edge. */
+body.ts-a .page-title-area { padding-inline: 2.5rem; }
+.request-feedback {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--table-header-border);
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+.request-feedback[hidden] { display: none; }
+.request-feedback button { min-width: 44px; min-height: 44px; }
+.section-panel[aria-busy="true"] { opacity: 0.65; }
+@media (max-width: 900px) {
+    .nav-links { max-height: calc(100dvh - 120px); overflow-y: auto; }
+    .nav-dropdown-btn, .nav-dropdown-menu a { min-height: 44px; }
+}
+@media (max-width: 640px) {
+    /* Keep data surfaces full width; inset only shared controls and text. */
+    body.ts-a .page-title-area { padding-inline: 0.75rem; }
+    .main-content .section-controls { padding-inline: 0.75rem; }
+    .main-content .section-nav { margin-inline: 0.75rem; max-width: calc(100% - 1.5rem); }
+    .section-controls .section-nav { margin-inline: 0; max-width: 100%; }
+    .main-content :is(.section-title, .page-subtitle, .chart-title, .chart-description, .chart-controls-label, .chart-note, .caption, .result-callout) {
+        padding-inline: 0.75rem;
+    }
+    .main-content .section-nav { scrollbar-width: thin; }
+    .main-content .section-nav::-webkit-scrollbar { display: block; height: 3px; }
+    .main-content .section-nav::-webkit-scrollbar-thumb { background: var(--table-header-border); border-radius: 3px; }
+    .request-feedback { margin-inline: 0.75rem; }
+}
