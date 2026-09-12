@@ -271,6 +271,18 @@
    MOBILE — mobile.html, pattern A (index first) only.
    ========================================================================= */
 @media (max-width:700px){
+  /* Same Tailwind-collision problem as the desktop NP-HOST block above, at
+     phone width instead (2026-09-12): mobile.css's `.main-content{
+     padding-left:0 }` only fires at its own ≤640px breakpoint and is a
+     single-class selector, so between 641-700px — this page's own
+     breakpoint — nothing zeroes `.main-content`'s Tailwind `px-6`, and even
+     inside 640px the CDN Tailwind runtime injects its stylesheet at
+     runtime in a way that can still out-order a same-specificity rule.
+     Diagnosed from a real-phone screenshot showing the report inset ~24px
+     further than intended. body.np-host raises specificity enough to win
+     regardless, scoped to just this page like its desktop counterpart. */
+  body.np-host .main-content{ padding-inline:0; }
+
   .np-mobile{
     display:block;
     /* The site page-level gutter is gone (.page-container, mobile.css,
@@ -282,6 +294,15 @@
     color:var(--ink);
   }
   .np-desktop{ display:none; }
+
+  /* An open article is its own full screen (Pattern A) — the page's TEG
+     select/round pills/title above .np-mobile belong to the index screen
+     only. newspaper_preview.js toggles this on <body> when a story is
+     open, so the article's own topbar sits right under the site nav
+     instead of below a second, redundant control row. */
+  body.np-reading .page-title-area,
+  body.np-reading .section-controls,
+  body.np-reading .np-caption{ display:none; }
 
   .m-masthead{ padding:calc(0.95rem + env(safe-area-inset-top)) var(--pad) 0; }
   .m-mh-row{ display:flex; align-items:baseline; justify-content:space-between; gap:0.6rem; }
@@ -298,19 +319,24 @@
   .m-body p + p{ margin-top:0.8em; }
   .m-meta{ font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.09em; text-transform:uppercase; color:var(--ink-soft); }
 
-  .m-r5{ border:1px solid var(--ink); margin:0.95rem var(--pad) 0; }
-  .m-r5-title{ background:var(--ink); color:var(--paper); font-family:var(--font-body); font-size:0.67rem;
-    font-weight:700; letter-spacing:0.12em; text-transform:uppercase; padding:0.34rem 0.7rem; }
-  .m-r-list{ padding:0.6rem 0.8rem 0.7rem; display:flex; flex-direction:column; gap:0.75rem; }
-  .m-r-item{ display:flex; justify-content:space-between; gap:0.7rem; align-items:baseline; }
-  .m-r-item + .m-r-item{ border-top:1px solid var(--rule); padding-top:0.6rem; }
-  .m-r-label{ font-family:var(--font-body); font-size:0.7rem; letter-spacing:0.02em; text-transform:uppercase; color:var(--ink-soft); }
-  .m-r-value{ font-family:var(--font-body); font-size:0.85rem; font-weight:700; font-variant-numeric:tabular-nums; text-align:right; }
-  .m-r-qual{ font-weight:400; font-size:0.72rem; color:var(--ink-soft); }
-  .m-r-vals{ display:flex; flex-direction:column; align-items:flex-end; gap:0.05rem; }
-  .m-r-runner{ font-family:var(--font-body); font-size:0.65rem; color:var(--ink-soft); text-align:right; }
-  .m-r-lead{ background:var(--tint); padding:0.26rem 0.35rem; margin:0 -0.35rem; }
-  .m-r-lead .m-r-value{ color:var(--accent); font-weight:700; }
+  /* "At a glance" results — slim ruleless strip (2026-09-12), replacing the
+     boxed dark-title-bar panel: a small-caps label does the job the border
+     and reversed title bar used to, item separation comes from spacing
+     rather than dividers, and the block sits AFTER the lead headline
+     (Jon: results shouldn't outrank the actual story) ending on whitespace
+     rather than another rule before "Also in this edition". Runner-up is
+     deliberately not rendered — tried in prototype, judged one line too many
+     for this compact a block. */
+  .m-strip{ margin:1.35rem 0 1.5rem; }
+  .m-strip-h{ font-family:var(--font-mono); font-size:0.6rem; font-weight:700; letter-spacing:0.16em;
+    text-transform:uppercase; color:var(--ink-soft); padding:0 var(--pad) 0.55rem; }
+  .m-strip-list{ display:flex; flex-direction:column; gap:0.65rem; padding:0 var(--pad); }
+  .m-strip-item{ display:flex; justify-content:space-between; align-items:baseline; gap:0.6rem; }
+  .m-strip-label{ font-family:var(--font-mono); font-size:0.62rem; font-weight:700; letter-spacing:0.09em;
+    text-transform:uppercase; color:var(--ink-soft); flex:none; }
+  .m-strip-value{ font-family:var(--font-body); font-size:0.84rem; text-align:right; color:var(--ink); }
+  .m-strip-value strong{ font-weight:700; }
+  .m-strip-value .m-strip-qual{ color:var(--ink-soft); font-size:0.78rem; font-weight:400; }
 
   /* A — index first */
   .idx-lead{
@@ -334,27 +360,46 @@
   .idx-item .idx-foot{ display:flex; justify-content:space-between; align-items:baseline; gap:0.6rem; margin-top:0.45rem; }
   .chev{ font-family:var(--font-mono); font-size:0.72rem; font-weight:600; letter-spacing:0.04em; color:var(--accent); }
 
+  /* Article header — minimal text, no card (2026-09-12, Jon: chosen over a
+     boxed "← Front page" panel and an icon-only chevron). Spelled out in
+     full as "Report front page" rather than a bare "Back": the phone's own
+     Back gesture already exists, so this control's job is specifically
+     distinguishing "back to this report's index" from the site's own Home —
+     that needs words, not an icon. */
   .topbar{
-    position:sticky; top:0; z-index:5; display:flex; align-items:center; gap:0.55rem;
-    padding:calc(0.7rem + env(safe-area-inset-top)) var(--pad) 0.7rem; background:var(--paper); border-bottom:1px solid var(--ink);
+    position:sticky; top:0; z-index:5; display:flex; align-items:center;
+    padding:calc(0.6rem + env(safe-area-inset-top)) var(--pad) 0.55rem; background:var(--paper);
+    border-bottom:1px solid var(--rule);
   }
-  .topbar button{ background:none; border:none; cursor:pointer; display:flex; align-items:center;
-    gap:0.4rem; font-family:var(--font-mono); font-size:0.66rem; font-weight:700; letter-spacing:0.1em;
-    text-transform:uppercase; color:var(--accent); padding:0; min-height:44px; -webkit-tap-highlight-color:transparent; }
-  .topbar .tb-title{ margin-left:auto; font-family:var(--font-mono); font-size:0.6rem;
-    letter-spacing:0.09em; text-transform:uppercase; color:var(--ink-soft); }
-  .article{ padding:1.15rem var(--pad) 1.6rem; }
+  .topbar button{ background:none; border:none; cursor:pointer; padding:0; min-height:44px;
+    display:flex; align-items:center; gap:0.35rem; font-family:var(--font-body); font-size:0.86rem;
+    font-weight:500; color:var(--ink); -webkit-tap-highlight-color:transparent; }
+  .topbar button svg{ width:16px; height:16px; flex:none; }
+  .topbar .tb-title{ margin-left:auto; font-family:var(--font-contrast); font-size:0.72rem; color:var(--ink-soft); }
+  .kicker-line{ padding:0.9rem var(--pad) 0; }
+  .article{ padding:0.5rem var(--pad) 1.6rem; }
   .article .m-hl{ font-size:1.55rem; margin-top:0.3rem; }
   .article .m-sf{ font-size:0.92rem; margin-top:0.5rem; }
   .article .m-body{ margin-top:1rem; }
-  .artnav{ display:flex; border-top:3px solid var(--ink); padding-bottom:env(safe-area-inset-bottom); }
-  .artnav button{ flex:1; background:none; border:none; border-left:1px solid var(--rule);
-    padding:0.9rem var(--pad); text-align:left; cursor:pointer; min-height:44px; -webkit-tap-highlight-color:transparent; }
-  .artnav button:first-child{ border-left:none; }
-  .artnav button:disabled{ opacity:0.35; cursor:default; }
-  .artnav .an-lab{ display:block; font-family:var(--font-mono); font-size:0.58rem; letter-spacing:0.12em;
+
+  /* Prev/next/front-page footer — clean single-line links (2026-09-12,
+     replacing a boxed 2-up grid Jon called "awful"). A small-caps direction
+     label sits inline before the headline, truncated with an ellipsis
+     rather than wrapping, separated by hairlines only — no backgrounds, no
+     vertical dividers. Previous is omitted entirely on the lead article
+     rather than shown as a disabled ghost row. "Report front page" sits
+     last and reads quieter (ink-soft, not accent) since it's a return
+     action, not a "read more" one. */
+  .artnav{ border-top:1px solid var(--rule); margin-top:1.6rem; padding-bottom:env(safe-area-inset-bottom); }
+  .an-line{ display:flex; align-items:baseline; gap:0.5rem; width:100%; background:none; border:none;
+    border-top:1px solid var(--rule); padding:0.8rem var(--pad); text-align:left; cursor:pointer;
+    min-height:44px; font-family:var(--font-body); -webkit-tap-highlight-color:transparent; }
+  .an-line:first-child{ border-top:none; }
+  .an-dir{ flex:none; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; letter-spacing:0.1em;
     text-transform:uppercase; color:var(--ink-soft); }
-  .artnav .an-hl{ display:block; font-family:var(--font-display); font-weight:700; font-size:0.88rem; line-height:1.2; margin-top:0.25rem; }
+  .an-hl{ flex:1; min-width:0; font-size:0.92rem; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .an-front{ color:var(--ink-soft); font-size:0.82rem; }
+  .an-front .an-dir{ color:var(--ink-soft); }
 
   /* appendix accordion, shared between index and article screens */
   .m-apx{ border-top:3px solid var(--ink); }

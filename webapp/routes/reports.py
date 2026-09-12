@@ -27,12 +27,14 @@ tournament report unless the TEG has none, in which case its first round
 takes over as the default; passing a `round` in `available_rounds(teg)`
 always switches to that round's edition.
 
-LEGACY ROUND FALLBACK (2026-09-12). Only 3 of the ~65 playable rounds have
-been through the round-storyline pipeline so far (STATUS.md → START HERE,
-item 3 — no backfill has run). Rather than show "no report" for every other
-round, a round pill for which `available_rounds(teg)` has no newspaper
-edition falls back to the OLD one-blob markdown render this page used before
-2026-09-11 — `_legacy_round_report_html`, reviving the file-fallback chain
+LEGACY ROUND FALLBACK (2026-09-12, backfill in progress). Round-storyline
+coverage is climbing as `round_storyline.py` backfill runs land — check
+`STATUS.md` → START HERE for the current count rather than trusting a number
+here, since it goes stale within a single backfill session. Rather than show
+"no report" for a round not yet converted, a round pill for which
+`available_rounds(teg)` has no newspaper edition falls back to the OLD
+one-blob markdown render this page used before 2026-09-11 —
+`_legacy_round_report_html`, reviving the file-fallback chain
 (`teg_N_round_R_report_styled.md` → `round_reports/TEG{N}_R{r}_report.md` →
 `round_reports/teg_{N}_round_{r}_report.md`) and the `.teg-report` CSS
 (`/static/teg_reports.css`, still loaded globally) rather than reinventing

@@ -115,11 +115,13 @@ dependency order:
      scores having nowhere else to live — no longer needed once they got their own table). No
      regeneration needed for the three validation reports — the underlying data was already on
      disk; only the parser/renderer changed.
-   **Not done, deliberately:** no backfill. Only the three validation TEGs above have round
-   storyline artefacts; the other 8 TEGs with published (legacy or 2025-vintage) round reports are
-   untouched, and a full backfill is a separate, costed decision once more of this has been read.
+   **Backfill started 2026-09-12** (superseding the "not done, deliberately" note this replaced):
+   round-storyline coverage is now the majority of playable rounds and climbing — check
+   `available_rounds(teg)` per TEG for the live count rather than trusting a number written here,
+   since it goes stale mid-session. TEGs 10–13 (plus TEG 14 R1/R3/R4) are the remaining legacy-only
+   gap as of this note.
    **Legacy round fallback, so `/teg-reports` shows every playable round today, not just the
-   three regenerated ones (2026-09-12).** `webapp/routes/reports.py` now has a `_round_kind(teg,
+   ones already regenerated (2026-09-12).** `webapp/routes/reports.py` now has a `_round_kind(teg,
    round)` of `"new"` (round-storyline edition), `"legacy"` (falls back to the pre-2026-09-11
    one-blob markdown render — `teg_N_round_R_report_styled.md`, then `round_reports/`, same
    fallback chain and `.teg-report` CSS this page used before), or `"none"`. New always wins where

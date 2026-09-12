@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Front page variants — /teg-reports mobile</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600;700&family=Libre+Franklin:wght@400;500;600;700&display=swap">
+<style>
+  /* ============== chrome around the prototype (not part of the design) ============== */
+  :root{ --lab-bg:#e9e9e4; --lab-ink:#333; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--lab-bg); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; color:var(--lab-ink); }
+  .lab-head{ max-width:1100px; margin:0 auto; padding:1.5rem 1.25rem 0.5rem; }
+  .lab-head h1{ font-size:1.15rem; margin:0 0 0.3rem; }
+  .lab-head p{ font-size:0.85rem; color:#666; margin:0 0 1rem; max-width:70ch; line-height:1.5; }
+  .lab-controls{ max-width:1100px; margin:0 auto; padding:0 1.25rem 1.5rem; display:flex; flex-wrap:wrap; gap:0.6rem; align-items:center; }
+  .lab-group{ display:flex; gap:0.4rem; align-items:center; background:#fff; border:1px solid #ddd; border-radius:8px; padding:0.35rem; }
+  .lab-group span{ font-size:0.7rem; text-transform:uppercase; letter-spacing:0.06em; color:#888; padding:0 0.5rem; }
+  .lab-btn{ font-size:0.78rem; font-weight:600; padding:0.45rem 0.8rem; border-radius:6px; border:1px solid transparent; background:none; cursor:pointer; color:#444; }
+  .lab-btn.active{ background:#211D17; color:#F6F3EA; }
+  .lab-note{ max-width:1100px; margin:0 auto 1.5rem; padding:0 1.25rem; font-size:0.8rem; color:#777; line-height:1.6; }
+  .lab-note strong{ color:#333; }
+  .phones{ max-width:1100px; margin:0 auto; padding:0 1.25rem 3rem; display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; }
+  .phone{ width:390px; max-width:100%; border:1px solid #ccc; border-radius:20px; overflow:hidden; background:#fff; box-shadow:0 4px 18px rgba(0,0,0,0.08); }
+  .phone-notch{ height:34px; background:#fff; display:flex; align-items:center; justify-content:space-between; padding:0 1rem; font-size:0.7rem; font-weight:600; color:#333; border-bottom:1px solid #eee; }
+  .phone-body{ height:760px; position:relative; background:#fff; overflow:hidden; }
+  .phone-scroll{ height:100%; overflow-y:auto; }
+
+  /* ============== real site chrome ============== */
+  .site-nav{ display:flex; align-items:center; justify-content:space-between; padding:0.85rem 0.9rem; border-bottom:1px solid #e5e2d8; }
+  .site-nav .brand{ font-family:'Source Serif 4',Georgia,serif; font-weight:700; font-size:1.1rem; color:#211D17; }
+  .site-nav .burger{ font-size:1.1rem; color:#333; }
+  .site-controls{ padding:0.7rem 0.9rem 0; display:flex; gap:0.5rem; flex-wrap:wrap; }
+  .site-pill{ font-family:'Libre Franklin',sans-serif; font-size:0.72rem; font-weight:600; padding:0.35rem 0.7rem; border-radius:999px; border:1px solid #ccc7b3; color:#555; }
+  .site-pill.active{ border-color:#2f6b3a; color:#2f6b3a; }
+
+  /* ============== .np-page scope, copied from newspaper_preview.css ============== */
+  .np-page{
+    --paper:#F6F3EA; --ink:#211D17; --ink-soft:#66604F; --ink-contrast:#63615C; --accent:#7A2420;
+    --rule:#C9C2AC; --tint:#EDE8D9;
+    --font-display:'Fraunces',Georgia,serif; --font-body:'Source Serif 4',Georgia,serif;
+    --font-mono:'IBM Plex Mono','Courier New',monospace; --font-contrast:'Libre Franklin',Arial,sans-serif;
+    color:var(--ink); font-family:var(--font-body); background:#fff;
+  }
+  .np-page *{ box-sizing:border-box; }
+  .np-page :where(h1,h2,p,ul){ margin:0; padding:0; }
+  .np-page ul{ list-style:none; }
+  .np-mobile{ --pad:0.9rem; }
+
+  .m-masthead{ padding:0.95rem var(--pad) 0; }
+  .m-mh-row{ display:flex; align-items:baseline; justify-content:space-between; gap:0.6rem; }
+  .m-wordmark{ font-family:var(--font-display); font-weight:600; font-size:1.18rem; letter-spacing:0.02em; }
+  .m-dateline{ font-family:var(--font-body); font-weight:500; font-size:0.58rem; letter-spacing:0.06em;
+    text-transform:uppercase; color:var(--ink-soft); }
+  .m-mh-rule{ border-top:3px solid var(--ink); border-bottom:1px solid var(--ink); height:4px; margin-top:0.6rem; }
+
+  /* Every clickable block below is a bare <button> (for real hash-routing
+     parity with newspaper_preview.js) — reset appearance/color explicitly
+     rather than relying on inheritance. Left unset, iOS Safari's UA
+     stylesheet renders unstyled button text in the system tint (blue),
+     which is exactly the "subheader in blue" bug Jon flagged: the
+     standfirst sat inside a button with no color of its own. */
+  button{ font:inherit; color:inherit; -webkit-appearance:none; appearance:none; }
+
+  .kicker{ font-family:var(--font-mono); font-weight:700; font-size:0.63rem; letter-spacing:0.13em;
+    text-transform:uppercase; color:var(--accent); }
+  .m-hl{ font-family:var(--font-display); font-weight:700; line-height:1.09; color:var(--ink); }
+  .m-sf{ font-family:var(--font-body); line-height:1.4; color:var(--ink-soft); }
+  .m-meta{ font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.09em; text-transform:uppercase; color:var(--ink-soft); }
+
+  /* ============== results panel — A/B share this boxed treatment ============== */
+  .m-r5{ border:1px solid var(--ink); margin:0.95rem var(--pad) 0; }
+  .m-r5-title{ background:var(--ink); color:var(--paper); font-family:var(--font-body); font-size:0.67rem;
+    font-weight:700; letter-spacing:0.12em; text-transform:uppercase; padding:0.34rem 0.7rem; }
+  .m-r-list{ padding:0.6rem 0.8rem 0.7rem; display:flex; flex-direction:column; gap:0.75rem; }
+  .m-r-item{ display:flex; justify-content:space-between; gap:0.7rem; align-items:baseline; }
+  .m-r-item + .m-r-item{ border-top:1px solid var(--rule); padding-top:0.6rem; }
+  .m-r-label{ font-family:var(--font-body); font-size:0.7rem; letter-spacing:0.02em; text-transform:uppercase; color:var(--ink-soft); }
+  .m-r-value{ font-family:var(--font-body); font-size:0.85rem; font-weight:700; font-variant-numeric:tabular-nums; text-align:right; }
+  .m-r-qual{ font-weight:400; font-size:0.72rem; color:var(--ink-soft); }
+  .m-r-vals{ display:flex; flex-direction:column; align-items:flex-end; gap:0.05rem; }
+  .m-r-runner{ font-family:var(--font-body); font-size:0.65rem; color:var(--ink-soft); text-align:right; }
+  .m-r-lead{ background:var(--tint); padding:0.26rem 0.35rem; margin:0 -0.35rem; }
+  .m-r-lead .m-r-value{ color:var(--accent); font-weight:700; }
+
+  /* ============== C — slim results strip, small-caps label, no box ==============
+     Revised (2026-09-12) after feedback that the thick idx-lead rule
+     immediately followed by another rule read as clutter, and that the
+     per-item dividers plus the strip's own top/bottom rule added up to too
+     many stacked horizontal lines before "Also in this edition". Fix: a
+     small-caps "At a glance" label takes over the job the top rule was
+     doing (announcing a new block, no line needed), the bottom rule is
+     dropped in favour of margin so the section ends on whitespace rather
+     than another stroke, and item separation comes from padding, not
+     per-row dividers. */
+  .m-strip{ margin:1.35rem 0 1.5rem; }
+  /* Above the lead (variant E) sits right under the masthead rule rather
+     than under idx-lead's thick 3px border, so it wants A's tighter
+     top gap, not the extra room the "after headline" placement needed. */
+  .m-strip--above{ margin-top:0.95rem; margin-bottom:0; }
+  .m-strip-h{ font-family:var(--font-mono); font-size:0.6rem; font-weight:700; letter-spacing:0.16em;
+    text-transform:uppercase; color:var(--ink-soft); padding:0 var(--pad) 0.55rem; }
+  .m-strip-list{ display:flex; flex-direction:column; gap:0.65rem; padding:0 var(--pad); }
+  .m-strip-item{ display:flex; justify-content:space-between; align-items:baseline; gap:0.6rem; }
+  .m-strip-label{ font-family:var(--font-mono); font-size:0.62rem; font-weight:700; letter-spacing:0.09em; text-transform:uppercase; color:var(--ink-soft); flex:none; }
+  .m-strip-vals{ display:flex; flex-direction:column; align-items:flex-end; gap:0.1rem; }
+  .m-strip-value{ font-family:var(--font-body); font-size:0.84rem; text-align:right; color:var(--ink); }
+  .m-strip-value strong{ font-weight:700; }
+  .m-strip-value .sv-qual{ color:var(--ink-soft); font-size:0.78rem; }
+  .m-strip-runner{ display:block; font-family:var(--font-body); font-size:0.72rem; color:var(--ink-soft); text-align:right; }
+
+  /* ============== D — boxed, but minimal: border only, no dividers ==============
+     Requested as a middle ground between A's heavy reversed title bar +
+     internal rules and C's ruleless strip: keep a single border so the
+     block reads as one contained unit at a glance, drop every internal
+     hairline, and use the same small-caps plain-text label as C rather
+     than a dark reversed bar. */
+  .m-box{ border:1px solid var(--rule); margin:1.35rem var(--pad) 1.5rem; padding:0.9rem 0.9rem 1rem; }
+  .m-box .m-strip-h{ padding:0 0 0.6rem; }
+  .m-box .m-strip-list{ padding:0; gap:0.85rem; }
+
+  /* ============== lead + sub list, shared across variants ============== */
+  .idx-lead{ display:block; width:100%; text-align:left; background:none; border:none;
+    padding:1.1rem var(--pad) 1.2rem; cursor:pointer; border-bottom:3px solid var(--ink); }
+  .idx-lead .m-hl{ font-size:1.72rem; margin-top:0.3rem; }
+  .idx-lead .m-sf{ font-size:0.94rem; margin-top:0.5rem; }
+  .idx-lead .lead-cta{ display:flex; justify-content:space-between; align-items:baseline; gap:0.6rem; margin-top:0.7rem; }
+  .idx-list{ margin-top:0; border-top:none; }
+  .idx-h{ font-family:var(--font-mono); font-size:0.6rem; font-weight:700; letter-spacing:0.16em;
+    text-transform:uppercase; color:var(--ink-soft); padding:0.6rem var(--pad) 0.2rem; }
+  .idx-item{ display:block; width:100%; text-align:left; background:none; border:none;
+    border-top:1px solid var(--rule); padding:0.85rem var(--pad); cursor:pointer; }
+  .idx-item:first-of-type{ border-top:none; }
+  .idx-item .m-hl{ font-size:1.14rem; margin-top:0.25rem; }
+  .idx-item .idx-foot{ display:flex; justify-content:space-between; align-items:baseline; gap:0.6rem; margin-top:0.45rem; }
+  .chev{ font-family:var(--font-mono); font-size:0.72rem; font-weight:600; letter-spacing:0.04em; color:var(--accent); }
+
+  .m-apx-btn{ display:flex; width:100%; text-align:left; background:none; border:none; cursor:pointer;
+    padding:0.85rem var(--pad); justify-content:space-between; align-items:center; gap:0.6rem; border-top:3px solid var(--ink); }
+  .m-apx-h{ font-family:var(--font-mono); font-size:0.63rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent); }
+  .acc-sign{ font-family:var(--font-mono); font-size:0.8rem; font-weight:700; color:var(--accent); }
+
+  /* ============== bottom tab bar mock ============== */
+  .tabbar-spacer{ height:70px; }
+  .tabbar{ position:absolute; left:0; right:0; bottom:0; display:grid; grid-template-columns:repeat(5,1fr);
+    background:#fff; border-top:1px solid #e0e0e0; padding:6px 2px 8px; box-shadow:0 -1px 6px rgba(0,0,0,0.06); }
+  .tab{ display:flex; flex-direction:column; align-items:center; gap:2px; padding:4px 0; font-size:9px; font-weight:600; color:#999; }
+  .tab.active{ color:forestgreen; }
+  .tab .ic{ font-size:18px; }
+</style>
+</head>
+<body>
+
+<div class="lab-head">
+  <h1>Front page (index screen) — three orderings</h1>
+  <p>Same TEG 17 content, three ways to sequence masthead / results / lead story / sub-list.
+  A is today's order (results before the story). B just reorders. C reorders AND replaces the
+  boxed results panel with a slimmer ruled strip, closer to how little visual weight FT gives a
+  secondary summary block.</p>
+</div>
+
+<div class="lab-controls">
+  <div class="lab-group">
+    <span>Order</span>
+    <button class="lab-btn active" data-set="variant" data-val="c">C · Shipped: slim strip, after headline</button>
+    <button class="lab-btn" data-set="variant" data-val="e">E · Slim strip, above headline</button>
+    <button class="lab-btn" data-set="variant" data-val="d">D · Boxed, minimal</button>
+    <button class="lab-btn" data-set="variant" data-val="a">A · Current (reference)</button>
+    <button class="lab-btn" data-set="variant" data-val="b">B · Headline first, boxed</button>
+  </div>
+  <div class="lab-group">
+    <span>Runner-up</span>
+    <button class="lab-btn" data-set="runner" data-val="true">Shown</button>
+    <button class="lab-btn active" data-set="runner" data-val="false">Hidden</button>
+  </div>
+</div>
+
+<div class="lab-note">
+  <strong>C — shipped (2026-09-12).</strong> Masthead, lead headline + standfirst, then the slim
+  "At a glance" strip (small-caps label, no rules, no dividers), runner-up hidden. Briefly tried
+  above the headline (E) but Jon preferred it back below, after the story — this is what's live
+  in <code>newspaper_preview.css</code>/<code>.js</code> now.<br>
+  <strong>E</strong>, <strong>D</strong>, <strong>A</strong>, <strong>B</strong> — kept for reference only, not shipped.
+</div>
+
+<div class="phones" id="phones"></div>
+
+<script>
+const RESULTS = [
+  { label: "Trophy Winner", name: "Jon Baker", qual: "166 pts, by 18", runner: "Runner-up: David Mullin", lead: true },
+  { label: "Green Jacket", name: "Jon Baker", qual: "+67, by 13", runner: "Runner-up: David Mullin", lead: false },
+  { label: "Wooden Spoon", name: "Gregg Williams", qual: "123 pts", runner: "Next above: John Patterson", lead: false },
+];
+
+const LEAD = {
+  kicker: "TROPHY",
+  headline: "Fourth Place, No More",
+  standfirst: "After three straight TEGs stuck in fourth, Jon Baker builds an 18-point Trophy win the hard way — round after round, never worse than second.",
+  words: 333,
+};
+
+const SUBS = [
+  { kicker: "JOHN PATTERSON", headline: "Leader, Loser, Fighter, Fallen", words: 257 },
+  { kicker: "ALEX BAKER", headline: "The Baker Who Couldn't Stop Bleeding Shots", words: 283 },
+  { kicker: "WOODEN SPOON · GREGG WILLIAMS", headline: "From the Podium to the Cellar", words: 257 },
+  { kicker: "DAVID MULLIN · JOHN PATTERSON", headline: "West Cliffs Breaks Both Ways", words: 229 },
+];
+
+function readTime(words) { return Math.max(1, Math.ceil(words / 200)) + " min read"; }
+
+function masthead() {
+  return `<header class="m-masthead"><div class="m-mh-row">
+    <span class="m-wordmark">TEG 17</span>
+    <span class="m-dateline">Lisbon Coast, Portugal &middot; 2024</span>
+  </div><div class="m-mh-rule"></div></header>`;
+}
+
+function resultsBox() {
+  const items = RESULTS.map(r => `<li class="m-r-item${r.lead ? ' m-r-lead' : ''}">
+    <span class="m-r-label">${r.label}</span>
+    <span class="m-r-vals"><span class="m-r-value">${r.name} <span class="m-r-qual">${r.qual}</span></span>
+    <span class="m-r-runner">${r.runner}</span></span></li>`).join('');
+  return `<div class="m-r5"><p class="m-r5-title">At a glance</p><ul class="m-r-list">${items}</ul></div>`;
+}
+
+function strippedItems(showRunner) {
+  return RESULTS.map(r => `<div class="m-strip-item">
+    <span class="m-strip-label">${r.label}</span>
+    <span class="m-strip-vals"><span class="m-strip-value"><strong>${r.name}</strong> <span class="sv-qual">${r.qual}</span></span>
+    ${showRunner ? `<span class="m-strip-runner">${r.runner}</span>` : ''}</span>
+  </div>`).join('');
+}
+
+function resultsStrip(showRunner, modifier) {
+  return `<div class="m-strip${modifier ? ' ' + modifier : ''}"><p class="m-strip-h">At a glance</p>
+    <div class="m-strip-list">${strippedItems(showRunner)}</div></div>`;
+}
+
+function resultsBoxed(showRunner) {
+  return `<div class="m-box"><p class="m-strip-h">At a glance</p>
+    <div class="m-strip-list">${strippedItems(showRunner)}</div></div>`;
+}
+
+function leadBlock() {
+  return `<button type="button" class="idx-lead">
+    <p class="kicker">${LEAD.kicker}</p>
+    <h1 class="m-hl">${LEAD.headline}</h1>
+    <p class="m-sf">${LEAD.standfirst}</p>
+    <span class="lead-cta"><span class="m-meta">${readTime(LEAD.words)}</span>
+    <span class="chev" aria-hidden="true">Read the report &rarr;</span></span>
+  </button>`;
+}
+
+function subList() {
+  const items = SUBS.map(a => `<button type="button" class="idx-item">
+    <p class="kicker">${a.kicker}</p>
+    <h2 class="m-hl">${a.headline}</h2>
+    <span class="idx-foot"><span class="m-meta">${readTime(a.words)}</span>
+    <span class="chev" aria-hidden="true">Read &rarr;</span></span>
+  </button>`).join('');
+  return `<nav class="idx-list" aria-label="In this edition">
+    <p class="idx-h">Also in this edition</p>${items}
+  </nav>`;
+}
+
+function accordionStub() {
+  return `<section class="m-apx"><button type="button" class="m-apx-btn">
+    <span class="m-apx-h">Records &amp; Personal Bests</span>
+    <span class="acc-sign">+</span></button></section>`;
+}
+
+function frontpageHtml(variant, showRunner) {
+  let body;
+  if (variant === 'a') {
+    body = masthead() + resultsBox() + leadBlock() + subList() + accordionStub();
+  } else if (variant === 'b') {
+    body = masthead() + leadBlock() + resultsBox() + subList() + accordionStub();
+  } else if (variant === 'c') {
+    body = masthead() + leadBlock() + resultsStrip(showRunner) + subList() + accordionStub();
+  } else if (variant === 'd') {
+    body = masthead() + leadBlock() + resultsBoxed(showRunner) + subList() + accordionStub();
+  } else {
+    // E — the chosen combination (2026-09-12): C's slim, ruleless strip
+    // style, runner-up hidden, but moved back above the lead headline —
+    // Jon preferred the reorder from A/B reverted once the strip itself
+    // stopped competing visually with the headline.
+    body = masthead() + resultsStrip(showRunner, 'm-strip--above') + leadBlock() + subList() + accordionStub();
+  }
+  return `<div class="np-page np-mobile" data-variant="${variant}">
+    ${body}
+    <div class="tabbar-spacer"></div>
+  </div>`;
+}
+
+const TABBAR = `<div class="tabbar">
+  <div class="tab active"><span class="ic">☰</span>History</div>
+  <div class="tab"><span class="ic">▤</span>Latest</div>
+  <div class="tab"><span class="ic">🏅</span>Records</div>
+  <div class="tab"><span class="ic">⛳</span>Scoring</div>
+  <div class="tab"><span class="ic">◎</span>Cards</div>
+</div>`;
+
+function phoneHtml(variant, showRunner) {
+  return `<div class="phone" data-phone-variant="${variant}">
+    <div class="phone-notch"><span>9:41</span><span>${variant.toUpperCase()}</span></div>
+    <div class="phone-body">
+      <div class="phone-scroll">
+        <div class="site-nav"><span class="brand">The El Golfo</span><span class="burger">&#9776;</span></div>
+        <div class="site-controls">
+          <span class="site-pill active">Tournament</span>
+          <span class="site-pill">R1</span><span class="site-pill">R2</span>
+          <span class="site-pill">R3</span><span class="site-pill">R4</span>
+        </div>
+        ${frontpageHtml(variant, showRunner)}
+      </div>
+      ${TABBAR}
+    </div>
+  </div>`;
+}
+
+const state = { variant: 'c', runner: false };
+
+function render() {
+  const phones = document.getElementById('phones');
+  const variants = state.variant === 'all' ? ['e','c','d'] : [state.variant];
+  phones.innerHTML = variants.map(v => phoneHtml(v, state.runner)).join('');
+}
+
+document.querySelectorAll('.lab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const set = btn.getAttribute('data-set');
+    const raw = btn.getAttribute('data-val');
+    state[set] = set === 'runner' ? raw === 'true' : raw;
+    document.querySelectorAll(`.lab-btn[data-set="${set}"]`).forEach(b => b.classList.toggle('active', b === btn));
+    render();
+  });
+});
+
+render();
+</script>
+</body>
+</html>

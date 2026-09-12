@@ -154,5 +154,8 @@
 }
 
 @media (max-width: 900px) {
-    .teg-report { column-count: 1; padding: 1rem; }
+    /* Justify reads fine at the 800px desktop measure this stylesheet was
+       built for, but at phone width it stretches word-spacing into visible
+       rivers — left-align instead once the column narrows this much. */
+    .teg-report { column-count: 1; padding: 1rem; text-align: left; }
 }

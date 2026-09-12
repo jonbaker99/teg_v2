@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Article header variants — /teg-reports mobile</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600;700&family=Libre+Franklin:wght@400;500;600;700&display=swap">
+<style>
+  /* ============== chrome around the prototype (not part of the design) ============== */
+  :root{ --lab-bg:#e9e9e4; --lab-ink:#333; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--lab-bg); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; color:var(--lab-ink); }
+  .lab-head{ max-width:1100px; margin:0 auto; padding:1.5rem 1.25rem 0.5rem; }
+  .lab-head h1{ font-size:1.15rem; margin:0 0 0.3rem; }
+  .lab-head p{ font-size:0.85rem; color:#666; margin:0 0 1rem; max-width:70ch; line-height:1.5; }
+  .lab-controls{ max-width:1100px; margin:0 auto; padding:0 1.25rem 1.5rem; display:flex; flex-wrap:wrap; gap:0.6rem; align-items:center; }
+  .lab-group{ display:flex; gap:0.4rem; align-items:center; background:#fff; border:1px solid #ddd; border-radius:8px; padding:0.35rem; }
+  .lab-group span{ font-size:0.7rem; text-transform:uppercase; letter-spacing:0.06em; color:#888; padding:0 0.5rem; }
+  .lab-btn{ font-size:0.78rem; font-weight:600; padding:0.45rem 0.8rem; border-radius:6px; border:1px solid transparent; background:none; cursor:pointer; color:#444; }
+  .lab-btn.active{ background:#211D17; color:#F6F3EA; }
+  .lab-note{ max-width:1100px; margin:0 auto 1.5rem; padding:0 1.25rem; font-size:0.8rem; color:#777; }
+  .lab-note code{ background:#fff; border:1px solid #ddd; border-radius:4px; padding:0.05rem 0.35rem; }
+  .phones{ max-width:1100px; margin:0 auto; padding:0 1.25rem 3rem; display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; }
+  .phone{ width:390px; max-width:100%; border:1px solid #ccc; border-radius:20px; overflow:hidden; background:#fff; box-shadow:0 4px 18px rgba(0,0,0,0.08); }
+  .phone-notch{ height:34px; background:#fff; display:flex; align-items:center; justify-content:space-between; padding:0 1rem; font-size:0.7rem; font-weight:600; color:#333; border-bottom:1px solid #eee; }
+  .phone-body{ height:700px; position:relative; background:#fff; overflow:hidden; }
+  .phone-scroll{ height:100%; overflow-y:auto; }
+
+  /* ============== real site chrome, copied to match base.html/mobile.css ============== */
+  .site-nav{ display:flex; align-items:center; justify-content:space-between; padding:0.85rem 0.9rem; border-bottom:1px solid #e5e2d8; }
+  .site-nav .brand{ font-family:'Source Serif 4',Georgia,serif; font-weight:700; font-size:1.1rem; color:#211D17; }
+  .site-nav .burger{ font-size:1.1rem; color:#333; }
+
+  /* ============== .np-page scope, copied from newspaper_preview.css ============== */
+  .np-page{
+    --paper:#F6F3EA; --ink:#211D17; --ink-soft:#66604F; --ink-contrast:#63615C; --accent:#7A2420;
+    --rule:#C9C2AC; --tint:#EDE8D9;
+    --font-display:'Fraunces',Georgia,serif; --font-body:'Source Serif 4',Georgia,serif;
+    --font-mono:'IBM Plex Mono','Courier New',monospace; --font-contrast:'Libre Franklin',Arial,sans-serif;
+    color:var(--ink); font-family:var(--font-body); background:#fff;
+  }
+  .np-page *{ box-sizing:border-box; }
+  .np-page :where(h1,h2,p){ margin:0; padding:0; }
+
+  /* WIDTH FIX toggle — data-gutter="buggy" restores the confirmed real bug
+     (.main-content's Tailwind px-6 surviving under the report's own 700px
+     breakpoint because mobile.css only zeroes it at 640px) so you can see
+     exactly what it looked like in your screenshot, side by side with the
+     fix (data-gutter="fixed", the default and the recommended state). */
+  [data-gutter="buggy"] .np-mobile{ padding-inline:24px; }
+  [data-gutter="fixed"] .np-mobile{ padding-inline:0; }
+
+  .np-mobile{ --pad:0.9rem; }
+
+  .kicker{ font-family:var(--font-mono); font-weight:700; font-size:0.63rem; letter-spacing:0.13em; text-transform:uppercase; color:var(--accent); }
+  .m-hl{ font-family:var(--font-display); font-weight:700; line-height:1.09; color:var(--ink); font-size:1.55rem; margin-top:0.3rem; }
+  .m-sf{ font-family:var(--font-contrast); font-weight:500; color:var(--ink-contrast); font-size:0.92rem; margin-top:0.5rem; line-height:1.4; }
+  .m-body{ margin-top:1rem; }
+  .m-body p{ font-family:var(--font-body); font-size:1rem; line-height:1.6; color:var(--ink); }
+  .m-body p + p{ margin-top:0.8em; }
+  .article{ padding:1.15rem var(--pad) 1.6rem; }
+
+  /* ============== VARIANT A — current production topbar ============== */
+  .topbar-a{
+    display:flex; align-items:center; gap:0.55rem; padding:0.7rem var(--pad); background:var(--paper);
+    border-bottom:1px solid var(--ink);
+  }
+  .topbar-a button{ background:none; border:none; cursor:pointer; display:flex; align-items:center; gap:0.4rem;
+    font-family:var(--font-mono); font-size:0.66rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--accent); padding:0; min-height:44px; }
+  .topbar-a .tb-title{ margin-left:auto; font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.09em;
+    text-transform:uppercase; color:var(--ink-soft); }
+
+  /* ============== VARIANT B — icon-only, edge to edge, no card ============== */
+  .topbar-b{ display:flex; align-items:center; padding:0.35rem 0.25rem; background:transparent; }
+  .topbar-b button{ background:none; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    width:44px; height:44px; color:var(--ink); margin-inline-start:-0.4rem; }
+  .topbar-b svg{ width:22px; height:22px; }
+  .topbar-b .kicker-line{ padding:0 var(--pad) 0; }
+  .topbar-b .kicker-line .kicker{ font-size:0.63rem; }
+
+  /* ============== VARIANT C — minimal text, no card, hairline only ============== */
+  /* "Report front page" (2026-09-12, Jon: chosen header style) — spelled out
+     in full because the phone's normal Back gesture already exists; this
+     control's job is specifically distinguishing "back to this report's
+     index" from the site's own Home, so it earns a plain-English label
+     rather than an icon or a bare "Back". */
+  .topbar-c{ display:flex; align-items:center; padding:0.6rem var(--pad) 0.55rem; border-bottom:1px solid var(--rule); }
+  .topbar-c button{ background:none; border:none; cursor:pointer; padding:0; min-height:44px; display:flex; align-items:center; gap:0.35rem;
+    font-family:var(--font-body); font-size:0.86rem; font-weight:500; color:var(--ink); }
+  .topbar-c button svg{ width:16px; height:16px; flex:none; }
+  .topbar-c .tb-title-c{ margin-left:auto; font-family:var(--font-contrast); font-size:0.72rem; color:var(--ink-soft); }
+
+  /* ============== artnav — clean minimalist links, no boxes/grid ==============
+     Replaces the earlier boxed 2-up + third row (2026-09-12, Jon: "the 'next
+     story' styling ... is awful ... clean, professional, minimalist links,
+     in keeping with the rest"). Each entry is one line: a small caps
+     direction label inline before the headline, truncated with an ellipsis
+     rather than wrapping to a second line, separated by hairlines only —
+     no backgrounds, no vertical dividers, no button chrome beyond the tap
+     target. "Report front page" sits last and reads quieter (ink-soft, not
+     accent) since it's a return action, not a "read more" one. */
+  .artnav{ border-top:1px solid var(--rule); margin-top:1.6rem; }
+  .an-line{ display:flex; align-items:baseline; gap:0.5rem; width:100%; background:none; border:none;
+    border-top:1px solid var(--rule); padding:0.8rem var(--pad); text-align:left; cursor:pointer;
+    min-height:44px; font-family:var(--font-body); }
+  .an-line:first-child{ border-top:none; }
+  .an-dir{ flex:none; font-family:var(--font-mono); font-size:0.6rem; font-weight:700; letter-spacing:0.1em;
+    text-transform:uppercase; color:var(--ink-soft); }
+  .an-hl{ flex:1; min-width:0; font-size:0.92rem; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .an-front{ color:var(--ink-soft); font-size:0.82rem; }
+  .an-front .an-dir{ color:var(--ink-soft); }
+
+  /* ============== bottom tab bar mock, matches mobile.css .mobile-tabbar ============== */
+  .tabbar{ position:absolute; left:0; right:0; bottom:0; display:grid; grid-template-columns:repeat(5,1fr);
+    background:#fff; border-top:1px solid #e0e0e0; padding:6px 2px 8px; box-shadow:0 -1px 6px rgba(0,0,0,0.06); }
+  .tab{ display:flex; flex-direction:column; align-items:center; gap:2px; padding:4px 0; font-size:9px; font-weight:600; color:#999; }
+  .tab.active{ color:forestgreen; }
+  .tab .ic{ font-size:18px; }
+  .tabbar-spacer{ height:70px; }
+</style>
+</head>
+<body>
+
+<div class="lab-head">
+  <h1>Article header — three treatments, same content</h1>
+  <p>Comparing the current boxed topbar against two FT-influenced alternatives, plus the width-gutter
+  bug your screenshot showed (Tailwind's <code>px-6</code> surviving under the report's own 700px
+  breakpoint). Content is TEG 17's real lead article. Scroll each phone independently.</p>
+</div>
+
+<div class="lab-controls">
+  <div class="lab-group">
+    <span>Header</span>
+    <button class="lab-btn active" data-set="variant" data-val="a">A · Current</button>
+    <button class="lab-btn" data-set="variant" data-val="b">B · Icon-only</button>
+    <button class="lab-btn" data-set="variant" data-val="c">C · Minimal text</button>
+    <button class="lab-btn" data-set="variant" data-val="all">Show all three</button>
+  </div>
+  <div class="lab-group">
+    <span>Gutter</span>
+    <button class="lab-btn active" data-set="gutter" data-val="fixed">Fixed (0)</button>
+    <button class="lab-btn" data-set="gutter" data-val="buggy">Buggy (24px, as on your phone)</button>
+  </div>
+</div>
+
+<div class="lab-note">
+  <strong>A</strong> — text link "← Front page" + right-aligned mono edition label, boxed in a cream
+  card with a full-weight black rule. This is what's live today.<br>
+  <strong>B</strong> — icon-only chevron (44×44 tap target), no background or border; edition context
+  folds into the kicker (<code>TEG 17 · TROPHY</code>); the explicit "front page" text link moves to a
+  third row under the prev/next footer nav.<br>
+  <strong>C</strong> — a middle ground: small plain-text "‹ Back", no box, a hairline rule only, kicker
+  unchanged. Also gets the footer front-page row.
+</div>
+
+<div class="phones" id="phones"></div>
+
+<script>
+const ARTICLE = {
+  kicker: "TROPHY",
+  headline: "Fourth Place, No More",
+  standfirst: "After three straight TEGs stuck in fourth, Jon Baker builds an 18-point Trophy win the hard way — round after round, never worse than second.",
+  paragraphs: [
+    "Jon Baker won the TEG 17 Trophy with 166 Stableford points, 18 clear of runner-up David Mullin. It is the highest Trophy total of his career. Three years of fourth place had begun to look less like a run of results and more like a permanent seating arrangement. He has now vacated the chair.",
+    "The shape of the win was steady rather than sudden. After two rounds Baker sat on top of the Stableford table, though only level at the front, with Mullin leading the TEG 17 Green Jacket on gross. Baker's second round at West Cliffs was an 86, fifteen strokes better than the 101 he had posted on his only previous visit to the Cynthia Dye links.",
+    "Round three at Royal Óbidos settled it. Baker went round Seve Ballesteros's parkland course in 86 gross, a new course record. The previous best was 87, set across 18 prior visits by the group."
+  ],
+  edition: "TEG 17",
+  next: { kicker: "JOHN PATTERSON", headline: "Leader, Loser, Fighter, Fallen" }
+};
+
+const CHEVRON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>';
+
+function articleHtml(variant) {
+  const bodyHtml = ARTICLE.paragraphs.map(p => `<p>${p}</p>`).join('');
+  let topbar;
+  if (variant === 'a') {
+    topbar = `<div class="topbar-a">
+      <button type="button">← Front page</button>
+      <span class="tb-title">${ARTICLE.edition}</span>
+    </div>`;
+  } else if (variant === 'b') {
+    topbar = `<div class="topbar-b">
+      <button type="button" aria-label="Front page">${CHEVRON}</button>
+    </div>
+    <div class="kicker-line"><p class="kicker">${ARTICLE.edition} &middot; ${ARTICLE.kicker}</p></div>`;
+  } else {
+    topbar = `<div class="topbar-c">
+      <button type="button">${CHEVRON}Report front page</button>
+      <span class="tb-title-c">${ARTICLE.edition}</span>
+    </div>
+    <div class="kicker-line" style="padding:0.9rem var(--pad) 0;"><p class="kicker">${ARTICLE.kicker}</p></div>`;
+  }
+  // Previous is omitted entirely on the lead article (index 0) rather than
+  // shown disabled — a clean minimalist link list has no ghost rows.
+  const navLines = [
+    `<button type="button" class="an-line"><span class="an-dir">Next</span><span class="an-hl">${ARTICLE.next.headline}</span></button>`,
+    `<button type="button" class="an-line an-front"><span class="an-dir">&larr;</span><span class="an-hl">Report front page</span></button>`,
+  ].join('');
+  return `<div class="np-page np-mobile" data-variant="${variant}">
+    ${topbar}
+    <article class="article" style="padding-top:${variant==='a' ? '1.15rem' : '0.5rem'};">
+      <h1 class="m-hl">${ARTICLE.headline}</h1>
+      <p class="m-sf">${ARTICLE.standfirst}</p>
+      <div class="m-body">${bodyHtml}</div>
+    </article>
+    <nav class="artnav">${navLines}</nav>
+    <div class="tabbar-spacer"></div>
+  </div>`;
+}
+
+const TABBAR = `<div class="tabbar">
+  <div class="tab active"><span class="ic">☰</span>History</div>
+  <div class="tab"><span class="ic">▤</span>Latest</div>
+  <div class="tab"><span class="ic">🏅</span>Records</div>
+  <div class="tab"><span class="ic">⛳</span>Scoring</div>
+  <div class="tab"><span class="ic">◎</span>Cards</div>
+</div>`;
+
+function phoneHtml(variant, gutter) {
+  return `<div class="phone" data-phone-variant="${variant}">
+    <div class="phone-notch"><span>9:41</span><span>${variant.toUpperCase()}</span></div>
+    <div class="phone-body">
+      <div class="phone-scroll" data-gutter="${gutter}">
+        <div class="site-nav"><span class="brand">The El Golfo</span><span class="burger">&#9776;</span></div>
+        ${articleHtml(variant)}
+      </div>
+      ${TABBAR}
+    </div>
+  </div>`;
+}
+
+const state = { variant: 'a', gutter: 'fixed' };
+
+function render() {
+  const phones = document.getElementById('phones');
+  const variants = state.variant === 'all' ? ['a','b','c'] : [state.variant];
+  phones.innerHTML = variants.map(v => phoneHtml(v, state.gutter)).join('');
+}
+
+document.querySelectorAll('.lab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const set = btn.getAttribute('data-set');
+    const val = btn.getAttribute('data-val');
+    state[set] = val;
+    document.querySelectorAll(`.lab-btn[data-set="${set}"]`).forEach(b => b.classList.toggle('active', b === btn));
+    render();
+  });
+});
+
+render();
+</script>
+</body>
+</html>

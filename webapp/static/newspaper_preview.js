@@ -55,16 +55,18 @@
       "</div><div class=\"m-mh-rule\"></div></header>";
   }
   function resultsHtml() {
+    // Slim strip, no runner-up (2026-09-12) — see newspaper_preview.css's
+    // .m-strip comment for why. r.runner_up still arrives in the edition
+    // data; this simply doesn't render it.
     var items = edition.results.map(function (r) {
-      var qual = r.value_qual ? ' <span class="m-r-qual">' + esc(r.value_qual) + "</span>" : "";
-      return '<li class="m-r-item' + (r.lead ? " m-r-lead" : "") + '">' +
-        '<span class="m-r-label">' + esc(r.label) + "</span>" +
-        '<span class="m-r-vals"><span class="m-r-value">' + esc(r.value_name) + qual + "</span>" +
-        (r.runner_up ? '<span class="m-r-runner">' + esc(r.runner_up) + "</span>" : "") +
-        "</span></li>";
+      var qual = r.value_qual ? ' <span class="m-strip-qual">' + esc(r.value_qual) + "</span>" : "";
+      return '<div class="m-strip-item">' +
+        '<span class="m-strip-label">' + esc(r.label) + "</span>" +
+        '<span class="m-strip-value"><strong>' + esc(r.value_name) + "</strong>" + qual + "</span>" +
+        "</div>";
     }).join("");
-    return '<div class="m-r5"><p class="m-r5-title">At a glance</p>' +
-      '<ul class="m-r-list">' + items + "</ul></div>";
+    return '<div class="m-strip"><p class="m-strip-h">At a glance</p>' +
+      '<div class="m-strip-list">' + items + "</div></div>";
   }
   function appendixHtml(open) {
     // Standings tables dropped 2026-09-11: they duplicate the round-by-round
@@ -99,7 +101,7 @@
     }).join("");
 
     return '<div class="scroller" id="scroller">' +
-      mastheadHtml() + resultsHtml() +
+      mastheadHtml() +
       '<button type="button" class="idx-lead" data-open="0">' +
         '<p class="kicker">' + esc(lead.descriptor || lead.kicker) + "</p>" +
         '<h1 class="m-hl">' + esc(lead.headline) + "</h1>" +
@@ -107,6 +109,7 @@
         '<span class="lead-cta"><span class="m-meta">' + readTime(lead.words) + "</span>" +
         '<span class="chev" aria-hidden="true">Read the report &rarr;</span></span>' +
       "</button>" +
+      resultsHtml() +
       '<nav class="idx-list" aria-label="In this edition">' +
         '<p class="idx-h">Also in this edition</p>' + items +
       "</nav>" +
@@ -114,24 +117,31 @@
     "</div>";
   }
 
+  var CHEVRON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+    'stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>';
+
   function renderArticle(i) {
     var a = all[i], prev = all[i - 1], next = all[i + 1];
-    function navBtn(art, j, label) {
-      if (!art) return '<button type="button" disabled><span class="an-lab">' + label + "</span></button>";
-      return '<button type="button" data-open="' + j + '"><span class="an-lab">' + label + "</span>" +
-        '<span class="an-hl">' + esc(art.headline) + "</span></button>";
+    // Previous/Next omitted entirely when absent rather than shown disabled
+    // (2026-09-12) — a clean minimalist link list has no ghost rows.
+    function navLine(art, j, label) {
+      if (!art) return "";
+      return '<button type="button" class="an-line" data-open="' + j + '">' +
+        '<span class="an-dir">' + label + '</span><span class="an-hl">' + esc(art.headline) + "</span></button>";
     }
+    var frontLine = '<button type="button" class="an-line an-front" data-index="1">' +
+      '<span class="an-dir">&larr;</span><span class="an-hl">Report front page</span></button>';
     return '<div class="scroller" id="scroller">' +
-      '<div class="topbar"><button type="button" data-index="1">&larr; Front page</button>' +
+      '<div class="topbar"><button type="button" data-index="1">' + CHEVRON + "Report front page</button>" +
         '<span class="tb-title">' + editionTitle() + "</span></div>" +
+      '<div class="kicker-line"><p class="kicker">' + esc(a.descriptor || a.kicker) + "</p></div>" +
       '<article class="article">' +
-        '<p class="kicker">' + esc(a.descriptor || a.kicker) + "</p>" +
         '<h1 class="m-hl" id="screen-title" tabindex="-1">' + esc(a.headline) + "</h1>" +
         (a.standfirst ? '<p class="m-sf">' + esc(a.standfirst) + "</p>" : "") +
         '<div class="m-body">' + paragraphsHtml(a.paragraphs) + "</div>" +
       "</article>" +
       '<nav class="artnav" aria-label="Other articles">' +
-        navBtn(prev, i - 1, "Previous") + navBtn(next, i + 1, "Next") + "</nav>" +
+        navLine(prev, i - 1, "Previous") + navLine(next, i + 1, "Next") + frontLine + "</nav>" +
     "</div>";
   }
 
@@ -206,6 +216,7 @@
 
   function render() {
     mount.innerHTML = state.view === null ? renderIndex() : renderArticle(state.view);
+    document.body.classList.toggle("np-reading", state.view !== null);
     bindScreen();
     restoreScroll();
   }
