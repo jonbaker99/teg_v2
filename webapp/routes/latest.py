@@ -5,17 +5,16 @@ from pathlib import Path
 from typing import Optional
 
 import pandas as pd
-import markdown as md_lib
 from fastapi import APIRouter, Request, Query
 from fastapi.templating import Jinja2Templates
 
-from github import GithubException
-
-from teg_analysis.reporting.newspaper_edition import available_rounds as _report_available_rounds
+from teg_analysis.reporting.newspaper_edition import (
+    available_rounds as _report_available_rounds,
+    available_tegs as _report_available_tegs,
+)
 
 from teg_analysis.constants import HANDICAPS_CSV
 from teg_analysis.core.players import get_name_to_code
-from teg_analysis.io import read_text_file
 from teg_analysis.io.file_operations import read_file
 from teg_analysis.analysis.aggregation import (
     get_round_data,
@@ -85,8 +84,6 @@ def _df_to_html(df: pd.DataFrame, table_class: str = "teg-table") -> str:
     )
 
 
-_COMMENTARY_DIR = "data/commentary"
-_MD_EXTS = ["extra", "sane_lists", "smarty"]
 
 
 def _round_context_header(teg_num: int, round_num: int) -> str:
@@ -108,17 +105,6 @@ def _teg_context_header(teg_num: int) -> str:
         return " | ".join(p for p in [area, year_str] if p)
     except Exception:
         return ""
-
-
-def _render_report(candidates: list[str]) -> str | None:
-    """Render the first existing markdown file (relative to data/commentary) to HTML."""
-    for name in candidates:
-        try:
-            text = read_text_file(f"{_COMMENTARY_DIR}/{name}")
-        except (FileNotFoundError, GithubException):
-            continue
-        return md_lib.markdown(text, extensions=_MD_EXTS)
-    return None
 
 
 def _fmt_record_value(value, metric: str) -> str:
@@ -506,7 +492,6 @@ LATEST_TEG_TABS = [
     ("eclectic", "Eclectic"),
     ("streaks", "Streaks"),
     ("records", "Records & PBs"),
-    ("report", "Report"),
 ]
 
 
@@ -620,21 +605,6 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
                 logger.exception("_latest_teg_tab_context failed")
                 sections.append({"title": "Eclectic", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
-        elif tab == "report":
-            html = _render_report([
-                f"teg_{teg_num}_report_styled.md",
-                f"teg_{teg_num}_main_report.md",
-            ])
-            teg_num_int = int(teg_num)
-            caption = None
-            if teg_num_int < 8:
-                caption = ("NB: Before TEG 8 the TEG Trophy was decided by best net score "
-                           "(total net vs par), not Stableford points.")
-            if html:
-                return {"report_html": html, "report_caption": caption}
-            return {"report_html": None,
-                    "report_message": f"No report available for TEG {teg_num}."}
-
         elif tab == "streaks":
             try:
                 all_data = cached_load_all_data()
@@ -694,6 +664,9 @@ def latest_teg_page(request: Request):
         "tabs": LATEST_TEG_TABS,
         "active_tab": "aggregate",
         "context_header": _teg_context_header(teg_num),
+        # Drives the Report tab (a real link to /teg-reports, not an HTMX
+        # swap) — same pattern as /results' report_tegs.
+        "report_tegs": list(_report_available_tegs()),
         **ctx,
     })
 

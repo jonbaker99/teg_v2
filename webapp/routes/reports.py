@@ -285,6 +285,6 @@ def teg_reports(request: Request, teg: Optional[int] = None, round: Optional[int
                 if (edition is not None or legacy_html is not None) and selected_round else
                 f"/results?teg={selected_teg}" if edition is not None else None
             ),
-            "back_label": f"Round {selected_round}" if selected_round else "Full Results",
+            "back_label": f"Round {selected_round} detail" if selected_round else "Full Results",
         },
     )

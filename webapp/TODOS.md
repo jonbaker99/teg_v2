@@ -22,11 +22,17 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
   verified in a real browser (Playwright) that the link's `href`/hidden state stay correct across
   round switches both directions, not just on first load. The old `tab == "report"` branch in
   `_latest_round_tab_context` was deleted, not left dead.
-- [ ] **`/latest-teg`'s Report tab still reads the stale `teg_N_report_styled.md` markdown-blob
-  artefact** (`webapp/routes/latest.py`'s `_render_report`, `LATEST_TEG_TABS`), unlike `/results`,
-  `/leaderboard` and now `/latest-round`'s Report tabs. Point it at `/teg-reports?teg=N` the same
-  way (last tab, real link, hidden when no edition), then `_render_report`, `/static/teg_reports.css`
-  and the whole `_report_styled.md` read path become fully dead and can be removed in one sweep.
+- [x] **`/latest-teg`'s Report tab fixed the same way (2026-09-12).** It was already the last tab
+  (no reordering needed, unlike `/latest-round`), but was an HTMX swap reading the stale
+  `teg_N_report_styled.md` blob. Now a real link to `/teg-reports?teg=N`, hidden unless the TEG has
+  a newspaper edition (`report_tegs`, same pattern as `/results`) — `#lt-teg-select` isn't replaced
+  via `hx-swap-oob` anywhere in `partials/latest_teg_tab.html`, so the simpler `/results`-style sync
+  (cache the select, one `change` listener) is safe here, unlike `/latest-round`'s. `_render_report`
+  was fully dead after this (both call sites now removed) and deleted, along with the now-unused
+  `markdown`/`GithubException`/`read_text_file` imports and `_COMMENTARY_DIR`/`_MD_EXTS` constants
+  it alone used. `/static/teg_reports.css` and the `_report_styled.md` read path are NOT fully dead
+  yet — `.teg-report` is still used by the legacy round-report fallback in `/teg-reports` itself
+  (`reports.py`'s `_legacy_round_report_html`).
 - [x] **`/teg-reports` TEG select moved next to the Tournament/Round pills, and both pills now
   reflect what actually exists (2026-09-12).** The select used to sit in the page title row,
   separate from the pills below it; it's now in the same `.section-controls` row as the pills

@@ -36,9 +36,33 @@
         {{ tab_label }}
     </button>
     {% endfor %}
+    {# Report is a REAL link, not an HTMX swap — see results.html for the
+       full reasoning. Hidden unless the selected TEG has a newspaper
+       edition. #}
+    <a id="lt-report-tab" class="tab-underline"
+       href="/teg-reports?teg={{ selected_teg }}"
+       {% if selected_teg not in report_tegs %}hidden{% endif %}>Report<span class="tab-arrow" aria-hidden="true">&nearr;</span></a>
 </div>
 
 <div id="lt-content" class="section-panel">
     {% include "partials/latest_teg_tab.html" %}
 </div>
+
+{# The tab row lives outside #lt-content, so an HTMX TEG change never
+   re-renders it — keep the Report link's target and visibility in sync here. #}
+<script>
+(function () {
+    var withReports = {{ report_tegs | tojson }};
+    var tab = document.getElementById('lt-report-tab');
+    var select = document.getElementById('lt-teg-select');
+    if (!tab || !select) return;
+    function sync() {
+        var teg = parseInt(select.value, 10);
+        tab.href = '/teg-reports?teg=' + teg;
+        tab.hidden = withReports.indexOf(teg) === -1;
+    }
+    select.addEventListener('change', sync);
+    sync();
+})();
+</script>
 {% endblock %}
