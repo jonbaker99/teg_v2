@@ -7,9 +7,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> David MULLIN</span></p>
-  <p><strong>Green Jacket:</strong><span> David MULLIN</span></p>
-  <p><strong>Wooden Spoon:</strong><span> Henry MELLER</span></p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> David Mullin</span></p>
+  <p><strong>Green Jacket:</strong><span> David Mullin</span></p>
+  <p><strong>Wooden Spoon:</strong><span> Henry Meller</span></p>
 </section>
 
 ## David Mullin completes the TEG 2 Trophy and Green Jacket double

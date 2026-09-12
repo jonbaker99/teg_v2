@@ -7,9 +7,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> John PATTERSON</span></p>
-  <p><strong>Green Jacket:</strong><span> Jon BAKER</span></p>
-  <p><strong>Wooden Spoon:</strong><span> David MULLIN</span></p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> John Patterson</span></p>
+  <p><strong>Green Jacket:</strong><span> Jon Baker</span></p>
+  <p><strong>Wooden Spoon:</strong><span> David Mullin</span></p>
 </section>
 
 ## John Patterson is crowned TEG 12 Trophy champion by ten from Gregg Williams, whose best ever Stadium round cost him two further points

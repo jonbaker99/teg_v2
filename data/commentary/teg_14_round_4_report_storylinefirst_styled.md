@@ -7,9 +7,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> David MULLIN</span></p>
-  <p><strong>Green Jacket:</strong><span> David MULLIN</span></p>
-  <p><strong>Wooden Spoon:</strong><span> Jon BAKER</span></p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> David Mullin</span></p>
+  <p><strong>Green Jacket:</strong><span> David Mullin</span></p>
+  <p><strong>Wooden Spoon:</strong><span> Jon Baker</span></p>
 </section>
 
 ## David Mullin completes the TEG 14 Trophy and Green Jacket double while posting the worst round in the field, as Alex Baker's charge dies with a 10 at the 16th

@@ -7,9 +7,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Jon BAKER</span></p>
-  <p><strong>Green Jacket:</strong><span> Jon BAKER</span></p>
-  <p><strong>Wooden Spoon:</strong><span> Gregg WILLIAMS</span></p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Jon Baker</span></p>
+  <p><strong>Green Jacket:</strong><span> Jon Baker</span></p>
+  <p><strong>Wooden Spoon:</strong><span> Gregg Williams</span></p>
 </section>
 
 ## David Mullin's tidy final round wasn't enough to stop Jon Baker turning healthy leads into a seventh TEG double, while Gregg Williams's closing 29 points confirmed the Wooden Spoon.

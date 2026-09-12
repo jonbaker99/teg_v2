@@ -7,9 +7,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Alex BAKER</span></p>
-  <p><strong>Green Jacket:</strong><span> Gregg WILLIAMS</span></p>
-  <p><strong>Wooden Spoon:</strong><span> Jon BAKER</span></p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Alex Baker</span></p>
+  <p><strong>Green Jacket:</strong><span> Gregg Williams</span></p>
+  <p><strong>Wooden Spoon:</strong><span> Jon Baker</span></p>
 </section>
 
 ## Alex Baker wins the TEG 18 Trophy on 169 by eight from John Patterson despite a 10 and an 8 in the final round, while finishing bottom of the Green Jacket table

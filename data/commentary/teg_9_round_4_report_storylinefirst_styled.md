@@ -7,9 +7,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> John PATTERSON</span></p>
-  <p><strong>Green Jacket:</strong><span> David MULLIN</span></p>
-  <p><strong>Wooden Spoon:</strong><span> Stuart NEUMANN</span></p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> John Patterson</span></p>
+  <p><strong>Green Jacket:</strong><span> David Mullin</span></p>
+  <p><strong>Wooden Spoon:</strong><span> Stuart Neumann</span></p>
 </section>
 
 ## Alex Baker's brief level lead for the TEG 9 Trophy, undone by a back-nine collapse

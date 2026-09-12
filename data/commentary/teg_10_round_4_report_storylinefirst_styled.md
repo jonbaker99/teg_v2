@@ -7,9 +7,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Alex BAKER</span></p>
-  <p><strong>Green Jacket:</strong><span> David MULLIN</span></p>
-  <p><strong>Wooden Spoon:</strong><span> John PATTERSON</span></p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Alex Baker</span></p>
+  <p><strong>Green Jacket:</strong><span> David Mullin</span></p>
+  <p><strong>Wooden Spoon:</strong><span> John Patterson</span></p>
 </section>
 
 ## The three TEG 10 competitions resolved at Boavista, told from Gregg Williams's side of the Trophy, level at the top, briefly ahead on the 5th, eleven adrift by the close, with David Mullin's Green Jacket and John Patterson's Wooden Spoon confirmed

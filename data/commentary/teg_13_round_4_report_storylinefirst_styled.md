@@ -7,9 +7,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Jon BAKER</span></p>
-  <p><strong>Green Jacket:</strong><span> Jon BAKER</span></p>
-  <p><strong>Wooden Spoon:</strong><span> David MULLIN</span></p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Jon Baker</span></p>
+  <p><strong>Green Jacket:</strong><span> Jon Baker</span></p>
+  <p><strong>Wooden Spoon:</strong><span> David Mullin</span></p>
 </section>
 
 ## Jon Baker's completion of the TEG 13 Trophy and TEG 13 Green Jacket double at Prince's, and Gregg Williams's four-day failure to lay a glove on him

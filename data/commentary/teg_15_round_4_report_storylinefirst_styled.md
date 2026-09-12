@@ -7,9 +7,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Gregg WILLIAMS</span></p>
-  <p><strong>Green Jacket:</strong><span> Gregg WILLIAMS</span></p>
-  <p><strong>Wooden Spoon:</strong><span> Alex BAKER</span></p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Gregg Williams</span></p>
+  <p><strong>Green Jacket:</strong><span> Gregg Williams</span></p>
+  <p><strong>Wooden Spoon:</strong><span> Alex Baker</span></p>
 </section>
 
 ## Gregg Williams closes out TEG 15 with victories in both the Trophy and the Green Jacket, completing the tournament's sixth double.

@@ -719,21 +719,33 @@ def build_round_results_for_glance(teg_num: int, round_num: int) -> Tuple[list, 
 
     Mid-tournament: round of the day, Trophy lead, Green Jacket lead. Final
     round: the real Trophy / Green Jacket / Wooden Spoon winners, in that
-    order (matching the tournament at-a-glance box's order).
+    order (matching the tournament at-a-glance box's order) — no win-count
+    suffix (Jon's call, 2026-09-12: rounds don't need it, only the tournament
+    report does).
     """
-    end_state = _competition_state_at_round(teg_num, round_num)
     from teg_analysis.reporting.venue import build_venue_context
     total_rounds = len(build_venue_context(teg_num).get("rounds", []))
     is_final_round = (round_num == total_rounds) and total_rounds > 0
-    by_name = {c["name"]: c for c in end_state}
 
     if is_final_round:
+        # Same source as `render._build_at_a_glance`, not
+        # `_competition_state_at_round`'s `leader`/`laggard` — those are raw
+        # all-caps-surname strings with no override awareness, so TEG 5's
+        # Green Jacket (a tiebreak decided off-course, see TEG_OVERRIDES)
+        # came out wrong here the same way it did in the tournament report.
+        from teg_analysis.analysis.history import get_teg_placings
+        from teg_analysis.core.data_loader import load_all_data
+        from teg_analysis.reporting.events import _proper
+
+        placings = get_teg_placings(load_all_data(), teg_num)
         return [
-            {"label": "Trophy Winner", "value": by_name["Trophy"]["leader"]},
-            {"label": "Green Jacket", "value": by_name["Green Jacket"]["leader"]},
-            {"label": "Wooden Spoon", "value": by_name["Wooden Spoon"]["laggard"]},
+            {"label": "Trophy Winner", "value": _proper(placings["trophy"][0])},
+            {"label": "Green Jacket", "value": _proper(placings["jacket"][0])},
+            {"label": "Wooden Spoon", "value": _proper(placings["trophy"][-1])},
         ], True
 
+    end_state = _competition_state_at_round(teg_num, round_num)
+    by_name = {c["name"]: c for c in end_state}
     round_ranks = _round_ranks(teg_num, round_num)
     metric = trophy_metric(teg_num)
     score_key = "round_score_trophy"

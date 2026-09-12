@@ -7,9 +7,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Jon BAKER</span></p>
-  <p><strong>Green Jacket:</strong><span> Jon BAKER</span></p>
-  <p><strong>Wooden Spoon:</strong><span> David MULLIN</span></p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Jon Baker</span></p>
+  <p><strong>Green Jacket:</strong><span> Jon Baker</span></p>
+  <p><strong>Wooden Spoon:</strong><span> David Mullin</span></p>
 </section>
 
 ## Jon Baker overturns a two-point deficit on the final day to win the TEG 11 Trophy and the TEG 11 Green Jacket together, the third double in TEG history

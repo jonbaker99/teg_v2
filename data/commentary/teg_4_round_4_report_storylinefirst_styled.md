@@ -7,9 +7,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> David MULLIN</span></p>
-  <p><strong>Green Jacket:</strong><span> David MULLIN</span></p>
-  <p><strong>Wooden Spoon:</strong><span> Gregg WILLIAMS</span></p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> David Mullin</span></p>
+  <p><strong>Green Jacket:</strong><span> David Mullin</span></p>
+  <p><strong>Wooden Spoon:</strong><span> Gregg Williams</span></p>
 </section>
 
 ## David Mullin completes the Trophy-Jacket double as Jon Baker's seven-shot lead disintegrates and Gregg Williams inherits the Wooden Spoon.

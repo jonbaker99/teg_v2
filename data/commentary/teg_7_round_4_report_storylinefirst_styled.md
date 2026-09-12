@@ -7,9 +7,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Henry MELLER</span></p>
-  <p><strong>Green Jacket:</strong><span> David MULLIN</span></p>
-  <p><strong>Wooden Spoon:</strong><span> Alex BAKER</span></p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Henry Meller</span></p>
+  <p><strong>Green Jacket:</strong><span> David Mullin</span></p>
+  <p><strong>Wooden Spoon:</strong><span> Alex Baker</span></p>
 </section>
 
 ## Henry Meller survives a late Trophy scare

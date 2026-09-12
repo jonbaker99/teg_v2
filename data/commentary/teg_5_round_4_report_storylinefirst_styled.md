@@ -7,9 +7,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Gregg WILLIAMS</span></p>
-  <p><strong>Green Jacket:</strong><span> David MULLIN</span></p>
-  <p><strong>Wooden Spoon:</strong><span> David MULLIN</span></p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Gregg Williams</span></p>
+  <p><strong>Green Jacket:</strong><span> Stuart Neumann</span></p>
+  <p><strong>Wooden Spoon:</strong><span> David Mullin</span></p>
 </section>
 
 ## Gregg Williams holds off a fast-closing Jon Baker to win the TEG 5 Trophy by two shots
