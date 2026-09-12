@@ -5,13 +5,9 @@
 Two steps, always run together, so this does both:
 
 1. Rebuild `webapp/report_layout_prototypes/editions.json` from whichever TEGs
-   have storyline-first artefacts. Tournaments only by default — pass
-   `--include-rounds` to also build every round with storyline-first round
-   artefacts (`round_storyline.py`), or `--no-tournaments` to build rounds
-   ONLY (implies `--include-rounds`). Tournaments and rounds take separate
-   quality filters — `--min-*` for tournaments, `--round-min-*` for rounds —
-   so each can use different criteria, or one can be filtered while the other
-   isn't; neither inherits the other's flags.
+   have storyline-first artefacts. `--tournaments` and `--rounds` pick which
+   kind(s) to build; neither given defaults to tournaments only. The same
+   `--min-*` filter applies to whichever kind(s) are selected.
 2. Inline it into the prototype pages, which carry the data as a JS literal
    because a published Artifact cannot fetch a sibling file.
 
@@ -57,45 +53,34 @@ def _parse_args(argv=None):
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     ap.add_argument("--min-compelling", type=int, default=None,
-                    help="TOURNAMENTS: only print DISCOVERED stories scoring at least this "
-                         "(0-10). Trophy, Green Jacket and Wooden Spoon are always printed.")
+                    help="Only print DISCOVERED stories scoring at least this (0-10). "
+                         "The mandatory stories (Trophy/Jacket/Spoon, or "
+                         "round_story/race_story) are always printed.")
     ap.add_argument("--min-humour", type=int, default=None,
-                    help="TOURNAMENTS: only print stories scoring at least this (0-10).")
+                    help="Only print stories scoring at least this (0-10).")
     ap.add_argument("--match", choices=("all", "any"), default="all",
-                    help="TOURNAMENTS: whether a story must clear BOTH score floors "
-                         "(all, default) or EITHER (any).")
+                    help="Whether a story must clear BOTH score floors (all, default) "
+                         "or EITHER (any).")
     ap.add_argument("--min-combined", type=int, default=None,
-                    help="TOURNAMENTS: rescue — print a story whose compelling+humour "
-                         "reaches this even if it misses the floors.")
-    ap.add_argument("--round-min-compelling", type=int, default=None,
-                    help="ROUNDS: same as --min-compelling, applied to round editions "
-                         "only. round_story/race_story are always printed.")
-    ap.add_argument("--round-min-humour", type=int, default=None,
-                    help="ROUNDS: same as --min-humour, applied to round editions only.")
-    ap.add_argument("--round-match", choices=("all", "any"), default="all",
-                    help="ROUNDS: same as --match, applied to round editions only.")
-    ap.add_argument("--round-min-combined", type=int, default=None,
-                    help="ROUNDS: same as --min-combined, applied to round editions only.")
-    ap.add_argument("--include-rounds", action="store_true",
-                    help="Also build editions for every round with storyline-first "
-                         "round artefacts (round_storyline.py), alongside tournaments.")
-    ap.add_argument("--no-tournaments", action="store_true",
-                    help="Skip tournament editions entirely and build rounds only. "
-                         "Implies --include-rounds.")
+                    help="Rescue: print a story whose compelling+humour reaches this "
+                         "even if it misses the floors.")
+    ap.add_argument("--tournaments", action="store_true",
+                    help="Build tournament editions.")
+    ap.add_argument("--rounds", action="store_true",
+                    help="Build round editions (round_storyline.py artefacts).")
     args = ap.parse_args(argv)
 
-    def _filter_from(compelling, humour, match, combined):
-        if all(v is None for v in (compelling, humour, combined)):
-            return None      # no flags for this kind: use the module default
-        return ArticleFilter(min_compelling=compelling or 0, min_humour=humour or 0,
-                             match=match, min_combined=combined or 0)
+    if all(v is None for v in (args.min_compelling, args.min_humour, args.min_combined)):
+        article_filter = None      # no flags: use the module default
+    else:
+        article_filter = ArticleFilter(min_compelling=args.min_compelling or 0,
+                                       min_humour=args.min_humour or 0,
+                                       match=args.match,
+                                       min_combined=args.min_combined or 0)
 
-    tournament_filter = _filter_from(args.min_compelling, args.min_humour,
-                                     args.match, args.min_combined)
-    round_filter = _filter_from(args.round_min_compelling, args.round_min_humour,
-                                args.round_match, args.round_min_combined)
-    include_rounds = args.include_rounds or args.no_tournaments or round_filter is not None
-    return tournament_filter, round_filter, include_rounds, args.no_tournaments
+    do_tournaments = args.tournaments or not args.rounds   # default: tournaments only
+    do_rounds = args.rounds
+    return article_filter, do_tournaments, do_rounds
 
 
 def _print_edition(edition: dict) -> None:
@@ -125,25 +110,22 @@ def main(argv=None) -> None:
     tegs = available_tegs()
     if not tegs:
         raise SystemExit("no TEG has storyline-first artefacts — nothing to build")
-    tournament_filter, round_filter, include_rounds, no_tournaments = _parse_args(argv)
+    article_filter, do_tournaments, do_rounds = _parse_args(argv)
 
     editions = []
-    if no_tournaments:
-        print("Skipping tournaments (--no-tournaments)")
-    else:
+    if do_tournaments:
         print(f"Building editions for TEG {', '.join(str(t) for t in tegs)}")
-        editions = [build_edition(teg, article_filter=tournament_filter) for teg in tegs]
-        if tournament_filter is not None:
-            print(f"Tournament filter: {tournament_filter.describe()}")
+        editions = [build_edition(teg, article_filter=article_filter) for teg in tegs]
 
-    if include_rounds:
+    if do_rounds:
         for teg in tegs:
             for r in available_rounds(teg):
-                editions.append(build_edition(teg, round_num=r, article_filter=round_filter))
+                editions.append(build_edition(teg, round_num=r, article_filter=article_filter))
         n_rounds = sum(1 for teg in tegs for _ in available_rounds(teg))
-        print(f"Building {n_rounds} round edition(s)"
-              + (f" — filter: {round_filter.describe()}" if round_filter is not None
-                 else " (unfiltered — pass --round-min-* for a round-specific filter)"))
+        print(f"Building {n_rounds} round edition(s)")
+
+    if article_filter is not None:
+        print(f"Filter: {article_filter.describe()}")
 
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_PATH.write_text(
