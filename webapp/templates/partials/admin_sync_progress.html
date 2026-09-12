@@ -1,0 +1,19 @@
+{# Polling progress view for a background pull job (admin.py's _sync_jobs).
+   Swapped into #sync-body; re-polls itself until the job finishes, at which
+   point /admin/volume-sync/job/{id} returns the normal result body instead
+   (no poll trigger in that response => polling stops on its own). #}
+<div hx-get="/admin/volume-sync/job/{{ job_id }}?folder={{ folder }}"
+     hx-trigger="load, every 600ms"
+     hx-target="#sync-body" hx-swap="innerHTML">
+  <div class="data-card" style="margin-bottom:1rem;">
+    <h2 class="card-header">🔄 Syncing…</h2>
+    {% if total %}
+    <div style="background:var(--table-cell-border,#e0e0e0);border-radius:4px;overflow:hidden;height:10px;margin:.6rem 0;">
+      <div style="width:{{ ((done / total) * 100) | round(1) }}%;background:var(--accent,forestgreen);height:100%;transition:width .3s;"></div>
+    </div>
+    <p class="text-muted text-sm">{{ done }} / {{ total }}{% if current %} — {{ current }}{% endif %}</p>
+    {% else %}
+    <p class="text-muted text-sm">Starting…</p>
+    {% endif %}
+  </div>
+</div>

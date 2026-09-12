@@ -22,6 +22,7 @@ import os
 import re
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Callable, Optional
 
 from .github_operations import GITHUB_REPO, _get_github_branch, batch_commit_to_github
 from . import volume_operations
@@ -517,11 +518,16 @@ def delete_store_file(rel: str) -> dict:
 # Pull / push orchestrators
 # ---------------------------------------------------------------------------
 
-def pull_files(folder: str, names: list[str]) -> dict:
+def pull_files(folder: str, names: list[str],
+               on_progress: Optional[Callable[[int, str], None]] = None) -> dict:
     """Copy ``names`` from GitHub ``folder`` down to the store.
 
     Each existing store file is backed up (under a single dated dir) *before* it
     is overwritten, so a pull is always reversible via :func:`restore_backup`.
+
+    ``on_progress(done, name)`` is called after each file (success or failure),
+    ``done`` a 1-based count — one GitHub API call per file, so this is the slow
+    op progress bars matter for. Optional; ignored if not given.
 
     Returns ``{pulled: int, failed: [(name, error), ...], backups: [rel, ...]}``.
     """
@@ -529,7 +535,7 @@ def pull_files(folder: str, names: list[str]) -> dict:
     pulled = 0
     failed: list[tuple[str, str]] = []
     backups: list[str] = []
-    for name in names:
+    for i, name in enumerate(names, start=1):
         path = f"{folder}/{name}"
         try:
             raw = github_download_bytes(path)
@@ -544,6 +550,8 @@ def pull_files(folder: str, names: list[str]) -> dict:
         except Exception as e:  # noqa: BLE001
             logger.error(f"Pull failed for {path}: {e}", exc_info=True)
             failed.append((name, str(e)))
+        if on_progress is not None:
+            on_progress(i, name)
     return {"pulled": pulled, "failed": failed, "backups": backups}
 
 
@@ -600,7 +608,7 @@ _REPORT_FILE_PATTERNS = {
 }
 
 
-def sync_report_files() -> dict:
+def sync_report_files(on_progress: Optional[Callable[[int, int, str], None]] = None) -> dict:
     """Re-pull every report file from GitHub to the store, overwriting.
 
     Only files matching the report naming conventions (see
@@ -609,20 +617,40 @@ def sync_report_files() -> dict:
     for a *regenerated* report — the case ``read_text_file``'s volume cache
     would otherwise keep serving stale.
 
+    ``on_progress(done, total, name)`` is called after each file across ALL
+    folders (``done``/``total`` cumulative, not per-folder) — one GitHub API
+    call per file each way (one to list the folder, one per file pulled), so
+    this can take a while across the whole report tree. Optional.
+
     Returns:
         ``{pulled: int, failed: [(name, error), ...], folders: {folder: count}}``.
     """
+    # Two passes: first resolve every folder's matching filenames so the total
+    # is known upfront (on_progress needs it from the very first callback,
+    # not just once the last folder's listing arrives).
+    per_folder_names = {}
+    for folder, pattern in _REPORT_FILE_PATTERNS.items():
+        names = sorted(n for n in list_github_files(folder) if pattern.match(n))
+        if names:
+            per_folder_names[folder] = names
+    total = sum(len(names) for names in per_folder_names.values())
+
     total_pulled = 0
     failed: list[tuple[str, str]] = []
     per_folder: dict[str, int] = {}
+    done_so_far = 0
 
-    for folder, pattern in _REPORT_FILE_PATTERNS.items():
-        names = sorted(n for n in list_github_files(folder) if pattern.match(n))
-        if not names:
-            continue
-        outcome = pull_files(folder, names)
+    for folder, names in per_folder_names.items():
+        offset = done_so_far
+
+        def _folder_progress(i, name, _offset=offset):
+            if on_progress is not None:
+                on_progress(_offset + i, total, name)
+
+        outcome = pull_files(folder, names, **({"on_progress": _folder_progress} if on_progress else {}))
         total_pulled += outcome["pulled"]
         failed.extend(outcome["failed"])
         per_folder[folder] = outcome["pulled"]
+        done_so_far += len(names)
 
     return {"pulled": total_pulled, "failed": failed, "folders": per_folder}

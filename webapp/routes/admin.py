@@ -14,9 +14,11 @@ Flow:
 """
 
 import logging
+import threading
+import uuid
 from pathlib import Path
 
-from fastapi import APIRouter, Request, Form
+from fastapi import APIRouter, Request, Form, BackgroundTasks
 from fastapi.responses import RedirectResponse, HTMLResponse, Response
 from fastapi.templating import Jinja2Templates
 from starlette.concurrency import run_in_threadpool
@@ -431,6 +433,67 @@ def admin_delete_data_execute(request: Request, teg: str = Form(""), rounds: lis
 
 # --- GitHub <-> store sync ----------------------------------------------------
 
+# In-memory progress for a running pull job (sync-reports or pull-selected) —
+# both do one GitHub API call per file and can take a while across many files,
+# with nothing to show for it mid-request otherwise. Single-process (plain
+# uvicorn, no multi-worker setup — railway.toml), so a module-level dict + lock
+# is enough; no need for a real job queue. Finished jobs are popped once their
+# result has been fetched by the poller; an abandoned job (browser closed
+# mid-poll) just lingers harmlessly — this is a low-traffic single-admin tool,
+# not worth building GC for.
+_sync_jobs: dict[str, dict] = {}
+_sync_jobs_lock = threading.Lock()
+
+
+def _start_sync_job() -> str:
+    job_id = uuid.uuid4().hex
+    with _sync_jobs_lock:
+        _sync_jobs[job_id] = {"done": 0, "total": 0, "current": "", "finished": False,
+                              "result": None, "error": None}
+    return job_id
+
+
+def _set_sync_progress(job_id: str, done: int, total: int, current: str) -> None:
+    with _sync_jobs_lock:
+        job = _sync_jobs.get(job_id)
+        if job is not None:
+            job.update(done=done, total=total, current=current)
+
+
+def _finish_sync_job(job_id: str, *, result: dict = None, error: str = None) -> None:
+    with _sync_jobs_lock:
+        job = _sync_jobs.get(job_id)
+        if job is not None:
+            job["finished"] = True
+            job["result"] = result
+            job["error"] = error
+
+
+def _sync_progress_response(request: Request, job_id: str, folder: str):
+    """The polling fragment: still-running progress bar, or (once finished)
+    the normal result body — whichever the job's current state calls for.
+    Finished jobs are removed from _sync_jobs here, once collected."""
+    with _sync_jobs_lock:
+        job = _sync_jobs.get(job_id)
+        if job is not None and job["finished"]:
+            del _sync_jobs[job_id]
+
+    if job is None:
+        ctx = _sync_body_ctx(request, folder, result={
+            "action": "pull", "error": "Sync job not found (server may have restarted)."})
+        return templates.TemplateResponse("partials/admin_sync_body.html", ctx)
+
+    if not job["finished"]:
+        return templates.TemplateResponse("partials/admin_sync_progress.html", {
+            "request": request, "job_id": job_id, "folder": folder,
+            "done": job["done"], "total": job["total"], "current": job["current"],
+        })
+
+    result = {"action": "pull", "error": job["error"]} if job["error"] else job["result"]
+    ctx = _sync_body_ctx(request, folder, result=result)
+    return templates.TemplateResponse("partials/admin_sync_body.html", ctx)
+
+
 def _sync_body_ctx(request: Request, folder: str, result: dict = None) -> dict:
     """Build the context for the sync body partial (status table + forms)."""
     from teg_analysis.io import (
@@ -548,8 +611,17 @@ def admin_volume_sync_diff(request: Request, folder: str = "data", name: str = "
     })
 
 
+@router.get("/admin/volume-sync/job/{job_id}", response_class=HTMLResponse)
+def admin_volume_sync_job(request: Request, job_id: str, folder: str = "data"):
+    """Poll target for a running pull job — see _sync_progress_response."""
+    if not is_authed(request):
+        return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
+    return _sync_progress_response(request, job_id, folder)
+
+
 @router.post("/admin/volume-sync/pull", response_class=HTMLResponse)
-def admin_volume_sync_pull(request: Request, folder: str = Form("data"),
+def admin_volume_sync_pull(request: Request, background_tasks: BackgroundTasks,
+                           folder: str = Form("data"),
                            files: list[str] = Form([]), confirm: str = Form("")):
     if not is_authed(request):
         return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
@@ -573,42 +645,62 @@ def admin_volume_sync_pull(request: Request, folder: str = Form("data"),
             return _sync_conflict_response(
                 request, action="pull", folder=folder, names=names, conflicts=conflicts)
 
-    try:
-        outcome = pull_files(folder, names)
-        deps.clear_all_data_caches()  # store changed — drop in-process caches
-        result = {"action": "pull", **outcome}
-    except Exception as e:  # noqa: BLE001
-        logger.error(f"Pull failed: {e}", exc_info=True)
-        result = {"action": "pull", "error": str(e)}
+    # Runs in the background so the response can return immediately with a
+    # progress view; the poller (/admin/volume-sync/job/{id}) picks up the
+    # final result once _finish_sync_job marks it done. See the _sync_jobs
+    # block above for why an in-memory dict is enough here.
+    job_id = _start_sync_job()
 
-    ctx = _sync_body_ctx(request, folder, result=result)
-    return templates.TemplateResponse("partials/admin_sync_body.html", ctx)
+    def _run_pull():
+        try:
+            outcome = pull_files(folder, names,
+                                 on_progress=lambda i, name: _set_sync_progress(job_id, i, len(names), name))
+            deps.clear_all_data_caches()  # store changed — drop in-process caches
+            _finish_sync_job(job_id, result={"action": "pull", **outcome})
+        except Exception as e:  # noqa: BLE001
+            logger.error(f"Pull failed: {e}", exc_info=True)
+            _finish_sync_job(job_id, error=str(e))
+
+    background_tasks.add_task(_run_pull)
+    return templates.TemplateResponse("partials/admin_sync_progress.html", {
+        "request": request, "job_id": job_id, "folder": folder, "done": 0, "total": len(names), "current": "",
+    })
 
 
 @router.post("/admin/volume-sync/sync-reports", response_class=HTMLResponse)
-def admin_volume_sync_reports(request: Request, folder: str = Form("data")):
+def admin_volume_sync_reports(request: Request, background_tasks: BackgroundTasks,
+                              folder: str = Form("data")):
     """One-click refresh: re-pull every report file from GitHub to the store.
 
     Reports are generated offline and arrive on GitHub out-of-band, so the store
     can hold a stale copy of a regenerated report. This force-pulls them all
     (overwriting, with backups) — the refresh lever for regenerations. New
-    reports are picked up too. Re-renders the sync body for the current folder.
+    reports are picked up too. Runs in the background with a polled progress
+    view (one GitHub API call per file, and there can be a lot of them) —
+    see the _sync_jobs block above.
     """
     if not is_authed(request):
         return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
 
     from teg_analysis.io import sync_report_files
 
-    try:
-        outcome = sync_report_files()
-        deps.clear_all_data_caches()  # store changed — drop in-process caches
-        result = {"action": "pull", "pulled": outcome["pulled"], "failed": outcome["failed"]}
-    except Exception as e:  # noqa: BLE001
-        logger.error(f"Report sync failed: {e}", exc_info=True)
-        result = {"action": "pull", "error": str(e)}
+    job_id = _start_sync_job()
 
-    ctx = _sync_body_ctx(request, folder, result=result)
-    return templates.TemplateResponse("partials/admin_sync_body.html", ctx)
+    def _run_sync():
+        try:
+            outcome = sync_report_files(
+                on_progress=lambda done, total, name: _set_sync_progress(job_id, done, total, name))
+            deps.clear_all_data_caches()  # store changed — drop in-process caches
+            _finish_sync_job(job_id, result={
+                "action": "pull", "pulled": outcome["pulled"], "failed": outcome["failed"]})
+        except Exception as e:  # noqa: BLE001
+            logger.error(f"Report sync failed: {e}", exc_info=True)
+            _finish_sync_job(job_id, error=str(e))
+
+    background_tasks.add_task(_run_sync)
+    return templates.TemplateResponse("partials/admin_sync_progress.html", {
+        "request": request, "job_id": job_id, "folder": folder, "done": 0, "total": 0, "current": "",
+    })
 
 
 @router.post("/admin/volume-sync/push", response_class=HTMLResponse)

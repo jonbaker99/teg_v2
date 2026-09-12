@@ -54,6 +54,43 @@ def test_pull_files_records_failures(monkeypatch, tmp_path):
     assert out["failed"][0][0] == "x.csv"
 
 
+def test_pull_files_calls_on_progress_per_file(monkeypatch, tmp_path):
+    monkeypatch.setattr(sync, "github_download_bytes", lambda path: b"x")
+    monkeypatch.setattr(sync, "_store_path", lambda rel: tmp_path / rel)
+
+    calls = []
+    sync.pull_files("data", ["a.csv", "b.csv", "c.csv"], on_progress=lambda i, name: calls.append((i, name)))
+
+    assert calls == [(1, "a.csv"), (2, "b.csv"), (3, "c.csv")]
+
+
+def test_pull_files_on_progress_called_even_on_failure(monkeypatch, tmp_path):
+    monkeypatch.setattr(sync, "github_download_bytes", lambda path: (_ for _ in ()).throw(RuntimeError("nope")))
+    monkeypatch.setattr(sync, "_store_path", lambda rel: tmp_path / rel)
+
+    calls = []
+    sync.pull_files("data", ["a.csv"], on_progress=lambda i, name: calls.append((i, name)))
+
+    assert calls == [(1, "a.csv")]
+
+
+def test_sync_report_files_on_progress_is_cumulative_across_folders(monkeypatch, tmp_path):
+    """Progress counts across ALL matched report files, not reset per folder."""
+    monkeypatch.setattr(sync, "list_github_files", lambda folder: (
+        {"teg_9_report_styled.md": 1, "teg_10_report_styled.md": 1} if folder == "data/commentary"
+        else {"teg_9_main_report.md": 1} if folder == "data/commentary/drafts"
+        else {}
+    ))
+    monkeypatch.setattr(sync, "github_download_bytes", lambda path: b"x")
+    monkeypatch.setattr(sync, "_store_path", lambda rel: tmp_path / rel)
+
+    calls = []
+    out = sync.sync_report_files(on_progress=lambda done, total, name: calls.append((done, total, name)))
+
+    assert out["pulled"] == 3
+    assert [c[:2] for c in calls] == [(1, 3), (2, 3), (3, 3)]
+
+
 def test_push_files_batches(monkeypatch, tmp_path):
     # Seed the fake store.
     (tmp_path / "data").mkdir(parents=True)

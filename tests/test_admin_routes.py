@@ -162,13 +162,17 @@ def test_volume_sync_pull_warns_on_newer(client, monkeypatch):
 
 
 def test_volume_sync_reports_refreshes(client, monkeypatch):
-    """The one-click reports refresh re-pulls report files and reports the count."""
+    """The one-click reports refresh runs in the background (progress-polled);
+    the pull actually happens and the final poll response reports the count."""
+    import re
     import teg_analysis.io as tio
 
     calls = {}
 
-    def _fake():
+    def _fake(on_progress=None):
         calls["ran"] = True
+        if on_progress:
+            on_progress(7, 7, "teg_9_report_styled.md")
         return {"pulled": 7, "failed": [], "folders": {"data/commentary": 7}}
 
     monkeypatch.setattr(tio, "sync_report_files", _fake)
@@ -176,8 +180,14 @@ def test_volume_sync_reports_refreshes(client, monkeypatch):
     resp = client.post("/admin/volume-sync/sync-reports",
                        data={"folder": "data/commentary"})
     assert resp.status_code == 200
-    assert calls.get("ran") is True         # the refresh actually ran
-    assert "7" in resp.text                 # pulled count surfaced
+    assert calls.get("ran") is True         # the refresh actually ran (TestClient
+                                             # runs BackgroundTasks synchronously)
+    assert "Syncing" in resp.text           # initial response is the progress view
+
+    job_id = re.search(r'/admin/volume-sync/job/([0-9a-f]+)', resp.text).group(1)
+    poll = client.get(f"/admin/volume-sync/job/{job_id}", params={"folder": "data/commentary"})
+    assert poll.status_code == 200
+    assert "7" in poll.text                 # pulled count surfaced, job finished
 
 
 def test_volume_sync_preview_shows_table(client, monkeypatch):
