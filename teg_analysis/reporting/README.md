@@ -658,7 +658,7 @@ call, no cost.**
    `chosen_headline`/`standfirst` where present, falling back to `_derive_headline` /
    `_choose_standfirst` only for artefacts written before those fields existed (2026-09-06).
    Reads go through `teg_analysis.io.read_text_file`, so it is volume-then-GitHub aware on Railway
-   and never touches the raw filesystem. `available_tegs()` discovers which TEGs have both artefacts, by probing the TEGs in `completed_tegs.csv` — so generating a report for a new TEG makes it appear without editing any code. Currently 14, 16 and 18.
+   and never touches the raw filesystem. `available_tegs()` discovers which TEGs have both artefacts, by probing the TEGs in `completed_tegs.csv` — so generating a report for a new TEG makes it appear without editing any code. Every TEG 2–18 has them as of the 2026-09-11 `data/commentary/` cleanup. `available_rounds(teg)` does the same for round-level storyline artefacts (`round_storyline.py`) — coverage varies by TEG, check with `available_rounds(N)` rather than assuming.
 
 5. **Render.** Two consumers, from the same edition dict:
    - **The site** — `webapp/routes/report_preview.py` at `/teg-reports-preview`. Desktop renders
@@ -677,20 +677,28 @@ call, no cost.**
      prototypes** — the live route calls `build_edition` directly and never reads it.
 
 6. **Choose which stories are printed** — optional, and applied last.
-   Every plan carries three **mandatory** storylines (trophy, jacket, spoon), populated *"regardless
-   of how good you judge them to be"*, plus 0–3 discovered. So a weak competition article is not a
-   fault: the editor was told to write it, and it still gets printed. `ArticleFilter` is the lever
-   for thinning the **discovered** stories.
+   Every plan carries mandatory storylines (trophy, jacket, spoon for a tournament;
+   `round_story`/`race_story` for a round), populated *"regardless of how good you judge them to
+   be"*, plus 0–3 discovered. So a weak competition article is not a fault: the editor was told to
+   write it, and it still gets printed. `ArticleFilter` is the lever for thinning the **discovered**
+   stories, via `python -m scripts.build_newspaper_edition`:
 
    ```bash
-   # try a policy — writes filtered pages, and names what it left out
+   python -m scripts.build_newspaper_edition                              # tournaments only (default)
+   python -m scripts.build_newspaper_edition --rounds                     # rounds only
+   python -m scripts.build_newspaper_edition --tournaments --rounds       # both
+
+   # add a filter — applies to whichever of the above is selected
    python -m scripts.build_newspaper_edition --min-compelling 7 --min-humour 5
-   python -m scripts.build_newspaper_edition --min-compelling 8 --match any --min-combined 14
-   python -m scripts.build_newspaper_edition          # no flags: back to printing everything
+   python -m scripts.build_newspaper_edition --rounds --min-compelling 8 --match any --min-combined 14
    ```
 
-   `--match all` (default) needs both floors, `--match any` needs either, and `--min-combined`
-   rescues a lopsided piece — a 9-humour/5-compelling story survives a compelling floor of 7.
+   `--tournaments`/`--rounds` pick which kind(s) to (re)build — neither given defaults to
+   tournaments only, matching the pre-round-reports behaviour. One `--min-*` filter applies to
+   whatever was selected; there is no separate per-kind filter. `--match all` (default) needs both
+   floors, `--match any` needs either, and `--min-combined` rescues a lopsided piece — a
+   9-humour/5-compelling story survives a compelling floor of 7. Writes filtered pages and names
+   what it left out; no flags at all goes back to printing everything.
 
    **Trophy, Green Jacket and Wooden Spoon are always printed**, whatever they score. A report that
    never says who won the Jacket has a hole in it, however dull that week's Jacket was — and the
