@@ -1,55 +1,67 @@
-# The Baker Reversal: Alex Takes the Trophy, Jon Takes the Spoon
+# The Great Reversal at Camiral
 
-## How Alex Baker, owner of three prior Wooden Spoons, led the Trophy from the fifth hole of round one to the last and won by eight
+## Alex Baker, three-time Spoon collector, leads the TEG 18 Trophy from the 5th hole of R1 to the end despite a course-worst 106 and two double-figure holes
+<!-- storyline: trophy -->
 
-Alex Baker won the Trophy at TEG 18 in Catalonia with 169 Stableford points, eight clear of runner-up John Patterson. It is the seventh-highest total on record and the second best of his own career.
+Alex Baker won the TEG 18 Trophy with 169 Stableford points, eight clear of John Patterson. It stands as the second-highest total of his own career.
 
-The points came in bursts. On the Tour Course in round one he took 17 from holes 8 to 12, three-point bogeys either side of pars at the 10th and 11th, then 13 more over holes 14 to 16, including a birdie at the par-5 15th. His 98 that day was his best gross of the week on that course, though six shots off his previous best there of 92.
+The platform was laid in the first round on the PGA Catalunya Tour course, where he took 17 points from holes 8 to 12 — two pars and three bogeys, none worse — and then 13 more across 14 to 16, the birdie at the par-five 15th the pick of them. A double bogey at the 17th ended that run of par or better. His 98 was his best score of the week on the Tour course, though some way off the 92 he posted there in TEG 11.
 
-Round two was the opposite. He ran up an 11 at the par-5 18th and an eight at the par-3 16th, both blank holes, and signed for 106 gross. That is a new course-worst at PGA Catalunya Tour, one stroke worse than the 105 that had stood across 22 prior visits. He still led the Trophy at the end of the day.
+Round two ran the other way. Alex Baker signed for 106 gross, the highest round ever recorded on the Tour course, beating the previous worst of 105 set across 22 prior visits. A quintuple-bogey eight at the par-three 16th and an eleven at the par-five 18th were his worst returns on those pars. He still led the Trophy at the end of the day, with Jon Baker ahead in the TEG 18 Green Jacket.
 
-He led after round three too, helped by 21 points across holes 11 to 16 on the Stadium Course, and he still led after round four, despite a 10 at the 14th and an eight at the 17th.
+He held the lead after round three, built on 21 points from holes 11 to 16 on the Stadium course, and again after round four, despite a ten at the 14th and an eight at the 17th. Gregg Williams led the Jacket over the closing two rounds.
 
-## David Mullin's week of extremes: an 11 in R1, the lowest gross round the Stadium has ever surrendered in R3, and nine shots gone in four holes in R4
+## David Mullin takes 11 at the 15th in R1, then breaks the Stadium course record with 84 in R3, then bleeds it away over the closing stretch of R4
+<!-- storyline: d0 -->
 
-David Mullin's week in Catalonia swung between the best and the worst golf of the trip.
+**Mullin's week of extremes at Camiral**
 
-It began badly. On the 15th at the Tour Course in round one — a par 5, stroke index 5 — he ran up an eleven, a sextuple bogey worth no Stableford points and the worst hole against par of his TEG career. It cost him ground in the Wooden Spoon race too: second in that competition before the hole, fifth after it.
+David Mullin's TEG 18 ran from one end of the scale to the other. It began badly on the Tour Course in Round 1, where he ran up an 11 at the par-five 15th, a sextuple bogey that returned no Stableford points and stands as the worst score relative to par of his career. The hole also moved him in the standings nobody wants: he dropped from second to the bottom of the TEG 18 Wooden Spoon race.
 
-Round three was the reverse. At the Stadium Course he shot 84 gross, the lowest round the course had ever surrendered, beating the previous record of 89 set across 27 prior visits. It was a personal best there as well. His best in five previous Stadium rounds was 91, and the 84 was eight shots better than his last visit to the course.
+Round 3 on the Stadium Course produced the opposite. Mullin went round in 84 gross, a new course record, beating the previous mark of 89 set across 27 prior visits. It was also comfortably his own best there — seven shots better than his previous personal best of 91 on the course, and eight fewer than his last visit.
 
-Round four then unravelled over four holes. From the 14th to the 17th he went double bogey, triple bogey, double bogey, double bogey — 6, 8, 5, 6 — nine shots dropped in four holes and four holes without a net par, a single Stableford point on three of them and none at the 15th.
+Round 4, back on the Stadium, gave much of it away over the closing stretch. From the 14th he went four holes without a net par: double bogey at the 14th, triple at the par-five 15th, then doubles at the 16th and 17th. That run cost him nine shots against par and yielded three Stableford points from a possible eight. The record stood, but the finish meant his second Stadium round bore little resemblance to his first.
 
-He finished runner-up in the Green Jacket, 14 shots behind Gregg Williams, who won at +66.
+## John Patterson loses the TEG 18 Trophy on the front nine of R1, bleeding 22 shots in eight holes, then spends three rounds proving he was the better player
+<!-- storyline: d1 -->
 
-## John Patterson is bottom of the Wooden Spoon race after four holes of the tournament and finishes as Trophy runner-up, eight points back
+**Eight holes in Girona**
 
-John Patterson's tournament was decided at both ends, and the first end came fast. Four holes into round one on the Tour course he was already bottom of the Wooden Spoon race, dropping from fourth to fifth after a quadruple-bogey eight at the 3rd and a triple-bogey seven at the 4th. The bleeding did not stop there. He lost 22 shots to par across holes 3 to 10, and went seven straight holes, the 3rd to the 9th, without a net par.
+John Patterson's TEG 18 Trophy was settled before the first round was half done. Starting the third at PGA Catalunya's Tour Course, he ran up an 8 — a quadruple bogey — and did not steady himself for another seven holes. From the 3rd to the 10th he bled 22 shots: triple bogeys at the 4th, 7th, 8th and 9th, doubles at the 5th, 6th and 10th. Across the 3rd to the 9th he failed to make a single net par. The damage was quick enough to register on the board at once; the triple at the 4th dropped him to the bottom of the TEG 18 Wooden Spoon race.
 
-Then he turned it around. Holes 13 to 16 brought him 13 points, and he finished round one 14 points stronger on the back nine than the front, for 34 points in all. Round two repeated the shape: another quadruple-bogey eight, this time at the 4th, 11 shots dropped from the 6th to the 10th, then 16 points across holes 11 to 15.
+What followed made the loss harder to explain away. Patterson took 13 points from the 13th to the 16th and finished the round 14 points better on the back nine than the front, for 34 points in all. In round two he took 16 points in five holes from the 11th to the 15th, and his 94 there was his best gross score on the Tour Course, beating the 96 he posted in TEG 12. Round three brought a 93 on the Stadium Course, also a personal best there and four strokes better than his last visit. In round four he collected nine points across the 4th, 5th and 6th, and after a triple and a double at the 14th and 15th, stopped the slide with a birdie at the 17th.
 
-The recovery held. In round four he took nine points from holes 4 to 6, and ended a run of bogeys or worse with a birdie at the 17th. Both courses yielded personal bests: 94 on the Tour, beating his previous 96, and 93 on the Stadium, beating his previous 95.
+## A catalogue of the TEG 18 double-figure and blow-up holes: two elevens, a ten, two nines and a new course-worst gross at the Tour
+<!-- storyline: d2 -->
 
-It was not enough. Alex Baker took the Trophy on 169 points, eight clear, with Patterson runner-up.
+**The wreckage column: TEG 18's double-figure holes**
 
-## Gregg Williams, reigning Wooden Spoon holder, improves in every round and turns a wretched R1 into the Green Jacket by fourteen
+TEG 18 produced three holes of ten or more strokes, and the PGA Catalunya Tour course accounted for two of them on consecutive days.
 
-Gregg Williams started badly. On the Tour course he ran up a nine at the par-five 7th and an eight at the par-four 17th, both quadruple bogeys, and failed to make a par from the 2nd through the 14th before a birdie at the par-five 15th finally stopped the run. The round came to 31 points.
+David Mullin opened the week with an 11 at the par-five 15th in round one, a sextuple bogey and the worst hole against par of his TEG career. The same round brought a nine from Gregg Williams at the seventh and an eight at the 17th, plus an eight at the third from John Patterson, who added another at the 4th on Sunday.
 
-Round two was a different story: 42 points, eleven better. He took nine points from holes 3 to 5 and thirteen from 13 to 16, four consecutive pars without a gross shot dropped. The par at the 13th drew him level at the head of the Green Jacket, and during that round Jon Baker's 20-hole spell in front ended with Williams overtaking him.
+Round two belonged to Alex Baker. He took eight at the par-three 16th, five over par, and then closed with an 11 at the last — a sextuple bogey and the heaviest single hole of his TEG record. The round totalled 106 gross, a new worst score ever recorded on the Tour course, beating the previous mark of 105 set across 22 prior visits. For scale, Alex Baker's best gross on the course before this week was 92.
 
-On the Stadium course a par at the 2nd put him outright in the lead. Four pars from the 2nd to the 5th were worth twelve points before a double bogey at the 6th ended the sequence. In round four he birdied the par-three 5th and gathered nine points from the 8th to the 10th, closing to nine off the Trophy lead having at one stage trailed by fifteen. His 84 that day was his best on the Stadium course, eight strokes better than his last visit there.
+The Stadium course was kinder but not clean. Jon Baker ran up a nine at the fourth in round three, and in the final round Alex Baker added a ten at the 14th and an eight at the 17th. Eleven holes in all cost their players a blank Stableford score.
 
-He finished on +66, fourteen clear of David Mullin: his own best gross total, and the sixth best recorded.
+## Gregg Williams, reigning Wooden Spoon holder, recovers from a ruinous R1 to take the TEG 18 Green Jacket by 14 from nine-time winner David Mullin
+<!-- storyline: jacket -->
 
-## Jon Baker arrives as defending Trophy and Jacket champion and leaves 23 points adrift at the bottom, last in three of the four rounds
+**Williams turns a wrecked opening round into a 14-shot Green Jacket win**
 
-Jon Baker's week in Catalonia ended with the Wooden Spoon, his 126 Stableford points the total nobody wants.
+Gregg Williams won the TEG 18 Green Jacket at +66 gross, 14 clear of David Mullin, and he did it after an opening round that looked like it had ruled him out. On the Tour Course at PGA Catalunya he ran up a nine at the par-five 7th and an eight at the par-four 17th, both quadruple bogeys, and did not make a hole better than bogey until a birdie at the 15th finally broke the run. The round came in at 31 points.
 
-It did not begin that way. He took the Green Jacket lead on the fifth hole of round one and held it for 20 holes, across into round two, before a bogey six at the par-five seventh on the Tour course handed the lead to Gregg Williams.
+The second round was 42, an eleven-point swing. Williams took nine points from holes 3 to 5, then played 13 to 16 in level par for 13 points. Jon Baker, who had led the gross competition since the 5th hole of round one, lost it at the 7th in round two after 20 holes in front; Williams drew level at the 13th and went outright ahead at the 2nd hole of round three, on the Stadium Course.
 
-He answered on the same afternoon. Over the closing five holes he birdied the par-three 14th and parred 15, 16, 17 and 18, banking 16 points and covering the stretch one under par without dropping a gross shot anywhere. It put him back in front: after round two he led the Jacket, with Alex Baker top of the Trophy.
+From there he mostly held on. Four pars to open round three were followed by a double bogey at the 6th, but he birdied the 5th in the final round and picked up nine points across holes 8 to 10. His 84 in round four was his best score on the Stadium Course, eight better than his previous best there, and +66 is the lowest gross total of his TEG career.
 
-Round three, on the Stadium course, undid the good work. He ran up a nine at the par-four fourth, a quintuple bogey worth no points at all.
+## Jon Baker, defending Trophy champion, leads the gross for 20 holes and then finishes the TEG 18 Wooden Spoon 23 points adrift of anyone else
+<!-- storyline: spoon -->
 
-The wider numbers tell the same story. This was his seventh visit to the Stadium course, and his best gross round there this week, 97, was eight strokes worse than the 89 he had managed on a previous trip, and eight worse than his last visit. On the Tour course, 87 against a previous best of 84.
+**Jon Baker: 20 holes in front, then the Spoon**
+
+Jon Baker arrived in Catalonia as the defending Trophy champion and left with the TEG 18 Wooden Spoon, his 126 Stableford points the lowest of the week.
+
+For a while it looked like a different tournament. Jon Baker took the lead in the TEG 18 Green Jacket, the gross competition, at the fifth hole of the opening round on the Tour Course and held it for 20 holes, into the second round. It ended at the par-five seventh on Sunday, where a six handed the lead to Gregg Williams. He answered late: birdie at the 14th and pars at the 15th, 16th, 17th and 18th gave him 16 points in five holes without dropping a gross shot, and his 87 on the Tour Course was one stroke better than his previous visit there. By the close of round two, with Alex Baker leading the TEG 18 Trophy, Jon Baker was back in front in the Jacket.
+
+The Stadium Course undid it. At the fourth in round three he ran up a nine, a quintuple bogey worth no points, and his best gross round on the Stadium all week was 97 — eight strokes more than his last visit to the course. The Jacket lead did not come back, and neither did the Trophy defence.
