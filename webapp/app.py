@@ -15,7 +15,7 @@ from webapp.routes import (
     history, latest, performance, scoring, scorecards,
     eclectic, reports, contents,
     admin, admin_round_setup, admin_teg_setup, admin_live_round, live_round,
-    admin_new_round,
+    admin_new_round, admin_reports,
 )
 from webapp.nav import NAV_SECTIONS
 from webapp.theme import (
@@ -81,6 +81,7 @@ app.include_router(admin_round_setup.router)
 app.include_router(admin_teg_setup.router)
 app.include_router(admin_live_round.router)
 app.include_router(live_round.router)
+app.include_router(admin_reports.router)
 
 
 @app.get("/")

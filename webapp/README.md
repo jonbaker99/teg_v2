@@ -34,9 +34,9 @@ Visit `http://localhost:8000` in your browser. Use the theme switcher in the nav
 
 The webapp includes a password-gated admin area, all in `webapp/routes/admin.py`
 (+ `webapp/routes/admin_round_setup.py`, `webapp/routes/admin_teg_setup.py`,
-`webapp/routes/admin_live_round.py`) + `webapp/admin_auth.py`. A shared sub-nav
-(`partials/admin_nav.html`) links the pages: **➕ New round** (the guided
-wizard — start here), **Round setup**, **TEG setup**, **Live round**, **Sheet
+`webapp/routes/admin_live_round.py`, `webapp/routes/admin_reports.py`) + `webapp/admin_auth.py`.
+A shared sub-nav (`partials/admin_nav.html`) links the pages: **➕ New round** (the guided
+wizard — start here), **Round setup**, **TEG setup**, **Live round**, **Reports**, **Sheet
 import (fallback)**, **Edit data**, **Delete rounds**, **Volume** (browser),
 **GitHub sync**, **Backups** and **File guide**. Every page is
 behind the same cookie auth and each write calls `deps.clear_all_data_caches()`
@@ -145,6 +145,24 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
   pipeline exactly as "Add a round" does — one GitHub commit, every derived cache
   regenerated. See the player-facing side below and
   `DATA_STORAGE_INGESTION_PLAN.md`'s "Phase 3.4 design" for the full model.
+
+**Reports** — templates `admin_reports.html`, `partials/admin_report_panel.html`,
+`partials/admin_report_status.html`; route `webapp/routes/admin_reports.py`; state machine +
+background task in `webapp/report_generation.py`.
+- **Routes:** `/admin/reports` (TEG/round pickers), `/admin/reports/panel` (HTMX, repopulates
+  rounds when the TEG changes), `/admin/reports/generate` (`kind=round|tournament`, HTMX),
+  `/admin/reports/status` (HTMX poll target).
+- **Purpose:** trigger the newspaper-style report pipeline (storylines → draft → voice) from a
+  phone, no laptop — the clubhouse use case. Runs for minutes, not seconds, so status lives in a
+  **JSON file per (TEG, round-or-None)**, not the in-memory `_sync_jobs` dict the volume-sync pull
+  jobs use (`admin.py`) — a phone's screen locking mid-poll would otherwise lose the job. A
+  `claim()` call makes the (TEG, round) slot single-flight: a second trigger while one is active
+  is refused, not queued. The pipeline writes to a CWD-relative `data/commentary/`, which on
+  Railway is not the mounted volume, so the background task stages its four output files into the
+  real store, then pushes them to GitHub (`teg_analysis.io.push_files`) as the sync-of-record — a
+  failed push doesn't block reading the report, it's a separate terminal state
+  (`done_local_only`) with its own retry path. Copy this file-based-status pattern for any future
+  admin action that can outlast a single poll cycle.
 
 **Sheet import (fallback)** — templates `admin_data_update.html`, `partials/admin_update_*.html`.
 Phase 4.1 of `DATA_STORAGE_INGESTION_PLAN.md`: relabeled from "Add a round" now that Live

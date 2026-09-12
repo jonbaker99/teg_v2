@@ -8,6 +8,27 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 - [ ] **Bestball/worstball on `/latest-round`** — show best/worst bestball and worstball positions in the round-in-context page.
 - [ ] **`/scoring/matrix`** - score type as pills; TEG / Round / 9 as tabs
+- [x] **Remote/on-the-fly report generation — admin-triggered, the clubhouse use case (2026-09-12).**
+  `/admin/reports` runs the newspaper-style pipeline (storylines → draft → voice) directly on the
+  webapp process, for both tournament and round reports, then pushes the result to GitHub — no
+  laptop or CLI needed after a round ends. `POST /admin/reports/generate` (`kind=round|tournament`)
+  claims a single-flight slot per (TEG, round) and enqueues a `BackgroundTasks` job;
+  `GET /admin/reports/status` is the HTMX poll target, self-terminating once the run reaches a
+  terminal state. All of it lives in the new `webapp/report_generation.py` (the status-file state
+  machine + the background task) and `webapp/routes/admin_reports.py` (route plumbing only) — see
+  `webapp/README.md`'s admin section for why status is a file, not the in-memory dict the
+  volume-sync jobs use. **The staging step is the load-bearing part**: the pipeline writes its
+  artefacts to a CWD-relative `data/commentary/` (`teg_analysis.reporting.paths.output_dir`), which
+  on Railway is *not* the mounted volume (`data/` is excluded from the Docker image) — so every run
+  copies its four output files into the real store before the site can see them, then
+  `teg_analysis.io.push_files` commits them to GitHub in one batch. A failed push doesn't block
+  reading the report (state `done_local_only`, retry from `/admin/volume-sync`); a failed
+  generation never reaches staging (state `error`). Manual trigger only, full pipeline only
+  (no stage-by-stage UI), real API billing (`ANTHROPIC_API_KEY`) — the mailbox/plan-usage path
+  isn't viable standing in a clubhouse.
+  **Validated live, same session:** a TEG 18 R4 round report (194s, 0 new D3 findings) and the TEG 18
+  tournament report (379s, 0 new D3 findings), both generated, staged and committed to GitHub
+  end to end.
 - [x] **`/latest-round`'s Report tab fixed the same way (2026-09-12).** It was an HTMX tab reading
   the stale `teg_N_round_R_report_styled.md` blob, 4th of 7 tabs. Now it's the last item in the
   tab row and a real link to `/teg-reports?teg=N&round=R` for the specific round being viewed,
@@ -200,18 +221,6 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 - [ ] **Records table horizontal overflow on narrow screens** — long location strings (e.g. `TEG 8 (Lisbon Coast, Portugal, 2015)`) push the `/records` tables past the panel/viewport at narrow widths, causing horizontal scroll. Pre-existing (unrelated to the page-gutter fix). Apply the mobile table approach — sticky-column / horizontal-scroll container or name-shortening — per `design_principles.md` → Tables.
 
 ## Planned enhancements
-
-- [ ] **Remote/on-the-fly report generation, tournament AND round (the clubhouse use case)** — no
-  webapp UI/route currently triggers the `teg_analysis/reporting/` pipeline; generation is a
-  local/manual process (run the pipeline via script/notebook with `ANTHROPIC_API_KEY`, then get the
-  output file onto the Railway volume) before it's viewable at `/teg-reports` or the Report tabs.
-  The goal is a live report as soon as scores are in while still in the clubhouse — add an
-  admin-triggered generate flow (e.g. a button on `/admin` that runs the pipeline as a background
-  task and writes/syncs the resulting `..._report_styled.md`), fast enough that "as soon as the
-  scores are in" is real, for both the tournament pipeline and the round-report equivalent once #3
-  in `teg_analysis/reporting/STATUS.md` → START HERE → *Next* exists. (Note: the separate *viewing*
-  bug — reports not appearing on Railway at all — was diagnosed and fixed 2026-07-12; see
-  `teg_analysis/reporting/STATUS.md` → "Known issues". This item is about generation only.)
 
 - [ ] **Hole-level score correction** — inline editor to fix individual hole scores after entry. Not built in either app: Streamlit's `data_edit.py` and the webapp's `/admin/edit-data` both only cover metadata CSVs (round info, handicaps, etc.), not raw hole-level scores. Not a Streamlit-retirement blocker (Streamlit never had this either) — a standalone future enhancement.
 

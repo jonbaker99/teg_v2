@@ -35,6 +35,10 @@ data/commentary/variants/
 # the pass is reversible without git; in the repo, git history already holds the
 # text they preserve, so committing them is duplication.
 data/commentary/*_precorrections.md
+
+# Admin-triggered report-generation status (webapp/report_generation.py). Local
+# run state only — never pushed/pulled, never meant to be committed.
+data/commentary/_generation_status/
 nul
 
 #nodemodules -> what is this?

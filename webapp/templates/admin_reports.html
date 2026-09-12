@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title_suffix %} — Generate reports{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+  <span class="page-label">Admin</span>
+  <h1 class="page-title">Generate reports</h1>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="/static/admin.css">
+{% endblock %}
+
+{% block content %}
+{% set admin_active = 'reports' %}
+{% include "partials/admin_nav.html" %}
+
+<div class="section-panel">
+  <p style="margin-bottom:1.25rem;font-size:0.875rem;">
+    Runs the newspaper-style report pipeline (storylines → draft → voice) directly on this
+    service, then pushes the finished report to GitHub. Each run makes real Anthropic API
+    calls and takes a few minutes — pick the TEG/round, hit Generate, and check back from
+    <a href="/teg-reports">/teg-reports</a> once it's done.
+  </p>
+
+  <div id="report-panel">
+    {% include "partials/admin_report_panel.html" %}
+  </div>
+</div>
+{% endblock %}

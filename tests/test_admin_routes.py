@@ -30,7 +30,7 @@ def _login(client):
 @pytest.mark.parametrize("path", [
     "/admin/edit-data", "/admin/delete-data", "/admin/volume-sync",
     "/admin/file-guide", "/admin/volume", "/admin/backups", "/admin/round-setup",
-    "/admin/teg-setup", "/admin/live-round",
+    "/admin/teg-setup", "/admin/live-round", "/admin/reports",
 ])
 def test_routes_require_auth(client, path):
     resp = client.get(path)
@@ -664,6 +664,71 @@ def test_live_round_cancel(client, monkeypatch):
     resp = client.post("/admin/live-round/tok123/cancel")
     assert resp.status_code == 200
     assert "cancelled" in resp.text.lower()
+
+
+def test_reports_page_renders(client):
+    _login(client)
+    resp = client.get("/admin/reports")
+    assert resp.status_code == 200
+    assert "Generate round report" in resp.text
+    assert "Generate tournament report" in resp.text
+
+
+def test_reports_generate_enqueues_and_guards_double_run(client, monkeypatch, tmp_path):
+    import webapp.report_generation as report_generation
+    from webapp import deps
+
+    # Status files land under tmp_path instead of the real store.
+    monkeypatch.setattr(report_generation, "_store_path",
+                        lambda rel: tmp_path / rel)
+
+    calls = []
+    monkeypatch.setattr(report_generation, "generate_report",
+                        lambda teg, round_num: calls.append((teg, round_num)))
+
+    teg = deps.get_default_teg_num()
+    rounds = deps.get_rounds_for_teg(teg)
+    round_num = rounds[-1] if rounds else 1
+
+    _login(client)
+    resp = client.post("/admin/reports/generate",
+                       data={"kind": "round", "teg": teg, "round": round_num})
+    assert resp.status_code == 200
+    assert len(calls) == 1
+
+    status = report_generation.read_status(teg, round_num)
+    assert status is not None
+
+    # A second request while the first looks "active" is refused, not enqueued
+    # again — generate_report ran synchronously above (TestClient runs
+    # BackgroundTasks inline) and left state "queued", since our stub never
+    # writes "running"/"done" itself.
+    resp2 = client.post("/admin/reports/generate",
+                        data={"kind": "round", "teg": teg, "round": round_num})
+    assert resp2.status_code == 200
+    assert "already generating" in resp2.text.lower()
+    assert len(calls) == 1
+
+
+def test_generate_rejects_tournament_for_in_progress_teg(client, monkeypatch, tmp_path):
+    import webapp.report_generation as report_generation
+    from webapp import deps
+
+    monkeypatch.setattr(report_generation, "_store_path", lambda rel: tmp_path / rel)
+
+    teg = deps.get_default_teg_num()
+    monkeypatch.setattr(deps, "get_current_in_progress_teg_fast", lambda: (teg, 1))
+
+    calls = []
+    monkeypatch.setattr(report_generation, "generate_report",
+                        lambda t, r: calls.append((t, r)))
+
+    _login(client)
+    resp = client.post("/admin/reports/generate", data={"kind": "tournament", "teg": teg})
+    assert resp.status_code == 200
+    assert "still in progress" in resp.text.lower()
+    assert calls == []
+    assert report_generation.read_status(teg, None) is None
 
 
 if __name__ == "__main__":

@@ -14,6 +14,14 @@
 
 ## START HERE — picking this up in a new chat (2026-09-08)
 
+**A second, non-CLI caller now exists (2026-09-12).** `webapp/report_generation.py` calls
+`run_one()` directly from both `scripts/storyline_full_report_experiment.py` and
+`scripts/storyline_round_report_experiment.py`, from inside the webapp process, via
+`/admin/reports`. It depends on two things staying true: `run_one()` never calling `sys.exit`
+(only each script's CLI-only `main()` does), and the storyline-first artefact filenames in
+`paths.py:_artefact_names` staying stable. Anyone refactoring either should check that route first.
+Detail: `webapp/TODOS.md`'s dated 2026-09-12 entry.
+
 ### Next: one to-do (items 1–3 done 2026-09-11)
 
 The storyline-first newspaper report (Fraunces/Source Serif newspaper layout, row-packed

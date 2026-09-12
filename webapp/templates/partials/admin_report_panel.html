@@ -1,0 +1,60 @@
+{# TEG/round pickers + two generate buttils + status. Re-rendered whenever the
+   TEG select changes (to repopulate rounds) via /admin/reports/panel. #}
+
+<form id="report-form">
+  <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end;margin-bottom:1rem;">
+    <label style="display:flex;flex-direction:column;gap:.25rem;">
+      <span class="page-label">TEG</span>
+      <select name="teg" hx-get="/admin/reports/panel" hx-target="#report-panel" hx-swap="innerHTML"
+              hx-trigger="change" hx-include="closest form" style="padding:.4rem .6rem;">
+        {% for t in tegs %}
+          <option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <label style="display:flex;flex-direction:column;gap:.25rem;">
+      <span class="page-label">Round</span>
+      <select name="round" style="padding:.4rem .6rem;">
+        {% for r in rounds %}
+          <option value="{{ r }}" {% if r == selected_round %}selected{% endif %}>
+            Round {{ r }}{% if r in rounds_with_reports %} ✓{% endif %}
+          </option>
+        {% endfor %}
+      </select>
+    </label>
+  </div>
+
+  <div style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;margin-bottom:.5rem;">
+    <button type="button" class="btn-action"
+            hx-post="/admin/reports/generate" hx-vals='{"kind": "round"}'
+            hx-target="#report-status" hx-swap="innerHTML" hx-include="closest form">
+      Generate round report
+    </button>
+    {% if round_status and round_status.state not in ("queued", "running", "pushing") %}
+      <span class="text-muted text-sm">Last run: {{ round_status.state }}{% if round_status.finished_at %} ({{ round_status.finished_at[:16] }}){% endif %}</span>
+    {% endif %}
+
+    <button type="button" class="btn-secondary"
+            hx-post="/admin/reports/generate" hx-vals='{"kind": "tournament"}'
+            hx-target="#report-status" hx-swap="innerHTML" hx-include="closest form"
+            {% if not teg_complete %}disabled title="TEG {{ selected_teg }} is still in progress — the tournament report can only be written once the final round is in."{% endif %}>
+      Generate tournament report
+    </button>
+    {% if tournament_status and tournament_status.state not in ("queued", "running", "pushing") %}
+      <span class="text-muted text-sm">Last run: {{ tournament_status.state }}{% if tournament_status.finished_at %} ({{ tournament_status.finished_at[:16] }}){% endif %}</span>
+    {% endif %}
+
+    {% if has_tournament_report %}
+      <span class="text-muted text-sm">Tournament report already exists — regenerating overwrites it.</span>
+    {% endif %}
+  </div>
+
+  <p class="text-muted text-sm" style="margin-bottom:1rem;">
+    Roughly 4–7 API calls for a round, 7–10 for a tournament. A few minutes either way — don't double-tap.
+  </p>
+</form>
+
+<div id="report-status">
+  {% include "partials/admin_report_status.html" with context %}
+</div>

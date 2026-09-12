@@ -1,0 +1,53 @@
+{# Live status for one (teg, round-or-None, kind) report run. Swapped into
+   #report-status by the generate button and by its own poll. Self-terminating:
+   only the in-flight branch carries an hx-get, so polling stops the instant a
+   terminal state renders (same trick as admin_sync_progress.html). #}
+
+{% if error_message %}
+  <div class="admin-callout admin-callout--warning">
+    <div class="admin-callout-title">⚠️ Can't start</div>
+    <div class="admin-callout-detail">{{ error_message }}</div>
+  </div>
+
+{% elif not status %}
+  {# Nothing run yet for this selection — render nothing. #}
+
+{% elif status.state in ("queued", "running", "pushing") %}
+  <div hx-get="/admin/reports/status?teg={{ teg }}&round={{ round or 0 }}&kind={{ kind }}"
+       hx-trigger="load delay:3s" hx-target="#report-status" hx-swap="innerHTML">
+    <div class="data-card" style="margin-bottom:1rem;">
+      <h2 class="card-header">
+        {% if status.state == "pushing" %}🔄 Committing to GitHub…{% else %}🔄 Generating…{% endif %}
+      </h2>
+      <p class="text-muted text-sm">{{ status.message }}</p>
+      {% if status.started_at %}
+        <p class="text-muted text-sm">Started {{ status.started_at[:16] }}.</p>
+      {% endif %}
+    </div>
+  </div>
+
+{% elif status.state == "done" %}
+  <div class="admin-callout admin-callout--live">
+    <div class="admin-callout-title">✅ Report ready</div>
+    <div class="admin-callout-detail">
+      Committed to GitHub.
+      <a href="/teg-reports?teg={{ teg }}{% if round %}&round={{ round }}{% endif %}">View it →</a>
+    </div>
+  </div>
+
+{% elif status.state == "done_local_only" %}
+  <div class="admin-callout admin-callout--warning">
+    <div class="admin-callout-title">⚠️ Report is live, but not yet on GitHub</div>
+    <div class="admin-callout-detail">
+      {{ status.error }}<br>
+      <a href="/teg-reports?teg={{ teg }}{% if round %}&round={{ round }}{% endif %}">View it →</a> —
+      <a href="/admin/volume-sync?folder=data/commentary">retry the GitHub push</a>
+    </div>
+  </div>
+
+{% elif status.state == "error" %}
+  <div class="admin-callout admin-callout--warning">
+    <div class="admin-callout-title">❌ Generation failed</div>
+    <div class="admin-callout-detail">{{ status.error }}</div>
+  </div>
+{% endif %}
