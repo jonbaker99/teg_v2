@@ -38,6 +38,7 @@ towards) is written when later rounds do not exist yet. See
 from __future__ import annotations
 
 import json
+import re
 from typing import Optional, Tuple, Union
 
 from pydantic import BaseModel, Field
@@ -132,6 +133,82 @@ def _round_of_the_day(round_ranks: list[dict]) -> dict:
         "best_gross_score": min(r["round_score_gross"] for r in round_ranks),
         "worst_gross_score": max(r["round_score_gross"] for r in round_ranks),
         "field_size": len(round_ranks),
+    }
+
+
+#: Phrasing that asserts a player was best across MULTIPLE rounds — "the
+#: fourth round running", "swept", "wire to wire", "every round". Found
+#: 2026-09-12: TEG 3 R4's `round_story` claimed Jon Baker had "the best score
+#: in the field for the fourth round running" — false. Round 2 was an EXACT
+#: tie with Henry Meller (both -2 net-vs-par), not a Baker win. The claim
+#: originated in the editor's `subject`/`why_it_matters` with no beat_ids
+#: citing it, and the fact-isolated draft writer — which had no round-level
+#: data for rounds 1-3 in its `context` at all — restated it as fact anyway,
+#: because `subject` was the only place the claim existed to copy from.
+#: `round_by_round_status` (below) is the fix: a real, tie-aware fact the
+#: editor and writer can both check a streak claim against, and
+#: `check_round_storyline_plan_consistency` flags any storyline whose text
+#: matches this pattern for manual verification, since parsing "which player,
+#: is it exactly true" out of free text is not reliable enough to gate on
+#: automatically.
+_STREAK_CLAIM_RE = re.compile(
+    r"\bevery round\b"
+    r"|\b(?:second|third|fourth|fifth|sixth)\s+round\s+running\b"
+    r"|\bswept\b|\bclean sweep\b|\bwire[\s-]to[\s-]wire\b"
+    r"|\ball\s+(?:three|four|five|six)\s+rounds\b",
+    re.IGNORECASE,
+)
+
+
+def _round_by_round_status(teg_num: int, round_num: int) -> dict:
+    """Per-player, per-round best/tied/not-best status for rounds 1..round_num,
+    for BOTH the Trophy metric and Gross — the ground truth any "swept every
+    round" / "Nth round running" claim must match exactly. A tie is NOT a win.
+
+    Returns `{"trophy": {...}, "gross": {...}}`, each `{player: {"rounds":
+    [1,2,...], "statuses": ["best","tied","best",...], "best_or_tied_every_round":
+    bool, "clean_sweep": bool, "tied_rounds": [2]}}`. Leak-safe by construction
+    — bounded to `Round <= round_num` of THIS teg_num, same as every other
+    enrichment in this module.
+    """
+    from teg_analysis.analysis.commentary import create_round_summary
+    rs = create_round_summary()
+    rs = rs[(rs["TEGNum"] == teg_num) & (rs["Round"] <= round_num)]
+    if rs.empty:
+        return {"trophy": {}, "gross": {}}
+
+    metric = trophy_metric(teg_num)
+    trophy_col = "Round_Score_NetVP" if metric == "net_vs_par" else "Round_Score_Stableford"
+    trophy_best_is_low = metric == "net_vs_par"
+
+    def _status_by_round(col: str, best_is_low: bool) -> dict:
+        by_player: dict = {}
+        for r, g in rs.groupby("Round"):
+            best = g[col].min() if best_is_low else g[col].max()
+            n_at_best = int((g[col] == best).sum())
+            for _, row in g.iterrows():
+                status = ("best" if row[col] == best and n_at_best == 1
+                          else "tied" if row[col] == best else "not")
+                by_player.setdefault(row["Player"], {})[int(r)] = status
+        return by_player
+
+    def _summarize(by_player: dict) -> dict:
+        out = {}
+        for player, by_round in by_player.items():
+            rounds = sorted(by_round)
+            statuses = [by_round[r] for r in rounds]
+            out[player] = {
+                "rounds": rounds,
+                "statuses": statuses,
+                "best_or_tied_every_round": all(s in ("best", "tied") for s in statuses),
+                "clean_sweep": all(s == "best" for s in statuses),
+                "tied_rounds": [r for r, s in zip(rounds, statuses) if s == "tied"],
+            }
+        return out
+
+    return {
+        "trophy": _summarize(_status_by_round(trophy_col, trophy_best_is_low)),
+        "gross": _summarize(_status_by_round("Round_Score_Gross", True)),
     }
 
 
@@ -278,6 +355,7 @@ def assemble_round_storyline_bundle(teg_num: int, round_num: int, *,
         "prior_rounds": _prior_rounds_context(teg_num, round_num, all_events),
         "round_ranks": round_ranks,
         "round_of_the_day": _round_of_the_day(round_ranks),
+        "round_by_round_status": _round_by_round_status(teg_num, round_num),
         "course_context": build_player_course_history(teg_num, through_round=round_num),
         "player_history": {
             p: h for p, h in build_player_cross_teg_history(teg_num).items()
@@ -352,6 +430,13 @@ course, bounded to visits strictly before this round (earlier TEGs, or earlier r
 TEG on the same course) — never a course best set LATER in this TEG. Use it for `round_story` \
 or a discovered storyline when a player's course history is genuinely part of the story.
 
+**Cross-round claims must match `round_by_round_status` exactly.** Before writing "every \
+round", "the Nth round running", "swept", "clean sweep", or "wire to wire" for any player, check \
+`round_by_round_status` (per player, per competition: `trophy` and `gross` separately) for the \
+rounds so far. A round marked `"tied"` is NOT a win — a genuinely unbroken run needs \
+`clean_sweep: true`; a run with a tie is "the best or tied-best in every round", never a clean \
+sweep. If you cannot confirm the claim from this field, do not make it.
+
 YOUR JOB:
 - `title` + `title_candidates`, `theme` (one line), `opening_hook`.
 - 1-3 `narrative_vehicles`, naming the one you foreground as `prominent_vehicle`. Pick ONLY \
@@ -421,6 +506,14 @@ out `evidence` — the beats are still the spine.
 Every fact you state must trace to `evidence` or `context`. If it is in neither, it does not \
 exist.
 
+**`subject` may claim more than the evidence supports — check it, do not just copy it.** If \
+`subject` asserts a player was best across MULTIPLE rounds ("every round", "the Nth round \
+running", "swept", "wire to wire"), that claim is only true if `context.round_by_round_status` \
+(per competition: `trophy` and `gross`) confirms it — a round marked `"tied"` is NOT a win. \
+Restate the claim only as far as `round_by_round_status` actually supports: if it shows a tie, \
+say "the best or tied-best in every round", never a clean sweep; if you cannot check it at all, \
+drop the specific round-count and describe only what `evidence` for THIS round shows.
+
 WHAT IS WORTH SAYING, and how to name it:
 """ + prompts.RANKING_RULE + """
 """ + prompts.NAMING_RULE + """
@@ -452,6 +545,12 @@ def check_round_storyline_plan_consistency(plan: RoundStorylinePlan, bundle: dic
             warnings.append(f"{name} has no standfirst")
         if not s.descriptor:
             warnings.append(f"{name} has no descriptor")
+        text = " ".join((s.subject, s.why_it_matters, s.shape, s.chosen_headline))
+        if _STREAK_CLAIM_RE.search(text):
+            warnings.append(
+                f"{name} makes a cross-round streak/sweep claim — verify it against "
+                f"bundle['round_by_round_status'] before trusting it (a tied round is "
+                f"not a win): {text[:160]!r}")
 
     mandatory_ids = {b["id"] for b in bundle["beats"] if b.get("mandatory")}
     cited_ids = {bid for _, s in storylines for bid in s.beat_ids}
@@ -542,6 +641,71 @@ def load_round_storyline_plan(teg_num: int, round_num: int) -> dict:
         raise ValueError(f"{path} is not a valid RoundStorylinePlan: {e}") from None
 
 
+class _StreakCorrectedFields(BaseModel):
+    subject: str
+    chosen_headline: str
+    standfirst: str
+    why_it_matters: str
+
+
+def correct_streak_claim_in_plan(teg_num: int, round_num: int, story_key: str,
+                                 model: Optional[str] = None) -> dict:
+    """Narrow companion to `authoring.apply_corrections`'s edit 4 — that
+    function corrects the REPORT PROSE; it never touches the plan JSON, but
+    `newspaper_edition._plan_headline` prefers the plan's `chosen_headline`
+    over anything derived from the markdown heading, so a streak/sweep claim
+    baked into `chosen_headline` (or `subject`/`standfirst`) survives a
+    prose-only correction untouched and keeps printing on the page.
+
+    Rewrites ONLY `subject`, `chosen_headline`, `standfirst`, `why_it_matters`
+    for the one storyline named by `story_key` ("round_story", "race_story",
+    or "discovered_storylines[N]") to match `_round_by_round_status` — never
+    `beat_ids`, `shape`, the scores, or `descriptor`. Writes the plan back in
+    place; no backup (the plan is small and already in git).
+
+    Found 2026-09-12 correcting TEG 3 R4: `round_story.chosen_headline` was
+    "Four Rounds, Four Wins For Baker" — false, round 2 was a tie.
+    """
+    path = f"{output_dir()}/teg_{teg_num}_round_{round_num}_storyline_plan.json"
+    with open(path) as f:
+        plan = json.load(f)
+
+    if story_key.startswith("discovered_storylines["):
+        idx = int(story_key[len("discovered_storylines["):-1])
+        story = plan["discovered_storylines"][idx]
+    else:
+        story = plan[story_key]
+
+    status = _round_by_round_status(teg_num, round_num)
+    system = (
+        "You are correcting exactly four fields of a golf-report storyline plan: "
+        "`subject`, `chosen_headline`, `standfirst`, `why_it_matters`. Nothing else. "
+        "The current values assert a cross-round streak/sweep claim ('every round', "
+        "'the Nth round running', 'swept', 'clean sweep', 'wire to wire') that does "
+        "not match the supplied `round_by_round_status` ground truth — a round marked "
+        "\"tied\" is NOT a win. Rewrite the four fields so they state only what the "
+        "data actually supports (e.g. 'the best or tied-best in every round' instead "
+        "of 'swept'), keeping every other fact and the overall shape of each field. "
+        "`chosen_headline` stays 3-8 words, no two-clause 'X — Y' or 'X: Y' "
+        "construction. `standfirst` stays one sentence. Change nothing else in "
+        "meaning."
+    )
+    user = json.dumps({
+        "current": {k: story[k] for k in ("subject", "chosen_headline",
+                                          "standfirst", "why_it_matters")},
+        "round_by_round_status": status,
+    }, indent=2, ensure_ascii=False)
+    fields, _usage = llm.generate_structured(system, user, _StreakCorrectedFields,
+                                             model=model or llm.DEFAULT_MODEL,
+                                             stage="round_streak_correction",
+                                             label=f"teg{teg_num}r{round_num}")
+    story.update(fields.model_dump())
+
+    with open(path, "w") as f:
+        json.dump(plan, f, indent=2, ensure_ascii=False)
+    return fields.model_dump()
+
+
 def build_round_results_for_glance(teg_num: int, round_num: int) -> Tuple[list, bool]:
     """The round edition's at-a-glance box content, computed DETERMINISTICALLY
     from `_competition_state_at_round` / `_round_of_the_day` — never from the
@@ -612,6 +776,16 @@ def _context_for(storyline_players: set, bundle: dict) -> dict:
                            if p in storyline_players},
         "player_history": {p: h for p, h in (bundle.get("player_history") or {}).items()
                            if p in storyline_players},
+        # The only source for a cross-round claim ("every round", "swept",
+        # "Nth round running") — a tie is NOT a win. Added 2026-09-12 after
+        # TEG 3 R4's round_story stated a clean sweep that round 2 (an exact
+        # tie) contradicts; before this, the writer had no round-level data
+        # for prior rounds at all and could only copy the editor's `subject`.
+        "round_by_round_status": {
+            comp: {p: v for p, v in (bundle.get("round_by_round_status") or {}).get(comp, {}).items()
+                  if p in storyline_players}
+            for comp in ("trophy", "gross")
+        },
     }
     if bundle.get("is_final_round"):
         ctx["double"] = bundle.get("double")

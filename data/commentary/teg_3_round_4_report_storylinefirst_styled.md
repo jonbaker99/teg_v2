@@ -15,9 +15,9 @@
 ## The final-day verdicts at Boavista seen from the men who were not winning the Trophy: David Mullin's second Green Jacket, Stuart Neumann's near-miss with the Spoon, and Henry Meller's second Wooden Spoon
 <!-- storyline: race -->
 
-On the final day at Boavista the Trophy went to Jon Baker, but three other stories closed out around him. David Mullin secured his second Green Jacket, extending his lead from nine shots to twelve. He built the round on a tidy stretch from the 2nd to the 4th. Three holes without dropping a gross shot, three shots gained to net par, the golf of a man who had read the situation correctly. Then came the 5th, and a triple bogey, and the end of all that. At the 11th he added a quadruple bogey, apparently to test whether twelve shots was really necessary. It was not. Neither dent cost him the Jacket.
+On the final day at Boavista the TEG 3 Trophy went to Jon Baker, but three other stories closed out around him. David Mullin secured the TEG 3 Green Jacket, his second, extending his lead from nine shots to twelve. He built the round on a tidy stretch from the 2nd to the 4th. Three holes without dropping a gross shot, three shots gained to net par, the golf of a man who had read the situation correctly. Then came the 5th, and a triple bogey, and the end of all that. At the 11th he added a quadruple bogey, apparently to test whether twelve shots was really necessary. It was not. Neither dent cost him the Jacket.
 
-Stuart Neumann kept himself off the bottom with a small run of his own. Two holes without a dropped shot, around the 6th and 7th. It was enough to survive a near-miss with the Wooden Spoon, which is not the same thing as playing well.
+Stuart Neumann kept himself off the bottom with a small run of his own. Two holes without a dropped shot, around the 6th and 7th. It was enough to survive a near-miss with the TEG 3 Wooden Spoon, which is not the same thing as playing well.
 
 Henry Meller could not escape it. From the 12th to the 15th he gained shots to par four times in succession, narrowing the gap to fourth from five to four. It was a rally staged in a building that had already been condemned. Meller finished with his second Wooden Spoon.
 
@@ -39,14 +39,14 @@ The round rested on three quadruple bogeys, spaced out like scheduled maintenanc
 
 The finish offered nothing. He bled nine shots over the closing four holes. Double bogeys at the 15th, 16th and 18th, with a triple at the 17th sitting in the middle of them. The 15th is Boavista's hardest hole and the 18th one of its toughest, so at least the collapse had taste.
 
-## Jon Baker's level-net 0 at Boavista, the best score in the field for the fourth round running, completing the sweep that delivers his first TEG Trophy
+## Jon Baker's level-net 0 at Boavista, the best or tied-best score in the field in every round, completing the run that delivers his first TEG Trophy
 <!-- storyline: round -->
 
-Jon Baker's final round at Boavista Golf & Spa Resort completed a clean sweep of TEG 16. His level-net 0 was the best score in the field for the fourth round running. The Trophy is his, for the first time.
+Jon Baker's final round at Boavista Golf & Spa Resort completed a TEG 3 with the best or tied-best score in every round. His level-net 0 was the best score in the field. The Trophy is his, for the first time.
 
 The round turned through holes 7 to 9, where he picked up four shots against par. The key blow was a net birdie on the par-5 8th, one of the hardest holes on the course, delivered off nothing more exotic than a gross par. He then went through the 8th and the 9th without dropping a gross shot. It was control, applied without ceremony, on an afternoon when three other men were being dismantled by the 17th.
 
-It left Jon Baker as Trophy leader after the round, with David Mullin leading the separate Green Jacket race. Baker's overall Trophy lead grew to 18 shots by the finish. He began the day in front and ended it further in front, which is what four straight rounds as the field's best will do. It was his seventh visit to Boavista. Not a course best for him this TEG. Enough to finish the job.
+It left Jon Baker as Trophy leader after the round, with David Mullin leading the separate Green Jacket race. Baker's overall Trophy lead grew to 18 shots by the finish. He began the day in front and ended it further in front, which is what four rounds as the field's best or joint-best will do. It was his seventh visit to Boavista. Not a course best for him this TEG. Enough to finish the job.
 
 ## Round standings
 

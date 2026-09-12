@@ -191,3 +191,84 @@ def test_is_final_round_mismatch_is_flagged():
     bundle["is_final_round"] = False
     warnings = check_round_storyline_plan_consistency(plan, bundle)
     assert any("is_final_round" in w for w in warnings)
+
+
+# ---------------------------------------------------------------------------
+# round_by_round_status — the ground truth for cross-round streak/sweep claims.
+# Regression coverage for the real TEG 3 R4 error: round_story claimed Jon
+# Baker had "the best score in the field for the fourth round running", but
+# round 2 was an exact tie with Henry Meller — not a win.
+# ---------------------------------------------------------------------------
+def test_round_by_round_status_flags_a_tie_as_not_a_clean_sweep():
+    from teg_analysis.reporting.round_storyline import _round_by_round_status
+    status = _round_by_round_status(3, 4)["trophy"]
+    baker = status["Jon BAKER"]
+    assert baker["statuses"] == ["best", "tied", "best", "best"]
+    assert baker["best_or_tied_every_round"] is True
+    assert baker["clean_sweep"] is False
+    assert baker["tied_rounds"] == [2]
+
+
+def test_round_by_round_status_is_bounded_to_round_num():
+    from teg_analysis.reporting.round_storyline import _round_by_round_status
+    status = _round_by_round_status(3, 2)["trophy"]
+    assert status["Jon BAKER"]["rounds"] == [1, 2]
+
+
+def test_streak_claim_in_subject_is_flagged():
+    plan = _plan(round_story=_storyline(
+        beat_ids=["r2_b01"],
+        subject="the best score in the field for the fourth round running"))
+    bundle = _bundle([{"id": "r2_b01", "mandatory": False}, {"id": "r2_b02", "mandatory": False}])
+    warnings = check_round_storyline_plan_consistency(plan, bundle)
+    assert any("streak/sweep" in w for w in warnings)
+
+
+def test_no_streak_claim_is_silent():
+    plan = _plan(round_story=_storyline(beat_ids=["r2_b01"], subject="a good round"))
+    bundle = _bundle([{"id": "r2_b01", "mandatory": False}, {"id": "r2_b02", "mandatory": False}])
+    warnings = check_round_storyline_plan_consistency(plan, bundle)
+    assert not any("streak/sweep" in w for w in warnings)
+
+
+# ---------------------------------------------------------------------------
+# correct_streak_claim_in_plan — the plan-JSON half of the streak-claim fix.
+# `apply_corrections` only edits report prose; `newspaper_edition._plan_headline`
+# prefers the plan's `chosen_headline` over anything derived from the markdown,
+# so a false streak claim baked into `chosen_headline` survives a prose-only
+# correction untouched. Found correcting the real TEG 3 R4 output.
+# ---------------------------------------------------------------------------
+def test_correct_streak_claim_in_plan_rewrites_only_the_four_fields(tmp_path, monkeypatch):
+    import json
+    from unittest.mock import MagicMock
+    from teg_analysis.reporting import round_storyline as rs_mod
+
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "data" / "commentary").mkdir(parents=True)
+    plan = {
+        "round_story": {
+            "subject": "old false claim", "chosen_headline": "Old False Claim",
+            "standfirst": "Old.", "why_it_matters": "Old reason.",
+            "shape": "sh", "beat_ids": ["r4_b01"], "compelling_score": 7,
+            "humour_score": 5, "descriptor": "SIDEBAR",
+        },
+    }
+    path = tmp_path / "data" / "commentary" / "teg_9_round_4_storyline_plan.json"
+    path.write_text(json.dumps(plan))
+
+    fake_fields = rs_mod._StreakCorrectedFields(
+        subject="new accurate claim", chosen_headline="New Accurate Claim",
+        standfirst="New.", why_it_matters="New reason.")
+    monkeypatch.setattr(rs_mod.llm, "generate_structured",
+                        lambda *a, **k: (fake_fields, {}))
+
+    result = rs_mod.correct_streak_claim_in_plan(9, 4, "round_story")
+    assert result["chosen_headline"] == "New Accurate Claim"
+
+    saved = json.loads(path.read_text())
+    assert saved["round_story"]["chosen_headline"] == "New Accurate Claim"
+    assert saved["round_story"]["subject"] == "new accurate claim"
+    # Untouched fields survive exactly.
+    assert saved["round_story"]["beat_ids"] == ["r4_b01"]
+    assert saved["round_story"]["shape"] == "sh"
+    assert saved["round_story"]["descriptor"] == "SIDEBAR"

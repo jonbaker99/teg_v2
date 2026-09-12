@@ -5,9 +5,9 @@
 
 Alex Baker's final round at Praia D'El Rey passed through every available emotion, mostly in the wrong order. The front nine opened a wound early. A triple bogey at the 4th, a quadruple bogey at the 6th, and bogeys at the 5th and 7th packed neatly around them. A birdie at the 8th stopped the bleeding, if not the memory of it.
 
-The repair job held. It held long enough that a double bogey at the 14th drew him level at the top of the Trophy. Level was as far as he got. From the 14th to the 17th he shed 11 shots, including a second quadruple bogey at the 15th, one of the hardest holes on the course, and a double bogey at the index-one 17th. He gave the impression throughout of a man reading a weather forecast for somewhere else.
+The repair job held. It held long enough that a double bogey at the 14th drew him level at the top of the TEG 9 Trophy. Level was as far as he got. From the 14th to the 17th he shed 11 shots, including a second quadruple bogey at the 15th, one of the hardest holes on the course, and a double bogey at the index-one 17th. He gave the impression throughout of a man reading a weather forecast for somewhere else.
 
-And yet the round was a personal best twice over: 44 Stableford points and a gross 27 over par. It is a peculiar kind of triumph, and it counts all the same. John Patterson ended the day out in front for the Trophy, the gap now six. David Mullin remained ahead for the Green Jacket.
+And yet the round was a personal best twice over: 44 Stableford points and a gross 27 over par. It is a peculiar kind of triumph, and it counts all the same. John Patterson ended the day out in front for the Trophy, the gap now six. David Mullin remained ahead for the TEG 9 Green Jacket.
 
 ## David Mullin's wire-to-wire TEG 9 Green Jacket, sealed with the best gross round of the day
 <!-- storyline: d0 -->
@@ -21,7 +21,7 @@ It was the strongest gross score in the field for the round. It capped a Jacket 
 ## Stuart Neumann's rollercoaster final round confirms the TEG 9 Wooden Spoon
 <!-- storyline: d1 -->
 
-Stuart Neumann's final round was a fair summary of his entire TEG 9. Real quality, sealed at both ends by the golf that won him the Wooden Spoon. He opened by bleeding nine shots across holes 2 to 5, including a triple bogey at the 3rd. The 3rd is stroke index 18. It is the hole the course provides as a courtesy. He then went three consecutive holes without a net par.
+Stuart Neumann's final round was a fair summary of his entire TEG 9. Real quality, sealed at both ends by the golf that won him the TEG 9 Wooden Spoon. He opened by bleeding nine shots across holes 2 to 5, including a triple bogey at the 3rd. The 3rd is stroke index 18. It is the hole the course provides as a courtesy. He then went three consecutive holes without a net par.
 
 The middle told an entirely different story. A birdie at the 13th launched a run of 16 points from the 11th to the 15th, with four holes from the 11th to the 14th passing without a single gross shot dropped. It was his best golf of the tournament. He appeared to have no idea what to do with it.
 

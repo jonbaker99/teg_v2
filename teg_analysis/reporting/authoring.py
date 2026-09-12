@@ -1234,7 +1234,7 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
 CORRECTIONS_CONTRACT = """You are applying specific editorial rules to a finished golf \
 tournament report. This is a CORRECTIONS pass, not a rewrite and not a restyle.
 
-**You may make exactly three kinds of edit. Nothing else.**
+**You may make exactly four kinds of edit. Nothing else.**
 
 1. **Delete a rank claim that the ranking rule does not allow.** Remove the ranking clause and \
 leave the sentence grammatical. Where the sentence exists only to carry the rank, delete the \
@@ -1245,12 +1245,20 @@ This is an expansion, never a substitution: the person and the competition stay 
 3. **Add one sentence stating the double**, only where the supplied data shows the Trophy and \
 Green Jacket went to the same player this TEG and the lead story's opening paragraph does not \
 already say so. State it plainly, using only the rarity figures supplied — invent nothing. This \
-is the one exception to "add nothing" below.
+is one of two exceptions to "add nothing" below.
+4. **Correct or soften a cross-round streak/sweep claim** ("every round", "the Nth round \
+running", "swept", "clean sweep", "wire to wire") that does not match the supplied \
+`round_by_round_status` data, when it is supplied. A round marked `"tied"` is NOT a win: reword \
+the claim to what the data actually shows — "the best or tied-best in every round" instead of \
+"swept", for instance — or drop the specific round-count where no accurate short phrasing fits. \
+Change only the words carrying the false claim; leave the rest of the sentence and paragraph \
+exactly as written. If no `round_by_round_status` data is supplied, this edit does not apply.
 
 **Everything else is frozen.** Same paragraphs, same order, same headings, same sentences, same \
 voice, same jokes. Reproduce any HTML comment (`<!-- ... -->`) exactly where it is: those are \
 machine-readable anchors, invisible to the reader, and dropping one breaks the newspaper layout. Every score, hole, margin, total, weekday, course name and record stays \
-exactly as written. Add nothing beyond the single sentence permitted above. Reorder nothing. Do \
+exactly as written, except where edit 4 above requires changing the false part of a streak claim. \
+Add nothing beyond the single sentence permitted by edit 3. Reorder nothing. Do \
 not improve a sentence you were not sent here to touch, and do not compensate for a deleted \
 clause by writing a new one.
 
@@ -1262,9 +1270,10 @@ def apply_corrections(teg_num: int, *, source_label: str = "storylinefirst",
                       label: Optional[str] = None,
                       model: Optional[str] = None,
                       verify: bool = True,
-                      style: bool = True) -> dict:
-    """Apply `RANKING_RULE` + `NAMING_RULE` + `DOUBLE_RULE` to a report already on
-    disk. One call.
+                      style: bool = True,
+                      round_num: Optional[int] = None) -> dict:
+    """Apply `RANKING_RULE` + `NAMING_RULE` + `DOUBLE_RULE` + the streak/sweep
+    check to a report already on disk. One call.
 
     Args:
         teg_num: which TEG.
@@ -1279,6 +1288,12 @@ def apply_corrections(teg_num: int, *, source_label: str = "storylinefirst",
             (default True). Same rationale as `restyle_voice`: an extra pass over
             prose is judged on what it introduced, not on what it inherited.
         style: also write `{label}_styled.md` (default True).
+        round_num: when given, operates on `teg_N_round_R_report_*` artefacts
+            and additionally supplies `round_by_round_status`
+            (`round_storyline._round_by_round_status`) — the ground truth for
+            edit 4 of `CORRECTIONS_CONTRACT` (correcting an unverified
+            cross-round streak/sweep claim without a full regeneration; see
+            `teg_analysis/reporting/STATUS.md`, 2026-09-12).
 
     Returns {teg, label, source_path, backup_path, output_path, styled_path,
     usage, findings, new_findings, changed}.
@@ -1286,22 +1301,24 @@ def apply_corrections(teg_num: int, *, source_label: str = "storylinefirst",
     import os
     import shutil
 
-    from teg_analysis.reporting.render import style_text
     from teg_analysis.reporting.verify import verify_report
 
     out_label = _variant_label(label or source_label)
-    source_path = f"{output_dir()}/teg_{teg_num}_report_{source_label}.md"
+    stem = f"teg_{teg_num}_round_{round_num}" if round_num is not None else f"teg_{teg_num}"
+    source_path = f"{output_dir()}/{stem}_report_{source_label}.md"
     if not os.path.exists(source_path):
         raise FileNotFoundError(
-            f"{source_path} not found — TEG {teg_num} has no {source_label!r} report "
-            f"to correct. Generate one first, or pass a different source_label.")
+            f"{source_path} not found — TEG {teg_num}"
+            f"{f' round {round_num}' if round_num is not None else ''} has no "
+            f"{source_label!r} report to correct. Generate one first, or pass "
+            f"a different source_label.")
 
     with open(source_path) as f:
         source_text = f.read()
 
     backup_path = None
     if out_label == source_label:
-        backup_path = f"{output_dir()}/teg_{teg_num}_report_{source_label}_precorrections.md"
+        backup_path = f"{output_dir()}/{stem}_report_{source_label}_precorrections.md"
         # Never clobber an existing backup: a second run would otherwise
         # overwrite the true original with the already-corrected text.
         if not os.path.exists(backup_path):
@@ -1320,31 +1337,58 @@ def apply_corrections(teg_num: int, *, source_label: str = "storylinefirst",
     # the user message so the model never has to guess a "Nth double" claim.
     from teg_analysis.reporting.history_context import build_double_context
     double_context = build_double_context(teg_num)
-    user_message = ("DOUBLE DATA (the only source for any rarity claim about "
-                    "the double):\n" + json.dumps(double_context, ensure_ascii=False)
-                    + "\n\n" + source_text)
+    data_blocks = [
+        "DOUBLE DATA (the only source for any rarity claim about the double):\n"
+        + json.dumps(double_context, ensure_ascii=False)
+    ]
+    if round_num is not None:
+        # The only source for edit 4 (streak/sweep correction) — a round
+        # report is the only pipeline this applies to today, since that is
+        # where the real error (TEG 3 R4, 2026-09-12) was found. Harmless to
+        # compute for a tournament report too if this is ever extended there;
+        # omitted here because there is no round_num to scope it to.
+        from teg_analysis.reporting.round_storyline import _round_by_round_status
+        data_blocks.append(
+            "ROUND_BY_ROUND_STATUS (the only source for correcting a cross-round "
+            "streak/sweep claim — a \"tied\" round is NOT a win):\n"
+            + json.dumps(_round_by_round_status(teg_num, round_num), ensure_ascii=False)
+        )
+    user_message = "\n\n".join(data_blocks) + "\n\n" + source_text
     text, usage = llm.generate_text(system, user_message,
                                     model=model or llm.DEFAULT_MODEL,
                                     max_tokens=16000,
-                                    stage="corrections", label=f"teg{teg_num}")
+                                    stage="corrections",
+                                    label=f"teg{teg_num}" + (f"r{round_num}" if round_num is not None else ""))
     text = _strip_beat_ids(text)
 
-    output_path = f"{output_dir()}/teg_{teg_num}_report_{out_label}.md"
+    output_path = f"{output_dir()}/{stem}_report_{out_label}.md"
     with open(output_path, "w") as f:
         f.write(text)
 
     styled_path = None
     if style:
-        styled_path = f"{output_dir()}/teg_{teg_num}_report_{out_label}_styled.md"
+        styled_path = f"{output_dir()}/{stem}_report_{out_label}_styled.md"
+        if round_num is not None:
+            from teg_analysis.reporting.render import style_round_text, build_round_at_a_glance
+            from teg_analysis.reporting.round_storyline import build_round_results_for_glance
+            round_results, is_final = build_round_results_for_glance(teg_num, round_num)
+            at_a_glance = build_round_at_a_glance(round_results, is_final)
+            styled_text = style_round_text(teg_num, round_num, text,
+                                           appendix_heading="Round standings",
+                                           at_a_glance_html=at_a_glance)
+        else:
+            from teg_analysis.reporting.render import style_text
+            styled_text = style_text(teg_num, text)
         with open(styled_path, "w") as f:
-            f.write(style_text(teg_num, text))
+            f.write(styled_text)
 
     findings: list = []
     new_findings: list = []
     if verify:
-        found = verify_report(teg_num, text=text)
+        found = verify_report(teg_num, text=text, round_num=round_num)
         findings = [str(f) for f in found]
-        before = Counter((f.rule, f.detail) for f in verify_report(teg_num, text=source_text))
+        before = Counter((f.rule, f.detail)
+                         for f in verify_report(teg_num, text=source_text, round_num=round_num))
         for f in found:
             k = (f.rule, f.detail)
             if before[k]:
@@ -1352,7 +1396,8 @@ def apply_corrections(teg_num: int, *, source_label: str = "storylinefirst",
             else:
                 new_findings.append(str(f))
         if new_findings:
-            print(f"[apply_corrections] WARNING TEG {teg_num}: "
+            print(f"[apply_corrections] WARNING TEG {teg_num}"
+                  f"{f' R{round_num}' if round_num is not None else ''}: "
                   f"{len(new_findings)} NEW fault(s) introduced by this pass:")
             for line in new_findings:
                 print(f"  {line}")
