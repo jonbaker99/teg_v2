@@ -1,0 +1,105 @@
+{
+  "title": "The Record Falls at Boavista",
+  "title_candidates": [
+    "The Record Falls at Boavista",
+    "Seventy-Five and Everyone Else",
+    "An Afternoon of Two Halves in Lagos"
+  ],
+  "theme": "David Mullin opens TEG 10 with the lowest gross round in TEG history while the rest of the field is dismantled by Boavista's closing holes.",
+  "tone": "house",
+  "opening_hook": "Boavista's record had stood at 82 gross across fifty prior TEG visits, a number that looked less like a target than a ceiling. On the fourth TEG trip to the Algarve, on a warm Saturday in Lagos, David Mullin removed seven shots from it before lunch was properly digested — and the rest of the field, meanwhile, spent the last four holes being taken apart.",
+  "narrative_vehicles": [
+    "hero_arc",
+    "ensemble",
+    "catalogue"
+  ],
+  "prominent_vehicle": "hero_arc",
+  "prominent_palette": "records",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "David Mullin's 75 gross at Boavista — a new course record, the best gross round in TEG history to date and 49 Stableford points",
+    "why_it_matters": "Boavista's record of 82 had survived fifty prior TEG visits, including ten by Mullin himself; he beat it by seven, posted the lowest gross round anyone has recorded in TEG to date, and was 23 shots better than his own last visit to the place.",
+    "shape": "Setup: the 11th TEG round at Boavista, where Mullin's own best in ten previous visits was 82 gross (TEG 5), the same figure that stood as the course record. Turn: level par through 6, 7 and 8, then 11 points from holes 12 to 14 with birdies at the 13th and the par-three 14th, and no gross shot dropped across that stretch. Resolution: a birdie at the 16th and pars home for 75 gross, +4 for the round, 49 points — a course record, a personal best at Boavista by seven shots, the best gross round in TEG history to date and the second-best points round ever recorded.",
+    "beat_ids": [
+      "cr01",
+      "r1_b01",
+      "r1_b02",
+      "r1_b05",
+      "r1_b07",
+      "r1_b12",
+      "r1_b16",
+      "r1_b21",
+      "r1_b23"
+    ],
+    "headline_candidates": [
+      "Mullin Breaks Boavista's Record With 75",
+      "Seven Shots Off a Standing Record",
+      "Mullin Posts the Lowest Round Ever"
+    ],
+    "chosen_headline": "Mullin Breaks Boavista's Record With 75",
+    "standfirst": "His 49 points is the second-best round in TEG history to date and his +4 gross the lowest anyone has managed, on a course where his own best in ten previous visits was 82.",
+    "compelling_score": 9,
+    "humour_score": 5,
+    "descriptor": "DAVID MULLIN"
+  },
+  "race_story": {
+    "subject": "The chase after round one of TEG 10 — Jon Baker's brief lead, Alex Baker's 41 points, and John Patterson's immediate residency at the foot of the Wooden Spoon",
+    "why_it_matters": "Four players held or shared the TEG 10 Trophy lead during the afternoon and none of them finished with it; the round leaves Alex Baker eight points adrift with three rounds to play, and John Patterson three points off the field in the Wooden Spoon after only eighteen holes.",
+    "shape": "Setup: the lead changed hands repeatedly on the front nine, Alex Baker level after the 6th, Jon Baker outright in front after the 9th and level atop the TEG 10 Green Jacket too. Turn: Mullin drew level at the 10th and never surrendered it, while Alex Baker's 41 points — a fine number in isolation, his third-best gross round in thirteen career rounds — was undone as a challenge by quadruple bogeys at the 2nd and 8th. Resolution: eight points covers Mullin and Alex Baker, fourteen shots covers the Jacket, and John Patterson, bottom of the Spoon race since the 4th hole, posts 29 points with a 10 at the par-five 8th and a 7 at the par-three 6th.",
+    "beat_ids": [
+      "r1_b30",
+      "r1_b32",
+      "r1_b33",
+      "r1_b36",
+      "r1_b37",
+      "r1_b08",
+      "r1_b22",
+      "r1_b03",
+      "r1_b11",
+      "r1_b17",
+      "r1_b18",
+      "r1_b27",
+      "r1_b31"
+    ],
+    "headline_candidates": [
+      "Jon Baker's Lead Lasts Nine Holes",
+      "Four Leaders and One Survivor",
+      "Everybody Led Except at the End"
+    ],
+    "chosen_headline": "Jon Baker's Lead Lasts Nine Holes",
+    "standfirst": "Alex Baker, Jon Baker and John Patterson all took something from the opening day, though only one of those things was a Wooden Spoon.",
+    "compelling_score": 6,
+    "humour_score": 6,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Boavista's closing four holes, and the 18th in particular, dismantling most of the field",
+      "why_it_matters": "Three of the six players were wrecked over the final stretch — Stuart Neumann bled 16 shots from the 15th, John Patterson 11 — and the 18th alone took a 10, a 9 and an 8 while Mullin walked off it in one under for the last three.",
+      "shape": "Setup: the field turns for home at the 15th, stroke index 1, with the round still notionally open. Turn: Neumann takes 8, 7, 8 and then 10 at the last for a six-over finish and his worst return on a par four; Patterson goes double, double, triple, quadruple for 11 dropped shots; Gregg Williams signs off with a 9 at the same hole. Resolution: the same three holes yield Mullin a birdie and two pars, and the gap between the top and bottom of the leaderboard widens from a question into a settlement.",
+      "beat_ids": [
+        "r1_b04",
+        "r1_b09",
+        "r1_b13",
+        "r1_b14",
+        "r1_b06",
+        "r1_b10",
+        "r1_b19",
+        "r1_b20",
+        "r1_b12"
+      ],
+      "headline_candidates": [
+        "Boavista's Eighteenth Collects Its Dues",
+        "Three Wrecks at the Final Hole",
+        "Sixteen Shots Lost in Four Holes"
+      ],
+      "chosen_headline": "Boavista's Eighteenth Collects Its Dues",
+      "standfirst": "A 10, a 9 and an 8 were handed in at the last, which was also where the leader made two of his easiest pars.",
+      "compelling_score": 7,
+      "humour_score": 8,
+      "descriptor": "BOAVISTA"
+    }
+  ],
+  "race_state_note": "Round one of four: nothing is settled, but the eight-point Trophy gap and the fourteen-shot Green Jacket gap are both the work of a single afternoon, and there is no prior round to measure movement against.",
+  "storyline_note": ""
+}

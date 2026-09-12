@@ -1,0 +1,115 @@
+{
+  "title": "Meller Holds On as Mullin Breaks the Course Record",
+  "title_candidates": [
+    "Meller Holds On as Mullin Breaks the Record",
+    "A Record Falls, A Trophy Nearly Slips",
+    "Praia D'El Rey's Day of Records and Near-Misses"
+  ],
+  "theme": "The final round produced history at the top of the card and just short of it everywhere else — a new course record, a near-miss Trophy fightback, and business as usual at the foot of the table.",
+  "tone": "wry, warm, needling, faithful to the numbers",
+  "opening_hook": "Praia D'El Rey had hosted TEG golf only once before, and its second visit produced a new course record, two career-best charges that both ran out of holes at exactly the same distance from the lead, and a Wooden Spoon delivered with the tidy inevitability of a man who has never once threatened to escape it.",
+  "narrative_vehicles": [
+    "counterfactual",
+    "dual_narrative",
+    "catalogue"
+  ],
+  "prominent_vehicle": "counterfactual",
+  "prominent_palette": "decisive_moment",
+  "is_final_round": true,
+  "round_story": {
+    "subject": "David Mullin's course-record 83 at Praia D'El Rey",
+    "why_it_matters": "It is the best individual round of the entire week: a new Praia D'El Rey course record, the 2nd-best gross round in TEG history to date, and only the 2nd-best net round of Mullin's own 23-round career — all produced on the tournament's final day.",
+    "shape": "Mullin goes bogey-free from the 4th to the 8th, then stumbles with a triple bogey at the 10th that threatens to derail the round entirely. He answers immediately with a birdie at the 11th, holds the card together through the 13th, and closes out a new course record of 83 gross — beating the previous mark by a shot.",
+    "beat_ids": [
+      "r4_b01",
+      "cr01",
+      "r4_b12",
+      "r4_b10",
+      "r4_b13",
+      "r4_b07"
+    ],
+    "headline_candidates": [
+      "Mullin Breaks the Course Record",
+      "A New Best at Praia D'El Rey",
+      "Mullin's 83 Rewrites the Record Book"
+    ],
+    "chosen_headline": "Mullin Breaks the Course Record",
+    "standfirst": "A triple bogey at the 10th barely dented a round that turned out to be the best gross card played all week.",
+    "compelling_score": 8,
+    "humour_score": 5,
+    "descriptor": "DAVID MULLIN"
+  },
+  "race_story": {
+    "subject": "Henry Meller survives a late Trophy scare",
+    "why_it_matters": "This is the final round, so the Trophy, Green Jacket and Wooden Spoon are all settled here: Henry Meller's 15-shot cushion shrank alarmingly before holding, while David Mullin and Alex Baker both confirmed leads they had built well before this round.",
+    "shape": "Meller starts the day 15 clear in the Trophy but posts the joint-worst round in the top half of the field, while Gregg Williams and Stuart Neumann both fire career-best net rounds of -12 to haul the gap down into single figures. It is not quite enough — Meller's cushion holds at 7 — while David Mullin's Green Jacket lead balloons to 15 and Alex Baker's Wooden Spoon is confirmed by 8.",
+    "beat_ids": [
+      "r4_b19",
+      "r4_b22",
+      "r4_b24",
+      "r4_b26",
+      "r4_b02",
+      "r4_b03",
+      "r4_b25"
+    ],
+    "headline_candidates": [
+      "Meller Survives the Late Surge",
+      "Trophy Holds Despite the Fightback",
+      "Seven Shots Save Meller's Trophy"
+    ],
+    "chosen_headline": "Meller Survives the Late Surge",
+    "standfirst": "Gregg Williams and Stuart Neumann both closed with the best net rounds of their careers, but Henry Meller's early-week cushion proved just enough to see out the TEG 7 Trophy.",
+    "compelling_score": 8,
+    "humour_score": 4,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Jon Baker's back-to-back blow-ups at the 10th and 11th",
+      "why_it_matters": "Jon Baker was joint-second in the Trophy and leading the Green Jacket after round one; a sextuple bogey immediately followed by a quadruple bogey in this final round completed a slide to 5th and 4th respectively, the biggest fade in the field.",
+      "shape": "Baker plays a tidy, bogey-free stretch from the 2nd to the 5th, suggesting a strong finish to the week. Instead he runs up an 11 at the 10th and a 7 at the very next hole, and the tournament's early pace-setter finishes fifth in the Trophy and fourth in the Green Jacket.",
+      "beat_ids": [
+        "r4_b04",
+        "r4_b05",
+        "r4_b15",
+        "r4_b16",
+        "r4_b11",
+        "r4_b20"
+      ],
+      "headline_candidates": [
+        "Two Holes Undo Jon Baker",
+        "Baker Fades From First to Fourth",
+        "Disaster Strikes at the Tenth"
+      ],
+      "chosen_headline": "Two Holes Undo Jon Baker",
+      "standfirst": "A sextuple bogey and a quadruple bogey in successive holes capped a slow-motion slide from early pace-setter to also-ran.",
+      "compelling_score": 7,
+      "humour_score": 6,
+      "descriptor": "JON BAKER"
+    },
+    {
+      "subject": "Alex Baker's chaotic final round confirms the Wooden Spoon",
+      "why_it_matters": "Two more quintuple bogeys in the final round, either side of a rare hot patch, capped a tournament in which Alex Baker was bottom half in all four rounds and never came close to escaping the Wooden Spoon.",
+      "shape": "Baker opens with a quadruple bogey at the 3rd and a quintuple at the 6th, briefly rallies with a birdie-fuelled run from the 13th to the 15th, then runs up a second quintuple bogey at the 16th. He finishes the tournament 8 shots clear of Jon Baker at the bottom of the table.",
+      "beat_ids": [
+        "r4_b31",
+        "r4_b33",
+        "r4_b32",
+        "r4_b34",
+        "r4_b35"
+      ],
+      "headline_candidates": [
+        "Alex Baker Wraps Up the Spoon",
+        "Two Fives Seal the Spoon",
+        "Alex Baker's Spoon Was Never in Doubt"
+      ],
+      "chosen_headline": "Alex Baker Wraps Up the Spoon",
+      "standfirst": "Two quintuple bogeys either side of a rare purple patch summed up a tournament Alex Baker's Wooden Spoon was never really in danger of leaving.",
+      "compelling_score": 6,
+      "humour_score": 8,
+      "descriptor": "WOODEN SPOON"
+    }
+  ],
+  "race_state_note": "No lead changed hands in any of the three competitions this round — Henry Meller's Trophy cushion merely narrowed while David Mullin's Green Jacket advantage widened to its largest margin of the tournament.",
+  "storyline_note": ""
+}

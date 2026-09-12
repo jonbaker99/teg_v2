@@ -1,0 +1,110 @@
+{
+  "title": "Four From Four at Boavista",
+  "title_candidates": [
+    "Four From Four at Boavista",
+    "Boavista Settles All Three",
+    "Baker's Eighteen-Shot Procession Ends"
+  ],
+  "theme": "A final day with nothing left to overturn: Jon Baker completes a clean sweep of the rounds to take his first TEG Trophy, David Mullin's steadiness collects a second Green Jacket, and Boavista's 17th claims one last victim without quite rearranging the Wooden Spoon.",
+  "tone": "house",
+  "opening_hook": "The 17th at Boavista is rated the 17th hardest hole on the card, a designation that by Friday evening had acquired the status of a practical joke. Stuart Neumann took ten there; it was the third time in four days the hole had removed a man's afternoon, and still it changed nothing at all.",
+  "narrative_vehicles": [
+    "origin",
+    "inevitability",
+    "motif"
+  ],
+  "prominent_vehicle": "origin",
+  "prominent_palette": "cross_teg_career",
+  "is_final_round": true,
+  "round_story": {
+    "subject": "Jon Baker's level-net 0 at Boavista, the best score in the field for the fourth round running, completing the sweep that delivers his first TEG Trophy",
+    "why_it_matters": "Baker won all four rounds of TEG 3 outright and beat David Mullin head-to-head in every one of them; Friday's level round was the least dramatic and the most conclusive, and it is the round that finishes off a first Trophy.",
+    "shape": "Baker arrived at Boavista already 16 clear on net-vs-par with nothing to do but not fall over. He did the opposite of falling over on the front nine, taking four shots off par net across the 7th, 8th and 9th, including gross pars on the stroke index 2 8th and the 9th. He signed for level net, the only man in the field not to lose ground to par, and by doing so won the round for the fourth time in four.",
+    "beat_ids": [
+      "r4_b05",
+      "r4_b06",
+      "r4_b13"
+    ],
+    "headline_candidates": [
+      "Four Rounds, Four Wins For Baker",
+      "Baker Signs For Level And Everything",
+      "Jon Baker Completes The Clean Sweep"
+    ],
+    "chosen_headline": "Four Rounds, Four Wins For Baker",
+    "standfirst": "A level-net round was the best score on Friday and the fourth best score of four attempts, closing out the week that began with the -9 that stands as the best round in TEG history.",
+    "compelling_score": 7,
+    "humour_score": 5,
+    "descriptor": "JON BAKER"
+  },
+  "race_story": {
+    "subject": "The final-day verdicts at Boavista seen from the men who were not winning the Trophy: David Mullin's second Green Jacket, Stuart Neumann's near-miss with the Spoon, and Henry Meller's second Wooden Spoon",
+    "why_it_matters": "This is the round that turns three standings into three results. Jon Baker takes the TEG 3 Trophy by 18 on net-vs-par; David Mullin takes the TEG 3 Green Jacket by 12 with the best gross round of the day; Henry Meller takes the TEG 3 Wooden Spoon by four, his second.",
+    "shape": "Mullin began as he has all week, three gross pars from the 2nd to the 4th, before a triple bogey at the 5th and a seven at the short 11th reminded everyone what the week costs; his +20 gross was still the best of the day and enough to add 12 to a lead that was already nine. Behind him Neumann's afternoon came apart on the 17th, and the Spoon gap closed from five to four without ever threatening to close entirely. Meller's four straight net gains from the 12th to the 15th were the tidiest golf of his day and arrived far too late to matter.",
+    "beat_ids": [
+      "r4_b13",
+      "r4_b14",
+      "r4_b15",
+      "r4_b17",
+      "r4_b07",
+      "r4_b12",
+      "r4_b03"
+    ],
+    "headline_candidates": [
+      "Boavista Settles All Three Races",
+      "Mullin Collects A Second Jacket",
+      "Nothing Changes Hands On Friday"
+    ],
+    "chosen_headline": "Boavista Settles All Three Races",
+    "standfirst": "Not one of the three competitions changed leader on the final day, which left Friday to decide only the size of the margins and which of Stuart Neumann and Henry Meller would carry the Spoon home.",
+    "compelling_score": 8,
+    "humour_score": 6,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "The 17th at Boavista, stroke index 17 and the most destructive hole of TEG 3, which took a 12 from Henry Meller, a 9 from David Mullin and finally a 10 from Stuart Neumann",
+      "why_it_matters": "Three of the week's four biggest wrecks happened on the same short par four that the card insists is the second easiest hole on the course. Neumann's ten is the worst he has ever made on a par four, and it arrived on the last competitive afternoon of the tournament.",
+      "shape": "On Tuesday the hole took a 12 from Meller and dropped him to the bottom of the Spoon race; on Wednesday it took a 9 from Mullin. On Friday, with the Spoon still theoretically live, it took a sextuple-bogey 10 from Neumann, five shots to par net in one visit. The hole finished the week undefeated and entirely unpunished by the stroke index.",
+      "beat_ids": [
+        "r4_b01",
+        "r1_prior_01",
+        "r2_prior_04"
+      ],
+      "headline_candidates": [
+        "Boavista's Easiest Hole Takes Another Ten",
+        "The Seventeenth Keeps Its Record Intact",
+        "Stroke Index Seventeen Claims Three Men"
+      ],
+      "chosen_headline": "Boavista's Easiest Hole Takes Another Ten",
+      "standfirst": "Rated seventeenth hardest of eighteen, the hole has now produced a 12 from Henry Meller, a 9 from David Mullin and a sextuple bogey from Stuart Neumann inside four days.",
+      "compelling_score": 7,
+      "humour_score": 8,
+      "descriptor": "BOAVISTA"
+    },
+    {
+      "subject": "Gregg Williams's 35-over gross round at Boavista, assembled out of three quadruple bogeys and a closing four holes that cost him nine shots, which was nonetheless his third-best net round in seven",
+      "why_it_matters": "Williams posted the worst gross score of the day by seven shots and still handed in a net round he can defend, and the closing stretch repeated exactly what happened to him over the same four holes in round one.",
+      "shape": "A nine at the 3rd, an eight at the 7th and an eight at the 12th accounted for twelve gross shots between them, with a tidy run of three bogeys from the 4th to the 6th in between to prove the golf was still in there somewhere. The card then fell apart over the last four holes, nine shots gone, the same closing four that took 13 off him in round one. The net figures absorbed most of it: +5 for the round, his third best of the seven he has played.",
+      "beat_ids": [
+        "r4_b11",
+        "r4_b10",
+        "r4_b09",
+        "r4_b08",
+        "r4_b16",
+        "r1_prior_06"
+      ],
+      "headline_candidates": [
+        "Three Quadruple Bogeys, One Respectable Net",
+        "Williams Loses Nine Coming Home Again",
+        "A Catalogue Of Quadruples At Boavista"
+      ],
+      "chosen_headline": "Three Quadruple Bogeys, One Respectable Net",
+      "standfirst": "The handicap absorbed a 35-over gross round that included the same closing collapse over the last four holes that undid him on Tuesday.",
+      "compelling_score": 6,
+      "humour_score": 8,
+      "descriptor": "GREGG WILLIAMS"
+    }
+  ],
+  "race_state_note": "No lead changed hands on the final day in any of the three competitions. Jon Baker led the Trophy from the end of round one and never lost it; the Trophy gap widened from 16 to 18 and the Jacket gap from 9 to 12, while the Spoon gap narrowed from five to four without flipping. Trophy is net-vs-par (lower better), Jacket is gross.",
+  "storyline_note": "Final round, so race_story leads. round_story is written strictly as Jon Baker's day on the course; the coronation is told from David Mullin, Stuart Neumann and Henry Meller's side so the two sections do not repeat each other."
+}

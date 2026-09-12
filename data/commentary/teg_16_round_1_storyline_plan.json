@@ -1,0 +1,106 @@
+{
+  "title": "Records Fall Both Ways at Oitavos Dunes",
+  "title_candidates": [
+    "Records Fall Both Ways at Oitavos Dunes",
+    "A Tale of Two Records at Oitavos",
+    "Bests and Worsts on the Same Card"
+  ],
+  "theme": "A round of personal bests for two players and a course-worst nobody wanted for a third, while Stuart Neumann quietly banked the outright Trophy lead.",
+  "tone": "Wry and matter-of-fact, treating routine misery and routine competence with equal, mock-solemn weight.",
+  "opening_hook": "Oitavos Dunes had been visited twice before by TEG; this round produced two new personal bests and one score nobody will ever want to beat.",
+  "narrative_vehicles": [
+    "motif",
+    "catalogue"
+  ],
+  "prominent_vehicle": "motif",
+  "prominent_palette": "course_history",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Stuart Neumann's untroubled 39 points was the best round anyone posted all day, opening TEG 16 with the sort of total that wins by attrition rather than acclaim.",
+    "why_it_matters": "It gives Neumann the outright TEG 16 Trophy lead after Round 1, even though by his own standards it barely registers.",
+    "shape": "Setup: Neumann banked 9 points across the first three holes without fuss. Turn: he simply kept accumulating, with no signature moment to speak of. Resolution: his 39 stands as the best round of the day and the outright TEG 16 Trophy lead, despite ranking only 7th among his own 44 competitive rounds.",
+    "beat_ids": [
+      "r1_b19",
+      "r1_b08"
+    ],
+    "headline_candidates": [
+      "Neumann's Steady 39 Tops the Field",
+      "No Fireworks, Just Points, From Neumann",
+      "Neumann Leads Without Any Drama"
+    ],
+    "chosen_headline": "Neumann's Steady 39 Tops the Field",
+    "standfirst": "Nobody broke par for entertainment on day one, but Stuart Neumann's relentless accumulation was still enough to top the round and the TEG 16 Trophy standings.",
+    "compelling_score": 6,
+    "humour_score": 5,
+    "descriptor": "STUART NEUMANN"
+  },
+  "race_story": {
+    "subject": "Gregg Williams ground out a new personal best at Oitavos Dunes to seize the early TEG 16 Green Jacket lead, with Jon Baker matching him almost shot for shot three behind.",
+    "why_it_matters": "It sets the gross-competition order for the tournament with three rounds still to play, and the gap is thin enough to matter immediately.",
+    "shape": "Setup: Williams built his card on two bogey-free stretches, at the 2nd-3rd and 15th-16th. Turn: David Mullin briefly drew level for the lead at the 6th before fading away. Resolution: Williams's 89 gross, a course personal best, leaves him three clear of Jon Baker, who also posted a new course best of 92.",
+    "beat_ids": [
+      "r1_b11",
+      "r1_b14",
+      "r1_b20"
+    ],
+    "headline_candidates": [
+      "Williams Grinds Out the Early Jacket Lead",
+      "Williams Edges Ahead by Three",
+      "Two Personal Bests, One Jacket Lead"
+    ],
+    "chosen_headline": "Williams Grinds Out the Early Jacket Lead",
+    "standfirst": "A round with no eagles and few thrills still produced two course personal bests at the top of the TEG 16 Green Jacket table.",
+    "compelling_score": 6,
+    "humour_score": 4,
+    "descriptor": "GREGG WILLIAMS | JON BAKER"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Alex Baker's 113 gross was not just his own worst outing at Oitavos Dunes but the worst round anyone has posted at the course across three TEG visits there.",
+      "why_it_matters": "A course record, however unwanted, is always worth marking, and it leaves him rooted to the bottom of the TEG 16 Wooden Spoon race after a single round.",
+      "shape": "Setup: Alex Baker opened with a quintuple bogey at the 1st and never found rhythm. Turn: further blow-ups at the 7th and 11th were followed by the round's low point, a sextuple-bogey 10 at the 17th. Resolution: a closing stretch from the 16th to 18th alone cost him 11 shots, sealing a new Oitavos Dunes course-worst of 113, eleven shots worse than the previous record.",
+      "beat_ids": [
+        "cr01",
+        "r1_b01",
+        "r1_b04",
+        "r1_b09",
+        "r1_b03",
+        "r1_b07",
+        "r1_b13",
+        "r1_b18"
+      ],
+      "headline_candidates": [
+        "Alex Baker Sets a Record Nobody Wants",
+        "New Course Worst for Alex Baker",
+        "Alex Baker's 113 Rewrites the Book"
+      ],
+      "chosen_headline": "Alex Baker Sets a Record Nobody Wants",
+      "standfirst": "Twelve prior TEG visits to Oitavos Dunes had never produced a card this bad, and Alex Baker's Round 1 wreckage already heads the Wooden Spoon table by four.",
+      "compelling_score": 8,
+      "humour_score": 8,
+      "descriptor": "ALEX BAKER"
+    },
+    {
+      "subject": "Jon Baker banked a new personal best at Oitavos Dunes despite a double bogey at the 17th undoing some of his best golf of the day.",
+      "why_it_matters": "It shows how fine the margins were on a tricky links and keeps him second in the early TEG 16 Green Jacket standings.",
+      "shape": "Setup: Jon Baker built nine points across the 14th, 15th and 16th without dropping a gross shot. Turn: that run of pars ended abruptly with a double bogey at the 17th. Resolution: even so, the round produced a new course personal best of 92 gross, leaving him three behind Williams for the Jacket.",
+      "beat_ids": [
+        "r1_b05",
+        "r1_b10",
+        "r1_b06"
+      ],
+      "headline_candidates": [
+        "Jon Baker's Purple Patch Ends at the 17th",
+        "Three Perfect Holes, Then Disaster",
+        "Jon Baker's Best Undone at the Death"
+      ],
+      "chosen_headline": "Jon Baker's Purple Patch Ends at the 17th",
+      "standfirst": "A flawless run through the 14th, 15th and 16th gave Jon Baker a new course best at Oitavos Dunes, before the 17th took a little shine off it.",
+      "compelling_score": 6,
+      "humour_score": 6,
+      "descriptor": "JON BAKER"
+    }
+  ],
+  "race_state_note": "Stuart Neumann leads the TEG 16 Trophy by five points from Gregg Williams and Jon Baker, level on 34; Alex Baker sits last in the Wooden Spoon race by four points after his record-breaking round.",
+  "storyline_note": ""
+}

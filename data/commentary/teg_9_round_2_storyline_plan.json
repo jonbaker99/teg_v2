@@ -1,0 +1,112 @@
+{
+  "title": "Patterson's 49 Turns the Trophy Upside Down",
+  "title_candidates": [
+    "Patterson's 49 Turns the Trophy Upside Down",
+    "A Round for the History Books at Praia D'El Rey",
+    "The Novice Who Nearly Broke the Record"
+  ],
+  "theme": "A near-stranger to the leaderboard produces a career-defining round that rewrites the record book and flips the Trophy race in one afternoon.",
+  "tone": "wry, deferential awe at an outlier performance, with the course's teeth played for dark comedy underneath",
+  "opening_hook": "Somewhere between the dunes of Praia D'El Rey and the clubhouse bar, John Patterson — a man with precisely one previous TEG round to his name — produced the sort of scorecard that usually arrives with an asterisk and a drugs test.",
+  "narrative_vehicles": [
+    "underdog",
+    "dual_narrative",
+    "catalogue"
+  ],
+  "prominent_vehicle": "underdog",
+  "prominent_palette": "records",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "John Patterson's 49-point round, the second-best total in TEG history to date, built on a front-nine rescue and a back-nine avalanche of points",
+    "why_it_matters": "This is the best round of the day by a distance, and it belongs to a player with barely any TEG history to speak of, making it the natural anchor for the report",
+    "shape": "He bleeds eight shots across holes 4-6 and looks set for another quiet day; a birdie at the 7th halts the slide; from there he piles up seventeen points across holes 9-13 and another fourteen across 15-18 to finish on 49, the second-highest points total ever recorded in the competition.",
+    "beat_ids": [
+      "r2_b01",
+      "r2_b29",
+      "r2_b28",
+      "r2_b08",
+      "r2_b09",
+      "r2_b21"
+    ],
+    "headline_candidates": [
+      "Patterson's 49 Nearly Breaks the Record",
+      "A Round for the History Books",
+      "Second-Best Ever, Out of Nowhere"
+    ],
+    "chosen_headline": "Patterson's 49 Nearly Breaks the Record",
+    "standfirst": "A man with only one previous TEG round to his name carded the second-highest points total in the competition's history, recovering from an early wobble to do it.",
+    "compelling_score": 9,
+    "humour_score": 5,
+    "descriptor": "JOHN PATTERSON"
+  },
+  "race_story": {
+    "subject": "Jon Baker's one-point overnight Trophy lead evaporates as a ragged middle nine drops him to third, ten adrift of the new leader",
+    "why_it_matters": "The Trophy race changed hands overnight and Jon Baker, not John Patterson, is the one whose week this story really belongs to — he did nothing wrong except stand still while someone else sprinted past",
+    "shape": "He starts the day a single point clear at the top of the TEG 9 Trophy; a joyless stretch without a net par at holes 5-7 and a quadruple bogey at the short 14th arrest any progress while Patterson catches fire elsewhere on the course; he ends the round in third place, ten points off a lead he never had to actually lose a duel for.",
+    "beat_ids": [
+      "r2_b15",
+      "r2_b36",
+      "r2_b19",
+      "r2_b22",
+      "r2_b25"
+    ],
+    "headline_candidates": [
+      "Baker's Slender Lead Disappears",
+      "Third Place, Ten Adrift",
+      "The Lead That Didn't Survive Saturday"
+    ],
+    "chosen_headline": "Baker's Slender Lead Disappears",
+    "standfirst": "Jon Baker's one-point cushion atop the TEG 9 Trophy is gone, undone less by anything Patterson did to him directly than by a ragged middle nine of his own.",
+    "compelling_score": 7,
+    "humour_score": 4,
+    "descriptor": "JON BAKER"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Alex Baker, a day after his worst-ever gross round, posts a personal-best round, a personal-best gross score, and a new course record at Praia D'El Rey",
+      "why_it_matters": "A genuine turnaround story grounded in his own course history — nine shots better than his previous best here, the day after carding an eleven at the same hole that undid him again briefly on Saturday",
+      "shape": "Friday's 43-over horror show, including an eleven at the 14th, is still fresh; he steadies himself through the front nine before a wild quadruple-bogey nine at the 10th threatens to derail things again; he recovers to finish on 44 points and 27-over gross, both personal bests, and a course-best at Praia D'El Rey by nine shots.",
+      "beat_ids": [
+        "r2_b02",
+        "r2_b03",
+        "r2_b20",
+        "r2_b16",
+        "r2_b07"
+      ],
+      "headline_candidates": [
+        "Alex Baker's Total Turnaround",
+        "Baker Buries Friday's Horror Show",
+        "From Worst Ever to Personal Best"
+      ],
+      "chosen_headline": "Alex Baker's Total Turnaround",
+      "standfirst": "A day after carding the worst gross round of his TEG career, Alex Baker returned to Praia D'El Rey and beat his own course record by nine shots.",
+      "compelling_score": 8,
+      "humour_score": 6,
+      "descriptor": "ALEX BAKER"
+    },
+    {
+      "subject": "Praia D'El Rey's par-4 9th and short par-3 14th combine to wreck four separate scorecards across the field",
+      "why_it_matters": "A reminder that the course, not just the players, is shaping this TEG — and it accounts for the mandatory blow-up beats the other two stories don't cover",
+      "shape": "The course's reputation for coastal drama precedes it; Gregg Williams cards a sextuple-bogey ten at the 9th and Stuart Neumann a quadruple there too, while both Alex Baker and Jon Baker card quadruple bogeys at the short 14th within the same round; four separate blow-up holes later, the course's teeth are the quiet through-line of the day.",
+      "beat_ids": [
+        "r2_b06",
+        "r2_b26",
+        "r2_b27",
+        "r2_b04",
+        "r2_b05"
+      ],
+      "headline_candidates": [
+        "Praia D'El Rey Draws Blood",
+        "The Course Bites Back",
+        "Four Blow-Ups, One Round"
+      ],
+      "chosen_headline": "Praia D'El Rey Draws Blood",
+      "standfirst": "The par-4 9th and the short 14th combined to wreck four separate scorecards, a reminder of why this course is treated with such respect.",
+      "compelling_score": 6,
+      "humour_score": 7,
+      "descriptor": "PRAIA D'EL REY"
+    }
+  ],
+  "race_state_note": "The Green Jacket and Wooden Spoon pictures are largely unchanged at the extremes — David Mullin's lead grew from two to seven, Stuart Neumann's gap to safety from eight to fourteen — while the Trophy race has been completely reshaped.",
+  "storyline_note": ""
+}

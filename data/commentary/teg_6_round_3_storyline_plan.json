@@ -1,0 +1,112 @@
+{
+  "title": "Fifty-One Holes Undone in a Single Round",
+  "title_candidates": [
+    "Fifty-One Holes Undone in a Single Round",
+    "El Prat Turns the Screw",
+    "Two Tens and a Stolen Jacket"
+  ],
+  "theme": "A brutal new course reshuffles two of the three races in an afternoon, rewarding patience over ambition.",
+  "tone": "wry, restrained, faintly merciless",
+  "opening_hook": "By the time Jon Baker had signed his card, David Mullin's fifty-one holes of Green Jacket ownership had evaporated inside two holes at El Prat's Rosa course, and Henry Meller had somehow contrived to card two separate tens before lunch.",
+  "narrative_vehicles": [
+    "tragic_arc",
+    "catalogue",
+    "ensemble"
+  ],
+  "prominent_vehicle": "tragic_arc",
+  "prominent_palette": "decisive_moment",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Stuart Neumann's flat, error-free round is the best golf played all day, and quietly rescues him from bottom spot in the Trophy standings.",
+    "why_it_matters": "While three of his four rivals wrecked their cards, Neumann added nothing at all to his running Trophy total, the joint-best net contribution of anyone in the field, and his third-best Trophy round on record; he moved from holding the Wooden Spoon before the round to third place in the Trophy without doing anything spectacular at all.",
+    "shape": "Neumann starts the day propping up the Trophy table, a stroke behind Henry Meller for last. He strings together two clean pars at the 5th and 6th and simply avoids the disasters unfolding around him. He finishes with a round that adds nothing to his Trophy score, his third-best ever, and finds himself third overall purely because David Mullin and Henry Meller both imploded beneath him.",
+    "beat_ids": [
+      "r3_b18"
+    ],
+    "headline_candidates": [
+      "Neumann's Flat Round Moves Him Up",
+      "Stillness Pays Off For Neumann",
+      "Neumann Climbs While Others Fall"
+    ],
+    "chosen_headline": "Neumann's Flat Round Moves Him Up",
+    "standfirst": "Third-best Trophy round of his TEG career, delivered while three rivals imploded around him.",
+    "compelling_score": 7,
+    "humour_score": 6,
+    "descriptor": "STUART NEUMANN"
+  },
+  "race_story": {
+    "subject": "David Mullin's fifty-one-hole grip on the Green Jacket collapses at El Prat, handing Jon Baker a one-shot lead as the Wooden Spoon changes hands too.",
+    "why_it_matters": "This is the round's pivotal swing across two of the tournament's three competitions: the Green Jacket race inverts after Mullin spent nearly two rounds in front, while Henry Meller's implosion hands him the Wooden Spoon in Stuart Neumann's place; only Gregg Williams' Trophy lead survives the day largely intact.",
+    "shape": "Mullin arrives at El Prat still five ahead in the Green Jacket race, a lead he has held since the third hole of round one. A quintuple bogey at the 15th and a quadruple at the 18th wreck his card into the worst gross round of his TEG career, while Jon Baker, despite his own quintuple bogey at the 8th, closes 16 to 18 in three shots to par. Baker leads the Jacket by a single stroke, Williams' Trophy lead narrows from nine to eight but holds, and the Wooden Spoon flips from Neumann to Meller with an eight-shot gap opening at the bottom.",
+    "beat_ids": [
+      "r3_b01",
+      "r3_b14",
+      "r3_b02",
+      "r3_b03",
+      "r3_b05",
+      "r3_b06",
+      "r3_b07",
+      "r3_b12"
+    ],
+    "headline_candidates": [
+      "Baker Snatches The Jacket Lead",
+      "Mullin's Long Reign Ends",
+      "Fifty-One Holes Undone In A Round"
+    ],
+    "chosen_headline": "Baker Snatches The Jacket Lead",
+    "standfirst": "David Mullin's worst gross round of the tournament costs him a lead he had held since the third hole of round one.",
+    "compelling_score": 9,
+    "humour_score": 5,
+    "descriptor": "DAVID MULLIN | JON BAKER"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Henry Meller's round of double-figure horrors, two tens and a nine, drops him from mid-table into commanding last place.",
+      "why_it_matters": "Meller's meltdown is the most extreme individual card of the round and the mechanism by which the Wooden Spoon changes hands, opening an eight-shot gap at the bottom that dwarfs the one-shot margin he inherited it by.",
+      "shape": "Meller starts the day only a stroke above Neumann at the foot of the Trophy table. He cards a ten at the 1st and a sextuple-bogey ten at the 8th, bleeding fourteen shots across holes 7 to 10 without a single net par along the way. His round collapses from a personal-best minus five in round two to plus fifteen, and he inherits the Wooden Spoon outright by eight shots.",
+      "beat_ids": [
+        "r3_b08",
+        "r3_b11",
+        "r3_b17",
+        "r3_b10",
+        "r3_b13",
+        "r3_b16",
+        "r3_b19",
+        "r3_b21"
+      ],
+      "headline_candidates": [
+        "Two Tens Sink Meller At El Prat",
+        "Meller's Round Of Double-Figure Horrors",
+        "Meller Plunges Into Last Place"
+      ],
+      "chosen_headline": "Two Tens Sink Meller At El Prat",
+      "standfirst": "A sextuple bogey at the 8th and a quintuple at the 1st turned a promising week sour in a single round.",
+      "compelling_score": 8,
+      "humour_score": 8,
+      "descriptor": "HENRY MELLER"
+    },
+    {
+      "subject": "El Prat's Rosa course, new to TEG and designed by Greg Norman, punishes the same stretch of holes across nearly the entire field on its debut.",
+      "why_it_matters": "On its first TEG outing the course's toughest run of holes claims blow-up scores from three different players, announcing itself immediately as a genuine examination rather than a scenic diversion.",
+      "shape": "El Prat's Rosa course hosts TEG for the first time, a Greg Norman design that has held the Spanish Open. Holes 7 to 10 draw blood repeatedly: Gregg Williams' quadruple bogey at the 7th, Jon Baker's quintuple at the 8th, and Henry Meller bleeding fourteen shots across the same stretch. The course announces itself as a leveller, its difficulty distributed across the field rather than settling on one victim.",
+      "beat_ids": [
+        "r3_b04",
+        "r3_b09",
+        "r3_b20",
+        "r3_b13"
+      ],
+      "headline_candidates": [
+        "El Prat's Front Nine Bares Its Teeth",
+        "The Course That Bit Everyone At Once",
+        "El Prat Announces Itself With Menace"
+      ],
+      "chosen_headline": "El Prat's Front Nine Bares Its Teeth",
+      "standfirst": "A Greg Norman design new to TEG wasted no time turning the run from the 7th to the 10th into a minefield.",
+      "compelling_score": 7,
+      "humour_score": 6,
+      "descriptor": "EL PRAT - ROSA"
+    }
+  ],
+  "race_state_note": "Gregg Williams' Trophy lead, though narrowed by a shot, remains by far the largest of the three races; the real drama today was in the Jacket and Spoon.",
+  "storyline_note": ""
+}

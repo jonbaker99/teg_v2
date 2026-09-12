@@ -1,0 +1,123 @@
+{
+  "title": "Mullin Completes the Double as Baker's Lead Turns to Dust",
+  "title_candidates": [
+    "Mullin Completes the Double as Baker's Lead Turns to Dust",
+    "Eagle at Eight, Ruin by Sixteen",
+    "Worst Round in TEG History Settles the Spoon"
+  ],
+  "theme": "A tale of two collapses at Bletchingley: one handed David Mullin a rare double, the other decided who finished last.",
+  "tone": "house",
+  "opening_hook": "Jon Baker stood on the 8th tee with an eagle in hand and a seven-shot lead in the Trophy; by the time he reached the 16th he had neither, and David Mullin had both the Trophy and the Green Jacket he came for.",
+  "narrative_vehicles": [
+    "tragic_arc",
+    "dual_narrative",
+    "catalogue"
+  ],
+  "prominent_vehicle": "tragic_arc",
+  "prominent_palette": "decisive_moment",
+  "is_final_round": true,
+  "round_story": {
+    "subject": "David Mullin's unremarkable final round is nonetheless the best round of the day, and the one that wins the tournament.",
+    "why_it_matters": "On a day when everyone around him fell apart, Mullin's round produced the field's best net score (1) and best gross score (19) — nothing spectacular on paper, but it was exactly enough, delivered at exactly the right time.",
+    "shape": "Setup: Mullin starts the day level with Jon Baker for the Trophy lead. Turn: while Baker charges clear with an eagle, Mullin simply compiles pars through the 4th to 6th and shrugs off a quadruple bogey at the 7th. Resolution: with the best net and gross scores of the day banked, Mullin takes outright control of the Trophy at the 12th and never lets go.",
+    "beat_ids": [
+      "r4_b28",
+      "r4_b30",
+      "r4_b33",
+      "r4_b23",
+      "r4_b29",
+      "r4_b35"
+    ],
+    "headline_candidates": [
+      "The Quietest Best Round of the Day",
+      "Mullin's Round Nobody Will Remember",
+      "Steady Wins Without Trying"
+    ],
+    "chosen_headline": "The Quietest Best Round of the Day",
+    "standfirst": "No eagles, no fireworks — just the best net and gross scores in the field, delivered on the day it mattered most.",
+    "compelling_score": 7,
+    "humour_score": 6,
+    "descriptor": "DAVID MULLIN"
+  },
+  "race_story": {
+    "subject": "David Mullin completes the Trophy-Jacket double as Jon Baker's seven-shot lead disintegrates and Gregg Williams inherits the Wooden Spoon.",
+    "why_it_matters": "This is the final round: the Trophy, the Green Jacket and the Wooden Spoon are all settled here, and David Mullin's double is only the second in TEG history, following TEG 2.",
+    "shape": "Setup: Baker draws level then eagles the 8th to lead the Trophy by seven, while Henry Meller clings to the bottom of the Spoon table by four. Turn: Baker's back nine collapses completely as Mullin's card holds firm, and simultaneously Gregg Williams's ruinous +43 gross round overtakes Meller for last place. Resolution: Mullin wins the Trophy by eight and the Jacket by nineteen — his second career double — while the Wooden Spoon changes hands on the final day, Williams beating Meller to it by five.",
+    "beat_ids": [
+      "r4_b22",
+      "r4_b29",
+      "r4_b35",
+      "r4_b34",
+      "r4_b13",
+      "r4_b19",
+      "r4_b24"
+    ],
+    "headline_candidates": [
+      "Mullin Completes the Double at Last",
+      "Baker's Lead Vanishes at Bletchingley",
+      "Double Glory as Spoon Changes Hands"
+    ],
+    "chosen_headline": "Mullin Completes the Double at Last",
+    "standfirst": "A seven-shot lead disappeared, the bottom of the table changed hands, and only one man finished the week where he started it: on top.",
+    "compelling_score": 9,
+    "humour_score": 5,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Jon Baker eagles the 8th to lead the Trophy by seven, then loses it by the close.",
+      "why_it_matters": "This single round is the mechanism by which the Trophy was lost rather than won — a front nine good enough to win the whole tournament outright, followed by a back nine that gave it all back and more.",
+      "shape": "Setup: level with Mullin overnight, Baker eagles the par-4 8th to move seven clear. Turn: from the 9th he goes seven holes without a net par, including a sextuple bogey at the short 12th and an even worse sextuple bogey at the par-5 15th, bleeding 27 gross shots across eight holes. Resolution: a brilliant front nine is buried under a ruinous back nine, and the Trophy — and with it the Jacket — passes to David Mullin.",
+      "beat_ids": [
+        "r4_b07",
+        "r4_b05",
+        "r4_b06",
+        "r4_b01",
+        "r4_b04",
+        "r4_b10",
+        "r4_b22",
+        "r4_b20"
+      ],
+      "headline_candidates": [
+        "Eagle at Eight, Ruin by Sixteen",
+        "Baker's Seven-Shot Lead Evaporates",
+        "From Contender to Cautionary Tale"
+      ],
+      "chosen_headline": "Eagle at Eight, Ruin by Sixteen",
+      "standfirst": "An eagle that should have won him the Trophy instead marked the high point of a round that lost it.",
+      "compelling_score": 9,
+      "humour_score": 7,
+      "descriptor": "JON BAKER"
+    },
+    {
+      "subject": "Gregg Williams's Wooden Spoon-clinching round is the worst gross round recorded in TEG history to date.",
+      "why_it_matters": "Henry Meller's two quintuple bogeys looked like they would keep him anchored at the bottom of the table, but Williams's own collapse — his personal worst on both counts, and the worst gross round anyone has posted in 55 TEG rounds — proved worse still.",
+      "shape": "Setup: Meller starts the day four adrift at the bottom of the Spoon table, needing only to stay out of trouble. Turn: he obliges with quintuple bogeys at the 11th and 15th, dropping to the foot of the table — but Williams's own card is unravelling faster, a 43-gross disaster including 16 shots bled over the closing six holes. Resolution: Williams's collapse overtakes Meller by five strokes and hands him his first Wooden Spoon.",
+      "beat_ids": [
+        "r4_b08",
+        "r4_b09",
+        "r4_b13",
+        "r4_b02",
+        "r4_b03",
+        "r4_b14",
+        "r4_b17",
+        "r4_b21",
+        "r4_b25",
+        "r4_b11",
+        "r4_b12"
+      ],
+      "headline_candidates": [
+        "Worst Round in TEG History",
+        "Williams's Round Sets a New Low",
+        "Spoon Swaps Hands at the Death"
+      ],
+      "chosen_headline": "Worst Round in TEG History",
+      "standfirst": "Forty-three over gross was enough to leapfrog Henry Meller into last place on the final day.",
+      "compelling_score": 8,
+      "humour_score": 7,
+      "descriptor": "WOODEN SPOON | GREGG WILLIAMS"
+    }
+  ],
+  "race_state_note": "Mullin's Trophy win is classed as 'inherited' — Baker's collapse handed it to him rather than any surge of his own — while the Jacket was built steadily across all four rounds, with Mullin never finishing worse than second.",
+  "storyline_note": ""
+}

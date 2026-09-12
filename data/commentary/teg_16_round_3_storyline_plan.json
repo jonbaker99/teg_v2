@@ -1,0 +1,88 @@
+{
+  "title": "Gregg Williams Rises as Jon Baker's Charge Crumbles",
+  "title_candidates": [
+    "Gregg Williams Rises as Jon Baker's Charge Crumbles",
+    "The Back Nine Turns Penha Longa Red",
+    "Williams Serene, Jon Baker Undone"
+  ],
+  "theme": "A dual-natured day on Penha Longa's brutal back nine: serenity for Gregg Williams, disaster for nearly everyone else, and a Green Jacket race blown wide open by Jon Baker's collapse.",
+  "tone": "wry, tongue-in-cheek, understated, British",
+  "opening_hook": "Penha Longa's cliffside back nine has a habit of separating the composed from the chaotic, and Round 3 obliged with almost comic precision — one man floated through the stretch untouched while the rest of the field supplied the wreckage.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "redemption_arc",
+    "ensemble"
+  ],
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "decisive_moment",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Gregg Williams's recovery from a rocky start into five untouched holes produced the best gross round of the day at Penha Longa",
+    "why_it_matters": "On a course that wrecked four of the five players in the field, Williams found the calmest passage through its toughest stretch, turning a scrappy opening into the round of the day.",
+    "shape": "Two tidy opening pars gave way to a triple and a double before a birdie at the 5th steadied things, only for three more bogey-laden holes to follow. From the 11th he found another gear entirely, playing five holes without dropping a gross shot and piling up nine Stableford points in a three-hole burst to post the best gross score of the round.",
+    "beat_ids": [
+      "r3_b15",
+      "r3_b06",
+      "r3_b12",
+      "r3_b02",
+      "r3_b05"
+    ],
+    "headline_candidates": [
+      "Gregg Williams Tames the Back Nine",
+      "Williams Finds His Range at Penha Longa",
+      "Williams Cruises Through Penha Longa's Gauntlet"
+    ],
+    "chosen_headline": "Gregg Williams Tames the Back Nine",
+    "standfirst": "A shaky start gave way to five flawless holes that produced the best gross round of the tournament so far.",
+    "compelling_score": 8,
+    "humour_score": 5,
+    "descriptor": "GREGG WILLIAMS"
+  },
+  "race_story": {
+    "subject": "Jon Baker's three-hole implosion on the back nine handed Gregg Williams total control of the TEG 16 Green Jacket race",
+    "why_it_matters": "Jon Baker began the round just four shots behind Gregg Williams for the Green Jacket; by the close that gap had more than tripled, turning a tight contest into a procession.",
+    "shape": "Jon Baker arrived at the 11th still very much in touch, then dropped a double bogey, a quintuple bogey at the 12th and a quadruple bogey at the 13th in successive holes. Eleven shots vanished in three holes while Williams was doing the opposite elsewhere on the course, and the Jacket gap ballooned from four to fourteen.",
+    "beat_ids": [
+      "r3_b11",
+      "r3_b13",
+      "r3_b04",
+      "r3_b08"
+    ],
+    "headline_candidates": [
+      "Jon Baker's Green Jacket Hopes Unravel",
+      "Three Holes Wreck Jon Baker's Charge",
+      "Jon Baker's Collapse Gifts Williams Room"
+    ],
+    "chosen_headline": "Jon Baker's Green Jacket Hopes Unravel",
+    "standfirst": "A gap of four became a gap of fourteen inside three holes on the back nine.",
+    "compelling_score": 8,
+    "humour_score": 6,
+    "descriptor": "GREEN JACKET"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Alex Baker suffered two separate multi-hole collapses in the same round, on the front nine and the back nine, and stayed rooted to the bottom of the TEG 16 Wooden Spoon",
+      "why_it_matters": "Nobody else in the field blew up twice in one round; despite the carnage, the gap to the next-worst player in the Spoon race did not move at all, which tells its own story about how far adrift he already was.",
+      "shape": "An 11-shot bleed across holes 2 to 6, including three double bogeys and a triple, was bad enough on its own. Then came a second implosion from the 11th, four holes without a net par and a quadruple bogey at the 12th, for another 12 shots lost, leaving the Wooden Spoon gap exactly where it started.",
+      "beat_ids": [
+        "r3_b16",
+        "r3_b17",
+        "r3_b03",
+        "r3_b07",
+        "r3_b14"
+      ],
+      "headline_candidates": [
+        "Two Collapses, One Round for Alex Baker",
+        "Alex Baker Doubles Down on Disaster",
+        "Alex Baker's Day of Double Trouble"
+      ],
+      "chosen_headline": "Two Collapses, One Round for Alex Baker",
+      "standfirst": "Eleven shots on the front nine, twelve more on the back — the Wooden Spoon gap barely moved because nobody could get close enough to catch him.",
+      "compelling_score": 7,
+      "humour_score": 7,
+      "descriptor": "WOODEN SPOON"
+    }
+  ],
+  "race_state_note": "No lead changed hands in any of the three competitions this round; the story was entirely in how far the gaps stretched, not in who occupies each position.",
+  "storyline_note": ""
+}

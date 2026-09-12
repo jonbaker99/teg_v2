@@ -1,0 +1,90 @@
+{
+  "title": "Baker's Double Crowns TEG 17",
+  "title_candidates": [
+    "Baker's Double Crowns TEG 17",
+    "The Gap That Would Not Close",
+    "Seventh Time's the Charm for Baker"
+  ],
+  "theme": "A commanding campaign is sealed with the rarest prize in the game while, further down the card, the final round dissolves into comic carnage.",
+  "tone": "solemn triumph shot through with farce; exact numbers doing the comic work",
+  "opening_hook": "Some finals arrive with suspense; this one arrived with a coronation, and a nine at the 10th on the way to it.",
+  "narrative_vehicles": [
+    "hero_arc",
+    "dual_narrative",
+    "catalogue"
+  ],
+  "prominent_vehicle": "hero_arc",
+  "prominent_palette": "records",
+  "is_final_round": true,
+  "round_story": {
+    "subject": "Jon Baker's final round paired two calamitous quadruple bogeys with the best Stableford and gross scores of the day.",
+    "why_it_matters": "It is the round that closed out the tournament, and its shape — carnage bookending brilliance — captures how Jon Baker won this TEG: not cleanly, but always well enough.",
+    "shape": "A tidy start unravels into quadruple bogeys at the 10th and 17th, either side of a run of good holes; birdies at the 4th and 5th and a strong 14th-to-16th stretch drag the card back to the best Stableford and gross score anyone posted all day.",
+    "beat_ids": [
+      "r4_b11",
+      "r4_b12",
+      "r4_b15",
+      "r4_b17",
+      "r4_b18"
+    ],
+    "headline_candidates": [
+      "Baker Grinds Out the Best Round",
+      "Two Blow-Ups, One Flawless Card",
+      "Chaos and Class in Equal Measure"
+    ],
+    "chosen_headline": "Baker Grinds Out the Best Round",
+    "standfirst": "Two quadruple bogeys couldn't stop Jon Baker posting the best Stableford and gross scores of the final day.",
+    "compelling_score": 7,
+    "humour_score": 7,
+    "descriptor": "JON BAKER"
+  },
+  "race_story": {
+    "subject": "David Mullin's tidy final round wasn't enough to stop Jon Baker turning healthy leads into a seventh TEG double, while Gregg Williams's closing 29 points confirmed the Wooden Spoon.",
+    "why_it_matters": "This is the tournament's resolution: the TEG 17 Trophy and TEG 17 Green Jacket both go to the same man, the rarest outcome in the competition's history, and the Wooden Spoon is settled with a round to spare's worth of certainty.",
+    "shape": "David Mullin starts the day only 11 adrift in the Trophy and 8 in the Jacket, still with something to play for; Jon Baker's 40-point round stretches both gaps beyond reach while Mullin's own card cannot keep pace; the double is completed by 18 and 13 respectively, as Gregg Williams's flat finish leaves him 12 points clear of trouble at the bottom.",
+    "beat_ids": [
+      "r4_b19",
+      "r4_b10"
+    ],
+    "headline_candidates": [
+      "The Gap That Would Not Close",
+      "Baker Completes a Rare Double",
+      "Mullin's Chase Falls Just Short"
+    ],
+    "chosen_headline": "The Gap That Would Not Close",
+    "standfirst": "David Mullin's chase never quite landed a blow as Jon Baker turned healthy leads into a seventh TEG double.",
+    "compelling_score": 9,
+    "humour_score": 4,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Alex Baker and John Patterson both endured chaotic closing rounds thick with blow-up holes, even as the destiny at the top was already settled.",
+      "why_it_matters": "It is the final day's blackest comedy: two players litter their cards with sextuple and quadruple bogeys, a reminder that a settled leaderboard doesn't mean a quiet round.",
+      "shape": "John Patterson runs up sextuple bogeys at the 14th and 15th and a quadruple at the 18th; Alex Baker bleeds 25 shots across a nine-hole stretch from the 5th to the 13th, briefly clawing back nine points early only to lose it all again; both finish level on 135 for the Trophy, their rounds a catalogue of collapse.",
+      "beat_ids": [
+        "r4_b01",
+        "r4_b02",
+        "r4_b04",
+        "r4_b07",
+        "r4_b03",
+        "r4_b05",
+        "r4_b06",
+        "r4_b08",
+        "r4_b09"
+      ],
+      "headline_candidates": [
+        "Twin Collapses Steal the Show",
+        "A Festival of Blow-Up Holes",
+        "Sextuples, Quadruples and Worse"
+      ],
+      "chosen_headline": "Twin Collapses Steal the Show",
+      "standfirst": "While the destiny at the top was long settled, Alex Baker and John Patterson turned in a closing-day catalogue of double-figure holes.",
+      "compelling_score": 7,
+      "humour_score": 8,
+      "descriptor": "ALEX BAKER | JOHN PATTERSON"
+    }
+  ],
+  "race_state_note": "This is the 7th double in TEG history; Jon Baker previously completed it in TEGs 2, 4, 11, 13, 14 and 15.",
+  "storyline_note": ""
+}

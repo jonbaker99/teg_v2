@@ -1,0 +1,97 @@
+{
+  "title": "Records Fall Both Ways at West Cliffs",
+  "title_candidates": [
+    "Records Fall Both Ways at West Cliffs",
+    "Best of Times, Worst of Times on the Silver Coast",
+    "Mullin Soars as Patterson Sinks at West Cliffs"
+  ],
+  "theme": "On West Cliffs' second-ever TEG visit, the course record fell in both directions inside the same round.",
+  "tone": "house",
+  "opening_hook": "West Cliffs has hosted exactly one previous TEG round; by the time the last putt dropped on its second, it had a new best and a new worst, set thirty-four Stableford points apart on the same afternoon.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "redemption_arc"
+  ],
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "venue_character",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "David Mullin's course-record 82 headlines a stellar West Cliffs return",
+    "why_it_matters": "It is a new West Cliffs course record, the best gross round anyone has carded there across two TEGs, and it arrives from a player who was mid-table after round one - the standout performance of the day by a wide margin on both Stableford and gross.",
+    "shape": "David Mullin arrives at West Cliffs off a modest opening round of 33 points. A brisk birdie-laden stretch through the 7th to 10th, followed by two closing pars, carries him to 47 points and a gross 82 that beats the previous course record by six. It is, by some distance, the best round played at West Cliffs to date.",
+    "beat_ids": [
+      "cr01",
+      "r2_b16",
+      "r2_b17",
+      "r2_b19",
+      "r2_b27",
+      "r2_b28"
+    ],
+    "headline_candidates": [
+      "Mullin Breaks the West Cliffs Record",
+      "David Mullin Sets a New Course Mark",
+      "Mullin's 82 Rewrites West Cliffs History"
+    ],
+    "chosen_headline": "Mullin Breaks the West Cliffs Record",
+    "standfirst": "A wretched opening round is put right as David Mullin produces the best round played at this Portuguese links to date.",
+    "compelling_score": 9,
+    "humour_score": 4,
+    "descriptor": "DAVID MULLIN"
+  },
+  "race_story": {
+    "subject": "John Patterson's collapse hands the Trophy lead to Jon Baker and drops him to the bottom of the Wooden Spoon race",
+    "why_it_matters": "Patterson began the round a point clear at the top of the TEG 17 Trophy; he ends it with the heaviest gross score West Cliffs has yet recorded and seven points adrift at the foot of the TEG 17 Wooden Spoon, while a quietly excellent Jon Baker inherits the Trophy lead.",
+    "shape": "Patterson starts round two one point clear of Jon Baker at the top of the Trophy. From the 8th to the 15th he goes eight holes without a net par - a quadruple bogey at the 3rd, a quintuple at the 13th and a sextuple at the 15th among them - while Jon Baker builds his round quietly around two hot stretches. Patterson's 116 gross sets a new course worst and buries him at the bottom of the Spoon table by seven, as Jon Baker moves two clear at the top of the Trophy.",
+    "beat_ids": [
+      "r2_b01",
+      "r2_b02",
+      "r2_b03",
+      "r2_b04",
+      "r2_b05",
+      "r2_b09",
+      "r2_b10",
+      "r2_b14",
+      "r2_b15",
+      "cr02",
+      "r2_b26",
+      "r2_b18"
+    ],
+    "headline_candidates": [
+      "Patterson's Collapse Hands Jon Baker the Lead",
+      "Eight Ruinous Holes Bury Patterson",
+      "Trophy Swings as Patterson Implodes"
+    ],
+    "chosen_headline": "Patterson's Collapse Hands Jon Baker the Lead",
+    "standfirst": "Overnight Trophy leader John Patterson loses the plot for eight holes in the middle of his round and returns the heaviest gross score West Cliffs has yet seen.",
+    "compelling_score": 8,
+    "humour_score": 6,
+    "descriptor": "JOHN PATTERSON | JON BAKER"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Alex Baker survives two quadruple bogeys to set a new West Cliffs personal best",
+      "why_it_matters": "Alex Baker began the round anchoring the TEG 17 Wooden Spoon table; despite blow-ups at the 10th and 11th he posts a new course personal best of 105 gross, five shots inside his previous mark, and hands over last place as Patterson implodes elsewhere.",
+      "shape": "Alex Baker piles up 16 points through a hot stretch from the 4th to the 8th, then quadruple bogeys at the 10th and 11th threaten to derail the round entirely. A birdie at the 12th stops the bleeding, and he closes out with a new West Cliffs personal best.",
+      "beat_ids": [
+        "r2_b06",
+        "r2_b07",
+        "r2_b08",
+        "r2_b11",
+        "r2_b12",
+        "r2_b13"
+      ],
+      "headline_candidates": [
+        "Two Quads Can't Stop Alex Baker",
+        "Alex Baker's Rollercoaster Personal Best",
+        "Alex Baker Survives Blow-Ups for a Course Best"
+      ],
+      "chosen_headline": "Two Quads Can't Stop Alex Baker",
+      "standfirst": "A hot start and a defiant birdie carry Alex Baker to a new West Cliffs low despite twin quadruple bogeys in the middle of his round.",
+      "compelling_score": 7,
+      "humour_score": 6,
+      "descriptor": "ALEX BAKER"
+    }
+  ],
+  "race_state_note": "The Green Jacket is now a dead heat between David Mullin and Jon Baker, with Gregg Williams - the overnight leader - three shots back in third.",
+  "storyline_note": ""
+}

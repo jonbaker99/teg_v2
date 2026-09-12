@@ -1,0 +1,120 @@
+{
+  "title": "Palmares Gives, and Palmares Takes",
+  "title_candidates": [
+    "Palmares Gives, and Palmares Takes",
+    "Six Debutants on the Algarve Links",
+    "New Course, Fresh Personal Bests"
+  ],
+  "theme": "On a course none of them had ever played, four of the six returned career-best or near-career-best numbers while one man lost thirteen shots in three holes.",
+  "tone": "house",
+  "opening_hook": "Nobody in the field had seen a single hole of the Praia and Alvor nines before Sunday morning, which makes the scorecards that came back all the more improbable: a personal best for Gregg Williams, another for Alex Baker, the third-best gross round in TEG history from Jon Baker — and, at the other end of the draw, Stuart Neumann haemorrhaging thirteen shots across the 13th, 14th and 15th.",
+  "narrative_vehicles": [
+    "ensemble",
+    "motif",
+    "catalogue"
+  ],
+  "prominent_vehicle": "ensemble",
+  "prominent_palette": "venue_character",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Gregg Williams's 48 points at Palmares, the best round of his TEG career, on a course he had never seen, one day after a modest 38 at Boavista",
+    "why_it_matters": "It is the round of the day by three points, it is a career best in 33 TEG rounds, and it hauls Gregg Williams from fourth to level second in the TEG 10 Trophy, five off David Mullin.",
+    "shape": "Williams opened TEG 10 with 38 points at Boavista and sat fourth, going nowhere in particular. From the 8th he strung together 18 points in five holes — par, par, a birdie at the 10th, par, bogey — and then refused to let it slip, closing with 12 points over the last four. The card read 48 points and +14 gross, both better than anything he has managed in 33 TEG rounds.",
+    "beat_ids": [
+      "r2_b05",
+      "r2_b06",
+      "r2_b08",
+      "r2_b21",
+      "r2_b24",
+      "r2_b32",
+      "r2_b26"
+    ],
+    "headline_candidates": [
+      "Williams Finds His Best at Palmares",
+      "Forty-Eight Points on First Acquaintance",
+      "Career Best Arrives on a Strange Course"
+    ],
+    "chosen_headline": "Williams Finds His Best at Palmares",
+    "standfirst": "Ten points better than his Boavista opener and the finest round of 33 TEG appearances, delivered on a layout he had never previously walked.",
+    "compelling_score": 8,
+    "humour_score": 5,
+    "descriptor": "GREGG WILLIAMS"
+  },
+  "race_story": {
+    "subject": "David Mullin's 42 points keeps him top of the TEG 10 Trophy but his cushion is trimmed from eight to five, while John Patterson's opening 10 pushes him further adrift at the bottom",
+    "why_it_matters": "The leader had the best day of anyone in round one and a perfectly respectable one in round two, and still lost ground; meanwhile the TEG 10 Wooden Spoon gap has widened from three to five with two rounds to play.",
+    "shape": "Mullin was untouchable at Boavista and began Sunday eight points clear, reeling off five straight pars from the 4th for 15 points. A double bogey at the 9th ended that run, and 42 points — good, not decisive — was simply not enough against Gregg Williams's 48 and the 45s of Alex Baker and Jon Baker. He still leads the Trophy on 91 and the TEG 10 Green Jacket by 13, but Alex Baker, whose 45 points and +23 gross were both career bests, is now level with Williams on 86, while John Patterson, who took 10 at the very first hole, slipped five behind the field in the TEG 10 Wooden Spoon.",
+    "beat_ids": [
+      "r2_b27",
+      "r2_b07",
+      "r2_b19",
+      "r2_b15",
+      "r2_b16",
+      "r2_b25",
+      "r2_b29",
+      "r2_b03"
+    ],
+    "headline_candidates": [
+      "Mullin's Cushion Thins to Five",
+      "The Chasers Close on Mullin",
+      "Five Points and Two Rounds Left"
+    ],
+    "chosen_headline": "Mullin's Cushion Thins to Five",
+    "standfirst": "Forty-two points would win most days at TEG; on Sunday at Palmares it cost the leader three points of his advantage and left three men within nine.",
+    "compelling_score": 7,
+    "humour_score": 5,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Jon Baker's +10 gross round of 82, the third-best gross round in TEG history to date and the best of his own 33 rounds, built on six consecutive pars from the 5th",
+      "why_it_matters": "Gross scoring at this level is vanishingly rare in TEG, and it is the one part of Jon Baker's game that puts pressure on David Mullin in the TEG 10 Green Jacket, where he is the only man within 13.",
+      "shape": "Jon Baker began par, birdie, par for 10 points in three holes, then handed it straight back with a double bogey at the 4th. From the 5th to the 10th he made six consecutive pars — 18 points, not a gross shot dropped, including the stroke-index-three 9th — and signed for 82, +10. It is the third-best gross round anyone has produced in TEG, and his own career best, though it moved him only a single point closer in the Jacket.",
+      "beat_ids": [
+        "r2_b01",
+        "r2_b02",
+        "r2_b04",
+        "r2_b12",
+        "r2_b17",
+        "r2_b20"
+      ],
+      "headline_candidates": [
+        "Jon Baker Signs for Eighty-Two",
+        "Six Pars Without a Shot Dropped",
+        "Jon Baker's Best Ever Gross Round"
+      ],
+      "chosen_headline": "Jon Baker Signs for Eighty-Two",
+      "standfirst": "Six pars in a row from the 5th carried him to the third-best gross round in TEG history, and still barely dented the Green Jacket margin.",
+      "compelling_score": 8,
+      "humour_score": 4,
+      "descriptor": "JON BAKER"
+    },
+    {
+      "subject": "Stuart Neumann's back nine at Palmares: 10 at the 13th, 9 at the 14th, 7 at the 15th, and then another 10 at the 18th",
+      "why_it_matters": "He had been going along perfectly well — 14 points across the 9th to the 12th — before losing thirteen gross shots in three holes, and it is the second consecutive round he has finished by taking 10 at the last.",
+      "shape": "Neumann turned in decent order, collecting 14 points from the 9th through the 12th and playing the 11th and 12th without dropping a gross shot. Then came the 13th (10), the 14th (9 at stroke index 18) and the 15th (7): thirteen shots gone, three consecutive blanks, three holes that took out his round. The 18th, where he had also taken 10 the previous day at Boavista, finished the job with a sextuple bogey — his worst return on a par 4 in TEG.",
+      "beat_ids": [
+        "r2_b11",
+        "r2_b14",
+        "r2_b13",
+        "r2_b18",
+        "r2_b22",
+        "r2_b09",
+        "r2_b30",
+        "r2_b28"
+      ],
+      "headline_candidates": [
+        "Thirteen Shots in Three Holes",
+        "Neumann Unravels Between Thirteen and Fifteen",
+        "Another Ten at the Last"
+      ],
+      "chosen_headline": "Thirteen Shots in Three Holes",
+      "standfirst": "A tidy front nine ended at the 13th, and by the 15th Stuart Neumann had made two quintuple bogeys and a triple without troubling the scorecard for a point.",
+      "compelling_score": 7,
+      "humour_score": 8,
+      "descriptor": "STUART NEUMANN"
+    }
+  ],
+  "race_state_note": "Alex Baker and Gregg Williams share second on 86, with Jon Baker nine off the lead; David Mullin's 13-point Green Jacket margin barely moved despite Jon Baker's 82.",
+  "storyline_note": ""
+}

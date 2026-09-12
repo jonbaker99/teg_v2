@@ -1,0 +1,90 @@
+{
+  "title": "Baker and Mullin Rewrite TEG History at Boavista",
+  "title_candidates": [
+    "Baker and Mullin Rewrite TEG History",
+    "Two Records Fall in a Single Morning",
+    "History Written Twice at Boavista"
+  ],
+  "theme": "Round 1 at Boavista delivers two once-in-a-competition rounds — Jon Baker's Trophy-best -9 and David Mullin's course-record 88 — while Henry Meller's 17th-hole disaster anchors the Wooden Spoon race before it has properly begun.",
+  "tone": "wry, understated, quietly disbelieving",
+  "opening_hook": "Boavista had already hosted three TEGs' worth of golf before Tuesday, but nothing in that history suggested Jon Baker was about to shoot the best round the competition has recorded — nor that David Mullin, in the same four-ball, would beat the course record while doing it.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "origin",
+    "catalogue"
+  ],
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "records",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Jon Baker's net -9 stands as the best round recorded in TEG history to date",
+    "why_it_matters": "Jon Baker's net -9 is, at the moment it was carded, the best round recorded anywhere in TEG's three-tournament history — a mark against which every future round will now be judged, and also comfortably the best of his own career.",
+    "shape": "Baker opens steadily before a mid-round surge through the turn at the 7th to 9th, then goes through the 13th and 14th without dropping a gross shot; by the 18th his card reads -9, the best net round anyone has shot in TEG history and the best of his own career by some distance.",
+    "beat_ids": [
+      "r1_b02",
+      "r1_b03",
+      "r1_b16",
+      "r1_b23"
+    ],
+    "headline_candidates": [
+      "Baker's -9 Rewrites TEG History",
+      "The Best Round Ever Played",
+      "Baker Sets a New Trophy Standard"
+    ],
+    "chosen_headline": "Baker's -9 Rewrites TEG History",
+    "standfirst": "No one at Boavista's clubhouse had seen a net score like it, and the record books hadn't either.",
+    "compelling_score": 9,
+    "humour_score": 4,
+    "descriptor": "JON BAKER"
+  },
+  "race_story": {
+    "subject": "David Mullin's course-record round grabs the Green Jacket lead as Henry Meller sinks to the bottom of the Wooden Spoon race",
+    "why_it_matters": "With no prior rounds to react to, Round 1 sets the terms for all three competitions: Jon Baker's Trophy lead is already commanding, but the Green Jacket and Wooden Spoon tables both find new occupants in David Mullin and Henry Meller respectively.",
+    "shape": "David Mullin's round builds quietly under the radar of Baker's fireworks, until his 88 gross is confirmed as a new Boavista course record and the best Gross round in TEG history — enough to put him two clear at the top of the Jacket table. At the other end, Henry Meller's outward frustrations curdle into a 12 at the 17th, the day's single worst hole, dropping him to the bottom of the Spoon table three shots adrift.",
+    "beat_ids": [
+      "cr01",
+      "r1_b07",
+      "r1_b10",
+      "r1_b12",
+      "r1_b01",
+      "r1_b05",
+      "r1_b04"
+    ],
+    "headline_candidates": [
+      "Mullin's Record 88 Grabs the Jacket",
+      "A New Course Mark, A New Leader",
+      "Mullin Writes His Name Into Boavista"
+    ],
+    "chosen_headline": "Mullin's Record 88 Grabs the Jacket",
+    "standfirst": "Two competitions changed hands within a single round, and a third was already beyond saving for Henry Meller.",
+    "compelling_score": 7,
+    "humour_score": 5,
+    "descriptor": "SIDEBAR"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Gregg Williams's personal-best net round is undone by a catastrophic finish",
+      "why_it_matters": "Buried in Gregg Williams's card is a personal-best net round — his lowest score yet in four TEGs — which makes the calamity that closes it all the harder to explain, and leaves him with the worst Gross return of the day.",
+      "shape": "Williams's card is on course for his best net round in four TEGs until a quadruple bogey at the short 6th opens the door; three double- and triple-bogeyed holes from the 8th follow, before a finishing run from the 15th — triple, triple, triple, quadruple — turns a respectable book into the day's worst Gross score.",
+      "beat_ids": [
+        "r1_b06",
+        "r1_b08",
+        "r1_b14",
+        "r1_b15",
+        "r1_b22"
+      ],
+      "headline_candidates": [
+        "Thirteen Shots in Four Holes",
+        "Williams's Personal Best, Ruined by the Finish",
+        "A Career Best, Then Catastrophe"
+      ],
+      "chosen_headline": "Thirteen Shots in Four Holes",
+      "standfirst": "The card that started as his best round in four years ended as barely believable.",
+      "compelling_score": 7,
+      "humour_score": 8,
+      "descriptor": "GREGG WILLIAMS"
+    }
+  ],
+  "race_state_note": "This is Round 1 of TEG 3, so every standing above reflects a single day's play rather than sustained form; the 8-shot Trophy gap and 2-shot Jacket gap could both move sharply on Wednesday.",
+  "storyline_note": ""
+}

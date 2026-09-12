@@ -1,0 +1,98 @@
+{
+  "title": "Williams Sets the Bar in Catalonia",
+  "title_candidates": [
+    "Williams Sets the Bar in Catalonia",
+    "A Record Round on Camiral's Debut",
+    "The Course That Spared No One (Almost)"
+  ],
+  "theme": "On TEG's first visit to a brand new course, one man plays the best round the tournament has ever recorded while the rest of the field discovers exactly how much trouble Camiral's Tour Course can cause.",
+  "tone": "Deadpan astonishment at the record round, giving way to gleeful cataloguing of everyone else's misfortune.",
+  "opening_hook": "Play had barely begun on Camiral's previously unvisited Tour Course when Gregg Williams set about redefining what a good day in TEG looks like — and everyone else set about demonstrating what a bad one does.",
+  "narrative_vehicles": [
+    "origin",
+    "ensemble",
+    "catalogue"
+  ],
+  "prominent_vehicle": "origin",
+  "prominent_palette": "venue_character",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Gregg Williams's -12 becomes the best round recorded in TEG history so far",
+    "why_it_matters": "It sets the historical standard for TEG on the tournament's debut at a new course, and hands Williams an immediate 9-shot Trophy lead that shapes the whole week ahead.",
+    "shape": "Williams opens shakily, losing three holes to par between the 3rd and 5th, before recovery birdies at the 11th and 14th turn things around. Back-nine stretches at holes 9-11 and 13-16 then carry him from merely respectable to historic, a stray double bogey at the 17th barely denting the surge, and he closes with the best net-vs-par score recorded in 80 TEG rounds to date — and, almost incidentally, his own best-ever gross round too.",
+    "beat_ids": [
+      "r1_b01",
+      "r1_b26",
+      "r1_b12",
+      "r1_b11",
+      "r1_b10",
+      "r1_b06",
+      "r1_b08",
+      "r1_b03"
+    ],
+    "headline_candidates": [
+      "The Best Round TEG Has Seen",
+      "Williams Rewrites the Record Books",
+      "A New Ceiling for TEG Golf"
+    ],
+    "chosen_headline": "The Best Round TEG Has Seen",
+    "standfirst": "A -12 return on the field's first visit to Camiral's Tour Course now stands as the finest round in 80 outings of TEG history.",
+    "compelling_score": 9,
+    "humour_score": 5,
+    "descriptor": "GREGG WILLIAMS"
+  },
+  "race_story": {
+    "subject": "David Mullin's tidy round keeps the Green Jacket race tight even as the Trophy race runs away",
+    "why_it_matters": "While Williams's outlier round has already put real distance into the Trophy standings, the Gross-based Jacket race remains a one-shot contest, and Mullin's brief share of the Trophy lead early on marks the moment the two competitions began to diverge.",
+    "shape": "Mullin draws level for the Trophy lead at both the 3rd and 5th holes and plays steadily enough to seize the Green Jacket lead outright — before Williams's back-nine surge removes him from Trophy contention entirely. By the close Mullin still leads the Jacket, but only by a single shot from Jon Baker, whose own personal-best gross round of 18 was not quite enough to overhaul him.",
+    "beat_ids": [
+      "r1_b28",
+      "r1_b30",
+      "r1_b27",
+      "r1_b23",
+      "r1_b24",
+      "r1_b14",
+      "r1_b02"
+    ],
+    "headline_candidates": [
+      "One Shot Separates Mullin and Baker",
+      "Mullin's Steady Day Holds Off Baker",
+      "A Career-Best Round Still Not Enough"
+    ],
+    "chosen_headline": "One Shot Separates Mullin and Baker",
+    "standfirst": "A round of career-best gross golf from Jon Baker still leaves him chasing David Mullin's single-shot Green Jacket lead after day one.",
+    "compelling_score": 7,
+    "humour_score": 3,
+    "descriptor": "DAVID MULLIN | JON BAKER"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Henry Meller's two quadruple-bogey 9s bury him at the foot of the Wooden Spoon race, with Stuart Neumann's own meltdown a reminder the course spared almost nobody",
+      "why_it_matters": "On a debut where one man ran off with a historic score, the Wooden Spoon table shows exactly how brutal Camiral's Tour Course could be to everyone else, with the bottom spot changing hands four times before Meller's own round settled the matter for good.",
+      "shape": "Neumann's quintuple bogey at the 9th and Jon Baker's repeated stumbles hand the Spoon's bottom spot back and forth through the front nine, before Henry Meller's round unravels completely with quadruple bogeys at the 7th and 15th. He ends the day three shots clear at the bottom of the Wooden Spoon table, the round's most emphatic loser even as others flirted with the same fate.",
+      "beat_ids": [
+        "r1_b04",
+        "r1_b15",
+        "r1_b19",
+        "r1_b20",
+        "r1_b16",
+        "r1_b17",
+        "r1_b18",
+        "r1_b22",
+        "r1_b25"
+      ],
+      "headline_candidates": [
+        "Meller's Twin Nines Seal Last Place",
+        "The Spoon Changes Hands All Day",
+        "A Rough Debut for Meller"
+      ],
+      "chosen_headline": "Meller's Twin Nines Seal Last Place",
+      "standfirst": "Two quadruple-bogey 9s condemn Henry Meller to the bottom of the Wooden Spoon table on the very first day of a course nobody had seen before.",
+      "compelling_score": 6,
+      "humour_score": 6,
+      "descriptor": "WOODEN SPOON | HENRY MELLER"
+    }
+  ],
+  "race_state_note": "Round one of four: the Trophy gap already dwarfs the far tighter Green Jacket and Wooden Spoon margins, a reminder that this table can move fast in either direction over three more rounds.",
+  "storyline_note": ""
+}

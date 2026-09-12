@@ -1,0 +1,87 @@
+{
+  "title": "Two Rounds, One Record",
+  "title_candidates": [
+    "Two Rounds, One Record",
+    "Boavista's Record Falls Twice",
+    "Same Score, Different Stories"
+  ],
+  "theme": "A parkland course finally surrenders its course record twice in the same afternoon, while almost everyone below an unmoved leader gets reshuffled.",
+  "tone": "house",
+  "opening_hook": "Boavista's course record didn't survive the back nine, and neither, in the end, did anyone's assumptions about who'd be standing where by close of play.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "catalogue"
+  ],
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "records",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "David Mullin and Stuart Neumann both card 82 gross to break the Boavista course record, with Neumann's net -9 standing as the best round in TEG history to date",
+    "why_it_matters": "A new course record and the best round in TEG history landing in the same round, shared by two players with entirely different games, is the kind of coincidence that defines a report on its own",
+    "shape": "David Mullin arrived at this round already owning Boavista's course record of 83, set only in round one of this very TEG. In round two he trimmed it to 82 — only for Stuart Neumann, playing the round of his life, to card the identical 82 gross and pair it with a net -9 that is the best round in TEG history to date. Two entirely different games produced the same number on the same card on the same afternoon.",
+    "beat_ids": [
+      "r2_b01",
+      "r2_b02",
+      "r2_b03",
+      "r2_b04",
+      "cr01"
+    ],
+    "headline_candidates": [
+      "Two Rounds Rewrite the Record Book",
+      "Mullin and Neumann Share Boavista Glory",
+      "Same Score, Different Stories at Boavista"
+    ],
+    "chosen_headline": "Two Rounds Rewrite the Record Book",
+    "standfirst": "Stuart Neumann's historic net score matched David Mullin shot for shot on the gross card, as both broke the Boavista course record in the same round.",
+    "compelling_score": 9,
+    "humour_score": 5,
+    "descriptor": "DAVID MULLIN | STUART NEUMANN"
+  },
+  "race_story": {
+    "subject": "Gregg Williams' career-best round and Stuart Neumann's leap from last both vault past a level-par Jon Baker in the Trophy chase, while Henry Meller's collapse flips the Wooden Spoon race entirely",
+    "why_it_matters": "The overnight order looked settled, but a level round turned out to be enough to lose a place, and one ruinous stretch flipped the Wooden Spoon completely — the minor races were transformed even though the man on top never moved",
+    "shape": "Overnight the Trophy chase had David Mullin one shot clear of Jon Baker, with Gregg Williams and Stuart Neumann still lurking behind. Williams' personal-best -6 and Neumann's leap from last to third both jumped clean over Baker, who played a level round and found himself shoved back to fourth for his trouble, while Henry Meller's implosion sent the Wooden Spoon gap from a three-shot squeak to a fifteen-shot canter.",
+    "beat_ids": [
+      "r2_b05",
+      "r2_b23",
+      "r2_b26"
+    ],
+    "headline_candidates": [
+      "Standing Still Costs Jon Baker",
+      "The Chasing Pack Gets Reshuffled",
+      "Williams and Neumann Storm Past Baker"
+    ],
+    "chosen_headline": "Standing Still Costs Jon Baker",
+    "standfirst": "A level-par round was enough to see Jon Baker overtaken twice over, while the Wooden Spoon race changed hands completely.",
+    "compelling_score": 7,
+    "humour_score": 6,
+    "descriptor": "SIDEBAR"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Henry Meller's three-hole collapse from the 14th to the 16th hands him the Wooden Spoon cellar",
+      "why_it_matters": "Three holes turned a respectable week into a Wooden Spoon lock, providing the round's sharpest single collapse and its clearest cautionary tale",
+      "shape": "Henry Meller had been merely mid-table after a solid front nine. Then holes 14 to 16 arrived — a quadruple bogey, a triple bogey and a quintuple bogey in succession, twelve shots bled in three holes, capped by a further quadruple at the last. It was enough to drop him from fourth to dead last in the Wooden Spoon race, and from within touching distance of the pack to fifteen shots adrift of it.",
+      "beat_ids": [
+        "r2_b06",
+        "r2_b07",
+        "r2_b08",
+        "r2_b10",
+        "r2_b13",
+        "r2_b16"
+      ],
+      "headline_candidates": [
+        "Three Holes Undo Henry Meller",
+        "Meller's Back Nine Falls Apart",
+        "Twelve Shots Lost in Three Holes"
+      ],
+      "chosen_headline": "Three Holes Undo Henry Meller",
+      "standfirst": "A quadruple, a triple and a quintuple bogey in a row turned a tidy front nine into the tournament's worst stretch of golf.",
+      "compelling_score": 8,
+      "humour_score": 8,
+      "descriptor": "HENRY MELLER"
+    }
+  ],
+  "race_state_note": "Despite the identical low gross rounds at the top, the Trophy lead actually widened, because both surges from Williams and Neumann still landed below David Mullin — the podium reshuffled beneath a leader who didn't need to move at all.",
+  "storyline_note": ""
+}

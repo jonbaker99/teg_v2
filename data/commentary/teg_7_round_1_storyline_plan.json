@@ -1,0 +1,124 @@
+{
+  "title": "Meller And Jon Baker Rewrite TEG History",
+  "title_candidates": [
+    "Meller And Jon Baker Rewrite TEG History",
+    "A New Benchmark On The Dunes",
+    "TEG's Portuguese Debut Produces Two Records"
+  ],
+  "theme": "TEG's first visit to Portugal produces the best round ever played, and the third-best right behind it.",
+  "tone": "Reverent of the numbers, wry about everything else — a debut course that rewarded brilliance and punished carelessness in equal measure.",
+  "opening_hook": "TEG arrived in Portugal for the first time and immediately tore up its own record book: Henry Meller's front-to-back demolition of Praia D'El Rey produced the best round the tournament has ever recorded, with Jon Baker's effort alongside him the third-best score in history and the best gross round anyone has shot in seven years of trying.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "origin",
+    "catalogue"
+  ],
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "records",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Henry Meller's -13 at Praia D'El Rey, the best round recorded in TEG history to date",
+    "why_it_matters": "It resets the tournament's own record book on its very first hole of Portuguese golf and hands Meller an outright Trophy lead before the field has left the coast.",
+    "shape": "Meller opens steadily, piling up shots to par through the first three holes before a double bogey at the 4th briefly breaks the rhythm. He then reels off nine holes from the 10th without a blemish worse than two closing bogeys, a stretch worth ten shots to par, to turn a good card into TEG's best-ever round and, in gross terms, his own personal best.",
+    "beat_ids": [
+      "r1_b02",
+      "r1_b05",
+      "r1_b04",
+      "r1_b16",
+      "r1_b20",
+      "r1_b09"
+    ],
+    "headline_candidates": [
+      "Meller Rewrites TEG's Record Books",
+      "A New Line In The Sand",
+      "History Made On The Back Nine"
+    ],
+    "chosen_headline": "Meller Rewrites TEG's Record Books",
+    "standfirst": "Henry Meller's back nine of relentless pars turned a promising round into the best 18 holes anyone has played in TEG's seven-year history.",
+    "compelling_score": 9,
+    "humour_score": 4,
+    "descriptor": "HENRY MELLER"
+  },
+  "race_story": {
+    "subject": "A day-one Trophy and Green Jacket picture split by wafer-thin margins between Henry Meller and Jon Baker",
+    "why_it_matters": "With three rounds still to come, the two competitions have already gone in different directions — Meller's record net round puts him three clear for the Trophy, while Jon Baker's own historic round leaves him ahead on gross by just a single shot.",
+    "shape": "The Trophy lead changes hands repeatedly through the middle holes — Gregg Williams and David Mullin both take turns in front — before Meller's closing surge settles it outright. The Green Jacket race runs in parallel, with Mullin and then Jon Baker drawing level on gross, until Jon Baker's own strong finish leaves him a single shot ahead of Meller once the Trophy split is complete.",
+    "beat_ids": [
+      "r1_b01",
+      "r1_b03",
+      "r1_b21",
+      "r1_b27",
+      "r1_b30",
+      "r1_b29",
+      "r1_b40",
+      "r1_b34",
+      "r1_b28",
+      "r1_b31",
+      "r1_b41",
+      "r1_b15",
+      "r1_b17",
+      "r1_b06"
+    ],
+    "headline_candidates": [
+      "The Slimmest Of Jacket Leads",
+      "Two Records, One Shot Apart",
+      "Jon Baker Trails By Three, Leads By One"
+    ],
+    "chosen_headline": "The Slimmest Of Jacket Leads",
+    "standfirst": "Jon Baker's own record-breaking round leaves him level on gross with Henry Meller's history-making net score, the pair split by three shots for the Trophy and just one for the Jacket.",
+    "compelling_score": 8,
+    "humour_score": 5,
+    "descriptor": "HENRY MELLER | JON BAKER"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Alex Baker's horror show around Praia D'El Rey, three quadruple bogeys and a quintuple leaving him rooted to the bottom of the Wooden Spoon race",
+      "why_it_matters": "It sets the early shape of the Spoon fight for the rest of the tournament, with Alex Baker already four shots clear of trouble at the bottom after just one round.",
+      "shape": "A quintuple bogey at the short 5th is only the opening act; a four-hole stretch from the 8th bleeds eleven shots including back-to-back quadruple bogeys at the 10th and 14th. He finishes the day rooted to the bottom of the Wooden Spoon standings by four clear shots.",
+      "beat_ids": [
+        "r1_b19",
+        "r1_b36",
+        "r1_b33",
+        "r1_b32",
+        "r1_b35",
+        "r1_b37",
+        "r1_b39",
+        "r1_b38"
+      ],
+      "headline_candidates": [
+        "Five, Then Eight, Then Eight Again",
+        "Alex Baker's Day To Forget",
+        "Bottom Of The Spoon By Four"
+      ],
+      "chosen_headline": "Five, Then Eight, Then Eight Again",
+      "standfirst": "A quintuple bogey at the 5th was merely the opening act in a round that saw Alex Baker card three separate quadruple bogeys on his TEG debut at Praia D'El Rey.",
+      "compelling_score": 7,
+      "humour_score": 8,
+      "descriptor": "ALEX BAKER"
+    },
+    {
+      "subject": "Praia D'El Rey's teeth on its TEG debut, with a big number found for every player in the field",
+      "why_it_matters": "It establishes the character of a new venue that can wound even the players posting the best rounds in TEG history, a useful counterweight to the day's headline scores.",
+      "shape": "Behind the two record rounds, the course claims victims throughout: a quadruple bogey for Jon Baker at the short 2nd, another for Gregg Williams at the 6th, and a closing quadruple for David Mullin at the 18th, while Stuart Neumann's two separate triple bogeys sink him toward the Spoon cellar. Even TEG's first visit to Portugal's most spectacular dunes proves nobody gets round it clean.",
+      "beat_ids": [
+        "r1_b06",
+        "r1_b08",
+        "r1_b07",
+        "r1_b11",
+        "r1_b12"
+      ],
+      "headline_candidates": [
+        "Praia D'El Rey Draws Blood",
+        "Every Player Feels The Bite",
+        "No One Escapes Unscathed"
+      ],
+      "chosen_headline": "Praia D'El Rey Draws Blood",
+      "standfirst": "Behind the two headline rounds, TEG's first Portuguese venue found a big number for every man in the field, Jon Baker's own quadruple bogey at the 2nd included.",
+      "compelling_score": 6,
+      "humour_score": 6,
+      "descriptor": "PRAIA D'EL REY"
+    }
+  ],
+  "race_state_note": "Round 1 of 4; day-one gaps are already wide by Trophy standards but historically ephemeral this early in a TEG.",
+  "storyline_note": ""
+}

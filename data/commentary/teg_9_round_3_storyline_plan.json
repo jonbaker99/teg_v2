@@ -1,0 +1,105 @@
+{
+  "title": "Royal Óbidos Savages The Back Nine",
+  "title_candidates": [
+    "Royal Óbidos Savages The Back Nine",
+    "The Ten-Shot Cushion Becomes A Three-Shot Sweat",
+    "Alex Baker's Best Day, Everyone Else's Worst Stretch"
+  ],
+  "theme": "Holes 10 to 12 became a killing ground that mauled three different players, yet left both the Green Jacket and Wooden Spoon races exactly where they started — only the Trophy race, undone by Patterson's comedown, actually moved.",
+  "tone": "Wry, forensic, and quietly delighted by the gap between a scorecard's carnage and its final verdict.",
+  "opening_hook": "Three players took turns being swallowed whole by holes 10 to 12 at Royal Óbidos, and somehow only one leaderboard noticed.",
+  "narrative_vehicles": [
+    "motif",
+    "counterfactual"
+  ],
+  "prominent_vehicle": "motif",
+  "prominent_palette": "venue_character",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Alex Baker's 42-point round is the best of the day and the second-best of his own TEG career, arriving despite a quintuple bogey at the 14th and an eight-shot bleed through holes 10-12.",
+    "why_it_matters": "It is the second-best Stableford round of his 11-round TEG history and, at Royal Óbidos specifically, a new course personal best — 102 gross, six shots better than his previous best here and thirteen shots better than his last visit — proof the carnage in the middle of his round didn't actually cost him the day.",
+    "shape": "Alex Baker arrived at Royal Óbidos never having broken 108 gross; somewhere in the middle of his round he took a quintuple bogey at the 14th and bled eight shots across holes 10-12, the kind of stretch that usually wrecks a card. Instead he closed with the best Stableford total of the day and a new personal best on the course, the numbers refusing to reflect the chaos that produced them.",
+    "beat_ids": [
+      "r3_b01",
+      "r3_b11"
+    ],
+    "headline_candidates": [
+      "Alex Baker Bends But Doesn't Break",
+      "Best Round Hides Worst Stretch",
+      "Alex Baker's Day Of Contradictions"
+    ],
+    "chosen_headline": "Alex Baker Bends But Doesn't Break",
+    "standfirst": "A quintuple bogey and a three-hole bloodbath through 10-12 somehow still added up to the best Stableford round of the day.",
+    "compelling_score": 8,
+    "humour_score": 6,
+    "descriptor": "ALEX BAKER"
+  },
+  "race_story": {
+    "subject": "John Patterson's ten-shot Trophy cushion, built on a near-record 49-point round, shrank to just three after a 34-point comedown at Royal Óbidos.",
+    "why_it_matters": "Two separate quadruple bogeys, at the 12th and the 18th, plus a costly early stretch through holes 2-4, turned a laughably comfortable lead into a nervous one with Alex Baker's 42 points closing hard and one round left to play.",
+    "shape": "Patterson took a ten-shot Trophy lead into the round on the back of the second-best round in TEG history. A poor 34 at Royal Óbidos — undone by quadruple bogeys at the 12th and 18th and an eight-shot bleed through 2-4 — has cut that cushion to three with the field's best round of the day snapping at his heels.",
+    "beat_ids": [
+      "r3_b13",
+      "r3_b16",
+      "r3_b17",
+      "r3_b19",
+      "r3_b08"
+    ],
+    "headline_candidates": [
+      "Patterson's Cushion Shrinks To Three",
+      "Ten-Shot Lead Nearly Vanishes",
+      "The Comedown After The High"
+    ],
+    "chosen_headline": "Patterson's Cushion Shrinks To Three",
+    "standfirst": "A pair of quadruple bogeys and a horror start turned a laughably comfortable lead into a nervous one, with a round to go.",
+    "compelling_score": 8,
+    "humour_score": 5,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Jon Baker's round split violently in two — a serene front nine undone by a ruinous stretch through holes 10-12.",
+      "why_it_matters": "He piled up 16 points across the first five holes without dropping a gross shot through 1-3, then went three holes without a single net par, bleeding eight shots and taking a quadruple bogey at the 11th — a ten-point front-to-back split that turned a promising round mediocre.",
+      "shape": "Jon Baker's front nine bordered on serene: 16 points in five holes, spotless golf through 1-3. Then holes 10-12 undid all of it — a double bogey, a quadruple bogey, another double, no net pars and eight shots gone. He finished with a 34-point round that flattered to deceive, a microcosm of a topsy-turvy day at Royal Óbidos.",
+      "beat_ids": [
+        "r3_b03",
+        "r3_b05",
+        "r3_b14",
+        "r3_b04",
+        "r3_b10",
+        "r3_b12"
+      ],
+      "headline_candidates": [
+        "Jon Baker's Round Of Two Halves",
+        "Brilliant Front, Ruinous Back",
+        "Ten Points Lost In Three Holes"
+      ],
+      "chosen_headline": "Jon Baker's Round Of Two Halves",
+      "standfirst": "Sixteen points in five holes gave way to three without a single net par, a swing that summed up the day.",
+      "compelling_score": 7,
+      "humour_score": 6,
+      "descriptor": "JON BAKER"
+    },
+    {
+      "subject": "David Mullin's Green Jacket lead survives a quintuple bogey at the 10th, his worst hole of the tournament so far.",
+      "why_it_matters": "With Jon Baker seven shots back and this round's chaos elsewhere, the blow-up threatened to hand the initiative straight back, but a tidy start — including a birdie at the 3rd — banked enough that the Jacket gap finished the round exactly where it started.",
+      "shape": "Mullin took a seven-shot Green Jacket cushion into the round. A quintuple bogey at the 10th, his worst hole of the TEG so far, threatened to cut it down. Instead the gap held at seven, unmoved, heading into the final round.",
+      "beat_ids": [
+        "r3_b02",
+        "r3_b15"
+      ],
+      "headline_candidates": [
+        "Mullin Survives A Horror Tenth",
+        "The Lead That Wouldn't Budge",
+        "Mullin's Nightmare Hole Costs Nothing"
+      ],
+      "chosen_headline": "Mullin Survives A Horror Tenth",
+      "standfirst": "A quintuple bogey at the 10th was as bad as his tournament has been, yet the Jacket gap didn't move an inch.",
+      "compelling_score": 6,
+      "humour_score": 6,
+      "descriptor": "GREEN JACKET"
+    }
+  ],
+  "race_state_note": "The Green Jacket gap held at exactly seven and the Wooden Spoon gap crept out by one to fifteen — both leaders unmoved, only the Trophy race sharpened.",
+  "storyline_note": ""
+}

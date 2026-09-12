@@ -1,0 +1,92 @@
+{
+  "title": "The Two Faces of Costa Brava",
+  "title_candidates": [
+    "The Two Faces of Costa Brava",
+    "Meller Breaks Free at Costa Brava",
+    "Williams Wobbles, Meller Soars"
+  ],
+  "theme": "Costa Brava's split personality - a tight, tree-lined front nine and a forgiving back nine - rescues one player's tournament and exposes another's cushion.",
+  "tone": "house",
+  "opening_hook": "TEG's first visit to Catalonia produced a course of two distinct temperaments, and by the close of round two it had found a player to match each one: Henry Meller, rescued by its gentler back nine after the worst finish of his tournament so far, and Gregg Williams, undone by the very same stretch of holes.",
+  "narrative_vehicles": [
+    "redemption_arc",
+    "inversion",
+    "ensemble"
+  ],
+  "prominent_vehicle": "redemption_arc",
+  "prominent_palette": "decisive_moment",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Henry Meller's career-best round, arriving a day after his worst finish of the tournament",
+    "why_it_matters": "It is both the best round anyone shot at Costa Brava and, on the player's own numbers, the best round of Henry Meller's TEG career on both scoring measures - a genuine first, not a mid-table ranking.",
+    "shape": "Meller began the day at the bottom of the Wooden Spoon table after a poor opening round, briefly dropping there again after a double bogey at the 3rd. Two hot stretches either side of the turn - four holes without a dropped gross shot from the 9th, and five points gained net over the same stretch - turned the round around completely. He closed with a personal-best -5 net and a personal-best gross return, the best figures anyone posted all day.",
+    "beat_ids": [
+      "r2_b01",
+      "r2_b02",
+      "r2_b07",
+      "r2_b13",
+      "r2_b15",
+      "r2_b16",
+      "r2_b18",
+      "r2_b19"
+    ],
+    "headline_candidates": [
+      "Meller Finds His Career-Best Round",
+      "Meller Escapes The Cellar In Style",
+      "Meller Shoots The Round Of His Life"
+    ],
+    "chosen_headline": "Meller Finds His Career-Best Round",
+    "standfirst": "A first visit to Catalonia produced the best net score of the day and a personal best on both measures for a player who had been last in the field just twenty-four hours earlier.",
+    "compelling_score": 8,
+    "humour_score": 6,
+    "descriptor": "HENRY MELLER"
+  },
+  "race_story": {
+    "subject": "David Mullin stretches his Green Jacket lead while Stuart Neumann inherits the Wooden Spoon cellar",
+    "why_it_matters": "With the Trophy race untouched at the top, the day's real movement came at the other two tables: the Green Jacket gap quintupled and the Wooden Spoon changed hands, leaving the tightest of margins between last and second-last.",
+    "shape": "David Mullin began the day just one point clear of Jon Baker in the Green Jacket race; a flawless closing stretch from the 15th, three holes without dropping a gross shot, pushed that gap out to five. At the other end, Stuart Neumann's own round was perfectly respectable, but with Henry Meller vaulting clear of the Wooden Spoon cellar, Neumann found himself dropped into last place instead, with just a single shot now separating him from Meller.",
+    "beat_ids": [
+      "r2_b03",
+      "r2_b04",
+      "r2_b06",
+      "r2_b14"
+    ],
+    "headline_candidates": [
+      "Mullin Extends Lead While Spoon Flips",
+      "Jacket Gap Widens As Spoon Turns Over",
+      "Mullin Pulls Clear, Neumann Takes Last"
+    ],
+    "chosen_headline": "Mullin Extends Lead While Spoon Flips",
+    "standfirst": "Gregg Williams's cushion at the top proved undentable, but the placings shuffled hard at both ends of the field behind him.",
+    "compelling_score": 6,
+    "humour_score": 5,
+    "descriptor": "DAVID MULLIN | STUART NEUMANN"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Gregg Williams's front-runner stumble at Costa Brava",
+      "why_it_matters": "The runaway Trophy leader endured his roughest day of the tournament so far - a quadruple bogey, eleven gross shots bled across four holes, four bogeys in a row - and it cost him nothing in the standings, purely because of the scale of his round-one cushion.",
+      "shape": "Williams arrived at Costa Brava with a nine-shot Trophy lead built on the best round in TEG history. A quadruple bogey at the 1st-index 7th opened the door, and a run from the 13th to the 16th cost him eleven gross shots in four holes. A birdie at the 17th stopped the bleeding, and his overall lead finished the day exactly where it started.",
+      "beat_ids": [
+        "r2_b05",
+        "r2_b08",
+        "r2_b10",
+        "r2_b12",
+        "r2_b17",
+        "r2_b20"
+      ],
+      "headline_candidates": [
+        "Williams Wobbles But The Lead Holds",
+        "Williams Survives His Own Collapse",
+        "The Cushion Absorbs A Quadruple Bogey"
+      ],
+      "chosen_headline": "Williams Wobbles But The Lead Holds",
+      "standfirst": "A quadruple bogey at the 7th began a spell of scoring that would have unsettled anyone without a nine-shot lead already banked.",
+      "compelling_score": 7,
+      "humour_score": 8,
+      "descriptor": "GREGG WILLIAMS"
+    }
+  ],
+  "race_state_note": "Gregg Williams's Trophy lead survives at nine shots despite his own toughest day of the tournament so far, purely because of the size of his round-one cushion; the Wooden Spoon picture is now separated by a single shot between Neumann and Meller.",
+  "storyline_note": ""
+}

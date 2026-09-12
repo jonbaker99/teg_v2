@@ -1,0 +1,107 @@
+{
+  "title": "Alex Baker Rewrites the Record Books at Boavista",
+  "title_candidates": [
+    "Alex Baker Rewrites the Record Books at Boavista",
+    "A Record Round Settles the TEG 10 Trophy",
+    "Boavista Bows to a 51"
+  ],
+  "theme": "A tied Trophy race is blown open by the best round TEG has ever seen, while the Green Jacket and Wooden Spoon are both settled on the same Algarve afternoon.",
+  "tone": "Reverent about the record round, drily merciless about the collapse at the bottom of the table.",
+  "opening_hook": "Boavista had hosted eleven previous TEG rounds; nothing in that history looked anything like the twelfth.",
+  "narrative_vehicles": [
+    "hero_arc",
+    "origin",
+    "inevitability"
+  ],
+  "prominent_vehicle": "hero_arc",
+  "prominent_palette": "records",
+  "is_final_round": true,
+  "round_story": {
+    "subject": "Alex Baker's 51-point final round, the best in TEG history to date",
+    "why_it_matters": "It is the highest Stableford total ever recorded in TEG's history, and it arrived at exactly the moment it mattered most, on a course he had barely played before this week.",
+    "shape": "Alex Baker arrives at Boavista level with Gregg Williams for the Trophy after three rounds of parity. He catches fire from the 5th, gathering 21 points across a six-hole stretch to the 10th while carding a personal-best gross 17. He finishes on 51 points, the best round in TEG history to date, alongside a new Boavista personal best of 88 gross, 11 shots better than his previous visit.",
+    "beat_ids": [
+      "r4_b03",
+      "r4_b05",
+      "r4_b07"
+    ],
+    "headline_candidates": [
+      "The Best Round Boavista Has Seen",
+      "Alex Baker's Record 51",
+      "A Round for the History Books"
+    ],
+    "chosen_headline": "Alex Baker's Record 51",
+    "standfirst": "A career-best gross round and a new Boavista personal best combined to produce the highest Stableford total in TEG's history.",
+    "compelling_score": 9,
+    "humour_score": 4,
+    "descriptor": "ALEX BAKER"
+  },
+  "race_story": {
+    "subject": "The Trophy race, resolved: Alex Baker's breakaway from a tied lead to his first title",
+    "why_it_matters": "This is the tournament's resolution — the destination of the TEG 10 Trophy, decided after three rounds had left Alex Baker and Gregg Williams locked together on identical scores.",
+    "shape": "Alex Baker and Gregg Williams arrive at the final round dead level on 133 points each. Williams draws back level early at the 5th, only for a six-shot bleed through holes 12 to 14 and a closing quadruple bogey at the 18th to undo him, while Alex Baker's back-nine surge pulls clear. Alex Baker closes out a first Trophy title by 11 points, the widest margin of the week.",
+    "beat_ids": [
+      "r4_b16",
+      "r4_b17",
+      "r4_b10",
+      "r4_b13"
+    ],
+    "headline_candidates": [
+      "Alex Baker Claims a First Trophy",
+      "From Level Pegging to an 11-Point Win",
+      "Gregg Williams Fades as Alex Baker Delivers"
+    ],
+    "chosen_headline": "Alex Baker Claims a First Trophy",
+    "standfirst": "Level with Gregg Williams overnight, Alex Baker turned a tied Trophy race into his maiden title by the close of play.",
+    "compelling_score": 8,
+    "humour_score": 5,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "David Mullin holds off a fast-closing Jon Baker to take the Green Jacket",
+      "why_it_matters": "The Jacket race was the tightest in the field entering the final round, and Jon Baker's closing charge threatened to close what had been a 10-point gap.",
+      "shape": "Jon Baker enters the final round just 10 adrift, sets a new Boavista personal best of 86 gross and piles up nine points in a closing stretch from the 15th. David Mullin matches him hole for hole, opening with two clean holes and stitching together his own tidy stretch through the 13th and 14th. Mullin's round proves just enough, extending his lead to 12 and landing the Green Jacket.",
+      "beat_ids": [
+        "r4_b09",
+        "r4_b18",
+        "r4_b21",
+        "r4_b13"
+      ],
+      "headline_candidates": [
+        "David Mullin Holds His Nerve",
+        "David Mullin Survives a Late Scare",
+        "Jon Baker's Charge Falls Just Short"
+      ],
+      "chosen_headline": "David Mullin Holds His Nerve",
+      "standfirst": "A tense final day at Boavista saw the Green Jacket gap tighten before David Mullin closed it out by 12.",
+      "compelling_score": 7,
+      "humour_score": 4,
+      "descriptor": "GREEN JACKET"
+    },
+    {
+      "subject": "John Patterson's collapse to a runaway Wooden Spoon",
+      "why_it_matters": "His final round was the worst round and the worst gross round of his TEG career, built on three separate blow-up holes, and it stretched his Wooden Spoon deficit from 14 to 32, the widest gap of the tournament.",
+      "shape": "John Patterson comes into the final round already anchored to the bottom of the Wooden Spoon table, 14 adrift. A sextuple bogey 11 at the 8th, a quadruple bogey 8 at the 10th and a quintuple bogey 9 at the 18th shred any hope of a recovery. He finishes on 21 points and +40 gross, both worst-to-date, and takes the Wooden Spoon by 32 clear points.",
+      "beat_ids": [
+        "r4_b01",
+        "r4_b02",
+        "r4_b04",
+        "r4_b06",
+        "r4_b08"
+      ],
+      "headline_candidates": [
+        "Three Blow-Ups Seal the Spoon",
+        "John Patterson's Day to Forget",
+        "A Career-Worst at Boavista"
+      ],
+      "chosen_headline": "Three Blow-Ups Seal the Spoon",
+      "standfirst": "A sextuple bogey at the 8th set the tone for John Patterson's worst round in eight TEG appearances.",
+      "compelling_score": 8,
+      "humour_score": 6,
+      "descriptor": "WOODEN SPOON | JOHN PATTERSON"
+    }
+  ],
+  "race_state_note": "All three competitions were settled this round: the Trophy race, level entering the final day, swung 11 points in Alex Baker's favour; the Jacket gap that had been 10 stretched to 12; and John Patterson's Spoon deficit more than doubled from 14 to 32.",
+  "storyline_note": ""
+}

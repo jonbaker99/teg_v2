@@ -1,0 +1,50 @@
+{
+  "title": "No News From Boavista",
+  "title_candidates": [
+    "No News From Boavista",
+    "The Quiet Fourth",
+    "Boavista Holds Its Breath"
+  ],
+  "theme": "A round that left no trace: the Algarve's newest course kept its secrets, and the leaderboard forged across three record-strewn days at Boavista simply refused to move.",
+  "tone": "Restrained and deadpan, treating a total absence of drama as the most solemn development of the week.",
+  "opening_hook": "There are rounds that reshape a TEG, and there are rounds that vanish into the scorecard drawer without a whisper; Boavista, on this occasion, chose silence.",
+  "narrative_vehicles": [],
+  "prominent_vehicle": "theme_led_body",
+  "prominent_palette": "venue_character",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "The round that produced no headline act",
+    "why_it_matters": "After three rounds that had already delivered a course record, a near-record gross card, and multiple blow-up holes, a round with nothing at all to report is itself a departure worth noting for a TEG that had been unusually generous with drama.",
+    "shape": "The field arrives at Boavista off the back of a week stuffed with records and collapses; round four offers no comparable card, no record, no collapse worth logging; it passes into the books as the quietest eighteen of the trip.",
+    "beat_ids": [],
+    "headline_candidates": [
+      "The Round That Left No Trace",
+      "Boavista's Quietest Eighteen",
+      "A Scorecard With Nothing To Say"
+    ],
+    "chosen_headline": "Boavista's Quietest Eighteen",
+    "standfirst": "After three days of records and collapses, Boavista's fourth round offered the field nothing at all to write home about.",
+    "compelling_score": 4,
+    "humour_score": 6,
+    "descriptor": "BOAVISTA"
+  },
+  "race_story": {
+    "subject": "The Trophy and Green Jacket races frozen in place",
+    "why_it_matters": "David Mullin's overnight command of both the TEG 2 Trophy (6, seven clear of Jon Baker's 13) and the TEG 2 Green Jacket (66, eleven clear of Stuart Neumann's 77) survives untouched, while Henry Meller's grip on the TEG 2 Wooden Spoon (39, twelve adrift of the field) likewise goes unchallenged.",
+    "shape": "Round three closed with Mullin dominant in both money competitions and Meller marooned at the bottom; round four brings no reported movement in either direction; the field carries the exact same gaps forward as it left Boavista.",
+    "beat_ids": [],
+    "headline_candidates": [
+      "Standings Refuse To Budge",
+      "Mullin's Grip Goes Unchallenged",
+      "The Leaderboard That Wouldn't Move"
+    ],
+    "chosen_headline": "Mullin's Grip Goes Unchallenged",
+    "standfirst": "David Mullin's command of both the Trophy and the Jacket survived a round that gave nobody else a chance to close the gap.",
+    "compelling_score": 5,
+    "humour_score": 5,
+    "descriptor": "SIDEBAR"
+  },
+  "discovered_storylines": [],
+  "race_state_note": "No round 4 results were recorded; the standings above reflect the state entering the round, unchanged since round 3 — Mullin leads the Trophy by 7 from Baker and the Jacket by 11 from Neumann, with Meller 12 clear at the foot of the Spoon table.",
+  "storyline_note": "With no beats recorded for this round, both mandatory storylines are drawn from the absence of movement rather than from fresh action; no discovered storylines met the threshold."
+}

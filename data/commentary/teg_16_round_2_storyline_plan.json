@@ -1,0 +1,111 @@
+{
+  "title": "Troia Bares Its Teeth",
+  "title_candidates": [
+    "Troia Bares Its Teeth",
+    "New Course, Same Old Scars",
+    "The Peninsula Takes Its Toll",
+    "Survival At Troia"
+  ],
+  "theme": "TEG's maiden visit to Troia turns into a shared ordeal, exposing every player's fault lines while barely moving the overall race.",
+  "tone": "subverted gravitas, wry and rueful, British understatement",
+  "opening_hook": "Robert Trent Jones Sr. built Troia to punish, and on its TEG debut it obliged, handing out double and triple bogeys like scorecards; by close of play even the man who posted the best round of the day had been mugged twice on the way round.",
+  "narrative_vehicles": [
+    "ensemble",
+    "catalogue"
+  ],
+  "prominent_vehicle": "ensemble",
+  "prominent_palette": "venue_character",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Stuart Neumann's rollercoaster 35 points — the best round of the day, salvaged from two separate collapses",
+    "why_it_matters": "It shows the Trophy leader extending his advantage not through control but through survival, on a course that punished everyone else just as hard.",
+    "shape": "Setup: Stuart Neumann opened with a ragged front nine of double and triple bogeys, rescued only by a birdie at the 10th. Turn: three glorious holes from 10 to 12 produced eleven Stableford points and real momentum. Resolution: a triple bogey at the 13th and a quadruple at the 16th threatened to undo it all, yet his 35 points still topped the field and stretched his overnight Trophy lead.",
+    "beat_ids": [
+      "r2_b16",
+      "r2_b12",
+      "r2_b15",
+      "r2_b14",
+      "r2_b11"
+    ],
+    "headline_candidates": [
+      "Neumann's Day Of Two Collapses",
+      "Best Round, Worst Nerves",
+      "Neumann Survives Troia Twice"
+    ],
+    "chosen_headline": "Neumann Survives Troia Twice",
+    "standfirst": "A ragged front nine and a horror show at the 16th could not stop Stuart Neumann posting the best score of the day.",
+    "compelling_score": 7,
+    "humour_score": 6,
+    "descriptor": "STUART NEUMANN"
+  },
+  "race_story": {
+    "subject": "David Mullin leapfrogs Gregg Williams into outright second as Stuart Neumann's Trophy lead stretches to seven",
+    "why_it_matters": "With the leader untroubled, the real movement in the TEG 16 Trophy race happened underneath him, reshaping who is best placed to chase Neumann down over the final two rounds.",
+    "shape": "Setup: overnight, Gregg Williams sat just five Stableford points behind Stuart Neumann's Trophy lead. Turn: Williams's round disintegrated through three separate scoreless stretches while David Mullin quietly banked 34 points. Resolution: Mullin now occupies second on his own, seven adrift of Neumann, with Williams pushed back into third.",
+    "beat_ids": [
+      "r2_b03",
+      "r2_b02",
+      "r2_b06",
+      "r2_b04"
+    ],
+    "headline_candidates": [
+      "Mullin Climbs Past Williams",
+      "The Chase Reshuffles At Troia",
+      "Second Place Changes Hands"
+    ],
+    "chosen_headline": "The Chase Reshuffles At Troia",
+    "standfirst": "Stuart Neumann's overnight Trophy lead barely moved, but the places behind him did, as Gregg Williams's rough day let David Mullin through.",
+    "compelling_score": 6,
+    "humour_score": 4,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Gregg Williams's horror round nearly hands Jon Baker the Green Jacket lead",
+      "why_it_matters": "The TEG 16 Green Jacket race looked, for a few holes, like it might change hands entirely, before the man on top simply outlasted the collapse around him.",
+      "shape": "Setup: Gregg Williams began the day four strokes clear at the top of the Green Jacket. Turn: three cold stretches, at holes 8-11 and twice more around 13-15, saw him bleed shots continuously while Jon Baker drew level for the lead at both the 11th and 14th. Resolution: Williams's card just about held, and by day's end his gross cushion had actually grown to four strokes.",
+      "beat_ids": [
+        "r2_b02",
+        "r2_b04",
+        "r2_b05",
+        "r2_b06",
+        "r2_b17",
+        "r2_b18"
+      ],
+      "headline_candidates": [
+        "Williams Survives The Turn",
+        "Jacket Lead Nearly Slips Away",
+        "Baker Draws Level, Twice"
+      ],
+      "chosen_headline": "Williams Survives The Turn",
+      "standfirst": "Three separate cold spells threatened to cost Gregg Williams his Green Jacket lead, with Jon Baker twice drawing level before falling back.",
+      "compelling_score": 6,
+      "humour_score": 6,
+      "descriptor": "GREEN JACKET"
+    },
+    {
+      "subject": "Alex Baker's Troia debut turns into a two-act horror show, but the Wooden Spoon gap tightens anyway",
+      "why_it_matters": "It covers the TEG 16 Wooden Spoon race, where the man already anchored to last place found new ways to suffer without actually losing further ground.",
+      "shape": "Setup: already rooted to the bottom of the Wooden Spoon, Alex Baker opened his round by bleeding 13 shots across holes 4 to 9. Turn: a birdie at the 10th offered brief respite before an even worse run from 13 to 17 shed another 13 shots and dropped him further down the Spoon standings on the 13th. Resolution: despite it all, his round score was not the worst of the day, and the gap to safety actually narrowed from four points to three.",
+      "beat_ids": [
+        "r2_b13",
+        "r2_b07",
+        "r2_b01",
+        "r2_b08",
+        "r2_b10"
+      ],
+      "headline_candidates": [
+        "Alex Baker's Troia Ordeal",
+        "Two Collapses, One Small Mercy",
+        "Baker's Bleeding Continues At Troia"
+      ],
+      "chosen_headline": "Alex Baker's Troia Ordeal",
+      "standfirst": "Two separate stretches of relentless dropped shots kept Alex Baker rooted to the bottom of the Wooden Spoon, even as the gap above him shrank.",
+      "compelling_score": 6,
+      "humour_score": 7,
+      "descriptor": "WOODEN SPOON"
+    }
+  ],
+  "race_state_note": "No lead changed hands in any of the three competitions this round; all movement was confined to the minor placings and the size of existing gaps.",
+  "storyline_note": ""
+}

@@ -1,0 +1,91 @@
+{
+  "title": "Mullin's Long Reign Ends at Boavista",
+  "title_candidates": [
+    "Mullin's Long Reign Ends at Boavista",
+    "Williams Storms Into the Lead",
+    "Twenty-One Holes of Command, Undone in Three"
+  ],
+  "theme": "A three-round Trophy lead evaporates inside four holes, while further down the field a recovering last-place man and two identical closing-hole disasters supply the round's comic relief.",
+  "tone": "Wry, forensic and quietly merciless — the collapse of a long lead treated with the gravity of a toppled government, the twin blow-ups at the last played entirely straight.",
+  "opening_hook": "David Mullin had held the TEG 5 Trophy lead since the very first evening of the tournament, twenty-one holes of ownership that survived two rounds and change; by the third hole of round three at Boavista it belonged to Gregg Williams, and it never came back.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "tragic_arc",
+    "motif"
+  ],
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "decisive_moment",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Henry Meller, anchored to the bottom of the Wooden Spoon table after two blow-up-heavy rounds, quietly produces the best golf of the day",
+    "why_it_matters": "It is the standout individual round of round three by some distance — his second-best gross score in fourteen TEG rounds — and it is played by the man everyone had already filed under lost cause, cutting the gap out of the Wooden Spoon place almost in half.",
+    "shape": "Meller arrives at Boavista having bled shots all week and sitting dead last; three flawless holes from the 3rd to the 5th — two pars and a birdie-adjacent net return — carry him into genuinely good form. A double bogey at the 6th ends the run, but the round holds up: his second-best gross score on record, ten shots better than his previous visit to this course.",
+    "beat_ids": [
+      "r3_b18",
+      "r3_b14",
+      "r3_b17",
+      "r3_b08"
+    ],
+    "headline_candidates": [
+      "Meller's Quiet Return to Form",
+      "The Bottom Man's Best Round",
+      "Form Finds Meller Too Late"
+    ],
+    "chosen_headline": "Meller's Quiet Return to Form",
+    "standfirst": "A second-best gross round of his TEG career drags Henry Meller back into touching distance of the Wooden Spoon exit, even as he remains rooted last.",
+    "compelling_score": 7,
+    "humour_score": 5,
+    "descriptor": "HENRY MELLER"
+  },
+  "race_story": {
+    "subject": "David Mullin's twenty-one-hole grip on the TEG 5 Trophy is broken by a three-hole capitulation, handing Gregg Williams a five-shot lead",
+    "why_it_matters": "This is the single biggest swing in the Trophy race so far — the overnight leader posts his worst round of the tournament while the new leader posts his third-best ever, turning a three-shot gap into five and reshuffling the whole top of the table in one afternoon.",
+    "shape": "Mullin arrives at Boavista holding the lead he has owned since the first evening; a triple bogey at the 2nd, a double at the 3rd and another double at the 4th bleed seven shots in three holes, and a quadruple at the 13th later finishes the job, leaving him with the worst round of his TEG career. Gregg Williams, playing serenely underneath it all, takes the lead at the 3rd and never looks back, while Stuart Neumann's own fall from -9 to +7 means the whole order below him shuffles too.",
+    "beat_ids": [
+      "r3_b03",
+      "r3_b12",
+      "r3_b13",
+      "r3_b04",
+      "r3_b22",
+      "r3_b19",
+      "r3_b16",
+      "r3_b15",
+      "r3_b06"
+    ],
+    "headline_candidates": [
+      "Mullin's Long Reign Ends",
+      "Williams Seizes an Unlikely Lead",
+      "Five Shots Clear After the Fall"
+    ],
+    "chosen_headline": "Mullin's Long Reign Ends",
+    "standfirst": "A three-hole capitulation costs David Mullin the TEG 5 Trophy lead he had held since the first evening, and Gregg Williams' composed round turns a three-shot gap into a five-shot cushion.",
+    "compelling_score": 8,
+    "humour_score": 4,
+    "descriptor": "DAVID MULLIN | GREGG WILLIAMS"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Jon Baker and Stuart Neumann both close their rounds with identical quintuple-bogey nines at Boavista's 18th",
+      "why_it_matters": "It is the kind of coincidence a round report exists to notice — two separate players, two otherwise ordinary rounds, undone by the exact same score at the exact same hole, one of them Baker's second nine of the day.",
+      "shape": "Both men are playing unremarkable, mid-table golf through the back nine; Neumann arrives at the 16th already bleeding shots from a three-hole stretch that costs him ten strokes, and Baker, who had already carded an identical quintuple bogey at the 7th, joins him in disaster at the last. Neither round recovers before the card is signed.",
+      "beat_ids": [
+        "r3_b01",
+        "r3_b02",
+        "r3_b05",
+        "r3_b10"
+      ],
+      "headline_candidates": [
+        "The 18th Claims Two Victims",
+        "Two Nines at the Last",
+        "Baker and Neumann Share a Nightmare"
+      ],
+      "chosen_headline": "The 18th Claims Two Victims",
+      "standfirst": "Jon Baker and Stuart Neumann both close with quintuple-bogey nines on Boavista's 18th, the final indignity in two otherwise ordinary rounds gone wrong.",
+      "compelling_score": 6,
+      "humour_score": 8,
+      "descriptor": "JON BAKER | STUART NEUMANN"
+    }
+  ],
+  "race_state_note": "The Wooden Spoon order itself did not change, but Henry Meller's round halved the gap back up to Jon Baker from fifteen shots to eight, keeping the exit route open with a round still to play.",
+  "storyline_note": ""
+}

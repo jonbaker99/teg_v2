@@ -1,0 +1,113 @@
+{
+  "title": "Baker's 114 Rewrites the Record Book as Patterson Surges",
+  "title_candidates": [
+    "Baker's 114 Rewrites the Record Book as Patterson Surges",
+    "New Course Worst Overshadows a Tidy Trophy Charge",
+    "A Record Collapse and a Quiet Rise at Praia D'El Rey"
+  ],
+  "theme": "A record-breaking collapse dominates a round otherwise defined by John Patterson's early Trophy surge.",
+  "tone": "house",
+  "opening_hook": "Round one at Praia D'El Rey produced a leaderboard nobody will remember and a number nobody will forget: 114, the worst round the course has ever hosted.",
+  "narrative_vehicles": [
+    "catalogue",
+    "ensemble"
+  ],
+  "prominent_vehicle": "catalogue",
+  "prominent_palette": "records",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "John Patterson's round survives two early quadruple bogeys to become the best score of the day",
+    "why_it_matters": "It is the best Stableford return of the round and hands Patterson the outright TEG 17 Trophy lead going into round two.",
+    "shape": "Two quadruple bogeys inside the first six holes threaten to wreck Patterson's day, but a birdie at the 12th arrests the slide and two shot-free stretches down the closing holes carry him to 39 points, the best of the field, and an outright Trophy lead grabbed at the 16th.",
+    "beat_ids": [
+      "r1_b03",
+      "r1_b05",
+      "r1_b07",
+      "r1_b12",
+      "r1_b13",
+      "r1_b10"
+    ],
+    "headline_candidates": [
+      "Patterson's Late Surge Tops the Field",
+      "Two Blow-Ups, One Big Finish",
+      "Patterson Recovers to Lead the Way"
+    ],
+    "chosen_headline": "Patterson's Late Surge Tops the Field",
+    "standfirst": "A day that began with back-to-back quadruple bogeys ended with the best score of the round and an outright grip on the TEG 17 Trophy.",
+    "compelling_score": 7,
+    "humour_score": 4,
+    "descriptor": "JOHN PATTERSON"
+  },
+  "race_story": {
+    "subject": "The early state of all three races after one round at Praia D'El Rey",
+    "why_it_matters": "With no prior rounds to measure against, this round alone sets the shape of the TEG 17 Trophy, Green Jacket and Wooden Spoon tables heading into day two.",
+    "shape": "Jon Baker held the outright Trophy lead as early as the 3rd before Patterson overtook him late; Gregg Williams drew level with Jon Baker for the TEG 17 Green Jacket lead at the 17th; and Alex Baker's horror show leaves him already marooned at the bottom of the TEG 17 Wooden Spoon table by a single point.",
+    "beat_ids": [
+      "r1_b22",
+      "r1_b10",
+      "r1_b23",
+      "r1_b11",
+      "r1_b06"
+    ],
+    "headline_candidates": [
+      "Jacket Shared, Spoon Already Anchored",
+      "Early Lead Changes Set the Tone",
+      "Baker Leads, Then Loses It"
+    ],
+    "chosen_headline": "Jacket Shared, Spoon Already Anchored",
+    "standfirst": "One round in, the Green Jacket is already a two-way tie and the Wooden Spoon has found its first occupant.",
+    "compelling_score": 6,
+    "humour_score": 5,
+    "descriptor": "SIDEBAR"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Alex Baker shatters the Praia D'El Rey course record with a 114",
+      "why_it_matters": "It is a new course worst by four shots across 24 prior visits, the single most extreme number of the day, and effectively pre-decides the Wooden Spoon and Green Jacket races before round two.",
+      "shape": "A sextuple bogey at the 5th anchors a stretch that bleeds 13 shots in three holes, compounded by a quadruple bogey at the 4th and a closing quintuple bogey at the 18th; the round totals 114 gross, a new course worst and 14 shots worse than his own previous best here.",
+      "beat_ids": [
+        "cr01",
+        "r1_b01",
+        "r1_b02",
+        "r1_b04",
+        "r1_b08",
+        "r1_b09"
+      ],
+      "headline_candidates": [
+        "Baker Rewrites the Record Books, Badly",
+        "A New Worst at Praia D'El Rey",
+        "114 and Counting"
+      ],
+      "chosen_headline": "Baker Rewrites the Record Books, Badly",
+      "standfirst": "Five ruinous holes and a closing quintuple bogey leave the course record broken for all the wrong reasons.",
+      "compelling_score": 9,
+      "humour_score": 8,
+      "descriptor": "ALEX BAKER"
+    },
+    {
+      "subject": "David Mullin's round splits neatly into a horror front nine and a big finish",
+      "why_it_matters": "His 33-point Trophy return hides a stark front-to-back split worth flagging as the shape of his whole round.",
+      "shape": "Mullin drops 11 shots across holes 4 to 8, including a triple bogey at the 8th, before reeling off 16 Stableford points across holes 12 to 16 with a birdie at the 13th, turning a bleak morning into a genuine two-act round.",
+      "beat_ids": [
+        "r1_b17",
+        "r1_b21",
+        "r1_b19",
+        "r1_b14",
+        "r1_b24",
+        "r1_b16"
+      ],
+      "headline_candidates": [
+        "Mullin's Round of Two Halves",
+        "From Disaster to Recovery in Nine Holes",
+        "Mullin Fights Back After the Turn"
+      ],
+      "chosen_headline": "Mullin's Round of Two Halves",
+      "standfirst": "A front nine that threatened to unravel gave way to the best stretch of anyone's day.",
+      "compelling_score": 6,
+      "humour_score": 4,
+      "descriptor": "DAVID MULLIN"
+    }
+  ],
+  "race_state_note": "With no prior rounds banked, round one alone establishes all three competition tables.",
+  "storyline_note": ""
+}

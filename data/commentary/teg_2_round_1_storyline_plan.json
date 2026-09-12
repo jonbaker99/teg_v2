@@ -1,0 +1,90 @@
+{
+  "title": "A Record-Breaking Debut in the Algarve",
+  "title_candidates": [
+    "A Record-Breaking Debut in the Algarve",
+    "Boavista Sets a New Bar",
+    "History Made on the Ocean Course"
+  ],
+  "theme": "A course new to TEG immediately rewrites its record books, while the game's oldest hazard — the sudden nine — reasserts itself lower down the leaderboard.",
+  "tone": "Subverted gravitas: a debut round at an unknown Algarve parkland course treated with the solemnity of a coronation, the comedy arriving in the gap between the stakes and the language.",
+  "opening_hook": "TEG's first landing in Portugal produced not a gentle acclimatisation but an afternoon of record-breaking scoring, headed by a round for the ages from David Mullin.",
+  "narrative_vehicles": [
+    "ensemble",
+    "tragic_arc"
+  ],
+  "prominent_vehicle": "ensemble",
+  "prominent_palette": "records",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Three players post top-three all-time TEG rounds on Boavista's tournament debut, led by David Mullin's flawless card",
+    "why_it_matters": "It is only TEG's fifth round ever played and TEG's first visit to Portugal, yet the record books are rewritten three times over in a single afternoon.",
+    "shape": "Boavista, entirely unknown to the field, offered no clues as to how it would play. David Mullin's level-par net round turned out to be the best in the competition's short history, with Jon Baker's (2nd-best) and Stuart Neumann's (3rd-best) close behind on both the net and gross lists. The result is a leaderboard bunched at a standard nobody expected on a first visit to a new course.",
+    "beat_ids": [
+      "r1_b10",
+      "r1_b11",
+      "r1_b15",
+      "r1_b18",
+      "r1_b03",
+      "r1_b01"
+    ],
+    "headline_candidates": [
+      "Mullin's Perfect Card Rewrites History",
+      "Three Records Fall in One Round",
+      "History Made on TEG's Algarve Debut"
+    ],
+    "chosen_headline": "Mullin's Perfect Card Rewrites History",
+    "standfirst": "A first visit to Portugal produces a level-par round from David Mullin and top-three all-time finishes for Jon Baker and Stuart Neumann besides.",
+    "compelling_score": 8,
+    "humour_score": 4,
+    "descriptor": "SIDEBAR"
+  },
+  "race_story": {
+    "subject": "The Trophy lead changes hands four times before David Mullin's finish secures it, while Henry Meller is already isolated at the foot of the Wooden Spoon race",
+    "why_it_matters": "One round in, the tournament's shape is already visible: a tight contest at the top and a large gap already opening at the bottom.",
+    "shape": "Gregg Williams draws level early, Jon Baker twice takes the outright Trophy lead, and David Mullin twice pegs it back before pulling clear on the closing holes. Henry Meller, meanwhile, slips to the bottom of the Wooden Spoon standings by the third hole and never threatens to climb off it, ending the day 24 shots adrift with a 12-shot cushion already built between him and the rest of the field.",
+    "beat_ids": [
+      "r1_b27",
+      "r1_b37",
+      "r1_b43",
+      "r1_b31",
+      "r1_b32",
+      "r1_b07"
+    ],
+    "headline_candidates": [
+      "Lead Changes Hands Four Times",
+      "Meller Exiled at the Bottom Early",
+      "A Tight Top, a Lonely Bottom"
+    ],
+    "chosen_headline": "A Tight Top, a Lonely Bottom",
+    "standfirst": "Four lead changes settle nothing for long at the top of the Trophy race, but Henry Meller's day puts him in a different sort of race entirely.",
+    "compelling_score": 7,
+    "humour_score": 5,
+    "descriptor": "SIDEBAR"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Gregg Williams shares the outright lead through two holes, then loses 22 shots across a ruinous closing stretch",
+      "why_it_matters": "It is the sharpest reversal of the day — from tied at the top to next-to-last inside a single round — and sets an early tone for how quickly Boavista can turn on a player.",
+      "shape": "A birdie at the 2nd draws Gregg Williams level for both the Trophy and Green Jacket leads inside the round's first half hour. From the 12th he unravels: a sextuple-bogey nine at the par-3 14th and a quintuple-bogey nine at the 17th anchor a stretch in which he drops 22 shots across seven holes, and by the close he sits fourth of five in both the Trophy and Jacket races.",
+      "beat_ids": [
+        "r1_b21",
+        "r1_b26",
+        "r1_b04",
+        "r1_b02",
+        "r1_b05"
+      ],
+      "headline_candidates": [
+        "Williams Falls From First to Fourth",
+        "Level at Two, Lost by Eighteen",
+        "A Lead Undone in Seven Holes"
+      ],
+      "chosen_headline": "Level at Two, Lost by Eighteen",
+      "standfirst": "A share of the lead through two holes gives no hint of the 22 shots Gregg Williams is about to concede over the closing stretch.",
+      "compelling_score": 7,
+      "humour_score": 6,
+      "descriptor": "GREGG WILLIAMS"
+    }
+  ],
+  "race_state_note": "All three of the round's headline acts occupy the top three Trophy places after a single round, while the Wooden Spoon picture is already effectively a two-horse contest between Henry Meller and the rest.",
+  "storyline_note": ""
+}

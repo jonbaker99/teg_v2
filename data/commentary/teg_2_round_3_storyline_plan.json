@@ -1,0 +1,103 @@
+{
+  "title": "Mullin's Double At Boavista",
+  "title_candidates": [
+    "Mullin's Double At Boavista",
+    "History Made On The Algarve",
+    "The Perfect Round That Won Everything"
+  ],
+  "theme": "A record-breaking final round delivers the first Trophy-and-Jacket double in TEG history, while the overnight leader's front-nine collapse and the Wooden Spoon's cruellest twist play out beneath it.",
+  "tone": "Wry and reverent of the numbers, quietly unsparing about Baker's capitulation.",
+  "opening_hook": "David Mullin had spent two rounds as the man closest to greatness without touching it; on the final day at Boavista he touched it twice, and took both trophies home.",
+  "narrative_vehicles": [
+    "hero_arc",
+    "tragic_arc",
+    "dual_narrative"
+  ],
+  "prominent_vehicle": "hero_arc",
+  "prominent_palette": "course_history",
+  "is_final_round": true,
+  "round_story": {
+    "subject": "David Mullin's closing round at Boavista, the best recorded in TEG history to date",
+    "why_it_matters": "A net -2 and gross 18 do not just win the day — they stand as the best round and the best gross round anyone has played in TEG history so far, and break the Boavista course record he himself had set earlier this TEG.",
+    "shape": "Mullin arrives at the final round having trailed Jon Baker by three overnight, needing something special. He produces a flawless 18, improving his own course best of 91 to a new record 89 gross across 10 prior visits by the field. The round stands as the best net and best gross round recorded in TEG history to date.",
+    "beat_ids": [
+      "r3_b02",
+      "r3_b03",
+      "cr01",
+      "r3_b13"
+    ],
+    "headline_candidates": [
+      "Mullin Rewrites The Boavista Record Book",
+      "A Perfect 18 From Mullin",
+      "Mullin's Round For The Ages"
+    ],
+    "chosen_headline": "Mullin Rewrites The Boavista Record Book",
+    "standfirst": "Two rounds earlier David Mullin had been the tournament's most beatable leader; on the Algarve's Atlantic links he produced the best round anyone has played.",
+    "compelling_score": 9,
+    "humour_score": 4,
+    "descriptor": "DAVID MULLIN"
+  },
+  "race_story": {
+    "subject": "David Mullin completes the TEG 2 Trophy and Green Jacket double",
+    "why_it_matters": "This is the first time in TEG history that one player has won both the Trophy and the Green Jacket in the same event — no prior doubles have occurred. Jon Baker's overnight Trophy lead evaporates for the second time in as many rounds.",
+    "shape": "Overnight, Jon Baker leads the Trophy by three with Mullin already established atop the Jacket. Mullin's record round overturns the Trophy at the 3rd hole and stretches his Jacket lead to 11. By the close he holds both prizes outright, a first in TEG history, while Baker — who blew a seven-shot lead as recently as round two — finishes runner-up in both.",
+    "beat_ids": [
+      "r3_b11",
+      "r3_b14"
+    ],
+    "headline_candidates": [
+      "Mullin Seals A Historic Double",
+      "Baker's Lead Vanishes Again",
+      "Mullin Claims Both Trophies"
+    ],
+    "chosen_headline": "Mullin Seals A Historic Double",
+    "standfirst": "No player had ever left a TEG with both prizes until Boavista's final round settled it.",
+    "compelling_score": 9,
+    "humour_score": 3,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Henry Meller's best round of the week arrives one round too late",
+      "why_it_matters": "Meller's closing effort is the second-best gross round recorded in TEG history to date, cutting the Wooden Spoon gap from 16 to 12 — but the hole dug over two earlier rounds proves too deep, and the TEG 2 Wooden Spoon is his.",
+      "shape": "Meller starts the final round 16 adrift at the bottom of the Spoon table. A bogey-free stretch through the 5th and 6th and a strong back nine deliver a stableford haul that ranks as the second-best gross round in TEG history to date. It only narrows the gap to 12: the week's best individual round still finishes with the Spoon.",
+      "beat_ids": [
+        "r3_b01",
+        "r3_b05",
+        "r3_b06"
+      ],
+      "headline_candidates": [
+        "Meller's Masterclass Comes Too Late",
+        "The Spoon That Got Away Anyway",
+        "Meller Finishes Strong, Finishes Last"
+      ],
+      "chosen_headline": "Meller's Masterclass Comes Too Late",
+      "standfirst": "A brilliant final round proved the cruellest kind of consolation.",
+      "compelling_score": 7,
+      "humour_score": 6,
+      "descriptor": "WOODEN SPOON"
+    },
+    {
+      "subject": "Jon Baker's front nine implosion",
+      "why_it_matters": "The overnight Trophy leader goes five holes without a net par to open his final round, the stretch that ultimately hands the Trophy to David Mullin.",
+      "shape": "Baker takes a three-shot overnight Trophy lead into the final round. Holes 1 to 5 yield no net par and bleed 12 gross shots, and a quadruple bogey at the 15th compounds the damage. His +8 round confirms the Trophy has slipped away — the second big lead he has surrendered this week, after blowing seven shots at the 11th in round two.",
+      "beat_ids": [
+        "r3_b09",
+        "r3_b10",
+        "r3_b07"
+      ],
+      "headline_candidates": [
+        "Five Holes That Cost The Trophy",
+        "Baker's Front Nine Unravels",
+        "Baker Cannot Hold On Again"
+      ],
+      "chosen_headline": "Five Holes That Cost The Trophy",
+      "standfirst": "The overnight leader's round came apart before the turn, and never recovered.",
+      "compelling_score": 7,
+      "humour_score": 5,
+      "descriptor": "JON BAKER"
+    }
+  ],
+  "race_state_note": "Mullin's double is the first in TEG history (no prior doubles recorded); Jon Baker's Trophy lead has now evaporated in back-to-back rounds, at Boavista in R2 and again in R3.",
+  "storyline_note": ""
+}

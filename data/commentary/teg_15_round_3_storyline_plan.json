@@ -1,0 +1,91 @@
+{
+  "title": "The Mountain Finally Yields",
+  "title_candidates": [
+    "The Mountain Finally Yields",
+    "Record Falls At Penha Longa",
+    "Personal Bests And Personal Disasters"
+  ],
+  "theme": "A day of career-best rounds up and down the field, crowned by a new course record, while the Wooden Spoon found a fresh occupant.",
+  "tone": "Wry British understatement, treating a golf course record and a Wooden Spoon handover with identical solemnity.",
+  "opening_hook": "Two visits after Penha Longa's slopes first punished the field, its mountainside finally yielded — to one man's iron game, and to nobody else's.",
+  "narrative_vehicles": [
+    "motif",
+    "inversion"
+  ],
+  "prominent_vehicle": "motif",
+  "prominent_palette": "course_history",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Gregg Williams sets a new Penha Longa course record with a gross 82",
+    "why_it_matters": "It is the best gross round of Gregg Williams's entire TEG career and a new course record at a venue that had previously resisted everyone, extending his overnight leads in both the TEG 15 Trophy and the TEG 15 Green Jacket.",
+    "shape": "Williams arrives at Penha Longa already leading both races; two immaculate stretches, birdies at the 8th and 10th sandwiching tidy pars either side, carry him fourteen shots inside his own previous best at the course; he finishes with a gross 82, a new course record beating the previous mark of 86, and both his leads swell further.",
+    "beat_ids": [
+      "cr01",
+      "r3_b23",
+      "r3_b31",
+      "r3_b32",
+      "r3_b30"
+    ],
+    "headline_candidates": [
+      "Williams Carves New Course Record",
+      "A New Best For Penha Longa",
+      "Williams Rewrites The Penha Longa Record Book"
+    ],
+    "chosen_headline": "Williams Carves New Course Record",
+    "standfirst": "An 82 gross, fourteen shots better than his own previous best around the Sintra hills, is the finest round of Gregg Williams's TEG career and leaves both his races looking healthier than ever.",
+    "compelling_score": 8,
+    "humour_score": 5,
+    "descriptor": "GREGG WILLIAMS"
+  },
+  "race_story": {
+    "subject": "The Wooden Spoon changes hands as Alex Baker collapses and Stuart Neumann recovers",
+    "why_it_matters": "Stuart Neumann had been rooted level at the foot of the TEG 15 Wooden Spoon table since round two; a ruinous back-nine stretch from Alex Baker hands him the cellar outright by fourteen shots, in what is the third-worst Trophy round of Alex Baker's 35-round TEG career.",
+    "shape": "Neumann enters the round tied for last with nowhere to go but up; three holes from the 12th to the 14th cost Alex Baker twelve shots outright, including a lone sextuple bogey at the par-4 14th, while Neumann quietly banks nine points across holes 14 to 16; by the close the Spoon has swapped hands entirely, with Neumann clear and Baker installed in last by fourteen shots.",
+    "beat_ids": [
+      "r3_b04",
+      "r3_b05",
+      "r3_b10",
+      "r3_b29",
+      "r3_b14",
+      "r3_b07",
+      "r3_b13",
+      "r3_b24"
+    ],
+    "headline_candidates": [
+      "Alex Baker Inherits The Wooden Spoon",
+      "Neumann Escapes As Baker Falls Last",
+      "Wooden Spoon Swaps Hands In Sintra"
+    ],
+    "chosen_headline": "Alex Baker Inherits The Wooden Spoon",
+    "standfirst": "A ruinous stretch from the 12th to the 14th, capped by a double-figure score at the par-4 14th, hands Alex Baker sole occupancy of the Wooden Spoon cellar as Stuart Neumann's revival lifts him clear.",
+    "compelling_score": 7,
+    "humour_score": 7,
+    "descriptor": "WOODEN SPOON"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "John Patterson's wild first look at Penha Longa",
+      "why_it_matters": "On his maiden visit to the course, John Patterson's card swung from a run of six holes worth 19 stableford points to two separate double-figure blow-ups, a volatility that captures how mercilessly Penha Longa punishes any lapse.",
+      "shape": "Patterson opens steadily before catching fire from the 3rd to the 8th, banking 19 points in six holes; the turn sours almost immediately as a quadruple bogey at the 10th and a quintuple bogey at the 16th bracket a bleeding three-hole stretch from the 9th; he still finishes with a respectable tally, but the card reads like two entirely different rounds.",
+      "beat_ids": [
+        "r3_b01",
+        "r3_b02",
+        "r3_b03",
+        "r3_b12",
+        "r3_b15"
+      ],
+      "headline_candidates": [
+        "Patterson's Wild Penha Longa Baptism",
+        "Highs And Disasters For Patterson",
+        "A Debut Of Two Extremes"
+      ],
+      "chosen_headline": "Patterson's Wild Penha Longa Baptism",
+      "standfirst": "Nineteen points in six holes and two separate double-figure scores summed up a first look at the Sintra hills for John Patterson, whose scorecard swung wildly all afternoon.",
+      "compelling_score": 6,
+      "humour_score": 6,
+      "descriptor": "JOHN PATTERSON"
+    }
+  ],
+  "race_state_note": "Gregg Williams's Trophy and Green Jacket leads both grew again but the order at the top is unchanged from overnight; the meaningful movement was at the foot of the Wooden Spoon table, where Alex Baker replaces Stuart Neumann.",
+  "storyline_note": ""
+}

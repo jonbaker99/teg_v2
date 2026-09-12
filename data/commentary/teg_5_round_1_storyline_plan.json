@@ -1,0 +1,115 @@
+{
+  "title": "Mullin's Record 83 Sets The Tone",
+  "title_candidates": [
+    "Mullin's Record 83 Sets The Tone",
+    "A New Best Gross For Boavista",
+    "Mullin Rewrites The Boavista Record Book"
+  ],
+  "theme": "A record-breaking opening round hands David Mullin command of both the Trophy and the Green Jacket, while Jon Baker's twin blow-ups keep him within a shot in one race and nowhere in the other.",
+  "tone": "Restrained astonishment at a record round, undercut by quintuple-bogey farce elsewhere in the field.",
+  "opening_hook": "Boavista had already staged seven TEG rounds without anyone breaking 85. It took David Mullin twenty minutes into round one of TEG 5 to make that number look ordinary.",
+  "narrative_vehicles": [
+    "origin",
+    "dual_narrative",
+    "catalogue"
+  ],
+  "prominent_vehicle": "origin",
+  "prominent_palette": "course_history",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "David Mullin's 83 gross at Boavista — a new course record and the best gross round in TEG history to date, arriving on his eighth visit to the venue.",
+    "why_it_matters": "It is the best gross round ever recorded in TEG's five-year history and a new competitive course record at Boavista, and it immediately puts Mullin on top of both the Trophy and Green Jacket tables on the very first day.",
+    "shape": "Mullin arrived with a personal best of 85 gross from three years earlier; an early birdie at the 3rd put him top of both the Trophy and Green Jacket standings before the turn, and a bogey-free stretch through 7 to 9 kept the card clean. He closed with a bogey at the 18th but the damage to the field was already done: 83 gross, two shots inside his own Boavista best and the lowest gross round anyone has carded in TEG's history.",
+    "beat_ids": [
+      "r1_b01",
+      "cr01",
+      "r1_b13",
+      "r1_b16",
+      "r1_b17",
+      "r1_b18",
+      "r1_b26"
+    ],
+    "headline_candidates": [
+      "Mullin Breaks The Boavista Course Record",
+      "A New Best Gross In TEG History",
+      "Mullin's 83 Rewrites The Record Book"
+    ],
+    "chosen_headline": "Mullin Breaks The Boavista Course Record",
+    "standfirst": "An 83 gross, two shots inside his own previous best at the course, stands alone as the finest round played in five years of TEG golf.",
+    "compelling_score": 9,
+    "humour_score": 4,
+    "descriptor": "DAVID MULLIN"
+  },
+  "race_story": {
+    "subject": "Jon Baker's tussle with David Mullin for the TEG 5 Trophy lead, and the much wider gap that opened in the Green Jacket race off the same round.",
+    "why_it_matters": "The opening round sets the pecking order for the week: Baker's proximity in net terms keeps the Trophy race alive despite the gulf in gross quality that already separates the pair by eight points in the Green Jacket.",
+    "shape": "Jon Baker matched Mullin blow for blow in net terms, drawing level for the Trophy lead at the 4th and again at the 16th despite blow-ups of his own at the 6th and 18th. Each time Mullin's steadier card pulled back in front, and a closing bogey at the 18th settled the Trophy lead by a single shot — even as the same figures left Baker eight adrift for the Green Jacket, where handicap strokes count for nothing.",
+    "beat_ids": [
+      "r1_b15",
+      "r1_b17",
+      "r1_b18",
+      "r1_b20",
+      "r1_b27",
+      "r1_b26"
+    ],
+    "headline_candidates": [
+      "Baker Matches Him, Twice, Then Slips",
+      "One Shot Behind, Eight Shots Adrift",
+      "Level Twice, Ahead Once, By Baker"
+    ],
+    "chosen_headline": "One Shot Behind, Eight Shots Adrift",
+    "standfirst": "Jon Baker twice drew level for the Trophy lead only to finish a shot back, while the same round left him eight adrift for the Green Jacket.",
+    "compelling_score": 7,
+    "humour_score": 5,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Gregg Williams's round unravels twice over — nine shots lost in his first four holes and ten more in his last three, including a quintuple bogey at the 17th.",
+      "why_it_matters": "Williams's meltdown produced the worst gross score of the day and immediate last place in the Wooden Spoon table, a marker the rest of the tournament will have to overturn.",
+      "shape": "Williams shed nine shots to par inside his first four holes, steadied through the middle of the round, then lost all of it again with a double, a quintuple and a triple bogey across the closing three holes, the 17th alone costing him a nine. The result was the worst gross score of the round and last place in the Wooden Spoon race from the very first day.",
+      "beat_ids": [
+        "r1_b02",
+        "r1_b12",
+        "r1_b19",
+        "r1_b21"
+      ],
+      "headline_candidates": [
+        "Ten Shots Lost In Three Holes",
+        "Williams Implodes On The Back Nine",
+        "A Nine At The 17th Undoes Him"
+      ],
+      "chosen_headline": "Ten Shots Lost In Three Holes",
+      "standfirst": "Gregg Williams shed nine shots in his first four holes and then ten more in his last three, signing for the worst gross score of the round.",
+      "compelling_score": 7,
+      "humour_score": 8,
+      "descriptor": "GREGG WILLIAMS"
+    },
+    {
+      "subject": "The Wooden Spoon race changes hands three times inside round one before settling on Stuart Neumann, three points clear of trouble at the foot of the table.",
+      "why_it_matters": "It establishes the shape of the tournament's least glamorous fight from day one, with Neumann's late collapse the difference between last place and mid-table.",
+      "shape": "The bottom of the Wooden Spoon table changed hands repeatedly through the round, with Williams, Meller and Neumann each taking a turn in last place after a string of doubles and triples. Neumann's own triple bogeys at the 16th and 18th settled the argument, leaving him three points clear of Meller at the foot of the table after round one.",
+      "beat_ids": [
+        "r1_b06",
+        "r1_b07",
+        "r1_b08",
+        "r1_b10",
+        "r1_b23",
+        "r1_b24",
+        "r1_b25"
+      ],
+      "headline_candidates": [
+        "Neumann Left Holding The Spoon",
+        "The Spoon Changes Hands All Day",
+        "Neumann Settles At The Bottom"
+      ],
+      "chosen_headline": "Neumann Left Holding The Spoon",
+      "standfirst": "The Wooden Spoon place swapped between three different players before Stuart Neumann's late trouble left him three points adrift at the bottom of the table.",
+      "compelling_score": 6,
+      "humour_score": 6,
+      "descriptor": "WOODEN SPOON"
+    }
+  ],
+  "race_state_note": "The Trophy uses net-vs-par scoring for TEG 5, so Baker's -2 sits just one shot behind Mullin's -3 even though Mullin's gross round was nine shots better — a gap the Green Jacket standings, scored on gross alone, show in full.",
+  "storyline_note": ""
+}

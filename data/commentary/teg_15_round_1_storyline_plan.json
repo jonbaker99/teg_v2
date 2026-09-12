@@ -1,0 +1,95 @@
+{
+  "title": "Williams Bookends Disaster With Brilliance On Estoril Debut",
+  "title_candidates": [
+    "Williams Bookends Disaster With Brilliance",
+    "Estoril Bares Its Teeth On Debut",
+    "Gregg Williams Runs Away With Round One"
+  ],
+  "theme": "Estoril's first-ever TEG round punishes almost the entire field, but Gregg Williams's own pair of quadruple bogeys can't stop him running away with the day.",
+  "tone": "Dry, wry and quietly merciless — treating a sextuple bogey with the same solemn attention as a Stableford masterclass.",
+  "opening_hook": "Portugal's oldest golf club hosted TEG for the very first time on Saturday, and within a few holes it had already extracted a sextuple bogey, three separate quadruples and a chunk of Gregg Williams's opening tee shot — before he shrugged it off and won the day by five clear Stableford points.",
+  "narrative_vehicles": [
+    "bookends",
+    "ensemble",
+    "tragic_arc"
+  ],
+  "prominent_vehicle": "bookends",
+  "prominent_palette": "venue_character",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Gregg Williams's Estoril debut, bookended by two quadruple bogeys either side of the best golf of the day",
+    "why_it_matters": "It is the best round of TEG 15's opening day by a distance, and it hands Gregg Williams the outright lead of both the TEG 15 Trophy and the TEG 15 Green Jacket after round one, on a course nobody in the field had ever played.",
+    "shape": "Williams opens his TEG 15 account with a quadruple bogey at the very 1st, the kind of start that usually buries a card; instead he answers immediately with back-to-back birdies at the 3rd and 4th to seize the outright Trophy lead, then strings together bogey-free stretches at 8-9 and 13-14 to take the Green Jacket lead at the 11th. A closing quadruple bogey at the 18th barely dents it — his 39 points and 17 gross are both the best figures of the day, five points and eight shots clear of the rest of the field respectively.",
+    "beat_ids": [
+      "r1_b28",
+      "r1_b32",
+      "r1_b33",
+      "r1_b34",
+      "r1_b39",
+      "r1_b38",
+      "r1_b35",
+      "r1_b36",
+      "r1_b27"
+    ],
+    "headline_candidates": [
+      "Williams Bookends Disaster With Brilliance",
+      "Two Blow-Ups Either Side Of Brilliance",
+      "Williams Opens Estoril Account In Style"
+    ],
+    "chosen_headline": "Williams Bookends Disaster With Brilliance",
+    "standfirst": "A quadruple bogey at the first and another at the last couldn't stop Gregg Williams running away with the best round of the day on Estoril's TEG debut.",
+    "compelling_score": 8,
+    "humour_score": 7,
+    "descriptor": "GREGG WILLIAMS"
+  },
+  "race_story": {
+    "subject": "David Mullin and Alex Baker share TEG 15's opening Wooden Spoon cellar",
+    "why_it_matters": "It establishes the first TEG 15 Wooden Spoon picture of the tournament, with two players locked together at the bottom on 30 points and a third, Stuart Neumann, only a single Stableford point clear after a round of his own that produced the day's mandatory horror story.",
+    "shape": "David Mullin's card is undone by a quadruple bogey at the 12th and a late triple at the 17th that drops him to the foot of the table; Stuart Neumann's sextuple bogey ten at the 15th briefly threatens to join him there, before a late rally through 16 to 18 lifts Neumann one point clear. The round closes with David Mullin and Alex Baker tied on 30 points, sharing the cellar as round one ends.",
+    "beat_ids": [
+      "r1_b03",
+      "r1_b06",
+      "r1_b01",
+      "r1_b07",
+      "r1_b09"
+    ],
+    "headline_candidates": [
+      "David Mullin And Alex Baker Share Cellar",
+      "Two Players Tied At The Bottom",
+      "Cellar Duo Emerges After Round One"
+    ],
+    "chosen_headline": "David Mullin And Alex Baker Share Cellar",
+    "standfirst": "Stuart Neumann's sextuple bogey at the 15th threatened to join them, but a late rally left David Mullin and Alex Baker alone at the foot of the TEG 15 Wooden Spoon table after round one.",
+    "compelling_score": 7,
+    "humour_score": 6,
+    "descriptor": "WOODEN SPOON"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Jon Baker's share of the Trophy lead evaporates in twin quintuple bogeys",
+      "why_it_matters": "He had clawed his way level for the outright TEG 15 Trophy lead through a bogey-free stretch, only for the toughest part of Estoril's back nine to erase it inside two holes.",
+      "shape": "Three solid pars from the 8th to the 10th draw Jon Baker level for the outright Trophy lead; the very next hole, the 11th, brings a quintuple bogey nine, and the 12th produces an identical nine straight after. The front-nine gains are wiped out and Jon Baker's card finishes on 31 points, a share of mid-table rather than the outright lead his front nine had promised.",
+      "beat_ids": [
+        "r1_b20",
+        "r1_b11",
+        "r1_b22",
+        "r1_b25",
+        "r1_b10",
+        "r1_b08",
+        "r1_b14"
+      ],
+      "headline_candidates": [
+        "Two Quintuple Bogeys Sink Jon Baker",
+        "Jon Baker's Lead Share Undone Twice",
+        "Front Nine Promise, Back Nine Ruin"
+      ],
+      "chosen_headline": "Two Quintuple Bogeys Sink Jon Baker",
+      "standfirst": "Level for the outright TEG 15 Trophy lead through ten holes, Jon Baker's card capsized with matching nines at the 11th and 12th.",
+      "compelling_score": 7,
+      "humour_score": 6,
+      "descriptor": "JON BAKER"
+    }
+  ],
+  "race_state_note": "After one round, Gregg Williams leads both the Trophy (39, five clear of John Patterson) and the Green Jacket (17 gross, eight clear of David Mullin), with David Mullin and Alex Baker tied for the Wooden Spoon cellar on 30 points apiece.",
+  "storyline_note": ""
+}

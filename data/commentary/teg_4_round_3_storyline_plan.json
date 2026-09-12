@@ -1,0 +1,97 @@
+{
+  "title": "Crowborough Debut Brings Best And Worst",
+  "title_candidates": [
+    "Crowborough Debut Brings Best And Worst",
+    "Heathland Highs And Lows At Crowborough",
+    "A New Course Sorts The Field"
+  ],
+  "theme": "A maiden visit to a MacKenzie heathland exposes both brilliance and ruin in equal measure.",
+  "tone": "Wry and precise, tracking triumph and calamity hole by hole.",
+  "opening_hook": "Crowborough's high heathland turf offered panoramic views of the South Downs and, for at least one player, a ringside seat to his own collapse.",
+  "narrative_vehicles": [
+    "redemption_arc",
+    "dual_narrative",
+    "catalogue"
+  ],
+  "prominent_vehicle": "redemption_arc",
+  "prominent_palette": "decisive_moment",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Jon Baker follows his worst round of the TEG 4 Trophy so far with the best net score of the day at Crowborough, built around a four-hole purple patch either side of two closing quadruple bogeys.",
+    "why_it_matters": "It is the best net-vs-par score anyone posts all round, a top-three finish in Jon Baker's own career on that measure, and it is what drags the TEG 4 Trophy race back level after Round 2 had threatened to put him adrift.",
+    "shape": "Round 2 left Jon Baker with his worst round to date; at Crowborough he rattles off four pars in a row from the 11th to close within a shot of the outright net lead, then immediately drops quadruple bogeys at the 15th and 18th. Even with both blow-ups included, the round still nets out as the best net score of the day.",
+    "beat_ids": [
+      "r3_b02",
+      "r3_b04",
+      "r3_b06",
+      "r3_b07",
+      "r3_b11",
+      "r3_b12"
+    ],
+    "headline_candidates": [
+      "Baker Roars Back At Crowborough",
+      "Baker Erases His Worst Round",
+      "From Nightmare To Best Of Day"
+    ],
+    "chosen_headline": "Baker Roars Back At Crowborough",
+    "standfirst": "A four-hole purple patch bracketed by two quadruple bogeys somehow still added up to the best net score of the round.",
+    "compelling_score": 8,
+    "humour_score": 5,
+    "descriptor": "JON BAKER"
+  },
+  "race_story": {
+    "subject": "David Mullin's 17-gross round, the second-best gross round recorded in TEG history to date, blows the TEG 4 Green Jacket race wide open even as the TEG 4 Trophy tightens to a flat tie, while the TEG 4 Wooden Spoon changes hands from Stuart Neumann to Henry Meller.",
+    "why_it_matters": "Three different races moved three different ways off the same day's play: David Mullin's Jacket cushion more than doubled, his Trophy lead evaporated entirely, and last place swapped occupants for the second time this tournament.",
+    "shape": "David Mullin arrives with modest leads in both the Trophy and the Jacket; his near-record gross round balloons the Jacket gap to sixteen, but Jon Baker's response on the net scale draws the Trophy level at 8 apiece. Meanw.While Stuart Neumann briefly held the Spoon's bottom spot mid-round, Henry Meller's late collapse through the 13th to 15th hands him last place outright.",
+    "beat_ids": [
+      "r3_b05",
+      "r3_b23",
+      "r3_b24",
+      "r3_b25",
+      "r3_b26",
+      "r3_b30",
+      "r3_b09",
+      "r3_b17",
+      "r3_b22"
+    ],
+    "headline_candidates": [
+      "Mullin's Big Day Reshapes Three Races",
+      "One Lead Grows While One Vanishes",
+      "Jacket Widens As Trophy Levels"
+    ],
+    "chosen_headline": "Jacket Widens As Trophy Levels",
+    "standfirst": "A near-record gross round for one man and a last-gasp collapse for another reshuffled all three competitions in a single afternoon.",
+    "compelling_score": 7,
+    "humour_score": 4,
+    "descriptor": "SIDEBAR"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Gregg Williams's outward nine at Crowborough contains four separate quadruple bogeys inside six holes, producing the third-worst gross round recorded in TEG history to date and his own second-worst round on both scales.",
+      "why_it_matters": "Four quadruple bogeys in a single round is a genuinely rare inventory of failure, and the resulting score sits in the bottom three all-time for gross and inside the worst two of his own TEG career.",
+      "shape": "Gregg Williams opens with a double bogey at the 1st, then quadruple bogeys at the 2nd, 4th and 5th send him to the bottom of the Wooden Spoon reckoning before the round is a third done. A brief truce on the 16th and 17th offers no real recovery before a fourth quadruple bogey arrives at the 15th.",
+      "beat_ids": [
+        "r3_b01",
+        "r3_b03",
+        "r3_b08",
+        "r3_b13",
+        "r3_b16",
+        "r3_b18",
+        "r3_b19",
+        "r3_b20"
+      ],
+      "headline_candidates": [
+        "Four Blow-Ups Sink Williams",
+        "Williams's Catalogue Of Calamity",
+        "A Round Of Four Quadruples"
+      ],
+      "chosen_headline": "Four Blow-Ups Sink Williams",
+      "standfirst": "Three quadruple bogeys inside the first six holes were only the start of it.",
+      "compelling_score": 7,
+      "humour_score": 8,
+      "descriptor": "GREGG WILLIAMS"
+    }
+  ],
+  "race_state_note": "The TEG 4 Trophy is level for the first time this tournament, while the Green Jacket gap has more than doubled and the Wooden Spoon has changed hands for the second time.",
+  "storyline_note": ""
+}

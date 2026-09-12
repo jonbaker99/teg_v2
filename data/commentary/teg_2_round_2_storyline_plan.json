@@ -1,0 +1,113 @@
+{
+  "title": "Baker Takes the Lead as Boavista Draws Blood",
+  "title_candidates": [
+    "Baker Takes the Lead as Boavista Draws Blood",
+    "Boavista's Back Nine Bites Back",
+    "Three Rounds for the Ages, One Hole for the Ages"
+  ],
+  "theme": "A round of near-record golf undone in patches by Boavista's unforgiving finish, reshuffling the TEG 2 Trophy race while leaving the Green Jacket and Wooden Spoon largely undisturbed.",
+  "tone": "Dry understatement, savouring the gap between the brilliance of the front nine and the carnage of the back.",
+  "opening_hook": "Three men reached the 18th tee at Boavista in good order on Sunday; all three left it with an eight, and one of them still somehow posted the second-best round in TEG history.",
+  "narrative_vehicles": [
+    "ensemble",
+    "dual_narrative",
+    "motif"
+  ],
+  "prominent_vehicle": "ensemble",
+  "prominent_palette": "venue_character",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Jon Baker's near-record round undone by a ragged finish",
+    "why_it_matters": "It is the best round of the day by some distance and the second-best net-vs-par score in TEG history, yet Baker's own closing stretch very nearly cost him the distinction entirely.",
+    "shape": "Baker banks four shots to par across holes 6-8 and takes the outright TEG 2 Trophy lead at the 4th, only to trade it with David Mullin twice more before a horror finish - 13 gross shots dropped across holes 15-18, including quadruple bogeys at both 17 and 18. He still closes with the second-best round in TEG history, one of three near-record cards produced this afternoon alongside Stuart Neumann's second-best-ever gross round.",
+    "beat_ids": [
+      "r2_b01",
+      "r2_b06",
+      "r2_b13",
+      "r2_b19",
+      "r2_b22",
+      "r2_b04",
+      "r2_b09",
+      "r2_b10"
+    ],
+    "headline_candidates": [
+      "Baker's Near-Perfect Round Ends in Carnage",
+      "Second-Best Ever, Somehow",
+      "Baker's Brilliance Survives a Bruising Finish"
+    ],
+    "chosen_headline": "Baker's Near-Perfect Round Ends in Carnage",
+    "standfirst": "A front nine of surgical precision gave way to a back nine of quadruple bogeys, but Jon Baker's card still stands as the second-best in TEG history.",
+    "compelling_score": 8,
+    "humour_score": 6,
+    "descriptor": "JON BAKER"
+  },
+  "race_story": {
+    "subject": "David Mullin's Trophy lead slips away despite a career round",
+    "why_it_matters": "Mullin's gross score is the third-best round in TEG history, but the same closing holes that troubled Baker also cost him the outright Trophy lead he had held since round one.",
+    "shape": "Mullin takes the Trophy lead outright at the 5th, matching Baker shot for shot through the turn. But three holes without a net par from 16 to 18, capped by a quadruple bogey at the last, hand the lead back to Baker, who now leads the Trophy by three with one round to play; his TEG 2 Green Jacket cushion, meanwhile, survives largely untouched at eight shots.",
+    "beat_ids": [
+      "r2_b02",
+      "r2_b23",
+      "r2_b19",
+      "r2_b22",
+      "r2_b07",
+      "r2_b08",
+      "r2_b16",
+      "r2_b14"
+    ],
+    "headline_candidates": [
+      "Mullin's Great Round, Wrong Ending",
+      "Lead Lost in the Last Three",
+      "Mullin Falls Back Despite Career Gross"
+    ],
+    "chosen_headline": "Mullin's Great Round, Wrong Ending",
+    "standfirst": "A near-flawless tee-to-green display couldn't survive a ragged run home, and David Mullin hands the Trophy lead back to Jon Baker with one round left.",
+    "compelling_score": 7,
+    "humour_score": 5,
+    "descriptor": "JON BAKER | DAVID MULLIN"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Boavista's 18th hole punishes three cards in one afternoon",
+      "why_it_matters": "The same par-4 finishing hole produces quadruple bogeys for three separate players in the same round - a shared collapse that shapes both the Trophy and Green Jacket races.",
+      "shape": "Jon Baker, Gregg Williams and David Mullin all reach the 18th tee in good order and all three walk off with an eight. The hole, stroke index 5, becomes the great leveller of the round, turning strong scorecards into merely good ones and directly feeding both the Trophy lead swing and Mullin's stumble.",
+      "beat_ids": [
+        "r2_b09",
+        "r2_b15",
+        "r2_b16"
+      ],
+      "headline_candidates": [
+        "Three Eights at the Last",
+        "Boavista's 18th Claims Its Victims",
+        "The Hole That Humbled Everyone"
+      ],
+      "chosen_headline": "Three Eights at the Last",
+      "standfirst": "Boavista's closing par four turned three good rounds sour, with Jon Baker, Gregg Williams and David Mullin all carding quadruple bogeys there.",
+      "compelling_score": 7,
+      "humour_score": 8,
+      "descriptor": "BOAVISTA"
+    },
+    {
+      "subject": "Henry Meller's quiet transformation at Boavista",
+      "why_it_matters": "Meller improves his own course best by 11 shots and posts his best round of the tournament so far, yet the gap to Gregg Williams at the foot of the TEG 2 Wooden Spoon standings still widens to 16 shots - proof that personal progress and the standings can move in opposite directions.",
+      "shape": "After a wretched opening round, Meller returns to Boavista and carves 11 shots from his own personal best at the course. A four-hole stretch without a net par from 13-16 still costs him dear, and with the rest of the field also improving, he ends the round further adrift at the bottom of the Trophy standings than when he started it.",
+      "beat_ids": [
+        "r2_b24",
+        "r2_b18",
+        "r2_b20"
+      ],
+      "headline_candidates": [
+        "Meller's Best Round Yet, Still Last",
+        "Progress Without Reward for Meller",
+        "Meller Cuts Eleven Shots, Gains Nothing"
+      ],
+      "chosen_headline": "Meller's Best Round Yet, Still Last",
+      "standfirst": "Henry Meller trimmed 11 shots from his own Boavista best, but with the rest of the field improving too, the Wooden Spoon gap only grew.",
+      "compelling_score": 6,
+      "humour_score": 6,
+      "descriptor": "WOODEN SPOON"
+    }
+  ],
+  "race_state_note": "No competition changed hands outright except the Trophy; Meller's improved golf has not yet touched his hold on last place in the Wooden Spoon.",
+  "storyline_note": ""
+}

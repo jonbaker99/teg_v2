@@ -1,0 +1,90 @@
+{
+  "title": "Meller's Second Coming at Boavista",
+  "title_candidates": [
+    "Meller's Second Coming at Boavista",
+    "From Rock Bottom to Near-Record",
+    "Baker Extends His Grip as Meller Roars Back"
+  ],
+  "theme": "A day of redemption at Boavista, as Henry Meller's historic recovery reshapes the Wooden Spoon race while Jon Baker tightens his grip on the Trophy.",
+  "tone": "Wry and forensic, letting the historic numbers and the farce sit side by side without comment.",
+  "opening_hook": "Twenty-four hours after limping to the foot of the TEG 3 Wooden Spoon table with a 12 at Boavista's 17th, Henry Meller produced the second-best round in TEG history to date — and passed his misery on to Stuart Neumann instead.",
+  "narrative_vehicles": [
+    "redemption_arc",
+    "dual_narrative",
+    "catalogue"
+  ],
+  "prominent_vehicle": "redemption_arc",
+  "prominent_palette": "records",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Henry Meller and Jon Baker share the best trophy score of the day, but only one of them is making TEG history",
+    "why_it_matters": "Meller's -2 is the 2nd-best round and 2nd-best gross round recorded in TEG history to date, arriving one round after he sat bottom of the Wooden Spoon; Baker matches him on the trophy metric but by a rockier road, and the pair's shared score is this round's headline act.",
+    "shape": "Meller opens with a tidy front nine, gains four shots to par across holes 7-9 and never looks back despite a single double bogey at the 10th, finishing with a round and a gross score both ranked 2nd-best in TEG history to date. Baker matches Meller's -2 trophy score for the day but only after a mid-round stretch that bled ten gross shots across holes 10-14, making the identical scoreline the product of two very different rounds.",
+    "beat_ids": [
+      "r2_b01",
+      "r2_b02",
+      "r2_b07",
+      "r2_b11",
+      "r2_b08",
+      "r2_b03",
+      "r2_b20"
+    ],
+    "headline_candidates": [
+      "Meller's Second Coming at Boavista",
+      "From Disaster to Near-Record in a Day",
+      "Meller Matches History, Baker Matches Him"
+    ],
+    "chosen_headline": "Meller's Second Coming at Boavista",
+    "standfirst": "A day after his 12 at the 17th, Meller's round and his gross score both rank 2nd-best in TEG history to date, with Jon Baker matching him on the harder metric via a far bumpier route.",
+    "compelling_score": 8,
+    "humour_score": 5,
+    "descriptor": "JON BAKER | HENRY MELLER"
+  },
+  "race_story": {
+    "subject": "Stuart Neumann's front-nine promise collapses into the Wooden Spoon cellar",
+    "why_it_matters": "The Wooden Spoon changes hands for the first time this TEG, while at the top both Jon Baker's Trophy lead and David Mullin's Green Jacket lead grow wider despite Mullin's own horror show at the 17th — this round redraws the shape of all three races without changing a single leader's name.",
+    "shape": "Neumann builds three shots of net par across holes 4-6 and looks set to escape the bottom of the table, only for a double bogey at the 7th to end the run and further trouble at the 8th to tip him into last place. Meanwhile David Mullin survives a quintuple bogey at the 17th to stretch his Green Jacket lead to 5, and Jon Baker's Trophy cushion grows to 13 despite his own mid-round wobble — the top of both tables gets safer even as the bottom gets worse.",
+    "beat_ids": [
+      "r2_b14",
+      "r2_b21",
+      "r2_b04",
+      "r2_b19"
+    ],
+    "headline_candidates": [
+      "Neumann Inherits the Wooden Spoon Cellar",
+      "Wooden Spoon Changes Hands at Boavista",
+      "Neumann Slips as Leaders Pull Clear"
+    ],
+    "chosen_headline": "Neumann Inherits the Wooden Spoon Cellar",
+    "standfirst": "A tidy front nine unravelled at the 7th and 8th, swapping places with Henry Meller at the foot of the TEG 3 Wooden Spoon table, while David Mullin shrugged off a quintuple bogey at the 17th to push his Green Jacket lead out to 5.",
+    "compelling_score": 7,
+    "humour_score": 6,
+    "descriptor": "WOODEN SPOON"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Gregg Williams's day of visible carnage somehow produces a Boavista personal best",
+      "why_it_matters": "Williams shed twelve shots to par across holes 8-11 and another eight across holes 15-17, yet still finished three shots inside his previous best at the course — the kind of round that reads as disaster and scores as progress.",
+      "shape": "An encouraging start, four shots gained across holes 3-5, gives way to a run without a single net par from the 8th to the 11th, capped by a quadruple bogey at the 10th. A second bleed of eight shots across holes 15-17 follows, yet the final card still beats his prior Boavista best by three.",
+      "beat_ids": [
+        "r2_b10",
+        "r2_b05",
+        "r2_b06",
+        "r2_b15",
+        "r2_b17"
+      ],
+      "headline_candidates": [
+        "A New Boavista Best, Somehow",
+        "Williams's Personal Best Wrapped in Carnage",
+        "Williams Survives Himself for a Record"
+      ],
+      "chosen_headline": "A New Boavista Best, Somehow",
+      "standfirst": "Two stretches without a net par either side of a quadruple bogey at the 10th did not stop Gregg Williams finishing three shots better than any previous visit to the course.",
+      "compelling_score": 6,
+      "humour_score": 8,
+      "descriptor": "GREGG WILLIAMS"
+    }
+  ],
+  "race_state_note": "Baker's Trophy cushion is now 13 shots on net-vs-par, Mullin's Green Jacket lead has grown to 5, and just a single stroke now separates Neumann from Meller at the foot of the Wooden Spoon table.",
+  "storyline_note": ""
+}

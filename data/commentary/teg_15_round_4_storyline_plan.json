@@ -1,0 +1,112 @@
+{
+  "title": "Gregg Williams Sweeps Trophy and Jacket",
+  "title_candidates": [
+    "Gregg Williams Sweeps Trophy and Jacket",
+    "Williams Seals the Double at Oitavos",
+    "The Double Lands at Oitavos Dunes"
+  ],
+  "theme": "Composure at the top, carnage everywhere else.",
+  "tone": "Wry and affectionate; solemn treatment of small triumphs and comic disasters alike.",
+  "opening_hook": "On the rugged links of Oitavos Dunes, Gregg Williams closed out TEG 15 with the untroubled calm of a man who had already banked the outcome, while behind him the rest of the field conducted a highlights reel of everything that can go wrong in golf.",
+  "narrative_vehicles": [
+    "hero_arc",
+    "inevitability",
+    "catalogue"
+  ],
+  "prominent_vehicle": "hero_arc",
+  "prominent_palette": "cross_teg_career",
+  "is_final_round": true,
+  "round_story": {
+    "subject": "Stuart Neumann posts the best Stableford round of the day, then contrives a quintuple bogey at the final hole to spoil it.",
+    "why_it_matters": "It was the single best scoring return of the round, a reminder of what Neumann can do on his day, and, in the way of TEG, it still ended in a snowman.",
+    "shape": "Neumann strings together the tournament's best final-round points tally, surging up the Trophy table; needing only a tidy finish, he then runs up a nine at the 18th, the sting in the tail of an otherwise flawless card.",
+    "beat_ids": [
+      "r4_b01"
+    ],
+    "headline_candidates": [
+      "Neumann's Best Round Ends in a Nine",
+      "The Best Round, Ruined at the Last",
+      "Neumann Peaks, Then Blows Up at 18"
+    ],
+    "chosen_headline": "Neumann's Best Round Ends in a Nine",
+    "standfirst": "A career-quality Stableford return took a wrong turn at the very last hole of the week.",
+    "compelling_score": 7,
+    "humour_score": 8,
+    "descriptor": "STUART NEUMANN"
+  },
+  "race_story": {
+    "subject": "Gregg Williams closes out TEG 15 with victories in both the Trophy and the Green Jacket, completing the tournament's sixth double.",
+    "why_it_matters": "It confirms Williams as the dominant force of the week, having led both competitions wire to wire, and marks a rare feat in TEG's own history.",
+    "shape": "Arriving with commanding overnight leads in both races, Williams answers with 34 Stableford points and a personal-best 91 gross round at Oitavos Dunes, seeing off Stuart Neumann by 21 in the Trophy and Jon Baker by 29 in the Green Jacket; he becomes only the sixth player to complete the double.",
+    "beat_ids": [
+      "r4_b25",
+      "r4_b29",
+      "r4_b31",
+      "r4_b30"
+    ],
+    "headline_candidates": [
+      "Williams Completes the Double",
+      "Gregg Williams Seals Trophy and Jacket",
+      "Double Glory for Gregg Williams"
+    ],
+    "chosen_headline": "Williams Completes the Double",
+    "standfirst": "A sixth Trophy-and-Jacket double in TEG history, delivered with the same calm that carried him through all four rounds.",
+    "compelling_score": 8,
+    "humour_score": 4,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "David Mullin's final round produces his worst Stableford and worst gross scores in the same afternoon, capped by a quadruple bogey at the last.",
+      "why_it_matters": "It was the worst round of Mullin's 55-round TEG career by both counting methods, coming straight off his best round of the week, and it nearly cost him his escape from the Wooden Spoon.",
+      "shape": "Mullin arrives at Oitavos Dunes fresh from his best round of the tournament, opens with three ropey holes, fades further through the closing stretch, and finishes with a quadruple bogey at the 18th for a career-worst 22 points and +33 gross.",
+      "beat_ids": [
+        "r4_b02",
+        "r4_b03",
+        "r4_b04",
+        "r4_b08",
+        "r4_b09",
+        "r4_b11",
+        "r4_b12",
+        "r4_b15",
+        "r4_b16"
+      ],
+      "headline_candidates": [
+        "Mullin's Round to Forget",
+        "A Career-Worst Day for Mullin",
+        "Mullin Hits Rock Bottom at Oitavos"
+      ],
+      "chosen_headline": "Mullin's Round to Forget",
+      "standfirst": "Two personal worsts in one afternoon, and a nervous look over the shoulder at the Wooden Spoon.",
+      "compelling_score": 8,
+      "humour_score": 6,
+      "descriptor": "DAVID MULLIN"
+    },
+    {
+      "subject": "John Patterson opens with a sextuple bogey at the 1st, bleeds ten shots across the first three holes, and never finds a rhythm.",
+      "why_it_matters": "It cost him outright second place in the Trophy race, dropping him from runner-up overnight to third by the close.",
+      "shape": "Patterson's week unravels from the very first tee, a ten at the 1st followed by two more dropped-shot holes leaving him without a net par through three; a brief truce at 15-16 offers false hope before further blow-ups at 12 and 17 confirm the theme.",
+      "beat_ids": [
+        "r4_b06",
+        "r4_b14",
+        "r4_b17",
+        "r4_b05",
+        "r4_b07",
+        "r4_b10",
+        "r4_b13"
+      ],
+      "headline_candidates": [
+        "Patterson's Ten at the First Sets the Tone",
+        "Disaster Start Dooms Patterson",
+        "A Sextuple Bogey to Begin the Day"
+      ],
+      "chosen_headline": "Patterson's Ten at the First Sets the Tone",
+      "standfirst": "A calamitous start on the very first hole shaped the whole of Patterson's final round.",
+      "compelling_score": 7,
+      "humour_score": 7,
+      "descriptor": "JOHN PATTERSON"
+    }
+  ],
+  "race_state_note": "Alex Baker retains the Wooden Spoon, but a ghastly final round from David Mullin narrowed the gap from 14 to 11 shots — the tightest it has been all week.",
+  "storyline_note": ""
+}

@@ -1,0 +1,92 @@
+{
+  "title": "Williams Crowned As Baker's Late Charge Falls Short",
+  "title_candidates": [
+    "Williams Crowned As Baker's Late Charge Falls Short",
+    "Two Shots Settle It At Palmares",
+    "Mullin's Jacket Comes With A Twist"
+  ],
+  "theme": "A two-shot Trophy finish, personal bests littering the card, and a Green Jacket champion who somehow finished bottom of the Wooden Spoon table in the same round.",
+  "tone": "Wry and even-handed, treating a two-shot margin like a state funeral.",
+  "opening_hook": "TEG's first visit to the Algarve's Palmares resort delivered exactly the theatre the format was built for: a Trophy race decided by two shots, personal bests littering the card, and a Green Jacket champion who somehow contrived to finish bottom of the Wooden Spoon table in the very same round.",
+  "narrative_vehicles": [
+    "counterfactual",
+    "dual_narrative"
+  ],
+  "prominent_vehicle": "counterfactual",
+  "prominent_palette": "decisive_moment",
+  "is_final_round": true,
+  "round_story": {
+    "subject": "Henry Meller's personal-best round, net and gross, on TEG's first visit to Palmares",
+    "why_it_matters": "It is the best round anyone played all week and a genuine double personal best for Meller, arriving straight out of a horror stretch that had briefly dumped him at the bottom of the Wooden Spoon table.",
+    "shape": "Setup: Henry Meller went triple-double-double at holes 9 to 11, a stretch bad enough to put him last in the Wooden Spoon race. Turn: he steadied immediately, closing with pars at 16 and 17 in a run of tidy golf. Resolution: he finishes with the best Trophy round of his TEG career (-3) and the best gross round of his TEG career (17), the outstanding individual round of the day, even though someone else entirely ends up carrying the Spoon.",
+    "beat_ids": [
+      "r4_b01",
+      "r4_b02",
+      "r4_b17",
+      "r4_b19",
+      "r4_b15",
+      "r4_b25"
+    ],
+    "headline_candidates": [
+      "Meller's Best Round Arrives Too Late",
+      "A Personal Best From Nowhere",
+      "Meller Finds Form On The Back Nine"
+    ],
+    "chosen_headline": "Meller's Best Round Arrives Too Late",
+    "standfirst": "Henry Meller's first look at Palmares produced the best round of his TEG career, net and gross, built out of the wreckage of three horror holes in the middle of his back nine.",
+    "compelling_score": 7,
+    "humour_score": 5,
+    "descriptor": "HENRY MELLER"
+  },
+  "race_story": {
+    "subject": "Gregg Williams holds off a fast-closing Jon Baker to win the TEG 5 Trophy by two shots",
+    "why_it_matters": "It crowns the tournament's headline prize and is Gregg Williams's first Trophy win, secured not by brilliance but by never once finishing worse than third of five all week while his closest rival blew hot and cold.",
+    "shape": "Setup: Gregg Williams carried a five-shot cushion into the final round. Turn: Jon Baker produced his own personal-best gross round and hot stretches at the 1st-4th and 14th-15th to cut the gap to two, only for a quintuple bogey at the 5th to cost him the ground he needed. Resolution: Williams survives a cold stretch of his own at holes 10-13 and a blow-up at the 16th to close out the Trophy by two, with no countback or playoff to spare Baker.",
+    "beat_ids": [
+      "r4_b03",
+      "r4_b05",
+      "r4_b11",
+      "r4_b12",
+      "r4_b04",
+      "r4_b14",
+      "r4_b13"
+    ],
+    "headline_candidates": [
+      "Williams Holds On Despite Baker's Charge",
+      "Two Shots Decide It At Palmares",
+      "Baker's Fightback Falls Just Short"
+    ],
+    "chosen_headline": "Baker's Fightback Falls Just Short",
+    "standfirst": "Gregg Williams's first Trophy title survived a final-round surge from Jon Baker that included his best-ever gross round, but it arrived two shots too late.",
+    "compelling_score": 8,
+    "humour_score": 4,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "David Mullin wins the Green Jacket while finishing bottom of the Wooden Spoon table in the same round",
+      "why_it_matters": "It captures the volatility of David Mullin's whole week in one round: the tournament's most complete performance over four days and its most chaotic single round, delivered by the same man on the same afternoon.",
+      "shape": "Setup: David Mullin arrived with a comfortable Green Jacket cushion built in the opening two rounds, his Trophy challenge long since gone. Turn: a quadruple bogey at the 6th dropped him to the bottom of the Wooden Spoon table by hole six, and though a pair of birdies at 12 and 13 briefly halted the bleeding, a routine par at the 17th was enough to send him back to the foot of the net standings, swapping places with Henry Meller. Resolution: he closes out TEG 5 with the Green Jacket in one hand and the Wooden Spoon in the other.",
+      "beat_ids": [
+        "r4_b06",
+        "r4_b07",
+        "r4_b09",
+        "r4_b16",
+        "r4_b24",
+        "r4_b26"
+      ],
+      "headline_candidates": [
+        "Mullin Wins Jacket, Finds The Spoon Too",
+        "One Round, Two Very Different Prizes",
+        "Green Jacket Arrives With A Booby Prize"
+      ],
+      "chosen_headline": "Mullin Wins Jacket, Finds The Spoon Too",
+      "standfirst": "David Mullin sealed another Green Jacket in the same round that left him marooned at the bottom of the Wooden Spoon table, swapping places with Henry Meller in the closing holes.",
+      "compelling_score": 8,
+      "humour_score": 7,
+      "descriptor": "DAVID MULLIN"
+    }
+  ],
+  "race_state_note": "Jon Baker actually posted the better Trophy score in two of the four rounds and still finished runner-up - there is no countback or playoff in TEG, only the four-round sum.",
+  "storyline_note": ""
+}

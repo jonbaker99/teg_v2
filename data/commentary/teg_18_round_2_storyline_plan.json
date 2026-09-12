@@ -1,0 +1,100 @@
+{
+  "title": "The Course Record Nobody Wanted",
+  "title_candidates": [
+    "The Course Record Nobody Wanted",
+    "Four Personal Bests and One Disaster",
+    "Everyone Improves, Except One"
+  ],
+  "theme": "Round two at PGA Catalunya's Tour Course rewrote personal history for four players and course history for the fifth, while the big prizes barely flickered.",
+  "tone": "house",
+  "opening_hook": "Camiral's Tour Course has now hosted six TEG rounds, and Sunday's produced personal bests up and down the field — then, right at the end, comfortably the worst round anyone has ever posted there.",
+  "narrative_vehicles": [
+    "motif",
+    "ensemble",
+    "counterfactual"
+  ],
+  "prominent_vehicle": "motif",
+  "prominent_palette": "course_history",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Gregg Williams and John Patterson share the day's best Stableford return",
+    "why_it_matters": "With the field's best round tied rather than won outright, the day's honours belong jointly to a man rescuing his round from a mid-round collapse and a man simply continuing the recovery his poor first round demanded.",
+    "shape": "Both start unpromisingly — Patterson runs up a quadruple bogey at the 4th before bleeding 11 gross shots across holes 6-10 — while Williams is still working off a poor round one; then each catches fire mid-round, Patterson piling up 16 points over holes 11-15 and Williams reeling off 13 over 13-16 en route to a new course-best gross of 86; both finish on 42 points, the best return of the day, with Patterson's closing 94 gross a new personal best at the course.",
+    "beat_ids": [
+      "r2_b02",
+      "r2_b04",
+      "r2_b07",
+      "r2_b12",
+      "r2_b05",
+      "r2_b06",
+      "r2_b11",
+      "r2_b13"
+    ],
+    "headline_candidates": [
+      "Two Share the Day's Honours",
+      "Patterson and Williams Share Top Spot",
+      "Forty-Two Points, Two Different Routes",
+      "Best Round Split Two Ways"
+    ],
+    "chosen_headline": "Two Share the Day's Honours",
+    "standfirst": "A cold stretch nearly buried John Patterson's round before a personal best rescued it, while Gregg Williams simply carried on from where his poor opening round left off — in the opposite direction.",
+    "compelling_score": 7,
+    "humour_score": 5,
+    "descriptor": "JOHN PATTERSON | GREGG WILLIAMS"
+  },
+  "race_story": {
+    "subject": "Green Jacket lead survives a five-swing day, Wooden Spoon changes hands",
+    "why_it_matters": "The gap looks unchanged on paper, but the round tells a livelier story: a 20-hole gross lead was lost and won back, and the Wooden Spoon found a new home.",
+    "shape": "Jon Baker began the day two points clear atop the TEG 18 Green Jacket standings, having held the outright gross lead since the fifth hole of round one; Gregg Williams caught and passed him at the 7th, then the pair traded the lead twice more either side of Jon Baker's response at the 9th, while David Mullin imploded over holes 4-6 — three double-bogey-or-worse holes costing 11 shots — to fall to the bottom of the Wooden Spoon table.",
+    "beat_ids": [
+      "r2_b15",
+      "r2_b08",
+      "r2_b26",
+      "r2_b27",
+      "r2_b28",
+      "r2_b16",
+      "r2_b17",
+      "r2_b18",
+      "r2_b23",
+      "r2_b10"
+    ],
+    "headline_candidates": [
+      "Jacket Race Churns, Ends Unchanged",
+      "Green Jacket Lead Survives Five Swings",
+      "Mullin Inherits the Spoon",
+      "Baker Holds On As Others Trade Blows"
+    ],
+    "chosen_headline": "Jacket Race Churns, Ends Unchanged",
+    "standfirst": "A frantic gross battle for the TEG 18 Green Jacket produced five lead changes and settled exactly where it began, while a horror stretch through the turn cost David Mullin his place off the bottom of the Wooden Spoon.",
+    "compelling_score": 7,
+    "humour_score": 4,
+    "descriptor": "SIDEBAR"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Alex Baker sets an unwanted course record at PGA Catalunya",
+      "why_it_matters": "It is the single most dramatic story of the round, and the format's quirk — that a Stableford zero costs no more than a bogey does — is the reason it barely touched the Trophy race.",
+      "shape": "Alex Baker had visited this course four times before without ever shooting worse than 92; a closing horror stretch produced a quintuple bogey at the 16th and, two holes later, a sextuple bogey at the 18th, driving his gross to 106 — three shots worse than any score recorded here across 27 prior TEG visits; yet because Stableford caps the damage at zero points a hole, his round of 41 points was still the third-best of the day and his overall Trophy lead shrank by only a single point.",
+      "beat_ids": [
+        "cr01",
+        "r2_b09",
+        "r2_b14",
+        "r2_b25",
+        "r2_b30"
+      ],
+      "headline_candidates": [
+        "A Record Nobody Wanted",
+        "Baker Sets the Wrong Kind of Record",
+        "106 and Still Leading",
+        "Course Record Falls, Lead Barely Moves"
+      ],
+      "chosen_headline": "A Record Nobody Wanted",
+      "standfirst": "A closing double blow-up gave Alex Baker the worst round in the Tour Course's history, yet Stableford's forgiving arithmetic meant his Trophy lead barely noticed.",
+      "compelling_score": 9,
+      "humour_score": 8,
+      "descriptor": "ALEX BAKER"
+    }
+  ],
+  "race_state_note": "The two-point Green Jacket gap conceals a day of five lead changes; the Wooden Spoon changed hands solely on the back of David Mullin's horror stretch at holes 4-6.",
+  "storyline_note": ""
+}

@@ -1,0 +1,115 @@
+{
+  "title": "Jon Baker's Record Round Reshapes The Race",
+  "title_candidates": [
+    "Jon Baker's Record Round Reshapes The Race",
+    "A New Course Record At Royal Óbidos",
+    "Jon Baker Surges As Others Fade"
+  ],
+  "theme": "A course record for Jon Baker overshadows a day of collapses for almost everyone else at Royal Óbidos.",
+  "tone": "house",
+  "opening_hook": "Royal Óbidos has hosted three TEG rounds before this one, and none of them produced anything like Jon Baker's 86.",
+  "narrative_vehicles": [
+    "hero_arc",
+    "dual_narrative",
+    "catalogue"
+  ],
+  "prominent_vehicle": "hero_arc",
+  "prominent_palette": "records",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Jon Baker's record-breaking 86 gross at Royal Óbidos, a new course best",
+    "why_it_matters": "It is the lowest score ever returned at Royal Óbidos across four TEG visits, and it arrives at the exact moment Jon Baker needed daylight in both the Trophy and the Green Jacket races.",
+    "shape": "Royal Óbidos had stood at a best of 87 gross through eighteen prior visits. Jon Baker's back nine settled the matter: birdies at the 11th and 13th fed a six-hole run worth 20 stableford points, and pars down the stretch protected the card. He finished on 14 gross, 44 stableford, and a new course record of 86, one shot inside the old mark.",
+    "beat_ids": [
+      "cr01",
+      "r3_b12",
+      "r3_b18",
+      "r3_b22"
+    ],
+    "headline_candidates": [
+      "Jon Baker Sets New Course Record",
+      "Baker's 86 Rewrites Royal Óbidos",
+      "A Record Round For Jon Baker"
+    ],
+    "chosen_headline": "Jon Baker Sets New Course Record",
+    "standfirst": "The 86 gross eclipses the previous Royal Óbidos best by a single shot, set across four TEG visits to the Óbidos coast.",
+    "compelling_score": 8,
+    "humour_score": 4,
+    "descriptor": "JON BAKER"
+  },
+  "race_story": {
+    "subject": "David Mullin's fade lets Jon Baker escape in both the Trophy and the Green Jacket races",
+    "why_it_matters": "The Trophy gap between the pair widened from 2 to 11 on Stableford, and a Green Jacket lead that swapped hands three times in a single round ended up back with Jon Baker by a clear 8.",
+    "shape": "David Mullin arrived to inherit the Green Jacket lead at the very first hole, ending Jon Baker's 35-hole spell in front. Jon Baker drew level twice more, at the 2nd and the 7th, before his back-nine surge put real distance between them. David Mullin's own round subsided from a strong second round to a stableford 35, and by the close the Trophy gap had ballooned to 11 and the Jacket gap to 8.",
+    "beat_ids": [
+      "r3_b10",
+      "r3_b21",
+      "r3_b23",
+      "r3_b24",
+      "r3_b25"
+    ],
+    "headline_candidates": [
+      "David Mullin's Jacket Lead Evaporates",
+      "Jon Baker Reclaims The Jacket",
+      "Mullin Fades As Jon Baker Surges"
+    ],
+    "chosen_headline": "David Mullin's Jacket Lead Evaporates",
+    "standfirst": "David Mullin held the Green Jacket lead for barely five holes before Jon Baker's record-breaking round swept both races out of reach.",
+    "compelling_score": 7,
+    "humour_score": 5,
+    "descriptor": "DAVID MULLIN | JON BAKER"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Alex Baker's catalogue of blow-ups produces the field's worst gross round",
+      "why_it_matters": "Four separate blow-up holes and two bleeding stretches left Alex Baker with the day's worst gross score, well adrift of his own best at this course.",
+      "shape": "Quadruple bogeys at the 4th and 5th opened a four-hole stretch that cost him 12 shots. A sextuple-bogey ten at the 14th then triggered a second collapse through 12-16, and a quadruple bogey at the last confirmed the field's worst gross round of the day.",
+      "beat_ids": [
+        "r3_b01",
+        "r3_b02",
+        "r3_b04",
+        "r3_b05",
+        "r3_b06",
+        "r3_b08"
+      ],
+      "headline_candidates": [
+        "Four Blow-Ups Undo Alex Baker",
+        "Alex Baker's Afternoon Of Horrors",
+        "Alex Baker's Card Falls Apart"
+      ],
+      "chosen_headline": "Four Blow-Ups Undo Alex Baker",
+      "standfirst": "A sextuple-bogey ten at the 14th was merely the low point of a round that produced four separate blow-up holes for Alex Baker.",
+      "compelling_score": 6,
+      "humour_score": 7,
+      "descriptor": "ALEX BAKER"
+    },
+    {
+      "subject": "The Wooden Spoon changes hands as Gregg Williams collapses and John Patterson rallies",
+      "why_it_matters": "John Patterson escapes the bottom spot he had held since the second round, posting a personal best at Royal Óbidos, while Gregg Williams's back-nine collapse installs him at the bottom of the Spoon table by 8 points.",
+      "shape": "John Patterson had propped up the Wooden Spoon table since his horror show in round two. He strung together pars from the 12th to the 15th for 13 stableford points while Gregg Williams reeled off seven straight bogey-or-worse holes from the 12th, including a quadruple bogey at the 5th. Patterson posted a course personal best of 94 gross to climb clear, leaving Gregg Williams anchored at the bottom with an 8-point cushion to the next player.",
+      "beat_ids": [
+        "r3_b09",
+        "r3_b11",
+        "r3_b07",
+        "r3_b15",
+        "r3_b13",
+        "r3_b16",
+        "r3_b17",
+        "r3_b19",
+        "r3_b20"
+      ],
+      "headline_candidates": [
+        "Williams Slips To The Bottom",
+        "Patterson Escapes, Williams Inherits Spoon",
+        "Spoon Changes Hands At Óbidos"
+      ],
+      "chosen_headline": "Williams Slips To The Bottom",
+      "standfirst": "A seven-hole run without a net par condemned Gregg Williams to last place just as John Patterson posted a personal best at Royal Óbidos to climb clear.",
+      "compelling_score": 7,
+      "humour_score": 6,
+      "descriptor": "WOODEN SPOON"
+    }
+  ],
+  "race_state_note": "One round remains: Jon Baker's cushion in both the Trophy and the Green Jacket now looks close to decisive, while the Wooden Spoon race stays live with only 8 points separating last from next.",
+  "storyline_note": ""
+}

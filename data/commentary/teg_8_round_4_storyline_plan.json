@@ -1,0 +1,119 @@
+{
+  "title": "Last Day on the Dunes",
+  "title_candidates": [
+    "Last Day on the Dunes",
+    "Oitavos Delivers Its Verdict",
+    "Forty-One and Done"
+  ],
+  "theme": "A new Atlantic links decides nothing at the top and everything underneath it: Gregg Williams simply widens the gap while the Green Jacket changes hands on the second green.",
+  "tone": "house",
+  "opening_hook": "TEG's first visit to Oitavos Dunes, a pure links on the Cascais coast, and the man who had led the TEG 8 Trophy at the end of every single round arrived five clear and left twelve clear; the only lead that genuinely changed hands did so before most of the field had finished warming up.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "inevitability",
+    "tragic_arc"
+  ],
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "decisive_moment",
+  "is_final_round": true,
+  "round_story": {
+    "subject": "Gregg Williams's 41 points at Oitavos Dunes, the best round of the day, converting a five-point overnight lead into a twelve-point TEG 8 Trophy win",
+    "why_it_matters": "This is the final round and the coronation: Gregg Williams closes out the TEG 8 Trophy at 149 to Alex Baker's 137. He did it the hard way in the middle of the round, losing eleven gross shots across holes 5-8 including an 8 at the 5th (stroke index 1), then taking twelve Stableford points off holes 12-15 to bury it. His gross 22 was the third-best gross round of his own 27 to date — worth saying; his Stableford placings elsewhere are mid-table and must not be dressed up as rankings. Supporting facts from win_anatomy: best in the field in three of the four rounds, never worse than fourth of six, and he beat Alex Baker head-to-head in three of the four. win_counts credits him with three Trophies in total — state it as a count, never as a rank. The TEG 8 Green Jacket went elsewhere, so this is not a double; do not imply one.",
+    "shape": "Williams begins the day five clear of Jon Baker and promptly gives the impression of a man determined to make it interesting, bleeding eleven shots between the 5th and the 8th, an 8 at the hardest hole on the course among them. The turn comes at the 12th, where he strings together par, bogey at the par-5 13th, par, par for twelve points in four holes. He signs for 41 — matching his round-two total — and the argument, such as it was, is over by twelve.",
+    "beat_ids": [
+      "r4_b15",
+      "r4_b22",
+      "r4_b18",
+      "r4_b26",
+      "r4_b29",
+      "r4_b11"
+    ],
+    "headline_candidates": [
+      "Twelve Points in Four Holes",
+      "Williams Widens It at Oitavos",
+      "Forty-One Ends the Argument"
+    ],
+    "chosen_headline": "Twelve Points in Four Holes",
+    "standfirst": "A ruinous stretch around the turn cost Gregg Williams eleven shots before holes 12 to 15 handed him the TEG 8 Trophy by twelve.",
+    "compelling_score": 8,
+    "humour_score": 6,
+    "descriptor": "TROPHY"
+  },
+  "race_story": {
+    "subject": "Jon Baker's final day: two shots clear in the Green Jacket overnight, passed at the second hole by David Mullin, and passed in the Trophy by Alex Baker",
+    "why_it_matters": "Written from the losing vantage so it does not retell the Williams round. Jon Baker took a two-shot TEG 8 Green Jacket lead into the last day and lost it at the second hole, where David Mullin went in front and stayed there, finishing 77 to Jon Baker's 83. Mullin's 17 gross was the best gross round of the day by eight. Jon Baker's 28 points was the third-worst Stableford round of his own 27 to date — citable; his gross placings are mid-table and are not. At the same time Alex Baker's 39 points, the second-best Stableford round of his eight and the second-best gross round of his eight, carried him from third to second in the Trophy on 137, past Jon Baker on 131 — and he did that despite a 9 at the last and a 7 at the par-3 15th. The Wooden Spoon result (Stuart Neumann, 100) is stated here in a line and developed in its own section. Note for the writer: Alex Baker finishing Trophy runner-up while last on gross is ordinary handicapping, not a paradox.",
+    "shape": "Jon Baker starts the day holding the Jacket by two and second in the Trophy, and by the second green he holds neither comfortably — David Mullin bogeys the 2nd and that is enough to take the lead. Mullin then survives his own quadruple-bogey 8 at the 11th, answers it with a birdie at the 13th and another at the 16th, and posts 17 gross. Jon Baker's 28 points leaves him six adrift in the Jacket and, with Alex Baker's 39 arriving from behind, third in the Trophy: two positions surrendered in a single afternoon.",
+    "beat_ids": [
+      "r4_b21",
+      "r4_b04",
+      "r4_b23",
+      "r4_b10",
+      "r4_b19",
+      "r4_b05",
+      "r4_b08",
+      "r4_b11"
+    ],
+    "headline_candidates": [
+      "Jon Baker Surrenders the Jacket",
+      "Two Shots Gone by the Second",
+      "Mullin in Front by the Second Green"
+    ],
+    "chosen_headline": "Jon Baker Surrenders the Jacket",
+    "standfirst": "An overnight lead of two lasted less than half an hour, and by the close Alex Baker had taken second in the Trophy as well.",
+    "compelling_score": 8,
+    "humour_score": 6,
+    "descriptor": "GREEN JACKET | DAVID MULLIN"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Henry Meller's first six holes at Oitavos Dunes: 22 gross shots dropped, a sextuple-bogey 10 at the 4th, and a finish that matched the start",
+      "why_it_matters": "The mandatory beat lives here. Henry Meller dropped 22 shots over the opening six holes — 6, 8, 6, 10, 9, 6 against pars of 4, 4, 3, 4, 4, 4 — with no net par among them, and the 10 at the 4th is the centrepiece. His 21 points was the second-worst Stableford round of his own 27 to date and his 40 gross the second-worst of his own 27; both are citable, nothing else about his placings is. It followed a 34-point round three, a 13-point swing. The tail was no better: 7, 7, 8 over the closing three for nine more shots. He still finished 11 clear of the Spoon, which is the joke.",
+      "shape": "Meller arrives off the best round of his week and loses 22 shots before he reaches the 7th tee, the 10 at the 4th sitting in the middle of it like a road closure. A brief flicker of competence follows — back-to-back pars at the 14th and 15th — before the last three holes take nine more shots off him. He signs for 21 points, the second-worst round of his TEG career, and remains, comfortably, not last.",
+      "beat_ids": [
+        "r4_b01",
+        "r4_b02",
+        "r4_b03",
+        "r4_b07",
+        "r4_b14",
+        "r4_b09",
+        "r4_b20",
+        "r4_b17",
+        "r4_b12",
+        "r4_b25"
+      ],
+      "headline_candidates": [
+        "Twenty-Two Shots Before the Seventh",
+        "Meller's Morning Ends at the Fourth",
+        "Six Holes, Twenty-Two Shots Gone"
+      ],
+      "chosen_headline": "Twenty-Two Shots Before the Seventh",
+      "standfirst": "A sextuple-bogey 10 at the 4th was not even the whole of it, and the closing three holes cost Henry Meller nine more.",
+      "compelling_score": 7,
+      "humour_score": 9,
+      "descriptor": "HENRY MELLER"
+    },
+    {
+      "subject": "Stuart Neumann's 32 points, his best round of TEG 8, arriving on the one day it could no longer save him from the Wooden Spoon",
+      "why_it_matters": "Resolves the TEG 8 Wooden Spoon and does it with the right shape: Neumann's four rounds ran 17, 31, 20, 32, and the best of them came last. He still finished on 100, eleven behind Henry Meller, having halved a 22-point gap and got nowhere near closing it. Two quadruple-bogey 8s along the way, at the 5th and the 17th, plus consecutive pars at the 11th and 12th. From win_anatomy: last in the field in two of the four rounds, and even with an ordinary round in place of his worst he would still have taken the Spoon.",
+      "shape": "Neumann begins the last day 22 adrift at the bottom and plays, by some distance, his best golf of the week — a 12-point improvement on round three. Two 8s, at the 5th and the 17th, keep the improvement honest. He finishes with 32 points and the Wooden Spoon, the gap halved to eleven and the outcome never once in question.",
+      "beat_ids": [
+        "r4_b06",
+        "r4_b16",
+        "r4_b13",
+        "r4_b24"
+      ],
+      "headline_candidates": [
+        "Neumann's Best Round Wins Nothing",
+        "Halving a Gap That Never Mattered",
+        "Thirty-Two Points and the Spoon"
+      ],
+      "chosen_headline": "Neumann's Best Round Wins Nothing",
+      "standfirst": "Twelve points better than round three, and still eleven adrift of Henry Meller at the bottom of TEG 8.",
+      "compelling_score": 6,
+      "humour_score": 7,
+      "descriptor": "WOODEN SPOON"
+    }
+  ],
+  "race_state_note": "Gregg Williams led the Trophy at the end of all four rounds; the only lead that actually changed hands in TEG 8's final round did so at the 2nd, where David Mullin went past Jon Baker in the Jacket. Alex Baker finished Trophy runner-up while last on gross — normal handicapping, not a contradiction, and should not be framed as one.",
+  "storyline_note": "Final round, so the coronation sits in round_story rather than race_story: the best round of the day and the Trophy win belong to the same man, Gregg Williams. race_story therefore takes the losing vantage — Jon Baker, who surrendered the Jacket and second place in the Trophy on the same afternoon — and the Spoon is resolved in its own section."
+}

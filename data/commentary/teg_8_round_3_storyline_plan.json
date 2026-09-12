@@ -1,0 +1,117 @@
+{
+  "title": "History and Havoc at Quinta da Marinha",
+  "title_candidates": [
+    "History and Havoc at Quinta da Marinha",
+    "A New Record, An Old Lead Falls",
+    "Jon Baker Writes History, Mullin's Reign Ends"
+  ],
+  "theme": "A day that rewrote the course record book while dismantling a 36-hole Green Jacket lead and burying Stuart Neumann further into the Wooden Spoon cellar.",
+  "tone": "Wry record-book reverence undercut by comic devastation, treating a course record and a horror show with equal solemnity.",
+  "opening_hook": "Jon Baker walked off the 18th with a new Quinta da Marinha course record in his pocket; behind him, the leaderboard was still convulsing.",
+  "narrative_vehicles": [
+    "bookends",
+    "catalogue"
+  ],
+  "prominent_vehicle": "bookends",
+  "prominent_palette": "course_history",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Jon Baker's course-record 89 gross headlines the best round of the day at Quinta da Marinha",
+    "why_it_matters": "It is both the best Stableford return of the day (35) and the best gross return (18 shots over par), and it breaks the course record of 91 gross set across six prior TEG visits to Quinta da Marinha.",
+    "shape": "Jon Baker arrives at Quinta da Marinha three shots shy of his own prior best on the course; a bogey-free stretch through the 12th and 13th keeps him level for the Green Jacket lead and building momentum; he closes with 89 gross, a new course record, and the day's best Stableford score.",
+    "beat_ids": [
+      "cr01",
+      "r3_b29",
+      "r3_b30",
+      "r3_b34"
+    ],
+    "headline_candidates": [
+      "Jon Baker Rewrites the Marinha Record Book",
+      "A New Best for Jon Baker at Marinha",
+      "Jon Baker's 89 Sets the Standard"
+    ],
+    "chosen_headline": "Jon Baker Rewrites the Marinha Record Book",
+    "standfirst": "Jon Baker's 89 gross eclipses the previous Quinta da Marinha record of 91, and the 35 Stableford points that came with it were also the best return of the day.",
+    "compelling_score": 8,
+    "humour_score": 4,
+    "descriptor": "JON BAKER"
+  },
+  "race_story": {
+    "subject": "David Mullin's 36-hole Green Jacket lead ends at the very hole it began, while Gregg Williams' Trophy cushion is nearly halved",
+    "why_it_matters": "The Green Jacket lead changes hands for the first time since Round 1, and the Trophy leader survives the day but sees his margin cut from 11 to 5 with a round still to play.",
+    "shape": "Mullin arrives at the 13th still nominally in front of a 36-hole Jacket lead, and Williams comfortably clear atop the Trophy; Mullin's round collapses to his worst score to date, capped by trouble at the 12th and 13th, while Williams stumbles through a run from the 8th to the 11th including a ten; Jon Baker inherits the Jacket lead at the same hole Mullin first seized it, and Williams clings to top spot with his buffer cut to five.",
+    "beat_ids": [
+      "r3_b02",
+      "r3_b11",
+      "r3_b33",
+      "r3_b01",
+      "r3_b04",
+      "r3_b18",
+      "r3_b17",
+      "r3_b19"
+    ],
+    "headline_candidates": [
+      "Mullin's Long Reign Ends at the 13th",
+      "Two Leaders Wobble at Marinha",
+      "Jon Baker Ends Mullin's 36-Hole Reign"
+    ],
+    "chosen_headline": "Mullin's Long Reign Ends at the 13th",
+    "standfirst": "A 36-hole grip on the Green Jacket lead evaporates at the same hole it was won, and the Trophy leader's cushion is cut in half without losing top spot.",
+    "compelling_score": 8,
+    "humour_score": 3,
+    "descriptor": "SIDEBAR"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Stuart Neumann's round disintegrates into the day's worst score, stretching his Wooden Spoon gap to 22 points",
+      "why_it_matters": "A quintuple bogey at the 1st, a sextuple bogey at the 10th, and 17 shots bled across the first five holes combine for the worst Stableford (20) and worst gross score of the day, ballooning his last-place cushion from 8 to 22.",
+      "shape": "Neumann began the day only 8 points clear of the field's foot; a run of 17 dropped shots through the first five holes is followed by a sextuple-bogey ten at the 10th and a quintuple at the 9th; his 20-point return is the day's worst and the Wooden Spoon gap balloons to 22 with a round still to play.",
+      "beat_ids": [
+        "r3_b14",
+        "r3_b08",
+        "r3_b10",
+        "r3_b06",
+        "r3_b12",
+        "r3_b13",
+        "r3_b15",
+        "r3_b21",
+        "r3_b24"
+      ],
+      "headline_candidates": [
+        "Neumann's Spoon Grip Tightens Further",
+        "A Round to Forget for Neumann",
+        "Neumann Sinks Deeper Into Last"
+      ],
+      "chosen_headline": "Neumann's Spoon Grip Tightens Further",
+      "standfirst": "Five holes without a net par and two blow-up tens turn a modest overnight cushion into a 22-point gap at the bottom of the pile.",
+      "compelling_score": 7,
+      "humour_score": 6,
+      "descriptor": "WOODEN SPOON"
+    },
+    {
+      "subject": "Alex Baker survives a sextuple-bogey ten at the 8th to set a new personal best at Quinta da Marinha",
+      "why_it_matters": "Despite 13 shots dropped across holes 7 to 10 and a quadruple bogey at the 12th, a birdie at the 17th and a steadier finish deliver a course personal best of 111 gross, one shot inside his only prior visit.",
+      "shape": "Alex Baker opens with three straight triple bogeys through the 3rd to 5th; the round bottoms out with a sextuple-bogey ten at the 8th before a birdie at the 17th finally halts the bleeding; the wreckage still adds up to a new personal best at the course, one shot better than his prior visit.",
+      "beat_ids": [
+        "r3_b05",
+        "r3_b03",
+        "r3_b09",
+        "r3_b28",
+        "r3_b31",
+        "r3_b16"
+      ],
+      "headline_candidates": [
+        "Alex Baker's Ten Can't Stop a Personal Best",
+        "Wreckage and a New Best for Alex Baker",
+        "A Ten, A Birdie, A New Best"
+      ],
+      "chosen_headline": "Wreckage and a New Best for Alex Baker",
+      "standfirst": "Three straight triples and a sextuple-bogey ten still leave Alex Baker one shot better than his only previous visit to Quinta da Marinha.",
+      "compelling_score": 6,
+      "humour_score": 7,
+      "descriptor": "ALEX BAKER"
+    }
+  ],
+  "race_state_note": "David Mullin's Green Jacket lead had stood since the 13th hole of Round 1; it fell at the same hole, the 13th, in Round 3.",
+  "storyline_note": ""
+}

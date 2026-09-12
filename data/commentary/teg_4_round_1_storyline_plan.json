@@ -1,0 +1,93 @@
+{
+  "title": "No Bunkers, No Mercy",
+  "title_candidates": [
+    "No Bunkers, No Mercy",
+    "Ashdown Draws First Blood",
+    "Teeth of the Forest"
+  ],
+  "theme": "Royal Ashdown Forest's hazard-free heathland needs no bunkers to inflict carnage, scattering the field across three separate leaderboards on TEG's first visit to East Sussex.",
+  "tone": "wry, restrained, tongue-in-cheek British",
+  "opening_hook": "Royal Ashdown Forest has no bunkers at all, and still found a way to hand out a 12, two separate 9s and a nine-hole, 22-shot collapse before anyone had reached the turn for lunch.",
+  "narrative_vehicles": [
+    "ensemble",
+    "motif"
+  ],
+  "prominent_vehicle": "ensemble",
+  "prominent_palette": "venue_character",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Jon Baker's net 2 survives a quintuple bogey at the 14th to post the best Trophy score of the day",
+    "why_it_matters": "It is the best round of the day by the Trophy's own net-vs-par metric and hands Baker the outright lead after round one, even though his own eight-round TEG history rates it as one of his shakier net-to-par efforts.",
+    "shape": "Baker traded the outright net-vs-par lead back and forth all day, drawing level four separate times without ever pulling clear. A quintuple bogey at the par-4 14th then threatened to end the effort altogether. He answered immediately with back-to-back pars at the 15th and 16th, closing with the best net score in the field and sole control of the Trophy - a round that ranks as just his third-worst net-to-par performance in eight TEG rounds to date, whatever the leaderboard now says.",
+    "beat_ids": [
+      "r1_b02",
+      "r1_b15",
+      "r1_b23",
+      "r1_b24",
+      "r1_b29",
+      "r1_b36"
+    ],
+    "headline_candidates": [
+      "Baker Survives the Fourteenth",
+      "Level Five Times, Ahead Once",
+      "Baker's Nerve Holds at Ashdown"
+    ],
+    "chosen_headline": "Baker Survives the Fourteenth",
+    "standfirst": "A quintuple bogey threatened to sink him, but a brace of closing pars gave Jon Baker the best net score of the day and sole control of the TEG 4 Trophy.",
+    "compelling_score": 7,
+    "humour_score": 5,
+    "descriptor": "JON BAKER"
+  },
+  "race_story": {
+    "subject": "A fractured leaderboard after round one: David Mullin claims the Green Jacket lead on twin birdie recoveries while Henry Meller's 12 at the short 11th plants him at the bottom of the Wooden Spoon",
+    "why_it_matters": "It establishes the shape of the whole tournament from day one - no single player dominates across all three competitions, and the Spoon already looks close to settled in tone if not in fact.",
+    "shape": "The round's carnage scattered players across all three tables. Mullin, having briefly sat at the bottom of the Spoon race himself after a shaky start, answered with birdies at the 10th and 13th to drag himself into the Green Jacket lead on gross. Meanwhile Henry Meller's calamitous 12 at the par-3 11th - a hole-and-a-half worse than anyone else managed all day - left him rooted at the bottom of the Wooden Spoon by four shots, closing a round in which Baker led the Trophy, Mullin led the Jacket, and the course had the last word on everyone.",
+    "beat_ids": [
+      "r1_b01",
+      "r1_b13",
+      "r1_b18",
+      "r1_b19",
+      "r1_b16",
+      "r1_b20"
+    ],
+    "headline_candidates": [
+      "Two Leaders, One Ruthless Course",
+      "Mullin Answers, Meller Anchors",
+      "A Tale of Two Tables"
+    ],
+    "chosen_headline": "Two Leaders, One Ruthless Course",
+    "standfirst": "David Mullin's birdie recoveries hand him the Green Jacket lead even as Henry Meller's 12 at the short 11th buries him at the bottom of the Wooden Spoon.",
+    "compelling_score": 7,
+    "humour_score": 6,
+    "descriptor": "SIDEBAR"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Gregg Williams's day of whiplash: a fleeting outright Trophy lead off a birdie at the 8th collapses into a nine-hole, 22-shot bleed and the worst gross score of the round",
+      "why_it_matters": "It shows Ashdown's swings within a single round and leaves Williams already off the pace in both major competitions after round one, having anchored the Wooden Spoon race at three separate points along the way.",
+      "shape": "A horror opening - 13 shots dropped across holes 2 to 6, including a quadruple bogey at the 4th - left Williams anchoring the Spoon early. A birdie at the 8th snapped the run and, remarkably, handed him the outright Trophy lead. The reprieve lasted three holes: a 22-shot collapse over the closing nine, including a five-hole stretch without a single net par, dropped him to the day's worst gross score and out of contention in both competitions.",
+      "beat_ids": [
+        "r1_b03",
+        "r1_b04",
+        "r1_b08",
+        "r1_b09",
+        "r1_b10",
+        "r1_b11",
+        "r1_b12",
+        "r1_b17"
+      ],
+      "headline_candidates": [
+        "Williams Leads, Then Loses Everything",
+        "Twenty-Two Shots of Regret",
+        "One Birdie, Then Freefall"
+      ],
+      "chosen_headline": "One Birdie, Then Freefall",
+      "standfirst": "A single birdie briefly put Gregg Williams top of the Trophy table before a 22-shot collapse over the closing nine buried the round for good.",
+      "compelling_score": 7,
+      "humour_score": 7,
+      "descriptor": "GREGG WILLIAMS"
+    }
+  ],
+  "race_state_note": "With four rounds still to play and TEG 4 only just under way, none of these gaps - three shots atop the Trophy, three atop the Jacket, four clear at the bottom of the Spoon - amount to more than a first-day skirmish.",
+  "storyline_note": ""
+}

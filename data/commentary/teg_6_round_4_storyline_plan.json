@@ -1,0 +1,99 @@
+{
+  "title": "Baker Leads Both, Loses Both",
+  "title_candidates": [
+    "Baker Leads Both, Loses Both",
+    "The Ninth Hole Undoes Everything",
+    "Two Trophies, Nine Holes, No Wins"
+  ],
+  "theme": "A wild final round on a brand-new course sees Jon Baker hold both the Trophy and the Jacket at once, then lose both inside two holes.",
+  "tone": "farcical escalation with an undercurrent of sympathy — trivial stakes treated as high tragedy",
+  "opening_hook": "For a few minutes either side of the turn at Camiral, Jon Baker held both the TEG 6 Trophy and the TEG 6 Green Jacket. By the time he reached the 9th tee he had neither.",
+  "narrative_vehicles": [
+    "tragic_arc",
+    "counterfactual",
+    "dual_narrative"
+  ],
+  "prominent_vehicle": "tragic_arc",
+  "prominent_palette": "decisive_moment",
+  "is_final_round": true,
+  "round_story": {
+    "subject": "David Mullin's rollercoaster card at Camiral",
+    "why_it_matters": "On the field's first look at PGA Catalunya's Stadium Course, Mullin posted both the best net and best gross rounds of the day — and it was enough, despite a shaky close, to settle the Green Jacket.",
+    "shape": "A ragged start (bogey, double bogey, and a quadruple at the 5th) is halted by a birdie at the 4th, then three straight pars from the 8th vault him into the Green Jacket lead outright. A cold spell from the 14th to the 16th lets Jon Baker draw level again at the 16th, but Mullin's earlier work holds up and his card stands as the best of the day.",
+    "beat_ids": [
+      "r4_b24",
+      "r4_b13",
+      "r4_b17",
+      "r4_b27",
+      "r4_b14",
+      "r4_b15",
+      "r4_b16",
+      "r4_b33"
+    ],
+    "headline_candidates": [
+      "Mullin Grinds Out the Jacket Lead",
+      "A New Course, A New Leader",
+      "Mullin's Rollercoaster Rules the Day"
+    ],
+    "chosen_headline": "Mullin Grinds Out the Jacket Lead",
+    "standfirst": "David Mullin's card was the best of the day even with a wobble at the death, and it ended Jon Baker's grip on the TEG 6 Green Jacket.",
+    "compelling_score": 8,
+    "humour_score": 5,
+    "descriptor": "DAVID MULLIN"
+  },
+  "race_story": {
+    "subject": "Jon Baker's two-competition collapse, and the survivors either side of him",
+    "why_it_matters": "This was the final round: it settled the TEG 6 Trophy, the TEG 6 Green Jacket and the TEG 6 Wooden Spoon in one afternoon, and the pivotal action came in a two-hole spasm that cost one man both prizes at once.",
+    "shape": "Jon Baker began the day trailing the Trophy by 8 and leading the Jacket by 1, then went further ahead still — up to 4 clear in the Jacket race and outright in front for the Trophy at the 7th, ending Gregg Williams's 59-hole reign. Two holes later a sextuple-bogey 10 at the 9th handed the Trophy straight back to Williams, while David Mullin's own surge did the same to the Jacket. Williams then survived a horror closing stretch of his own to close out his second Trophy by 5; Mullin's card held to take a fourth Green Jacket by 4; and Henry Meller's grim final round, opening with a quintuple bogey at the 1st, confirmed a third Wooden Spoon as the gap behind him nearly doubled to 17.",
+    "beat_ids": [
+      "r4_b02",
+      "r4_b25",
+      "r4_b01",
+      "r4_b30",
+      "r4_b23",
+      "r4_b09",
+      "r4_b05",
+      "r4_b04",
+      "r4_b27",
+      "r4_b33",
+      "r4_b28",
+      "r4_b31",
+      "r4_b34"
+    ],
+    "headline_candidates": [
+      "Baker Leads Both, Wins Neither",
+      "Nine Holes Undo Both Titles",
+      "The Turn That Cost Everything"
+    ],
+    "chosen_headline": "Baker Leads Both, Wins Neither",
+    "standfirst": "Gregg Williams survives his own horror finish to retain the Trophy and Henry Meller's dismal round confirms a third Wooden Spoon, but the afternoon belongs to Jon Baker's remarkable two-competition unravelling.",
+    "compelling_score": 9,
+    "humour_score": 6,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Stuart Neumann's front-nine disaster and late recovery",
+      "why_it_matters": "A four-hole horror stretch threatened to bury Neumann's Trophy hopes for the round entirely, before a much steadier finish clawed most of the damage back.",
+      "shape": "A quintuple bogey at the 3rd opens a run of four holes without a net par, dropping Neumann to 16 shots off the Trophy pace at his worst point. The back nine brought no further big numbers, and by the 18th he had hauled the gap back to 9, salvaging a respectable finish from what had briefly threatened to be a rout.",
+      "beat_ids": [
+        "r4_b03",
+        "r4_b08",
+        "r4_b10",
+        "r4_b12"
+      ],
+      "headline_candidates": [
+        "Neumann's Great Escape",
+        "From Sixteen Back to Nine",
+        "Neumann Claws His Way Clear"
+      ],
+      "chosen_headline": "Neumann's Great Escape",
+      "standfirst": "A quintuple bogey at the 3rd looked like it might define Stuart Neumann's day; instead a composed back nine hauled him back into the picture.",
+      "compelling_score": 6,
+      "humour_score": 5,
+      "descriptor": "STUART NEUMANN"
+    }
+  ],
+  "race_state_note": "No double this TEG: Gregg Williams takes the Trophy (his second) and David Mullin the Jacket (his fourth) separately; Henry Meller's third Wooden Spoon is now settled with a 17-shot cushion over the next worst.",
+  "storyline_note": "Final round: race_story leads as the coronation piece; round_story runs second, built around Mullin's card rather than re-covering the Jacket melodrama already told from Baker's side in race_story."
+}

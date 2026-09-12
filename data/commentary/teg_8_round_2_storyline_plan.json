@@ -1,0 +1,105 @@
+{
+  "title": "Penha Longa Draws First Blood",
+  "title_candidates": [
+    "Penha Longa Draws First Blood",
+    "The Beast of Sintra Bites Back",
+    "Sixteenth Hole, Six Casualties"
+  ],
+  "theme": "A brutal, unfamiliar mountain course exposes the whole field at Penha Longa, but Gregg Williams's rollercoaster round still comes out on top.",
+  "tone": "Wry, subverted gravitas: golfing carnage on a cliff-top course treated with the solemnity of a natural disaster, British understatement throughout.",
+  "opening_hook": "Six players arrived at Sintra's cliff-top monster having never seen a blade of it before; by the close, three of them had a horror story from the same hole.",
+  "narrative_vehicles": [
+    "catalogue",
+    "ensemble"
+  ],
+  "prominent_vehicle": "catalogue",
+  "prominent_palette": "venue_character",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Gregg Williams's round of the day: a stellar 41 points bookended by two separate horror stretches",
+    "why_it_matters": "This was the best Stableford return of the day in the TEG 8 Trophy race, extending Gregg Williams's overnight lead, though the round itself - a quintuple-bogey 10 at the 12th sandwiched between two cold stretches - shows the best score of the day was still earned the hard way at an unfamiliar course.",
+    "shape": "Gregg Williams opens with two untouched holes through the turn, then implodes for nine shots across 11-13 including a quintuple-bogey 10 at the par-5 12th. He bleeds another seven shots in three holes late on, yet still returns the best Stableford card of the round, stretching his TEG 8 Trophy lead from four points to eleven.",
+    "beat_ids": [
+      "r2_b06",
+      "r2_b16",
+      "r2_b17",
+      "r2_b18",
+      "r2_b01"
+    ],
+    "headline_candidates": [
+      "The Best Round Nobody Enjoyed",
+      "Williams Survives a Ten to Lead",
+      "Forty-One Points, One Almighty Blip"
+    ],
+    "chosen_headline": "The Best Round Nobody Enjoyed",
+    "standfirst": "Gregg Williams's card ran hot, cold, catastrophic and hot again, yet still topped the field by some distance.",
+    "compelling_score": 7,
+    "humour_score": 6,
+    "descriptor": "GREGG WILLIAMS"
+  },
+  "race_story": {
+    "subject": "David Mullin stretches his Green Jacket lead as Alex Baker's back-nine implosion drags him to the rear of the pack",
+    "why_it_matters": "The TEG 8 Green Jacket race had tightened to a single point after round one, but David Mullin's immaculate approach play - untouched by a dropped shot through six and seven - pushed his overnight cushion out to six, while Alex Baker's closing quadruple-bogeys at the 16th and 18th left him needing a big response in the final two rounds.",
+    "shape": "David Mullin goes two holes without losing a shot through the turn to build his round around, quietly extending a lead he held by just one stroke overnight. Behind him, Alex Baker's finish disintegrates - quadruple bogeys at both the 16th and 18th - and by the close he sits at the back of the Jacket field rather than in touch at the front.",
+    "beat_ids": [
+      "r2_b12",
+      "r2_b04",
+      "r2_b07",
+      "r2_b19"
+    ],
+    "headline_candidates": [
+      "Mullin Extends His Green Jacket Cushion",
+      "Alex Baker's Back Nine Blows It Open",
+      "Mullin Pulls Clear in the Jacket Race"
+    ],
+    "chosen_headline": "Mullin Extends His Green Jacket Cushion",
+    "standfirst": "A near-flawless run through the turn set up David Mullin's biggest lead of the week, just as Alex Baker's finish unravelled behind him.",
+    "compelling_score": 7,
+    "humour_score": 5,
+    "descriptor": "GREEN JACKET"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Penha Longa's par-4 16th, stroke index one, claims three separate blow-ups in the same round",
+      "why_it_matters": "On its first appearance in the TEG rota, Penha Longa's toughest hole announced itself brutally - Henry Meller, Stuart Neumann and Alex Baker all card quintuple- or quadruple-bogeys there, an early clue to just how unforgiving the Sintra hills can be for a raw TEG field.",
+      "shape": "The field arrives at Penha Longa for the first time with no course history to draw on. By the 16th tee, three different players in turn come to grief - two nines and an eight - on the hardest hole on the card. The 16th cements itself instantly as the defining hazard of the round.",
+      "beat_ids": [
+        "r2_b02",
+        "r2_b03",
+        "r2_b05"
+      ],
+      "headline_candidates": [
+        "Penha Longa's Sixteenth Draws Blood",
+        "The 16th Announces Itself Brutally",
+        "Three Wrecks at the Same Hole"
+      ],
+      "chosen_headline": "Penha Longa's Sixteenth Draws Blood",
+      "standfirst": "Index one on the card, and it played like it, with three of the six-strong field coming to grief at the same hole.",
+      "compelling_score": 7,
+      "humour_score": 6,
+      "descriptor": "PENHA LONGA"
+    },
+    {
+      "subject": "Stuart Neumann's recovery narrows the Wooden Spoon gap, with Henry Meller's rough finish closing fast",
+      "why_it_matters": "Stuart Neumann began the day twelve points clear of anyone at the bottom of the TEG 8 Trophy standings; a second-round recovery of fourteen points was not enough to shake off Henry Meller, whose own horror stretch from the 11th to the 14th pulled the gap down to eight, keeping alive genuine jeopardy for the TEG 8 Wooden Spoon.",
+      "shape": "Stuart Neumann follows a ruinous opening round with a fourteen-point improvement, the kind of swing that should ease the pressure at the foot of the table. Instead, Henry Meller's own collapse - four holes without a net par - drags him back towards the bottom, and the gap that looked settled at twelve shrinks to eight.",
+      "beat_ids": [
+        "r2_b13",
+        "r2_b10",
+        "r2_b11"
+      ],
+      "headline_candidates": [
+        "The Wooden Spoon Race Tightens",
+        "Meller Closes In at the Bottom",
+        "Neumann Still Last, But Not by Much"
+      ],
+      "chosen_headline": "The Wooden Spoon Race Tightens",
+      "standfirst": "A stronger round from Stuart Neumann should have eased the pressure at the foot of the table, but Henry Meller's own struggles kept the gap shrinking instead.",
+      "compelling_score": 6,
+      "humour_score": 6,
+      "descriptor": "WOODEN SPOON | STUART NEUMANN"
+    }
+  ],
+  "race_state_note": "Gregg Williams's stellar round pushed his TEG 8 Trophy lead out from four to eleven, while at the bottom the Wooden Spoon gap shrank from twelve to eight as Henry Meller closed in on Stuart Neumann.",
+  "storyline_note": ""
+}

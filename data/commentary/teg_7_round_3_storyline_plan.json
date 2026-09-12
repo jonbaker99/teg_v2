@@ -1,0 +1,91 @@
+{
+  "title": "Royal Óbidos Draws Blood On Debut",
+  "title_candidates": [
+    "Royal Óbidos Draws Blood On Debut",
+    "Seve's Last Course Bites Back",
+    "The Field Meets Its Match At Óbidos"
+  ],
+  "theme": "A brutal, beautiful debut for Seve Ballesteros's final design, which punished every player with at least one big number and reshuffled the Green Jacket race in the process.",
+  "tone": "Wry and restrained, treating a viciously difficult new course like an act of aggression against six blameless amateurs.",
+  "opening_hook": "Royal Óbidos, Seve Ballesteros's last design and TEG's first visit to the Lisbon Coast, greeted the field with water, wind and rather too many testing greens, and left not one of the six players unscathed.",
+  "narrative_vehicles": [
+    "ensemble",
+    "catalogue"
+  ],
+  "prominent_vehicle": "ensemble",
+  "prominent_palette": "venue_character",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Gregg Williams survives two big numbers to post the best round of the day at Royal Óbidos",
+    "why_it_matters": "It was, by the numbers, the best round anyone managed on the course's difficult debut — proof that survival, not smoothness, was the currency of the day.",
+    "shape": "Gregg Williams arrived mid-pack in the Trophy race and immediately found trouble, a quadruple bogey at the 4th followed later by a quintuple bogey at the 14th. Between and around the carnage he strung together two hot stretches, gaining four shots on par over the 1st to 3rd and six more from the 7th to the 10th, with a recovery birdie at the 8th breaking a bad run. The net result was -4 for the round, the best net score anyone in the field could manage on the day.",
+    "beat_ids": [
+      "r3_b06",
+      "r3_b01",
+      "r3_b08",
+      "r3_b10",
+      "r3_b18",
+      "r3_b26"
+    ],
+    "headline_candidates": [
+      "Williams Turns Carnage Into Best Round",
+      "Two Blow-Ups Still Produce Best Round",
+      "Gregg Williams Rides The Óbidos Rollercoaster"
+    ],
+    "chosen_headline": "Williams Turns Carnage Into Best Round",
+    "standfirst": "A quintuple bogey at the 14th and a quadruple bogey at the 4th did nothing to stop Gregg Williams carding the best net score of the day at Royal Óbidos.",
+    "compelling_score": 7,
+    "humour_score": 7,
+    "descriptor": "GREGG WILLIAMS"
+  },
+  "race_story": {
+    "subject": "David Mullin retakes the Green Jacket lead as Henry Meller's back nine unravels",
+    "why_it_matters": "The Green Jacket race swung for the first time since round one, while the Trophy gap blew out to its widest margin yet — the two competitions moving in opposite directions off the same round.",
+    "shape": "Henry Meller began the day three clear in the Green Jacket and eleven up in the Trophy, both leads looking secure. Drawing level for the Jacket at the 14th proved a false dawn: a triple, double, triple and double from the 15th sent him backwards, and David Mullin, level for the lead twice already that day, went through for good. The net effect of the round: Meller's Trophy cushion widened to 15 as his closest rivals fell even further away, but his Green Jacket lead is gone.",
+    "beat_ids": [
+      "r3_b16",
+      "r3_b11",
+      "r3_b13",
+      "r3_b22",
+      "r3_b14",
+      "r3_b20",
+      "r3_b28",
+      "r3_b19"
+    ],
+    "headline_candidates": [
+      "Mullin Reclaims The Green Jacket Lead",
+      "Meller's Back Nine Costs Him The Jacket",
+      "Mullin Retakes Jacket As Meller Fades"
+    ],
+    "chosen_headline": "Mullin Retakes Jacket As Meller Fades",
+    "standfirst": "Three lead changes in the Gross competition were settled when Henry Meller dropped ten shots across the closing four holes, handing David Mullin a three-shot cushion.",
+    "compelling_score": 8,
+    "humour_score": 5,
+    "descriptor": "GREEN JACKET"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Jon Baker's Trophy challenge collapses in three holes",
+      "why_it_matters": "He was the only realistic Trophy pursuer overnight; two holes at Royal Óbidos ended that pursuit and reshuffled the chasing pack behind Henry Meller.",
+      "shape": "Jon Baker arrived at Royal Óbidos just 11 shots off Henry Meller's Trophy lead, the nearest thing to a rival. A quintuple bogey ten at the 2nd was followed immediately by a quadruple bogey seven at the 3rd, five shots gone to par in as many holes. Two clean pars at the 7th and 8th arrived too late to repair the damage, and he finished the day tied for third, his round the worst net score of anyone in the field.",
+      "beat_ids": [
+        "r3_b04",
+        "r3_b07",
+        "r3_b21",
+        "r3_b24"
+      ],
+      "headline_candidates": [
+        "Two Holes Wreck Jon Baker's Charge",
+        "Jon Baker's Trophy Bid Falls Apart",
+        "Disaster Strikes Early For Jon Baker"
+      ],
+      "chosen_headline": "Two Holes Wreck Jon Baker's Charge",
+      "standfirst": "Ten at the par-five 2nd and seven at the 3rd turned Jon Baker's overnight position as closest Trophy challenger into a share of third place, 17 shots off Henry Meller's lead.",
+      "compelling_score": 7,
+      "humour_score": 6,
+      "descriptor": "JON BAKER"
+    }
+  ],
+  "race_state_note": "Henry Meller's Trophy cushion widened to 15 net shots not through his own play but via Jon Baker and Stuart Neumann's collapses; Alex Baker's Wooden Spoon gap more than doubled to seven after a blow-up at the 6th and a bruising stretch from the 9th to the 12th.",
+  "storyline_note": ""
+}

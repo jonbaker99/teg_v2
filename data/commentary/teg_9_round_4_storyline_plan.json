@@ -1,0 +1,116 @@
+{
+  "title": "Praia D'El Rey Settles All Three Prizes",
+  "title_candidates": [
+    "Praia D'El Rey Settles All Three Prizes",
+    "Level, Then Lost: The Final Round",
+    "Mullin Sweeps, Patterson Survives"
+  ],
+  "theme": "A final round in which two of three prizes had been quietly decided for days, and the third briefly went level before swinging back inside four holes.",
+  "tone": "wry, understated, faithful to the numbers",
+  "opening_hook": "By the turn at Praia D'El Rey the TEG 9 Trophy had gone level for the first time all week — and by the 17th it very much hadn't.",
+  "narrative_vehicles": [
+    "tragic_arc",
+    "redemption_arc",
+    "inevitability"
+  ],
+  "prominent_vehicle": "tragic_arc",
+  "prominent_palette": "decisive_moment",
+  "is_final_round": true,
+  "round_story": {
+    "subject": "John Patterson's closing 47 stableford points, the best round of the final day",
+    "why_it_matters": "Three days after a poor round had let his lead shrink, Patterson answered with the tournament's best round of golf to close out the TEG 9 Trophy.",
+    "shape": "Patterson had stumbled to 34 points in round three, bottom half of the field and his lead down to three; he responded with a composed 47 in the final round, surviving a quintuple-bogey nine at the 5th to keep scoring throughout; the round stands as the day's best and the second-best of his brief four-round TEG career.",
+    "beat_ids": [
+      "r4_b16",
+      "r4_b17",
+      "r4_b21",
+      "r4_b23",
+      "r4_b08"
+    ],
+    "headline_candidates": [
+      "Patterson's Final-Round Redemption",
+      "Best Round Of A Nervy Day",
+      "Patterson Turns It Around Fast"
+    ],
+    "chosen_headline": "Patterson's Final-Round Redemption",
+    "standfirst": "Three days after a wobble dropped him into the bottom half of the field, John Patterson produced the best round of the week when it mattered most.",
+    "compelling_score": 7,
+    "humour_score": 4,
+    "descriptor": "JOHN PATTERSON"
+  },
+  "race_story": {
+    "subject": "Alex Baker's brief level lead for the TEG 9 Trophy, undone by a back-nine collapse",
+    "why_it_matters": "This was the only genuinely live race of the final round: Alex Baker produced personal bests in both formats and drew level for the Trophy, only for four ruinous holes to hand it straight back to John Patterson.",
+    "shape": "Alex Baker arrived three points behind Patterson and playing the steadiest golf of the week; a string of pars drew him level for the Trophy lead at the 14th, but quadruple bogeys followed almost immediately at the 15th and 6th as part of an 11-shot bleed across holes 14-17; Patterson's own 47 closed the door, and Baker finishes runner-up by six despite a personal-best round.",
+    "beat_ids": [
+      "r4_b25",
+      "r4_b01",
+      "r4_b02",
+      "r4_b18",
+      "r4_b04",
+      "r4_b06",
+      "r4_b09",
+      "r4_b14"
+    ],
+    "headline_candidates": [
+      "Level, Then Lost By Six",
+      "Baker's Best Round Not Enough",
+      "Level At The Turn, Undone Late"
+    ],
+    "chosen_headline": "Level, Then Lost By Six",
+    "standfirst": "A career-best card from Alex Baker briefly squared the TEG 9 Trophy race before four calamitous holes handed it straight back to John Patterson.",
+    "compelling_score": 9,
+    "humour_score": 6,
+    "descriptor": "ALEX BAKER | JOHN PATTERSON"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "David Mullin's wire-to-wire TEG 9 Green Jacket, sealed with the best gross round of the day",
+      "why_it_matters": "Mullin won every round of the week outright, extended his lead from seven to ten shots, and closed it out with the best gross score of the final round.",
+      "shape": "Mullin arrived with a healthy Jacket lead already built on three round wins; an early quadruple bogey at the 1st threatened to open a door, but tidy pars through holes 2-4 and 7-9 restored order; he closes with a 16-over final round, the best gross score of the day, to complete a sweep in which he never finished worse than first.",
+      "beat_ids": [
+        "r4_b10",
+        "r4_b11",
+        "r4_b12",
+        "r4_b15",
+        "r4_b20",
+        "r4_b14"
+      ],
+      "headline_candidates": [
+        "Mullin Completes A Clean Sweep",
+        "Four From Four For Mullin",
+        "Mullin's Immaculate Jacket Defence"
+      ],
+      "chosen_headline": "Mullin Completes A Clean Sweep",
+      "standfirst": "David Mullin's final-round 16-over capped a Green Jacket campaign in which he was never beaten in a single round all week.",
+      "compelling_score": 7,
+      "humour_score": 3,
+      "descriptor": "GREEN JACKET"
+    },
+    {
+      "subject": "Stuart Neumann's rollercoaster final round confirms the TEG 9 Wooden Spoon",
+      "why_it_matters": "A five-hole purple patch in the middle of the round briefly threatened an escape from the bottom of the table, but the closing holes made sure of the Spoon by a comfortable 16 shots.",
+      "shape": "Neumann began the day already anchoring the table, 15 adrift of safety; he produced his best stretch of the week, 16 stableford points across holes 11-15, without dropping a gross shot; a quadruple bogey at the 16th and a further eight-shot bleed over the closing holes undid the recovery, and he finishes last by 16, almost exactly as he started the day.",
+      "beat_ids": [
+        "r4_b05",
+        "r4_b07",
+        "r4_b19",
+        "r4_b22",
+        "r4_b26",
+        "r4_b27"
+      ],
+      "headline_candidates": [
+        "Neumann's Rally Comes Too Late",
+        "A Flash Of Form, Then Ruin",
+        "Neumann Closes Out Last Place"
+      ],
+      "chosen_headline": "Neumann's Rally Comes Too Late",
+      "standfirst": "A blistering five-hole stretch in the middle of the round threatened an escape from the bottom of the TEG 9 standings, but the closing holes made sure of the Wooden Spoon regardless.",
+      "compelling_score": 7,
+      "humour_score": 6,
+      "descriptor": "WOODEN SPOON"
+    }
+  ],
+  "race_state_note": "The Green Jacket and Wooden Spoon placings had been effectively settled for days; only the Trophy's destination was genuinely live going into the last round.",
+  "storyline_note": ""
+}

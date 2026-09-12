@@ -1,0 +1,109 @@
+{
+  "title": "A New Best, A New Worst At Royal Óbidos",
+  "title_candidates": [
+    "A New Best, A New Worst At Royal Óbidos",
+    "Mullin's Masterclass, Baker's Nightmare",
+    "Extremes Define Day One In Portugal"
+  ],
+  "theme": "Round one delivers a course record at one end of the field and a course-worst at the other, with Jon Baker grabbing an early Trophy edge in between.",
+  "tone": "Wry, exact, savouring the gap between virtuosity and catastrophe.",
+  "opening_hook": "On Seve Ballesteros's final design, on the same afternoon and over the same eighteen holes, David Mullin played the best round anyone has shot at Royal Óbidos and Alex Baker played the worst.",
+  "narrative_vehicles": [
+    "ensemble",
+    "catalogue"
+  ],
+  "prominent_vehicle": "ensemble",
+  "prominent_palette": "venue_character",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "David Mullin's course-record 87 gross at Royal Óbidos in the TEG 9 first round",
+    "why_it_matters": "It rewrites the course record book at a venue the field has visited only once before, and doubles as his opening move in the Green Jacket race.",
+    "shape": "Setup: on only his second visit to Royal Óbidos, David Mullin settles into a tidy, mistake-free rhythm. Turn: a three-hole stretch from the 13th to the 15th without dropping a shot carries him to the brink of the course record. Resolution: he closes with a 6 at the 18th good enough to seal 87 gross, three shots inside the previous best of 90 set in TEG 7.",
+    "beat_ids": [
+      "cr01",
+      "r1_b17",
+      "r1_b22",
+      "r1_b26"
+    ],
+    "headline_candidates": [
+      "Mullin Rewrites Royal Óbidos's Record Book",
+      "A Record Round For The Books",
+      "Mullin Sets New Óbidos Standard"
+    ],
+    "chosen_headline": "Mullin Rewrites Royal Óbidos's Record Book",
+    "standfirst": "A three-hole stretch without dropping a shot carried David Mullin to the lowest gross score ever recorded at Seve Ballesteros's Lisbon Coast design.",
+    "compelling_score": 9,
+    "humour_score": 4,
+    "descriptor": "DAVID MULLIN"
+  },
+  "race_story": {
+    "subject": "Jon Baker's one-point Trophy lead and Stuart Neumann's early anchor in the Wooden Spoon after round one of TEG 9",
+    "why_it_matters": "It sets the shape of the week to come, establishing who is chasing whom across all three competitions with three rounds still to play.",
+    "shape": "Setup: the Trophy lead changes hands three times through the front nine, passing between Gregg Williams, John Patterson and Jon Baker. Turn: Jon Baker's card holds firmest, closing on 39 Stableford points, one clear of David Mullin and John Patterson. Resolution: at the other end, Stuart Neumann's back nine bleeds 16 shots and leaves him marooned eight points clear of the rest at the foot of the Wooden Spoon table.",
+    "beat_ids": [
+      "r1_b16",
+      "r1_b35",
+      "r1_b36",
+      "r1_b12",
+      "r1_b23"
+    ],
+    "headline_candidates": [
+      "Jon Baker Edges Ahead, Neumann Cut Adrift",
+      "One Point Splits An Early Pack",
+      "Neumann Left Marooned After Day One"
+    ],
+    "chosen_headline": "Jon Baker Edges Ahead, Neumann Cut Adrift",
+    "standfirst": "The Stableford lead changed hands three times before settling on Jon Baker, while Stuart Neumann's ragged back nine put him eight clear of the rest at the wrong end of the table.",
+    "compelling_score": 7,
+    "humour_score": 5,
+    "descriptor": "SIDEBAR"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Alex Baker's 115 gross, a new Royal Óbidos course-worst and his own poorest round on record",
+      "why_it_matters": "It sets an unwanted new low for the course itself, on top of being the worst round of Alex Baker's own nine-round TEG career.",
+      "shape": "Setup: a quadruple bogey at the 2nd puts Alex Baker on the back foot early. Turn: matters spiral with a quintuple at the 12th and a calamitous septuple-bogey 11 at the 14th. Resolution: he signs for 115, a new course-worst beating the prior mark of 108, and drops to the bottom of the Wooden Spoon table along the way.",
+      "beat_ids": [
+        "cr02",
+        "r1_b01",
+        "r1_b02",
+        "r1_b07",
+        "r1_b04",
+        "r1_b11"
+      ],
+      "headline_candidates": [
+        "Alex Baker Writes Óbidos's Darkest Chapter",
+        "A New Low At Royal Óbidos",
+        "Alex Baker's Card Falls Apart"
+      ],
+      "chosen_headline": "Alex Baker Writes Óbidos's Darkest Chapter",
+      "standfirst": "Three blow-up holes, including an 11 at the 14th, left Alex Baker with the highest gross score the course has recorded in six TEG visits.",
+      "compelling_score": 8,
+      "humour_score": 7,
+      "descriptor": "ALEX BAKER"
+    },
+    {
+      "subject": "John Patterson's TEG debut at Royal Óbidos, a brief Trophy lead undone almost as soon as it began by a sextuple bogey",
+      "why_it_matters": "It introduces the field's newest competitor and shows him nearly seizing outright control of the Trophy race on his very first appearance.",
+      "shape": "Setup: playing his first-ever TEG round, John Patterson starts steadily. Turn: a sextuple-bogey 10 at the notoriously tough 4th threatens to derail him, yet he claws outright ahead of the Trophy field at the 5th. Resolution: a closing birdie at the 17th keeps him within a point of the overnight leaders on debut.",
+      "beat_ids": [
+        "r1_b10",
+        "r1_b35",
+        "r1_b34",
+        "r1_b18"
+      ],
+      "headline_candidates": [
+        "Patterson's Debut Survives A Nightmare Hole",
+        "A Sextuple Bogey, Then A Lead",
+        "Patterson Announces Himself In Style"
+      ],
+      "chosen_headline": "Patterson's Debut Survives A Nightmare Hole",
+      "standfirst": "A sextuple bogey at the notoriously difficult 4th did nothing to stop John Patterson taking the outright Trophy lead an hour later, on his first appearance in the tournament.",
+      "compelling_score": 7,
+      "humour_score": 6,
+      "descriptor": "JOHN PATTERSON"
+    }
+  ],
+  "race_state_note": "This is round one of four; today's positions are only a starting point, with three rounds still to shape the Trophy, Jacket and Spoon outcomes.",
+  "storyline_note": ""
+}

@@ -1,0 +1,115 @@
+{
+  "title": "Records Fall Both Ways at Estoril",
+  "title_candidates": [
+    "Records Fall Both Ways at Estoril",
+    "A New Best, A New Worst, One Trophy",
+    "History Written in Both Directions at Estoril"
+  ],
+  "theme": "The final round produced history at both extremes — a new course record and a new course-worst — while the trophy races, already settled for days, merely confirmed themselves.",
+  "tone": "wry, exact, alert to the gap between the stakes and the solemnity with which they are treated",
+  "opening_hook": "Estoril's record book needed rewriting twice on Tuesday: once at the top, once at the bottom, and in between Stuart Neumann quietly collected the only trophy that was ever actually in question.",
+  "narrative_vehicles": [
+    "bookends",
+    "origin",
+    "motif"
+  ],
+  "prominent_vehicle": "bookends",
+  "prominent_palette": "records",
+  "is_final_round": true,
+  "round_story": {
+    "subject": "David Mullin's course-record 80 at Estoril",
+    "why_it_matters": "It was comfortably the best round any of the five played all week, the third-best Stableford round of Mullin's entire TEG career, and the new outright course record at Estoril — arriving a day after the Green Jacket race had already been settled.",
+    "shape": "Coming off his worst round of the week, Mullin opened with a birdie at the 2nd, then reeled off three separate stretches without dropping a shot around the turn and down the closing holes. He signed for 80 gross, six shots inside the previous Estoril record of 86 and fourteen better than his own prior best there, for 45 Stableford points, the best of the day. It changed nothing on the leaderboard, but it will be the number anyone who plays Estoril next has to beat.",
+    "beat_ids": [
+      "cr01",
+      "r4_b10",
+      "r4_b02",
+      "r4_b04",
+      "r4_b07",
+      "r4_b11",
+      "r4_b16"
+    ],
+    "headline_candidates": [
+      "Mullin Breaks the Estoril Record",
+      "A New Estoril Best, By Six",
+      "Mullin's 80 Rewrites the Course Book"
+    ],
+    "chosen_headline": "Mullin Breaks the Estoril Record",
+    "standfirst": "The card of the week arrived a round too late to trouble either trophy race.",
+    "compelling_score": 8,
+    "humour_score": 4,
+    "descriptor": "DAVID MULLIN"
+  },
+  "race_story": {
+    "subject": "Stuart Neumann's first Trophy, sealed under pressure",
+    "why_it_matters": "Neumann led the TEG 16 Trophy from round one to round four without ever relinquishing it, and this is the first Trophy of his TEG career after four days out in front.",
+    "shape": "Needing only to avoid disaster, Neumann instead ran up a quintuple bogey at the par-four 8th and bled nine shots across the three holes either side of it. He steadied to post 43 points, the second-best round of the day, and though Gregg Williams matched him stroke for stroke all week, the gap only widened, from 12 to 13.",
+    "beat_ids": [
+      "r4_b05",
+      "r4_b23",
+      "r4_b25",
+      "r4_b26"
+    ],
+    "headline_candidates": [
+      "Neumann Completes a Wire-to-Wire Trophy",
+      "Neumann's First Trophy, Never in Doubt",
+      "Neumann Holds On for a Maiden Trophy"
+    ],
+    "chosen_headline": "Neumann Wins His First TEG Trophy",
+    "standfirst": "He led from round one, survived a quintuple bogey at the 8th, and still carded the round's second-best score.",
+    "compelling_score": 8,
+    "humour_score": 5,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Gregg Williams retains and extends the Green Jacket",
+      "why_it_matters": "Confirms Williams's second TEG 16 Green Jacket after leading the competition through all four rounds, a genuinely wire-to-wire campaign.",
+      "shape": "Williams carried an untroubled Jacket lead into the final round and played to it, stringing together five clean stretches of pars either side of the turn for a share of the day's best gross score. A quadruple bogey at the 14th and a double bogey at the 9th were his only blots, and neither dented a lead that grew from 14 to 16 over David Mullin.",
+      "beat_ids": [
+        "r4_b01",
+        "r4_b03",
+        "r4_b08",
+        "r4_b09",
+        "r4_b13",
+        "r4_b14"
+      ],
+      "headline_candidates": [
+        "Williams Completes a Perfect Jacket Defence",
+        "Gregg Williams Claims a Second Jacket",
+        "Williams Seals Green Jacket Number Two"
+      ],
+      "chosen_headline": "Williams Seals a Second Green Jacket",
+      "standfirst": "Only a quadruple bogey at the 14th interrupted a round good enough to share the day's low gross score.",
+      "compelling_score": 7,
+      "humour_score": 5,
+      "descriptor": "GREEN JACKET"
+    },
+    {
+      "subject": "Alex Baker's Estoril meltdown confirms a third Wooden Spoon",
+      "why_it_matters": "Sets a new outright Estoril course-worst score and completes Alex Baker's third TEG 16 Wooden Spoon, extending his final margin over Jon Baker from 3 to 4.",
+      "shape": "Already anchored to the bottom of the field all week, Baker opened with a quintuple bogey at the 1st, added quadruple bogeys at the 3rd and 6th, then bled fourteen shots across holes 5 to 10 including a septuple bogey at the 12th. His 107 gross beat, in the wrong direction, Estoril's previous worst of 106, and was eight shots worse than his own last visit to the course.",
+      "beat_ids": [
+        "cr02",
+        "r4_b06",
+        "r4_b17",
+        "r4_b18",
+        "r4_b19",
+        "r4_b21",
+        "r4_b22"
+      ],
+      "headline_candidates": [
+        "Alex Baker Rewrites Estoril's Record Books",
+        "A New Course Low, For All the Wrong Reasons",
+        "Baker's 107 Sets an Estoril Worst"
+      ],
+      "chosen_headline": "Alex Baker Sets a New Estoril Worst",
+      "standfirst": "Four separate blow-up holes and a fourteen-shot bleed through the turn produced a score Estoril has never seen before.",
+      "compelling_score": 7,
+      "humour_score": 8,
+      "descriptor": "WOODEN SPOON"
+    }
+  ],
+  "race_state_note": "All three competitions had been effectively decided before the final round teed off — none of the four rounds produced a lead change all week, and Tuesday only widened each margin further.",
+  "storyline_note": "Although this is the final round, lead with round_story (Mullin's course-record round) rather than the race coronation: the trophy outcomes were never genuinely in doubt, while the record-breaking round is the day's real news."
+}

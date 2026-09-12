@@ -1,0 +1,116 @@
+{
+  "title": "Bom Sucesso Buries The Record Book",
+  "title_candidates": [
+    "Bom Sucesso Buries The Record Book",
+    "Meller Betters His Own Best",
+    "Three Records Fall On A New Course"
+  ],
+  "theme": "A course none of them had seen before produced the best round, the second-best round, and the best gross round in TEG history — all in one Friday afternoon.",
+  "tone": "Wry and record-obsessed, playing the historic scoring dead straight while sending up the carnage happening simultaneously at the bottom of the table.",
+  "opening_hook": "Bom Sucesso had never hosted a TEG round before Friday; by the close of play it had rewritten the record book three times over, and the overnight Green Jacket leader still finished the day worse off.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "ensemble",
+    "catalogue"
+  ],
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "records",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Henry Meller's -15 breaks the TEG round record he had set only one round earlier",
+    "why_it_matters": "It is now the best round in TEG history, it extends his Trophy lead to double figures, and it hands him the Green Jacket lead as well.",
+    "shape": "Meller arrives at Bom Sucesso having set the all-time record the previous afternoon; on the course's testing back nine he goes lower still, piling up nine shots to par through the middle holes and closing with another hot stretch at 15-17. He leaves the 18th leading both the Trophy and the Green Jacket.",
+    "beat_ids": [
+      "r2_b02",
+      "r2_b05",
+      "r2_b08",
+      "r2_b21",
+      "r2_b24",
+      "r2_b29",
+      "r2_b19"
+    ],
+    "headline_candidates": [
+      "Meller Betters His Own Record",
+      "Meller Tops Himself Again",
+      "A New Best, One Day Later"
+    ],
+    "chosen_headline": "Meller Betters His Own Record",
+    "standfirst": "Twenty-four hours after setting the mark, Henry Meller goes lower still on Bom Sucesso's testing back nine.",
+    "compelling_score": 9,
+    "humour_score": 4,
+    "descriptor": "HENRY MELLER"
+  },
+  "race_story": {
+    "subject": "The Green Jacket lead changes hands three times before Jon Baker's overnight advantage disappears",
+    "why_it_matters": "Jon Baker took a one-stroke Green Jacket lead into the round and a three-stroke Trophy deficit; he ends it three adrift in the Jacket and eleven behind in the Trophy, overtaken while playing perfectly reasonable golf of his own.",
+    "shape": "Baker starts the day on top of the Green Jacket standings, but the lead see-saws down the back nine as Meller draws level at the 12th, Baker himself briefly retakes it at the 14th, and Mullin joins the group at the 15th. Meller's closing pars settle it, leaving the overnight leader second in the Jacket race and further back in the Trophy.",
+    "beat_ids": [
+      "r2_b19",
+      "r2_b25",
+      "r2_b32",
+      "r2_b34"
+    ],
+    "headline_candidates": [
+      "Baker's Jacket Lead Slips Away",
+      "Three-Way Scramble, One Winner",
+      "Overnight Lead Undone By Nightfall"
+    ],
+    "chosen_headline": "Baker's Jacket Lead Slips Away",
+    "standfirst": "A back nine that saw the Green Jacket lead change hands three times ends with the overnight leader empty-handed.",
+    "compelling_score": 7,
+    "humour_score": 3,
+    "descriptor": "JON BAKER"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "David Mullin and Stuart Neumann both produce career- and TEG-best rounds in Meller's shadow",
+      "why_it_matters": "On the same afternoon as the new all-time record, Mullin cards the best gross round in TEG history and a personal net best, while Neumann posts the second-best net round and the second-best gross round ever recorded — remarkable depth of scoring that still leaves both men well short of the leader.",
+      "shape": "Both arrive off modest starts; Mullin strings together tidy four- and six-hole stretches to reach a TEG-best gross card, while Neumann catches fire through the middle holes for a stableford of -13 after a poor opening round. Both leap up the Trophy table, yet both finish comfortably behind Meller's superior score.",
+      "beat_ids": [
+        "r2_b01",
+        "r2_b03",
+        "r2_b04",
+        "r2_b06",
+        "r2_b13",
+        "r2_b17",
+        "r2_b09",
+        "r2_b12",
+        "r2_b15",
+        "r2_b28"
+      ],
+      "headline_candidates": [
+        "Mullin And Neumann Rewrite History Too",
+        "Two More Records Fall Unnoticed",
+        "Best-Ever Rounds, Second Billing"
+      ],
+      "chosen_headline": "Two More Records Fall Unnoticed",
+      "standfirst": "David Mullin's gross card and Stuart Neumann's net card both rank among the best in TEG history — just not the best of the day.",
+      "compelling_score": 8,
+      "humour_score": 5,
+      "descriptor": "DAVID MULLIN | STUART NEUMANN"
+    },
+    {
+      "subject": "Alex Baker and Gregg Williams each blow up twice on the way to propping up the leaderboard",
+      "why_it_matters": "While records tumbled at the top, the bottom of the field endured matching horror shows — two big-number holes apiece — that kept both men anchored at the foot of the Trophy table and Alex Baker still facing the Wooden Spoon.",
+      "shape": "Both start shakily: Williams runs up a quadruple bogey at the 2nd and a quintuple at the 15th either side of a tidy middle stretch, while Alex Baker opens with a quadruple bogey at the 1st then bleeds eight shots across three closing holes. Both finish the round exactly where they started, at the wrong end of the table.",
+      "beat_ids": [
+        "r2_b07",
+        "r2_b10",
+        "r2_b33",
+        "r2_b35"
+      ],
+      "headline_candidates": [
+        "Double Trouble At The Bottom",
+        "Two Blow-Ups Apiece",
+        "Carnage While History Is Made"
+      ],
+      "chosen_headline": "Carnage While History Is Made",
+      "standfirst": "Two quadruple bogeys, a quintuple, and eight shots bled in three holes — the round's other story, well away from the record books.",
+      "compelling_score": 6,
+      "humour_score": 8,
+      "descriptor": "ALEX BAKER | GREGG WILLIAMS"
+    }
+  ],
+  "race_state_note": "Alex Baker's Wooden Spoon cushion narrowed slightly, from four shots to three, even as he posted the best net round of his short TEG career — the gap closing not because he faltered but because Gregg Williams also had a torrid day.",
+  "storyline_note": ""
+}

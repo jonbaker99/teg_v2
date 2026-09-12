@@ -1,0 +1,88 @@
+{
+  "title": "Mullin Rewrites Boavista's Record Book",
+  "title_candidates": [
+    "Mullin Rewrites Boavista's Record Book",
+    "A Vintage Day at Boavista",
+    "Records Tumble, Meller Stumbles"
+  ],
+  "theme": "A day of historic scoring at Boavista, capped by a new course record, even as the Wooden Spoon changes hands at the bottom of the table.",
+  "tone": "Dry restraint for the record-breakers, farcical escalation for the collapse.",
+  "opening_hook": "David Mullin walked onto the 1st already holding the Boavista course record; by the 18th he had beaten his own mark by three shots with a gross 85, a new low across 25 prior visits to the course.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "catalogue"
+  ],
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "records",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "David Mullin breaks the Boavista course record with a gross 85 while Jon Baker's -7 stands as the second-best net round in TEG history",
+    "why_it_matters": "Two outright landmarks arrive on the same afternoon — an all-time course record at a venue TEG has visited five times before, and the second-best net round ever recorded — and both extend leads that were already commanding.",
+    "shape": "Mullin arrives at Boavista already holding the course's previous best of 88, set earlier in this very tournament; a string of pars either side of a lone blip lowers that mark to 85, an all-time low across 25 prior visits. Meanwhile Jon Baker returns a net -7 that ranks second only to his own opening-round effort in TEG history, despite a rogue quintuple bogey at the 18th.",
+    "beat_ids": [
+      "r3_b06",
+      "cr01",
+      "r3_b09",
+      "r3_b01",
+      "r3_b17",
+      "r3_b19",
+      "r3_b21"
+    ],
+    "headline_candidates": [
+      "Mullin Smashes Boavista's Course Record",
+      "Mullin Rewrites the Record Books",
+      "Two Landmark Rounds at Boavista"
+    ],
+    "chosen_headline": "Mullin Smashes Boavista's Course Record",
+    "standfirst": "A gross 85 beats David Mullin's own recent mark by three shots as Jon Baker's near-flawless net -7 keeps the Trophy procession rolling.",
+    "compelling_score": 9,
+    "humour_score": 5,
+    "descriptor": "DAVID MULLIN | JON BAKER"
+  },
+  "race_story": {
+    "subject": "Henry Meller's early collapse — a triple bogey at the 1st and a quintuple bogey at the 3rd — hands him outright last place in the TEG 3 Wooden Spoon race, with Stuart Neumann reprieved after occupying the spot himself",
+    "why_it_matters": "The Wooden Spoon has changed hands for the first time this tournament, and with the gap to safety now 5 shots rather than 1, the battle for last place looks very different heading into the final round.",
+    "shape": "Meller starts wretchedly with a triple bogey at the 1st, briefly ceding the bottom spot to Gregg Williams after his own quadruple bogey at the 2nd, before a quintuple-bogey 10 at the par-five 3rd puts Meller back in last place for good. He rallies with a birdie at the 11th, but the early damage leaves him 5 shots adrift of Stuart Neumann, who started the day in the very place he now escapes.",
+    "beat_ids": [
+      "r3_b12",
+      "r3_b18",
+      "r3_b04",
+      "r3_b10",
+      "r3_b11"
+    ],
+    "headline_candidates": [
+      "Meller's Meltdown Ends Neumann's Reprieve",
+      "Meller Freefalls to Wooden Spoon Bottom",
+      "Neumann Escapes as Meller Implodes"
+    ],
+    "chosen_headline": "Meller's Meltdown Ends Neumann's Reprieve",
+    "standfirst": "Three separate blow-up holes before the turn undo any chance of a quiet round for Henry Meller and leave Stuart Neumann breathing easier at the foot of the table.",
+    "compelling_score": 7,
+    "humour_score": 7,
+    "descriptor": "WOODEN SPOON"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Gregg Williams's net -4 and Stuart Neumann's gross 18 rank third-best in TEG history to date, and both mark new personal bests at Boavista, yet neither performance troubles the top of either the Trophy or Green Jacket table",
+      "why_it_matters": "It shows the overall quality of the round ran far deeper than the headline record, even though the standings barely moved for either man.",
+      "shape": "Both men arrive well off the outright pace; Williams, despite a quadruple bogey at the 2nd, still returns the third-best net round in TEG history, while Neumann's gross 18 is the third-best gross round recorded to date and a new personal best at the course. Neither result changes their standing meaningfully given the size of the gaps above them, so two of the finest rounds of the day pass with barely a ripple in the table.",
+      "beat_ids": [
+        "r3_b02",
+        "r3_b03",
+        "r3_b16"
+      ],
+      "headline_candidates": [
+        "Two Personal Bests Go Unnoticed",
+        "Williams and Neumann Quietly Excel",
+        "Third-Best Rounds, Barely Noticed"
+      ],
+      "chosen_headline": "Two Personal Bests Go Unnoticed",
+      "standfirst": "A quadruple bogey at the 2nd barely dents a day in which Gregg Williams and Stuart Neumann both produce among the best rounds ever recorded at a TEG event.",
+      "compelling_score": 6,
+      "humour_score": 4,
+      "descriptor": "GREGG WILLIAMS | STUART NEUMANN"
+    }
+  ],
+  "race_state_note": "Jon Baker's Trophy lead has stretched to 16 shots and David Mullin's Green Jacket advantage to 9, with both races now looking increasingly settled ahead of the final round.",
+  "storyline_note": ""
+}

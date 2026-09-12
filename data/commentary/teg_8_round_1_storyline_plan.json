@@ -1,0 +1,92 @@
+{
+  "title": "New Course, Same Old Chaos",
+  "title_candidates": [
+    "New Course, Same Old Chaos",
+    "Williams Sets The Pace In Portugal",
+    "Neumann's Nightmare On Debut"
+  ],
+  "theme": "TEG's first visit to Quinta da Marinha proves the venue may be new but the script is reassuringly familiar.",
+  "tone": "Wry restraint throughout, treating a bogey at the ocean-view 3rd with the gravity of a diplomatic incident.",
+  "opening_hook": "TEG made its first landfall at Quinta da Marinha on Wednesday, and inside three holes the new course had already claimed a scalp: Henry Meller's quintuple-bogey ten leaving him rooted to the bottom of the Wooden Spoon table before most of the field had reached the turn.",
+  "narrative_vehicles": [
+    "origin",
+    "catalogue"
+  ],
+  "prominent_vehicle": "origin",
+  "prominent_palette": "venue_character",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Gregg Williams's stableford surge to 38 points, the best round of the opening day at Quinta da Marinha",
+    "why_it_matters": "It's the platform from which Williams grabs an immediate share of the TEG 8 Trophy lead, though a rough closing stretch shows the round wasn't without its wobbles.",
+    "shape": "Williams sits quietly in touch through the front nine before catching fire from the 8th, reeling off 14 stableford points in a four-hole burst that includes a birdie at the 10th to snatch the outright Trophy lead; the back nine then turns scratchy, with a run of holes between the 12th and 15th yielding almost nothing including a quadruple bogey at the 15th, but the cushion built earlier proves enough to see him home in front.",
+    "beat_ids": [
+      "r1_b21",
+      "r1_b34",
+      "r1_b31",
+      "r1_b24"
+    ],
+    "headline_candidates": [
+      "Williams Surges Clear At The Turn",
+      "Early Charge Puts Williams In Front",
+      "Williams Sets The Pace In Portugal"
+    ],
+    "chosen_headline": "Williams Surges Clear At The Turn",
+    "standfirst": "A four-hole blitz from the 8th hands Gregg Williams the outright TEG 8 Trophy lead despite a shaky finish.",
+    "compelling_score": 7,
+    "humour_score": 5,
+    "descriptor": "GREGG WILLIAMS"
+  },
+  "race_story": {
+    "subject": "The opening skirmish for the TEG 8 Green Jacket, with David Mullin edging ahead of Jon Baker by a single shot",
+    "why_it_matters": "With four rounds still to play the gap is paper-thin, and Jon Baker's own round shows exactly how quickly it could have gone the other way.",
+    "shape": "The Green Jacket lead changes hands repeatedly through the outward half, level at the 6th and again at the 10th and 11th, before David Mullin edges clear with a par at the 13th; Jon Baker, meanwhile, survives a quintuple bogey at that same hole to stay within touch, a birdie at the 17th arresting the damage just in time.",
+    "beat_ids": [
+      "r1_b40",
+      "r1_b39",
+      "r1_b38",
+      "r1_b32",
+      "r1_b05",
+      "r1_b25"
+    ],
+    "headline_candidates": [
+      "Mullin Edges Ahead By A Single Shot",
+      "Mullin Takes Early Green Jacket Lead",
+      "Baker Survives A Nine To Stay Close"
+    ],
+    "chosen_headline": "Mullin Takes Early Green Jacket Lead",
+    "standfirst": "David Mullin's par at the 13th settles a Green Jacket lead that changed hands three times inside the first round.",
+    "compelling_score": 6,
+    "humour_score": 4,
+    "descriptor": "GREEN JACKET"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Stuart Neumann's opening-round collapse, the worst Trophy round recorded in TEG history to date, which settles him at the foot of the TEG 8 Wooden Spoon table by a distance",
+      "why_it_matters": "It's only round one, but a 12-point cushion at the bottom already looks like a headache for the rest of the week, and it briefly cost Henry Meller his own unwanted tenancy of last place.",
+      "shape": "Henry Meller's quintuple-bogey 10 at the 3rd first drops him to the bottom of the Wooden Spoon race; Stuart Neumann then goes one nine-hole stretch worse, bleeding 29 shots between the 7th and 15th with quintuple bogeys at both the 12th and the 14th; by the close Neumann's 17 points is the worst Trophy round logged in the competition's history, and he inherits last place with room to spare.",
+      "beat_ids": [
+        "r1_b11",
+        "r1_b27",
+        "r1_b01",
+        "r1_b02",
+        "r1_b12",
+        "r1_b13",
+        "r1_b29",
+        "r1_b03",
+        "r1_b04"
+      ],
+      "headline_candidates": [
+        "Neumann's Nightmare Nine Holes",
+        "Neumann Sets A New Low",
+        "A Horror Show For Neumann"
+      ],
+      "chosen_headline": "Neumann Sets A New Low",
+      "standfirst": "A calamitous run from the 7th to the 15th leaves Stuart Neumann with the worst round in TEG history and an early lock on the Wooden Spoon.",
+      "compelling_score": 8,
+      "humour_score": 7,
+      "descriptor": "WOODEN SPOON"
+    }
+  ],
+  "race_state_note": "This is the opening round of TEG 8, so all standings reflect the first measurements of the tournament; there is no prior state to compare against.",
+  "storyline_note": ""
+}

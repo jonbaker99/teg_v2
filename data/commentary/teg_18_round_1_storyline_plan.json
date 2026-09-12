@@ -1,0 +1,136 @@
+{
+  "title": "Alex Baker's 46 Sets The Standard",
+  "title_candidates": [
+    "Alex Baker's 46 Sets The Standard",
+    "Camiral Bites Everyone But Alex Baker",
+    "An Opening Round Of Contrasts"
+  ],
+  "theme": "PGA Catalunya's Tour course punished almost every card in the field, but Alex Baker's stableford total proved sturdy enough to survive it and open up an early Trophy lead.",
+  "tone": "Wry and restrained, letting the numbers carry the joke.",
+  "opening_hook": "Five players took on the more forgiving sibling of the Stadium course and found it plenty punishing anyway - quadruple bogeys, a sextuple bogey, and one card, Alex Baker's, that somehow rose 12 points clear of the rest.",
+  "narrative_vehicles": [
+    "catalogue",
+    "ensemble"
+  ],
+  "prominent_vehicle": "catalogue",
+  "prominent_palette": "venue_character",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Alex Baker's opening 46 stableford points, the best round of the day and the third-best Trophy return of his TEG career",
+    "why_it_matters": "Alex Baker's 46 stableford points were not just the best score of the day - they rank as the third-best Trophy round of his TEG career, and they staked him to a 12-point overnight lead in the TEG 18 Trophy race.",
+    "shape": "Alex Baker opened with a quadruple bogey at the 2nd but recovered to string together two hot stretches - 17 stableford points across holes 8-12 and another 13 across holes 14-16. A late double bogey at 17 and a quadruple bogey at the last couldn't dent a card already out of sight, and he closed on 46 points, the best round of the day and the third-best Trophy return of his 45-round career.",
+    "beat_ids": [
+      "r1_b20",
+      "r1_b11",
+      "r1_b12",
+      "r1_b13",
+      "r1_b19",
+      "r1_b32",
+      "r1_b33"
+    ],
+    "headline_candidates": [
+      "Alex Baker's 46 Sets The Pace",
+      "A Landslide Despite Two Blow-Ups",
+      "Alex Baker Banks A Career Round"
+    ],
+    "chosen_headline": "Alex Baker's 46 Sets The Pace",
+    "standfirst": "Two quadruple bogeys couldn't stop a round that ranks third among his 45 TEG appearances.",
+    "compelling_score": 8,
+    "humour_score": 6,
+    "descriptor": "ALEX BAKER"
+  },
+  "race_story": {
+    "subject": "Jon Baker's round split the TEG 18 competitions - best gross of the day put him top of the Green Jacket, while his stableford total left him bottom of the Trophy and Wooden Spoon standings",
+    "why_it_matters": "Jon Baker's round produced the best gross score of the day, enough to put him two shots clear at the top of the TEG 18 Green Jacket - but the same card was the worst stableford return in the field, leaving him bottom of the TEG 18 Trophy standings and occupying the TEG 18 Wooden Spoon place by a single point.",
+    "shape": "A tidy gross card carried him past David Mullin for the Green Jacket lead at the 5th, and by the close he led it by two. That same card, tallying only 30 stableford points, left him bottom of the Trophy standings and sitting in the Wooden Spoon place with just a point in hand over Gregg Williams.",
+    "beat_ids": [
+      "r1_b35",
+      "r1_b25",
+      "r1_b26",
+      "r1_b28",
+      "r1_b29"
+    ],
+    "headline_candidates": [
+      "Jon Baker Leads Jacket, Props Up Spoon",
+      "Best Gross, Worst Points For Jon Baker",
+      "Jon Baker's Round Cuts Both Ways"
+    ],
+    "chosen_headline": "Jon Baker Leads Jacket, Props Up Spoon",
+    "standfirst": "The best gross card of the day and the worst points return sat on the same scorecard.",
+    "compelling_score": 7,
+    "humour_score": 7,
+    "descriptor": "JON BAKER"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "David Mullin's sextuple bogey at the 15th, his worst score ever recorded on the hole, wrecked a card that had twice shared the Green Jacket lead",
+      "why_it_matters": "A sextuple bogey at the par-five 15th was David Mullin's worst recorded score on the hole, undoing a card that had briefly shared the Green Jacket lead twice earlier in the round, and it left him bottom of the Wooden Spoon.",
+      "shape": "David Mullin arrived with a course history that included an 84 here in TEG 12, and twice drew level at the top of the Green Jacket standings inside the first ten holes. An eleven at the 15th - his worst score ever recorded on the hole - wrecked the card, and he finished 16 shots worse than his last visit to this course and bottom of the Wooden Spoon.",
+      "beat_ids": [
+        "r1_b10",
+        "r1_b22",
+        "r1_b23"
+      ],
+      "headline_candidates": [
+        "An Eleven At The Fifteenth Undoes David Mullin",
+        "David Mullin's Sixteen-Shot Fall",
+        "Sextuple Bogey Sinks David Mullin"
+      ],
+      "chosen_headline": "An Eleven At The Fifteenth Undoes David Mullin",
+      "standfirst": "A previous best of 84 around this course felt a long way off by the time he reached the 15th.",
+      "compelling_score": 7,
+      "humour_score": 6,
+      "descriptor": "DAVID MULLIN"
+    },
+    {
+      "subject": "Gregg Williams survived two quadruple bogeys and briefly shared the Green Jacket lead before a third disaster hole dropped him to the bottom of the Wooden Spoon",
+      "why_it_matters": "Gregg Williams survived two quadruple bogeys to briefly share the Green Jacket lead, a reminder of how thin the margins are on a course already punishing everyone in the field.",
+      "shape": "A cold three-hole stretch from the 3rd produced a quadruple bogey at the 7th, before a birdie at the 15th finally halted the bleeding and drew him level for the Green Jacket lead. The recovery didn't last - a quadruple bogey at the 17th dropped him back to the bottom of the Wooden Spoon.",
+      "beat_ids": [
+        "r1_b05",
+        "r1_b02",
+        "r1_b08",
+        "r1_b21",
+        "r1_b24",
+        "r1_b16",
+        "r1_b15"
+      ],
+      "headline_candidates": [
+        "Gregg Williams Survives A War Of Attrition",
+        "Two Quadruple Bogeys, One Fightback",
+        "Gregg Williams' Rollercoaster Round"
+      ],
+      "chosen_headline": "Gregg Williams Survives A War Of Attrition",
+      "standfirst": "A birdie at the 15th briefly rescued a card wrecked by two quadruple bogeys.",
+      "compelling_score": 6,
+      "humour_score": 6,
+      "descriptor": "GREGG WILLIAMS"
+    },
+    {
+      "subject": "John Patterson's round swung from a 22-shot front-nine collapse to one of the field's hottest stretches coming home",
+      "why_it_matters": "John Patterson's round swung between the field's worst stretch and one of its best, a genuine round of two halves that still left him only mid-table.",
+      "shape": "A quadruple bogey at the 3rd began a seven-hole run without a single net par, bleeding 22 shots and dropping him to the bottom of the Wooden Spoon race. Four holes from 13 to 16 flipped the story completely, yielding 13 stableford points, but the front-nine damage left him with a modest 34 points for the round.",
+      "beat_ids": [
+        "r1_b04",
+        "r1_b01",
+        "r1_b06",
+        "r1_b07",
+        "r1_b17",
+        "r1_b09",
+        "r1_b03"
+      ],
+      "headline_candidates": [
+        "John Patterson's Round Of Two Halves",
+        "Front Nine Ruin, Back Nine Revival",
+        "John Patterson Rescues What He Can"
+      ],
+      "chosen_headline": "John Patterson's Round Of Two Halves",
+      "standfirst": "Twenty-two shots lost across seven holes were nearly clawed back in four.",
+      "compelling_score": 7,
+      "humour_score": 6,
+      "descriptor": "JOHN PATTERSON"
+    }
+  ],
+  "race_state_note": "It's day one of four, so all gaps are provisional: the Green Jacket is separated by two shots at the top and the Wooden Spoon by a single stableford point at the bottom.",
+  "storyline_note": ""
+}

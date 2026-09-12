@@ -1,0 +1,117 @@
+{
+  "title": "Lingfield Draws First Blood",
+  "title_candidates": [
+    "Lingfield Draws First Blood",
+    "Baker's Lead Slips Away",
+    "Meller's Great Escape"
+  ],
+  "theme": "A brutal Lingfield debut swings the TEG 4 Trophy race, buries Stuart Neumann in the Wooden Spoon cellar, and lets Henry Meller quietly play the best round of anyone's week.",
+  "tone": "wry, escalating, tongue-in-cheek broadsheet solemnity",
+  "opening_hook": "Lingfield's first appearance in the TEG rota introduced itself the only way a new course knows how: with a volley of quadruple and quintuple bogeys that spared nobody, least of all the man who started the day leading the Trophy.",
+  "narrative_vehicles": [
+    "redemption_arc",
+    "dual_narrative",
+    "catalogue"
+  ],
+  "prominent_vehicle": "redemption_arc",
+  "prominent_palette": "venue_character",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Henry Meller's redemption round at Lingfield",
+    "why_it_matters": "Meller began the day bottom of the TEG 4 Wooden Spoon table after a horror show at Ashdown; his response was the best round of anyone's day and the second-best trophy and gross rounds of his own TEG career.",
+    "shape": "Bottom of the standings after a ruinous opening round, Meller opens with two costly quadruple bogeys either side of a flawless three-hole stretch of pars from the 9th, then a late triple bogey briefly threatens to undo it. He still finishes with the best trophy score and best gross score anyone posts all day.",
+    "beat_ids": [
+      "r2_b07",
+      "r2_b04",
+      "r2_b09",
+      "r2_b11",
+      "r2_b05",
+      "r2_b08",
+      "r2_b13"
+    ],
+    "headline_candidates": [
+      "Meller Turns Lingfield Around",
+      "Best Round Belongs To Meller",
+      "Meller's Middle-Nine Masterclass"
+    ],
+    "chosen_headline": "Meller Turns Lingfield Around",
+    "standfirst": "Bottom of the Wooden Spoon table overnight, Henry Meller answered with the best round anyone shot all day.",
+    "compelling_score": 8,
+    "humour_score": 5,
+    "descriptor": "HENRY MELLER"
+  },
+  "race_story": {
+    "subject": "David Mullin snatches the Trophy lead from Jon Baker",
+    "why_it_matters": "Jon Baker had led the TEG 4 Trophy since round one and even stretched that lead mid-round, only to hand it over by the close; David Mullin's rise also widened his separate Green Jacket cushion.",
+    "shape": "Baker starts the day three clear and reclaims an outright lead at the 12th despite David Mullin twice drawing level earlier in the round. A quintuple bogey at the 17th caps Baker's worst round to date, and Mullin - who survives a quadruple bogey of his own at the last - ends the day two shots clear at the top.",
+    "beat_ids": [
+      "r2_b28",
+      "r2_b31",
+      "r2_b32",
+      "r2_b02",
+      "r2_b01",
+      "r2_b12"
+    ],
+    "headline_candidates": [
+      "Mullin Overtakes At The Death",
+      "Baker's Lead Slips Away At 17",
+      "Seventeenth Hole Ends Baker's Reign"
+    ],
+    "chosen_headline": "Mullin Overtakes At The Death",
+    "standfirst": "A three-shot cushion and a brief mid-round lead both disappeared for Jon Baker inside the space of six holes.",
+    "compelling_score": 8,
+    "humour_score": 5,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Stuart Neumann inherits the Wooden Spoon cellar",
+      "why_it_matters": "Henry Meller began the round four shots adrift at the bottom of the TEG 4 Wooden Spoon table; a calamitous front nine instead leaves Stuart Neumann there by the close.",
+      "shape": "Neumann opens with a triple bogey at the 1st and a quadruple bogey at the 2nd, three holes without a net par to start his round. The damage recurs through the 5th and 9th, and by the 18th he has taken over as the outright Wooden Spoon laggard while Meller escapes the bottom spot entirely.",
+      "beat_ids": [
+        "r2_b19",
+        "r2_b20",
+        "r2_b14",
+        "r2_b18",
+        "r2_b24",
+        "r2_b23"
+      ],
+      "headline_candidates": [
+        "Neumann Takes Over Last Place",
+        "A New Face Props Up The Table",
+        "Neumann's Front Nine Nightmare"
+      ],
+      "chosen_headline": "Neumann Takes Over Last Place",
+      "standfirst": "Three holes without a net par at the start proved costly enough to swap him with Henry Meller at the foot of the Wooden Spoon standings.",
+      "compelling_score": 6,
+      "humour_score": 5,
+      "descriptor": "WOODEN SPOON"
+    },
+    {
+      "subject": "Lingfield punishes its first TEG field",
+      "why_it_matters": "On its maiden appearance in the TEG rota, Lingfield produced quadruple-bogey-or-worse holes for every one of the five players in a single round, announcing itself instantly as no pushover.",
+      "shape": "Harvey Jarrett's parkland layout, new to everyone in the field, opens with water and trees framing an unforgiving test. Every competitor records at least one blow-up hole of quadruple bogey or worse - several of them twice - and only Henry Meller's middle-nine recovery and David Mullin's overall consistency keep the carnage from deciding the whole round.",
+      "beat_ids": [
+        "r2_b02",
+        "r2_b03",
+        "r2_b06",
+        "r2_b08",
+        "r2_b12",
+        "r2_b14",
+        "r2_b15"
+      ],
+      "headline_candidates": [
+        "Lingfield Announces Itself With Menace",
+        "A Debut Course Takes No Prisoners",
+        "Eight Blow-Ups In One Round"
+      ],
+      "chosen_headline": "A Debut Course Takes No Prisoners",
+      "standfirst": "Every member of the field carded at least one hole of quadruple bogey or worse on Lingfield's first outing in the TEG rota.",
+      "compelling_score": 7,
+      "humour_score": 6,
+      "descriptor": "LINGFIELD"
+    }
+  ],
+  "race_state_note": "David Mullin's Green Jacket lead grew from 3 to 7 shots without any change at the top.",
+  "storyline_note": ""
+}
