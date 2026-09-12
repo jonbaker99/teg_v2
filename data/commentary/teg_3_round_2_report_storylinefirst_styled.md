@@ -49,5 +49,5 @@ It was a quiet kind of collapse. No blow-up hole, no single catastrophe to point
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>David Mullin runs up a 9 (quintuple bogey) at the 17th (R2) — his career-worst on a par-4</li>
+  <li>David Mullin runs up a 9 (+5) at the 17th — his career-worst on a par-4</li>
 </ul></div>

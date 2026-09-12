@@ -46,16 +46,7 @@ At the other end, Henry Meller was already beyond assistance. A double bogey at 
 
 ## Personal bests and TEG records
 
-<div class="records"><p class="records-header">TEG records:</p><ul>
-  <li>Stuart Neumann's +29 (gross) is the 2nd-best Gross round in TEG history to date</li>
-  <li>Stuart Neumann's +11 is the 3rd-best round in TEG history to date</li>
-  <li>David Mullin's +0 is the best round in TEG history to date</li>
-  <li>David Mullin's +20 (gross) is the best Gross round in TEG history to date</li>
-  <li>Jon Baker's +4 is the 2nd-best round in TEG history to date</li>
-  <li>Jon Baker's +32 (gross) is the 3rd-best Gross round in TEG history to date</li>
-</ul></div>
-
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Gregg Williams runs up a 9 (sextuple bogey) at the 14th (R1) — his career-worst on a par-3</li>
-  <li>Stuart Neumann runs up a 8 (quintuple bogey) at the 14th (R1) — his career-worst on a par-3</li>
+  <li>Gregg Williams runs up a 9 (+6) at the 14th — his career-worst on a par-3</li>
+  <li>Stuart Neumann runs up an 8 (+5) at the 14th — his career-worst on a par-3</li>
 </ul></div>

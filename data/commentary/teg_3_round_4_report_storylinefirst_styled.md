@@ -58,5 +58,5 @@ It left Jon Baker as Trophy leader after the round, with David Mullin leading th
 ## Personal bests and TEG records
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Stuart Neumann runs up a 10 (sextuple bogey) at the 17th (R4) — his career-worst on a par-4</li>
+  <li>Stuart Neumann runs up a 10 (+6) at the 17th — his career-worst on a par-4</li>
 </ul></div>

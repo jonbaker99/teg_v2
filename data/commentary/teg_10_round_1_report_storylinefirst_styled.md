@@ -51,14 +51,14 @@ At the other end, John Patterson dropped to the bottom of the Wooden Spoon table
 <div class="records"><p class="records-header">TEG records:</p><ul>
   <li>David Mullin's +4 (gross) is the best Gross round in TEG history to date</li>
   <li>David Mullin's 49 pts is the 2nd-best round in TEG history to date</li>
-  <li>David MULLIN — -1 Gross on the Back nine (R1) is the best Back nine Gross in TEG history</li>
+  <li>David Mullin — -1 Gross on the Back nine is the best Back nine Gross in TEG history</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Personal bests:</p><ul>
-  <li>David MULLIN — 28 Stableford on the Back nine (R1) is a personal-best Back nine Stableford</li>
-  <li>David MULLIN — -1 Gross on the Back nine (R1) is a personal-best Back nine Gross</li>
+  <li>David Mullin — -1 Gross on the Back nine is a personal-best Back nine Gross</li>
+  <li>David Mullin — 28 Stableford on the Back nine is a personal-best Back nine Stableford</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Stuart Neumann runs up a 10 (sextuple bogey) at the 18th (R1) — his career-worst on a par-4</li>
+  <li>Stuart Neumann runs up a 10 (+6) at the 18th — his career-worst on a par-4</li>
 </ul></div>

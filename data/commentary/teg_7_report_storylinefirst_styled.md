@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Henry Meller (winner, -31, by 7 over Gregg Williams)</span></p>
-  <p><strong>Green Jacket:</strong> David Mullin (winner, +53, by 15 over Stuart Neumann)</p>
-  <p><strong>Wooden Spoon:</strong> Alex Baker (loser, -5 net VP)</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Henry Meller (1st Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> David Mullin (5th Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> Alex Baker (1st Spoon)</p>
 </section>
 
 ## How the reigning Wooden Spoon holder won the TEG 7 Trophy: two record-breaking rounds at the start, then two ordinary days of controlled leaking that still left him 7 clear
@@ -109,10 +109,8 @@ The position he took on Thursday afternoon was the position he held on Sunday ev
 
 <div class="records"><p class="records-header">TEG records:</p><ul>
   <li>David Mullin's +10 (gross) is the 2nd-best Gross round in TEG history to date (R4)</li>
-  <li>Henry Meller's -31 net-vs-par is the 2nd-best Trophy total in TEG history</li>
   <li>David Mullin's +9 (gross) is the best Gross round in TEG history to date (R2)</li>
   <li>Henry Meller's -15 is the best round in TEG history to date (R2)</li>
-  <li>David Mullin's +53 is the 2nd-best Gross total in TEG history</li>
   <li>Stuart Neumann's -13 is the 2nd-best round in TEG history to date (R2)</li>
   <li>Stuart Neumann's +10 (gross) is the 2nd-best Gross round in TEG history to date (R2)</li>
   <li>Henry Meller's +10 (gross) is the 2nd-best Gross round in TEG history to date (R2)</li>
@@ -128,13 +126,17 @@ The position he took on Thursday afternoon was the position he held on Sunday ev
   <li>Henry Meller posts a personal-best Gross round: +12 (R1)</li>
   <li>Henry Meller's +69 is a personal Gross best</li>
   <li>Stuart Neumann's +68 is a personal Gross best</li>
-  <li>Henry MELLER — -10 net-vs-par on the Back nine (R1) is a personal-best Back nine net-vs-par</li>
-  <li>Stuart NEUMANN — -8 net-vs-par on the Front nine (R2) is a personal-best Front nine net-vs-par</li>
-  <li>Henry MELLER — +2 Gross on the Back nine (R1) is a personal-best Back nine Gross</li>
+  <li>David Mullin's -23 is a personal Trophy best</li>
+  <li>Henry Meller's -31 is a personal Trophy best</li>
+  <li>Stuart Neumann's -24 is a personal Trophy best</li>
+  <li>Henry Meller — +2 Gross on the Back nine (R1) is a personal-best Back nine Gross</li>
+  <li>Henry Meller — -10 net-vs-par on the Back nine (R1) is a personal-best Back nine net-vs-par</li>
+  <li>Stuart Neumann — -8 net-vs-par on the Front nine (R2) is a personal-best Front nine net-vs-par</li>
+  <li>David Mullin's 5-hole "Pars or Better" streak is a personal best (previous 4), at T07 R4 H4 to T07 R4 H8</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Jon Baker runs up a 11 (sextuple bogey) at the 10th (R4) — his career-worst on a par-5</li>
-  <li>David Mullin runs up a 8 (quintuple bogey) at the 15th (R3) — his career-worst on a par-3</li>
-  <li>Alex Baker runs up a 8 (quintuple bogey) at the 5th (R1) — his career-worst on a par-3</li>
+  <li>Jon Baker runs up an 11 (+6) at the 10th (R4) — his career-worst on a par-5</li>
+  <li>David Mullin runs up an 8 (+5) at the 15th (R3) — his career-worst on a par-3</li>
+  <li>Alex Baker runs up an 8 (+5) at the 5th (R1) — his career-worst on a par-3</li>
 </ul></div>

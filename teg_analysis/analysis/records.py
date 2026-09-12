@@ -117,10 +117,11 @@ def identify_aggregate_records_and_pbs(df_teg_or_round: pd.DataFrame, selected_t
 
 
 def identify_9hole_records_and_pbs(selected_teg: str, selected_round: int, df_9hole: pd.DataFrame = None) -> dict:
-    """Identifies 9-hole records and personal bests for the selected round.
+    """Identifies 9-hole records, personal bests and personal worsts for the
+    selected round.
 
     This function checks if the front 9 or back 9 of the selected round set
-    any records or personal bests.
+    any records, personal bests or personal worsts.
 
     Args:
         selected_teg (str): The selected TEG (e.g., "TEG 17").
@@ -129,12 +130,12 @@ def identify_9hole_records_and_pbs(selected_teg: str, selected_round: int, df_9h
             will attempt to generate from loaded data.
 
     Returns:
-        dict: A dictionary containing lists of records and personal bests for
-        9-hole segments.
+        dict: A dictionary containing lists of records, personal bests and
+        personal worsts for 9-hole segments.
     """
     if df_9hole is None:
         logger.warning("No 9-hole data provided to identify_9hole_records_and_pbs")
-        return {'records': [], 'personal_bests': []}
+        return {'records': [], 'personal_bests': [], 'personal_worsts': []}
 
     # Parse TEG number
     teg_num = int(selected_teg.split()[1])
@@ -146,12 +147,14 @@ def identify_9hole_records_and_pbs(selected_teg: str, selected_round: int, df_9h
     if filtered.empty:
         return {
             'records': [],
-            'personal_bests': []
+            'personal_bests': [],
+            'personal_worsts': []
         }
 
     metrics = ['Sc', 'GrossVP', 'NetVP', 'Stableford']
     records = []
     personal_bests = []
+    personal_worsts = []
 
     for metric in metrics:
         rank_all_col = f'Rank_within_all_{metric}'
@@ -187,9 +190,25 @@ def identify_9hole_records_and_pbs(selected_teg: str, selected_round: int, df_9h
                     'segment': segment
                 })
 
+            # Personal worst (highest rank within player's history of nines,
+            # front and back combined — mirrors `Rank_within_player_{metric}`,
+            # which is computed per-player without splitting on FrontBack).
+            # Only when they have more than one nine on record.
+            player_data = df_9hole[df_9hole['Player'] == player]
+            max_rank = player_data[rank_player_col].max()
+            if row[rank_player_col] == max_rank and max_rank > 1:
+                personal_worsts.append({
+                    'player': player,
+                    'metric': metric,
+                    'value': value,
+                    'friendly_name': get_friendly_metric_name(metric),
+                    'segment': segment
+                })
+
     return {
         'records': records,
-        'personal_bests': personal_bests
+        'personal_bests': personal_bests,
+        'personal_worsts': personal_worsts
     }
 
 

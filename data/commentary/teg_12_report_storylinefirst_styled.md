@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> John Patterson (winner, 172 pts, by 10 from Gregg Williams)</span></p>
-  <p><strong>Green Jacket:</strong> Jon Baker (winner, +63, by 8 from David Mullin)</p>
-  <p><strong>Wooden Spoon:</strong> David Mullin (loser, 139 pts, 4 behind Alex Baker)</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> John Patterson (2nd Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> Jon Baker (2nd Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> David Mullin (3rd Spoon)</p>
 </section>
 
 ## How John Patterson won the TEG 12 Trophy by ten with three blow-up holes, two best-in-field rounds and a personal-best 172 points
@@ -109,20 +109,15 @@ He then played the rest of the round rather well, which is the cruellest detail 
 
 ## Personal bests and TEG records
 
-<div class="records"><p class="records-header">TEG records:</p><ul>
-  <li>Jon Baker's +63 is the 3rd-best Gross total in TEG history</li>
-</ul></div>
-
 <div class="records"><p class="records-header">Personal bests:</p><ul>
-  <li>John Patterson's 172 pts is a personal Trophy best</li>
   <li>Gregg Williams posts a personal-best Gross round: +12 (R1)</li>
-  <li>Gregg Williams's +76 is a personal Gross best</li>
+  <li>John Patterson's 172 pts is a personal Trophy best</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
   <li>Stuart Neumann eagles the par-5 15th (R4)</li>
-  <li>Gregg Williams runs up a 11 (septuple bogey) at the 13th (R3) — his career-worst on a par-4</li>
-  <li>Stuart Neumann runs up a 12 (septuple bogey) at the 15th (R1) — a new TEG-record worst on a par-5; his career-worst on a par-5</li>
-  <li>Stuart Neumann runs up a 10 (sextuple bogey) at the 13th (R1) — his career-worst on a par-4</li>
-  <li>John Patterson runs up a 12 (+8) at the 4th (R1) — a new TEG-record worst on a par-4; his career-worst on a par-4</li>
+  <li>Gregg Williams runs up an 11 (+7) at the 13th (R3) — his career-worst on a par-4</li>
+  <li>Stuart Neumann runs up a 12 (+7) at the 15th (R1) — a new TEG-record and career-worst on a par-5</li>
+  <li>Stuart Neumann runs up a 10 (+6) at the 13th (R1) — his career-worst on a par-4</li>
+  <li>John Patterson runs up a 12 (+8) at the 4th (R1) — a new TEG-record and career-worst on a par-4</li>
 </ul></div>

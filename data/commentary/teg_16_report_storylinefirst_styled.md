@@ -94,10 +94,6 @@ Estoril supplied the second record. Baker opened with a nine at the 1st, added a
 
 ## Personal bests and TEG records
 
-<div class="records"><p class="records-header">Personal bests:</p><ul>
-  <li>Gregg Williams's +66 is a personal Gross best</li>
-</ul></div>
-
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Alex Baker runs up a 11 (septuple bogey) at the 12th (R4) — his career-worst on a par-4</li>
+  <li>Alex Baker runs up an 11 (+7) at the 12th (R4) — his career-worst on a par-4</li>
 </ul></div>

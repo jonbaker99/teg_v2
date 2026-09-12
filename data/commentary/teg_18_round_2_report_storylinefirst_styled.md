@@ -55,6 +55,6 @@ Elsewhere, Alex Baker's card tied the round's best Trophy score. The man who had
 ## Personal bests and TEG records
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Alex Baker runs up a 11 (sextuple bogey) at the 18th (R2) — his career-worst on a par-5</li>
-  <li>Alex Baker runs up a 8 (quintuple bogey) at the 16th (R2) — his career-worst on a par-3</li>
+  <li>Alex Baker runs up an 11 (+6) at the 18th — his career-worst on a par-5</li>
+  <li>Alex Baker runs up an 8 (+5) at the 16th — his career-worst on a par-3</li>
 </ul></div>

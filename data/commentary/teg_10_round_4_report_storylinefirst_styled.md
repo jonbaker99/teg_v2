@@ -70,8 +70,9 @@ The timing could not have been sharper. The 2017 TEG Trophy race arrived at Boav
 <div class="records"><p class="records-header">Personal worsts:</p><ul>
   <li>John Patterson's worst round to date: 21 pts</li>
   <li>John Patterson's worst Gross round to date: +40</li>
+  <li>John Patterson's 12-hole "Over Par" streak is a personal worst (previous 7), at T10 R4 H7 to T10 R4 H18</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>John Patterson runs up a 11 (sextuple bogey) at the 8th (R4) — his career-worst on a par-5</li>
+  <li>John Patterson runs up an 11 (+6) at the 8th — his career-worst on a par-5</li>
 </ul></div>

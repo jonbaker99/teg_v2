@@ -56,5 +56,5 @@ At the other end, Henry Meller unravelled. Bogeys from the 9th through the 13th,
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Henry Meller runs up a 12 (+8) at the 17th (R1) — a new TEG-record worst on a par-4; his career-worst on a par-4</li>
+  <li>Henry Meller runs up a 12 (+8) at the 17th — a new TEG-record and career-worst on a par-4</li>
 </ul></div>

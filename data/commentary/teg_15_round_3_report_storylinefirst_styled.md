@@ -62,5 +62,5 @@ It capped a substantial swing after a poor second round, and leaves Neumann's Wo
 
 <div class="records"><p class="records-header">Personal bests:</p><ul>
   <li>Gregg Williams posts a personal-best Gross round: +10</li>
-  <li>Gregg WILLIAMS — +2 Gross on the Back nine (R3) is a personal-best Back nine Gross</li>
+  <li>Gregg Williams — +2 Gross on the Back nine is a personal-best Back nine Gross</li>
 </ul></div>

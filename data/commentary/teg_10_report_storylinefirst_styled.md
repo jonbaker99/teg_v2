@@ -95,41 +95,42 @@ His best gross of the four days was the 102 in round one at Boavista, on what wa
 ## Personal bests and TEG records
 
 <div class="records"><p class="records-header">TEG records:</p><ul>
-  <li>Alex Baker's 184 pts is the best Trophy total in TEG history</li>
-  <li>David Mullin's +51 is the best Gross total in TEG history</li>
   <li>Jon Baker's +10 (gross) is the 3rd-best Gross round in TEG history to date (R2)</li>
   <li>David Mullin's +4 (gross) is the best Gross round in TEG history to date (R1)</li>
   <li>David Mullin's 49 pts is the 2nd-best round in TEG history to date (R1)</li>
   <li>Alex Baker's 51 pts is the best round in TEG history to date (R4)</li>
-  <li>David MULLIN — -1 Gross on the Back nine (R1) is the best Back nine Gross in TEG history</li>
+  <li>Alex Baker's 184 pts is the best Trophy total in TEG history</li>
+  <li>David Mullin — -1 Gross on the Back nine (R1) is the best Back nine Gross in TEG history</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Personal bests:</p><ul>
   <li>Alex Baker posts a personal-best Gross round: +17 (R4)</li>
-  <li>Alex Baker's +90 is a personal Gross best</li>
-  <li>Gregg Williams's +76 is a personal Gross best</li>
-  <li>Jon Baker's +63 is a personal Gross best</li>
   <li>Gregg Williams posts a personal-best round: 48 pts (R2)</li>
   <li>Gregg Williams posts a personal-best Gross round: +14 (R2)</li>
   <li>Alex Baker posts a personal-best round: 47 pts (R3)</li>
   <li>Alex Baker posts a personal-best Gross round: +22 (R3)</li>
   <li>Alex Baker posts a personal-best round: 45 pts (R2)</li>
   <li>Alex Baker posts a personal-best Gross round: +23 (R2)</li>
-  <li>Alex BAKER — 28 Stableford on the Front nine (R2) is a personal-best Front nine Stableford</li>
-  <li>David MULLIN — 28 Stableford on the Back nine (R1) is a personal-best Back nine Stableford</li>
-  <li>Jon BAKER — 27 Stableford on the Front nine (R2) is a personal-best Front nine Stableford</li>
-  <li>Alex BAKER — +6 Gross on the Front nine (R2) is a personal-best Front nine Gross</li>
-  <li>David MULLIN — -1 Gross on the Back nine (R1) is a personal-best Back nine Gross</li>
-  <li>Jon BAKER — +1 Gross on the Front nine (R2) is a personal-best Front nine Gross</li>
+  <li>Alex Baker's +90 is a personal Gross best</li>
+  <li>David Mullin's +51 is a personal Gross best</li>
+  <li>Alex Baker's 184 pts is a personal Trophy best</li>
+  <li>Gregg Williams's 173 pts is a personal Trophy best</li>
+  <li>David Mullin — -1 Gross on the Back nine (R1) is a personal-best Back nine Gross</li>
+  <li>David Mullin — 28 Stableford on the Back nine (R1) is a personal-best Back nine Stableford</li>
+  <li>Alex Baker — +6 Gross on the Front nine (R2) is a personal-best Front nine Gross</li>
+  <li>Jon Baker — +1 Gross on the Front nine (R2) is a personal-best Front nine Gross</li>
+  <li>Alex Baker — 28 Stableford on the Front nine (R2) is a personal-best Front nine Stableford</li>
+  <li>Jon Baker — 27 Stableford on the Front nine (R2) is a personal-best Front nine Stableford</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Personal worsts:</p><ul>
   <li>John Patterson's worst round to date: 21 pts (R4)</li>
   <li>John Patterson's worst Gross round to date: +40 (R4)</li>
+  <li>John Patterson's 12-hole "Over Par" streak is a personal worst (previous 7), at T10 R4 H7 to T10 R4 H18</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>John Patterson runs up a 11 (sextuple bogey) at the 8th (R4) — his career-worst on a par-5</li>
-  <li>Stuart Neumann runs up a 10 (sextuple bogey) at the 18th (R2) — his career-worst on a par-4</li>
-  <li>Stuart Neumann runs up a 10 (sextuple bogey) at the 18th (R1) — his career-worst on a par-4</li>
+  <li>John Patterson runs up an 11 (+6) at the 8th (R4) — his career-worst on a par-5</li>
+  <li>Stuart Neumann runs up a 10 (+6) at the 18th (R2) — his career-worst on a par-4</li>
+  <li>Stuart Neumann runs up a 10 (+6) at the 18th (R1) — his career-worst on a par-4</li>
 </ul></div>

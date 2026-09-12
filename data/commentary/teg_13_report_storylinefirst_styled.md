@@ -89,17 +89,18 @@ The Spoon is decided on Stableford points, and 135 across four rounds was never 
 ## Personal bests and TEG records
 
 <div class="records"><p class="records-header">TEG records:</p><ul>
-  <li>Jon Baker's +50 is the best Gross total in TEG history</li>
   <li>John Patterson's 49 pts is the 3rd-best round in TEG history to date (R3)</li>
   <li>Jon Baker's +8 (gross) is the 2nd-best Gross round in TEG history to date (R3)</li>
+  <li>Jon Baker's +50 is the best Gross total in TEG history</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Personal bests:</p><ul>
   <li>Alex Baker posts a personal-best Gross round: +17 (R4)</li>
   <li>John Patterson posts a personal-best Gross round: +12 (R3)</li>
+  <li>Jon Baker's +50 is a personal Gross best</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
   <li>John Patterson eagles the par-5 2nd (R4)</li>
-  <li>David Mullin runs up a 9 (quintuple bogey) at the 10th (R4) — his career-worst on a par-4</li>
+  <li>David Mullin runs up a 9 (+5) at the 10th (R4) — his career-worst on a par-4</li>
 </ul></div>

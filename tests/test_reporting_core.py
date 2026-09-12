@@ -8,6 +8,7 @@ from minimal in-memory inputs. Nothing in reporting/llm.py is imported or
 exercised.
 """
 
+import pandas as pd
 import pytest
 
 from teg_analysis.reporting import scoring
@@ -171,40 +172,52 @@ def test_add_round_classes_ignores_non_round_headings():
     assert out == text
 
 
+def _tiny_all_data(rows):
+    """Minimal `all_data`-shaped DataFrame for a single fake TEG: one row per
+    player per hole, just the columns `get_teg_placings` needs."""
+    return pd.DataFrame(rows)
+
+
+def _fake_teg_df():
+    # Three players, one row each, TEGNum 99 (post-Stableford era) — distinct
+    # winners on each competition: Jon Baker (Trophy), Dave Mullin (Jacket),
+    # Gregg Williams last on the Trophy metric (Spoon).
+    return _tiny_all_data([
+        {"TEGNum": 99, "Player": "Jon BAKER", "GrossVP": 4, "NetVP": -2, "Stableford": 40},
+        {"TEGNum": 99, "Player": "Dave MULLIN", "GrossVP": 0, "NetVP": 0, "Stableford": 36},
+        {"TEGNum": 99, "Player": "Gregg WILLIAMS", "GrossVP": 2, "NetVP": 2, "Stableford": 30},
+    ])
+
+
 def test_build_at_a_glance_lists_winners_without_counts():
-    plan = {"competitions": [
-        {"name": "Trophy (Stableford)", "winner_or_loser": "Jon Baker"},
-        {"name": "Green Jacket (Gross)", "winner_or_loser": "Dave Mullin"},
-        {"name": "Wooden Spoon", "winner_or_loser": "Gregg Williams"},
-    ]}
-    out = render._build_at_a_glance(plan)
+    out = render._build_at_a_glance(99, df=_fake_teg_df())
     assert '<section class="callout at-a-glance-box">' in out
     assert "Jon Baker" in out and "Dave Mullin" in out and "Gregg Williams" in out
     assert "(" not in out.split("Jon Baker")[1].split("</p>")[0]  # no ordinal suffix
 
 
 def test_build_at_a_glance_annotates_with_win_counts():
-    plan = {"competitions": [
-        {"name": "Trophy (Stableford)", "winner_or_loser": "Jon Baker"},
-    ]}
-    win_counts = {"JON BAKER": {"trophy_wins": 2}}
-    out = render._build_at_a_glance(plan, win_counts=win_counts)
+    win_counts = {"Jon BAKER": {"trophy_wins": 2}}
+    out = render._build_at_a_glance(99, win_counts=win_counts, df=_fake_teg_df())
     assert "(2nd Trophy)" in out
 
 
-def test_apply_styling_inserts_dateline_and_callout_once():
+def test_apply_styling_inserts_dateline_and_callout_once(monkeypatch):
     text = "# TEG 42 Report\n\nProse.\n"
-    plan = {"competitions": [{"name": "Trophy (Stableford)", "winner_or_loser": "Jon Baker"}]}
     venue = {"teg_num": 42, "area": "Berkshire", "year": 2026}
+    monkeypatch.setattr(
+        render, "_build_at_a_glance",
+        lambda teg_num, win_counts=None: '<section class="callout at-a-glance-box"></section>',
+    )
 
-    styled = render.apply_styling(text, plan, venue)
+    styled = render.apply_styling(text, 42, venue)
     assert styled.count("{.report-title}") == 1
     assert 'class="dateline"' in styled
     assert "TEG 42 | Berkshire | 2026" in styled
     assert 'at-a-glance-box' in styled
 
     # Idempotent: re-applying does not duplicate the callout/dateline.
-    restyled = render.apply_styling(styled, plan, venue)
+    restyled = render.apply_styling(styled, 42, venue)
     assert restyled.count('class="dateline"') == 1
     assert restyled.count('at-a-glance-box') == 1
 
@@ -238,3 +251,81 @@ def test_dedup_entries_combines_round_suffixes():
     assert "Baker posts a personal-best round: 44 pts (R2, R4)" in out
     assert "Someone else entirely" in out
     assert len(out) == 2
+
+
+def test_dedup_entries_sorts_round_suffixes_ascending():
+    # Source events don't arrive in round order — the dedup must not just
+    # concatenate them as found (regression: used to produce "(R4, R2)").
+    entries = [
+        "Baker posts a personal-best round: 44 pts (R4)",
+        "Baker posts a personal-best round: 44 pts (R2)",
+    ]
+    out = render._dedup_entries(entries)
+    assert out == ["Baker posts a personal-best round: 44 pts (R2, R4)"]
+
+
+# ---------------------------------------------------------------------------
+# render.py: Notable Achievements helpers
+# ---------------------------------------------------------------------------
+
+def test_a_or_an_before_vowel_sound_numbers():
+    assert render._a_or_an(8) == "an"
+    assert render._a_or_an(11) == "an"
+    assert render._a_or_an(18) == "an"
+    assert render._a_or_an(9) == "a"
+    assert render._a_or_an(10) == "a"
+    assert render._a_or_an(12) == "a"
+
+
+def test_blowup_feat_numeric_score_not_word_label():
+    ev = NotableEvent(
+        teg_num=99, scope="hole", type="big_blowup", round=2,
+        headline="Jon Baker runs up a 11 (sextuple bogey) at the 5th (R2)",
+        players=["Jon Baker"],
+        holes=[{"hole": 5, "par": 4, "sc": 11, "grossvp": 7, "result": "sextuple bogey"}],
+        importance=5.0, rarity=5.0, entertainment=5.0,
+    )
+    out = render._blowup_feat(ev, is_pw=True, is_rw=False, show_round=True)
+    assert "an 11 (+7)" in out
+    assert "sextuple bogey" not in out
+    assert "career-worst on a par-4" in out
+
+
+def test_blowup_feat_merges_record_and_career_worst_tag():
+    ev = NotableEvent(
+        teg_num=99, scope="hole", type="big_blowup", round=1,
+        headline="x", players=["Jon Baker"],
+        holes=[{"hole": 5, "par": 4, "sc": 12, "grossvp": 8, "result": "+8"}],
+        importance=5.0, rarity=5.0, entertainment=5.0,
+    )
+    out = render._blowup_feat(ev, is_pw=True, is_rw=True, show_round=False)
+    assert out.count("par-4") == 1
+    assert "a new TEG-record and career-worst on a par-4" in out
+
+
+def test_get_teg_placings_applies_override(monkeypatch):
+    from teg_analysis.analysis import history
+
+    df = pd.DataFrame([
+        {"TEGNum": 5, "Player": "David MULLIN", "GrossVP": 72, "NetVP": 12, "Stableford": 136},
+        {"TEGNum": 5, "Player": "Stuart NEUMANN", "GrossVP": 88, "NetVP": 8, "Stableford": 139},
+        {"TEGNum": 5, "Player": "Gregg WILLIAMS", "GrossVP": 126, "NetVP": -6, "Stableford": 153},
+    ])
+    monkeypatch.setattr(history, "TEG_OVERRIDES", {"TEG 5": {"Best Gross": "Stuart NEUMANN*"}})
+    placings = history.get_teg_placings(df, 5)
+    # Raw data favours David Mullin (72 < 88); the override promotes Neumann.
+    assert placings["jacket"][0] == "Stuart NEUMANN"
+    assert placings["jacket"][1] == "David MULLIN"
+
+
+def test_get_teg_placings_no_override_sorts_by_score(monkeypatch):
+    from teg_analysis.analysis import history
+
+    df = pd.DataFrame([
+        {"TEGNum": 6, "Player": "Jon BAKER", "GrossVP": 4, "NetVP": -2, "Stableford": 40},
+        {"TEGNum": 6, "Player": "Dave MULLIN", "GrossVP": 0, "NetVP": 0, "Stableford": 36},
+    ])
+    monkeypatch.setattr(history, "TEG_OVERRIDES", {})
+    placings = history.get_teg_placings(df, 6)
+    assert placings["trophy"] == ["Jon BAKER", "Dave MULLIN"]
+    assert placings["jacket"] == ["Dave MULLIN", "Jon BAKER"]

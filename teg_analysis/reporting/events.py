@@ -795,6 +795,13 @@ def _hole_event(teg_num, rnd, player, ev, etype, head, imp, rar, ent) -> Notable
     )
 
 
+# All-time-rank claims ("the 3rd-best round in TEG history") need enough
+# history to mean something — early TEGs have almost the whole all-time pool
+# in the top 3 by construction. ~5 TEGs' worth of rounds (2026-09-12 audit:
+# TEG 2/3 each listed a dozen such claims off a 2-3 TEG pool).
+_MIN_ALL_TIME_ROUND_POOL = 20
+
+
 def _round_beats(round_summary: pd.DataFrame, sw: dict, metric: str = "stableford") -> list:
     """One leadership beat per round, plus per-player round beats only when notable.
 
@@ -840,7 +847,7 @@ def _round_beats(round_summary: pd.DataFrame, sw: dict, metric: str = "stablefor
             # every round is a "PB"). Require a meaningful history first.
             has_history = pn is not None and pn >= 8
             round_score_str = _fmt_score(r[cols["round_score"]])
-            if ax is not None and ax <= 3:
+            if ax is not None and ax <= 3 and an is not None and an >= _MIN_ALL_TIME_ROUND_POOL:
                 label = {1: "the best", 2: "the 2nd-best", 3: "the 3rd-best"}[ax]
                 note = f"{player}'s {round_score_str} is {label} round in TEG history to date"
                 rar, ent = {1: 9.0, 2: 8.0, 3: 7.0}[ax], scoring.cap(7 + 2 * (1 - w))
@@ -875,12 +882,12 @@ def _round_beats(round_summary: pd.DataFrame, sw: dict, metric: str = "stablefor
             # AND a Gross PB simultaneously, or one without the other. Emit a
             # separate `round_player_gross` beat using the gross history columns.
             gx, gn = _parse_rank(r.get("Round_Rank_In_Player_History_Gross"))
-            gax, _gan = _parse_rank(r.get("Round_Rank_In_All_History_Gross"))
+            gax, gan = _parse_rank(r.get("Round_Rank_In_All_History_Gross"))
             g_has_history = gn is not None and gn >= 8
             g_note, g_rar, g_ent, g_imp = None, 1.0, 2.0, scoring.cap(2 + 3 * w)
             gross_score = int(r["Round_Score_Gross"])
             gross_score_str = f"{gross_score:+d}"
-            if gax is not None and gax <= 3:
+            if gax is not None and gax <= 3 and gan is not None and gan >= _MIN_ALL_TIME_ROUND_POOL:
                 label = {1: "the best", 2: "the 2nd-best", 3: "the 3rd-best"}[gax]
                 g_note = f"{player}'s {gross_score_str} (gross) is {label} Gross round in TEG history to date"
                 g_rar, g_ent = {1: 9.0, 2: 8.0, 3: 7.0}[gax], scoring.cap(7 + 2 * (1 - w))

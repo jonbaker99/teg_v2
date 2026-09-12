@@ -45,5 +45,5 @@ Mullin's turn arrived later and was no less thorough. A quadruple bogey 8 at the
 ## Personal bests and TEG records
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Stuart Neumann runs up a 10 (sextuple bogey) at the 15th (R1) — his career-worst on a par-4</li>
+  <li>Stuart Neumann runs up a 10 (+6) at the 15th — his career-worst on a par-4</li>
 </ul></div>

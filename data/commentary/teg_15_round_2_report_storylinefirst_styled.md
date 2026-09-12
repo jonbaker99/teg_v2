@@ -67,6 +67,6 @@ By the close, Williams still led both the Trophy and the Green Jacket, and both 
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
   <li>David Mullin eagles the par-5 15th (R2)</li>
-  <li>Alex Baker runs up a 11 (sextuple bogey) at the 6th (R2) — his career-worst on a par-5</li>
-  <li>Jon Baker runs up a 11 (septuple bogey) at the 17th (R2) — his career-worst on a par-4</li>
+  <li>Alex Baker runs up an 11 (+6) at the 6th — his career-worst on a par-5</li>
+  <li>Jon Baker runs up an 11 (+7) at the 17th — his career-worst on a par-4</li>
 </ul></div>

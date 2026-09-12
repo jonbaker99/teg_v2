@@ -54,3 +54,9 @@ He then steadied and did the necessary thing. Twelve points from holes 12 to 15,
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> GW 149 (R4: 41) | AB 137 (R4: 39) | JB 131 (R4: 28) | DM 126 (R4: 34) | HM 111 (R4: 21) | SN 100 (R4: 32)</p>
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +77 (R4: +17) | JB +83 (R4: +25) | GW +107 (R4: +22) | HM +123 (R4: +40) | SN +137 (R4: +24) | AB +148 (R4: +33)</p>
+
+## Personal bests and TEG records
+
+<div class="records"><p class="records-header">Personal worsts:</p><ul>
+  <li>Henry Meller's 6-hole "+2s or Worse" streak is a personal worst (previous 5), at T08 R4 H1 to T08 R4 H6</li>
+</ul></div>

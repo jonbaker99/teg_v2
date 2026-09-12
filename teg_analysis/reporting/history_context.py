@@ -223,7 +223,12 @@ def build_win_counts(teg_num: int, df: Optional[pd.DataFrame] = None) -> dict:
         return {}
 
     from teg_analysis.analysis.history import get_teg_winners
-    winners = get_teg_winners(through_df)
+    # `winners` carries a trailing '*' on a tiebreak-override name (see
+    # `TEG_OVERRIDES`) — strip it before comparing, the same convention
+    # `analysis.history.process_winners_for_charts`/`calculate_trophy_jacket_doubles`
+    # already use, or an overridden winner (e.g. TEG 5's Green Jacket) is
+    # silently undercounted by one.
+    winners = get_teg_winners(through_df).replace(r"\*", "", regex=True)
 
     out = {}
     all_players = sorted(through_df["Player"].unique())

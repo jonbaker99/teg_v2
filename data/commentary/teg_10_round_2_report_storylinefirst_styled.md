@@ -64,12 +64,12 @@ At the other end, John Patterson's round ended at the 1st. Not literally, but in
   <li>Gregg Williams posts a personal-best Gross round: +14</li>
   <li>Alex Baker posts a personal-best round: 45 pts</li>
   <li>Alex Baker posts a personal-best Gross round: +23</li>
-  <li>Alex BAKER — 28 Stableford on the Front nine (R2) is a personal-best Front nine Stableford</li>
-  <li>Jon BAKER — 27 Stableford on the Front nine (R2) is a personal-best Front nine Stableford</li>
-  <li>Alex BAKER — +6 Gross on the Front nine (R2) is a personal-best Front nine Gross</li>
-  <li>Jon BAKER — +1 Gross on the Front nine (R2) is a personal-best Front nine Gross</li>
+  <li>Alex Baker — +6 Gross on the Front nine is a personal-best Front nine Gross</li>
+  <li>Jon Baker — +1 Gross on the Front nine is a personal-best Front nine Gross</li>
+  <li>Alex Baker — 28 Stableford on the Front nine is a personal-best Front nine Stableford</li>
+  <li>Jon Baker — 27 Stableford on the Front nine is a personal-best Front nine Stableford</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Stuart Neumann runs up a 10 (sextuple bogey) at the 18th (R2) — his career-worst on a par-4</li>
+  <li>Stuart Neumann runs up a 10 (+6) at the 18th — his career-worst on a par-4</li>
 </ul></div>

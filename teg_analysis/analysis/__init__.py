@@ -38,7 +38,7 @@ from .aggregation import (
     get_last_completed_teg_fast,
     has_incomplete_teg_fast,
 )
-from .history import get_teg_winners
+from .history import get_teg_winners, get_teg_placings
 from .leaderboards import filter_data_by_teg
 from .rankings import add_ranks, get_best, get_worst
 from .data_update import execute_data_update, process_google_sheets_data
@@ -62,6 +62,7 @@ __all__ = [
     'get_net_competition_measure',
     'aggregate_data',
     'get_teg_winners',
+    'get_teg_placings',
     'get_complete_teg_data',
     'add_ranks',
     'get_best',

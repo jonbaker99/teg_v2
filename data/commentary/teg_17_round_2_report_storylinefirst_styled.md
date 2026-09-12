@@ -50,8 +50,9 @@ The collapse cost him the TEG 16 Trophy lead. It passes to Jon Baker, who moved 
 
 <div class="records"><p class="records-header">Personal worsts:</p><ul>
   <li>John Patterson's worst Gross round to date: +44</li>
+  <li>John Patterson — +25 Gross on the Back nine is a personal-worst Back nine Gross</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>John Patterson runs up a 11 (sextuple bogey) at the 15th (R2) — his career-worst on a par-5</li>
+  <li>John Patterson runs up an 11 (+6) at the 15th — his career-worst on a par-5</li>
 </ul></div>

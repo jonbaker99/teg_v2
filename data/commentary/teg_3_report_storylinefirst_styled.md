@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Jon Baker — winner at -18, by 18</span></p>
-  <p><strong>Green Jacket:</strong> David Mullin — winner at +72, by 12</p>
-  <p><strong>Wooden Spoon:</strong> Henry Meller — loser at +16 net VP</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Jon Baker (1st Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> David Mullin (2nd Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> Henry Meller (2nd Spoon)</p>
 </section>
 
 ## How Jon Baker turned the best round in TEG history into an eighteen-shot procession at Boavista and a first Trophy
@@ -113,13 +113,9 @@ He finished 16 over net, and collected the Wooden Spoon. He had, at various mome
   <li>David Mullin's -1 is the 3rd-best round in TEG history to date (R1)</li>
 </ul></div>
 
-<div class="records"><p class="records-header">Personal bests:</p><ul>
-  <li>Jon Baker's -18 net-vs-par is a personal Trophy best</li>
-</ul></div>
-
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Stuart Neumann runs up a 10 (sextuple bogey) at the 17th (R4) — his career-worst on a par-4</li>
-  <li>Henry Meller runs up a 12 (+8) at the 17th (R1) — a new TEG-record worst on a par-4; his career-worst on a par-4</li>
-  <li>Henry Meller runs up a 10 (quintuple bogey) at the 3rd (R3) — his career-worst on a par-5</li>
-  <li>David Mullin runs up a 9 (quintuple bogey) at the 17th (R2) — his career-worst on a par-4</li>
+  <li>Stuart Neumann runs up a 10 (+6) at the 17th (R4) — his career-worst on a par-4</li>
+  <li>Henry Meller runs up a 12 (+8) at the 17th (R1) — a new TEG-record and career-worst on a par-4</li>
+  <li>Henry Meller runs up a 10 (+5) at the 3rd (R3) — his career-worst on a par-5</li>
+  <li>David Mullin runs up a 9 (+5) at the 17th (R2) — his career-worst on a par-4</li>
 </ul></div>

@@ -53,9 +53,11 @@ While Mullin unravelled, Jon Baker gained three shots to par across the last thr
 
 <div class="records"><p class="records-header">Personal worsts:</p><ul>
   <li>David Mullin's worst Gross round to date: +29</li>
+  <li>David Mullin — +18 Gross on the Back nine is a personal-worst Back nine Gross</li>
+  <li>David Mullin — +9 net-vs-par on the Back nine is a personal-worst Back nine net-vs-par</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>David Mullin runs up a 9 (quintuple bogey) at the 15th (R3) — his career-worst on a par-4</li>
-  <li>Henry Meller runs up a 10 (quintuple bogey) at the 1st (R3) — his career-worst on a par-5</li>
+  <li>David Mullin runs up a 9 (+5) at the 15th — his career-worst on a par-4</li>
+  <li>Henry Meller runs up a 10 (+5) at the 1st — his career-worst on a par-5</li>
 </ul></div>

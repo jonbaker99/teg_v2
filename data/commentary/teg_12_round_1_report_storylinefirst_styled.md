@@ -54,7 +54,7 @@ Elsewhere the 2019 Green Jacket honours were shared. Jon Baker birdied the 14th 
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Stuart Neumann runs up a 12 (septuple bogey) at the 15th (R1) — a new TEG-record worst on a par-5; his career-worst on a par-5</li>
-  <li>Stuart Neumann runs up a 10 (sextuple bogey) at the 13th (R1) — his career-worst on a par-4</li>
-  <li>John Patterson runs up a 12 (+8) at the 4th (R1) — a new TEG-record worst on a par-4; his career-worst on a par-4</li>
+  <li>Stuart Neumann runs up a 12 (+7) at the 15th — a new TEG-record and career-worst on a par-5</li>
+  <li>Stuart Neumann runs up a 10 (+6) at the 13th — his career-worst on a par-4</li>
+  <li>John Patterson runs up a 12 (+8) at the 4th — a new TEG-record and career-worst on a par-4</li>
 </ul></div>

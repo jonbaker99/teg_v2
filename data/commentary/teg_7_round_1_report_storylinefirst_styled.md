@@ -55,10 +55,10 @@ Those three pars decided things. On the 10th he had drawn level for the Trophy l
 
 <div class="records"><p class="records-header">Personal bests:</p><ul>
   <li>Henry Meller posts a personal-best Gross round: +12</li>
-  <li>Henry MELLER — -10 net-vs-par on the Back nine (R1) is a personal-best Back nine net-vs-par</li>
-  <li>Henry MELLER — +2 Gross on the Back nine (R1) is a personal-best Back nine Gross</li>
+  <li>Henry Meller — +2 Gross on the Back nine is a personal-best Back nine Gross</li>
+  <li>Henry Meller — -10 net-vs-par on the Back nine is a personal-best Back nine net-vs-par</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Alex Baker runs up a 8 (quintuple bogey) at the 5th (R1) — his career-worst on a par-3</li>
+  <li>Alex Baker runs up an 8 (+5) at the 5th — his career-worst on a par-3</li>
 </ul></div>

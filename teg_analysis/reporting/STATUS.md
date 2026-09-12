@@ -14,6 +14,54 @@
 
 ## START HERE — picking this up in a new chat (2026-09-08)
 
+**Notable Achievements + At A Glance rebuilt (2026-09-12).** Both deterministic (no-LLM) report
+blocks were audited across all 17 TEGs and rebuilt to reuse the same analysis functions the webapp
+Records page uses, rather than a parallel hand-rolled implementation:
+
+- **At A Glance** (`render._build_at_a_glance`) now says the same three things every report: winner,
+  their Nth-win ordinal, nothing about score or margin. It computes the winner directly from scores
+  via the new `analysis.history.get_teg_placings` (override-aware — see next point) instead of the
+  LLM plan's free-text `winner_or_loser` field, which had drifted into wildly inconsistent formats
+  across the corpus (only 4 of 17 TEGs even carried a win-count). The runner-up is unchanged — it
+  already came from `newspaper_edition._add_runners_up` reading the Standings table.
+- **Found and fixed while doing it: TEG 5's Green Jacket winner was wrong.**
+  `constants.TEG_OVERRIDES['TEG 5']` records a tiebreak decided off-course — Stuart Neumann, not
+  David Mullin (who has the better raw Gross total) — and `analysis.history.get_teg_winners`
+  (used by `/history`) already respected it. The report pipeline never did. New
+  `get_teg_placings(df, teg_num)` exposes the full override-aware order (not just the single
+  winner `get_teg_winners` gives), so `_build_at_a_glance` and `render.build_round_standings`'s
+  final-round row both now agree with `/history`. Also fixed in the same pass:
+  `history_context.build_win_counts` compared against the override name including its literal
+  trailing `*`, silently undercounting an overridden winner's tally by one — now stripped, matching
+  the convention `analysis.history.process_winners_for_charts`/`calculate_trophy_jacket_doubles`
+  already used.
+- **Notable Achievements** (`render.build_records_block`) now pulls tournament totals, 9-holes and
+  streaks from `analysis.records`/`reporting.milestone_records` — the same functions the Records
+  page calls — instead of `events.py`'s hand-rolled duplicate logic. Concretely: streaks (all-time
+  record ties/breaks, and now personal-best/worst streaks too — a new detector,
+  `milestone_records.detect_personal_streak_extremes`) reach this appendix for the first time;
+  personal-worst tournament totals and personal-worst 9-holes are now detected at all (previously
+  bests only — `records.identify_9hole_records_and_pbs` gained a `personal_worsts` key); hole scores
+  over par are numeric ("+5") rather than a word ladder ("quintuple bogey"); the wrong-article bug
+  ("runs up a 8", "a 11") is fixed; round suffixes in a merged entry sort ascending ("R2, R4" not
+  "R4, R2"); a redundant double-tag ("...on a par-4; his career-worst on a par-4") merges into one.
+  Early-TEG noise (TEG 2/3 each listed a dozen near-automatic "Nth-best in TEG history" claims off a
+  2-3 TEG pool) is gated by history depth — `MIN_PRIOR_TEGS_FOR_LEAGUE_RANK` and siblings, top of
+  `render.py`'s Notable Achievements section, plus a matching gate added to `events._round_beats`'s
+  own all-time-rank branch. No cap on volume otherwise — everything clearing the bar prints.
+  Entry counts across the 17-TEG corpus went from a 1-to-26 spread to roughly 1-to-29, but with the
+  early-TEG *trivial* entries gone and genuine new categories (streaks, worsts) added — a real
+  redistribution, not just a trim. One deliberate simplification from the original plan: tournament
+  totals now show only outright records (rank 1), not "2nd/3rd-best ever" — the underlying
+  `identify_aggregate_records_and_pbs` doesn't expose that granularity, and extending it wasn't worth
+  it for two entries in the whole corpus (TEG 7, TEG 12) that lost this framing.
+  **Not yet retrofitted onto the 17 published reports** — `scripts/apply_report_rules.py
+  --restyle-only` regenerates both blocks from data for free (no LLM call), confirmed by reading the
+  script; round reports need `render.style_round_report` run separately, same free path.
+- Round-level records/PBs/worsts and single-hole feats (aces, eagles, blow-ups) were already decent
+  and already history-depth-gated on their own terms (`events._round_beats`'s `has_history` check) —
+  left as the source for those two categories rather than rebuilt.
+
 **A second, non-CLI caller now exists (2026-09-12).** `webapp/report_generation.py` calls
 `run_one()` directly from both `scripts/storyline_full_report_experiment.py` and
 `scripts/storyline_round_report_experiment.py`, from inside the webapp process, via
@@ -1662,8 +1710,13 @@ the blocker (it was ported on 2026-08-11); this is now purely a scope-and-cost c
 
 **9. Remote (webapp) report generation** (known issue 5) — tracked in `webapp/TODOS.md`.
 
-**10. Whenever:** TEG 11's at-a-glance box renders differently from every other report, suggesting
-`build_win_counts` returned nothing for that TEG. Cosmetic and self-contained.
+**10. Done (2026-09-12), and the hypothesis here was wrong.** `build_win_counts(11)` returns full,
+correct data — checked directly. TEG 11's box wasn't uniquely broken; it was one of 13 of 17 TEGs
+whose *published* at-a-glance box predates the win-count-suffix feature entirely (only TEGs 10, 13,
+14, 16 had it). The real fix: `render._build_at_a_glance` now computes the winner directly from
+scores (`analysis.history.get_teg_placings`) instead of the LLM plan's free-text `winner_or_loser`
+field, dropping score/margin text in favour of the same three lines every time — see the "Notable
+Achievements + At A Glance rebuild" entry below.
 
 ---
 

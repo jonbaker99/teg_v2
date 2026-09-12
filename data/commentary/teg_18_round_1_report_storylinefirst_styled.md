@@ -59,5 +59,5 @@ The Stableford column was less generous. Holes 7 to 9 undid him twice over: thre
 ## Personal bests and TEG records
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>David Mullin runs up a 11 (sextuple bogey) at the 15th (R1) — his career-worst on a par-5</li>
+  <li>David Mullin runs up an 11 (+6) at the 15th — his career-worst on a par-5</li>
 </ul></div>

@@ -60,5 +60,5 @@ Set beside round 3 it barely looks like the same man: 30 Stableford points then,
 ## Personal bests and TEG records
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Alex Baker runs up a 11 (septuple bogey) at the 12th (R4) — his career-worst on a par-4</li>
+  <li>Alex Baker runs up an 11 (+7) at the 12th — his career-worst on a par-4</li>
 </ul></div>

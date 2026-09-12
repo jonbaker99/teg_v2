@@ -66,8 +66,9 @@ The 83 beat his own previous best at the course, 89, by six shots. It stands as 
 <div class="records"><p class="records-header">Personal bests:</p><ul>
   <li>Gregg Williams posts a personal-best round: -12</li>
   <li>Gregg Williams posts a personal-best Gross round: +20</li>
+  <li>David Mullin's 5-hole "Pars or Better" streak is a personal best (previous 4), at T07 R4 H4 to T07 R4 H8</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Jon Baker runs up a 11 (sextuple bogey) at the 10th (R4) — his career-worst on a par-5</li>
+  <li>Jon Baker runs up an 11 (+6) at the 10th — his career-worst on a par-5</li>
 </ul></div>

@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Gregg Williams — 149 pts, by 12 from Alex Baker</span></p>
-  <p><strong>Green Jacket:</strong> David Mullin — +77, by 6 from Jon Baker</p>
-  <p><strong>Wooden Spoon:</strong> Stuart Neumann — 100 pts, last by 11 from Henry Meller</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Gregg Williams (3rd Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> David Mullin (6th Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> Stuart Neumann (1st Spoon)</p>
 </section>
 
 ## How Gregg Williams won the TEG 8 Trophy by 12: three best-in-field rounds either side of one ruinous R3, quintuple bogeys included
@@ -101,10 +101,13 @@ The closing day at Oitavos Dunes at least gave him something to take home. Neuma
   <li>David Mullin's worst round to date: 26 pts (R3)</li>
   <li>Stuart Neumann's worst round to date: 17 pts (R1)</li>
   <li>Stuart Neumann's worst Gross round to date: +43 (R1)</li>
+  <li>Henry Meller's +123 is a personal Gross worst</li>
+  <li>Stuart Neumann's +137 is a personal Gross worst</li>
+  <li>Henry Meller's 6-hole "+2s or Worse" streak is a personal worst (previous 5), at T08 R4 H1 to T08 R4 H6</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Stuart Neumann runs up a 8 (quintuple bogey) at the 9th (R3) — his career-worst on a par-3</li>
-  <li>Henry Meller runs up a 10 (quintuple bogey) at the 3rd (R1) — his career-worst on a par-5</li>
-  <li>Stuart Neumann runs up a 8 (quintuple bogey) at the 14th (R1) — his career-worst on a par-3</li>
+  <li>Stuart Neumann runs up an 8 (+5) at the 9th (R3) — his career-worst on a par-3</li>
+  <li>Henry Meller runs up a 10 (+5) at the 3rd (R1) — his career-worst on a par-5</li>
+  <li>Stuart Neumann runs up an 8 (+5) at the 14th (R1) — his career-worst on a par-3</li>
 </ul></div>

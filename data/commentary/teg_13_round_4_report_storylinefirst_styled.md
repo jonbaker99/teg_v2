@@ -61,5 +61,5 @@ The round was built on control, not fireworks. Two holes to open without a dropp
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
   <li>John Patterson eagles the par-5 2nd (R4)</li>
-  <li>David Mullin runs up a 9 (quintuple bogey) at the 10th (R4) — his career-worst on a par-4</li>
+  <li>David Mullin runs up a 9 (+5) at the 10th — his career-worst on a par-4</li>
 </ul></div>

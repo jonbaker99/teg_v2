@@ -50,5 +50,5 @@ The total came to 34 points, a fall of 15 from his round two score. He remained 
 ## Personal bests and TEG records
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>David Mullin runs up a 9 (quintuple bogey) at the 10th (R3) — his career-worst on a par-4</li>
+  <li>David Mullin runs up a 9 (+5) at the 10th — his career-worst on a par-4</li>
 </ul></div>

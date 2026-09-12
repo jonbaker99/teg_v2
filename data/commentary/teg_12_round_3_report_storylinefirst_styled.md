@@ -58,5 +58,5 @@ Then the round turned. Between the 11th and the 13th he shed twelve gross shots 
 ## Personal bests and TEG records
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Gregg Williams runs up a 11 (septuple bogey) at the 13th (R3) — his career-worst on a par-4</li>
+  <li>Gregg Williams runs up an 11 (+7) at the 13th — his career-worst on a par-4</li>
 </ul></div>

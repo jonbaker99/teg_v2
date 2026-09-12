@@ -199,6 +199,7 @@ Cache is in-process (`@lru_cache`). Cleared manually after data updates.
 - `build_streaks(all_data)` — Streaks data structure per hole per player
 - `get_eagles_data(all_data)` — Eagles records
 - `get_teg_winners(all_data)` — Who won each tournament
+- `get_teg_placings(df, teg_num)` — Full best-to-worst order for one TEG's Trophy/Green Jacket, override-aware like `get_teg_winners`
 - `calculate_par_performance_matrix()` — Score distribution by par type
 - `prepare_comeback_data()` — Comeback/improvement records
 

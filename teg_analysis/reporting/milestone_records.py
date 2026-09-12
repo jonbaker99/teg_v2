@@ -37,6 +37,34 @@ def _proper(name: str) -> str:
     return " ".join(w.capitalize() for w in str(name).split())
 
 
+def _round_from_location(loc) -> Optional[int]:
+    """Parse the round number out of a streak `Location` string like
+    'TEG 16 R2 H4 to TEG 16 R2 H10'. `None` if it can't be parsed."""
+    if not isinstance(loc, str) or " R" not in loc:
+        return None
+    try:
+        return int(loc.split(" R", 1)[1].split(" ", 1)[0])
+    except (IndexError, ValueError):
+        return None
+
+
+# `calculate_window_streaks.streak_names`, inverted — display label -> the
+# `*_streak` column `get_max_streaks` keys its wide output by — restricted to
+# `_INTERESTING_STREAK_TYPES` (the same set `detect_streak_records` uses) so
+# "personal best/worst" and "all-time record" apply the same compelling-ness
+# bar. `direction` says which extreme is the achievement: a longer good
+# streak is a personal BEST (more eagles/birdies/pars-or-better in a row); a
+# longer bad streak is a personal WORST (a longer cold run or blow-up run).
+_STREAK_COLUMN_BY_TYPE = {
+    "Eagles": ("eagle_true_streak", "best"),
+    "Birdies": ("birdie_true_streak", "best"),
+    "Pars or Better": ("par_better_true_streak", "best"),
+    "+2s or Worse": ("double_bogey_true_streak", "worst"),
+    "TBPs": ("TBP_true_streak", "worst"),
+    "Over Par": ("par_better_false_streak", "worst"),
+}
+
+
 def detect_streak_records(teg_num: int, df: Optional[pd.DataFrame] = None) -> list[dict]:
     """Detect all-time-record-tying/breaking streaks set during this TEG.
 
@@ -88,12 +116,7 @@ def detect_streak_records(teg_num: int, df: Optional[pd.DataFrame] = None) -> li
             continue
 
         loc = row["Location"]
-        round_num = None
-        if isinstance(loc, str) and " R" in loc:
-            try:
-                round_num = int(loc.split(" R", 1)[1].split(" ", 1)[0])
-            except (IndexError, ValueError):
-                round_num = None
+        round_num = _round_from_location(loc)
 
         verb = "ties" if value == record_value else "breaks"
         player = _proper(row["Player"])
@@ -152,6 +175,90 @@ def detect_score_count_records(teg_num: int, df: Optional[pd.DataFrame] = None) 
             "summary_fact": (
                 f"{player} recorded {rec['count']} {label} in "
                 f"TEG {teg_num} — an all-time TEG record"
+            ),
+        })
+    return events
+
+
+def detect_personal_streak_extremes(teg_num: int, df: Optional[pd.DataFrame] = None,
+                                    min_length: int = 4) -> list[dict]:
+    """Detect a player's own longest-ever streak (best direction) or
+    longest-ever bad run (worst direction) set during this TEG, measured
+    against their PRIOR TEGs only — a genuine improvement/decline, not a tie.
+
+    Complements `detect_streak_records` (all-time), for Jon's example: "a
+    player extending their non-eagle streak is not interesting [so stays
+    excluded]; a player setting a personal best for pars or better is
+    [interesting]." `min_length` keeps a short, unremarkable streak out —
+    everyone's first hole is trivially a 1-hole "streak".
+
+    Returns a list of beat-shaped dicts:
+        {
+            "type": "streak_personal_best" | "streak_personal_worst",
+            "streak_type": str,
+            "player": str,
+            "value": int,
+            "prior_best": int,
+            "round": Optional[int],
+            "location": str,
+            "summary_fact": str,
+        }
+    """
+    from teg_analysis.core.data_loader import load_all_data
+    from teg_analysis.analysis.streaks import build_streaks, get_player_window_streaks, get_max_streaks
+
+    if df is None:
+        df = load_all_data()
+
+    teg_rows = df[df["TEGNum"] == teg_num]
+    if teg_rows.empty:
+        return []
+    last_round = int(teg_rows["Round"].max())
+
+    prior_df = df[df["TEGNum"] < teg_num]
+    if prior_df.empty:
+        return []  # no prior TEGs — "personal best/worst" has no baseline
+
+    prior_max = get_max_streaks(build_streaks(prior_df)).set_index("Pl")
+    name_to_code = df[["Player", "Pl"]].drop_duplicates().set_index("Player")["Pl"].to_dict()
+
+    streaks_df = build_streaks(df)
+    teg_streaks = get_player_window_streaks(df, streaks_df, teg=f"TEG {teg_num}", round_num=last_round)
+    if teg_streaks.empty:
+        return []
+
+    events: list[dict] = []
+    for _, row in teg_streaks.iterrows():
+        stype = row["Streak Type"]
+        mapping = _STREAK_COLUMN_BY_TYPE.get(stype)
+        if mapping is None:
+            continue
+        col, direction = mapping
+        value = int(row["Max Streak"])
+        if value < min_length:
+            continue
+
+        code = name_to_code.get(row["Player"])
+        if code is None or code not in prior_max.index:
+            continue
+        prior_value = int(prior_max.loc[code, col])
+        if value <= prior_value:
+            continue  # not an improvement (best) / not a new low (worst)
+
+        player = _proper(row["Player"])
+        loc = row["Location"]
+        kind = "personal best" if direction == "best" else "personal worst"
+        events.append({
+            "type": f"streak_personal_{direction}",
+            "streak_type": stype,
+            "player": player,
+            "value": value,
+            "prior_best": prior_value,
+            "round": _round_from_location(loc),
+            "location": loc,
+            "summary_fact": (
+                f"{player}'s {value}-hole \"{stype}\" streak is a {kind} "
+                f"(previous {prior_value}), at {loc}"
             ),
         })
     return events

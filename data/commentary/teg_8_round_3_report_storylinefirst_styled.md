@@ -56,5 +56,5 @@ Gregg Williams held on to his 2015 Trophy lead. He held on to rather less of his
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Stuart Neumann runs up a 8 (quintuple bogey) at the 9th (R3) — his career-worst on a par-3</li>
+  <li>Stuart Neumann runs up an 8 (+5) at the 9th — his career-worst on a par-3</li>
 </ul></div>

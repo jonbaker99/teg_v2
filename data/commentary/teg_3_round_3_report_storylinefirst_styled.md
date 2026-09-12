@@ -57,5 +57,5 @@ The result was a straight swap at the bottom. Stuart Neumann, who had held last 
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Henry Meller runs up a 10 (quintuple bogey) at the 3rd (R3) — his career-worst on a par-5</li>
+  <li>Henry Meller runs up a 10 (+5) at the 3rd — his career-worst on a par-5</li>
 </ul></div>

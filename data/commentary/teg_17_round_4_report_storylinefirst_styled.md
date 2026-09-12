@@ -42,6 +42,15 @@ Jon Baker completed the double at Praia D'El Rey, taking the 2024 TEG Trophy and
 
 ## Personal bests and TEG records
 
+<div class="records"><p class="records-header">TEG records:</p><ul>
+  <li>Jon Baker's 2-hole "Birdies" streak ties the all-time TEG record (2), at T17 R4 H4 to T17 R4 H5</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Personal worsts:</p><ul>
+  <li>John Patterson — +25 Gross on the Back nine is a personal-worst Back nine Gross</li>
+  <li>Alex Baker's 9-hole "+2s or Worse" streak is a personal worst (previous 8), at T17 R4 H5 to T17 R4 H13</li>
+</ul></div>
+
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>John Patterson runs up a 9 (sextuple bogey) at the 14th (R4) — his career-worst on a par-3</li>
+  <li>John Patterson runs up a 9 (+6) at the 14th — his career-worst on a par-3</li>
 </ul></div>

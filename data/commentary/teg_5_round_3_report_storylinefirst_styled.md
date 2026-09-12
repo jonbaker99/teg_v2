@@ -52,4 +52,5 @@ By the close of the round Williams held the Trophy by five, a three-shot deficit
 
 <div class="records"><p class="records-header">Personal worsts:</p><ul>
   <li>David Mullin's worst round to date: +12</li>
+  <li>David Mullin — +9 net-vs-par on the Back nine is a personal-worst Back nine net-vs-par</li>
 </ul></div>

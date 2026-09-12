@@ -41,3 +41,9 @@ John Patterson's Round 1 in Catalonia was two rounds stitched together by a man 
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> JB 35 | AB 32 | GW 30 | DM 29 | JP 26</p>
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> JB +18 | DM +20 | AB +28 | GW +29 | JP +40</p>
+
+## Personal bests and TEG records
+
+<div class="records"><p class="records-header">Personal worsts:</p><ul>
+  <li>John Patterson — 9 Stableford on the Back nine is a personal-worst Back nine Stableford</li>
+</ul></div>

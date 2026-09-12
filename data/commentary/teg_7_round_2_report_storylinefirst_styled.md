@@ -65,5 +65,5 @@ By the finish Meller had pulled clear. He held the Jacket outright and extended 
 
 <div class="records"><p class="records-header">Personal bests:</p><ul>
   <li>David Mullin posts a personal-best round: -10</li>
-  <li>Stuart NEUMANN — -8 net-vs-par on the Front nine (R2) is a personal-best Front nine net-vs-par</li>
+  <li>Stuart Neumann — -8 net-vs-par on the Front nine is a personal-best Front nine net-vs-par</li>
 </ul></div>

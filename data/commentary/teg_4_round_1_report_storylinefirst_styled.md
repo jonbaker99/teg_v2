@@ -45,5 +45,5 @@ David Mullin began no better. A triple bogey at the 5th sent him to the very bot
 ## Personal bests and TEG records
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Henry Meller runs up a 12 (+9) at the 11th (R1) — a new TEG-record worst on a par-3; his career-worst on a par-3</li>
+  <li>Henry Meller runs up a 12 (+9) at the 11th — a new TEG-record and career-worst on a par-3</li>
 </ul></div>

@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Jon Baker (143 pts, by 6 from Alex Baker)</span></p>
-  <p><strong>Green Jacket:</strong> Jon Baker (+70, by 3 from David Mullin)</p>
-  <p><strong>Wooden Spoon:</strong> David Mullin (125 pts)</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Jon Baker (2nd Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> Jon Baker (1st Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> David Mullin (2nd Spoon)</p>
 </section>
 
 ## How the TEG 11 Trophy changed hands twice between brothers: Jon Baker's 45-hole lead lost at El Prat, then Alex Baker's four-shot final-round lead surrendered in eleven points
@@ -90,8 +90,9 @@ The damage came in bursts, and it came generously. El Prat's Azul Course, new to
 
 <div class="records"><p class="records-header">Personal worsts:</p><ul>
   <li>Alex Baker's worst round to date: 27 pts (R4)</li>
+  <li>John Patterson — 9 Stableford on the Back nine (R1) is a personal-worst Back nine Stableford</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>John Patterson runs up a 11 (sextuple bogey) at the 15th (R2) — his career-worst on a par-5</li>
+  <li>John Patterson runs up an 11 (+6) at the 15th (R2) — his career-worst on a par-5</li>
 </ul></div>

@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> David Mullin (winner, +9, by 8 over Jon Baker)</span></p>
-  <p><strong>Green Jacket:</strong> David Mullin (winner, +81, by 19 over Stuart Neumann)</p>
-  <p><strong>Wooden Spoon:</strong> Gregg Williams (loser, +40 net VP, by 5 from Henry Meller)</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> David Mullin (2nd Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> David Mullin (3rd Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> Gregg Williams (1st Spoon)</p>
 </section>
 
 ## How David Mullin won the TEG 4 Trophy by standing still: Jon Baker led by seven at the 8th in R4, then bled 27 shots in eight holes
@@ -97,16 +97,7 @@ One consolation: his gross aggregate of +152 was, at that point, the best he had
 ## Personal bests and TEG records
 
 <div class="records"><p class="records-header">TEG records:</p><ul>
-  <li>David Mullin's +9 net-vs-par is the best Trophy total in TEG history</li>
-  <li>David Mullin's +81 is the best Gross total in TEG history</li>
   <li>David Mullin's +17 (gross) is the 2nd-best Gross round in TEG history to date (R3)</li>
-</ul></div>
-
-<div class="records"><p class="records-header">Personal bests:</p><ul>
-  <li>Gregg Williams's +152 is a personal Gross best</li>
-  <li>Henry Meller's +107 is a personal Gross best</li>
-  <li>Jon Baker's +113 is a personal Gross best</li>
-  <li>Stuart Neumann's +100 is a personal Gross best</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Personal worsts:</p><ul>
@@ -116,10 +107,10 @@ One consolation: his gross aggregate of +152 was, at that point, the best he had
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Henry Meller runs up a 12 (+9) at the 11th (R1) — a new TEG-record worst on a par-3; his career-worst on a par-3</li>
-  <li>Jon Baker runs up a 11 (sextuple bogey) at the 15th (R4) — his career-worst on a par-5</li>
-  <li>Jon Baker runs up a 9 (sextuple bogey) at the 12th (R4) — his career-worst on a par-3</li>
+  <li>Henry Meller runs up a 12 (+9) at the 11th (R1) — a new TEG-record and career-worst on a par-3</li>
+  <li>Jon Baker runs up an 11 (+6) at the 15th (R4) — his career-worst on a par-5</li>
+  <li>Jon Baker runs up a 9 (+6) at the 12th (R4) — his career-worst on a par-3</li>
   <li>Jon Baker eagles the par-4 8th (R4)</li>
-  <li>Henry Meller runs up a 10 (quintuple bogey) at the 15th (R4) — his career-worst on a par-5</li>
-  <li>Henry Meller runs up a 10 (quintuple bogey) at the 11th (R4) — his career-worst on a par-5</li>
+  <li>Henry Meller runs up a 10 (+5) at the 15th (R4) — his career-worst on a par-5</li>
+  <li>Henry Meller runs up a 10 (+5) at the 11th (R4) — his career-worst on a par-5</li>
 </ul></div>

@@ -37,3 +37,9 @@ The record was built on a five-hole stretch from the 11th during which he did no
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> DM 154 (R4: 37) | AB 152 (R4: 43) | GW 137 (R4: 38) | JB 125 (R4: 39)</p>
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +68 (R4: +19) | JB +75 (R4: +11) | GW +76 (R4: +15) | AB +102 (R4: +22)</p>
+
+## Personal bests and TEG records
+
+<div class="records"><p class="records-header">TEG records:</p><ul>
+  <li>Jon Baker's 2-hole "Birdies" streak ties the all-time TEG record (2), at T14 R4 H12 to T14 R4 H13</li>
+</ul></div>

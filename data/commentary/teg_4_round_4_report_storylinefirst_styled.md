@@ -55,9 +55,9 @@ His final round at Bletchingley was not spectacular. It was merely the best roun
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Jon Baker runs up a 11 (sextuple bogey) at the 15th (R4) — his career-worst on a par-5</li>
-  <li>Jon Baker runs up a 9 (sextuple bogey) at the 12th (R4) — his career-worst on a par-3</li>
+  <li>Jon Baker runs up an 11 (+6) at the 15th — his career-worst on a par-5</li>
+  <li>Jon Baker runs up a 9 (+6) at the 12th — his career-worst on a par-3</li>
   <li>Jon Baker eagles the par-4 8th (R4)</li>
-  <li>Henry Meller runs up a 10 (quintuple bogey) at the 15th (R4) — his career-worst on a par-5</li>
-  <li>Henry Meller runs up a 10 (quintuple bogey) at the 11th (R4) — his career-worst on a par-5</li>
+  <li>Henry Meller runs up a 10 (+5) at the 15th — his career-worst on a par-5</li>
+  <li>Henry Meller runs up a 10 (+5) at the 11th — his career-worst on a par-5</li>
 </ul></div>

@@ -58,4 +58,5 @@ The wider picture is no kinder. His best gross at Oitavos Dunes this TEG was 99.
 <div class="records"><p class="records-header">Personal worsts:</p><ul>
   <li>David Mullin's worst round to date: 22 pts</li>
   <li>David Mullin's worst Gross round to date: +33</li>
+  <li>David Mullin — 10 Stableford on the Back nine is a personal-worst Back nine Stableford</li>
 </ul></div>

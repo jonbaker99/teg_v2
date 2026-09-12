@@ -40,9 +40,14 @@ Then he simply stopped losing shots. The 16th and the 17th came and went without
 **End of Round 4**
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> GW -6 (R4: -1) | JB -4 (R4: -4) | SN +8 (R4: +4) | HM +10 (R4: -3) | DM +12 (R4: +7)</p>
-<p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +72 (R4: +22) | JB +84 (R4: +18) | SN +88 (R4: +24) | HM +90 (R4: +17) | GW +126 (R4: +32)</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> SN +88 (R4: +24) | DM +72 (R4: +22) | JB +84 (R4: +18) | HM +90 (R4: +17) | GW +126 (R4: +32)</p>
 
 ## Personal bests and TEG records
+
+<div class="records"><p class="records-header">TEG records:</p><ul>
+  <li>David Mullin's 2-hole "Birdies" streak ties the all-time TEG record (2), at T05 R4 H12 to T05 R4 H13</li>
+  <li>Jon Baker's 2-hole "Birdies" streak ties the all-time TEG record (2), at T05 R4 H14 to T05 R4 H15</li>
+</ul></div>
 
 <div class="records"><p class="records-header">Personal bests:</p><ul>
   <li>Henry Meller posts a personal-best round: -3</li>

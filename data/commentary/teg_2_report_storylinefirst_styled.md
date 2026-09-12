@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> David Mullin (winner, +6, by 7 from Jon Baker)</span></p>
-  <p><strong>Green Jacket:</strong> David Mullin (winner, +66, by 11 from Stuart Neumann)</p>
-  <p><strong>Wooden Spoon:</strong> Henry Meller (loser, +39 net VP)</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> David Mullin (1st Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> David Mullin (1st Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> Henry Meller (1st Spoon)</p>
 </section>
 
 ## How David Mullin won the TEG 2 Trophy: two record rounds either side of a wobble, while Jon Baker's seven-shot lead evaporated in five holes
@@ -93,23 +93,8 @@ It was also his best score of the three days at Boavista, a course none of the f
 
 ## Personal bests and TEG records
 
-<div class="records"><p class="records-header">TEG records:</p><ul>
-  <li>Henry Meller's +20 (gross) is the 2nd-best Gross round in TEG history to date (R3)</li>
-  <li>Jon Baker's +1 is the 2nd-best round in TEG history to date (R2)</li>
-  <li>David Mullin's -2 is the best round in TEG history to date (R3)</li>
-  <li>David Mullin's +18 (gross) is the best Gross round in TEG history to date (R3)</li>
-  <li>David Mullin's +28 (gross) is the 3rd-best Gross round in TEG history to date (R2)</li>
-  <li>Stuart Neumann's +29 (gross) is the 2nd-best Gross round in TEG history to date (R1)</li>
-  <li>Stuart Neumann's +11 is the 3rd-best round in TEG history to date (R1)</li>
-  <li>Stuart Neumann's +27 (gross) is the 2nd-best Gross round in TEG history to date (R2)</li>
-  <li>David Mullin's +0 is the best round in TEG history to date (R1)</li>
-  <li>David Mullin's +20 (gross) is the best Gross round in TEG history to date (R1)</li>
-  <li>Jon Baker's +4 is the 2nd-best round in TEG history to date (R1)</li>
-  <li>Jon Baker's +32 (gross) is the 3rd-best Gross round in TEG history to date (R1)</li>
-</ul></div>
-
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Stuart Neumann runs up a 8 (quintuple bogey) at the 14th (R2) — his career-worst on a par-3</li>
-  <li>Gregg Williams runs up a 9 (sextuple bogey) at the 14th (R1) — his career-worst on a par-3</li>
-  <li>Stuart Neumann runs up a 8 (quintuple bogey) at the 14th (R1) — his career-worst on a par-3</li>
+  <li>Stuart Neumann runs up an 8 (+5) at the 14th (R2) — his career-worst on a par-3</li>
+  <li>Gregg Williams runs up a 9 (+6) at the 14th (R1) — his career-worst on a par-3</li>
+  <li>Stuart Neumann runs up an 8 (+5) at the 14th (R1) — his career-worst on a par-3</li>
 </ul></div>

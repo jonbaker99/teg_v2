@@ -50,6 +50,6 @@ Baker's reply arrived at the very same hole, and was a quintuple-bogey 9. It was
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Henry Meller runs up a 10 (quintuple bogey) at the 3rd (R1) — his career-worst on a par-5</li>
-  <li>Stuart Neumann runs up a 8 (quintuple bogey) at the 14th (R1) — his career-worst on a par-3</li>
+  <li>Henry Meller runs up a 10 (+5) at the 3rd — his career-worst on a par-5</li>
+  <li>Stuart Neumann runs up an 8 (+5) at the 14th — his career-worst on a par-3</li>
 </ul></div>

@@ -59,9 +59,9 @@ The tenancy passed to Henry Meller. A double bogey on the par-5 3rd sent him fro
 <div class="records"><p class="records-header">Personal bests:</p><ul>
   <li>David Mullin posts a personal-best round: -4</li>
   <li>Gregg Williams posts a personal-best round: -6</li>
-  <li>Stuart NEUMANN — +3 Gross on the Front nine (R2) is a personal-best Front nine Gross</li>
+  <li>Stuart Neumann — +3 Gross on the Front nine is a personal-best Front nine Gross</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Henry Meller runs up a 10 (quintuple bogey) at the 16th (R2) — his career-worst on a par-5</li>
+  <li>Henry Meller runs up a 10 (+5) at the 16th — his career-worst on a par-5</li>
 </ul></div>

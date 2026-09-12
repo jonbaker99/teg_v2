@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Gregg Williams (winner, -6, by 2 from Jon Baker)</span></p>
-  <p><strong>Green Jacket:</strong> David Mullin (winner, +72, by 12 from Jon Baker)</p>
-  <p><strong>Wooden Spoon:</strong> David Mullin (loser, +12 net VP)</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Gregg Williams (1st Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> Stuart Neumann (1st Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> David Mullin (1st Spoon)</p>
 </section>
 
 ## How Gregg Williams, the reigning Wooden Spoon holder, took his first Trophy by two after David Mullin's five-shot lead evaporated at Boavista in Round 3
@@ -95,7 +95,7 @@ The oddity is that the same four rounds produced his best scoring, too. Back-to-
 **End of Round 4**
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> GW -6 (R4: -1) | JB -4 (R4: -4) | SN +8 (R4: +4) | HM +10 (R4: -3) | DM +12 (R4: +7)</p>
-<p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +72 (R4: +22) | JB +84 (R4: +18) | SN +88 (R4: +24) | HM +90 (R4: +17) | GW +126 (R4: +32)</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> SN +88 (R4: +24) | DM +72 (R4: +22) | JB +84 (R4: +18) | HM +90 (R4: +17) | GW +126 (R4: +32)</p>
 
 ## Personal bests and TEG records
 
@@ -104,6 +104,8 @@ The oddity is that the same four rounds produced his best scoring, too. Back-to-
   <li>Stuart Neumann's +11 (gross) is the best Gross round in TEG history to date (R2)</li>
   <li>David Mullin's +11 (gross) is the best Gross round in TEG history to date (R2)</li>
   <li>David Mullin's +12 (gross) is the best Gross round in TEG history to date (R1)</li>
+  <li>David Mullin's 2-hole "Birdies" streak ties the all-time TEG record (2), at T05 R4 H12 to T05 R4 H13</li>
+  <li>Jon Baker's 2-hole "Birdies" streak ties the all-time TEG record (2), at T05 R4 H14 to T05 R4 H15</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Personal bests:</p><ul>
@@ -112,13 +114,14 @@ The oddity is that the same four rounds produced his best scoring, too. Back-to-
   <li>Jon Baker posts a personal-best Gross round: +18 (R4)</li>
   <li>David Mullin posts a personal-best round: -4 (R2)</li>
   <li>Gregg Williams posts a personal-best round: -6 (R2)</li>
-  <li>Stuart NEUMANN — +3 Gross on the Front nine (R2) is a personal-best Front nine Gross</li>
+  <li>Stuart Neumann — +3 Gross on the Front nine (R2) is a personal-best Front nine Gross</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Personal worsts:</p><ul>
   <li>David Mullin's worst round to date: +12 (R3)</li>
+  <li>David Mullin — +9 net-vs-par on the Back nine (R3) is a personal-worst Back nine net-vs-par</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Henry Meller runs up a 10 (quintuple bogey) at the 16th (R2) — his career-worst on a par-5</li>
+  <li>Henry Meller runs up a 10 (+5) at the 16th (R2) — his career-worst on a par-5</li>
 </ul></div>

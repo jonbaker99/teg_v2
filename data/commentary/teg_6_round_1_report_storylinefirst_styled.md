@@ -49,5 +49,5 @@ By the close Mullin led the Jacket outright, while Gregg Williams headed the Tro
 <div class="records"><p class="records-header">Personal bests:</p><ul>
   <li>Jon Baker posts a personal-best Gross round: +18</li>
   <li>Gregg Williams posts a personal-best Gross round: +20</li>
-  <li>Gregg WILLIAMS — -10 net-vs-par on the Back nine (R1) is a personal-best Back nine net-vs-par</li>
+  <li>Gregg Williams — -10 net-vs-par on the Back nine is a personal-best Back nine net-vs-par</li>
 </ul></div>

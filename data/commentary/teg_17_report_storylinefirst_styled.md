@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Jon Baker (winner, 166 pts, by 18)</span></p>
-  <p><strong>Green Jacket:</strong> Jon Baker (winner, +67, by 13)</p>
-  <p><strong>Wooden Spoon:</strong> Gregg Williams (loser, 123 pts)</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Jon Baker (4th Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> Jon Baker (4th Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> Gregg Williams (2nd Spoon)</p>
 </section>
 
 ## Jon Baker converts three years of nearly-there fourth-place finishes into a consistent, front-running Trophy win, never dropping below second all tournament and pulling clear with best-in-field rounds in R3 and R4.
@@ -107,15 +107,25 @@ The final round at Praia D'El Rey opened badly too, Williams running up a 9 at t
 
 ## Personal bests and TEG records
 
+<div class="records"><p class="records-header">TEG records:</p><ul>
+  <li>Jon Baker's 2-hole "Birdies" streak ties the all-time TEG record (2), at T17 R4 H4 to T17 R4 H5</li>
+</ul></div>
+
 <div class="records"><p class="records-header">Personal bests:</p><ul>
   <li>Jon Baker's 166 pts is a personal Trophy best</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Personal worsts:</p><ul>
   <li>John Patterson's worst Gross round to date: +44 (R2)</li>
+  <li>Alex Baker's +150 is a personal Gross worst</li>
+  <li>David Mullin — +18 Gross on the Front nine (R1) is a personal-worst Front nine Gross</li>
+  <li>David Mullin — 10 Stableford on the Front nine (R1) is a personal-worst Front nine Stableford</li>
+  <li>John Patterson — +25 Gross on the Back nine (R2) is a personal-worst Back nine Gross</li>
+  <li>John Patterson — +25 Gross on the Back nine (R4) is a personal-worst Back nine Gross</li>
+  <li>Alex Baker's 9-hole "+2s or Worse" streak is a personal worst (previous 8), at T17 R4 H5 to T17 R4 H13</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>John Patterson runs up a 9 (sextuple bogey) at the 14th (R4) — his career-worst on a par-3</li>
-  <li>John Patterson runs up a 11 (sextuple bogey) at the 15th (R2) — his career-worst on a par-5</li>
+  <li>John Patterson runs up a 9 (+6) at the 14th (R4) — his career-worst on a par-3</li>
+  <li>John Patterson runs up an 11 (+6) at the 15th (R2) — his career-worst on a par-5</li>
 </ul></div>

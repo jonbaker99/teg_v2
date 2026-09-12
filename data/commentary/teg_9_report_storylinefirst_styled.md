@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> John Patterson (winner, 168 pts, by 6 from Alex Baker)</span></p>
-  <p><strong>Green Jacket:</strong> David Mullin (winner, +67, by 10 from Jon Baker)</p>
-  <p><strong>Wooden Spoon:</strong> Stuart Neumann (loser, 127 pts)</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> John Patterson (1st Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> David Mullin (7th Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> Stuart Neumann (2nd Spoon)</p>
 </section>
 
 ## John Patterson's record 168: two best-in-field rounds either side of an R3 wobble that let Alex Baker draw level with four holes left
@@ -106,31 +106,25 @@ The improvement was real. He got better every time out and finished last after e
 ## Personal bests and TEG records
 
 <div class="records"><p class="records-header">TEG records:</p><ul>
-  <li>John Patterson's 168 pts is the best Trophy total in TEG history</li>
-  <li>David Mullin's +67 is the best Gross total in TEG history</li>
   <li>John Patterson's 49 pts is the 2nd-best round in TEG history to date (R2)</li>
-  <li>John PATTERSON — 30 Stableford on the Back nine (R2) is the best Back nine Stableford in TEG history</li>
+  <li>John Patterson — 30 Stableford on the Back nine (R2) is the best Back nine Stableford in TEG history</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Personal bests:</p><ul>
-  <li>Alex Baker posts a personal-best round: 44 pts (R4, R2)</li>
-  <li>Alex Baker posts a personal-best Gross round: +27 (R4, R2)</li>
-  <li>Alex Baker's +127 is a personal Gross best</li>
-  <li>Gregg Williams's +115 is a personal Gross best</li>
-  <li>Jon Baker's +77 is a personal Gross best</li>
-  <li>John Patterson's +88 is a personal Gross best</li>
-  <li>John PATTERSON — 30 Stableford on the Back nine (R2) is a personal-best Back nine Stableford</li>
-  <li>John PATTERSON — +2 Gross on the Back nine (R2) is a personal-best Back nine Gross</li>
+  <li>Alex Baker posts a personal-best round: 44 pts (R2, R4)</li>
+  <li>Alex Baker posts a personal-best Gross round: +27 (R2, R4)</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Personal worsts:</p><ul>
   <li>Alex Baker's worst Gross round to date: +43 (R1)</li>
+  <li>Stuart Neumann — +27 Gross on the Back nine (R1) is a personal-worst Back nine Gross</li>
+  <li>Stuart Neumann — 6 Stableford on the Back nine (R1) is a personal-worst Back nine Stableford</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Gregg Williams runs up a 11 (sextuple bogey) at the 7th (R4) — his career-worst on a par-5</li>
-  <li>David Mullin runs up a 9 (quintuple bogey) at the 10th (R3) — his career-worst on a par-4</li>
-  <li>Alex Baker runs up a 11 (septuple bogey) at the 14th (R1) — his career-worst on a par-4</li>
-  <li>Gregg Williams runs up a 9 (sextuple bogey) at the 15th (R1) — his career-worst on a par-3</li>
-  <li>Stuart Neumann runs up a 8 (quintuple bogey) at the 15th (R1) — his career-worst on a par-3</li>
+  <li>Gregg Williams runs up an 11 (+6) at the 7th (R4) — his career-worst on a par-5</li>
+  <li>David Mullin runs up a 9 (+5) at the 10th (R3) — his career-worst on a par-4</li>
+  <li>Alex Baker runs up an 11 (+7) at the 14th (R1) — his career-worst on a par-4</li>
+  <li>Gregg Williams runs up a 9 (+6) at the 15th (R1) — his career-worst on a par-3</li>
+  <li>Stuart Neumann runs up an 8 (+5) at the 15th (R1) — his career-worst on a par-3</li>
 </ul></div>

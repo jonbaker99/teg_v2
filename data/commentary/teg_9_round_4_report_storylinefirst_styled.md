@@ -61,5 +61,5 @@ The round extended his overall lead in the TEG Trophy from 3 to 6. He held the l
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Gregg Williams runs up a 11 (sextuple bogey) at the 7th (R4) — his career-worst on a par-5</li>
+  <li>Gregg Williams runs up an 11 (+6) at the 7th — his career-worst on a par-5</li>
 </ul></div>

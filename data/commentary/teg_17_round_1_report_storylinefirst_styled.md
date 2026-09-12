@@ -50,3 +50,10 @@ At the other end of the field, Alex Baker's day ended as it had largely proceede
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> JP 39 | JB 38 | DM 33 | GW 33 | AB 32</p>
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +20 | JB +20 | JP +23 | DM +24 | AB +41</p>
+
+## Personal bests and TEG records
+
+<div class="records"><p class="records-header">Personal worsts:</p><ul>
+  <li>David Mullin — +18 Gross on the Front nine is a personal-worst Front nine Gross</li>
+  <li>David Mullin — 10 Stableford on the Front nine is a personal-worst Front nine Stableford</li>
+</ul></div>

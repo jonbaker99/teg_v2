@@ -59,12 +59,6 @@ Mullin still leads the Green Jacket. He also has the round of his life, and a Tr
 
 ## Personal bests and TEG records
 
-<div class="records"><p class="records-header">TEG records:</p><ul>
-  <li>Jon Baker's +1 is the 2nd-best round in TEG history to date</li>
-  <li>David Mullin's +28 (gross) is the 3rd-best Gross round in TEG history to date</li>
-  <li>Stuart Neumann's +27 (gross) is the 2nd-best Gross round in TEG history to date</li>
-</ul></div>
-
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Stuart Neumann runs up a 8 (quintuple bogey) at the 14th (R2) — his career-worst on a par-3</li>
+  <li>Stuart Neumann runs up an 8 (+5) at the 14th — his career-worst on a par-3</li>
 </ul></div>

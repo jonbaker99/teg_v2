@@ -55,10 +55,12 @@ Stuart Neumann had a rougher time of it. A triple bogey at the 14th opened a fiv
 
 <div class="records"><p class="records-header">Personal worsts:</p><ul>
   <li>Alex Baker's worst Gross round to date: +43</li>
+  <li>Stuart Neumann — +27 Gross on the Back nine is a personal-worst Back nine Gross</li>
+  <li>Stuart Neumann — 6 Stableford on the Back nine is a personal-worst Back nine Stableford</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>Alex Baker runs up a 11 (septuple bogey) at the 14th (R1) — his career-worst on a par-4</li>
-  <li>Gregg Williams runs up a 9 (sextuple bogey) at the 15th (R1) — his career-worst on a par-3</li>
-  <li>Stuart Neumann runs up a 8 (quintuple bogey) at the 15th (R1) — his career-worst on a par-3</li>
+  <li>Alex Baker runs up an 11 (+7) at the 14th — his career-worst on a par-4</li>
+  <li>Gregg Williams runs up a 9 (+6) at the 15th — his career-worst on a par-3</li>
+  <li>Stuart Neumann runs up an 8 (+5) at the 15th — his career-worst on a par-3</li>
 </ul></div>

@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Gregg Williams (winner, +0, by 5 from Jon Baker)</span></p>
-  <p><strong>Green Jacket:</strong> David Mullin (winner, +85, by 4 from Jon Baker)</p>
-  <p><strong>Wooden Spoon:</strong> Henry Meller (loser, +30 net VP)</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Gregg Williams (2nd Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> David Mullin (4th Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> Henry Meller (3rd Spoon)</p>
 </section>
 
 ## Gregg Williams's record -12 in Round 1 bought a lead he spent three rounds refusing to defend, and Jon Baker still lost
@@ -101,14 +101,16 @@ Meller finished the tournament on +30 net against par and collected the Wooden S
   <li>Henry Meller posts a personal-best Gross round: +17 (R2)</li>
   <li>Jon Baker posts a personal-best Gross round: +18 (R1)</li>
   <li>Gregg Williams posts a personal-best Gross round: +20 (R1)</li>
-  <li>Gregg WILLIAMS — -10 net-vs-par on the Back nine (R1) is a personal-best Back nine net-vs-par</li>
+  <li>Gregg Williams — -10 net-vs-par on the Back nine (R1) is a personal-best Back nine net-vs-par</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Personal worsts:</p><ul>
   <li>David Mullin's worst Gross round to date: +29 (R3)</li>
+  <li>David Mullin — +18 Gross on the Back nine (R3) is a personal-worst Back nine Gross</li>
+  <li>David Mullin — +9 net-vs-par on the Back nine (R3) is a personal-worst Back nine net-vs-par</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>David Mullin runs up a 9 (quintuple bogey) at the 15th (R3) — his career-worst on a par-4</li>
-  <li>Henry Meller runs up a 10 (quintuple bogey) at the 1st (R3) — his career-worst on a par-5</li>
+  <li>David Mullin runs up a 9 (+5) at the 15th (R3) — his career-worst on a par-4</li>
+  <li>Henry Meller runs up a 10 (+5) at the 1st (R3) — his career-worst on a par-5</li>
 </ul></div>

@@ -68,6 +68,55 @@ def get_teg_winners(df: pd.DataFrame) -> pd.DataFrame:
     return result_df[['TEG', 'Year', 'TEG Trophy', 'Green Jacket', 'HMM Wooden Spoon']]
 
 
+def get_teg_placings(df: pd.DataFrame, teg_num: int) -> dict:
+    """Full best-to-worst player order for one TEG's Trophy and Green Jacket
+    competitions — override-aware the same way `get_teg_winners` is (see
+    `TEG_OVERRIDES`), so a tiebreak decided off-course still puts the right
+    name first. `get_teg_winners` only ever exposes the single winner/loser;
+    this exposes the whole order, which callers need for a runner-up (rank 2)
+    or the Wooden Spoon (decided on the Trophy order, worst first — reverse
+    `placings['trophy']`, there is no separate Spoon ranking).
+
+    Returns `{'trophy': [player, ...], 'jacket': [player, ...]}`, player names
+    in the raw all-caps-surname format ('David MULLIN'). Empty lists if
+    `teg_num` has no rows in `df`.
+    """
+    from .scoring import get_net_competition_measure
+
+    teg_df = df[df['TEGNum'] == teg_num]
+    if teg_df.empty:
+        return {'trophy': [], 'jacket': []}
+
+    grouped = teg_df.groupby('Player').agg(
+        GrossVP=('GrossVP', 'sum'), NetVP=('NetVP', 'sum'), Stableford=('Stableford', 'sum'),
+    ).reset_index()
+
+    net_measure = get_net_competition_measure(teg_num)
+    if net_measure == 'NetVP':
+        trophy_order = grouped.sort_values(['NetVP', 'Player'], ascending=[True, True])['Player'].tolist()
+    else:
+        trophy_order = grouped.sort_values(['Stableford', 'Player'], ascending=[False, True])['Player'].tolist()
+    jacket_order = grouped.sort_values(['GrossVP', 'Player'], ascending=[True, True])['Player'].tolist()
+
+    overrides = TEG_OVERRIDES.get(f'TEG {teg_num}', {})
+
+    def _promote(order: list, override_key: str, to_front: bool) -> list:
+        name = overrides.get(override_key)
+        if not name:
+            return order
+        name = name.rstrip('*')
+        if name not in order:
+            return order
+        rest = [p for p in order if p != name]
+        return [name] + rest if to_front else rest + [name]
+
+    trophy_order = _promote(trophy_order, 'Best Net', to_front=True)
+    trophy_order = _promote(trophy_order, 'Worst Net', to_front=False)
+    jacket_order = _promote(jacket_order, 'Best Gross', to_front=True)
+
+    return {'trophy': trophy_order, 'jacket': jacket_order}
+
+
 # === CHART / DISPLAY HELPERS ===
 
 def process_winners_for_charts(winners_df: pd.DataFrame) -> dict:

@@ -49,5 +49,5 @@ It completed a grim piece of arithmetic. Meller shot 15-under net par in Round 2
 ## Personal bests and TEG records
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
-  <li>David Mullin runs up a 8 (quintuple bogey) at the 15th (R3) — his career-worst on a par-3</li>
+  <li>David Mullin runs up an 8 (+5) at the 15th — his career-worst on a par-3</li>
 </ul></div>

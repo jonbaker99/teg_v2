@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Gregg Williams — 157 pts, by 21 from Stuart Neumann</span></p>
-  <p><strong>Green Jacket:</strong> Gregg Williams — +63, by 29 from Jon Baker</p>
-  <p><strong>Wooden Spoon:</strong> Alex Baker — last on 114 pts</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Gregg Williams (4th Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> Gregg Williams (1st Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> Alex Baker (2nd Spoon)</p>
 </section>
 
 ## How Gregg Williams led the TEG 15 Trophy from the fourth hole of Round 1 to the last, winning three rounds outright and finishing 157 points, 21 clear
@@ -106,19 +106,22 @@ The closing round offered something better. His 103 at Oitavos Dunes was a shot 
 ## Personal bests and TEG records
 
 <div class="records"><p class="records-header">Personal bests:</p><ul>
-  <li>Gregg Williams's +63 is a personal Gross best</li>
   <li>Gregg Williams posts a personal-best Gross round: +10 (R3)</li>
-  <li>Gregg WILLIAMS — +2 Gross on the Back nine (R3) is a personal-best Back nine Gross</li>
+  <li>Gregg Williams's +63 is a personal Gross best</li>
+  <li>Gregg Williams — +2 Gross on the Back nine (R3) is a personal-best Back nine Gross</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Personal worsts:</p><ul>
   <li>David Mullin's worst round to date: 22 pts (R4)</li>
   <li>David Mullin's worst Gross round to date: +33 (R4)</li>
+  <li>David Mullin's +93 is a personal Gross worst</li>
+  <li>Alex Baker's 114 pts is a personal Trophy worst</li>
+  <li>David Mullin — 10 Stableford on the Back nine (R4) is a personal-worst Back nine Stableford</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>
   <li>David Mullin eagles the par-5 15th (R2)</li>
-  <li>Stuart Neumann runs up a 10 (sextuple bogey) at the 15th (R1) — his career-worst on a par-4</li>
-  <li>Alex Baker runs up a 11 (sextuple bogey) at the 6th (R2) — his career-worst on a par-5</li>
-  <li>Jon Baker runs up a 11 (septuple bogey) at the 17th (R2) — his career-worst on a par-4</li>
+  <li>Stuart Neumann runs up a 10 (+6) at the 15th (R1) — his career-worst on a par-4</li>
+  <li>Alex Baker runs up an 11 (+6) at the 6th (R2) — his career-worst on a par-5</li>
+  <li>Jon Baker runs up an 11 (+7) at the 17th (R2) — his career-worst on a par-4</li>
 </ul></div>

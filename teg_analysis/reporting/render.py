@@ -14,11 +14,9 @@ Idempotent: re-running on already-styled text is a no-op (existing hooks are det
 from __future__ import annotations
 
 import re
-from typing import Optional, Union
+from typing import Optional
 
-from teg_analysis.reporting.story_plan import StoryPlan
 from teg_analysis.reporting.venue import build_venue_context
-from teg_analysis.reporting.authoring import load_story_or_storyline_plan
 
 from teg_analysis.reporting.paths import output_dir
 
@@ -35,10 +33,15 @@ def build_round_standings(teg_num: int) -> dict:
     """Build per-round Trophy + Green Jacket standings markdown blocks for a TEG.
 
     Returns {round_num: standings_markdown}. Pure data — uses cumulative totals
-    from `create_round_summary`; no LLM, no fabrication risk.
+    from `create_round_summary`; no LLM, no fabrication risk. The final round's
+    order is override-aware (`analysis.history.get_teg_placings`), so it agrees
+    with the at-a-glance box and `/history` on a tiebreak decided off-course.
     """
     from teg_analysis.analysis.commentary import create_round_summary
+    from teg_analysis.analysis.history import get_teg_placings
+    from teg_analysis.core.data_loader import load_all_data
     from teg_analysis.reporting.era import trophy_metric
+    from teg_analysis.reporting.venue import build_venue_context
     rs = create_round_summary()
     rs = rs[rs["TEGNum"] == teg_num].copy()
 
@@ -54,18 +57,35 @@ def build_round_standings(teg_num: int) -> dict:
         trophy_ascending = False
         trophy_fmt = lambda x: str(int(x))
 
+    # The final round's placing is the one a tiebreak override
+    # (`analysis.history.TEG_OVERRIDES`) can correct — e.g. TEG 5's Green
+    # Jacket, decided off-course. Mid-tournament rounds are never overridden:
+    # the ruling is about the season result, not a round in progress.
+    total_rounds = len(build_venue_context(teg_num).get("rounds", []))
+    placings = get_teg_placings(load_all_data(), teg_num) if total_rounds else None
+
+    def _reorder(rdf, order: list):
+        """Rows of `rdf` in `order` (a list of 'Player' names, best to worst)."""
+        rank = {player: i for i, player in enumerate(order)}
+        return rdf.assign(_rank=rdf["Player"].map(rank)).sort_values("_rank")
+
     out: dict = {}
     for rnd in sorted(int(r) for r in rs["Round"].unique()):
         rdf = rs[rs["Round"] == rnd]
-        # Tie-break on player code so the order is deterministic. A bare
-        # single-column sort_values uses quicksort, which is NOT stable, so
-        # tied players came out in arbitrary order and re-running style_report
-        # produced a spurious diff — despite Stage 5 being documented as
-        # idempotent and free to re-run.
-        trophy = rdf.sort_values([trophy_col, "Pl"],
-                                 ascending=[trophy_ascending, True])
-        jacket = rdf.sort_values(["Cumulative_Tournament_Score_Gross", "Pl"],
-                                 ascending=[True, True])
+        is_final = placings is not None and rnd == total_rounds
+        if is_final:
+            trophy = _reorder(rdf, placings["trophy"])
+            jacket = _reorder(rdf, placings["jacket"])
+        else:
+            # Tie-break on player code so the order is deterministic. A bare
+            # single-column sort_values uses quicksort, which is NOT stable, so
+            # tied players came out in arbitrary order and re-running style_report
+            # produced a spurious diff — despite Stage 5 being documented as
+            # idempotent and free to re-run.
+            trophy = rdf.sort_values([trophy_col, "Pl"],
+                                     ascending=[trophy_ascending, True])
+            jacket = rdf.sort_values(["Cumulative_Tournament_Score_Gross", "Pl"],
+                                     ascending=[True, True])
 
         # Cumulative total, with the round's OWN score alongside it. The
         # standings alone answer "who is winning" but not "who had a good day",
@@ -196,17 +216,6 @@ def _build_dateline(venue: dict) -> str:
     return f'<p class="dateline">TEG {teg} | {area} | {year}</p>'
 
 
-def _competition_kind(name: str) -> str:
-    n = (name or "").lower()
-    if "trophy" in n or "stableford" in n:
-        return "trophy"
-    if "jacket" in n or "gross" in n:
-        return "jacket"
-    if "spoon" in n:
-        return "spoon"
-    return ""
-
-
 def _nth_suffix(n: int) -> str:
     """'1st', '2nd', '3rd', '4th', … for win-count annotations."""
     if 10 <= n % 100 <= 20:
@@ -216,57 +225,68 @@ def _nth_suffix(n: int) -> str:
     return f"{n}{suf}"
 
 
-def _build_at_a_glance(plan_d: dict, win_counts: Optional[dict] = None) -> str:
-    """Build the at-a-glance callout from `plan.competitions[]`.
+def _build_at_a_glance(teg_num: int, win_counts: Optional[dict] = None,
+                       df=None) -> str:
+    """Build the at-a-glance callout: winner + running win-count, nothing else.
+
+    Computed directly from scores via `analysis.history.get_teg_placings`
+    (override-aware — a tiebreak decided off-course, e.g. TEG 5's Green
+    Jacket, comes out right) rather than from the LLM plan's free-text
+    `winner_or_loser` field, which used to carry ad hoc score/margin prose
+    that varied report to report — only 4 of 17 TEGs even carried the
+    win-count annotation. Jon's call, 2026-09-12: the box says the same three
+    things every time — winner, their win count, nothing about the score or
+    the margin. The runner-up is not rendered here: it comes from the
+    Standings appendix table via `newspaper_edition._add_runners_up`.
 
     `win_counts` is a dict {player_name: {"trophy_wins": N, "jacket_wins": N,
-    "spoon_count": N}} covering all TEGs through the current one.  When supplied,
-    the winner's running total is appended in parentheses, e.g. "(2nd Trophy)".
+    "spoon_count": N}} covering all TEGs through the current one — keys and
+    the players returned by `get_teg_placings` are both the raw
+    all-caps-surname format, so no case-insensitive lookup is needed here
+    unlike the old plan-text version.
     """
-    winners = {"trophy": None, "jacket": None, "spoon": None}
-    for c in plan_d.get("competitions", []) or []:
-        kind = _competition_kind(c.get("name", ""))
-        if kind and not winners[kind]:
-            winners[kind] = c.get("winner_or_loser", "")
+    from teg_analysis.analysis.history import get_teg_placings
+    from teg_analysis.reporting.events import _proper
 
-    # Build a case-insensitive lookup — plan names are proper-cased, win_counts
-    # keys use the raw all-caps-surname format from the data ("John PATTERSON").
-    _wc_lower: dict = {k.lower(): v for k, v in (win_counts or {}).items()}
+    if df is None:
+        from teg_analysis.core.data_loader import load_all_data
+        df = load_all_data()
 
-    def _suffix(player: Optional[str], key: str) -> str:
-        if not win_counts or not player:
+    placings = get_teg_placings(df, teg_num)
+    trophy, jacket = placings["trophy"], placings["jacket"]
+    if not trophy or not jacket:
+        return ""
+    spoon_loser = trophy[-1]
+
+    def _suffix(player: str, key: str) -> str:
+        if not win_counts:
             return ""
-        counts = _wc_lower.get(player.lower(), {})
-        n = counts.get(key, 0)
+        n = win_counts.get(player, {}).get(key, 0)
         if n == 0:
             return ""
         label = {"trophy_wins": "Trophy", "jacket_wins": "Jacket", "spoon_count": "Spoon"}[key]
         return f" ({_nth_suffix(n)} {label})"
 
+    trophy_winner, jacket_winner = trophy[0], jacket[0]
     lines = [
         '<section class="callout at-a-glance-box">',
         '  <p class="at-a-glance-title">RESULTS</p>',
+        f'  <p><strong>Trophy Winner:</strong>'
+        f'<span class="trophy-winner"> {_proper(trophy_winner)}'
+        f'{_suffix(trophy_winner, "trophy_wins")}</span></p>',
+        f'  <p><strong>Green Jacket:</strong> {_proper(jacket_winner)}'
+        f'{_suffix(jacket_winner, "jacket_wins")}</p>',
+        f'  <p><strong>Wooden Spoon:</strong> {_proper(spoon_loser)}'
+        f'{_suffix(spoon_loser, "spoon_count")}</p>',
+        "</section>",
     ]
-    if winners["trophy"]:
-        suffix = _suffix(winners["trophy"], "trophy_wins")
-        lines.append(
-            f'  <p><strong>Trophy Winner:</strong>'
-            f'<span class="trophy-winner"> {winners["trophy"]}{suffix}</span></p>'
-        )
-    if winners["jacket"]:
-        suffix = _suffix(winners["jacket"], "jacket_wins")
-        lines.append(f'  <p><strong>Green Jacket:</strong> {winners["jacket"]}{suffix}</p>')
-    if winners["spoon"]:
-        suffix = _suffix(winners["spoon"], "spoon_count")
-        lines.append(f'  <p><strong>Wooden Spoon:</strong> {winners["spoon"]}{suffix}</p>')
-    lines.append("</section>")
     return "\n".join(lines)
 
 
 # ---------------------------------------------------------------------------
 # Public entry points
 # ---------------------------------------------------------------------------
-def apply_styling(text: str, plan: Union[StoryPlan, dict], venue: dict,
+def apply_styling(text: str, teg_num: int, venue: dict,
                   standings: Optional[dict] = None,
                   win_counts: Optional[dict] = None) -> str:
     """Apply CSS-class hooks + dateline + at-a-glance callout + per-round standings.
@@ -274,15 +294,13 @@ def apply_styling(text: str, plan: Union[StoryPlan, dict], venue: dict,
     `win_counts` is passed to `_build_at_a_glance` to annotate wins with ordinal
     suffixes, e.g. "(2nd Jacket)".  Idempotent: existing hooks are not duplicated.
     """
-    plan_d = plan.model_dump() if isinstance(plan, StoryPlan) else plan
-
     text = _add_report_title_class(text)
     text = _add_round_classes(text)
 
     # Insert dateline + callout right after the styled H1 (once).
     if 'class="dateline"' not in text and 'class="at-a-glance-box"' not in text:
         dateline = _build_dateline(venue)
-        callout = _build_at_a_glance(plan_d, win_counts=win_counts)
+        callout = _build_at_a_glance(teg_num, win_counts=win_counts)
         block = f"\n\n{dateline}\n\n{callout}\n"
         # The H1 has just been tagged with {.report-title}; anchor on that.
         text = re.sub(
@@ -310,164 +328,257 @@ _ROUND_SUFFIX_RE = re.compile(r"\s*\(R(\d+)\)\s*$")
 
 
 def _dedup_entries(entries: list[str]) -> list[str]:
-    """Deduplicate entries, combining round suffixes when the base text is the same.
+    """Deduplicate entries, combining round suffixes (ascending) when the base
+    text is the same.
 
     E.g. "Baker posts a personal-best round: 44 pts (R2)" and the same for (R4)
-    become "Baker posts a personal-best round: 44 pts (R2, R4)".
+    become "Baker posts a personal-best round: 44 pts (R2, R4)" — always in
+    round order, regardless of which order the source events arrived in.
     """
-    # Group by base text (with round suffix stripped), preserving insertion order.
-    seen: dict[str, list[str]] = {}   # base_lower -> [round_strs] or []
+    seen: dict[str, list[int]] = {}   # base_lower -> [round numbers]
+    bases: dict[str, str] = {}        # base_lower -> original-cased base text
     order: list[str] = []             # insertion order of base keys
     for e in entries:
         e = e.strip()
         m = _ROUND_SUFFIX_RE.search(e)
-        if m:
-            base = e[: m.start()]
-            rnd = f"R{m.group(1)}"
-        else:
-            base = e
-            rnd = None
+        base, rnd = (e[: m.start()], int(m.group(1))) if m else (e, None)
         key = base.lower()
         if key not in seen:
             seen[key] = []
+            bases[key] = base
             order.append(key)
-        if rnd and rnd not in seen[key]:
+        if rnd is not None and rnd not in seen[key]:
             seen[key].append(rnd)
 
     out = []
     for key in order:
-        # Recover original-cased base from the first entry stored under this key
-        original_base = next(
-            (e if not _ROUND_SUFFIX_RE.search(e) else e[: _ROUND_SUFFIX_RE.search(e).start()]
-             for e in entries if e.strip().lower().startswith(key) and
-             e.strip().lower().rstrip(")0123456789r(, ").rstrip() == key or
-             _ROUND_SUFFIX_RE.sub("", e.strip()).strip().lower() == key),
-            key,
-        )
-        # Simpler: find first entry whose base matches
-        for e in entries:
-            m = _ROUND_SUFFIX_RE.search(e.strip())
-            base_cased = e.strip()[: m.start()] if m else e.strip()
-            if base_cased.strip().lower() == key:
-                original_base = base_cased.strip()
-                break
-        rounds = seen[key]
+        rounds = sorted(seen[key])
         if rounds:
-            out.append(f"{original_base} ({', '.join(rounds)})")
+            out.append(f"{bases[key]} ({', '.join(f'R{r}' for r in rounds)})")
         else:
-            out.append(original_base)
+            out.append(bases[key])
     return out
 
 
-def _nine_hole_records(teg_num: int, round_num: Optional[int] = None) -> tuple[list, list]:
-    """Return (records, pbs) strings for 9-hole Stableford and Gross records.
+# ---------------------------------------------------------------------------
+# Notable Achievements: history-depth gates (kill trivial early-TEG claims —
+# a player's 2nd-ever round is not a meaningful "personal best", and "3rd-best
+# in TEG history" is empty when the league only has 2 TEGs of history) and
+# the tournament-total / 9-hole sections, reusing the same analysis functions
+# the webapp Records page uses (`analysis.records`, `reporting.milestone_records`)
+# instead of a second, hand-rolled implementation. Redesigned 2026-09-12 —
+# see STATUS.md for what changed and why.
+# ---------------------------------------------------------------------------
+MIN_PRIOR_TEGS_FOR_LEAGUE_RANK = 4   # "the Nth-best ... in TEG history" claims
+MIN_PRIOR_TEGS_FOR_TOTAL_PB = 3      # tournament-total personal best/worst
+MIN_PRIOR_NINES_FOR_PB = 16          # 9-hole personal best/worst
 
-    Loads the full ranked 9-hole data, filters to the TEG (and optionally one
-    round), checks `Rank_within_all_*` and `Rank_within_player_*` for rank == 1,
-    and returns plain-English strings.  Only surfaces Stableford and GrossVP —
-    Sc / NetVP are noisier and less meaningful to the audience.
-    """
-    try:
-        from teg_analysis.analysis.aggregation import get_9_data
-        from teg_analysis.analysis.rankings import add_ranks
-        from teg_analysis.reporting.era import trophy_metric
 
-        df9 = get_9_data()          # loads data internally
-        df9 = add_ranks(df9)
+def _a_or_an(n: int) -> str:
+    """'an' before a vowel-sound number (8, 11, 18), 'a' otherwise. Hole
+    scores in this appendix are always single- or double-digit."""
+    return "an" if int(n) in (8, 11, 18) else "a"
 
-        mask = df9["TEGNum"] == teg_num
-        if round_num is not None:
-            mask &= df9["Round"] == round_num
-        filtered = df9[mask]
-        if filtered.empty:
-            return [], []
 
-        metric = trophy_metric(teg_num)
-        # Show Stableford for TEG 8+, NetVP for TEGs 1-7 (as the Trophy metric)
-        trophy_col = "Stableford" if metric != "net_vs_par" else "NetVP"
-        active_metrics = [trophy_col, "GrossVP"]
+def _prior_teg_count(all_data, teg_num: int, player: Optional[str] = None) -> int:
+    df = all_data[all_data["TEGNum"] < teg_num]
+    if player is not None:
+        df = df[df["Player"] == player]
+    return int(df["TEGNum"].nunique())
 
-        friendly = {
-            "Stableford": "Stableford",
-            "NetVP": "net-vs-par",
-            "GrossVP": "Gross",
-        }
-        direction = {
-            "Stableford": "high",   # higher is better → rank 1 = highest
-            "NetVP": "low",          # lower is better → rank 1 = lowest
-            "GrossVP": "low",
-        }
 
-        records, pbs = [], []
-        seen_rec = set()
-        seen_pb = set()
+def _prior_nine_count(ranked9, teg_num: int, player: str) -> int:
+    df = ranked9[(ranked9["TEGNum"] < teg_num) & (ranked9["Player"] == player)]
+    return len(df)
 
-        for col in active_metrics:
-            rank_all = f"Rank_within_all_{col}"
-            rank_pl = f"Rank_within_player_{col}"
-            if rank_all not in filtered.columns or rank_pl not in filtered.columns:
+
+def _blowup_feat(e, is_pw: bool, is_rw: bool, show_round: bool) -> str:
+    """Numeric phrasing for a career/TEG-record-worst blow-up: 'runs up an 11
+    (+7) at the 15th', never a word label ('sextuple bogey') — Jon's call,
+    2026-09-12. Built from the raw hole evidence rather than `e.headline`,
+    which carries `events.result_label`'s word form; that function stays
+    untouched since it also feeds the LLM narrative prompts."""
+    from teg_analysis.reporting.events import _ord
+
+    hole = e.holes[0]
+    sc, grossvp, par = int(hole["sc"]), int(hole["grossvp"]), hole["par"]
+    round_tag = f" (R{e.round})" if show_round else ""
+    headline = (f"{e.players[0]} runs up {_a_or_an(sc)} {sc} ({grossvp:+d}) "
+               f"at the {_ord(hole['hole'])}{round_tag}")
+    if is_rw and is_pw:
+        tag = f"a new TEG-record and career-worst on a par-{par}"
+    elif is_rw:
+        tag = f"a new TEG-record worst on a par-{par}"
+    else:
+        tag = f"his career-worst on a par-{par}"
+    return f"{headline} — {tag}"
+
+
+def _totals_achievements(teg_num: int, trophy_col: str, all_data) -> tuple[list, list, list]:
+    """Tournament-total (Trophy + Gross) records/PBs/worsts, from
+    `analysis.records.identify_aggregate_records_and_pbs` — the same function
+    the webapp Records page calls — filtered to the era-appropriate Trophy
+    metric plus Gross (never raw Score, never the wrong era's metric)."""
+    from teg_analysis.analysis.records import identify_aggregate_records_and_pbs
+    from teg_analysis.analysis.rankings import get_ranked_teg_data
+    from teg_analysis.reporting.events import _proper
+
+    keep = {trophy_col, "GrossVP"}
+    label_by_metric = {trophy_col: "Trophy", "GrossVP": "Gross"}
+
+    def _fmt(metric: str, value) -> str:
+        return str(int(value)) + " pts" if metric == "Stableford" else f"{int(value):+d}"
+
+    res = identify_aggregate_records_and_pbs(get_ranked_teg_data(), f"TEG {teg_num}")
+    league_depth = _prior_teg_count(all_data, teg_num)
+
+    records, pbs, worsts = [], [], []
+    for r in res["records"]:
+        if r["metric"] not in keep or league_depth < MIN_PRIOR_TEGS_FOR_LEAGUE_RANK:
+            continue
+        label = label_by_metric[r["metric"]]
+        records.append(f"{_proper(r['player'])}'s {_fmt(r['metric'], r['value'])} "
+                       f"is the best {label} total in TEG history")
+    for r in res["personal_bests"]:
+        if r["metric"] not in keep:
+            continue
+        if _prior_teg_count(all_data, teg_num, r["player"]) < MIN_PRIOR_TEGS_FOR_TOTAL_PB:
+            continue
+        label = label_by_metric[r["metric"]]
+        pbs.append(f"{_proper(r['player'])}'s {_fmt(r['metric'], r['value'])} is a personal {label} best")
+    for r in res["personal_worsts"]:
+        if r["metric"] not in keep:
+            continue
+        if _prior_teg_count(all_data, teg_num, r["player"]) < MIN_PRIOR_TEGS_FOR_TOTAL_PB:
+            continue
+        label = label_by_metric[r["metric"]]
+        worsts.append(f"{_proper(r['player'])}'s {_fmt(r['metric'], r['value'])} is a personal {label} worst")
+    return records, pbs, worsts
+
+
+_NINE_FRIENDLY = {"Stableford": "Stableford", "NetVP": "net-vs-par", "GrossVP": "Gross"}
+
+
+def _nine_hole_achievements(teg_num: int, round_num: Optional[int], trophy_col: str,
+                            all_data) -> tuple[list, list, list]:
+    """9-hole (front/back) records/PBs/worsts, from
+    `analysis.records.identify_9hole_records_and_pbs` — the same function the
+    webapp Records page calls. That function is scoped to one round, so a
+    tournament report (round_num=None) loops every round of the TEG."""
+    from teg_analysis.analysis.records import identify_9hole_records_and_pbs
+    from teg_analysis.analysis.rankings import get_ranked_frontback_data
+    from teg_analysis.reporting.events import _proper
+
+    ranked9 = get_ranked_frontback_data()
+    keep = {trophy_col, "GrossVP"}
+    league_depth = _prior_teg_count(all_data, teg_num)
+
+    def _fmt(metric: str, value) -> str:
+        return str(int(value)) if metric == "Stableford" else f"{int(value):+d}"
+
+    if round_num is not None:
+        rounds = [round_num]
+    else:
+        rounds = sorted(int(r) for r in ranked9[ranked9["TEGNum"] == teg_num]["Round"].unique())
+
+    records, pbs, worsts = [], [], []
+    for rnd in rounds:
+        res = identify_9hole_records_and_pbs(f"TEG {teg_num}", rnd, ranked9)
+        suffix = f" (R{rnd})" if round_num is None else ""
+        for r in res["records"]:
+            if r["metric"] not in keep or league_depth < MIN_PRIOR_TEGS_FOR_LEAGUE_RANK:
                 continue
+            seg, fname = f"{r['segment']} nine", _NINE_FRIENDLY.get(r["metric"], r["metric"])
+            records.append(f"{_proper(r['player'])} — {_fmt(r['metric'], r['value'])} {fname} "
+                           f"on the {seg}{suffix} is the best {seg} {fname} in TEG history")
+        for r in res["personal_bests"]:
+            if r["metric"] not in keep:
+                continue
+            if _prior_nine_count(ranked9, teg_num, r["player"]) < MIN_PRIOR_NINES_FOR_PB:
+                continue
+            seg, fname = f"{r['segment']} nine", _NINE_FRIENDLY.get(r["metric"], r["metric"])
+            pbs.append(f"{_proper(r['player'])} — {_fmt(r['metric'], r['value'])} {fname} "
+                       f"on the {seg}{suffix} is a personal-best {seg} {fname}")
+        for r in res["personal_worsts"]:
+            if r["metric"] not in keep:
+                continue
+            if _prior_nine_count(ranked9, teg_num, r["player"]) < MIN_PRIOR_NINES_FOR_PB:
+                continue
+            seg, fname = f"{r['segment']} nine", _NINE_FRIENDLY.get(r["metric"], r["metric"])
+            worsts.append(f"{_proper(r['player'])} — {_fmt(r['metric'], r['value'])} {fname} "
+                          f"on the {seg}{suffix} is a personal-worst {seg} {fname}")
+    return records, pbs, worsts
 
-            for _, row in filtered.iterrows():
-                player = row["Player"]
-                segment = row.get("FrontBack", "nine")
-                val = row[col]
-                r_str = f"{round_num}" if round_num else f"R{int(row['Round'])}"
-                seg_label = f"{segment} nine" if segment in ("Front", "Back") else "nine"
-                fname = friendly.get(col, col)
 
-                if direction[col] == "high":
-                    val_str = str(int(val))
-                else:
-                    val_str = f"{int(val):+d}"
+def _streak_achievements(teg_num: int, round_num: Optional[int]) -> tuple[list, list, list]:
+    """All-time streak records + personal best/worst streaks, from
+    `reporting.milestone_records` (itself wrapping `analysis.streaks` — the
+    same functions the webapp Records page's Streaks tab uses). Previously
+    never reached this appendix at all."""
+    from teg_analysis.reporting.milestone_records import (
+        detect_streak_records, detect_personal_streak_extremes,
+    )
 
-                # TEG record (all-time best)
-                if row[rank_all] == 1:
-                    key = (player, col, segment, "rec")
-                    if key not in seen_rec:
-                        seen_rec.add(key)
-                        records.append(
-                            f"{player} — {val_str} {fname} on the {seg_label} (R{int(row['Round'])}) "
-                            f"is the best {seg_label} {fname} in TEG history"
-                        )
+    record_events = detect_streak_records(teg_num)
+    personal_events = detect_personal_streak_extremes(teg_num)
+    if round_num is not None:
+        record_events = [e for e in record_events if e.get("round") == round_num]
+        personal_events = [e for e in personal_events if e.get("round") == round_num]
 
-                # Personal best
-                if row[rank_pl] == 1:
-                    key = (player, col, segment, "pb")
-                    if key not in seen_pb:
-                        seen_pb.add(key)
-                        pbs.append(
-                            f"{player} — {val_str} {fname} on the {seg_label} (R{int(row['Round'])}) "
-                            f"is a personal-best {seg_label} {fname}"
-                        )
+    # A record-setting streak is trivially also that player's personal best —
+    # don't print it twice, once per category.
+    recorded = {(e["player"], e["streak_type"]) for e in record_events}
+    personal_events = [e for e in personal_events
+                       if (e["player"], e["streak_type"]) not in recorded]
 
-        return records, pbs
+    def _with_round(fact: str, e: dict) -> str:
+        if round_num is None and e.get("round") and f"R{e['round']}" not in fact:
+            return f"{fact} (R{e['round']})"
+        return fact
 
-    except Exception:
-        return [], []
+    records = [_with_round(e["summary_fact"], e) for e in record_events]
+    pbs = [_with_round(e["summary_fact"], e) for e in personal_events
+          if e["type"] == "streak_personal_best"]
+    worsts = [_with_round(e["summary_fact"], e) for e in personal_events
+             if e["type"] == "streak_personal_worst"]
+    return records, pbs, worsts
 
 
 def build_records_block(teg_num: int, round_num: Optional[int] = None) -> str:
-    """Deterministic 'PBs and TEG records' appendix block. Empty string if none.
+    """Deterministic 'Notable Achievements' appendix block. Empty string if none.
 
-    Categories surfaced:
-    - **TEG records**: all-time top-3 round, all-time best Trophy/Gross total,
-      all-time best 9-hole score.
-    - **Personal bests**: player-PB round, player-PB Trophy/Gross total,
-      player-PB 9-hole score.
-    - **Personal worsts**: player-worst round to date.
-    - **Rare feats**: holes-in-one, eagles, career/TEG-worst blow-ups.
+    Categories surfaced (best AND worst, TEG record AND personal, throughout):
+    - **TEG records**: all-time-best round/9/total, all-time streak ties/breaks.
+    - **Personal bests**: player-best round/9/total, personal-best streak.
+    - **Personal worsts**: player-worst round/9/total, personal-worst streak.
+    - **Rare feats**: holes-in-one, eagles, career/TEG-record-worst blow-ups
+      (hole scores over par shown numerically — "+5" — never as a word like
+      "quintuple bogey").
 
-    Each entry is its own bullet. Duplicate entries (same player, same feat)
-    are collapsed into one.  Trophy records use era-appropriate language:
-    Stableford for TEG 8+, net-vs-par for TEGs 1–7.
+    History-depth gated (`MIN_PRIOR_TEGS_FOR_LEAGUE_RANK` etc, top of this
+    file) so an early TEG doesn't drown in trivial claims — a debut round is
+    not a meaningful "personal best", and "3rd-best in TEG history" means
+    nothing when the league has only 2 TEGs of history. No cap on volume
+    otherwise: everything clearing the bar prints, however much that is.
+
+    Round-level and single-hole facts come from the existing
+    `events.build_notable_events` pipeline (already history-depth-gated on
+    its own terms); tournament totals, 9-holes and streaks are pulled
+    directly from `analysis.records`/`reporting.milestone_records` — the same
+    functions the webapp Records page uses — rather than a second
+    implementation. Trophy figures use era-appropriate language: Stableford
+    for TEG 8+, net-vs-par for TEGs 1–7; raw Score is never shown.
     """
     from teg_analysis.reporting.events import build_notable_events
     from teg_analysis.reporting.era import trophy_metric
-    events = build_notable_events(teg_num)
+    from teg_analysis.core.data_loader import load_all_data
+
+    all_data = load_all_data()
+    events = build_notable_events(teg_num, all_data=all_data)
     if round_num is not None:
         events = [e for e in events if e.round == round_num]
     metric = trophy_metric(teg_num)
+    trophy_col = "NetVP" if metric == "net_vs_par" else "Stableford"
 
     def _with_round(h: str, e) -> str:
         """Suffix headline with (R{round}) for tournament reports."""
@@ -485,13 +596,7 @@ def build_records_block(teg_num: int, round_num: Optional[int] = None) -> str:
             is_pw = ctx.get("is_player_par_worst", False)
             is_rw = ctx.get("is_teg_par_worst", False)
             if is_pw or is_rw:
-                par = e.holes[0].get("par") if e.holes else None
-                tags = []
-                if is_rw:
-                    tags.append(f"a new TEG-record worst on a par-{par}")
-                if is_pw:
-                    tags.append(f"his career-worst on a par-{par}")
-                feats.append(f"{_with_round(h, e)} — " + "; ".join(tags))
+                feats.append(_blowup_feat(e, is_pw, is_rw, show_round=round_num is None))
         elif e.type == "round_player":
             if "round in TEG history" in h:
                 records.append(_with_round(h, e))
@@ -506,44 +611,19 @@ def build_records_block(teg_num: int, round_num: Optional[int] = None) -> str:
                 pbs.append(_with_round(h, e))
             elif "worst Gross round" in h:
                 worsts.append(_with_round(h, e))
-        elif e.type == "trophy_win":
-            ctx = e.context or {}
-            ar = ctx.get("all_time_rank")
-            pr = ctx.get("player_rank")
-            winner = e.players[0] if e.players else "Winner"
-            score = ctx.get("score")
-            if metric == "net_vs_par":
-                score_str = f"{score:+d}" if isinstance(score, int) else str(score)
-                score_label = f"{score_str} net-vs-par"
-            else:
-                score_str = f"{score} pts"
-                score_label = score_str
-            if ar == 1:
-                records.append(f"{winner}'s {score_label} is the best Trophy total in TEG history")
-            elif ar is not None and ar <= 3:
-                ord_str = {2: "2nd", 3: "3rd"}.get(ar, str(ar))
-                records.append(f"{winner}'s {score_label} is the {ord_str}-best Trophy total in TEG history")
-            elif pr == 1:
-                pbs.append(f"{winner}'s {score_label} is a personal Trophy best")
-        elif e.type in ("jacket_win", "jacket_pb"):
-            ctx = e.context or {}
-            ar = ctx.get("all_time_rank")
-            pr = ctx.get("player_rank")
-            winner = e.players[0] if e.players else "Winner"
-            score = ctx.get("score")
-            score_label = f"{score:+d}" if isinstance(score, int) else str(score)
-            if ar == 1:
-                records.append(f"{winner}'s {score_label} is the best Gross total in TEG history")
-            elif ar is not None and ar <= 3:
-                ord_str = {2: "2nd", 3: "3rd"}.get(ar, str(ar))
-                records.append(f"{winner}'s {score_label} is the {ord_str}-best Gross total in TEG history")
-            elif pr == 1:
-                pbs.append(f"{winner}'s {score_label} is a personal Gross best")
 
-    # Add 9-hole records (tournament and round reports both get them)
-    nine_recs, nine_pbs = _nine_hole_records(teg_num, round_num)
-    records.extend(nine_recs)
-    pbs.extend(nine_pbs)
+    # Tournament totals (Trophy/Gross) — TEG scope only; a round report has
+    # no season total to speak of.
+    if round_num is None:
+        t_recs, t_pbs, t_worsts = _totals_achievements(teg_num, trophy_col, all_data)
+        records.extend(t_recs); pbs.extend(t_pbs); worsts.extend(t_worsts)
+
+    # 9-hole and streaks — both tournament and round reports get these.
+    n_recs, n_pbs, n_worsts = _nine_hole_achievements(teg_num, round_num, trophy_col, all_data)
+    records.extend(n_recs); pbs.extend(n_pbs); worsts.extend(n_worsts)
+
+    s_recs, s_pbs, s_worsts = _streak_achievements(teg_num, round_num)
+    records.extend(s_recs); pbs.extend(s_pbs); worsts.extend(s_worsts)
 
     # Deduplicate within each category
     records = _dedup_entries(records)
@@ -589,13 +669,12 @@ def style_text(teg_num: int, text: str) -> str:
     directly readable line-for-line against `report_styled.md`.
     """
     from teg_analysis.reporting.history_context import build_win_counts
-    plan = load_story_or_storyline_plan(teg_num)  # dict (legacy, or storyline-first fallback)
     venue = build_venue_context(teg_num)
     standings = build_round_standings(teg_num)
     win_counts = build_win_counts(teg_num)
     # Strip old at-a-glance so we can re-inject it with win-count annotations.
     text = _strip_at_a_glance(text)
-    styled = apply_styling(text, plan, venue, standings=standings, win_counts=win_counts)
+    styled = apply_styling(text, teg_num, venue, standings=standings, win_counts=win_counts)
     # Strip old records block so we can re-inject the updated version.
     styled = re.sub(r'\n*## Personal bests and TEG records\n[\s\S]*$', '', styled)
     return _append_records(styled, build_records_block(teg_num))
