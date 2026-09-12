@@ -87,23 +87,26 @@
     <div class="sync-action-buttons">
       <button type="button" class="btn-action"
               hx-post="/admin/volume-sync/preview" hx-vals='{"action": "pull"}'
-              hx-target="#sync-body" hx-swap="innerHTML">
+              hx-target="#sync-body" hx-swap="innerHTML" hx-indicator="#sync-spinner">
         ⬇️ Pull selected (GitHub → store)
       </button>
       <button type="button" class="btn-secondary"
               hx-post="/admin/volume-sync/preview" hx-vals='{"action": "push"}'
-              hx-target="#sync-body" hx-swap="innerHTML">
+              hx-target="#sync-body" hx-swap="innerHTML" hx-indicator="#sync-spinner">
         ⬆️ Push selected (store → GitHub)
       </button>
       {# One-click refresh of every report file GitHub → store (overwrites, with
-         backups). Use after regenerating a report, whatever folder is shown. #}
+         backups). Use after regenerating a report, whatever folder is shown. Can
+         take several seconds (one GitHub API call per file) with nothing else on
+         screen to show it's working, hence the indicator below — see webapp/TODOS.md. #}
       <button type="button" class="btn-secondary"
               hx-post="/admin/volume-sync/sync-reports"
               hx-vals='{"folder": "{{ folder }}"}'
-              hx-target="#sync-body" hx-swap="innerHTML"
+              hx-target="#sync-body" hx-swap="innerHTML" hx-indicator="#sync-spinner"
               hx-confirm="Re-pull all report files from GitHub, overwriting the store copies (backed up first)?">
         🔄 Sync all reports from GitHub
       </button>
+      <span id="sync-spinner" class="htmx-indicator">Working…</span>
     </div>
     <div class="sync-selected-box">
       <div class="sync-selected-head">Selected (<span id="sync-selected-count">0</span>)</div>
