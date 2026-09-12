@@ -5,7 +5,12 @@
 Two steps, always run together, so this does both:
 
 1. Rebuild `webapp/report_layout_prototypes/editions.json` from whichever TEGs
-   have storyline-first artefacts.
+   have storyline-first artefacts. Tournaments only by default — pass
+   `--include-rounds` to also build every round with storyline-first round
+   artefacts (`round_storyline.py`). A `--min-*` quality filter applies to
+   tournaments as soon as it's set; it does NOT reach round editions unless
+   `--filter-rounds` is also given — the two report kinds are opted into
+   filtering independently, on purpose.
 2. Inline it into the prototype pages, which carry the data as a JS literal
    because a published Artifact cannot fetch a sibling file.
 
@@ -32,6 +37,7 @@ from pathlib import Path
 from scripts.inline_editions import main as inline_editions
 from teg_analysis.reporting.newspaper_edition import (
     ArticleFilter,
+    available_rounds,
     available_tegs,
     build_edition,
     for_page,
@@ -61,13 +67,45 @@ def _parse_args(argv=None):
                     help="Rescue: print a story whose compelling+humour reaches this "
                          "even if it misses the floors. Lets a very funny but less "
                          "compelling piece through.")
+    ap.add_argument("--include-rounds", action="store_true",
+                    help="Also build editions for every round with storyline-first "
+                         "round artefacts (round_storyline.py), not just tournaments.")
+    ap.add_argument("--filter-rounds", action="store_true",
+                    help="Apply the --min-* filter to round editions too. Without this, "
+                         "round editions always print every discovered story regardless "
+                         "of --min-* — a filter must be opted into per report kind, not "
+                         "inherited just because it was set for tournaments. Requires "
+                         "--include-rounds; meaningless without a --min-* flag set.")
     args = ap.parse_args(argv)
     if all(v is None for v in (args.min_compelling, args.min_humour, args.min_combined)):
-        return None      # no flags: use the module default
-    return ArticleFilter(min_compelling=args.min_compelling or 0,
-                         min_humour=args.min_humour or 0,
-                         match=args.match,
-                         min_combined=args.min_combined or 0)
+        article_filter = None      # no flags: use the module default
+    else:
+        article_filter = ArticleFilter(min_compelling=args.min_compelling or 0,
+                                       min_humour=args.min_humour or 0,
+                                       match=args.match,
+                                       min_combined=args.min_combined or 0)
+    return article_filter, args.include_rounds, args.filter_rounds
+
+
+def _print_edition(edition: dict) -> None:
+    label = f"TEG {edition['teg']}" if edition["dateline"].get("round") is None \
+        else f"TEG {edition['teg']} R{edition['dateline']['round']}"
+    print(f"\n{label}: {edition['title']}")
+    print(f"  dateline: {edition['dateline']}")
+    print(f"  results: {[r['label'] for r in edition['results']]}")
+    for a in edition["articles"]:
+        print(
+            f"  [{a['kicker']}] {a['headline']!r} "
+            f"(lead={a['is_lead']}, words={a['words']}, "
+            f"compelling={a['compelling']}, humour={a['humour']})"
+        )
+    for a in edition["dropped_articles"]:
+        # Named, not silently gone: the story is still in the plan, the draft
+        # and the styled markdown — it just did not make the paper.
+        print(f"  NOT PRINTED [{a['kicker']}] {a['headline']!r} "
+              f"(compelling={a['compelling']}, humour={a['humour']})")
+    print(f"  standings rounds: {[s['round'] for s in edition['standings']]}")
+    print(f"  records: {len(edition['records'])}")
 
 
 def main(argv=None) -> None:
@@ -77,31 +115,28 @@ def main(argv=None) -> None:
     if not tegs:
         raise SystemExit("no TEG has storyline-first artefacts — nothing to build")
     print(f"Building editions for TEG {', '.join(str(t) for t in tegs)}")
-    article_filter = _parse_args(argv)
+    article_filter, include_rounds, filter_rounds = _parse_args(argv)
     editions = [build_edition(teg, article_filter=article_filter) for teg in tegs]
     if article_filter is not None:
         print(f"Filter: {article_filter.describe()}")
+
+    if include_rounds:
+        round_filter = article_filter if filter_rounds else None
+        for teg in tegs:
+            rounds = available_rounds(teg)
+            for r in rounds:
+                editions.append(build_edition(teg, round_num=r, article_filter=round_filter))
+        n_rounds = sum(1 for teg in tegs for _ in available_rounds(teg))
+        print(f"Also building {n_rounds} round edition(s)"
+              + (f" (filter: {round_filter.describe()})" if round_filter is not None
+                 else " (unfiltered — pass --filter-rounds to apply --min-* here too)"))
+
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_PATH.write_text(
         json.dumps([for_page(e) for e in editions], indent=2) + "\n", encoding="utf-8")
     print(f"Wrote {OUTPUT_PATH} ({len(editions)} editions)")
     for edition in editions:
-        print(f"\nTEG {edition['teg']}: {edition['title']}")
-        print(f"  dateline: {edition['dateline']}")
-        print(f"  results: {[r['label'] for r in edition['results']]}")
-        for a in edition["articles"]:
-            print(
-                f"  [{a['kicker']}] {a['headline']!r} "
-                f"(lead={a['is_lead']}, words={a['words']}, "
-                f"compelling={a['compelling']}, humour={a['humour']})"
-            )
-        for a in edition["dropped_articles"]:
-            # Named, not silently gone: the story is still in the plan, the draft
-            # and the styled markdown — it just did not make the paper.
-            print(f"  NOT PRINTED [{a['kicker']}] {a['headline']!r} "
-                  f"(compelling={a['compelling']}, humour={a['humour']})")
-        print(f"  standings rounds: {[s['round'] for s in edition['standings']]}")
-        print(f"  records: {len(edition['records'])}")
+        _print_edition(edition)
 
     # Step 2. Not optional: a rebuilt editions.json that is not inlined leaves
     # the prototype pages showing the previous content, which is worse than not
