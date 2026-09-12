@@ -140,16 +140,23 @@ FastAPI threadpools them. `async def` handlers doing blocking work stall every p
 
 ### Local Python can outrun Railway's
 
-Railway deploys on Python 3.11; local dev environments are routinely newer (3.12–3.14) and silently
-accept syntax 3.11 rejects — e.g. PEP 701's relaxed f-string grammar (nested same-quote strings
-inside an f-string, Python 3.12+ only). Such code imports fine locally, passes local tests, and is a
-hard `SyntaxError` in production. If the broken module sits in `webapp.app`'s import graph, the
-whole app fails to start — Railway shows "Application failed to respond" with no traceback in the
-UI, only in the deploy log (real incident, 2026-09-12: `teg_analysis/reporting/newspaper_edition.py`
-imported at module load by `webapp/routes/leaderboard.py`; entire site down until the log was read
-and the syntax fixed). Avoid newer-only syntax in anything `teg_analysis/`/`webapp/` can import
-at request or import time. Check before pushing: `python scripts/check_py311_compat.py` (needs a
-Python 3.11 interpreter on PATH — `brew install python@3.11` if missing).
+Real incident, 2026-09-12: Railway was deploying on Python 3.11 while local dev ran 3.14, which
+silently accepts syntax 3.11 rejects (PEP 701's relaxed f-string grammar, nested same-quote strings
+inside an f-string, 3.12+ only). The code imported fine locally and passed local tests, then was a
+hard `SyntaxError` in production; since the broken module sat in `webapp.app`'s import graph, the
+whole app failed to start — Railway showed "Application failed to respond" with no traceback in the
+UI, only in the deploy log.
+
+**Fix in place**: the repo root pins `.python-version` (3.12 as of this writing), and Railway's
+mise-based build reads it — confirmed against the deploy log after the pin was added. This narrows
+the gap but doesn't close it: local dev environments can still run newer than the pin (3.13/3.14),
+so newer-than-pin syntax is still a live risk, just for a smaller feature set. **Keep the local
+interpreter in sync with `.python-version`** — don't let this drift into "the file says 3.12 but
+nobody's venv actually is." Check before pushing: `python scripts/check_python_compat.py` (reads
+`.python-version` itself, so it always checks against whatever's actually pinned; needs a matching
+interpreter on PATH — `brew install python@3.12`, or whatever version the file names, if missing).
+If the pin ever changes, re-verify it actually took effect on Railway (the deploy log names the
+`mise`-installed version) rather than assuming the file alone is sufficient.
 
 ### Pandas strict dtypes
 
