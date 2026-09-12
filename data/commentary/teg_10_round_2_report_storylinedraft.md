@@ -1,31 +1,35 @@
-# Palmares Debut Brings Bests And Disasters
+# Palmares Gives, and Palmares Takes
 
-## Jon Baker plays the round of his TEG life on Palmares's Praia/Alvor combination, carding a gross 10-over that ranks among the best ever recorded.
+## Gregg Williams's 48 points at Palmares, the best round of his TEG career, on a course he had never seen, one day after a modest 38 at Boavista
 <!-- storyline: round -->
 
-Jon Baker produced the round of his TEG life on the Praia/Alvor combination at Palmares, carding a gross 10-over that stands as the third-best gross round in TEG history. Making his first visit to the course, he opened with a birdie at the par-5 2nd sandwiched between two pars, banking 10 stableford points across the first three holes without dropping a single gross shot. The run ended abruptly at the 4th, the hardest hole on the course, where a double bogey broke his streak of pars or better. Baker responded by reeling off six more holes, 5 through 10, all pars, adding another 18 points and a second stretch untouched by a dropped shot. The round helped cut David Mullin's overnight lead in the 2017 TEG Trophy from eight strokes to five, though Mullin stayed on top. Baker's gross 82 stands as his best score recorded at Palmares this week.
+Gregg Williams arrived at Palmares having never played the course before, a day after managing just 38 points at Boavista. He responded with 48 points, a personal best for his TEG career, built on a gross round of +14. It was the best Trophy score of the day, ahead of a field of six, and pulled five points back off leader David Mullin, whose overall lead in the 2017 TEG Trophy was cut from eight to five.
 
-## Stuart Neumann's promising round disintegrates in the space of three holes, followed by another horror show at the last.
+The round turned on two spells in particular. From the 8th to the 12th he took 18 points, including a birdie on the 4th-hardest hole on the course, and across holes 8 to 11 he went four holes without dropping a single gross shot. He finished with another good run, 12 points from the closing four holes. It amounted to the best round of Williams's TEG career, a ten-shot swing in points terms from his round at Boavista the day before.
+
+## Jon Baker's +10 gross round of 82, the third-best gross round in TEG history to date and the best of his own 33 rounds, built on six consecutive pars from the 5th
 <!-- storyline: d0 -->
 
-Stuart Neumann's TEG 2 round at Palmares had a spell of real promise in the middle before it fell apart late on. From the 9th to the 12th he strung together par, bogey, par, par to bank 14 stableford points across the four holes, the kind of stretch that could have anchored a solid card.
+Jon Baker shot a gross 82 in round 2 at Palmares Praia/Alvor, ten over par and the best gross score recorded anywhere in the field of six that day. It stands as the third-best gross round in TEG history to date, and the best round of his own TEG career.
 
-Then it collapsed. A quintuple bogey 10 on the par-5 13th was followed immediately by a quintuple bogey 9 on the 14th, and a triple bogey 7 on the 15th completed a run of 13 shots bled over three holes without a single net par, and without a single point to show for it on the stableford card.
+The round began well, with a birdie at the par-5 2nd sandwiched between pars, but a double bogey at the par-5 4th — the hardest hole on the course — broke that early run. Baker responded by reeling off six straight pars from the 5th through the 10th, a stretch that also yielded 18 stableford points without a dropped gross shot.
 
-Worse was still to come. At the 18th, one of the hardest holes on the course, Neumann ran up a sextuple bogey 10, his own worst score against par of the round, closing out a card that had briefly threatened something respectable with two disaster stretches bookending the back nine.
+The round did little to shake up the wider picture: David Mullin remained clear at the top of the 2017 TEG Trophy and Green Jacket standings, while John Patterson stayed anchored to the bottom of the Wooden Spoon table.
 
-## John Patterson opens with a sextuple bogey at the 1st and never recovers, extending his grip on the TEG 10 Wooden Spoon.
+## Stuart Neumann's back nine at Palmares: 10 at the 13th, 9 at the 14th, 7 at the 15th, and then another 10 at the 18th
 <!-- storyline: d1 -->
 
-John Patterson's Round 2 at Palmares - Praia / Alvor was over almost before it began. His opening drive at the 1st, a par 4 with a stroke index of 5, unravelled into a sextuple bogey 10, immediately putting him behind for the day. It was the kind of start no round recovers from cleanly, and Patterson's did not.
+Stuart Neumann's second round at Palmares Praia/Alvor, his first visit to the course, was a study in contrasts. He opened calmly, holding pars at the 4th and 5th without dropping a shot, then strung together a run from the 9th to the 12th that yielded 14 stableford points, capped by back-to-back pars at the 11th and 12th.
 
-There was a brief steadying spell in the middle of the back nine, two holes at 15 and 16 played without dropping a gross shot, pars on both. But it was a short-lived stretch of calm rather than any real turnaround, and the damage from the 1st was already done.
+The back nine then fell apart. A quintuple bogey 10 at the 13th was followed immediately by another quintuple bogey, a 9 at the 14th — remarkably, the easiest hole on the course by stroke index. A triple bogey 7 at the 15th completed a stretch of three holes without a single net par, 13 shots bleeding away in the process.
 
-The round left Patterson's grip on the 2017 TEG 10 Wooden Spoon looking firmer than ever. He had already been the field's laggard heading into the day, and by the end of it the gap back to the next player had widened from three shots to five.
+There was no recovery to come. Neumann closed with a sextuple bogey 10 at the 18th, one of the hardest holes on the course, which stood as his worst hole against par anywhere in the TEG so far.
 
-## David Mullin's overnight cushion in the TEG 10 Trophy and Green Jacket narrows as Gregg Williams and Alex Baker both card personal bests to draw level for second.
+## David Mullin's 42 points keeps him top of the TEG 10 Trophy but his cushion is trimmed from eight to five, while John Patterson's opening 10 pushes him further adrift at the bottom
 <!-- storyline: race -->
 
-David Mullin took a 48-point round into round two of the TEG 10 Trophy carrying an eight-point cushion, but by the end of the day at Palmares that lead had shrunk to five. Mullin himself played well, stacking 15 points across holes 4 to 8 before a double bogey at the par-5 9th, one of the harder holes on the card, broke the run. That was enough to keep him top of the Trophy standings and the Green Jacket race, with the gap at the top down to 13.
+David Mullin remained on top of the TEG 10 Trophy after the second round at Palmares, though his advantage was cut from eight points to five. Mullin ran off a hot stretch through the 4th to 8th, taking maximum points on every hole for fifteen in five, only for the run to end with a double bogey at the 9th, a par 5 rated the third-hardest on the card. He also stayed clear in the Green Jacket race, that gap trimmed slightly from fourteen to thirteen.
 
-Behind him, though, both chasers found new gears. Gregg Williams, who had struggled to 38 points in round one, turned in a personal-best 48 to match the day's best score in the field, backed by a personal-best gross round of +14. Alex Baker also posted a career-best round, 45 points on 23 over gross. Their rounds pulled Williams and Baker level for second place, and turned Mullin's overnight cushion into a much tighter contest heading into the rest of the week.
+The round's best individual performance belonged to Alex Baker, who returned a personal-best 45 points and a personal-best gross round of +23, built on stretches of nine and ten points either side of the turn. It was not enough to trouble Mullin at the top.
+
+At the other end, John Patterson's day unravelled at the first, a sextuple-bogey 10 on a hole rated among the harder ones on the course. It left him further adrift at the bottom of the Wooden Spoon table, the gap to the next player growing from three points to five.

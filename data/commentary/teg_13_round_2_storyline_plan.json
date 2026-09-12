@@ -1,0 +1,111 @@
+{
+  "title": "Six Becomes One at Prince's",
+  "title_candidates": [
+    "Six Becomes One at Prince's",
+    "Thirty-Two Holes Then Two",
+    "The Dunes Tighten Everything"
+  ],
+  "theme": "A new links strips five of the six points Jon Baker had banked, and hands the day to the only man who looked comfortable on it.",
+  "tone": "house",
+  "opening_hook": "Jon Baker had led the TEG 13 Trophy since the second hole of the tournament. On a course none of them had seen before, he spent two holes of Friday afternoon not leading it at all, and needed a birdie at the last to get it back.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "counterfactual",
+    "catalogue"
+  ],
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "decisive_moment",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Gregg Williams's 41-point, 86-gross round at Prince's, the best of the day by four points and the second-lowest gross round of his 45 TEG rounds",
+    "why_it_matters": "On a course new to every player in the field, Williams was the only one who played it as though he had seen it before, and the round cut a six-point Trophy deficit to one.",
+    "shape": "Five men arrive at Prince's Dunes and Himalayas nines with no course knowledge between them and Williams, six points adrift, quietly sets about the middle of the round. Three straight pars at the 11th, 12th and 13th bring nine Stableford points and no dropped gross shots, and two more pars at the 15th and 16th finish the job. He signs for 41 points and an 86 — 14 over gross, the second-lowest gross round of his TEG career — and the Trophy race is a different tournament by teatime.",
+    "beat_ids": [
+      "r2_b14",
+      "r2_b16",
+      "r2_b18"
+    ],
+    "headline_candidates": [
+      "Gregg Williams Masters an Unknown Links",
+      "Forty-One Points From Gregg Williams",
+      "Williams Finds Kent Entirely Agreeable"
+    ],
+    "chosen_headline": "Gregg Williams Masters an Unknown Links",
+    "standfirst": "His 86 was the second-lowest gross round of the 45 he has played in TEG, and nobody else in the field broke 88.",
+    "compelling_score": 7,
+    "humour_score": 6,
+    "descriptor": "GREGG WILLIAMS"
+  },
+  "race_story": {
+    "subject": "Jon Baker's afternoon at the top of the TEG 13 Trophy: 32 holes in front, dispossessed at the 16th, restored by a birdie at the 18th with a one-point lead",
+    "why_it_matters": "The Trophy lead that looked settled after Royal Cinque Ports is now worth a single point with two rounds to play, and the Green Jacket cushion has shrunk too.",
+    "shape": "Jon Baker had held the Trophy lead since the second hole of Round 1 and arrived at Prince's six points clear; a bogey and a double at the 4th and 5th were answered by a birdie at the 6th, but the cushion kept leaking. Gregg Williams drew level at the 15th and went in front at the 16th, ending a 32-hole tenure. Jon Baker parred the 17th and birdied the 18th to take it straight back, and leads by one at 75 points to 74, with David Mullin — whose quadruple-bogey 8 at the 9th cost him the Green Jacket runner-up spot — now third in both.",
+    "beat_ids": [
+      "r2_b08",
+      "r2_b19",
+      "r2_b15",
+      "r2_b17",
+      "r2_b20",
+      "r2_b12",
+      "r2_b13"
+    ],
+    "headline_candidates": [
+      "Jon Baker Reclaims It at Eighteen",
+      "Thirty-Two Holes and Two More",
+      "A One-Point Lead Survives Prince's"
+    ],
+    "chosen_headline": "Jon Baker Reclaims It at Eighteen",
+    "standfirst": "The TEG 13 Green Jacket margin also narrowed, from nine strokes to seven, with Gregg Williams replacing David Mullin as the man in second.",
+    "compelling_score": 8,
+    "humour_score": 6,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "John Patterson's 28 points and 105 gross at Prince's, bookended by quadruple-bogey 8s and interrupted by three of the best holes of his week",
+      "why_it_matters": "He now sits nine points adrift at the foot of the TEG 13 Wooden Spoon race, a gap that was three points on Thursday evening.",
+      "shape": "Patterson opened with an 8 at the 1st and bled 11 shots across the first four holes, three of them without a net par. Then, improbably, the 10th, 11th and 12th yielded a par, a bogey and a par for nine Stableford points — the best three-hole stretch anyone managed all day bar Williams's. Normal service resumed at once: eight shots gone across the 13th, 14th and 15th, another 8 at the 17th, and a nine-point cushion opened beneath him at the bottom of the Spoon.",
+      "beat_ids": [
+        "r2_b02",
+        "r2_b06",
+        "r2_b10",
+        "r2_b11",
+        "r2_b04",
+        "r2_b05",
+        "r2_b01"
+      ],
+      "headline_candidates": [
+        "John Patterson's Three Good Holes",
+        "Two Eights and a Brief Miracle",
+        "John Patterson Finds the Bottom Roomy"
+      ],
+      "chosen_headline": "John Patterson's Three Good Holes",
+      "standfirst": "The 10th, 11th and 12th brought him nine points; the rest of Prince's brought him nineteen.",
+      "compelling_score": 7,
+      "humour_score": 8,
+      "descriptor": "WOODEN SPOON"
+    },
+    {
+      "subject": "Alex Baker's finish at Prince's: five consecutive double bogeys from the 14th to the 18th, ten gross shots dropped",
+      "why_it_matters": "It turned a promising start into 34 points and 99 gross, and dropped him from third to fourth in the TEG 13 Trophy.",
+      "shape": "Alex Baker began well, taking three points apiece at the 3rd, 4th and 5th for nine in a row. The 10th, 11th and 12th cost him seven shots, and then the closing five holes produced a double bogey each, with metronomic consistency: 5, 7, 5, 6, 6. Ten shots gone in five holes, and Round 1's third place in the Trophy handed over to David Mullin.",
+      "beat_ids": [
+        "r2_b07",
+        "r2_b09",
+        "r2_b03"
+      ],
+      "headline_candidates": [
+        "Five Doubles to Finish for Alex Baker",
+        "Alex Baker Closes With Grim Consistency",
+        "Ten Shots Across Five Holes"
+      ],
+      "chosen_headline": "Five Doubles to Finish for Alex Baker",
+      "standfirst": "Nine points across the 3rd, 4th and 5th suggested one kind of afternoon; the last five holes delivered quite another.",
+      "compelling_score": 6,
+      "humour_score": 7,
+      "descriptor": "ALEX BAKER"
+    }
+  ],
+  "race_state_note": "Two rounds remain and nothing is settled: one point covers the top of the Trophy, seven strokes the Green Jacket, and only the Wooden Spoon gap has grown. No winners to be declared here.",
+  "storyline_note": ""
+}

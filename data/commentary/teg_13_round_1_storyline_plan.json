@@ -1,0 +1,116 @@
+{
+  "title": "No Bargains at Deal",
+  "title_candidates": [
+    "No Bargains at Deal",
+    "First Blood on the Kent Coast",
+    "The Links Introduces Itself"
+  ],
+  "theme": "TEG meets Royal Cinque Ports for the first time, and only one of the five men makes anything resembling a friend of it.",
+  "tone": "house",
+  "opening_hook": "Five players, none of whom had ever seen Royal Cinque Ports before, walked onto a links that has hosted two Open Championships on a Thursday in October; by the eighteenth green the scoreboard read like a casualty list with one conspicuous survivor.",
+  "narrative_vehicles": [
+    "ensemble",
+    "catalogue",
+    "dual_narrative"
+  ],
+  "prominent_vehicle": "ensemble",
+  "prominent_palette": "venue_character",
+  "is_final_round": true,
+  "round_story": {
+    "subject": "Jon Baker's 39-point opening round at Royal Cinque Ports, built on a flawless first five holes and closed out with three straight pars, six clear of the field",
+    "why_it_matters": "On a course nobody in the field had played, in TEG's first visit to Kent, Jon Baker was the only man who looked as though he had been given a map: 39 points and 85 gross on a links that took 36 over par off the man at the other end of the scoreboard.",
+    "shape": "Setup: five debutants at Deal, a championship links with two Opens on its CV and no local knowledge anywhere in the group. Turn: Jon Baker opens with two pars and a birdie at the par-five 3rd for ten points in three holes, and does not drop a gross shot until the 6th. Resolution: pars at 16, 17 and 18 close out 39 points, 85 gross, and a six-point Trophy lead plus the Green Jacket lead on the same card.",
+    "beat_ids": [
+      "r1_b13",
+      "r1_b15",
+      "r1_b23",
+      "r1_b24"
+    ],
+    "headline_candidates": [
+      "Jon Baker Opens Six Clear",
+      "Thirty-Nine Points on a Strange Links",
+      "Jon Baker Tames Royal Cinque Ports"
+    ],
+    "chosen_headline": "Jon Baker Opens Six Clear",
+    "standfirst": "An 85 on a course he had never seen, bookended by five unblemished holes at the start and three pars at the finish, gives him the early lead in both the TEG 13 Trophy and the TEG 13 Green Jacket.",
+    "compelling_score": 8,
+    "humour_score": 5,
+    "descriptor": "JON BAKER"
+  },
+  "race_story": {
+    "subject": "John Patterson's 28 points and 36-over gross round leave him three adrift at the foot of the TEG 13 Wooden Spoon race, while bottom place changed hands repeatedly before settling on him",
+    "why_it_matters": "Round one sets the floor as well as the ceiling: four different players occupied last place at some point during the afternoon before John Patterson's second nine of the day at the 16th nailed him to it, three points clear of nobody he would want to be clear of.",
+    "shape": "Setup: with no prior standings to defend, the Spoon race spent the front nine as a revolving door — Gregg Williams at the 3rd and the 5th, David Mullin at the 4th, Alex Baker at the 12th, all briefly bottom. Turn: John Patterson's card gathers weight — an 8 at the 1st, a 9 at the 7th, an 8 at the 10th inside a three-hole stretch that cost eight shots. Resolution: a 9 at the par-five 16th drops him to the bottom for good on 28 points, three behind the pack, with Gregg Williams second in the Trophy on 33 and David Mullin second in the Jacket on 22 over.",
+    "beat_ids": [
+      "r1_b01",
+      "r1_b02",
+      "r1_b04",
+      "r1_b05",
+      "r1_b06",
+      "r1_b08",
+      "r1_b12",
+      "r1_b16",
+      "r1_b17",
+      "r1_b20",
+      "r1_b24"
+    ],
+    "headline_candidates": [
+      "John Patterson Adrift at the Foot",
+      "Two Nines Settle the Bottom",
+      "The Revolving Door Stops Turning"
+    ],
+    "chosen_headline": "John Patterson Adrift at the Foot",
+    "standfirst": "Four of the five players held last place at some point on Thursday, but only one of them was still holding it when the cards were signed.",
+    "compelling_score": 7,
+    "humour_score": 7,
+    "descriptor": "WOODEN SPOON"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Alex Baker loses eighteen gross shots across two three- and four-hole stretches, the 4th to the 7th and the 10th to the 12th, on the way to 102",
+      "why_it_matters": "Two separate nine-shot haemorrhages in the same round is a particular kind of achievement, and they cost Alex Baker any chance of keeping Jon Baker in sight on day one.",
+      "shape": "Setup: Alex Baker reaches the 4th tee with the round still intact. Turn: double, triple, double, double from the 4th to the 7th bleeds nine shots, and after the turn the 10th to the 12th — double, an 8 at the stroke-index-three 11th, triple — bleeds nine more, briefly parking him at the bottom of the Wooden Spoon race at the 12th. Resolution: 102 gross and 31 points, which on this evidence flatters him.",
+      "beat_ids": [
+        "r1_b03",
+        "r1_b09",
+        "r1_b10",
+        "r1_b11",
+        "r1_b14",
+        "r1_b07"
+      ],
+      "headline_candidates": [
+        "Eighteen Shots Lost in Seven Holes",
+        "Alex Baker Bleeds Nine Twice",
+        "Two Collapses, One Scorecard"
+      ],
+      "chosen_headline": "Eighteen Shots Lost in Seven Holes",
+      "standfirst": "Alex Baker managed the rare feat of shedding nine gross shots before the turn and then doing it again straight afterwards, the quadruple bogey at the 11th the worst of it.",
+      "compelling_score": 6,
+      "humour_score": 7,
+      "descriptor": "ALEX BAKER"
+    },
+    {
+      "subject": "Gregg Williams and David Mullin both post 94 gross and both stop the rot with a single birdie, Mullin at the 5th and Williams at the 1st-stroke-index 15th",
+      "why_it_matters": "The two men who finished level on gross took near-identical routes there — an early bloodletting, then one hole that stopped it — and it leaves them in second place in the two competitions Jon Baker leads.",
+      "shape": "Setup: David Mullin opens with a triple bogey at the 1st and drops to the bottom of the Spoon race at the 4th; Gregg Williams does likewise at the 3rd and the 5th, then bleeds six shots in three holes from the 5th. Turn: Mullin's birdie at the par-five 5th ends his run of bogey-or-worse; Williams's birdie at the 15th, stroke index one, is worth five points on its own. Resolution: both sign for 94, with Gregg Williams second in the Trophy on 33 points and David Mullin second in the Green Jacket at 22 over.",
+      "beat_ids": [
+        "r1_b18",
+        "r1_b19",
+        "r1_b21",
+        "r1_b22"
+      ],
+      "headline_candidates": [
+        "Gregg Williams and David Mullin Rally",
+        "Two Birdies Stop Two Bleeds",
+        "Ninety-Four Apiece on the Kent Coast"
+      ],
+      "chosen_headline": "Gregg Williams and David Mullin Rally",
+      "standfirst": "Identical gross totals, near-identical shapes of round, and one well-timed birdie each to thank for it.",
+      "compelling_score": 6,
+      "humour_score": 5,
+      "descriptor": "DAVID MULLIN | GREGG WILLIAMS"
+    }
+  ],
+  "race_state_note": "This is round one of four, so there is nothing to compare the standings against — the numbers are a starting position, not a movement. Worth noting that Jon Baker leads the Trophy and the Green Jacket simultaneously, and that the three-point gap at the foot of the Wooden Spoon race is the only meaningful separation anywhere below the leader.",
+  "storyline_note": ""
+}

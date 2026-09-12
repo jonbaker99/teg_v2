@@ -1,0 +1,108 @@
+{
+  "title": "A Double at Prince's",
+  "title_candidates": [
+    "A Double at Prince's",
+    "Kent Settles Nothing and Everything",
+    "Jon Baker Takes Both on the Shore"
+  ],
+  "theme": "TEG's first visit to Kent ends with the outcome that was never really in doubt — Jon Baker's Trophy and Green Jacket double — and a final day whose genuine drama sat at the other end of the field.",
+  "tone": "house",
+  "opening_hook": "A brand-new links, the Shore nine married to the Dunes, and the same name at the top of both boards for the fourth round running — while behind Jon Baker the Wooden Spoon quietly changed hands at the 10th.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "inevitability",
+    "redemption_arc"
+  ],
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "venue_character",
+  "is_final_round": true,
+  "round_story": {
+    "subject": "Alex Baker's 44-point Sunday at Prince's, a personal-best gross round of 89 (+17) that dragged him off the bottom of the Wooden Spoon race at the last opportunity",
+    "why_it_matters": "Alex Baker arrived at the final round last in the Trophy standings on 97 and bottom of the Spoon race, having gone 102, 99, 100 gross around Kent all week; he then produced the lowest gross score of his TEG career on a course nobody in the field had ever seen, and finished level with John Patterson on 141.",
+    "shape": "Setup: after Saturday's 32 points at Littlestone, Alex Baker sat last in the Trophy and bottom of the Spoon race, three adrift of safety. Turn: he opened with back-to-back pars at the 1st and 2nd, repeated the trick at the 9th and 10th, and kept the card clean enough to post 44 points and 89 gross — the best gross round of his 28 TEG rounds. Resolution: a twelve-point improvement on Saturday, the best Stableford total of the day by six, and the Spoon left behind him.",
+    "beat_ids": [
+      "r4_b01",
+      "r4_b04",
+      "r4_b05",
+      "r4_b06"
+    ],
+    "headline_candidates": [
+      "Alex Baker Saves His Best for Sunday",
+      "A Personal Best on the Shore",
+      "Alex Baker's Forty-Four Changes Everything"
+    ],
+    "chosen_headline": "Alex Baker Saves His Best for Sunday",
+    "standfirst": "Three rounds of 102, 99 and 100 around Kent gave no warning of an 89 at a course the field had never played.",
+    "compelling_score": 8,
+    "humour_score": 6,
+    "descriptor": "ALEX BAKER"
+  },
+  "race_story": {
+    "subject": "Jon Baker's completion of the TEG 13 Trophy and TEG 13 Green Jacket double at Prince's, and Gregg Williams's four-day failure to lay a glove on him",
+    "why_it_matters": "Jon Baker led both competitions after every single round and finished 158 to Gregg Williams's 152 in the Trophy and 50 to 68 in the Jacket — the fourth double in TEG history, after TEGs 2, 4 and 11.",
+    "shape": "Setup: Jon Baker began Sunday five clear in the Trophy and fourteen clear in the Jacket, having led both boards since Wednesday evening, with Gregg Williams the only man close enough to matter. Turn: Gregg Williams did the sensible things — pars at the 12th and 13th, more at the 15th and 16th — while Jon Baker took nine points from the 12th, 13th and 14th and, after a bogey and a double at the 15th and 16th, birdied the par-3 17th to shut the door. Resolution: 39 points and 13 over gross, the lowest gross round in the field, and both trophies went the same way for the fourth time in TEG history.",
+    "beat_ids": [
+      "r4_b17",
+      "r4_b10",
+      "r4_b12",
+      "r4_b15",
+      "r4_b11",
+      "r4_b16"
+    ],
+    "headline_candidates": [
+      "Jon Baker Seals the Double at Prince's",
+      "Birdie at the Seventeenth Ends It",
+      "Both Boards Belong to Jon Baker"
+    ],
+    "chosen_headline": "Jon Baker Seals the Double at Prince's",
+    "standfirst": "Gregg Williams finished six back on Stableford and eighteen adrift on gross, having never once held either lead all week.",
+    "compelling_score": 8,
+    "humour_score": 6,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "David Mullin taking the TEG 13 Wooden Spoon after a nine at the 10th on the final afternoon",
+      "why_it_matters": "David Mullin, winner of eight Green Jackets, had been the steadiest man in the field round to round, and still contrived to be last in the Trophy standings on 135, six behind John Patterson, after a single hole undid four days of competence.",
+      "shape": "Setup: David Mullin began Sunday fourth on 100, three clear of Alex Baker, and looked untroubled — pars at the 1st and 2nd, three more in a row from the 4th to the 6th. Turn: at the par-4 10th, stroke index 3, he took nine, the worst he has recorded on a par 4, and dropped to the bottom of the Spoon race there and then. Resolution: 35 points, the lowest round in the field, and the Spoon changed owner on the final day of TEG 13.",
+      "beat_ids": [
+        "r4_b08",
+        "r4_b09",
+        "r4_b13",
+        "r4_b14"
+      ],
+      "headline_candidates": [
+        "David Mullin Undone at the Tenth",
+        "Nine Shots at a Par Four",
+        "The Spoon Changes Hands in Kent"
+      ],
+      "chosen_headline": "David Mullin Undone at the Tenth",
+      "standfirst": "Four days of unfussy golf, and then five shots dropped on a single par 4 with the Spoon in the balance.",
+      "compelling_score": 7,
+      "humour_score": 7,
+      "descriptor": "WOODEN SPOON"
+    },
+    {
+      "subject": "John Patterson's final round of extremes — an eagle three at the par-5 2nd and a nine at the 15th — following his 49-point Saturday",
+      "why_it_matters": "Eagles are the rarest thing on a TEG card, and John Patterson made one within two holes of the start; by the 15th he had given it all back and more, finishing on 36 points, thirteen down on the round that had briefly made him the story of the week.",
+      "shape": "Setup: John Patterson came to Prince's off 49 points at Littlestone, the third-best round in TEG history to date, and picked up where he left off with a three at the par-5 2nd. Turn: at the par-5 15th he ran up a nine, the fourth time this week a quadruple bogey or worse has appeared on his card. Resolution: 36 points, 97 gross, and a finish level with Alex Baker on 141 — the Spoon avoided by six.",
+      "beat_ids": [
+        "r4_b02",
+        "r4_b03",
+        "r4_b07"
+      ],
+      "headline_candidates": [
+        "An Eagle and a Nine",
+        "John Patterson Returns to Earth",
+        "Six Shots Between Two Par Fives"
+      ],
+      "chosen_headline": "An Eagle and a Nine",
+      "standfirst": "Saturday's 49 points was the third-best round TEG has seen; Sunday offered both ends of the same man in four hours.",
+      "compelling_score": 7,
+      "humour_score": 7,
+      "descriptor": "JOHN PATTERSON"
+    }
+  ],
+  "race_state_note": "Jon Baker led the Trophy and the Green Jacket after every round of TEG 13; the only lead to change hands on the final day was the Wooden Spoon, at the 10th. Alex Baker and John Patterson finished level on 141.",
+  "storyline_note": ""
+}

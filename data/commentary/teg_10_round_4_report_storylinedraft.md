@@ -1,31 +1,35 @@
-# Alex Baker Rewrites the Record Books at Boavista
+# Fifty-One at Boavista
 
-## The Trophy race, resolved: Alex Baker's breakaway from a tied lead to his first title
+## The three TEG 10 competitions resolved at Boavista, told from Gregg Williams's side of the Trophy — level at the top, briefly ahead on the 5th, eleven adrift by the close — with David Mullin's Green Jacket and John Patterson's Wooden Spoon confirmed
 <!-- storyline: race -->
 
-On the final day at Boavista Golf & Spa Resort, Alex Baker went into round 4 of the TEG 12 Trophy locked level at the top, and came out of it with the title in hand. Gregg Williams was the man who threatened to deny him. A birdie on the 12th, the toughest hole on the front for stroke index at 12, drew Williams level for the Stableford lead on the fifth hole. From there it unravelled. Over holes 12 to 14 he bled six shots with three successive double bogeys, and at the 18th, one of the hardest closing holes on the course, he ran up a quadruple bogey 8 to finish the round with nothing.
+At Boavista, round 4 brought all three competitions of TEG 10 to a close. Gregg Williams and Alex Baker went into the day level at the top of the TEG 10 Trophy, and after an early wobble - a double bogey and a bogey to start - Williams' birdie at the 5th brought him back level for the lead. It did not hold. A quadruple bogey seven at the 6th was followed by three straight double bogeys across holes 12 to 14, six shots gone in as many holes. He clawed back nine points over 15 to 17, including a bogey at the hardest hole on the course, but a closing quadruple bogey eight at the 18th finished him off. Alex Baker took the TEG 10 Trophy by eleven.
 
-Baker's own round matched him blow for blow on the day, the pair finishing level on Stableford after 18, but Baker's overall Trophy lead swelled from level to 11 shots by the close of play, all but settling the destination of the title. It was also his best round of the week at Boavista, a personal course best of 88. David Mullin, meanwhile, retained his separate lead in the TEG 12 Green Jacket race.
+The TEG 10 Green Jacket was never in question: David Mullin led the round throughout, playing 13 and 14 without dropping a gross shot, and pushed his winning margin out to 12. John Patterson's TEG 10 Wooden Spoon was just as settled, last from the first hole and 32 adrift by the finish.
 
-## David Mullin holds off a fast-closing Jon Baker to take the Green Jacket
+## John Patterson's 21 points and 40-over gross at Boavista, his worst round on both counts, completing a Wooden Spoon he led from the first day
 <!-- storyline: d0 -->
 
-David Mullin closed out the 2017 TEG Jacket at Boavista, seeing off a strong finish from Jon Baker to claim the title. Mullin's build. for the win came from consistency rather than fireworks: he opened with two holes without dropping a gross shot at the 1st and 2nd, then repeated the trick at the 13th and 14th, banking pars through the meat of the round while his rival searched for a way back.
+John Patterson closed out the Wooden Spoon in the worst possible style at Boavista, posting 21 points and a gross 40-over — both his worst rounds on record for either measure. It was the low score of the field's round, with the field ranging from 21 up to 51 points, and the worst gross score of the day by some distance against a best of 13-over.
 
-That way back nearly arrived. Jon Baker piled up nine stableford points across holes 15 to 17, a stretch that included a bogey on the 15th — the hardest hole on the course — followed by two clean pars. It was enough to set his own course personal best of 86 at Boavista, three shots inside his previous mark, but not enough to close the gap. Mullin's lead over the round actually grew, from ten points to twelve, and after four rounds he stood clear at the top of the Jacket standings while Alex Baker led the separate Trophy race.
+The damage came in clusters. At the 8th, one of the hardest holes on the course, Patterson ran up a sextuple-bogey 11, his own worst-ever hole against par. He added a quintuple-bogey 9 at the 18th and a quadruple-bogey 8 at the 10th, three separate blow-ups wiping out any chance of a respectable card.
 
-## John Patterson's collapse to a runaway Wooden Spoon
+None of it changed the destination of the Wooden Spoon, which Patterson had occupied since the first day and never looked like escaping. The gap to the next-worst player, already 14 points before the round, stretched to 32 by the end of it — confirmation, if any were needed, of a Spoon led wire to wire.
+
+## Boavista on TEG's 12th round at the venue, handing out personal bests to three of the six players in the same afternoon while punishing Stuart Neumann early
 <!-- storyline: d1 -->
 
-John Patterson's final round at Boavista was a wreck from start to finish. He posted 21 points, a new personal worst, built on a gross 40-over-par round that was also his worst on record. The damage came in three separate blow-ups: an 11 at the par-5 8th, one of the harder holes on the course, a 9 at the par-4 18th, and an 8 at the par-4 10th — three holes costing him 17 strokes over par between them and returning nothing but zeros on the Stableford card.
+Boavista Golf & Spa Resort in Lagos hosted its 12th TEG round on Tuesday, 03/10/2017, and the afternoon delivered fresh course bests for two of the six players while Stuart Neumann was undone before he had even settled in.
 
-The round only confirmed what was already settled. Patterson had gone into it holding down last place in the Wooden Spoon race by 14 points; by the close of play that gap to the next-worst player had stretched to 32. There was no flip, no late scare for anyone else — just a lead in the wrong direction turned into a rout. Of the six players in the field, nobody came close to his worst-of-the-day gross score of 40 over, or his round total of 21.
+Neumann's trouble came immediately: a double bogey at the 1st, a quadruple bogey seven at the par-3 2nd — one of Boavista's easiest holes at SI 16 — and a further double at the 3rd bled him eight shots inside three holes. He never recovered, his round finishing well adrift of the 82 he had once carded at this course.
 
-## Alex Baker's 51-point final round, the best in TEG history to date
+At the other end, Jon Baker and Gregg Williams both closed out clean, each playing 16 and 17 without a dropped gross shot. Jon Baker's finish carried more weight: a run from 15 to 17 worth 9 stableford points, a bogey at the fearsome, SI-1 15th still counting thanks to his stroke allowance. His 86 and Williams's 93 were both personal bests at Boavista, three shots inside each man's previous visit here.
+
+Elsewhere, Alex Baker's lead in the 2017 Trophy held but stretched to 11, David Mullin's Green Jacket advantage grew to 12, and John Patterson slipped further adrift at the bottom of the Wooden Spoon standings, now 32 shots off the pace.
+
+## Alex Baker's 51-point round at Boavista, the highest scoring round in TEG history to date, which turns a dead-level Trophy race into an eleven-point win
 <!-- storyline: round -->
 
-Alex Baker closed round four at Boavista with 51 points, the best round in TEG history to date. It came alongside a personal-best gross round of +17, and left him in the odd position of extending a lead he already held: he began the day as Trophy leader with the gap at zero, and ended it 11 points clear, without any change of leader.
+Alex Baker's fourth round at Boavista was the best in TEG history to that point: 51 Stableford points, built on a gross score of 17 over par that stood as his own personal best at the course. It broke down as three shots better than his previous visit here. The card had its rough patches — a bogey on the par-4 5th and another on the par-5 8th, one of the harder holes on the course — but from holes 5 to 10 he still gained 21 points, and across holes 6-7 and 9-10 he didn't drop a single gross shot.
 
-The scoring was built on a stretch of remarkable consistency rather than fireworks. From the 5th to the 10th he gained 21 points, missing only two pars, at the 5th and the par-5 8th — one of the harder holes on the course. Everything else in that stretch was a par, worth 3 or 4 points depending on the hole's difficulty.
-
-The gross score of 88 was also a course best for Baker this TEG, eleven strokes better than his previous visit to Boavista. Nothing about the day threatened the other two races: David Mullin's Green Jacket lead and John Patterson's place at the bottom of the Wooden Spoon standings were both unaffected.
+The timing could not have been sharper. The 2017 TEG Trophy race arrived at Boavista dead level, with Baker already the man to catch but no gap to his nearest rival. By the time he walked off the 18th, that gap was eleven points, all of it earned in a single round. The lead itself didn't change hands — Baker started the day on top and finished there too — but the contest behind him was transformed from a scrap into a chase.

@@ -1,0 +1,92 @@
+{
+  "title": "Leads Borrowed and Lost at El Prat",
+  "title_candidates": [
+    "Leads Borrowed and Lost at El Prat",
+    "Three Holes at El Prat",
+    "The Azul Rearranges Everybody"
+  ],
+  "theme": "On a course no TEG player had ever seen, every lead moved at least once, and none of the movement took more than three holes.",
+  "tone": "House: subverted gravitas and exact detail, with the farce held back for John Patterson's sixteenth and David Mullin's afternoon. British English, no winking.",
+  "opening_hook": "El Prat's Azul course had never been struck by a TEG ball before Saturday morning. By the fifth green it had taken the TEG 11 Green Jacket lead off Jon Baker, who had held it since the fourth hole of the tournament; by the thirteenth it had taken the TEG 11 Trophy lead off him as well, and neither departure required anything so dramatic as a disaster.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "motif",
+    "redemption_arc"
+  ],
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "decisive_moment",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "John Patterson's 39 points at El Prat, the best round of the day and the third-best of his eleven TEG rounds, a nine at the sixteenth included",
+    "why_it_matters": "Patterson has been the tournament's designated casualty — nines at the 4th and 13th in round one, an eleven at the 15th in round two — and on Saturday he posted the best score in the field and vacated the bottom of the Wooden Spoon race.",
+    "shape": "Setup: two rounds of catastrophe, last in the Trophy and last in the Spoon race, arriving at a course nobody in the field had played. Turn: three consecutive bogeys at the 8th, 9th and 10th — the 8th is stroke index 1 — worth nine points, the engine of the whole round. Resolution: a quintuple-bogey nine at the 16th does not derail it; 39 points, the best of the day and third-best of his TEG career, with the Spoon handed on to someone else.",
+    "beat_ids": [
+      "r3_b09",
+      "r3_b02",
+      "r2_prior_01",
+      "r1_prior_01"
+    ],
+    "headline_candidates": [
+      "Patterson Shrugs Off Another Nine",
+      "Thirty-Nine Points, One Quintuple Bogey",
+      "Patterson's Best Day in Catalonia"
+    ],
+    "chosen_headline": "Patterson Shrugs Off Another Nine",
+    "standfirst": "Three straight bogeys around the turn, one of them at the hardest hole on the course, carried a round that survived a nine at the sixteenth without noticeably slowing down.",
+    "compelling_score": 7,
+    "humour_score": 6,
+    "descriptor": "JOHN PATTERSON"
+  },
+  "race_story": {
+    "subject": "Jon Baker loses a 45-hole TEG 11 Trophy lead to Alex Baker at the thirteenth, the two-point margin surviving intact with only the names reversed",
+    "why_it_matters": "Jon Baker had led the Trophy since the fourth hole of round one and lost it in the space of three holes; Alex Baker now leads a competition he has trailed all week, with one round left.",
+    "shape": "Setup: Jon Baker arrives at El Prat two points clear, the lead his since the fourth hole of the tournament, and Alex Baker draws level as early as the first. Turn: holes 11 to 13 — double, double, triple, seven gross shots gone — while Alex Baker plays the 12th, 13th and 14th in three pars for nine points. Resolution: the lead changes at the thirteenth and the margin at the top is exactly what it was on Friday night, two points, facing the other way.",
+    "beat_ids": [
+      "r3_b01",
+      "r3_b05",
+      "r3_b17",
+      "r3_b13",
+      "r3_b16",
+      "r3_b08",
+      "r3_b12"
+    ],
+    "headline_candidates": [
+      "Three Holes Undo Forty-Five",
+      "Alex Baker Inherits the Trophy Lead",
+      "The Same Two Points, Reversed"
+    ],
+    "chosen_headline": "Three Holes Undo Forty-Five",
+    "standfirst": "The margin at the top of the TEG 11 Trophy is precisely what it was on Friday evening; only the names on either side of it have swapped places.",
+    "compelling_score": 8,
+    "humour_score": 6,
+    "descriptor": "ALEX BAKER | JON BAKER"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "David Mullin holds the TEG 11 Green Jacket lead from the fifth green to the sixth tee, then falls to the bottom of the Wooden Spoon race",
+      "why_it_matters": "Mullin ended a 37-hole reign by Jon Baker and owned the gross lead for exactly one hole, then produced the day's lowest points total and took over the Spoon; he still shares the day's best gross with the man he briefly displaced.",
+      "shape": "Setup: level pars at the 2nd and 3rd draw Mullin alongside in the Jacket, and Jon Baker's slip at the 5th hands him the outright lead after 37 holes in front. Turn: Jon Baker takes it straight back at the 6th, Mullin makes a quadruple-bogey seven at the short 6th himself, and from the 11th to the 15th he goes five holes without a net par. Resolution: 29 points, the fewest in the field, the bottom of the Spoon race inherited from John Patterson at the twelfth, and a gross 93 that is still the joint-lowest of the day.",
+      "beat_ids": [
+        "r3_b07",
+        "r3_b21",
+        "r3_b20",
+        "r3_b19",
+        "r3_b06",
+        "r3_b04",
+        "r3_b18"
+      ],
+      "headline_candidates": [
+        "Mullin Leads the Jacket for One Hole",
+        "Five Holes Without a Net Par",
+        "Mullin's Brief Afternoon in Charge"
+      ],
+      "chosen_headline": "Mullin Leads the Jacket for One Hole",
+      "standfirst": "He ended the longest lead of the tournament so far, kept it for a single tee shot, and finished the day at the bottom of a different competition altogether.",
+      "compelling_score": 7,
+      "humour_score": 7,
+      "descriptor": "DAVID MULLIN"
+    }
+  ],
+  "race_state_note": "The Trophy changed hands without the margin changing at all — two points then, two points now — and the Green Jacket gap is likewise unchanged at three; Gregg Williams sits six off the Trophy lead with a round to play, and the Wooden Spoon has simply swapped occupants, Mullin now five behind Patterson.",
+  "storyline_note": ""
+}

@@ -1,0 +1,116 @@
+{
+  "title": "Two Personal Bests, No Movement",
+  "title_candidates": [
+    "Two Personal Bests, No Movement",
+    "Plenty of Motion, No Movement",
+    "The Tour Course Gives and Takes Back"
+  ],
+  "theme": "On the resort's gentler course the field posted two personal bests and five blow-up holes, and the Trophy table finished the day exactly where it began.",
+  "tone": "house",
+  "opening_hook": "PGA Catalunya's Tour course is billed as the forgiving sibling, and on Friday it duly handed out two personal bests, an 8 at the 1st, an 8 at the 3rd, an 8 at the 4th and a 10 at the 15th. At the end of all that the TEG 12 Trophy lead had changed hands five times and stood precisely where it had at breakfast: Gregg Williams by one.",
+  "narrative_vehicles": [
+    "redemption_arc",
+    "bookends",
+    "catalogue"
+  ],
+  "prominent_vehicle": "redemption_arc",
+  "prominent_palette": "course_history",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Stuart Neumann answers a ruinous opening round with 44 points and a personal best at PGA Catalunya Tour, the best round of the day by any measure on the Trophy metric",
+    "why_it_matters": "After a first round wrecked by a 12 at the 15th and a 10 at the 13th, Neumann posted the day's best Stableford total of 44 and his best gross round at this course, 93, five shots better than the 98 he managed here in TEG 6 and fully twelve shots better than his last visit. It lifted him from fourth to third in the TEG 12 Trophy.",
+    "shape": "He opened with a quadruple-bogey 8 at the 1st, which looked like Thursday continuing by other means, then took 13 points from the 3rd to the 6th, bogey-bogey-par-birdie, the birdie at the 6th the only gross shot gained all morning. A second steadying pair of pars at the 8th and 9th carried him to the turn before the 14th to 16th cost seven shots — double, triple, double — and threatened the whole thing. It held anyway: 44 points, 93 gross, a course personal best, and the largest single-round gain in the field.",
+    "beat_ids": [
+      "r2_b09",
+      "r2_b02",
+      "r2_b12",
+      "r2_b18",
+      "r2_b19",
+      "r2_b21"
+    ],
+    "headline_candidates": [
+      "Neumann Turns Wreckage Into 44 Points",
+      "Neumann Repairs Thursday in One Round",
+      "Five Shots Better Than Ever Here"
+    ],
+    "chosen_headline": "Neumann Turns Wreckage Into 44 Points",
+    "standfirst": "A quadruple bogey at the 1st suggested more of the same, but by the 6th he had 13 points in four holes and by the 18th his best gross round at this course by five shots.",
+    "compelling_score": 8,
+    "humour_score": 6,
+    "descriptor": "STUART NEUMANN"
+  },
+  "race_story": {
+    "subject": "The TEG 12 Trophy lead changed hands five times across eighteen holes and finished exactly as it started, Gregg Williams one point clear of John Patterson, with the TEG 12 Green Jacket still deadlocked",
+    "why_it_matters": "Nothing at the top moved: Williams 88, Patterson 87, the same single point that separated them on Thursday night, and Williams still level with Jon Baker at 28 over for the Jacket. Both men shot 42, having spent the afternoon trading the lead at the 4th, the 12th, the 13th, the 15th and the 16th.",
+    "shape": "Patterson drew level at the 4th and was still level at the turn despite an 8 there and another at the 3rd, then went outright ahead at the 12th with four straight bogeys worth twelve points. Williams levelled at the 13th and took the lead outright at the 15th, where Patterson ran up a quintuple-bogey 10 on the par five and took nothing from it. Patterson was level again by the 16th and took nine points from the last three, which was enough to finish the day one adrift and not a stroke closer than when he started it.",
+    "beat_ids": [
+      "r2_b33",
+      "r2_b30",
+      "r2_b31",
+      "r2_b27",
+      "r2_b15",
+      "r2_b32",
+      "r2_b28",
+      "r2_b25",
+      "r2_b29",
+      "r2_b23"
+    ],
+    "headline_candidates": [
+      "Williams and Patterson End Where They Began",
+      "Five Lead Changes and One Point",
+      "A 10 at the 15th Decides Nothing"
+    ],
+    "chosen_headline": "Williams and Patterson End Where They Began",
+    "standfirst": "A quintuple-bogey 10 at the 15th cost John Patterson the lead, he was level again by the 16th, and the gap at close of play was the same single point it had been at dawn.",
+    "compelling_score": 7,
+    "humour_score": 6,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Alex Baker's round comes apart between the 6th and the 9th, eleven shots gone in four holes, and leaves him four adrift at the foot of the TEG 12 Wooden Spoon race",
+      "why_it_matters": "He had twelve points in the bag through five holes and was playing the most orderly golf of anyone in the field; four holes later he had dropped eleven gross shots, taken not a single net par, and slipped to the bottom of the Spoon standings at the 6th. His 37 points was respectable, but David Mullin's 40 stretched the gap at the bottom from one point to four.",
+      "shape": "Par, bogey, bogey, par from the 2nd to the 5th brought twelve points and a certain calm. Then double bogey at the 6th, an 8 at the par-five 7th, a 6 at the short 8th and a 7 at the 9th: eleven shots, no net pars, and a new resident at the bottom of the table. A birdie at the 10th stopped it and nine points from the 13th to the 15th tidied the ledger, but the four holes around the turn had already done the work.",
+      "beat_ids": [
+        "r2_b03",
+        "r2_b16",
+        "r2_b06",
+        "r2_b07",
+        "r2_b01",
+        "r2_b04"
+      ],
+      "headline_candidates": [
+        "Eleven Shots in Four Holes",
+        "The Turn Undoes a Tidy Start",
+        "Twelve Points, Then the 6th"
+      ],
+      "chosen_headline": "Eleven Shots in Four Holes",
+      "standfirst": "Twelve points through five holes, then double, triple, triple, triple, and a Wooden Spoon deficit that has quietly grown from one point to four.",
+      "compelling_score": 7,
+      "humour_score": 7,
+      "descriptor": "WOODEN SPOON | ALEX BAKER"
+    },
+    {
+      "subject": "David Mullin posts the best gross round of the day, 84, his personal best at PGA Catalunya Tour by a single shot",
+      "why_it_matters": "Mullin's 12 over par was the lowest gross score in the field on Friday and beats the 85 he shot here in TEG 11, five shots better than his last visit to the course. It is also the round that dragged him back into the Jacket conversation after a first round that left him five behind.",
+      "shape": "He played the 5th to the 8th in four consecutive pars, twelve points and not a gross shot dropped, the steadiest stretch anyone managed all day. The 9th ended it with a triple-bogey 7, which on another afternoon would have been the story of his round. It was not: he signed for 84, one better than anything he has done on this course, and the best gross figure of the day by four shots.",
+      "beat_ids": [
+        "r2_b05",
+        "r2_b08",
+        "r2_b14"
+      ],
+      "headline_candidates": [
+        "Four Pars, Then the 9th",
+        "Mullin Trims His Catalunya Best",
+        "The Steadiest Four Holes of Friday"
+      ],
+      "chosen_headline": "Four Pars, Then the 9th",
+      "standfirst": "An 84 here is one shot better than anything David Mullin had managed on the Tour course before, and it was comfortably the lowest gross round of the day.",
+      "compelling_score": 6,
+      "humour_score": 5,
+      "descriptor": "DAVID MULLIN"
+    }
+  ],
+  "race_state_note": "The tables understate how much happened: the Trophy lead changed hands five times inside the round and finished on the same one-point margin, and Gregg Williams and Jon Baker remain exactly level for the Green Jacket with David Mullin now one shot back rather than five.",
+  "storyline_note": ""
+}

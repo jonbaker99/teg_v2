@@ -1,0 +1,120 @@
+{
+  "title": "The Stadium Rearranges Everything",
+  "title_candidates": [
+    "The Stadium Rearranges Everything",
+    "Twelve Shots at the Thirteenth",
+    "Patterson Rises, Williams Falls"
+  ],
+  "theme": "A single Saturday at PGA Catalunya's Stadium Course inverted both races: John Patterson posted the day's outstanding score while Gregg Williams gave away twelve gross shots in three holes and lost two leads at once.",
+  "tone": "house",
+  "opening_hook": "Open at the 13th at the Stadium Course, a par 4 of stroke index 6, where Gregg Williams — one point clear of the TEG 12 Trophy at breakfast and joint-leader of the TEG 12 Green Jacket — signed for an 11. By the time the card was totted up he led nothing at all.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "tragic_arc",
+    "catalogue"
+  ],
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "decisive_moment",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "John Patterson's 45 points at the Stadium Course, the third-best round of his TEG career and a personal course best, built around two double-figure disasters",
+    "why_it_matters": "It was the day's outstanding round by nine points in a field where nobody else broke 37, and it turned a one-point Trophy deficit into an eight-point lead with one round to play.",
+    "shape": "Patterson starts by drawing level with Gregg Williams for the Trophy lead at the 1st, then takes a quintuple-bogey 10 at the 3rd and a quadruple-bogey 9 at the 7th, the sort of holes that normally end a round. Instead he takes the outright lead at the 4th, collects 10 points across the 4th to the 6th, and then makes the round: 19 points across the 12th to the 17th, the bleeding stopped by a birdie at the par-5 15th. He signs for 45 Stableford and 95 gross, the third-best round of his 15-round career and four shots better than his previous best at this course, set in TEG 11.",
+    "beat_ids": [
+      "r3_b19",
+      "r3_b21",
+      "r3_b31",
+      "r3_b27",
+      "r3_b25",
+      "r3_b16",
+      "r3_b22"
+    ],
+    "headline_candidates": [
+      "Forty-Five Points and a Ten",
+      "Patterson Scores Around the Wreckage",
+      "A Personal Best at the Stadium"
+    ],
+    "chosen_headline": "Forty-Five Points, and a Ten Too",
+    "standfirst": "A quintuple bogey at the 3rd and a nine at the 7th somehow coexisted with the third-best round of John Patterson's TEG career and his best gross score on this course.",
+    "compelling_score": 8,
+    "humour_score": 6,
+    "descriptor": "JOHN PATTERSON"
+  },
+  "race_story": {
+    "subject": "Gregg Williams leads the TEG 12 Trophy and shares the TEG 12 Green Jacket lead at the start of the day and finishes holding neither, undone by twelve gross shots between the 11th and the 13th",
+    "why_it_matters": "Both leads changed hands in a single afternoon: the Trophy gap went from Williams by one to Patterson by eight, and the Jacket from a dead heat to Jon Baker by five over David Mullin, with Williams a further five back.",
+    "shape": "Williams does everything right early, taking the outright Trophy lead at the 3rd, briefly seizing the Jacket lead Jon Baker had held for 23 holes since the 16th in Round 1, and drawing level again at the 9th. Then the 11th, 12th and 13th: double bogey, triple bogey, and a septuple-bogey 11 at a par 4, twelve gross shots gone in three holes and not a net par among them. Two pars at the 14th and 15th restore his dignity but nothing else; he ends on 36 points, 8 adrift of Patterson in the Trophy and 10 behind Jon Baker in the Jacket.",
+    "beat_ids": [
+      "r3_b23",
+      "r3_b04",
+      "r3_b32",
+      "r3_b30",
+      "r3_b09",
+      "r3_b08",
+      "r3_b01",
+      "r3_b24",
+      "r3_b29",
+      "r3_b10"
+    ],
+    "headline_candidates": [
+      "Williams Loses Both Leads in Three Holes",
+      "An Eleven Undoes Everything",
+      "Twelve Shots Gone by the Thirteenth"
+    ],
+    "chosen_headline": "Williams Loses Both Leads in Three Holes",
+    "standfirst": "One point clear in the Trophy and level in the Jacket when he teed off, Gregg Williams bled twelve gross shots from the 11th to the 13th and now trails in both.",
+    "compelling_score": 9,
+    "humour_score": 7,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Alex Baker's day at the bottom of the TEG 12 Wooden Spoon race, wrecked twice over at either end of the round yet still five shots better than his last visit here",
+      "why_it_matters": "He remains last in the Spoon race on 103 points, though the margin to David Mullin has narrowed from 4 to 2 with one round left.",
+      "shape": "A quadruple-bogey 8 at the 2nd opens a three-hole stretch costing nine gross shots and no net par at all. He steadies, then hands it all back over the closing four: double, double, double, triple — nine more shots and four holes without a net par, dropping to the foot of the Spoon race at the 11th and again at the 17th. The odd consolation is that 101 gross was five shots better than his last visit to the Stadium Course and one off his best here, set in TEG 11.",
+      "beat_ids": [
+        "r3_b02",
+        "r3_b14",
+        "r3_b12",
+        "r3_b05",
+        "r3_b06",
+        "r3_b18",
+        "r3_b17"
+      ],
+      "headline_candidates": [
+        "Alex Baker Drops Nine Twice Over",
+        "Bookended by Disaster at Both Ends",
+        "Nine Shots Gone, Then Nine More"
+      ],
+      "chosen_headline": "Alex Baker Drops Nine Twice Over",
+      "standfirst": "Three holes at the start and four at the finish accounted for eighteen gross shots, and yet the card was still an improvement on his last trip to Girona.",
+      "compelling_score": 7,
+      "humour_score": 7,
+      "descriptor": "ALEX BAKER"
+    },
+    {
+      "subject": "Stuart Neumann and David Mullin both surrender their rounds on the inward half while Patterson is collecting points on the same holes",
+      "why_it_matters": "It explains the shape of the day: the Stadium's closing stretch took shots from almost everyone, and the two who suffered most sit third and fifth in the Trophy with one round remaining.",
+      "shape": "Stuart Neumann is respectable through thirteen and then gives back ten gross shots from the 14th to the 17th, the damage centred on a quadruple-bogey 9 at the par-5 15th — the same hole where Patterson made birdie. David Mullin never gets going at all, his 30 points ten fewer than his second round, and he touches the bottom of the Spoon race twice, at the 9th and again at the 14th. Both escape with their positions intact, neither with much credit.",
+      "beat_ids": [
+        "r3_b07",
+        "r3_b11",
+        "r3_b15",
+        "r3_b20",
+        "r3_b26"
+      ],
+      "headline_candidates": [
+        "Two Rounds Unravel on the Back Nine",
+        "Ten Shots Gone in Four Holes",
+        "The Inward Half Takes Its Toll"
+      ],
+      "chosen_headline": "Two Rounds Unravel on the Back Nine",
+      "standfirst": "The 15th gave John Patterson a birdie and Stuart Neumann a nine, which is roughly the Stadium Course's idea of even-handedness.",
+      "compelling_score": 6,
+      "humour_score": 6,
+      "descriptor": "STUART NEUMANN | DAVID MULLIN"
+    }
+  ],
+  "race_state_note": "One round remains and nothing is decided: Gregg Williams was overhauled from in front in both the Trophy and the Green Jacket on the same afternoon, and Jon Baker's Jacket lead of five over David Mullin is the first he has held outright since the 4th hole of this round. Alex Baker stays bottom of the Wooden Spoon race, but his deficit to David Mullin has shrunk from 4 points to 2.",
+  "storyline_note": ""
+}

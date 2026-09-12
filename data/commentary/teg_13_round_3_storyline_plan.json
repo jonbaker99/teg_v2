@@ -1,0 +1,118 @@
+{
+  "title": "The Marsh Gives It Up",
+  "title_candidates": [
+    "The Marsh Gives It Up",
+    "Littlestone Opens Its Arms",
+    "Saturday on the Romney Marshes",
+    "Kent's New Links Declines to Bite"
+  ],
+  "theme": "On TEG's first visit to Littlestone the whole field scored, but the two rounds that mattered were the best of John Patterson's life and the second-best gross round in TEG history from Jon Baker.",
+  "tone": "house",
+  "opening_hook": "Two days in Kent had established John Patterson as a man who could find a 9 at a par four and a 8 at almost anything else; on Saturday, on a Purves links refined by Braid and MacKenzie that nobody in the field had ever seen, he went round in 83 shots for 49 points.",
+  "narrative_vehicles": [
+    "redemption_arc",
+    "dual_narrative",
+    "inevitability"
+  ],
+  "prominent_vehicle": "redemption_arc",
+  "prominent_palette": "records",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "John Patterson's 49 points at Littlestone, the third-best round in TEG history to date and comfortably the best of his own 19 rounds, arriving straight after two days spent at the bottom of every table",
+    "why_it_matters": "Patterson began the day last in the TEG 13 Trophy and last in the TEG 13 Wooden Spoon race, having posted 28 and 28-level scoring built on quadruple bogeys; he ended it third in the Trophy, nine points clear of the bottom, having also set a personal-best gross round of +12 (83 at Littlestone).",
+    "shape": "Set up with the ledger of the first two days — the 9 at the 7th and the 9 at the 16th at Royal Cinque Ports, the 8s at Prince's — and with Patterson still sinking, dropping to the bottom of the Spoon race at the 5th on Saturday morning. The turn is holes 8 to 11, where he takes 13 points in four holes, three of them in regulation figures, including a par at stroke index 1. Resolve with the quadruple-bogey 7 at the short 17th, which cost nothing that mattered, and with the arithmetic: 28 to 49, last to third, a personal best in both currencies at a course he had never played.",
+    "beat_ids": [
+      "r3_b01",
+      "r3_b02",
+      "r3_b23",
+      "r3_b07",
+      "r3_b12",
+      "r3_b16",
+      "r3_b10",
+      "r3_b04",
+      "r3_b08"
+    ],
+    "headline_candidates": [
+      "John Patterson Posts Forty-Nine at Littlestone",
+      "The Best Round of His Life",
+      "Forty-Nine Points on the Marsh"
+    ],
+    "chosen_headline": "John Patterson Posts Forty-Nine at Littlestone",
+    "standfirst": "Two days of quadruple bogeys gave way to the third-best round in TEG history to date, a personal-best 83 gross, and a climb from last to third in the TEG 13 Trophy.",
+    "compelling_score": 9,
+    "humour_score": 6,
+    "descriptor": "JOHN PATTERSON"
+  },
+  "race_story": {
+    "subject": "Jon Baker's +8 gross round, the second-best gross round in TEG history to date, which turned a one-point Trophy lead into five and a seven-shot Green Jacket lead into fourteen while Gregg Williams's 40 points went unrewarded",
+    "why_it_matters": "Gregg Williams actually drew level for the TEG 13 Trophy lead at the first hole of the day and then had a thoroughly good round — 40 points, 86 gross — and finished it four points further behind than he started; the TEG 13 Green Jacket margin has doubled with one round to play.",
+    "shape": "Open at the 1st, where Williams pars, draws level with Jon Baker on Stableford and holds the lead for as long as it takes to walk to the second tee. Jon Baker then plays holes 8 to 11 in one under par, birdie at the short 9th included, for 13 points, and signs for 79 — +8 gross, his own best and the second-best gross round yet recorded in TEG. Close on the two gaps: Trophy 1 to 5, Jacket 7 to 14, and Williams left with the specific misery of scoring 40 points and losing ground.",
+    "beat_ids": [
+      "r3_b26",
+      "r3_b03",
+      "r3_b15",
+      "r3_b17",
+      "r3_b27",
+      "r3_b18"
+    ],
+    "headline_candidates": [
+      "Jon Baker Doubles His Cushion",
+      "Level at the First, Buried by Dusk",
+      "Seventy-Nine Settles the Argument"
+    ],
+    "chosen_headline": "Jon Baker Doubles His Cushion",
+    "standfirst": "Gregg Williams held a share of the TEG 13 Trophy lead for precisely one hole before a round of +8 gross removed the question from him.",
+    "compelling_score": 7,
+    "humour_score": 6,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Alex Baker's 100 at Littlestone, eight shots dropped in the first three holes and seven more from the 8th to the 10th, which delivers him the bottom of the TEG 13 Wooden Spoon race for the first time",
+      "why_it_matters": "The Spoon has changed hands: John Patterson carried it out of the first two rounds by nine points and left Littlestone nine clear of it, while Alex Baker now sits last on 97 with only three points between him and David Mullin with one round to play.",
+      "shape": "Alex Baker opens 6, 8, 6 — eight gross shots gone in three holes, two Stableford points banked from the first three — and never recovers the ground. He formally arrives at the bottom of the Spoon race at the 9th, a double bogey in the middle of a stretch that bleeds seven shots in three holes, and signs for 100 and 32 points. Mullin's own three-hole lapse at 12, 13 and 14 costs seven shots but leaves him three points clear, which is now the entire width of the Wooden Spoon race.",
+      "beat_ids": [
+        "r3_b13",
+        "r3_b14",
+        "r3_b06",
+        "r3_b11",
+        "r3_b05",
+        "r3_b21"
+      ],
+      "headline_candidates": [
+        "Alex Baker Inherits the Wooden Spoon",
+        "Eight Shots Gone in Three Holes",
+        "Alex Baker Takes Delivery of the Spoon"
+      ],
+      "chosen_headline": "Alex Baker Inherits the Wooden Spoon",
+      "standfirst": "John Patterson's revival left the TEG 13 Wooden Spoon unattended, and a 100 around Littlestone was more than enough to claim it.",
+      "compelling_score": 7,
+      "humour_score": 7,
+      "descriptor": "WOODEN SPOON"
+    },
+    {
+      "subject": "Gregg Williams's 40 points and 86 gross at Littlestone, a round of sustained competence that gained him nothing at all",
+      "why_it_matters": "Williams is the only realistic challenger in both the TEG 13 Trophy and the TEG 13 Green Jacket, and he played the sort of round that usually wins a day — four holes in a row without dropping a gross shot, 15 points in five holes from the 6th — and finished it further behind in both.",
+      "shape": "Set up with the middle of the round: pars at the 6th, 7th, 8th and 9th, then a bogey at stroke index 1 for a fifth straight three-pointer, 15 points in five holes. Repeat the trick at 12, 13 and 14 — three pars, nine points — and the round has the shape of something decisive. Resolve at the 15th, a double bogey that ends the run, and at the scoreboard, where 40 points has bought him four points of lost ground and a fourteen-shot Jacket deficit.",
+      "beat_ids": [
+        "r3_b19",
+        "r3_b09",
+        "r3_b22",
+        "r3_b24",
+        "r3_b25"
+      ],
+      "headline_candidates": [
+        "Forty Points and Four Shots Lost",
+        "Gregg Williams Runs Hard, Stays Still",
+        "A Very Good Day Wasted"
+      ],
+      "chosen_headline": "Forty Points and Four Shots Lost",
+      "standfirst": "Fourteen consecutive holes in which Gregg Williams did almost nothing wrong, and a scoreboard that noticed none of it.",
+      "compelling_score": 6,
+      "humour_score": 7,
+      "descriptor": "GREGG WILLIAMS"
+    }
+  ],
+  "race_state_note": "Nothing is settled with one round left: Jon Baker leads the Trophy by five and the Jacket by fourteen, but John Patterson's 49 shows what a single round can do, and the Wooden Spoon now separates Alex Baker and David Mullin by three points.",
+  "storyline_note": ""
+}

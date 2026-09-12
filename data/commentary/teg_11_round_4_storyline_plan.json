@@ -1,0 +1,112 @@
+{
+  "title": "The Double at the Stadium",
+  "title_candidates": [
+    "The Double at the Stadium",
+    "Jon Baker Takes Both in Girona",
+    "Four Up and Gone by Six"
+  ],
+  "theme": "A final round at PGA Catalunya's Stadium Course in which Alex Baker's four-point cushion evaporated in nine holes and Jon Baker walked off with both the Trophy and the Green Jacket.",
+  "tone": "house",
+  "opening_hook": "Three holes into the last round of TEG 11, Alex Baker was four points clear and the TEG 11 Trophy was effectively his; by the 6th he was level, and by the 17th he was writing an 8 on a par 4 at the hardest stretch of Spain's premier golf course.",
+  "narrative_vehicles": [
+    "counterfactual",
+    "dual_narrative",
+    "tragic_arc"
+  ],
+  "prominent_vehicle": "counterfactual",
+  "prominent_palette": "decisive_moment",
+  "is_final_round": true,
+  "round_story": {
+    "subject": "John Patterson's 36 points and a course personal best of 99 at the Stadium, thirteen shots better than his only previous visit",
+    "why_it_matters": "Patterson had been the week's designated victim — a 9 at the 4th and a 9 at the 13th in round one, an 11 at the 15th in round two, a 9 at the 16th in round three — and on the last day he posted the best Stableford return in the field and his best gross score at this course by a distance.",
+    "shape": "John Patterson arrives at the Stadium Course with a previous best here of 112 gross and a tournament full of double-figure damage behind him. He still loses seven shots across the 7th to 9th and eight more from the 12th to the 14th, but this time the bleeding stops: back-to-back gross pars at the 16th and 17th close out a 99 and 36 points, the best round of the day. It leaves him eight off the Trophy lead having trailed by sixteen at one stage — fourth of five, and the only man in the field who went home happier than he arrived.",
+    "beat_ids": [
+      "r4_b13",
+      "r4_b11",
+      "r4_b09",
+      "r4_b14",
+      "r4_b15"
+    ],
+    "headline_candidates": [
+      "Thirteen Shots Better at the Stadium",
+      "John Patterson's Sunday of Restraint",
+      "Best Round of the Day at Last"
+    ],
+    "chosen_headline": "Thirteen Shots Better at the Stadium",
+    "standfirst": "The man who had posted a 9, a 9, an 11 and another 9 across the first three rounds finally got round the Stadium Course without one.",
+    "compelling_score": 7,
+    "humour_score": 7,
+    "descriptor": "JOHN PATTERSON"
+  },
+  "race_story": {
+    "subject": "Jon Baker overturns a two-point deficit on the final day to win the TEG 11 Trophy and the TEG 11 Green Jacket together, the third double in TEG history",
+    "why_it_matters": "This is the resolution of the whole tournament: a lead change on the final day, the double completed (after TEG 2 and TEG 4), and Alex Baker recording the worst round of his twenty-round career at precisely the moment he could least afford it.",
+    "shape": "Alex Baker began the round two points clear on Stableford and was four ahead by the 3rd, having led the Trophy since the 13th hole of round three. He bled seven shots across the 4th to 6th and Jon Baker drew level at the 6th; eight more went from the 12th to the 14th and a quadruple-bogey 8 at the 17th finished the job, leaving Alex Baker with 27 points, the worst of his twenty TEG rounds. Jon Baker's 35 — a quadruple-bogey 8 of his own at the 13th notwithstanding — took the Trophy by six on 143, and his 19 over par for the day held the Green Jacket by three from David Mullin.",
+    "beat_ids": [
+      "r4_b23",
+      "r4_b01",
+      "r4_b19",
+      "r4_b12",
+      "r4_b03",
+      "r4_b06",
+      "r4_b05",
+      "r4_b04",
+      "r4_b21"
+    ],
+    "headline_candidates": [
+      "Jon Baker Completes the Third Double",
+      "Four Ahead at the Third and Beaten",
+      "Alex Baker Blinks on the Back Nine"
+    ],
+    "chosen_headline": "Jon Baker Completes the Third Double",
+    "standfirst": "Alex Baker led by four after three holes and signed for 27 points, the lowest score of his twenty rounds, handing over a lead he had held since the third round.",
+    "compelling_score": 9,
+    "humour_score": 7,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "David Mullin shoots his best ever round at the Stadium Course, matches Jon Baker's gross score for the day, and still collects the TEG 11 Wooden Spoon by ten",
+      "why_it_matters": "Mullin was level for the Green Jacket lead at the 3rd and finished the Jacket three behind having tied the best gross round of the day; on Stableford he was ten adrift of the next man and the Spoon was never in doubt after round three.",
+      "shape": "David Mullin opens with three gross pars for nine points, drawing level for the Green Jacket lead at the 3rd, and goes on to sign for 91 gross — his best in three visits to the Stadium Course, one better than his previous mark here. A triple-bogey 8 at the 15th and doubles at the 16th and 17th cost seven shots and three holes without a net par, and the Jacket goes by three. On Stableford, 31 points leaves him on 125 for the week, ten behind John Patterson and in sole possession of the Spoon.",
+      "beat_ids": [
+        "r4_b16",
+        "r4_b20",
+        "r4_b24",
+        "r4_b10",
+        "r4_b08"
+      ],
+      "headline_candidates": [
+        "Mullin's Best Here and Still Last",
+        "Ninety-One and the Wooden Spoon",
+        "Three Pars Then Three Holes Too Many"
+      ],
+      "chosen_headline": "Mullin's Best Here and Still Last",
+      "standfirst": "A personal best round at the Stadium Course, a share of the day's best gross score, and ten points adrift of everyone else on the sheet that decides the Spoon.",
+      "compelling_score": 7,
+      "humour_score": 8,
+      "descriptor": "WOODEN SPOON"
+    },
+    {
+      "subject": "Gregg Williams loses eleven shots in four holes around the turn and misses second place in the TEG 11 Trophy by a single point",
+      "why_it_matters": "Williams finished 136, one behind Alex Baker and one ahead of John Patterson, with a quintuple-bogey 9 at the 10th sitting squarely in the middle of the arithmetic.",
+      "shape": "Gregg Williams reaches the 8th in decent order and then gives away eleven shots in four holes — doubles at the 8th, 9th and 11th either side of a 9 at the 10th. He recovers enough to sign for 99, his best gross score at the Stadium Course by two. It is still one point short of second place in the Trophy.",
+      "beat_ids": [
+        "r4_b02",
+        "r4_b07"
+      ],
+      "headline_candidates": [
+        "Eleven Shots Gone in Four Holes",
+        "A Nine at the Tenth Costs Williams",
+        "One Point Short of Second"
+      ],
+      "chosen_headline": "Eleven Shots Gone in Four Holes",
+      "standfirst": "Gregg Williams still set a personal best at the Stadium Course, which will be no comfort whatever given the final Trophy table.",
+      "compelling_score": 6,
+      "humour_score": 6,
+      "descriptor": "GREGG WILLIAMS"
+    }
+  ],
+  "race_state_note": "The Trophy margin was six, but second to fourth — Alex Baker 137, Gregg Williams 136, John Patterson 135 — finished within two points of each other; the Green Jacket went by three with Jon Baker and David Mullin both round in 19 over on the day; the Spoon was settled by ten.",
+  "storyline_note": ""
+}

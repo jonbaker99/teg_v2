@@ -1,0 +1,111 @@
+{
+  "title": "Records at Both Ends",
+  "title_candidates": [
+    "Records at Both Ends",
+    "The Gentler Sibling Bares Its Teeth",
+    "Eighty-Four and a Hundred and Three"
+  ],
+  "theme": "On the course billed as PGA Catalunya's more forgiving half, TEG 11's second round produced both the lowest and the highest gross rounds the Tour course has ever seen, and left every race broadly where it stood.",
+  "tone": "house",
+  "opening_hook": "The Tour course is the polite one, the sibling that does not want any trouble. On Friday it handed out a new course record of 84, a new course worst of 103, and a par five that swallowed eleven shots from one man and ten from another.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "motif",
+    "ensemble"
+  ],
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "course_history",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Jon Baker's 84 gross at PGA Catalunya - Tour, a new course record that beats the standing mark of 89 by five and his own previous best there by six",
+    "why_it_matters": "It is the lowest gross round ever recorded at the Tour course, the third-best gross round of Jon Baker's 37 TEG rounds, and it came from the man already leading both the TEG 11 Trophy and the TEG 11 Green Jacket.",
+    "shape": "Jon Baker arrived at the Tour course with a personal best of 90 there from TEG 6 and a three-point Trophy lead from the Stadium. He gave nothing back through the middle of the round, parring the 6th and 7th and then the 9th, 10th and 11th for nine straight Stableford points without dropping a gross shot. He signed for 84, five inside the course record and six better than his last visit, worth 41 points and a share of the day's heavy lifting.",
+    "beat_ids": [
+      "cr01",
+      "r2_b07",
+      "r2_b10",
+      "r2_b18",
+      "r2_b08"
+    ],
+    "headline_candidates": [
+      "Jon Baker Breaks the Tour Record",
+      "Eighty-Four Ends a Twelve-Year Mark",
+      "Jon Baker Takes the Course Apart"
+    ],
+    "chosen_headline": "Jon Baker Breaks the Tour Record",
+    "standfirst": "Six shots better than his own last visit here in TEG 6, and five inside the lowest gross round the course had previously yielded.",
+    "compelling_score": 8,
+    "humour_score": 5,
+    "descriptor": "JON BAKER"
+  },
+  "race_story": {
+    "subject": "What the round did to the three races: Alex Baker's 42 points, the best card of the day, claws back a single point on the TEG 11 Trophy, while David Mullin's personal best at the course still loses ground in the Green Jacket and John Patterson slides further clear in the Wooden Spoon",
+    "why_it_matters": "Nobody's lead changed hands. The best round of the day on Stableford bought one point, the Jacket gap widened rather than closed, and the Spoon margin stretched from three to five with half the tournament gone.",
+    "shape": "Alex Baker followed a modest 32 at the Stadium with 42 points, the second-best gross round of his 18 TEG rounds, absorbing a nine at the 12th along the way. David Mullin went round in 85 for a personal best at the Tour course, four better than his 89 there in TEG 6, and still handed Jon Baker a shot in the Jacket. At the back, John Patterson's 34 points left him five adrift at the foot of the Trophy table and alone in the Spoon position.",
+    "beat_ids": [
+      "r2_b14",
+      "r2_b03",
+      "r2_b08",
+      "r2_b12",
+      "r2_b15",
+      "r2_b04",
+      "r2_b16"
+    ],
+    "headline_candidates": [
+      "Alex Baker Closes to Two",
+      "One Point For All That",
+      "The Chase Gains Almost Nothing"
+    ],
+    "chosen_headline": "Alex Baker Closes to Two",
+    "standfirst": "The best Stableford card of the day, built around a nine at the 12th, and it bought exactly one point of the deficit.",
+    "compelling_score": 7,
+    "humour_score": 6,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "John Patterson's 103, a new course worst at PGA Catalunya - Tour, including an eleven at the par-five 15th",
+      "why_it_matters": "It is the highest gross round the Tour course has produced, past the 101 that had stood since TEG 6, and the eleven is the worst score John Patterson has made on a par five in TEG.",
+      "shape": "John Patterson lost eight gross shots across the 3rd, 4th and 5th before the round had properly begun, then steadied with back-to-back pars at the 11th and 12th. The 15th, a par five, took eleven from him and no points with it. The card added up to 103, a new worst for the course, and stretched his Wooden Spoon margin from three to five.",
+      "beat_ids": [
+        "cr02",
+        "r2_b01",
+        "r2_b09",
+        "r2_b11"
+      ],
+      "headline_candidates": [
+        "Patterson Sets a Record Nobody Wants",
+        "Eleven at the Fifteenth",
+        "A New Worst for the Tour"
+      ],
+      "chosen_headline": "Patterson Sets a Record Nobody Wants",
+      "standfirst": "The 15th had already taken ten shots from another man before it got to him.",
+      "compelling_score": 7,
+      "humour_score": 8,
+      "descriptor": "JOHN PATTERSON"
+    },
+    {
+      "subject": "Gregg Williams takes a ten at the 15th and still posts 92, equalling his best at the Tour course and his third-best gross round in 37 TEG rounds",
+      "why_it_matters": "The same par five that ruined John Patterson's card cost Gregg Williams five gross shots, and he answered it with a birdie at the 17th, the hardest hole on the card at stroke index 3.",
+      "shape": "Gregg Williams was already bogeying the 14th when the 15th removed ten shots and all four points from his afternoon. Two holes later he birdied the 17th and parred the last, finishing with 39 points. The 92 gross equals exactly what he shot here in TEG 6 and stands as the third-best gross round of his 37 TEG rounds.",
+      "beat_ids": [
+        "r2_b02",
+        "r2_b17",
+        "r2_b05",
+        "r2_b13"
+      ],
+      "headline_candidates": [
+        "Williams Shrugs Off a Ten",
+        "A Birdie to Bury the Wreckage",
+        "The Fifteenth Takes Ten More"
+      ],
+      "chosen_headline": "Williams Shrugs Off a Ten",
+      "standfirst": "Five gross shots gone at one par five, and the card still matched his best ever visit to the course.",
+      "compelling_score": 6,
+      "humour_score": 7,
+      "descriptor": "GREGG WILLIAMS"
+    }
+  ],
+  "race_state_note": "No lead changed hands, but the two leads moved in opposite directions: the Trophy gap narrowed from three to two, the Jacket gap widened from two to three, and the Spoon margin stretched from three to five. Two rounds remain.",
+  "storyline_note": ""
+}

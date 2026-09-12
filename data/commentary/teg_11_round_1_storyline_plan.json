@@ -1,0 +1,94 @@
+{
+  "title": "Ninety at the Stadium",
+  "title_candidates": [
+    "Ninety at the Stadium",
+    "Twelve Years Later, a New Mark",
+    "The Stadium Sorts the Field"
+  ],
+  "theme": "TEG returns to PGA Catalunya's Stadium Course for the first time since TEG 6 and the course settles old scores in both directions: a record at the top, carnage at the bottom.",
+  "tone": "house",
+  "opening_hook": "Open on the Stadium Course itself — Spain's premier championship test, played once before by this group in TEG 6 and remembered chiefly for the damage it did — then set two scorecards side by side from Thursday 4 October 2018: Jon Baker's 90 and John Patterson's 112.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "catalogue",
+    "motif"
+  ],
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "course_history",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Jon Baker's 90 gross at PGA Catalunya - Stadium, a new course record and 35 Stableford points to lead the TEG 11 Trophy after Round 1",
+    "why_it_matters": "The Stadium Course had never been broken below 94 in five prior TEG visits; Jon Baker took four off that mark and nine off his own TEG 6 figure of 99 here, and it put him top of both the Trophy and the Green Jacket on day one.",
+    "shape": "Setup: the Stadium Course's TEG ledger reads 94 as its best-ever score across five visits, and Jon Baker's own contribution to that ledger was a 99 in TEG 6. Turn: he draws level at the top of both races as early as the 3rd with back-to-back pars at the 3rd and 4th, and keeps the card intact through pars at the 10th and 11th. Resolution: 90 gross, 35 points, a new course record and a three-point Trophy lead — handsome rather than heroic, and built on the simple refusal to make a mess anywhere.",
+    "beat_ids": [
+      "cr01",
+      "r1_b14",
+      "r1_b13",
+      "r1_b17",
+      "r1_b18",
+      "r1_b19"
+    ],
+    "headline_candidates": [
+      "Jon Baker Rewrites the Stadium Record",
+      "Ninety Shots and a New Mark",
+      "Jon Baker Lowers the Stadium Bar"
+    ],
+    "chosen_headline": "Jon Baker Rewrites the Stadium Record",
+    "standfirst": "Nine shots better than the 99 he posted here in TEG 6, and four inside a course record that had stood through five previous visits.",
+    "compelling_score": 9,
+    "humour_score": 5,
+    "descriptor": "JON BAKER"
+  },
+  "race_story": {
+    "subject": "The state of the TEG 11 Trophy, Green Jacket and Wooden Spoon races after Round 1, told from the bottom of the card where John Patterson's four blow-up holes cost him the ground",
+    "why_it_matters": "With no prior rounds there is nothing to compare against, so the only movement worth reporting is within the round itself: John Patterson was level at the top of the Trophy after seven holes and ended the day alone at the foot of the Wooden Spoon race, three points adrift.",
+    "shape": "Setup: through seven holes John Patterson is level at the head of the TEG 11 Trophy, David Mullin having led at the 6th and Jon Baker at the 3rd — five players, four different names at the top, nothing settled. Turn: the 9s arrive, at the 4th and again at the 13th, flanked by 8s at the 10th and the 17th, and the run from the 12th to the 14th alone costs eleven shots. Resolution: 26 points and 40 over par leave him last in all three competitions and three clear at the bottom of the Spoon, while Jon Baker's 35 heads Alex Baker's 32, Gregg Williams on 30 and David Mullin on 29 — a field covered by nine points with three rounds to play.",
+    "beat_ids": [
+      "r1_b20",
+      "r1_b02",
+      "r1_b05",
+      "r1_b01",
+      "r1_b07",
+      "r1_b08",
+      "r1_b04",
+      "r1_b10",
+      "r1_b16",
+      "r1_b21",
+      "r1_b19"
+    ],
+    "headline_candidates": [
+      "Four Blow Ups Undo John Patterson",
+      "John Patterson Ends the Day Adrift",
+      "Nine, Eight, Nine, Eight"
+    ],
+    "chosen_headline": "Four Blow Ups Undo John Patterson",
+    "standfirst": "He was level at the top of the Trophy after seven holes; by the 14th he was alone at the bottom of the Wooden Spoon race, and it is only Thursday.",
+    "compelling_score": 7,
+    "humour_score": 7,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Gregg Williams's 101 at the Stadium Course — a dreadful opening three holes and an 8 at the par-three 5th, and still twelve shots better than his last visit here",
+      "why_it_matters": "Gregg Williams dropped eight shots in the first three holes and five more at a single par three, and the round was still comfortably his best ever on this course — which says as much about what the Stadium did to him in TEG 6 as about this round.",
+      "shape": "Setup: Gregg Williams's previous acquaintance with the Stadium Course ended in a 113 in TEG 6, the sort of number that ought to be filed rather than remembered. Turn: he opens triple, triple, double for eight dropped shots in three holes, and then takes 8 at the 5th, a par three. Resolution: 101, a personal best at the course by twelve strokes, 30 points and third place in the TEG 11 Trophy — improvement by the least reassuring route available.",
+      "beat_ids": [
+        "r1_b11",
+        "r1_b12",
+        "r1_b03"
+      ],
+      "headline_candidates": [
+        "Gregg Williams Improves by Twelve Anyway",
+        "An Eight at the Fifth Notwithstanding",
+        "Gregg Williams Mends His Stadium Record"
+      ],
+      "chosen_headline": "Gregg Williams Improves by Twelve Anyway",
+      "standfirst": "Eight shots gone in three holes, five more at a single par three, and still his best round on this course by a distance.",
+      "compelling_score": 7,
+      "humour_score": 8,
+      "descriptor": "GREGG WILLIAMS"
+    }
+  ],
+  "race_state_note": "No before-and-after to report: this is Round 1, so every position is a first reading rather than a move. Green Jacket figures are strokes over par, so the low number leads — Jon Baker on 18 over, David Mullin two behind on 20.",
+  "storyline_note": ""
+}

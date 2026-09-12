@@ -1,35 +1,27 @@
-## Henry Meller's -13 at Praia D'El Rey, the best round recorded in TEG history to date
+# Two Records in an Afternoon on the Lisbon Coast
+
+## Henry Meller's -13 at Praia D'El Rey, the best round in TEG history to date, built on a back nine of almost total serenity after an early wobble and a nine at the 8th
 <!-- storyline: round -->
 
-Henry Meller went out first thing at Praia D'El Rey and returned a net -13. It is the best round recorded in TEG history to date. It was also a personal best, off a gross of +12.
+Henry Meller opened TEG 1 at Praia D'El Rey with a round of -13. It remains the best round in TEG history to date. The gross figure was +12, a personal best, and the front nine did not hint at any of it. Three pars to open, at the 1st, 2nd and 3rd. Then a double bogey at the 4th. Then the 8th, the hardest hole on the course, where he signed for a quadruple bogey nine.
 
-It was not, however, a clean piece of work. Meller opened par, birdie, par across the 1st to the 3rd, which is the sort of start that invites a man to think well of himself. The 4th answered with a double bogey. The 8th, the hardest hole on the course, answered rather more loudly: a quadruple bogey 9, entered into the card without visible ceremony. A lesser man would have gone looking for his car keys. Meller simply carried on. From the 10th through the 18th he gained ten shots to par, playing the stretch in pars with only two bogeys, one of them at the 14th, the second-hardest hole out there.
+That is normally the end of a card. Meller simply declined to acknowledge it. From the 10th to the 18th he gained ten shots against par. Five holes in a row, the 10th through the 14th, passed without a single gross shot dropped. He closed with two bogeys, at the 15th and the 18th, either side of pars that caused nobody any concern. The nine at the 8th survives as the round's only blemish, a small disaster swallowed whole by the calm on either side of it.
 
-So the record round contains a 9. It was built on recovery as much as brilliance, two ruinous holes absorbed by par golf either side of them. The highest bar the format has yet seen, and a 9 sitting in the middle of it.
-
-## Alex Baker's horror show around Praia D'El Rey, three quadruple bogeys and a quintuple leaving him rooted to the bottom of the Wooden Spoon race
+## Alex Baker's first round of TEG golf: three eights, a quintuple bogey at the 5th, and last place in the TEG 7 Wooden Spoon race from the sixth hole onwards
 <!-- storyline: d0 -->
 
-Alex Baker began with three straight bogeys from the 2nd to the 4th. In the circumstances, this now reads as the good part.
+Alex Baker's first round of TEG golf, on debut at Praia D'El Rey, was an education. He began in reasonable order, shipping three bogeys through holes 2 to 4. Then he reached the par-3 5th and took a quintuple bogey 8. On a card that eventually contained a great deal, it still stands out.
 
-The 5th is a par 3. It is stroke index 17, one of the gentlest holes on the card. Baker took 8. A quintuple bogey, his worst hole of the day against par, extracted from the one hole on the property that was not trying to hurt him. The stroke-index-3 6th, which was, then took a triple bogey off him. By the turn he was already bottom of the TEG 16 Wooden Spoon race.
+It got worse, and it got worse methodically. Holes 8 through 11 cost him 11 shots, a quadruple bogey at the 10th among them. A second quadruple arrived at the 14th, one of the harder holes on the course, and with it last place in the TEG 7 Wooden Spoon race. He did not leave it again that day. The stretch from 14 to 16 removed a further eight shots. Three separate eights on the scorecard, on a course he had never seen before. Few men have introduced themselves to TEG so thoroughly.
 
-The back nine declined to intervene. Holes 8 through 11 bled 11 shots in total, headlined by a quadruple bogey at the 10th. A second quadruple bogey arrived at the 14th, stroke index 2. That one confirmed him last in the Spoon standings, a position he then held with the tenacity he had shown nowhere else. His gross 110 stands, for now, as his only mark at the course. It seems unlikely he will return to improve it.
-
-## Praia D'El Rey's teeth on its TEG debut, with a big number found for every player in the field
+## Praia D'El Rey itself: a course new to every player in the field that handed out a quadruple bogey to four of the six and still let two records fall
 <!-- storyline: d1 -->
 
-Praia D'El Rey has waited its whole existence for a TEG field. It did not squander the opportunity.
+Praia D'El Rey made its TEG debut on Thursday 2 October 2014, and showed the six-man field both its links teeth and its parkland manners in a single afternoon. David Mullin took a quadruple bogey 8 at the 18th, one of the course's harder holes. Gregg Williams matched him with a quadruple at the 6th, then composed himself admirably. Two four-hole stretches, at 7-10 and 13-16, passed with nothing worse than a bogey, and carried him level with Mullin for the Trophy lead by the 10th. Stuart Neumann fared less well, triple-bogeying the 3rd and the 7th and sinking to the bottom of the Wooden Spoon race. Nobody in the field had ever played the place. That made the day's extremes into records by default: the best score finished 11 over par, the worst 37 over, and both went straight onto the books.
 
-Jon Baker took a quadruple bogey 7 at the short 2nd, stroke index 13 and supposedly one of the easier holes on the property. Gregg Williams found the same grade of trouble at the 6th, the third-hardest on the course, for a quadruple bogey 8. David Mullin waited until the last possible moment and produced an identical quadruple bogey 8 at the 18th, stroke index 4, a finishing hole that gave nothing back to anybody.
-
-Stuart Neumann's collapse was slower and more thorough. Triple bogeys at the 3rd and the 7th, and between them they were enough to deposit him at the bottom of the Wooden Spoon race during this round. Four players in a six-man field, four blow-up holes. The course had made its position clear inside eighteen holes.
-
-## A day-one Trophy and Green Jacket picture split by wafer-thin margins between Henry Meller and Jon Baker
+## Jon Baker's +11 gross, the best gross round in TEG history to date, which delivered the TEG 7 Green Jacket lead by a single stroke while leaving him three adrift of Henry Meller in the TEG 7 Trophy
 <!-- storyline: race -->
 
-The opening round left both competitions too close to separate cleanly. This is more remarkable than it sounds, given that one of the two men involved had already destroyed a hole beyond recognition.
+Jon Baker opened TEG 7 at Praia D'El Rey with a gross round of +11, the best gross round in TEG history to date. It was not achieved without incident. At the short 2nd, stroke index 13 and one of the easier holes on the card, he made a quadruple bogey seven. Early, ugly, and apparently of no lasting interest to him. He recovered to card a net -10, the third-best round in TEG history, and finished with three straight pars from the 16th that cost him nothing gross or net.
 
-Jon Baker's quadruple bogey 7 at the short 2nd, stroke index 13, might have set the tone. Instead he posted -10 net, the third-best round recorded to that point, off a gross +11 that stands as the best gross round on record. Two hot stretches did it: three pars from 12 to 14, three more from 16 to 18. The 2nd was quietly not mentioned again.
-
-Both leads then changed hands with the restlessness of men who could not settle. Meller took the Green Jacket lead at the 2nd. Mullin drew level at the 5th. Meller levelled again at the 14th, one of the toughest holes out there, with Baker squaring it at the 12th. The Trophy lead moved just as freely, passing through Mullin, Williams, Meller and Baker, all level at various points around the 8th and 10th. It was opening-day jockeying, nothing more. By the close Meller held the Trophy lead by the barest of margins, with Baker in front for the Jacket. Neither man had earned the right to relax, and neither looked as though he intended to.
+Those three pars decided things. On the 10th he had drawn level for the Trophy lead, and by the 12th he had drawn level for the Green Jacket, only for Henry Meller to reclaim the outright Jacket lead moments later at the 2nd. By the close Baker held the Green Jacket lead by a single stroke. Meller topped the Trophy, three clear of him. Two men, two competitions, one afternoon, and no agreement between them.

@@ -1,0 +1,121 @@
+{
+  "title": "The Tour Course Picks Sides",
+  "title_candidates": [
+    "The Tour Course Picks Sides",
+    "Eighty-Four and a Hundred and Five",
+    "A Day of Personal Bests and Personal Worsts",
+    "Catalunya Splits the Field"
+  ],
+  "theme": "One course, one Thursday, and a 21-shot spread between the best gross round of Gregg Williams's career and the worst round the Tour course has ever seen.",
+  "tone": "house",
+  "opening_hook": "The same eighteen holes at PGA Catalunya's Tour course returned an 84 and a 105 on the same afternoon, which tells you most of what you need to know about TEG 12's opening day: for two men this was the best they have ever played here, for one it was the worst anybody has ever played here.",
+  "narrative_vehicles": [
+    "hero_arc",
+    "catalogue",
+    "motif"
+  ],
+  "prominent_vehicle": "hero_arc",
+  "prominent_palette": "course_history",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Gregg Williams opens TEG 12 with 46 points and an 84 gross, the lowest gross round of his 40-round TEG career and a personal best at PGA Catalunya - Tour",
+    "why_it_matters": "Forty TEG rounds in, Williams has never struck the ball better on any day at any venue, and he has done it eight shots better than his previous best on this course, set back in TEG 6.",
+    "shape": "Williams arrives at a course where his prior best was 92 gross, set in TEG 6, and is quietly in the Jacket lead by the 4th. He builds through the middle of the round, taking nine points across the 12th, 13th and 14th and the outright Trophy lead at the 14th. He signs for 84 gross and 46 Stableford, his best gross round in 40 TEG appearances, and ends the day top of the TEG 12 Trophy and level at the top of the TEG 12 Green Jacket.",
+    "beat_ids": [
+      "r1_b03",
+      "r1_b32",
+      "r1_b31",
+      "r1_b34",
+      "r1_b37",
+      "r1_b18"
+    ],
+    "headline_candidates": [
+      "Williams Posts His Best Ever Round",
+      "Eighty-Four and Never Better",
+      "Williams Finds Eight Shots at Catalunya"
+    ],
+    "chosen_headline": "Williams Posts His Best Ever Round",
+    "standfirst": "An 84 gross worth 46 points is the lowest round of Gregg Williams's forty TEG appearances and eight shots better than anything he had managed on this course before.",
+    "compelling_score": 8,
+    "humour_score": 5,
+    "descriptor": "GREGG WILLIAMS"
+  },
+  "race_story": {
+    "subject": "John Patterson ends day one a single point off the TEG 12 Trophy lead despite a 12 at the 4th, while the TEG 12 Green Jacket sits level between Gregg Williams and Jon Baker and Alex Baker already props up the TEG 12 Wooden Spoon",
+    "why_it_matters": "Patterson took twelve shots on a par four and still finished the day closer to the Trophy lead than anyone else, which sets the shape of the race going into round two rather than settling anything.",
+    "shape": "Patterson runs up a 12 at the 4th, eight over par on the second-hardest hole, and by any normal accounting his day is finished. Instead he plays the 7th to the 11th in 19 points, four straight pars from the 8th, and takes the Trophy lead outright at the 11th and again at the 15th. Williams reclaims it late and Patterson signs for 45 to Williams's 46, one point back, with his own course best of 96 gross in the bag and the Jacket tied at twelve over between Williams and Jon Baker.",
+    "beat_ids": [
+      "r1_b06",
+      "r1_b09",
+      "r1_b25",
+      "r1_b22",
+      "r1_b36",
+      "r1_b43",
+      "r1_b19",
+      "r1_b37",
+      "r1_b10"
+    ],
+    "headline_candidates": [
+      "Patterson Trails by One After a Twelve",
+      "A Twelve at the Fourth, One Point Adrift",
+      "Eight Over on One Hole, Still Second"
+    ],
+    "chosen_headline": "Patterson Trails by One After a Twelve",
+    "standfirst": "Three competitions took their opening shape on Thursday, and the man who took twelve shots at the 4th finished the day closest to the Trophy lead.",
+    "compelling_score": 7,
+    "humour_score": 6,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Stuart Neumann's 105 gross is the highest round ever recorded at PGA Catalunya - Tour, with 22 shots coming at the 13th and 15th alone",
+      "why_it_matters": "In eleven TEG visits to the Tour course nobody had gone past 103; Neumann's 105 is now the course worst, and it was built almost entirely out of two holes.",
+      "shape": "Neumann is going along tolerably, even taking nine points across the 10th, 11th and 12th. Then comes a 10 at the 13th, a par four and the hardest hole on the card, followed two holes later by a 12 at the par-five 15th, seven over par and the worst hole relative to par recorded in this TEG. Two pars at the 16th and 17th restore some dignity, but the card reads 105 gross, a course worst, even as 36 Stableford points keep him mid-table in the TEG 12 Trophy.",
+      "beat_ids": [
+        "cr01",
+        "r1_b01",
+        "r1_b02",
+        "r1_b26",
+        "r1_b27",
+        "r1_b33"
+      ],
+      "headline_candidates": [
+        "Neumann Sets a Mark Nobody Wanted",
+        "Twenty-Two Shots at Two Holes",
+        "The Highest Round This Course Has Seen"
+      ],
+      "chosen_headline": "Neumann Sets a Mark Nobody Wanted",
+      "standfirst": "No player had broken 103 in the wrong direction here in eleven TEG visits, and the 13th and 15th did most of the work.",
+      "compelling_score": 7,
+      "humour_score": 8,
+      "descriptor": "STUART NEUMANN"
+    },
+    {
+      "subject": "Alex Baker loses ten shots to par in the first three holes, adds a 10 at the 10th, and finishes the day bottom of the TEG 12 Wooden Spoon despite a tidy last three holes",
+      "why_it_matters": "Alex Baker played this course in 92 gross in TEG 11; on Thursday he was ten shots worse, and he ends round one a single point adrift at the foot of every standing.",
+      "shape": "He opens triple, quadruple, triple — ten shots gone to par before the 4th tee, and bottom of the Spoon race by the 2nd. A 10 at the par-five 10th and nine more shots bled across the 13th, 14th and 15th put the round beyond salvage. He then plays the last three in nine points, par-bogey-par, which is the golf he came for and three holes too late.",
+      "beat_ids": [
+        "r1_b04",
+        "r1_b14",
+        "r1_b17",
+        "r1_b07",
+        "r1_b05",
+        "r1_b13",
+        "r1_b11",
+        "r1_b24"
+      ],
+      "headline_candidates": [
+        "Ten Shots Gone in Three Holes",
+        "Alex Baker Arrives Three Holes Late",
+        "A Rally With Nothing Left to Save"
+      ],
+      "chosen_headline": "Ten Shots Gone in Three Holes",
+      "standfirst": "Ten shots worse than his TEG 11 visit to the same course, Alex Baker was at the bottom of the Wooden Spoon race by the 2nd green and never climbed out of it.",
+      "compelling_score": 6,
+      "humour_score": 6,
+      "descriptor": "ALEX BAKER"
+    }
+  ],
+  "race_state_note": "One round of four played, so nothing is decided: the Green Jacket lead is genuinely shared at twelve over par by Gregg Williams and Jon Baker, TEG having no countback of any kind, and the Wooden Spoon margin between Alex Baker and David Mullin is a single point.",
+  "storyline_note": ""
+}

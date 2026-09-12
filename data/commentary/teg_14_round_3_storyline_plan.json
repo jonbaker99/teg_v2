@@ -1,0 +1,110 @@
+{
+  "title": "Stalemate at the Top, Drift at the Bottom",
+  "title_candidates": [
+    "Stalemate at the Top, Drift at the Bottom",
+    "Prince's Rewards the Patient",
+    "The Saturday That Moved One Point"
+  ],
+  "theme": "On the strongest routing at Prince's, the leaderboard's top barely twitched while its bottom fell away, and Gregg Williams answered his own worst round of the week with his best.",
+  "tone": "house",
+  "opening_hook": "Open on Gregg Williams walking off the 11th green at Prince's on a Saturday in November, three pars, nine points, and the quiet air of a man who had spent the previous day at Littlestone signing for 27 and would rather nobody mentioned it. Then pull back: for all the movement in the middle of the field, David Mullin's two leads ended the day exactly where they began, give or take a single point.",
+  "narrative_vehicles": [
+    "redemption_arc",
+    "dual_narrative",
+    "inevitability"
+  ],
+  "prominent_vehicle": "redemption_arc",
+  "prominent_palette": "course_history",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Gregg Williams's 39 points and 86 gross at Prince's, a personal best on the course and a twelve-point answer to his Littlestone round",
+    "why_it_matters": "It is the best round of the day by any measure, Stableford or gross, it is a course personal best on only his second visit, and it lifts Williams from fourth in the TEG 14 Trophy to third and from third in the Green Jacket to second, all in one afternoon.",
+    "shape": "Williams arrives at Prince's off a 27-point Friday at Littlestone, where his 97 gross sat eleven shots adrift of the 86 he posted there in TEG 13. He steadies early with pars at the 2nd and 3rd, then goes par-par-par through the 9th, 10th and 11th for nine points, and though a triple bogey at the par-five 12th interrupts proceedings, pars at the 15th and 16th see him home in 39 points and 86 gross, three better than his TEG 13 visit here and the second-best gross round of his fifty in TEG.",
+    "beat_ids": [
+      "r3_b13",
+      "r3_b08",
+      "r3_b11",
+      "r3_b06",
+      "r3_b12",
+      "r3_b16"
+    ],
+    "headline_candidates": [
+      "Williams Rewrites His Prince's Best",
+      "Twelve Points Better In A Day",
+      "Williams Answers Littlestone At Sandwich"
+    ],
+    "chosen_headline": "Williams Rewrites His Prince's Best",
+    "standfirst": "A day earlier he had signed for 27 points and eleven shots more than his own Littlestone record; here he improved on his TEG 13 mark at Prince's by three and posted the second-best gross round of his career.",
+    "compelling_score": 8,
+    "humour_score": 6,
+    "descriptor": "GREGG WILLIAMS"
+  },
+  "race_story": {
+    "subject": "Jon Baker's 28 points turn a two-point Wooden Spoon cushion into a thirteen-point gap while David Mullin's Trophy and Jacket leads survive intact",
+    "why_it_matters": "Nothing changed at the top — Mullin's Trophy lead fell from 9 to 8 and his Green Jacket lead held at 12 — so the round's only decisive movement was Jon Baker sliding out of contact at the bottom with one round to play.",
+    "shape": "Jon Baker began the day two points clear of the TEG 14 Wooden Spoon's clutches, with Williams the only man within reach. A quadruple-bogey 8 at the 13th, stroke index 1, undid the morning, and although he answered with pars at the 14th, 15th and 16th, a triple bogey at the short 17th closed the account at 28 points. Williams's 39 did the rest: the gap to the field is now thirteen, while Mullin, only third-best on the day with 36, watched Alex Baker take precisely one point out of him.",
+    "beat_ids": [
+      "r3_b18",
+      "r3_b05",
+      "r3_b09",
+      "r3_b14",
+      "r3_b10"
+    ],
+    "headline_candidates": [
+      "Jon Baker Drifts Beyond The Pack",
+      "Thirteen Points From Safety Now",
+      "A Two-Point Cushion Becomes Thirteen"
+    ],
+    "chosen_headline": "Jon Baker Drifts Beyond The Pack",
+    "standfirst": "David Mullin's Trophy advantage shrank by one and his Jacket advantage not at all; the real movement was Gregg Williams climbing into second in the Jacket and leaving the man behind him thirteen points adrift.",
+    "compelling_score": 7,
+    "humour_score": 6,
+    "descriptor": "WOODEN SPOON"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "David Mullin's lopsided 36 points at Prince's, a quadruple-bogey 9 at the 8th redeemed by thirteen points over the closing four holes",
+      "why_it_matters": "The leader had the worst nine of his day and still finished with a birdie and both leads intact, which is the single most useful fact about the state of TEG 14 going into the last round.",
+      "shape": "Mullin makes an unremarkable start, pars at the 4th and 5th aside, and then puts a 9 on the par-five 8th to finish the outward half ten points worse than the inward one. Nothing about the front nine suggests what follows. He plays the 15th, 16th and 17th in regulation par and birdies the 18th for thirteen points in four holes, matches his 92 from TEG 13 here, and hands the Trophy race back exactly as he found it, minus a point.",
+      "beat_ids": [
+        "r3_b03",
+        "r3_b01",
+        "r3_b04",
+        "r3_b07",
+        "r3_b19"
+      ],
+      "headline_candidates": [
+        "Mullin Closes With Thirteen Points",
+        "A Nine At The Eighth Forgiven",
+        "Mullin Saves It For The Dunes"
+      ],
+      "chosen_headline": "Mullin Closes With Thirteen Points",
+      "standfirst": "His two nines were ten points apart and his 92 gross matched, to the shot, what he took round Prince's in TEG 13.",
+      "compelling_score": 7,
+      "humour_score": 7,
+      "descriptor": "DAVID MULLIN"
+    },
+    {
+      "subject": "Alex Baker's 37 points, assembled out of three opening double bogeys and a quadruple-bogey 8, worth one point off the lead",
+      "why_it_matters": "Baker is the only man with a plausible route to the Trophy and he spent the third round taking a single point out of Mullin while posting the worst gross score in the field.",
+      "shape": "He drops six shots in three holes to start, with double bogeys at the 1st, 2nd and 3rd, and adds an 8 at the 10th, the third-hardest hole on the card. Pars at the 11th and 12th steady things and he signs for 37 points, second-best of the day, off 97 gross — eight shots worse than his TEG 13 round here and the highest gross figure of the afternoon. The net effect on David Mullin's lead: one point.",
+      "beat_ids": [
+        "r3_b15",
+        "r3_b02",
+        "r3_b17"
+      ],
+      "headline_candidates": [
+        "Alex Baker Gains A Single Point",
+        "Three Doubles And An Eight",
+        "Alex Baker's Ragged Pursuit Continues"
+      ],
+      "chosen_headline": "Alex Baker Gains A Single Point",
+      "standfirst": "Blow-up holes have followed him all week — a 10 at the 16th in the first round, an 8 and a 9 in the second — and Prince's took eight shots more off him than it did in TEG 13.",
+      "compelling_score": 6,
+      "humour_score": 7,
+      "descriptor": "ALEX BAKER"
+    }
+  ],
+  "race_state_note": "One round remains. Mullin leads the Trophy by 8 and the Jacket by 12, both margins effectively untouched by a day on which he was only the third-best scorer. Alex Baker sits second in the Trophy and last in the Jacket; the two competitions measure different things, and his 25-over gross is the reason.",
+  "storyline_note": ""
+}

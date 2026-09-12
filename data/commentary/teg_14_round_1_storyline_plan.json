@@ -1,0 +1,89 @@
+{
+  "title": "Deal Rewrites Its Own Numbers",
+  "title_candidates": [
+    "Deal Rewrites Its Own Numbers",
+    "Seven Shots Either Way",
+    "The Links Settles Old Scores"
+  ],
+  "theme": "Two years on from TEG 13 the same four men returned to Royal Cinque Ports and almost every figure moved: David Mullin seven shots better, Jon Baker seven worse, and the day's order of merit inverted with them.",
+  "tone": "house",
+  "opening_hook": "Royal Cinque Ports has seen this field once before, in TEG 13, and kept a record of it. On that visit Jon Baker's 85 was the best score anyone in this group had managed on the Kent coast; on Thursday he signed for 92 and finished the afternoon at the bottom of the pile, while David Mullin, seven shots better than his own previous effort, walked off with 40 points and both leads.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "inversion",
+    "ensemble"
+  ],
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "course_history",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "David Mullin's 40-point round at Royal Cinque Ports, built on a four-hole surge through the turn and delivering an 87 that is his personal best on the course by seven shots",
+    "why_it_matters": "It is the best round of the day on both counts — 40 points and 15 over gross — and it converts a course he shot 94 on in TEG 13 into his own property, giving him the Trophy lead by three and the Green Jacket lead by five after one round of four.",
+    "shape": "Mullin begins the day second in both races and does nothing spectacular for eight holes. From the 9th he plays par, birdie, par, par for 13 points and goes four holes without dropping a gross shot, drawing level for the Trophy lead at the 11th and taking it outright at the 16th; a double bogey at the 13th is the only blemish in the stretch, and pars at the 15th and 16th close it out at 87, seven better than his TEG 13 visit.",
+    "beat_ids": [
+      "r1_b04",
+      "r1_b06",
+      "r1_b05",
+      "r1_b09",
+      "r1_b16",
+      "r1_b13"
+    ],
+    "headline_candidates": [
+      "Mullin's 87 Rewrites His Deal Best",
+      "Four Holes Through the Turn Decide It",
+      "Mullin Seven Better Than Last Time"
+    ],
+    "chosen_headline": "Mullin's 87 Rewrites His Deal Best",
+    "standfirst": "Par, birdie, par, par from the 9th produced 13 points in four holes and turned a course that took 94 off him in TEG 13 into a personal best by seven.",
+    "compelling_score": 7,
+    "humour_score": 4,
+    "descriptor": "DAVID MULLIN"
+  },
+  "race_story": {
+    "subject": "Jon Baker, who owns the lowest round this field has ever played at Royal Cinque Ports, loses seven shots on that mark and ends day one last in the TEG 14 Trophy and bottom of the Wooden Spoon race",
+    "why_it_matters": "The man best placed to exploit this links went backwards on it, and with three rounds left he starts four points adrift of Gregg Williams at the foot of the Trophy table — while sitting second in the Green Jacket, a split created by handicapping, not by anything mysterious.",
+    "shape": "Jon Baker's 85 here in TEG 13 was the benchmark; this time he goes five holes from the 2nd without a net par, including triple bogeys at the 3rd and the 5th, and a bogey at the 4th drops him to the bottom of the Spoon race. Three straight pars from the 11th steady the ship and preserve a 92 that leaves him second in the TEG 14 Green Jacket on 20 over, but 29 Stableford points is four short of Gregg Williams and eleven short of David Mullin, who leads both the TEG 14 Trophy and the TEG 14 Green Jacket.",
+    "beat_ids": [
+      "r1_b14",
+      "r1_b10",
+      "r1_b07",
+      "r1_b08",
+      "r1_b11"
+    ],
+    "headline_candidates": [
+      "Jon Baker Slips to the Spoon",
+      "Seven Shots Worse at Deal",
+      "The Course Record Holder Goes Backwards"
+    ],
+    "chosen_headline": "Jon Baker Slips to the Spoon",
+    "standfirst": "Triple bogeys at the 3rd and 5th cost him the round before the turn, though three straight pars from the 11th kept him second in the Green Jacket.",
+    "compelling_score": 7,
+    "humour_score": 6,
+    "descriptor": "WOODEN SPOON"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Alex Baker posts a 10 at the 16th and an 8 at the 11th, bleeds six shots across the 3rd, 4th and 5th, and still walks off with 37 points and a personal best at Royal Cinque Ports",
+      "why_it_matters": "It is the day's most entertaining accounting exercise: a round containing 18 gross strokes in two holes alone still improved on his TEG 13 visit by four shots and left him second in the TEG 14 Trophy, three behind David Mullin.",
+      "shape": "Alex Baker drops six shots in three holes from the 3rd with consecutive double bogeys, then pars the 6th to draw level for the Green Jacket lead. The 11th takes an 8 and the 16th, a par 5, takes a 10 — both worth nothing on the card — yet the 98 that results is four better than his 102 here in TEG 13, and 37 points leaves him closer to the Trophy lead than anyone else in the field.",
+      "beat_ids": [
+        "r1_b01",
+        "r1_b02",
+        "r1_b12",
+        "r1_b15"
+      ],
+      "headline_candidates": [
+        "Alex Baker's Ten at the Sixteenth",
+        "Carnage and a Personal Course Best",
+        "Two Blank Holes, Still Second"
+      ],
+      "chosen_headline": "Alex Baker's Ten at the Sixteenth",
+      "standfirst": "An 8 at the 11th and a 10 at the par-five 16th returned nothing at all, and the round was still four shots better than anything he had managed at Deal before.",
+      "compelling_score": 7,
+      "humour_score": 8,
+      "descriptor": "ALEX BAKER"
+    }
+  ],
+  "race_state_note": "One round of four played, so nothing is decided: David Mullin leads the Trophy by three and the Green Jacket by five. Jon Baker lies last in the Trophy but second in the Green Jacket — a straightforward consequence of handicapping, not a contradiction. Gregg Williams's 9 at the 3rd is the only notable card entry not carried by a storyline.",
+  "storyline_note": ""
+}

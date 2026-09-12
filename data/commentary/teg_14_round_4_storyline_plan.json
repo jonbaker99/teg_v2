@@ -1,0 +1,92 @@
+{
+  "title": "Record Falls, Mullin Doubles Up",
+  "title_candidates": [
+    "Record Falls, Mullin Doubles Up",
+    "Two Bakers and the Sixteenth",
+    "Sunday at Prince's Settles Everything"
+  ],
+  "theme": "The best golf of the day belonged to the two men who won nothing, while David Mullin limped home with the worst round in the field and both trophies.",
+  "tone": "house",
+  "opening_hook": "The 16th at Prince's is the 17th-hardest hole on the card, a fact both Bakers spent Sunday afternoon disproving: Alex Baker signed for a 10 there, Jon Baker for a 6, and between them they wrote the day's two decisive sentences on a hole nobody had thought to fear.",
+  "narrative_vehicles": [
+    "counterfactual",
+    "motif",
+    "dual_narrative"
+  ],
+  "prominent_vehicle": "counterfactual",
+  "prominent_palette": "decisive_moment",
+  "is_final_round": true,
+  "round_story": {
+    "subject": "Jon Baker's 83 gross at Prince's - Shore / Dunes, a new course record, built on a five-hole run without a dropped shot from the 11th",
+    "why_it_matters": "The record had stood at 85 through nine prior visits; Jon Baker beat it by two, was twelve shots better than his own last visit here, and posted the third-best gross round of his TEG career — on the one afternoon it could win him nothing.",
+    "shape": "Jon Baker arrives at Prince's off a 28-point Saturday and the bottom of every table, pars the 5th and birdies the 6th almost apologetically, then turns for home and goes five holes from the 11th without dropping a gross shot — birdies at the 12th and the stroke-index-one 13th, pars at the 14th and 15th, 14 points in four holes. The run ends with a double bogey at the 16th and the round ends with a quadruple-bogey 8 at the 18th, which is the only reason 83 is not smaller. It is still two better than the record that survived nine previous TEG visits to this routing.",
+    "beat_ids": [
+      "cr01",
+      "r4_b02",
+      "r4_b04",
+      "r4_b06",
+      "r4_b16",
+      "r4_b22"
+    ],
+    "headline_candidates": [
+      "Jon Baker Breaks the Prince's Record",
+      "Eighty-Three on the Shore and Dunes",
+      "Five Clean Holes Rewrite Prince's"
+    ],
+    "chosen_headline": "Jon Baker Breaks the Prince's Record",
+    "standfirst": "A mark of 85 had survived nine visits to the Shore and Dunes routing; it did not survive a Sunday on which its owner had nothing left to play for.",
+    "compelling_score": 9,
+    "humour_score": 5,
+    "descriptor": "JON BAKER"
+  },
+  "race_story": {
+    "subject": "David Mullin completes the TEG 14 Trophy and Green Jacket double while posting the worst round in the field, as Alex Baker's charge dies with a 10 at the 16th",
+    "why_it_matters": "This is the resolution of TEG 14: Mullin takes the Trophy by two and the Jacket by seven, and does it having been outscored by every man in the field on the final day — Alex Baker cut an eight-point deficit to two and needed only to par the 16th to have gone past him.",
+    "shape": "Mullin starts the day eight clear on Stableford and twelve clear in the Jacket, then produces 37 points and a 91 gross, the lowest return of the four and a quadruple-bogey 8 at the 10th to go with it. Alex Baker meanwhile pars the first three holes for 10 points, adds 11 more across the 13th, 14th and 15th, and walks to the 16th tee — stroke index 17 — with the Trophy genuinely in reach; he leaves it with a 10 and a blank on the card. Mullin's lead survives by two points, and the Jacket by seven, both won on Thursday and Friday rather than Sunday.",
+    "beat_ids": [
+      "r4_b01",
+      "r4_b05",
+      "r4_b13",
+      "r4_b07",
+      "r4_b14",
+      "r4_b03",
+      "r4_b21",
+      "r4_b10",
+      "r4_b12"
+    ],
+    "headline_candidates": [
+      "A Ten at the Sixteenth Settles It",
+      "Mullin Wins Both Going Backwards",
+      "Alex Baker Falls Two Points Short"
+    ],
+    "chosen_headline": "A Ten at the Sixteenth Settles It",
+    "standfirst": "David Mullin becomes the fifth man to carry off both the Trophy and the Green Jacket in the same TEG, and did it with the worst card of the final day.",
+    "compelling_score": 9,
+    "humour_score": 7,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Jon Baker takes the TEG 14 Wooden Spoon by twelve points on the same afternoon he sets the course record",
+      "why_it_matters": "The Spoon was built across three rounds of 29, 29 and 28 points; a jump of eleven points to 39 on the final day moved him into the top half of the field for the first time all week and cut the deficit to Gregg Williams from thirteen to twelve, which is to say it moved nothing at all.",
+      "shape": "Jon Baker goes into Sunday last in the Trophy by thirteen, having been last or second-last in every round so far. He then plays the best gross golf of the week by some distance, closing to within seven of the Jacket lead in the process. It arrives a day late: twelve points adrift of Gregg Williams at the close, the Spoon already engraved, with a quadruple-bogey 8 at the 18th as the final word.",
+      "beat_ids": [
+        "r4_b15",
+        "r4_b22",
+        "r4_b12"
+      ],
+      "headline_candidates": [
+        "The Spoon Arrives With a Record",
+        "Eleven Points Late to the Party",
+        "Best Golf, Worst Fortnight"
+      ],
+      "chosen_headline": "The Spoon Arrives With a Record",
+      "standfirst": "Thirty-nine points on Sunday against 29, 29 and 28 before it — the arithmetic of a man who solved the course on the day it stopped counting.",
+      "compelling_score": 7,
+      "humour_score": 8,
+      "descriptor": "WOODEN SPOON | JON BAKER"
+    }
+  ],
+  "race_state_note": "Alex Baker outscored David Mullin in two of the four rounds and still lost the Trophy by two; Mullin finished bottom of the field on the final day and never finished a round worse than fourth of four all week.",
+  "storyline_note": "Final round, so race_story leads as the coronation; round_story runs second because its subject won nothing, and the Spoon sidebar picks up the same player from the tournament's other end."
+}

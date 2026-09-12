@@ -1,101 +1,103 @@
 {
-  "title": "The Thirty-Hole Reign Ends at Palmares",
+  "title": "Level at Palmares",
   "title_candidates": [
-    "The Thirty-Hole Reign Ends at Palmares",
-    "Two Share the Day, One Leads Alone No More",
-    "Baker Takes the Lead, Patterson Takes the Floor"
+    "Level at Palmares",
+    "Two Forty-Sevens and a Vacated Lead",
+    "Thirty Holes in Front, Then Nothing"
   ],
-  "theme": "A long-held lead finally breaks, a personal best arrives mid-collapse, and the last-place gap turns into a chasm.",
-  "tone": "tongue-in-cheek gravitas, restrained until the collapse turns farcical",
-  "opening_hook": "Palmares' parkland fairways hosted TEG's first visit and immediately rewrote the leaderboard: David Mullin's 30-hole grip on the TEG 10 Trophy lead evaporated hole by hole, while Alex Baker's career-best round somehow survived a quintuple bogey of its own.",
+  "theme": "A brand-new course hands out two career-shaping rounds and quietly removes David Mullin from the front of the TEG 10 Trophy, leaving Alex Baker and Gregg Williams dead level on 133 with one round to play.",
+  "tone": "house",
+  "opening_hook": "David Mullin stood on the 18th tee at Palmares having just gone birdie, par, birdie — and walked off it with an eight, which was roughly the shape of his whole afternoon.",
   "narrative_vehicles": [
-    "tragic_arc",
     "dual_narrative",
+    "inversion",
     "catalogue"
   ],
-  "prominent_vehicle": "tragic_arc",
+  "prominent_vehicle": "dual_narrative",
   "prominent_palette": "decisive_moment",
   "is_final_round": false,
   "round_story": {
-    "subject": "Alex Baker's Stableford personal best and Gregg Williams's near-mirror gross career-best share round-of-the-day honours at Palmares",
-    "why_it_matters": "Best-round-of-the-day is usually a single name; today it split down the middle, and one half of it doubled as Alex Baker's first personal best in fifteen TEG rounds while carrying a nightmare hole he somehow shrugged off.",
-    "shape": "Alex Baker's round oscillated between the ridiculous and the sublime — nine points in three holes, then a quintuple bogey at the 13th — yet his 47 points stood as both his best-ever Stableford return and his best-ever gross round. Gregg Williams, playing steadier golf throughout, quietly posted the best gross score of anyone in the field and the second-best of his own 34-round career, level with Alex on points but eclipsing him on quality of strike.",
+    "subject": "Alex Baker and Gregg Williams both post 47 points on TEG's first visit to Palmares - Alvor / Lagos, arriving at the same number by conspicuously different routes",
+    "why_it_matters": "Two rounds of the day, tied to the point, which is also why the TEG 10 Trophy now has two men on 133 and nothing separating them going into the final round.",
+    "shape": "Alex Baker, playing a course nobody in the field had seen before, piles up 10 points across holes 2-4 and 9 more across 9-11; Gregg Williams grinds out the same 47 with a far tidier card, +15 gross against Alex Baker's +22. The turn is the 13th, where Alex Baker runs up a 10 and Gregg Williams makes a bogey for three points and briefly takes the Trophy lead outright. Both finish on 47 — a personal best for Alex Baker on both counts, and for Gregg Williams the second-best gross round of his TEG career — and both finish the day on 133.",
     "beat_ids": [
       "r3_b16",
       "r3_b17",
       "r3_b12",
-      "r3_b26",
-      "r3_b31",
       "r3_b27",
       "r3_b32",
-      "r3_b34",
+      "r3_b26",
+      "r3_b31",
       "r3_b28",
       "r3_b29",
-      "r3_b33",
-      "r3_b24"
+      "r3_b24",
+      "r3_b34"
     ],
     "headline_candidates": [
-      "Two Share the Day, One a First",
-      "Alex Baker and Williams Split Honours",
-      "Personal Best Comes With a Wobble"
+      "Two Forty-Sevens, One Shared Lead",
+      "Alex Baker Posts His Best Round Yet",
+      "Same Score, Very Different Cards"
     ],
-    "chosen_headline": "Two Share the Day, One a First",
-    "standfirst": "Alex Baker's 47 points was a career best despite a quintuple bogey at the 13th, while Gregg Williams matched him on the scorecard with the tidier round of the two.",
-    "compelling_score": 7,
+    "chosen_headline": "Two Forty-Sevens, One Shared Lead",
+    "standfirst": "Alex Baker's 47 is the best round of his TEG career and came with a 10 at the 13th; Gregg Williams matched it with seven fewer gross shots and no disasters at all.",
+    "compelling_score": 8,
     "humour_score": 6,
     "descriptor": "ALEX BAKER | GREGG WILLIAMS"
   },
   "race_story": {
-    "subject": "David Mullin's 30-hole grip on the TEG 10 Trophy lead ends on the 6th, and the race resets to a share at the top",
-    "why_it_matters": "Mullin had led the Trophy outright since the 12th hole of round one — the longest hold of the week — and its loss, followed by a closing quadruple bogey, hands the initiative to Alex Baker and Gregg Williams with one round to play.",
-    "shape": "Mullin's stranglehold, unbroken for 30 holes, gave way when Alex Baker drew level at the 6th; the lead changed hands four more times through the round as Alex, Williams and Mullin himself traded places, before a run of three birdies in four holes briefly threatened a Mullin revival. It ended instead with a quadruple bogey at the 18th, and Mullin drops to third, eleven points off a share of the lead he held for three days.",
+    "subject": "David Mullin's 31-point round ends 30 holes of Trophy leadership and drops him 11 behind, even as he retains the TEG 10 Green Jacket lead",
+    "why_it_matters": "The man who had led the TEG 10 Trophy since the 12th hole of round one no longer leads it, and the race he does still lead has shrunk from 13 shots to 10.",
+    "shape": "David Mullin had been in front of the Trophy continuously since the 12th hole of the first round, and was still level at the top after the 7th at Palmares. He lost the lead to Alex Baker at the 6th and never got it back, and although birdie, par, birdie at 15, 16 and 17 briefly suggested a rescue, a quadruple-bogey eight at the last closed the round at 31 points — 11 fewer than his second round. He ends the day third on 122, 11 adrift of the two men tied on 133, but still ahead in the Green Jacket on +38 with Jon Baker 10 back.",
     "beat_ids": [
       "r3_b09",
       "r3_b03",
       "r3_b06",
-      "r3_b30",
       "r3_b04",
       "r3_b05",
+      "r3_b10",
       "r3_b18",
-      "r3_b10"
+      "r3_b20",
+      "r3_b30",
+      "r3_b11"
     ],
     "headline_candidates": [
-      "Thirty Holes of Command, Gone",
-      "Mullin's Long Lead Finally Breaks",
-      "The Lead Changes Hands Again"
+      "Mullin's Thirty-Hole Lead Ends at Palmares",
+      "An Eight at the Last",
+      "Mullin Loses One Race, Holds Another"
     ],
-    "chosen_headline": "Thirty Holes of Command, Gone",
-    "standfirst": "David Mullin's spell atop the TEG 10 Trophy standings, unbroken since the first round, unravelled hole by hole at Palmares.",
+    "chosen_headline": "Mullin's Thirty-Hole Lead Ends at Palmares",
+    "standfirst": "Three under for holes 15 to 17 counted for nothing once the 18th produced an eight, and the Green Jacket cushion is down from 13 to 10.",
     "compelling_score": 8,
-    "humour_score": 4,
+    "humour_score": 6,
     "descriptor": "TROPHY"
   },
   "discovered_storylines": [
     {
-      "subject": "John Patterson's horror stretch through holes 11-15 buries his TEG 10 Wooden Spoon hopes deeper still",
-      "why_it_matters": "Patterson was already anchored to last place in the Trophy table; a run of double-figure holes and blow-ups across five holes bled 19 gross shots and stretched his gap to the next-worst player from 5 to 14.",
-      "shape": "A promising start — three pars worth nine points in the first three holes — gave way entirely from the 11th, where a quintuple bogey at the short 12th was sandwiched by more of the same at the 8th, 13th, 14th and 15th. Patterson went five holes without a single Stableford point, turning a manageable Wooden Spoon gap into a rout.",
+      "subject": "John Patterson's round falls apart over holes 11 to 15 and pushes him 14 points clear at the foot of the TEG 10 Wooden Spoon",
+      "why_it_matters": "He began the day five points off the field and ends it 14 adrift, having lost 19 gross shots in five holes.",
+      "shape": "John Patterson opened bogey, par, par for nine points across the first three holes and gave every impression of a man enjoying a new course, before a 10 at the par-five 8th put the first dent in it. From the 11th to the 15th he dropped 19 shots and did not make a single net par — an eight at the par-three 12th, a seven at the par-three 14th, a nine at the 15th. The round closed on 27 points and 108 gross, and the gap between him and the rest of the Wooden Spoon field went from five to 14.",
       "beat_ids": [
+        "r3_b15",
+        "r3_b25",
         "r3_b08",
         "r3_b01",
         "r3_b02",
         "r3_b07",
-        "r3_b13",
         "r3_b14",
-        "r3_b15"
+        "r3_b13"
       ],
       "headline_candidates": [
-        "Patterson's Back Nine Falls Apart",
-        "Five Holes Without a Point",
-        "The Spoon Gap Turns Into a Chasm"
+        "Patterson Loses Nineteen Shots in Five Holes",
+        "Five Holes That Settled the Spoon",
+        "No Net Pars From Eleven to Fifteen"
       ],
-      "chosen_headline": "Patterson's Back Nine Falls Apart",
-      "standfirst": "A five-hole stretch without a single Stableford point turned a five-point Wooden Spoon gap into a fourteen-point one.",
+      "chosen_headline": "Patterson Loses Nineteen Shots in Five Holes",
+      "standfirst": "Nine points from the opening three holes suggested one kind of day; an eight at a par three and a nine at the 15th supplied another.",
       "compelling_score": 7,
-      "humour_score": 8,
+      "humour_score": 7,
       "descriptor": "WOODEN SPOON"
     }
   ],
-  "race_state_note": "The Green Jacket picture also tightened — Mullin's cushion over Jon Baker fell from 13 to 10 — while John Patterson's slide to the foot of the Wooden Spoon table is covered separately.",
+  "race_state_note": "The Trophy is tied at 133 with one round to play and TEG has no countback and no tiebreaker, so a level finish stays level; David Mullin remains ahead in the Green Jacket on gross, which measures something different from the Stableford table above it.",
   "storyline_note": ""
 }

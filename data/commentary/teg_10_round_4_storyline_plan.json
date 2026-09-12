@@ -1,88 +1,74 @@
 {
-  "title": "Alex Baker Rewrites the Record Books at Boavista",
+  "title": "Fifty-One at Boavista",
   "title_candidates": [
-    "Alex Baker Rewrites the Record Books at Boavista",
-    "A Record Round Settles the TEG 10 Trophy",
-    "Boavista Bows to a 51"
+    "Fifty-One at Boavista",
+    "The Highest Round Ever Played",
+    "Alex Baker Settles a Level Race",
+    "Boavista Gives Up Its Best Round"
   ],
-  "theme": "A tied Trophy race is blown open by the best round TEG has ever seen, while the Green Jacket and Wooden Spoon are both settled on the same Algarve afternoon.",
-  "tone": "Reverent about the record round, drily merciless about the collapse at the bottom of the table.",
-  "opening_hook": "Boavista had hosted eleven previous TEG rounds; nothing in that history looked anything like the twelfth.",
+  "theme": "A Trophy race dead level after three rounds is settled in a single afternoon by the highest-scoring round in TEG history.",
+  "tone": "house",
+  "opening_hook": "Alex Baker and Gregg Williams began Tuesday at Boavista on 133 points each, which is as close as the TEG Trophy has ever been with one round to play. By the time they walked off the 18th the gap was eleven, and the reason was not that Gregg Williams had collapsed but that Alex Baker had played the best round anyone has played in 191 TEG rounds.",
   "narrative_vehicles": [
-    "hero_arc",
+    "dual_narrative",
     "origin",
-    "inevitability"
+    "ensemble"
   ],
-  "prominent_vehicle": "hero_arc",
-  "prominent_palette": "records",
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "decisive_moment",
   "is_final_round": true,
   "round_story": {
-    "subject": "Alex Baker's 51-point final round, the best in TEG history to date",
-    "why_it_matters": "It is the highest Stableford total ever recorded in TEG's history, and it arrived at exactly the moment it mattered most, on a course he had barely played before this week.",
-    "shape": "Alex Baker arrives at Boavista level with Gregg Williams for the Trophy after three rounds of parity. He catches fire from the 5th, gathering 21 points across a six-hole stretch to the 10th while carding a personal-best gross 17. He finishes on 51 points, the best round in TEG history to date, alongside a new Boavista personal best of 88 gross, 11 shots better than his previous visit.",
+    "subject": "Alex Baker's 51-point round at Boavista, the highest scoring round in TEG history to date, which turns a dead-level Trophy race into an eleven-point win",
+    "why_it_matters": "It is a rank-1 fact in the strictest sense: the best round of the 191 played in TEG to that point, his own best round, his own best gross round, and a personal best at Boavista by eleven strokes — all on the one day it counted most. It also delivers his first TEG Trophy.",
+    "shape": "Setup: level on 133 with Gregg Williams, Alex Baker had never won a round outright before round 3 and had a Boavista record of one visit and a 99. Turn: holes 5-10 yield 21 points — four pars and two bogeys against a card that gives him shots almost everywhere — and the round stops being a contest. Resolution: 51 points, 88 gross, the highest round in TEG history to date and an eleven-point Trophy win.",
     "beat_ids": [
       "r4_b03",
       "r4_b05",
-      "r4_b07"
+      "r4_b07",
+      "r4_b22",
+      "r4_b24"
     ],
     "headline_candidates": [
-      "The Best Round Boavista Has Seen",
-      "Alex Baker's Record 51",
-      "A Round for the History Books"
+      "Alex Baker Posts Fifty-One",
+      "Six Holes Decide the Trophy",
+      "Nobody Has Ever Scored Higher"
     ],
-    "chosen_headline": "Alex Baker's Record 51",
-    "standfirst": "A career-best gross round and a new Boavista personal best combined to produce the highest Stableford total in TEG's history.",
-    "compelling_score": 9,
-    "humour_score": 4,
+    "chosen_headline": "Alex Baker Posts Fifty-One",
+    "standfirst": "Level with Gregg Williams at breakfast, he took eleven strokes off his previous Boavista best and left with the highest round in TEG history to date.",
+    "compelling_score": 10,
+    "humour_score": 6,
     "descriptor": "ALEX BAKER"
   },
   "race_story": {
-    "subject": "The Trophy race, resolved: Alex Baker's breakaway from a tied lead to his first title",
-    "why_it_matters": "This is the tournament's resolution — the destination of the TEG 10 Trophy, decided after three rounds had left Alex Baker and Gregg Williams locked together on identical scores.",
-    "shape": "Alex Baker and Gregg Williams arrive at the final round dead level on 133 points each. Williams draws back level early at the 5th, only for a six-shot bleed through holes 12 to 14 and a closing quadruple bogey at the 18th to undo him, while Alex Baker's back-nine surge pulls clear. Alex Baker closes out a first Trophy title by 11 points, the widest margin of the week.",
+    "subject": "The three TEG 10 competitions resolved at Boavista, told from Gregg Williams's side of the Trophy — level at the top, briefly ahead on the 5th, eleven adrift by the close — with David Mullin's Green Jacket and John Patterson's Wooden Spoon confirmed",
+    "why_it_matters": "This is the coronation round: the TEG 10 Trophy to Alex Baker by 11, the TEG 10 Green Jacket to David Mullin by 12, the TEG 10 Wooden Spoon to John Patterson by 32. Gregg Williams's day is the one worth narrating, because he did nothing disgraceful — a 40-point round and a personal best 93 at Boavista — and still lost by eleven.",
+    "shape": "Setup: Gregg Williams and Alex Baker start level on 133, and a birdie at the 5th actually puts Gregg Williams level at the top of the Trophy on the course. Turn: a quadruple-bogey 7 at the short 6th, then three straight doubles through 12-14 costing six shots, while Alex Baker never stops scoring; a late 9-point run through 15-17 is repair work, not rescue, and a quadruple-bogey 8 at the last undoes it. Resolution: Alex Baker 184, Gregg Williams 173; David Mullin's 13-over round is the best gross of the day and seals the Jacket at 51 from Jon Baker's 63; John Patterson takes the Spoon by 32.",
     "beat_ids": [
       "r4_b16",
+      "r4_b11",
       "r4_b17",
+      "r4_b20",
       "r4_b10",
-      "r4_b13"
+      "r4_b14",
+      "r4_b13",
+      "r4_b18"
     ],
     "headline_candidates": [
-      "Alex Baker Claims a First Trophy",
-      "From Level Pegging to an 11-Point Win",
-      "Gregg Williams Fades as Alex Baker Delivers"
+      "Gregg Williams Falls Eleven Short",
+      "A Birdie at Five Changes Nothing",
+      "David Mullin Keeps the Jacket"
     ],
-    "chosen_headline": "Alex Baker Claims a First Trophy",
-    "standfirst": "Level with Gregg Williams overnight, Alex Baker turned a tied Trophy race into his maiden title by the close of play.",
+    "chosen_headline": "Gregg Williams Falls Eleven Short",
+    "standfirst": "He shot 40 points and a personal-best 93 at Boavista, which on any other Tuesday would have been more than enough.",
     "compelling_score": 8,
-    "humour_score": 5,
+    "humour_score": 6,
     "descriptor": "TROPHY"
   },
   "discovered_storylines": [
     {
-      "subject": "David Mullin holds off a fast-closing Jon Baker to take the Green Jacket",
-      "why_it_matters": "The Jacket race was the tightest in the field entering the final round, and Jon Baker's closing charge threatened to close what had been a 10-point gap.",
-      "shape": "Jon Baker enters the final round just 10 adrift, sets a new Boavista personal best of 86 gross and piles up nine points in a closing stretch from the 15th. David Mullin matches him hole for hole, opening with two clean holes and stitching together his own tidy stretch through the 13th and 14th. Mullin's round proves just enough, extending his lead to 12 and landing the Green Jacket.",
-      "beat_ids": [
-        "r4_b09",
-        "r4_b18",
-        "r4_b21",
-        "r4_b13"
-      ],
-      "headline_candidates": [
-        "David Mullin Holds His Nerve",
-        "David Mullin Survives a Late Scare",
-        "Jon Baker's Charge Falls Just Short"
-      ],
-      "chosen_headline": "David Mullin Holds His Nerve",
-      "standfirst": "A tense final day at Boavista saw the Green Jacket gap tighten before David Mullin closed it out by 12.",
-      "compelling_score": 7,
-      "humour_score": 4,
-      "descriptor": "GREEN JACKET"
-    },
-    {
-      "subject": "John Patterson's collapse to a runaway Wooden Spoon",
-      "why_it_matters": "His final round was the worst round and the worst gross round of his TEG career, built on three separate blow-up holes, and it stretched his Wooden Spoon deficit from 14 to 32, the widest gap of the tournament.",
-      "shape": "John Patterson comes into the final round already anchored to the bottom of the Wooden Spoon table, 14 adrift. A sextuple bogey 11 at the 8th, a quadruple bogey 8 at the 10th and a quintuple bogey 9 at the 18th shred any hope of a recovery. He finishes on 21 points and +40 gross, both worst-to-date, and takes the Wooden Spoon by 32 clear points.",
+      "subject": "John Patterson's 21 points and 40-over gross at Boavista, his worst round on both counts, completing a Wooden Spoon he led from the first day",
+      "why_it_matters": "Firsts and lasts both count: this is his worst round to date on Stableford and on gross, it contains the worst score he has ever made on a par 5, and it stretches the Spoon margin from 14 to 32. He was last in the field in all four rounds.",
+      "shape": "Setup: 14 points clear of trouble is not the same as clear of the Spoon, and John Patterson began the day already 14 adrift of Stuart Neumann. Turn: an 11 at the par-5 8th, the worst he has recorded on a par 5, then an 8 at the 10th. Resolution: a 9 at the last for 21 points and +40, his worst round on either measure, and a Spoon taken by 32.",
       "beat_ids": [
         "r4_b01",
         "r4_b02",
@@ -91,17 +77,39 @@
         "r4_b08"
       ],
       "headline_candidates": [
-        "Three Blow-Ups Seal the Spoon",
-        "John Patterson's Day to Forget",
-        "A Career-Worst at Boavista"
+        "Eleven at the Eighth",
+        "Twenty-One Points and Forty Over",
+        "The Spoon Settled by Thirty-Two"
       ],
-      "chosen_headline": "Three Blow-Ups Seal the Spoon",
-      "standfirst": "A sextuple bogey at the 8th set the tone for John Patterson's worst round in eight TEG appearances.",
-      "compelling_score": 8,
-      "humour_score": 6,
+      "chosen_headline": "Eleven at the Eighth",
+      "standfirst": "Last in the field in all four rounds, he saved his worst card for the final one.",
+      "compelling_score": 7,
+      "humour_score": 7,
       "descriptor": "WOODEN SPOON | JOHN PATTERSON"
+    },
+    {
+      "subject": "Boavista on TEG's 12th round at the venue, handing out personal bests to three of the six players in the same afternoon while punishing Stuart Neumann early",
+      "why_it_matters": "A course that has hosted eleven previous TEG rounds produced three course personal bests in one day — Jon Baker 86, Gregg Williams 93, Alex Baker 88 — plus the highest-scoring round in TEG history. Whatever Boavista was doing on Tuesday, it was not defending itself.",
+      "shape": "Setup: eleven prior TEG rounds here, with Stuart Neumann's 82 from TEG 5 standing as the benchmark nobody in this group threatened. Turn: Jon Baker takes three off his Boavista best with 9 points through 15-17 and back-to-back pars at 16 and 17; Gregg Williams takes three off his; Alex Baker takes eleven off his. Resolution: Stuart Neumann, the man who owns the best round ever played here, bled eight shots in the opening three holes including a quadruple-bogey 7 at the 2nd, and still came home nine better than his last visit.",
+      "beat_ids": [
+        "r4_b09",
+        "r4_b15",
+        "r4_b19",
+        "r4_b12",
+        "r4_b23"
+      ],
+      "headline_candidates": [
+        "Three Course Bests in One Afternoon",
+        "Boavista Stops Fighting Back",
+        "The Twelfth Visit to Boavista"
+      ],
+      "chosen_headline": "Three Course Bests in One Afternoon",
+      "standfirst": "On TEG's twelfth round at the Algarve parkland, half the field went lower than they ever have here.",
+      "compelling_score": 6,
+      "humour_score": 6,
+      "descriptor": "BOAVISTA"
     }
   ],
-  "race_state_note": "All three competitions were settled this round: the Trophy race, level entering the final day, swung 11 points in Alex Baker's favour; the Jacket gap that had been 10 stretched to 12; and John Patterson's Spoon deficit more than doubled from 14 to 32.",
-  "storyline_note": ""
+  "race_state_note": "Final margins: Trophy — Alex Baker 184 from Gregg Williams 173 (11); Green Jacket — David Mullin 51 from Jon Baker 63 (12, lower is better); Wooden Spoon — John Patterson 112, 32 behind Stuart Neumann. Ignore the stale 'gap 0 on Stableford' wording inside beat r4_b13; the Trophy was won by 11. No double this TEG (Alex Baker took the Trophy, David Mullin the Jacket); the only prior doubles were TEG 2 and TEG 4, and rarity claims must not go beyond that. Two Bakers in the field: never write a bare 'Baker'. Do not state a career total for David Mullin's Green Jackets — the supplied count is ambiguous as to whether it includes this one.",
+  "storyline_note": "Departing from race_story-leads on a final round: Alex Baker is both the round of the day and the Trophy winner, so round_story carries the lead with the record and the coronation, and race_story is written from Gregg Williams's vantage plus the Jacket and Spoon resolutions to avoid telling the same story twice."
 }

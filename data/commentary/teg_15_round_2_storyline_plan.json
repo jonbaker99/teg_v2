@@ -1,0 +1,117 @@
+{
+  "title": "The Dunes Take Their Cut",
+  "title_candidates": [
+    "The Dunes Take Their Cut",
+    "West Cliffs, First Acquaintance",
+    "Forty Points and a Rash of Elevens"
+  ],
+  "theme": "A links none of the six had ever played handed out elevens all afternoon, and the one man who kept his feet walked away further ahead in both races.",
+  "tone": "house",
+  "opening_hook": "At the par-five sixth, Gregg Williams made a five. The same hole gave up a nine, two tens and an eleven to the men around him, and West Cliffs had made its point before the turn.",
+  "narrative_vehicles": [
+    "ensemble",
+    "catalogue",
+    "inevitability"
+  ],
+  "prominent_vehicle": "ensemble",
+  "prominent_palette": "venue_character",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Gregg Williams's 40 points and 88 gross at West Cliffs, the best round of the day by four points and six shots, on a course he had never seen",
+    "why_it_matters": "On a debut links that cost everyone else shots against their Estoril numbers, Williams was the only player to look untroubled, and he turned a five-point Trophy lead into nine and an eight-shot Jacket lead into fourteen.",
+    "shape": "Setup: six players arrive at West Cliffs cold, and Williams opens by parring four holes in a row from the 4th to the 7th for twelve points while the field is being dismantled on the same stretch. Turn: he takes a 10 at the par-five 15th, a hole where David Mullin made three, which on any other card would be the whole story. Resolution: he still signs for 40 points and 88 gross, four clear of John Patterson's 36 and six clear of Mullin's 94, and leads both the TEG 15 Trophy and the TEG 15 Green Jacket by more than he did at breakfast. The 10 gets one clause here; the anatomy of the 15th belongs to the course sidebar.",
+    "beat_ids": [
+      "r2_b34",
+      "r2_b35",
+      "r2_b37",
+      "r2_b32",
+      "r2_b36"
+    ],
+    "headline_candidates": [
+      "Forty Points and One Ugly Ten",
+      "Four Straight Pars While Others Drowned",
+      "Best of the Day by Four"
+    ],
+    "chosen_headline": "Forty Points and One Ugly Ten",
+    "standfirst": "Nobody in the field had seen West Cliffs before Sunday, and only one man got round it in the eighties.",
+    "compelling_score": 7,
+    "humour_score": 6,
+    "descriptor": "GREGG WILLIAMS"
+  },
+  "race_story": {
+    "subject": "John Patterson's chase of the TEG 15 Trophy: level with Gregg Williams after three holes, nine points adrift by the eighteenth, with David Mullin's Green Jacket deficit widening from eight to fourteen",
+    "why_it_matters": "This was the round in which the pursuers had their chance and spent it; the Trophy gap went the wrong way for the second day running, and with two rounds left the chase is now a nine-point job rather than a five-point one.",
+    "shape": "Setup: Patterson starts double bogey, bogey, then birdies the 3rd — stroke index one — and draws level with Williams at the top of the Trophy for the first time in the tournament. Turn: he bleeds eight shots across the 6th, 7th and 8th and never gets nearer; Williams, playing the same holes in level par, simply walks away. Resolution: 36 points is a respectable day's work and leaves him nine behind on 70 to Williams's 79, while in the Jacket race Mullin's 22-over 94 lets the gap stretch from eight to fourteen.",
+    "beat_ids": [
+      "r2_b15",
+      "r2_b26",
+      "r2_b25",
+      "r2_b36"
+    ],
+    "headline_candidates": [
+      "The Sixth Undoes Patterson's Fast Start",
+      "Level After Three, Nine Adrift",
+      "Three Holes Cost Patterson the Lead"
+    ],
+    "chosen_headline": "The Sixth Undoes Patterson's Fast Start",
+    "standfirst": "A birdie at the hardest hole on the course had him level with Gregg Williams after twenty minutes, and he lost four more points by the close.",
+    "compelling_score": 7,
+    "humour_score": 5,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Stuart Neumann's back nine at West Cliffs, 26 points and 115 gross, taking the TEG 15 Wooden Spoon position off David Mullin at the 14th",
+      "why_it_matters": "The Spoon changed hands for the first time since the seventeenth hole of round one, and it did so on a stretch of golf that produced an eleven and a nine on consecutive holes.",
+      "shape": "Setup: Neumann begins the day on 31 points, tied third in the Trophy and three clear of Mullin, who has held the foot of the table since round one. Turn: an eleven at the par-five 13th and a nine at the 14th — stroke index two — drop him to the bottom of the Spoon race on the spot. Resolution: nine more shots go at the 16th, 17th and 18th, the card closes at 26 points and 115 gross, the worst of the day on both counts, and he ends level on 57 with Alex Baker at the foot of the Trophy table.",
+      "beat_ids": [
+        "r2_b12",
+        "r2_b02",
+        "r2_b04",
+        "r2_b11",
+        "r2_b03",
+        "r2_b17"
+      ],
+      "headline_candidates": [
+        "Neumann Inherits the Spoon at the Fourteenth",
+        "An Eleven, a Nine, a Spoon",
+        "Two Holes Change the Spoon Race"
+      ],
+      "chosen_headline": "Neumann Inherits the Spoon at the Fourteenth",
+      "standfirst": "David Mullin had held the position since the seventeenth hole of the opening round; it took consecutive holes of eleven and nine to shift it.",
+      "compelling_score": 7,
+      "humour_score": 7,
+      "descriptor": "WOODEN SPOON"
+    },
+    {
+      "subject": "West Cliffs on its first appearance in TEG: the par-five 6th and the par-four 17th between them accounting for four double-figure scores, against one eagle",
+      "why_it_matters": "This is the course's TEG debut and it introduced itself by taking twenty-eight more shots off the field than Estoril had the day before, with only David Mullin matching his round-one gross.",
+      "shape": "Setup: a Cynthia Dye links on the Silver Coast, six players, none of whom has ever stood on the first tee here. Turn: the 6th takes an eleven from Alex Baker — his worst return on a par five — a ten from David Mullin, a ten from Stuart Neumann and a nine from John Patterson, while Gregg Williams pars it; the 17th then takes an eleven from Jon Baker, the worst he has made on a par four, and a ten from Alex Baker, who drops thirteen shots in three holes around the turn and eleven more over the last three. Resolution: the single moment of grace is Mullin's eagle three at the par-five 15th, the only eagle of the round and a hole at which Williams took ten — seven shots between two cards on one piece of ground.",
+      "beat_ids": [
+        "r2_b08",
+        "r2_b16",
+        "r2_b21",
+        "r2_b05",
+        "r2_b06",
+        "r2_b09",
+        "r2_b07",
+        "r2_b10",
+        "r2_b18",
+        "r2_b01",
+        "r2_b32"
+      ],
+      "headline_candidates": [
+        "A New Course Collects Its Dues",
+        "Four Double Figures and One Eagle",
+        "The Sixth and Seventeenth Take Over"
+      ],
+      "chosen_headline": "A New Course Collects Its Dues",
+      "standfirst": "Nobody in the field had played West Cliffs before Sunday, and only David Mullin got round it in the same number of shots he had needed at Estoril.",
+      "compelling_score": 8,
+      "humour_score": 8,
+      "descriptor": "WEST CLIFFS"
+    }
+  ],
+  "race_state_note": "Stuart Neumann and Alex Baker are level on 57 at the foot of the Trophy table, so the Spoon position is genuinely shared going into round three — TEG has no countback to separate them. Two rounds remain.",
+  "storyline_note": ""
+}

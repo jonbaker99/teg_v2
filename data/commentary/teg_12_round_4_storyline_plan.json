@@ -1,0 +1,109 @@
+{
+  "title": "Records Fall, Nothing Changes",
+  "title_candidates": [
+    "Records Fall, Nothing Changes",
+    "The Stadium Finally Gives",
+    "Four Personal Bests, Same Leaderboard"
+  ],
+  "theme": "On the day four of the six played the Stadium Course better than they ever had, every race finished exactly where it already stood.",
+  "tone": "house",
+  "opening_hook": "A course that had held its record through 21 previous TEG visits surrendered it on the last afternoon of TEG 12 — and surrendered three other personal bests besides — and at the end of it the Trophy, the Jacket and the Spoon were all decided without a single lead changing hands on Sunday.",
+  "narrative_vehicles": [
+    "ensemble",
+    "inevitability",
+    "tragic_arc"
+  ],
+  "prominent_vehicle": "ensemble",
+  "prominent_palette": "course_history",
+  "is_final_round": true,
+  "round_story": {
+    "subject": "Jon Baker's 89 at PGA Catalunya - Stadium: a new course record, a personal best at the venue, and the round that closed out the TEG 12 Green Jacket",
+    "why_it_matters": "Jon Baker's 17 over was the lowest gross of the day by three shots and the lowest gross ever recorded at the Stadium in TEG play, lowering a mark of 90 that had survived 21 prior visits — a figure he had himself matched in TEG 11. It also carried the Green Jacket home: his gross-vs-par total of 63 finished eight clear of David Mullin, and it came on a day when Gregg Williams (92, down from 99), Alex Baker (93, down from 100) and Stuart Neumann (96, down from 100) all posted personal bests at the same course, which makes the field's day as much the story as the individual's.",
+    "shape": "Setup: Jon Baker arrives with a five-shot Jacket cushion over David Mullin and a Stadium best of 90 from TEG 11 that also happens to be the course record; he wobbles early, three dropped shots in a row before a birdie at the par-3 8th steadies him. Turn: a run of three untroubled pars from the 14th through the 16th takes him past the old mark with holes to spare, before a double bogey at the 17th ends the sequence and briefly threatens the number. Resolution: 89 gross — one better than the record, one better than himself — and the Jacket settled at eight, with three of his rivals also walking off having played the Stadium better than ever before.",
+    "beat_ids": [
+      "cr01",
+      "r4_b05",
+      "r4_b11",
+      "r4_b17"
+    ],
+    "headline_candidates": [
+      "Jon Baker Breaks the Stadium Record",
+      "Eighty-Nine Ends the Jacket Race",
+      "One Shot Better Than Anyone"
+    ],
+    "chosen_headline": "Jon Baker Breaks the Stadium Record",
+    "standfirst": "An 89 lowers a gross mark that had stood through 21 TEG visits to Girona, and settles the Green Jacket eight clear of David Mullin.",
+    "compelling_score": 8,
+    "humour_score": 5,
+    "descriptor": "JON BAKER"
+  },
+  "race_story": {
+    "subject": "John Patterson is crowned TEG 12 Trophy champion by ten from Gregg Williams, whose best ever Stadium round cost him two further points",
+    "why_it_matters": "This is the resolution: Patterson finishes on 172 Stableford points to Gregg Williams's 162, the gap widening from eight to ten on the final day. Told from the chaser's side it is sharper still — Williams shot 92 gross, his best ever at the Stadium and seven better than his previous mark there, scored 38 points, and lost ground anyway. Patterson never finished a round worse than third of six all week and was the steadiest man in the field round to round; there was nothing left for Williams to take.",
+    "shape": "Setup: Williams had led the Trophy after rounds one and two, by a single point each time, before Patterson's round three took the lead and stretched it to eight. Turn: Williams goes bogey, double, double from the 4th, rescues it with a birdie at the par-5 7th and plays his finest golf on this course — and across the same stretch Patterson banks 13 points from the 3rd to the 6th and puts the thing out of reach. Resolution: Patterson can drop six gross shots from the 15th to the 17th and still hand in 40 points, the gap ten, the Trophy his, with Jon Baker's Green Jacket confirmed on the same scorecard.",
+    "beat_ids": [
+      "r4_b12",
+      "r4_b15",
+      "r4_b16",
+      "r4_b18"
+    ],
+    "headline_candidates": [
+      "Patterson Takes the Trophy by Ten",
+      "Williams Plays His Best, Loses Ground",
+      "Ten Clear and Never Third"
+    ],
+    "chosen_headline": "Patterson Takes the Trophy by Ten",
+    "standfirst": "Gregg Williams posted his best ever round at the Stadium on Sunday and still finished two points further back than he began the day.",
+    "compelling_score": 7,
+    "humour_score": 6,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "David Mullin takes the TEG 12 Wooden Spoon after quadruple bogeys at the 3rd and 4th, despite producing the best four-hole stretch of the day",
+      "why_it_matters": "The Spoon was the only race to change hands on Sunday, and it changed at the 3rd hole: Alex Baker had held the bottom place since round one, and Mullin's nine there dropped him below it for good. He ends on 139 points, four adrift of Alex Baker, having been last in the field in two of the four rounds — and the galling part is that an ordinary round in place of his worst would have left the Spoon with somebody else.",
+      "shape": "Setup: Mullin starts the day two points above Alex Baker with the Spoon nominally Alex Baker's problem. Turn: a nine at the par-5 3rd and an eight at the par-4 4th — ten gross shots bled in three holes, three consecutive holes without a net par — and the bottom place transfers on the spot. Resolution: he then plays the best golf anyone managed all day, 14 points across the 11th to the 14th without dropping a gross shot, which lifts him to 34 for the round, still last, four behind, Spoon in hand.",
+      "beat_ids": [
+        "r4_b08",
+        "r4_b10",
+        "r4_b09",
+        "r4_b06",
+        "r4_b07",
+        "r4_b02",
+        "r4_b03"
+      ],
+      "headline_candidates": [
+        "Two Quadruple Bogeys Sink David Mullin",
+        "The Spoon Changes Hands at Three",
+        "David Mullin's Best Four Holes Arrive Late"
+      ],
+      "chosen_headline": "Two Quadruple Bogeys Sink David Mullin",
+      "standfirst": "The only lead to change hands all afternoon was the one nobody wanted, and it moved before the fourth green.",
+      "compelling_score": 7,
+      "humour_score": 7,
+      "descriptor": "WOODEN SPOON"
+    },
+    {
+      "subject": "Stuart Neumann's eagle at the par-5 15th, the rescue act inside a personal best at the Stadium",
+      "why_it_matters": "An eagle is the rarest thing on any TEG card, and this one arrives in the middle of a round going nowhere: Neumann had bled seven shots in three holes early and had just gone double bogey, bogey when he holed out in three at the 15th for five points. It carried him to 40 points, equal best of the day, and a Stadium gross of 96 — his best at the course, four better than the 100 he managed back in TEG 6.",
+      "shape": "Setup: Neumann begins the last day third in the Trophy and out of reach of the two above him, then drops seven shots between the 3rd and the 5th. Turn: after a double at the 13th and a bogey at the 14th he makes three at the par-5 15th, the day's only eagle and five Stableford points at a stroke. Resolution: 40 points, level with the best returned all afternoon, and a personal best at a course he had last seen in TEG 6.",
+      "beat_ids": [
+        "r4_b01",
+        "r4_b04",
+        "r4_b13"
+      ],
+      "headline_candidates": [
+        "An Eagle at the Fifteenth",
+        "Three at the Par Five",
+        "Neumann Holes Out for Five Points"
+      ],
+      "chosen_headline": "Stuart Neumann Holes Out for Five",
+      "standfirst": "The only eagle of TEG 12's final round arrived two holes after a double bogey and dragged a scrappy afternoon into a personal best.",
+      "compelling_score": 6,
+      "humour_score": 6,
+      "descriptor": "STUART NEUMANN"
+    }
+  ],
+  "race_state_note": "All three competitions were settled in this round. Neither the Trophy nor the Green Jacket lead changed hands on Sunday — both gaps simply widened — while the Wooden Spoon flipped from Alex Baker to David Mullin at the 3rd hole and stayed there. The Trophy and Jacket went to different players, so there is no double this year.",
+  "storyline_note": ""
+}
