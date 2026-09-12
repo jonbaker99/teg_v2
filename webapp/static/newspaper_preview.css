@@ -392,16 +392,20 @@
      distinguishing "back to this report's index" from the site's own Home —
      that needs words, not an icon. */
   .topbar{
-    /* background matches the page's own (var(--bg-card), theme-aware) not
-       var(--paper) (2026-09-12 fix) — this carried the old boxed header's
-       cream fill over by mistake when first ported. The chosen minimal-text
-       design has no distinct card behind it, just the hairline below; but
-       it's still position:sticky, so it needs SOME opaque fill or scrolled
-       article text shows through as it passes underneath — var(--bg-card)
-       gives that without reintroducing a visibly different-coloured box. */
-    position:sticky; top:0; z-index:5; display:flex; align-items:center;
-    padding:calc(0.6rem + env(safe-area-inset-top)) var(--pad) 0.55rem;
-    background:var(--bg-card, #fff);
+    /* Static, not sticky (2026-09-12 fix) — .nav is ALSO sticky (JS-driven,
+       base.html: pinned at top:0 until 300px of scroll, then slides away),
+       and with .topbar sticky too at a lower z-index, .nav painted over it
+       for that whole first 300-350px, hiding "Report front page" until .nav
+       cleared. A static top offset here can't track .nav's scroll-position-
+       driven height without duplicating that JS, and the "quick way back"
+       job is already covered without it: the phone's own back gesture, plus
+       the "Report front page" row already in the .artnav footer below. No
+       background needed either now nothing can scroll in behind it. */
+    display:flex; align-items:center;
+    /* No safe-area-inset-top here any more — that was for clearing the
+       notch/dynamic island while pinned to the physical top of the screen;
+       static, it always sits below .nav instead, so it's dead weight now. */
+    padding:0.6rem var(--pad) 0.55rem;
     border-bottom:1px solid var(--rule);
   }
   .topbar button{ background:none; border:none; cursor:pointer; padding:0; min-height:44px;
