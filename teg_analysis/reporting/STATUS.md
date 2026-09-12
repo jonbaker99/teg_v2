@@ -1718,6 +1718,18 @@ scores (`analysis.history.get_teg_placings`) instead of the LLM plan's free-text
 field, dropping score/margin text in favour of the same three lines every time — see the "Notable
 Achievements + At A Glance rebuild" entry below.
 
+**11. Round reports' final-round at-a-glance box was deliberately left out of the 2026-09-12
+rebuild — still the old bare-name format.** `round_storyline.build_round_results_for_glance`'s
+final-round branch reads straight off `_competition_state_at_round`'s `leader`/`laggard` fields: a
+raw all-caps-surname string (`"Alex BAKER"`, not proper-cased), no win-count ordinal, and no
+override-awareness (the TEG 5 Green Jacket fix does not reach round reports, though TEG 5 has no
+round-storyline artefacts to test that against). Scoped out of the tournament-report rebuild
+because it is a genuinely separate code path with no shared plumbing, not because the gap doesn't
+matter — a final-round report ought to say the same three things as its tournament counterpart.
+Fix shape: proper-case the name, and either compute the winner via
+`analysis.history.get_teg_placings` (override-aware, consistent) or accept
+`_competition_state_at_round`'s own computation and just add the win-count suffix on top.
+
 ---
 
 **Not on this list, deliberately:** a full evaluation/regression harness. D3 is the proportionate
