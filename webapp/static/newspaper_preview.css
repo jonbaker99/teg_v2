@@ -280,8 +280,33 @@
      runtime in a way that can still out-order a same-specificity rule.
      Diagnosed from a real-phone screenshot showing the report inset ~24px
      further than intended. body.np-host raises specificity enough to win
-     regardless, scoped to just this page like its desktop counterpart. */
-  body.np-host .main-content{ padding-inline:0; }
+     regardless, scoped to just this page like its desktop counterpart.
+     padding-block is zeroed too (2026-09-12 follow-up) — Tailwind's `py-8`
+     was never touched by the horizontal fix, and was the actual source of
+     the dead space above the article topbar Jon flagged from a live
+     screenshot; every component below already supplies its own vertical
+     spacing (.m-masthead, .article, .tabbar-spacer), so main-content
+     doesn't need to contribute any of its own on this page. */
+  body.np-host .main-content{ padding-inline:0; padding-block:0; }
+
+  /* .section-controls (TEG select + Tournament/round pills + "Go to Full
+     Results") is shared with /results and /leaderboard and has never had
+     its own horizontal inset — it always relied on .main-content's
+     Tailwind px-6. Zeroing main-content above (for the edge-to-edge
+     article/index panels) left it with nothing, so it went flush to the
+     screen edge. Give it the same inset as the rest of this page's mobile
+     content rather than main-content's. .page-title-area sits outside
+     .main-content entirely (a page_title block sibling in base.html) and
+     is dropped altogether on mobile instead of repadded — see the
+     .page-title-area rule below. */
+  body.np-host .section-controls{ padding-inline:0.9rem; }
+
+  /* "HISTORY / TEG Reports" dropped on mobile only (2026-09-12, Jon: "for a
+     more seamless look") — the bottom tab bar already highlights History as
+     the active section, and the masthead a few lines below already names
+     the TEG, so the label was pure repeated weight at the top of the
+     screen, not information. */
+  body.np-host .page-title-area{ display:none; }
 
   .np-mobile{
     display:block;
@@ -296,11 +321,11 @@
   .np-desktop{ display:none; }
 
   /* An open article is its own full screen (Pattern A) — the page's TEG
-     select/round pills/title above .np-mobile belong to the index screen
-     only. newspaper_preview.js toggles this on <body> when a story is
+     select/round pills above .np-mobile belong to the index screen only
+     (.page-title-area is dropped unconditionally above, not just while
+     reading). newspaper_preview.js toggles this on <body> when a story is
      open, so the article's own topbar sits right under the site nav
      instead of below a second, redundant control row. */
-  body.np-reading .page-title-area,
   body.np-reading .section-controls,
   body.np-reading .np-caption{ display:none; }
 
@@ -367,8 +392,16 @@
      distinguishing "back to this report's index" from the site's own Home —
      that needs words, not an icon. */
   .topbar{
+    /* background matches the page's own (var(--bg-card), theme-aware) not
+       var(--paper) (2026-09-12 fix) — this carried the old boxed header's
+       cream fill over by mistake when first ported. The chosen minimal-text
+       design has no distinct card behind it, just the hairline below; but
+       it's still position:sticky, so it needs SOME opaque fill or scrolled
+       article text shows through as it passes underneath — var(--bg-card)
+       gives that without reintroducing a visibly different-coloured box. */
     position:sticky; top:0; z-index:5; display:flex; align-items:center;
-    padding:calc(0.6rem + env(safe-area-inset-top)) var(--pad) 0.55rem; background:var(--paper);
+    padding:calc(0.6rem + env(safe-area-inset-top)) var(--pad) 0.55rem;
+    background:var(--bg-card, #fff);
     border-bottom:1px solid var(--rule);
   }
   .topbar button{ background:none; border:none; cursor:pointer; padding:0; min-height:44px;
