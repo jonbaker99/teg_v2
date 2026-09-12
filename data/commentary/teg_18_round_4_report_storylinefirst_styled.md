@@ -1,4 +1,4 @@
-# Held On, Hauled In {.round-report-title}
+# The Stadium Has the Last Word {.round-report-title}
 
 <p class="dateline">TEG 18 | Round 4 | 14/10/2025 | PGA Catalunya - Stadium</p>
 
@@ -12,41 +12,45 @@
   <p><strong>Wooden Spoon:</strong><span> Jon BAKER</span></p>
 </section>
 
-## Alex Baker wins the TEG 18 Trophy by eight from John Patterson while signing for 36 over par, a ten and an eight, and finishing last of five in the Green Jacket
+## Alex Baker wins the TEG 18 Trophy on 169 by eight from John Patterson despite a 10 and an 8 in the final round, while finishing bottom of the Green Jacket table
 <!-- storyline: race -->
 
-Alex Baker carried the TEG 18 Trophy lead into the fourth round at PGA Catalunya's Stadium Course. He emerged with it still in his possession, though visibly lighter. His advantage over John Patterson fell from 12 points to eight.
+**Alex Baker takes the TEG 18 Trophy while sliding to the foot of the Jacket table**
 
-The damage was all in the gross column, and it was considerable. Alex Baker signed for 36 over par, the worst gross round in a field of five. It did not collapse all at once. It came apart in instalments, like a building being demolished one floor at a time. He dropped seven shots in three holes from the 9th: a triple bogey on the hardest hole on the course, then doubles at the 10th and the 11th. At the 14th he took a sextuple bogey 10. At the 17th, a quadruple bogey. Both went down as blanks on the card, which is the scorecard's way of declining to comment.
+Alex Baker began the final round at PGA Catalunya's Stadium Course with a 12-point cushion in the TEG 18 Trophy. He finished with eight. That was still more than enough, which is the kindest sentence available about what happened in between.
 
-Patterson's day had the opposite shape. He took nine points from three consecutive holes beginning at the 4th. It was not enough, and it was never going to be. Alex Baker, meanwhile, finished the TEG 18 Green Jacket last of the five, having sat second after the opening round. Gregg Williams won that by 14. Alex Baker won the thing that mattered to him.
+The margin shrank because the round was a mess. He dropped seven shots across holes 9 to 11: a triple bogey at the 9th, the hardest hole on the course, then double bogeys at the 10th and 11th. Then came the 14th. He took a sextuple bogey 10 there, a blank on the card, and followed it with a quadruple bogey 8 at the 17th, also blank. Two holes, no points, no apparent concern. A man with a lead can afford to be generous. He was extremely generous.
 
-## Jon Baker's 29-point closing round, five consecutive double bogeys from the 7th to the 11th, completes a Wooden Spoon taken by 23 shots
+John Patterson was the only man close enough to matter, and he made his move early: nine Stableford points across holes 4 to 6, three apiece at the 4th, 5th and 6th. It was a fine, purposeful piece of golf. It was not enough to catch Alex Baker.
+
+The gross reckoning was less forgiving. Second after round one, he finished fifth and last in the TEG 18 Green Jacket, won by Gregg Williams. He won the thing he was chasing and came last in the thing he was not. The Trophy does not ask for an explanation.
+
+## Jon Baker takes the TEG 18 Wooden Spoon by 23 shots after five consecutive double bogeys from the 7th to the 11th
 <!-- storyline: d0 -->
 
-Jon Baker closed TEG 2025 with 29 points at PGA Catalunya's Stadium Course on the Tuesday, the lowest Trophy return in a field of five.
+**Jon Baker's Spoon sealed in the middle of the round**
 
-The damage was concentrated rather than brief. From the 2nd to the 12th he did not make a par. The middle of that stretch settled into a rhythm of remarkable consistency: five consecutive double bogeys. A 7 at the 7th, one of the easiest holes on the course. A 5 at the 8th. A 6 at the 9th, the hardest hole. A 6 at the 10th. A 5 at the 11th. Ten shots gone across five holes, a single point apiece. There is a kind of discipline in that.
+Jon Baker arrived at the Stadium Course already holding the TEG 18 Wooden Spoon. The final round did nothing to loosen his grip. His lead over the next man went from 14 shots to 23.
 
-It stopped at the 13th, where he made a birdie. It was his first hole better than bogey in twelve. The gross of 97 was, in fact, his best Stadium round of this TEG and three shots better than his last visit here. That says rather more about the tournament than the round. The Wooden Spoon was never in doubt. He finished 23 shots clear of fourth, having been a mere 14 clear when the round began. He extended his lead. He was the only man in the field who improved his position.
+The damage came in one unbroken stretch. From the 7th through the 11th he made five double bogeys in a row: a seven at the par-5 7th, fives at the 8th and 11th, sixes at the 9th and 10th. Ten shots dropped across five holes. One Stableford point apiece, collected with the grim regularity of a man signing for parcels he never ordered. The 9th, at stroke index 1, is the hardest hole on the course. The 7th and 11th are among the easiest. He treated them all exactly the same.
 
-## The Stadium's closing stretch, the 14th to the 17th, as the round's real protagonist: David Mullin nine shots gone in four holes, John Patterson a triple then a double then a rescuing birdie
+It was part of something longer. From the 2nd to the 12th, every single hole was a bogey or worse. Eleven holes without relief. The bleeding stopped at the 13th, where he made a birdie three, his first hole under par in eleven. It arrived far too late to mean anything and he took it anyway.
+
+## The Stadium's closing stretch, holes 14 to 17, which took shots off almost everyone in the field on the final afternoon
 <!-- storyline: d1 -->
 
-The round was not decided on the front nine. It was decided across four holes from the 14th to the 17th, which took something out of almost everyone who walked through them.
+The closing stretch at the Stadium Course did most of the damage on Tuesday afternoon. David Mullin played holes 14 to 17 in nine over par. A double bogey at the 14th, a triple bogey 8 at the 15th, then further doubles at the 16th and 17th. Four holes, not one net par among them, three Stableford points salvaged from the wreckage. The 15th, which cost him three shots, is the easiest hole on the course by stroke index. It is not clear he was told.
 
-David Mullin lost nine shots across the stretch. He did not make a net par in any of them. He opened with a double bogey at the 14th, one of the hardest holes on the course, which at least had the decency to be difficult. Then he took 8 at the par-5 15th. That is stroke index 18, the easiest hole there is. He added doubles at the 16th and the 17th to round things off. The sequence cost him five Stableford points against his handicap allowance.
+John Patterson's version started worse. He took 7 at the 14th and another 7 at the 15th, three over and two over respectively. A bogey at the 16th steadied things, in the sense that a bogey can be described as steadying. Then he birdied the 17th and ended a run of holes at bogey or worse. That single birdie was worth five Stableford points. Mullin took three from the entire four-hole sequence.
 
-John Patterson went through the same wringer and found the door out of it. He ran up a triple bogey 7 at the 14th and a double at the 15th. He salvaged a bogey at the short 16th. Then he holed out for a birdie 3 at the 17th. Five points, and the end of a long run of bogey-or-worse.
-
-## Gregg Williams's 44-point, 84-gross closing round at the Stadium: the best round of the day by two points and the card that sealed the TEG 18 Green Jacket by 14
+## Gregg Williams's closing 44 points and 84 gross at the Stadium, the best round of the day by six points and by six shots gross, sealing the TEG 18 Green Jacket
 <!-- storyline: round -->
 
-Gregg Williams closed the four days with 44 points and an 84 gross at PGA Catalunya's Stadium Course. It was the best round of the day by two points and it settled the TEG 18 Green Jacket by 14 shots. The 84 was a course best. In eight visits to the Stadium his previous low was 85. He went one better than his last time round it, having taken eight attempts to find the extra shot.
+Gregg Williams finished the tournament at the Stadium Course with 44 Stableford points and an 84 gross. It was the best round of the day on both counts. Six points clear of the field of five, six shots better than anyone else's gross. The 84 was also his best score in eight visits to the Stadium, one better than the 85 he had carried as his course mark. Eight attempts to move a number by one. He got there in the end.
 
-The scoring came in clusters. He birdied the 5th and parred the 6th, two holes without dropping a gross stroke. Then he took nine points from the 8th to the 10th: a par, a bogey at the 9th, the hardest hole on the course, and another par.
+The scoring came in clusters. He birdied the 5th and parred the 6th. Then he took nine points from holes 8 to 10: a par at the short 8th, a bogey at the 9th, the hardest hole on the course, which still returned three points, and a par at the 10th.
 
-There was a knock-on effect in the TEG 18 Trophy, where Alex Baker's lead came down from 12 to eight. Williams had been 15 adrift at one point and finished within single figures of the front. Alex Baker held the lead throughout. He did not so much repel the challenge as fail to notice it while the ground opened beneath him.
+It settled the TEG 18 Green Jacket, which he had led going into the round and now leads by 14. It also dragged him back into the TEG 18 Trophy picture. Having trailed by as many as 15 points at one stage, he finished nine behind Alex Baker. Alex Baker keeps the Trophy lead, and the last word belonged to the golf course.
 
 ## Round standings
 

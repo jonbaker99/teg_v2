@@ -1,107 +1,108 @@
 {
-  "title": "Held On, Hauled In",
+  "title": "The Stadium Has the Last Word",
   "title_candidates": [
-    "Held On, Hauled In",
-    "The Stadium Takes Its Cut",
-    "Two Winners, One Closing Stretch"
+    "The Stadium Has the Last Word",
+    "Four Rounds, Three Verdicts, One Course",
+    "Final Day in Girona",
+    "Everything Settled by Seventeen"
   ],
-  "theme": "Alex Baker limped home to the TEG 18 Trophy with the worst gross card in the field while Gregg Williams played the round of the week to seal the Green Jacket, the Stadium's closing four holes doing damage to almost everyone.",
+  "theme": "The best golf of the week arrives on the last day and wins only the Jacket, while the Trophy is carried off by a man going backwards down the closing stretch.",
   "tone": "house",
-  "opening_hook": "Three of the five men in the field walked off the Stadium's 14th having taken at least six shots; one of them won the Trophy anyway.",
+  "opening_hook": "Gregg Williams played the round of the week on the one afternoon it could not change the Trophy, and the Stadium's closing four holes took their money from everybody else.",
   "narrative_vehicles": [
     "dual_narrative",
     "ensemble",
-    "catalogue"
+    "inevitability"
   ],
   "prominent_vehicle": "dual_narrative",
-  "prominent_palette": "venue_character",
+  "prominent_palette": "course_history",
   "is_final_round": true,
   "round_story": {
-    "subject": "Gregg Williams's 44-point, 84-gross closing round at the Stadium — the best round of the day by two points and the card that sealed the TEG 18 Green Jacket by 14",
-    "why_it_matters": "It was the best Stableford round of the day (44, against John Patterson's 42, Alex Baker's and David Mullin's 38 and Jon Baker's 29), the lowest gross of the day at 12 over par, a new personal best for Williams at PGA Catalunya - Stadium on his seventh visit there — 84, one better than the 85 he had posted on the same course earlier this TEG — and his third-best gross round in 67 TEG rounds. It also turned an eight-shot Green Jacket lead into a 14-shot win.",
-    "shape": "Setup: Williams arrived at the Stadium eight clear of David Mullin in the Green Jacket and nine points adrift of Alex Baker in the Trophy, having trailed the Trophy by 15 at one point. Turn: a birdie at the par-three 5th began a spell of clean golf, and nine Stableford points across the 8th, 9th and 10th — par, bogey at stroke index one, par — took him through the turn without giving anything back. Resolution: 84 gross, a course personal best, the Jacket won by 14 over David Mullin, and the Trophy closed to nine with nowhere left to close it.",
+    "subject": "Gregg Williams's closing 44 points and 84 gross at the Stadium — the best round of the day by six points and by six shots gross — sealing the TEG 18 Green Jacket",
+    "why_it_matters": "It was the best round of the final day on both measures, it set a new personal best for Williams at PGA Catalunya - Stadium, and it turned a Green Jacket lead of eight into a 14-shot procession.",
+    "shape": "Williams began the day eight clear of David Mullin in the Jacket and nine adrift of nobody in particular in the Trophy, having trailed the Trophy lead by as much as 15 during the week. A birdie at the short 5th and a par-bogey-par run through the 8th, 9th and 10th — nine points in three holes, on the course's stroke index 1 among them — built a round nobody else came close to. He signed for 44 points and 84 gross: 12 over par, six better than anyone else in the field, and one stroke better than his own previous best at this course, set earlier in the same TEG.",
     "beat_ids": [
-      "r4_b06",
       "r4_b03",
+      "r4_b06",
       "r4_b05",
       "r4_b02"
     ],
     "headline_candidates": [
-      "Williams Signs Off With a Stadium Best",
-      "Forty-Four Points and a Green Jacket",
-      "Williams Saves His Best For Last"
+      "Forty-Four Points and a Course Best",
+      "Gregg Williams Saves His Best",
+      "A Stadium Best on Tuesday"
     ],
-    "chosen_headline": "Williams Signs Off With a Stadium Best",
-    "standfirst": "His 84 bettered by one the mark he had set on the same course earlier in the week, and stands as the third-best gross round of his 67 in TEG competition.",
-    "compelling_score": 7,
+    "chosen_headline": "Forty-Four Points and a Course Best",
+    "standfirst": "Williams's 84 gross is his lowest score in seven visits to the Stadium, and his third-best gross round in 67 TEG rounds.",
+    "compelling_score": 8,
     "humour_score": 4,
-    "descriptor": "GREGG WILLIAMS"
+    "descriptor": "GREEN JACKET | GREGG WILLIAMS"
   },
   "race_story": {
-    "subject": "Alex Baker wins the TEG 18 Trophy by eight from John Patterson while signing for 36 over par, a ten and an eight, and finishing last of five in the Green Jacket",
-    "why_it_matters": "This is the tournament's resolution: Alex Baker takes the TEG 18 Trophy on 169 from John Patterson's 161, Gregg Williams takes the TEG 18 Green Jacket on 66 from David Mullin's 80, and Jon Baker takes the TEG 18 Wooden Spoon on 126, 23 behind David Mullin. The comedy is in how the Trophy was collected: the champion's 38 points were joint third of five on the day, his 36 over par was the worst gross card in the field by 11 shots, and his 12-point overnight cushion was cut to eight without ever being genuinely threatened.",
-    "shape": "Setup: Alex Baker began the Stadium 12 points clear, with John Patterson the only man with the arithmetic to reach him. Turn: Patterson took nine points from the 4th, 5th and 6th and Alex Baker bled seven shots across the 9th, 10th and 11th, then took ten at the par-four 14th and eight at the 17th, and still the lead never fell below eight. Resolution: 169 to 161 for the Trophy, with the champion 124 over par for the week in the Green Jacket — last of the five — and both Jacket and Spoon settled by margins nobody was going to argue with.",
+    "subject": "Alex Baker wins the TEG 18 Trophy on 169 by eight from John Patterson despite a 10 and an 8 in the final round, while finishing bottom of the Green Jacket table",
+    "why_it_matters": "This is the coronation: the Trophy is decided, and it is decided by a man whose final round included the worst hole of the week and the worst gross score in the field.",
+    "shape": "Alex Baker began the last day 12 clear of John Patterson and never looked like losing it, having led since the first afternoon. Then came the 14th — a sextuple-bogey 10, no points — followed by a quadruple-bogey 8 at the 17th, part of a closing stretch that also cost him seven gross shots across the 9th, 10th and 11th; Patterson's 42 points, built on nine points through the 4th, 5th and 6th, clawed back four of the twelve and no more. Alex Baker signed for 38 points, 169 in total and the Trophy by eight, and simultaneously slid from second after round one to fifth and last in the Jacket on 124.",
     "beat_ids": [
       "r4_b02",
       "r4_b07",
       "r4_b08",
       "r4_b15",
-      "r4_b04",
-      "r4_b09"
+      "r4_b09",
+      "r4_b04"
     ],
     "headline_candidates": [
-      "Alex Baker Wins While Going Backwards",
-      "A Ten, an Eight and the Trophy",
-      "Eight Points Clear and Falling Apart"
+      "Alex Baker Survives a Ten",
+      "A Ten an Eight and the Trophy",
+      "Alex Baker Wins Going Backwards"
     ],
-    "chosen_headline": "Alex Baker Wins While Going Backwards",
-    "standfirst": "John Patterson posted the better card on two of the four days and still finished eight behind, which is the whole tournament in one sentence.",
+    "chosen_headline": "Alex Baker Survives a Ten",
+    "standfirst": "John Patterson outplayed him over two of the four rounds and still finished eight adrift.",
     "compelling_score": 8,
-    "humour_score": 8,
+    "humour_score": 7,
     "descriptor": "TROPHY"
   },
   "discovered_storylines": [
     {
-      "subject": "Jon Baker's 29-point closing round — five consecutive double bogeys from the 7th to the 11th — completes a Wooden Spoon taken by 23 shots",
-      "why_it_matters": "He was last in the field in three of the four rounds, never posted the best round of the day, and finished 23 points behind David Mullin, the next worst. The 29 was the lowest round of the day by nine points, and the middle of it is almost geometric: double bogey, double bogey, double bogey, double bogey, double bogey.",
-      "shape": "Setup: already 14 adrift of the Spoon before a ball was struck, Jon Baker needed only to avoid the spectacular. Turn: from the 7th to the 11th he made five straight double bogeys, ten shots gone in five holes, one Stableford point apiece, before a birdie at the 13th finally broke an eleven-hole run without a hole in par or better. Resolution: 29 points, 97 gross, last again, and the TEG 18 Wooden Spoon by 23.",
+      "subject": "Jon Baker takes the TEG 18 Wooden Spoon by 23 shots after five consecutive double bogeys from the 7th to the 11th",
+      "why_it_matters": "The Spoon was settled long before Tuesday, but the manner of it — five doubles in a row, last in the field for the third time in four rounds — is the week in miniature.",
+      "shape": "Jon Baker arrived at the Stadium already 14 adrift at the bottom of the Trophy table and needing only to survive. Instead he posted a double bogey at the 7th, then at the 8th, then the 9th, then the 10th, then the 11th — five in a row, ten gross shots gone, a single point apiece — before finally breaking a twelve-hole run without a par with a birdie at the 13th. A round of 29 points left him on 126, 23 behind David Mullin and in sole possession of the Spoon.",
       "beat_ids": [
         "r4_b12",
         "r4_b13",
         "r4_b14"
       ],
       "headline_candidates": [
-        "Jon Baker Takes the Spoon by Twenty-Three",
-        "Five Doubles in a Row",
-        "Jon Baker's Metronomic March to the Spoon"
+        "Five Straight Doubles Settle the Spoon",
+        "Ten Shots Gone in Five Holes",
+        "A Birdie Arrives Far Too Late"
       ],
-      "chosen_headline": "Jon Baker Takes the Spoon by Twenty-Three",
-      "standfirst": "His five consecutive double bogeys from the 7th were the most consistent golf anybody played all afternoon.",
+      "chosen_headline": "Five Straight Doubles Settle the Spoon",
+      "standfirst": "The birdie at the 13th ended a run of twelve holes without a par, by which point the arithmetic had long since stopped mattering.",
       "compelling_score": 7,
       "humour_score": 7,
-      "descriptor": "WOODEN SPOON"
+      "descriptor": "WOODEN SPOON | JON BAKER"
     },
     {
-      "subject": "The Stadium's closing stretch, the 14th to the 17th, as the round's real protagonist — David Mullin nine shots gone in four holes, John Patterson a triple then a double then a rescuing birdie",
-      "why_it_matters": "Three of the five men took six or worse at the 14th alone, and the four holes from the 14th to the 17th accounted for the day's two ugliest sequences plus the champion's ten and eight. On the seventh TEG round at this venue, the course closed out the tournament more decisively than any player did.",
-      "shape": "Setup: with the Jacket and Trophy effectively settled, the field turned for home on a course designed as a European Tour championship test. Turn: David Mullin went double, triple, double, double from the 14th, nine shots dropped and not a net par among them; John Patterson took seven at the 14th and seven at the par-five 15th before a birdie at the 17th stopped the bleeding. Resolution: nobody's position changed, and everyone had something to say about the 14th.",
+      "subject": "The Stadium's closing stretch, holes 14 to 17, which took shots off almost everyone in the field on the final afternoon",
+      "why_it_matters": "The same four holes that ended Alex Baker's scorecard hospitality also gutted David Mullin's round and nearly ruined John Patterson's, which is a course doing the work rather than any one player failing.",
+      "shape": "David Mullin reached the 14th with a respectable round in hand and left the 17th nine gross shots worse off — double, triple, double, double, four holes without a net par. John Patterson took a triple at the 14th and a double at the 15th before a bogey at the 16th steadied him and a birdie at the 17th stopped the bleeding altogether. Only Gregg Williams and the scorer's pencil emerged from the stretch intact.",
       "beat_ids": [
         "r4_b10",
         "r4_b11",
         "r4_b01"
       ],
       "headline_candidates": [
-        "The Fourteenth Collects Its Debts",
-        "Nine Shots in Four Holes",
-        "The Stadium Has the Final Word"
+        "Nobody Escapes Fourteen Through Seventeen",
+        "The Stadium Collects Its Debts Late",
+        "Nine Shots Gone in Four Holes"
       ],
-      "chosen_headline": "The Fourteenth Collects Its Debts",
-      "standfirst": "David Mullin's four-hole run home cost him nine shots and changed nothing at all, which is the purest form of golf there is.",
-      "compelling_score": 6,
-      "humour_score": 7,
+      "chosen_headline": "Nobody Escapes Fourteen Through Seventeen",
+      "standfirst": "Spain's premier championship course saved its teeth for the last hour of TEG 18.",
+      "compelling_score": 7,
+      "humour_score": 6,
       "descriptor": "STADIUM COURSE"
     }
   ],
-  "race_state_note": "Gregg Williams finished on 160, nine points off the Trophy, having trailed it by 15 at one stage; John Patterson posted the better round than Alex Baker on two of the four days and still lost by eight. TEG 18 is not a double — Trophy and Jacket went to different men; there have been seven doubles before now (TEGs 2, 4, 11, 13, 14, 15 and 17). Do not cite career win tallies for any player: the supplied counts do not make clear whether TEG 18 is included.",
+  "race_state_note": "Gregg Williams's 44 lifted him to third in the Trophy on 160, one behind John Patterson and nine behind Alex Baker, having trailed the lead by as much as 15 during the week; the Trophy lead narrowed from 12 to 8 but was never genuinely in danger, and the Jacket and Spoon both widened.",
   "storyline_note": ""
 }
