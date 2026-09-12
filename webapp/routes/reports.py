@@ -76,9 +76,9 @@ router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
 # Caption shown for pre-TEG-8 tournament reports (matches streamlit/teg_reports.py)
-_PRE_TEG8_CAPTION = (
-    "NB: The TEG Trophy winners before TEG 8 were decided by best net; "
-    "the report here is written based on Stableford so finishing positions may be inaccurate"
+_PRE_TEG8_CAPTION = ( ""
+    # "NB: The TEG Trophy winners before TEG 8 were decided by best net; "
+    # "the report here is written based on Stableford so finishing positions may be inaccurate"
 )
 
 _DATA_DIR = "data/commentary"
