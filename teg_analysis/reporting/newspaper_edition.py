@@ -1019,9 +1019,13 @@ def _round_scores_html(edition: dict[str, Any]) -> str:
     blocks = edition.get("round_scores")
     if not blocks:
         return ""
+
+    def _entry(e):
+        return f"{e['pl']} {e['value']}"
+
     rows = "".join(
         f'<p class="sb-lab">{_esc(b["header"])}</p>'
-        f'<p class="sb-row">{_esc(" | ".join(f"{e["pl"]} {e["value"]}" for e in b["entries"]))}</p>'
+        f'<p class="sb-row">{_esc(" | ".join(_entry(e) for e in b["entries"]))}</p>'
         for b in blocks
     )
     return f'<div class="rail-standings">{rows}</div>'
