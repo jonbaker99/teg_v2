@@ -1,17 +1,58 @@
 # CLAUDE.md
 
-Guidance for Claude Code when working in this repository.
+Guidance for Claude Code and Codex CLI when working in this repository.
 
 > **Freshness:** last reviewed **2026-08-19**. See [Keeping this file current](#keeping-this-file-current) at the bottom — it is an instruction, not a note.
 
 ## Working rules
 
-1. **Ask, don't assume.** If intent, architecture or requirements are unclear, ask before writing code. Running unattended: pick the most reasonable interpretation, proceed, and record the assumption where the work is reported.
+1. **Ask when the answer changes the work.** Inspect available context first. Ask about choices that materially affect scope, behaviour, architecture or irreversible actions. Resolve routine implementation details independently. Record consequential assumptions briefly.
 2. **Flag uncertainty explicitly.** If unsure, say so. Where useful, run a small, localised, low-risk experiment and bring the hypothesis and result back for discussion. Confidence without certainty does more damage than admitting a gap.
 3. **Simplest thing that works.** Ask "what's the smallest change that solves this?" first. Reuse existing patterns and components. Add complexity only when it's needed now, not when it might be. Prefer focused changes over rewrites — unless a rewrite meaningfully simplifies the codebase, in which case propose it.
 4. **Don't touch unrelated code** — but do surface bad code and design smells you find, as a separate item.
 5. **Suggest better approaches.** Strategic alternatives welcome, not just tactical fixes.
 6. **Documentation is part of the change**, not an afterthought. See [Documentation](#documentation).
+
+## Model and delegation
+
+Use a multi-model workflow by default. Skip it only when it is
+clearly unnecessary for the task or the user requests another approach.
+
+- **Plan:** A strong reasoning model inspects the project and defines
+  the approach, acceptance criteria and relevant checks.
+- **Implement:** Delegate scoped work to cheaper subagents. Use a
+  balanced coding model for ordinary implementation and a fast,
+  economical model for mechanical edits. Keep difficult or ambiguous
+  work with a stronger model.
+- **Review:** Use a strong model in a fresh review context to check
+  the combined diff. The lead resolves findings and verifies completion.
+
+Give workers clear scope, relevant context and file ownership.
+Parallelise independent work; sequence dependent work.
+Subagents must not overwrite the lead's session or recovery notes.
+
+Choose models by capability and cost from currently available options.
+Avoid version-specific model names in repository instructions or agent
+configuration. Use supported tier aliases where available; otherwise
+select an explicit worker model from the current available model list.
+
+Do not require the user to request delegation or approve routine model
+selection. Briefly report models used when completing delegated work,
+not on every turn. If suitable models or delegation are unavailable,
+state the limitation and use the best available approach.
+
+### Claude Code-specific
+
+Use `/model opusplan` for the lead workflow and
+`.claude/agents/*.md` frontmatter for worker models.
+Prefer tier aliases such as `opus`, `sonnet` and `haiku`.
+
+### Codex-specific
+
+Keep a strong model selected for the lead task.
+Explicitly select cheaper models when spawning implementation subagents;
+workers otherwise inherit the lead's model.
+These instructions do not change the lead task's selected model.
 
 ## Response style
 
@@ -25,6 +66,7 @@ Guidance for Claude Code when working in this repository.
 - A closing summary is welcome when it adds a decision or next step. Not when it just repeats.
 - Cut: "Great question", stacked hedges, unsolicited offers of further help.
 Never cut a fact to hit a word count. Accuracy beats brevity.
+- For copyable Markdown, use one source line per paragraph or bullet. Do not hard-wrap prose; let the editor wrap it visually.
 
 When writing longer documents or reports, follow the focus-style skill.
 
@@ -37,7 +79,7 @@ TEG v2 is a golf tournament analysis project with two architectural layers: a le
 - A **TEG** is an annual golf tournament. Each consists of several rounds (usually 4), each 18 holes, split into front 9 (1–9) and back 9 (10–18).
 - Two competitions per TEG: **gross** and **net**. Up to TEG 7, net was total net vs par; from TEG 8 onwards it is total Stableford points (`STABLEFORD_ERA_TEG = 8`).
 
-## Where state lives — read these, don't duplicate them here
+## Where state lives
 
 | Question | File |
 |---|---|
@@ -54,14 +96,26 @@ TEG v2 is a golf tournament analysis project with two architectural layers: a le
 | Running reports on plan usage vs API billing; model comparisons | `teg_analysis/reporting/README.md` → *Who answers the prompts* |
 | Streamlit internals (frozen) | `streamlit/README.md` |
 
+Use this table as a lookup. Read only sources relevant to the current task; do not load every listed document at startup. Read more when dependencies or uncertainty justify it.
+
 **Do not read or reference `to_do_jon.md`** unless explicitly asked. It is personal draft notes, not project documentation.
 
 When a to-do surfaces mid-conversation, add it to the right area's `TODOS.md` before ending the session.
+
+## Active Context Tracking
+- At startup, read `.current_session.md` and the recovery context supplied by project hooks. For a continuation request, inspect relevant diffs and continue the recorded next action. A new request takes precedence.
+- Maintain concise task notes in `.current_session.md`: goal/scope and acceptance criteria, decisions and constraints, owned files, exact checks/results, unresolved issues, permissions already granted and immediate next action. Update at task start, after meaningful edits/tests or decisions, before lengthy work, and before ending. Record failures too; don't wait for a requested handoff.
+- Hooks automatically save user requests, recent tool outcomes and Git state in `.agent-handoff/state.json`. These facts supplement task notes; they cannot infer decisions or prove completion. Unknown exit codes are not passing checks.
+- One lead session per worktree. Subagents may edit explicitly assigned, non-overlapping files under that lead. Only the lead updates session and recovery notes, coordinates shared writes, and performs Git mutations. Preserve unrelated dirty and untracked work. Setup and limitations: `README.md` → *Shared CLI recovery*.
+- Separate unfinished features use separate branches and worktree folders, even when one feature is paused. Create the new branch in its own worktree; never switch the branch in another active feature's folder.
+- Concurrent app instances use different ports. Worktrees do not isolate external services or writable data stores; inspect configuration and coordinate shared writes before running both.
 
 ## Development commands
 
 ```bash
 python todos.py                      # outstanding to-dos (--all includes completed)
+python3 scripts/agent_handoff.py install  # install shared CLI recovery hooks once
+python3 scripts/agent_handoff.py show     # inspect recovery state without changing it
 uvicorn webapp.app:app --reload      # run the webapp (the deployed app)
 pip install -r requirements.txt      # install deps
 python -m pytest tests/ -v           # run the test suite
@@ -216,14 +270,6 @@ Root docs cover the whole project; L1 subfolder READMEs cover only that subfolde
 | Architecture decision | This file's Architecture |
 | Work completed / priorities changed | `STATUS.md` |
 
-## Model and delegation
-
-Model selection is handled by `/model opusplan` and by `.claude/agents/*.md` frontmatter — **not by instructions in this file.** Two rules only:
-
-- **Never pin a model version string** anywhere in this repo's docs or config. Use aliases (`opus`, `sonnet`, `haiku`, `default`), which track the current model for each tier.
-- **Prefer delegating to a subagent over switching models** — especially for broad searches where only the conclusion is needed, and for reviewing work you just did (fresh context, not a continuation).
-
-If a task turns out to be a poor fit for the current model, say so in one line rather than pressing on. Don't emit a model-check block on every turn.
 
 ## Keeping this file current
 

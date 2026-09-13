@@ -31,6 +31,24 @@ The experiment log is in [`EXPERIMENTS.md`](teg_analysis/reporting/EXPERIMENTS.m
 ### Data updates — [below](#data-updates)
 Tracked here (no sub-folder needed).
 
+### Shared Codex / Claude CLI work — [below](#shared-codex--claude-cli-work)
+Shared rules and automatic checkpoint/startup recovery are built; runtime trust verification and quota-triggered launching remain open.
+
+---
+
+## Shared Codex / Claude CLI work
+
+Readiness review, 2026-09-12. Scope: both command-line tools; switching must not require a requested final handoff.
+
+- [x] Add local worktree recovery: semantic `.current_session.md` notes plus automatic `.agent-handoff/state.json` facts. Both CLIs load source state at startup; first requests and initial dirty Git baselines survive agent switches. Independent tasks must use separate worktrees; the state lock is not a writer-ownership lock.
+- [x] Add automatic prompt/tool-event capture, Git snapshots and content/metadata fingerprints. Capture failures and untracked work without relying on a final response; semantic decisions still need notes during work. Built 2026-09-12 in `scripts/agent_handoff.py`.
+- [ ] Reconcile stale root `STATUS.md` and reporting onboarding snapshots; shorten `CLAUDE.md`, which exceeds its own approximate 200-line limit. Commit recovery scripts, shared rules and project hooks before creating new worktrees; they are currently uncommitted. Include Codex-facing symlink/skills/configuration when committing this setup.
+- [ ] Add a small CLI supervisor for quota-triggered failover. Use Claude's documented `StopFailure` rate-limit event and Codex structured failure events; verify both on installed versions. Release source writer ownership before starting the successor in the same task worktree. Bound retries and stop when both accounts are unavailable or user input is required.
+- [ ] Verify installed hook execution and trust setup once on both real CLIs. Codex project hook definitions need `/hooks` review/trust. Event fixtures and direct hook commands are tested; actual account quota exhaustion has not been exercised. Existing global notification hooks are preserved.
+- [x] Exercise simulated interruption recovery with a partial edit, failed test, untracked work, missing final reply, concurrent state capture, slow Git, long request history and shell shortcuts. Focused stdlib tests pass; live supervisor ownership/failover tests belong to the still-open supervisor item.
+- [ ] Align the existing local development venv with `.python-version` (3.12); it currently runs 3.14. Use the installed Python 3.12 for recovery checks meanwhile.
+- [ ] Harden report-specific continuity separately: exclusive responder claims, recovery after mailbox timeout/dead pipeline, and platform-neutral tool instructions in the Codex responder skill. Reuse the existing report mailbox rather than treating it as a general coding handoff.
+
 ---
 
 ## Data updates

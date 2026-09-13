@@ -31,6 +31,18 @@ Pull/Push selected now show “Checking selected files…” during the slow Git
 preview request and disable repeated clicks. Confirmation shows a busy label
 before copy progress starts, and the preview/progress scrolls into view.
 
+## 2026-09-12 — Shared CLI recovery
+
+Added model-free Claude/Codex lifecycle capture and read-only startup recovery
+in `scripts/agent_handoff.py`, plus continuation shortcuts in
+`scripts/agent_handoff.zsh`. Local notes record intent; automatic snapshots
+retain requests, tool outcomes, Git state and source session baselines even
+without a final handoff. Setup is in `README.md` → *Shared CLI recovery*.
+Project hooks and backed-up zsh shell integration are installed. All 20 focused
+recovery checks pass under Python 3.12. Codex `/hooks` trust and real CLI runtime
+verification remain pending. Automatic CLI launching on quota exhaustion
+remains separate work.
+
 ## Where things stand
 
 **`teg_analysis/`** — Phases 1–7 cleanup complete (all Streamlit imports removed; aggregation/streaks/scoring refactored; dead code removed). Merged to `main`. Canonical analysis layer, fully UI-agnostic.

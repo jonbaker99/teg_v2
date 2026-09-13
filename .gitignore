@@ -15,6 +15,10 @@ __pycache__/
 # Isolated git worktrees created for background agent tasks
 .claude/worktrees/
 
+# Local cross-agent recovery state. Each worktree keeps its own copy.
+.current_session.md
+.agent-handoff/
+
 
 # === Exceptions (files we DO want to keep) ===
 !.streamlit/secrets.toml.template
