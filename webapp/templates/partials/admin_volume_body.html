@@ -14,6 +14,23 @@
         </p>
       {% endif %}
     </div>
+  {% elif result.action == 'delete_folder' %}
+    <div class="data-card" style="margin-bottom:1rem;">
+      <h2 class="card-header">✅ Cleared <code>{{ result.path }}</code>
+        ({{ result.deleted | length }} file{{ 's' if result.deleted | length != 1 else '' }})</h2>
+      {% if result.failed %}
+        <p style="font-size:.8rem;color:#b00020;margin-top:.4rem;">
+          {{ result.failed | length }} file{{ 's' if result.failed | length != 1 else '' }} could not be deleted:
+          {{ result.failed | map(attribute=0) | join(', ') }}
+        </p>
+      {% endif %}
+      {% if result.deleted %}
+        <p style="font-size:.8rem;opacity:.8;margin-top:.4rem;">
+          Each file was backed up first — restore from the
+          <a href="/admin/backups" class="text-link">Backups</a> page if needed.
+        </p>
+      {% endif %}
+    </div>
   {% endif %}
 {% endif %}
 
@@ -63,7 +80,16 @@
           <td>{{ "{:,}".format(e.size) if e.size is not none else "—" }}</td>
           <td>{{ e.mtime.strftime('%Y-%m-%d %H:%M UTC') if e.mtime else "—" }}</td>
           <td>
-            {% if not e.is_dir %}
+            {% if e.is_dir %}
+              <span class="volume-actions">
+                <button type="button" class="text-link volume-delete"
+                        hx-post="/admin/volume/delete-folder" hx-target="#volume-body" hx-swap="innerHTML"
+                        hx-vals='{"path": "{{ e.rel }}"}'
+                        hx-confirm="Delete every file under {{ e.name }}/ from the store? Each file is backed up first (restore from the Backups page). This does not touch GitHub.">
+                  Delete folder
+                </button>
+              </span>
+            {% else %}
               <span class="volume-actions">
                 {% if e.edit_slug %}
                   <a href="/admin/edit-data?file={{ e.edit_slug }}" class="text-link">Edit</a>

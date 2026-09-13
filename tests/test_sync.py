@@ -347,6 +347,38 @@ def test_delete_store_file_refuses_dir_and_backup_area(monkeypatch, tmp_path):
         sync.delete_store_file("data/backups/sync/x/data/a.csv")
 
 
+def test_delete_store_folder_removes_every_file_and_backs_up(monkeypatch, tmp_path):
+    base = tmp_path / "data/commentary/round_reports"
+    (base / "sub").mkdir(parents=True)
+    (base / "a.md").write_bytes(b"A")
+    (base / "sub" / "b.md").write_bytes(b"B")
+    monkeypatch.setattr(sync, "_store_path", lambda rel: tmp_path / rel if rel else tmp_path)
+
+    out = sync.delete_store_folder("data/commentary/round_reports")
+
+    assert set(out["deleted"]) == {
+        "data/commentary/round_reports/a.md",
+        "data/commentary/round_reports/sub/b.md",
+    }
+    assert out["failed"] == []
+    assert not base.exists()                                   # folder itself pruned
+    for rel in out["deleted"]:
+        backups = sync.backups_for(rel)
+        assert len(backups) == 1
+
+
+def test_delete_store_folder_refuses_backup_area_and_non_dir(monkeypatch, tmp_path):
+    (tmp_path / "data/a.csv").parent.mkdir(parents=True)
+    (tmp_path / "data/a.csv").write_bytes(b"x")
+    monkeypatch.setattr(sync, "_store_path", lambda rel: tmp_path / rel if rel else tmp_path)
+    with pytest.raises(ValueError):
+        sync.delete_store_folder("data/backups/sync/x")
+    with pytest.raises(NotADirectoryError):
+        sync.delete_store_folder("data/a.csv")
+    with pytest.raises(FileNotFoundError):
+        sync.delete_store_folder("data/nope")
+
+
 # ---------------------------------------------------------------------------
 # Backups: restore backs up the replaced file; backups_for filter
 # ---------------------------------------------------------------------------

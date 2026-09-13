@@ -250,16 +250,22 @@ real Live round use; not triggered yet.
 
 **Volume browser** — template `admin_volume.html`,
 `partials/admin_volume_body.html`, backed by `teg_analysis/io/sync.py`
-(`list_store_dir`, `read_store_file`, `delete_store_file`).
+(`list_store_dir`, `read_store_file`, `delete_store_file`, `delete_store_folder`).
 - **Routes:** `/admin/volume?path=<rel>` (browse), `/admin/volume/download?path=`
-  (stream a file), `/admin/volume/delete` (HTMX, file delete).
+  (stream a file), `/admin/volume/delete` (HTMX, file delete), `/admin/volume/
+  delete-folder` (HTMX, recursive folder delete).
 - **Flow:** browse the store's actual file tree (breadcrumb + drill-in). Each file
   row offers **Edit** (catalogued editable files → Edit data), **Sync** (jump to
   GitHub sync for that folder), **Download**, **Restore (N)** (if backups exist →
   Backups page filtered to that file) and **Delete**. Delete takes a timestamped
   backup first (`delete_store_file`, restorable from the Backups page) and
-  confirms. Paths are validated against traversal (`_safe_rel`). This is the main
-  way to *see what's on the Railway volume*.
+  confirms. A directory row instead offers **Delete folder** — recursively
+  deletes every file under it (each individually backed up, same restore path),
+  then prunes the emptied directories. One-off bulk lever for clearing a
+  superseded folder off the volume (e.g. an archived data source whose reading
+  code was removed) without hundreds of single-file clicks; neither delete
+  route touches GitHub. Paths are validated against traversal (`_safe_rel`).
+  This is the main way to *see what's on the Railway volume*.
 
 **Backups** — template `admin_backups.html`, `partials/admin_backups_body.html`.
 - **Routes:** `/admin/backups?file=<optional rel>` (browse, with a per-file

@@ -894,6 +894,28 @@ def admin_volume_delete(request: Request, path: str = Form("")):
     return templates.TemplateResponse("partials/admin_volume_body.html", ctx)
 
 
+@router.post("/admin/volume/delete-folder", response_class=HTMLResponse)
+def admin_volume_delete_folder(request: Request, path: str = Form("")):
+    if not is_authed(request):
+        return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
+
+    from teg_analysis.io import delete_store_folder
+
+    # Re-render the parent of the folder just cleared.
+    parent = path.rsplit("/", 1)[0] if "/" in path else ""
+
+    try:
+        outcome = delete_store_folder(path)
+        deps.clear_all_data_caches()
+        result = {"action": "delete_folder", "path": path, **outcome}
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Volume folder delete failed for {path!r}: {e}", exc_info=True)
+        result = {"action": "delete_folder", "path": path, "error": str(e)}
+
+    ctx = _volume_body_ctx(request, parent, result=result)
+    return templates.TemplateResponse("partials/admin_volume_body.html", ctx)
+
+
 # --- Backups browser ----------------------------------------------------------
 
 def _backups_body_ctx(request: Request, file_filter: str = "", result: dict = None) -> dict:

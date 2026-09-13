@@ -50,6 +50,7 @@ from .sync import (
     list_store_dir,
     read_store_file,
     delete_store_file,
+    delete_store_folder,
 )
 
 from .file_catalog import (
@@ -98,6 +99,7 @@ __all__ = [
     'list_store_dir',
     'read_store_file',
     'delete_store_file',
+    'delete_store_folder',
     # Data file catalog
     'DATA_FILE_CATALOG',
     'get_file_definition',

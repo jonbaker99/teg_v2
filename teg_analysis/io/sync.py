@@ -517,6 +517,51 @@ def delete_store_file(rel: str) -> dict:
     return {"deleted": rel, "backup_rel": backup_rel}
 
 
+def delete_store_folder(rel: str) -> dict:
+    """Recursively delete every file under a store folder, backing each one up
+    first via :func:`delete_store_file`. Removes emptied subdirectories too,
+    then the folder itself if it ends up empty. Does **not** touch GitHub.
+
+    One-off bulk lever for clearing an archived/superseded folder off the
+    Railway volume — `delete_store_file` is the UI's per-file primitive and
+    has no recursive counterpart, and deleting hundreds of files one click at
+    a time isn't practical. Refuses the backup area and a non-directory path.
+
+    Returns ``{deleted: [rel, ...], failed: [(rel, error), ...]}``.
+    """
+    rel = _safe_rel(rel)
+    if rel.startswith(SYNC_BACKUP_ROOT):
+        raise ValueError("Refusing to delete from the backup area")
+    base = _store_path(rel)
+    if not base.exists():
+        raise FileNotFoundError(rel)
+    if not base.is_dir():
+        raise NotADirectoryError(f"{rel} is not a directory")
+
+    deleted: list[str] = []
+    failed: list[tuple[str, str]] = []
+    # Bottom-up so a subdirectory is empty (and prunable) by the time we reach it.
+    for p in sorted(base.rglob("*"), key=lambda x: len(x.parts), reverse=True):
+        if p.is_dir():
+            try:
+                p.rmdir()
+            except OSError:
+                pass  # not yet empty (a failed file delete left something behind)
+            continue
+        file_rel = f"{rel}/{p.relative_to(base)}"
+        try:
+            outcome = delete_store_file(file_rel)
+            deleted.append(outcome["deleted"])
+        except Exception as e:  # noqa: BLE001 - one bad file must not stop the rest
+            failed.append((file_rel, str(e)))
+
+    try:
+        base.rmdir()
+    except OSError:
+        pass  # non-empty (some deletes failed) or already gone
+    return {"deleted": deleted, "failed": failed}
+
+
 # ---------------------------------------------------------------------------
 # Pull / push orchestrators
 # ---------------------------------------------------------------------------
