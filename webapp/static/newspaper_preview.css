@@ -52,8 +52,12 @@
 .np-page{
   /* Palette/type variables live on the wrapper (not :root) so this scope
    * never leaks into the rest of the page. T1 Broadsheet (elements.html
-   * .pal-a), the settled choice. */
-  --paper:#F6F3EA; --ink:#211D17; --ink-soft:#66604F; --ink-contrast:#63615C; --accent:#7A2420; --accent2:#7A2420;
+   * .pal-a), the settled choice. Accent re-hued to a muted forest green
+   * (2026-09-13, was #7A2420 brick) to tie the report into the site's
+   * forestgreen accent (clean.css) instead of an unrelated colour — kept
+   * muted rather than the site's literal forestgreen so it still sits
+   * quietly on this warm cream paper. */
+  --paper:#F6F3EA; --ink:#211D17; --ink-soft:#66604F; --ink-contrast:#63615C; --accent:#256B3D; --accent2:#256B3D;
   --rule:#C9C2AC; --tint:#EDE8D9;
   --font-display:'Fraunces',Georgia,'Times New Roman',serif;
   --font-body:'Source Serif 4',Georgia,'Times New Roman',serif;
@@ -71,7 +75,7 @@
    rejected options, not kept here as dead CSS.
    ========================================================================= */
 .pal-a{
-  --paper:#F6F3EA; --ink:#211D17; --ink-soft:#66604F; --ink-contrast:#63615C; --accent:#7A2420; --accent2:#7A2420;
+  --paper:#F6F3EA; --ink:#211D17; --ink-soft:#66604F; --ink-contrast:#63615C; --accent:#256B3D; --accent2:#256B3D;
   --rule:#C9C2AC; --tint:#EDE8D9;
   --font-display:'Fraunces',Georgia,'Times New Roman',serif;
   --font-body:'Source Serif 4',Georgia,'Times New Roman',serif;
@@ -120,7 +124,7 @@
   font-size:0.85rem; font-weight:500; text-decoration:none;
   color:var(--text-muted, #666); white-space:nowrap;
 }
-.np-back-link:hover{ color:var(--accent, #7A2420); }
+.np-back-link:hover{ color:var(--accent, #256B3D); }
 
 /* TEG select, sized/weighted to match the .pill buttons it sits next to
  * (2026-09-12, Jon: font/colour didn't match) — .theme-select's sitewide
@@ -191,11 +195,14 @@
    * 8 from John Patterson") de-emphasised so the name reads first — task 4. */
   .r-qual{ font-weight:400; font-size:0.76rem; color:var(--ink-soft); }
   /* The trophy row carries no shading in either rail variant (2026-09-08) —
-   * the accent value below is the only emphasis it gets. `.r5 .r-lead` used to
-   * set padding and a negative margin purely so its tint bled into the list
+   * bold weight is the only emphasis it gets. `.r5 .r-lead` used to set
+   * padding and a negative margin purely so its tint bled into the list
    * padding; with the tint gone those would only push the row out of line with
-   * its siblings, so the rule went with it. */
-  .r-lead .r-value{ color:var(--accent); font-weight:700; }
+   * its siblings, so the rule went with it. Left ink rather than accent
+   * (2026-09-13, when the accent moved to green) — the player's name isn't
+   * "the honour", the trophy label above it already says that, so colouring
+   * the name read as if green meant something about that specific player. */
+  .r-lead .r-value{ color:var(--ink); font-weight:700; }
   .rail-standings{ margin-top:1.1rem; padding-top:1rem; border-top:1px solid var(--rule); }
   .sb-lab{ font-family:var(--font-body); font-size:0.68rem; font-weight:700; letter-spacing:0.09em;
     text-transform:uppercase; color:var(--accent); }

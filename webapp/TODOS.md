@@ -158,6 +158,12 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 ## UI Changes
 
+- [ ] **Newspaper report — "standings movement" idea (2026-09-13).** While
+  reviewing forest-green accent options for `/teg-reports` (`newspaper_preview.css`),
+  Jon liked the simple `rail-standings`/`.sb-lab` block ("Standings movement:
+  Baker ↑1 · Patterson ↓1") more than expected — flagged as worth expanding
+  into a fuller feature later (e.g. surfacing more movement context in the
+  rail or appendix). No spec yet; revisit when doing more report design work.
 - [ ] **Mobile table identity columns** — preserve table identity columns
   explicitly rather than always pinning column one. Navigation buttons, tablet
   breakpoint and shared mobile component insets shipped in the UI polish pass.
