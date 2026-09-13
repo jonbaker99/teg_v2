@@ -88,12 +88,17 @@
     font-family: 'Roboto Mono', monospace;
 }
 
-/* Active nav: bold + underline, no background */
+/* Active nav: bold + underline, no background. Underline/text in --accent
+   (2026-09-13, was flat #1a1a1a) so the top-nav "you are here" indicator
+   matches every other active-state convention on the site — in-page tabs
+   (.tab-underline--active), pills (.pill--active) and the mobile tab bar
+   (.mtab--active) all already use --accent for this same job. */
 .nav-link.active {
     background-color: transparent;
     font-weight: 700;
-    border-bottom: 2px solid #1a1a1a;
+    border-bottom: 2px solid var(--accent);
     border-radius: 0;
+    color: var(--accent);
 }
 
 /* ── Serif retention ──
