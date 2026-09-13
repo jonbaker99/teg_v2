@@ -2,7 +2,16 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-08 (newspaper layout preview page fixed and its artefacts re-synced; report build documented end to end in `DATA_FLOW.md` §10; earlier content current as at 2026-07-12)
+**Last updated:** 2026-09-13 (grouped player-detail redesign; earlier reporting context retained)
+
+## 2026-09-13 — Grouped player detail approved
+
+The approved prototype is implemented for `/player/{code}`. Glance statistics
+and Trophy Cabinet stay clearly grouped; Career Highlights remain four cards.
+A compact player picker, responsive neutral chart, recent/full results toggle
+and complete held-record details reduce overview clutter. The liked `/player`
+roster and all analytical calculations are unchanged. Further aesthetic work
+to make the page less generic remains open in `webapp/TODOS.md`.
 
 ## 2026-09-12 — Shared UI polish approved
 
@@ -38,7 +47,12 @@ exist:** the production **five-stage** chain below, and a newer **storyline-firs
 replaced the other; `/teg-reports` still serves the five-stage output. The end-to-end route for both
 — scores entered through to the rendered report — is `DATA_FLOW.md` → §10. Five-stage pipeline: scored evidence-carrying beats + competition arcs (code) → structured story plan (LLM) → dry draft as QA scaffold + entertaining write-up + repetition lint (LLM) → CSS-class styled markdown, with mechanical verification (`verify.py`, 8 checks) after every generation. **All 17 TEGs (2–18) published and regenerated on one vintage**; ~$0.65 each. Can run on the Anthropic API (default) or hand prompts off to claude.ai plan usage. ⚠️ **What the site serves lags what was generated** — 16 of 17 styled files still hold pre-2026-08-13 prose, because the regeneration ran `style=False`. Details: `teg_analysis/reporting/README.md`, `teg_analysis/reporting/STATUS.md`.
 
-**Player profiles** (`webapp/routes/player.py`, `webapp/templates/partials/player_overview.html`, `webapp/templates/player_index.html`) — `/player` and `/player/{code}` reworked: pill-driven roster landing with player cards; overview with 11 ranked metric cards, trophy cabinet with ordinal ranks, career highlights, records/worsts in natural language, career trend bar charts with rank annotations. Functionality complete; **UI design pass still outstanding** (`webapp/TODOS.md`).
+**Player profiles** — the roster keeps its player cards. Detail pages now use
+grouped career statistics and honours, four Career Highlights cards, responsive
+career charts and expandable full TEG history. Landmarks and complete held
+records/worsts remain available. Structural design approved; a less-generic
+aesthetic pass and the pre-existing career-average weighting mismatch remain
+open (`webapp/TODOS.md`). Page patterns: `webapp/README.md` → Player profiles.
 
 **Data storage + native round entry** — Railway-volume + GitHub foundation kept and hardened (backups on add, concurrency lock, dead CSV mirrors retired). Google Sheets score capture replaced with a native mobile-first flow:
 

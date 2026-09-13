@@ -1,0 +1,96 @@
+/* Player detail only: roster-like surfaces without changing the shared shell. */
+.page-panel .main-content:has(> .pp-profile) {
+    background: transparent;
+    box-shadow: none;
+}
+.pp-profile { font-family: 'Roboto Mono', monospace; color: var(--text-primary); }
+.pp-back, .pp-link { color: var(--text-secondary); font: inherit; font-size: 0.75rem; text-decoration: none; }
+.pp-link { background: transparent; border: 0; padding: 0; cursor: pointer; text-align: left; }
+.pp-back:hover, .pp-link:hover { text-decoration: underline; }
+.pp-identity { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin: 1.25rem 0 1.5rem; }
+.pp-name { font-family: 'Roboto Mono', monospace; font-size: 1.75rem; font-weight: 600; line-height: 1.3; margin-bottom: 0.35rem; }
+.pp-meta, .pp-context { font-size: 0.75rem; line-height: 1.6; color: var(--text-secondary); }
+.pp-player-switch { display: flex; align-items: center; gap: 0.75rem; font-size: 0.75rem; }
+.pp-player-switch select { font-family: inherit; min-height: 44px; max-width: 100%; }
+.pp-profile .pp-tabs {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0 1.5rem;
+    border: 0;
+    border-bottom: 1px solid var(--table-cell-border);
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+}
+.pp-tab { border: 0; border-bottom: 2px solid transparent; background: transparent; padding: 0.65rem 0; color: var(--text-secondary); font: inherit; font-size: 0.8rem; cursor: pointer; min-height: 44px; }
+.pp-tab--active { border-bottom-color: var(--text-primary); color: var(--text-primary); font-weight: 600; }
+.pp-loading { font-size: 0.75rem; color: var(--text-secondary); }
+.pp-overview { display: grid; gap: 1.5rem; }
+.pp-overview-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 1.25rem; }
+.pp-block, .pp-highlight { background: var(--bg-card); border: 1px solid var(--table-cell-border); border-radius: var(--card-radius); padding: 1.25rem; min-width: 0; }
+.pp-profile .pp-section-title { font: 600 0.9rem/1.4 'Roboto Mono', monospace; margin: 0 0 1.1rem; }
+.pp-label { font: 400 0.65rem/1.6 'Roboto Mono', monospace; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.04em; }
+.pp-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.pp-stats > div { min-width: 0; }
+.pp-stat-value { font-size: 1.65rem; line-height: 1.4; font-weight: 600; font-variant-numeric: tabular-nums; }
+.pp-landmarks { border-top: 1px solid var(--table-cell-border); margin-top: 1.2rem; padding-top: 0.6rem; }
+.pp-landmarks summary { cursor: pointer; font-size: 0.75rem; color: var(--text-secondary); }
+.pp-landmarks[open] summary { margin-bottom: 1rem; }
+.pp-landmarks .pp-stats { grid-template-columns: 1fr; gap: 1rem; }
+.pp-landmarks .pp-stat-value { font-size: 1.2rem; }
+.pp-honour-row { display: grid; grid-template-columns: 1fr 2rem minmax(4rem, 7rem); gap: 0.1rem 0.6rem; align-items: center; margin-bottom: 0.9rem; font-size: 0.75rem; }
+.pp-honour-row strong { font-size: 1.25rem; text-align: right; }
+.pp-honour-stars { display: flex; flex-wrap: wrap; gap: 0.1rem; }
+.pp-honour-stars .trophy-star { font-size: 1rem; }
+.pp-honour-rank { grid-column: 1/-1; }
+.pp-cabinet-note { border-top: 1px solid var(--table-cell-border); padding-top: 0.75rem; }
+.pp-highlight-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+.pp-highlight { display: flex; flex-direction: column; gap: 0.75rem; padding: 1rem; }
+.pp-highlight .pp-label { min-height: 2.2rem; }
+.pp-highlight-value { font-size: 1.75rem; line-height: 1.4; font-weight: 600; }
+.pp-highlight-value--course { font-size: 1rem; overflow-wrap: anywhere; }
+.pp-highlight .pp-context { margin-top: auto; }
+.pp-section-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem 1rem; margin-bottom: 1rem; }
+.pp-profile .pp-section-head .pp-section-title { margin: 0; }
+.pp-chart-controls { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.pp-chart-controls .pill { font-family: inherit; color: var(--text-secondary); border-color: var(--table-cell-border); }
+.pp-chart-controls .pill--active { color: var(--text-primary); border-color: var(--text-primary); background: transparent; }
+.pp-trend-chart { height: 280px; width: 100%; }
+.pp-record-teasers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; font-size: 0.75rem; margin-bottom: 0.5rem; }
+.pp-record-teasers dd { font-size: 1.15rem; font-weight: 600; }
+.pp-table-wrap { overflow-x: auto; }
+.pp-results .teg-table { margin: 0; }
+.pp-results.is-collapsible:not(.is-expanded) tbody tr:nth-child(n+4) { display: none; }
+.pp-profile .player-results-table :is(.result-win, .result-loss) span { background: transparent; color: inherit; padding: 0; }
+.pp-profile .player-results-table .col-result.result-win { color: var(--accent); font-weight: 600; }
+.pp-held-records { margin-bottom: 1.5rem; }
+.pp-held-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1rem; }
+.pp-held-item { border-bottom: 1px solid var(--table-cell-border); padding-bottom: 1rem; min-width: 0; }
+.pp-held-item strong { font-size: 1.4rem; font-weight: 600; }
+.pp-profile .section-title { font-family: 'Roboto Mono', monospace; }
+@media (max-width: 800px) {
+    .pp-overview-grid { grid-template-columns: 1fr; }
+    .pp-highlight-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+    .pp-profile { padding-inline: 0.75rem; }
+    .pp-back, .pp-link { display: inline-flex; align-items: center; min-height: 44px; }
+    .pp-name { font-size: 1.5rem; }
+    .pp-identity { margin-top: 0.75rem; }
+    .pp-player-switch { width: 100%; justify-content: space-between; }
+    .pp-player-switch select { min-width: 0; flex: 1; max-width: 16rem; }
+    .main-content .pp-profile .pp-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-inline: 0; max-width: 100%; }
+    .pp-loading { grid-column: 1/-1; }
+    .pp-loading:not(.htmx-request) { display: none; }
+    .pp-block { padding: 1rem; }
+    .pp-highlight-grid { gap: 0.75rem; }
+    .pp-highlight { padding: 0.85rem; }
+    .pp-highlight .pp-label { min-height: 3.2rem; }
+    .pp-trend-chart { height: 260px; }
+    .pp-chart-controls .pill { min-height: 44px; }
+    .pp-record-teasers { grid-template-columns: 1fr; gap: 0.75rem; }
+    .pp-held-grid { grid-template-columns: 1fr; }
+    .pp-landmarks summary { min-height: 44px; padding-block: 0.65rem; }
+}

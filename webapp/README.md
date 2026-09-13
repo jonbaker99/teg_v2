@@ -389,6 +389,27 @@ TemplateResponse → HTML
 
 All data comes from `teg_analysis/`. The webapp never calculates anything — it only formats and displays.
 
+## Player profiles
+
+The `/player` roster keeps its existing card layout. `/player/{code}` uses
+page-only `player-profile.css` and `player-profile.js`: bounded At a glance
+and Trophy Cabinet blocks sit side by side on desktop, then stack below
+800px. Career Highlights remain cards. The player picker replaces the long
+detail-page pill list; the four existing section endpoints remain unchanged.
+
+Current handicap uses `_current_playing_handicaps()`, shared with the roster:
+the next/in-progress TEG's playing handicap, not the latest historical score.
+Scoring landmarks retain counts, ranks and location details in a disclosure.
+The overview previews held records; Records & Streaks contains their complete
+details, all worsts, personal bests/worsts and existing streak tables.
+
+Career Trend precedes the results table. Its local presentation uses theme
+colours and fewer phone ticks; crossing the phone breakpoint restores desktop
+rank annotations. Calculations and average weighting are unchanged. Long
+result histories initially show three recent TEGs with an expansion control;
+without JavaScript, the complete table remains visible. Profile identity,
+headings and data use mono typography, a scoped exception to the shared titles.
+
 ## Theme system
 
 Three themes, registered in `theme.py`. Each overrides CSS custom properties defined in `base-vars.css`. Default: **Clean** (flat white, matching the Streamlit site — Phase 1a).
@@ -404,7 +425,8 @@ titles, tabs, pills, captions, page text) uses a sans face (`--font-sans`, IBM
 Plex Sans) via `--font-heading`/`--font-body`; data tables stay Roboto Mono. The
 site's **Lora serif (`--font-serif`) is retained for three identity elements
 only**: the site title (`.nav-brand`), the main nav (`.nav-link` + dropdown), and
-page H1 titles (`.page-title`, `.player-profile-name`). These are re-asserted in a
+page H1 titles (`.page-title`). Player detail uses its own mono identity, as
+described above. Shared serif elements are re-asserted in a
 "Serif retention" block at the foot of `clean.css` — global, no per-template markup.
 
 **Dark mode (orthogonal to theme).** A light/dark **mode** is independent of the

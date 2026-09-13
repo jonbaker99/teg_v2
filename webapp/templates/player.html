@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% block title_suffix %} — {{ player_name }}{% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="/static/player-profile.css?v=2">
+<script src="/static/player-profile.js?v=2" defer></script>
+{% endblock %}
+
 {% block page_title %}
 <div class="page-title-area">
     <span class="page-label">Player Profile</span>
@@ -8,36 +13,35 @@
 {% endblock %}
 
 {% block content %}
-<!-- Player selector pills -->
-{% with active_code = player_code %}
-{% include "partials/player_pills.html" %}
-{% endwith %}
-
-<!-- Player name as in-page heading (not in the top banner) -->
-<div class="player-profile-heading">
-    <h1 class="player-profile-name">{{ player_name }}{% if trophy and (trophy.trophies or trophy.jackets) %}<span class="title-stars">{% for i in range(trophy.trophies) %}<span class="trophy-star trophy-star--gold">&#9733;</span>{% endfor %}{% if trophy.trophies and trophy.jackets %}<span class="title-stars-gap"></span>{% endif %}{% for i in range(trophy.jackets) %}<span class="trophy-star trophy-star--green">&#9733;</span>{% endfor %}</span>{% endif %}</h1>
-    <p class="text-sm text-secondary">{{ subtitle }}</p>
+<div id="player-profile" class="pp-profile">
+<a class="pp-back" href="/player">← All players</a>
+<div class="pp-identity">
+    <div>
+        <h1 class="pp-name">{{ player_name }}</h1>
+        <p class="pp-meta">{{ subtitle }}</p>
+    </div>
+    <label class="pp-player-switch" for="pp-player">Player
+        <select id="pp-player" class="theme-select" data-player-switch>
+            {% for code, name in player_list %}<option value="/player/{{ code }}"{% if code == player_code %} selected{% endif %}>{{ name }}</option>{% endfor %}
+        </select>
+    </label>
 </div>
-
-<!-- Tab buttons at top, before any content -->
-<div class="section-nav flex flex-wrap gap-2 mb-0">
+<nav class="section-nav pp-tabs" aria-label="Profile sections">
     {% for tab_id, tab_label in tabs %}
-    <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
+    <button type="button" class="pp-tab{% if tab_id == active_tab %} pp-tab--active{% endif %}"
+            aria-pressed="{{ 'true' if tab_id == active_tab else 'false' }}"
+            aria-controls="tab-content" data-profile-tab="{{ tab_id }}"
             hx-get="/player/{{ player_code }}/tab/{{ tab_id }}"
             hx-target="#tab-content"
             hx-indicator="#player-loading">
         {{ tab_label }}
     </button>
     {% endfor %}
-    <span id="player-loading" class="htmx-indicator ml-2 self-center">
-        <svg class="animate-spin h-5 w-5 accent-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-        </svg>
-    </span>
-</div>
+    <span id="player-loading" class="htmx-indicator pp-loading" role="status">Loading…</span>
+</nav>
 
 <div id="tab-content" class="section-panel">
     {% include "partials/player_overview.html" %}
+</div>
 </div>
 {% endblock %}
