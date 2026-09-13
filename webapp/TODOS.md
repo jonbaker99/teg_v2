@@ -212,9 +212,19 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
   Career Highlights cards, trend before expandable results and complete held
   records on Records & Streaks. The liked roster is unchanged.
 - [ ] **Less generic player-detail aesthetic** — revisit the approved structure
-  after shipment. User wants less of a "generic AI webpage": refine card
+  after the wider UI work, not as the next task (decision 2026-09-13).
+  User wants less of a "generic AI webpage": refine card
   sameness, rhythm, hierarchy and scorecard character without losing grouping
   or Career Highlights cards. Show an interactive direction before more changes.
+  Quick thoughts to test, not settled requirements:
+  - Borrow the liked roster's character and the wider UI's eventual typography,
+    spacing and controls; avoid inventing another isolated visual system.
+  - Give statistics, honours and history distinct treatments within clear groups.
+    Reduce the repeated identical-card feel; keep Career Highlights as cards.
+  - Strengthen the player's career story through hierarchy: honours and standout
+    performances should feel different from supporting ranks and metadata.
+  - Tighten excess vertical spacing on phones and repeated small-label rhythms.
+    Try restrained scorecard rules/alignment before adding decoration.
 
 - [ ] **"Design vibe" (lo-fi/mono) attempt — rejected on review, more work needed before retrying.**
   The `/player` roster redesign (merged, PR #71) established a lo-fi/mono-first
