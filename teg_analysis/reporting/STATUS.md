@@ -1308,7 +1308,7 @@ Confirmed in the published reports:
 TEGs 3 and 4 read clean (TEG 3 was the Phase-G smoke test). The webapp already ships a caption
 admitting the problem (`_PRE_TEG8_CAPTION` in `webapp/routes/reports.py`: *"the report here is
 written based on Stableford so finishing positions may be inaccurate"*) — that caption was inherited
-from the legacy 2025 reports and is still accurate for TEGs 5–7 today.
+from the legacy 2025 reports and is still accurate for TEGs 5–7 today. - NB THIS IS NO LONGER CORRECT
 
 **Fix**: make `hole_evidence()` era-aware (omit or relabel `stableford` when
 `trophy_metric(teg) == "net_vs_par"`), then regenerate TEGs 1–7. Also audit `_fmt_evidence()`

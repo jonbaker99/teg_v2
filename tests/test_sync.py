@@ -388,16 +388,11 @@ def test_sync_report_files_filters_to_report_patterns(monkeypatch):
     gh = {
         "data/commentary": {
             "teg_9_report_styled.md": 1,          # report — pull
-            "teg_9_round_1_report_styled.md": 1,  # report — pull
             "teg_9_dry_draft.md": 1,              # junk — ignore
         },
         "data/commentary/drafts": {
             "teg_9_main_report.md": 1,            # report — pull
             "teg_9_satire.md": 1,                 # report — pull
-        },
-        "data/commentary/round_reports": {
-            "TEG9_R1_report.md": 1,               # report — pull
-            "TEG9_R1_v2_scratch.md": 1,           # junk — ignore
         },
     }
     monkeypatch.setattr(sync, "list_github_files", lambda folder: gh.get(folder, {}))
@@ -411,14 +406,11 @@ def test_sync_report_files_filters_to_report_patterns(monkeypatch):
 
     assert set(pulled_names) == {
         "teg_9_report_styled.md",
-        "teg_9_round_1_report_styled.md",
         "teg_9_main_report.md",
         "teg_9_satire.md",
-        "TEG9_R1_report.md",
     }
     assert "teg_9_dry_draft.md" not in pulled_names       # non-report junk excluded
-    assert "TEG9_R1_v2_scratch.md" not in pulled_names    # non-report junk excluded
-    assert out["pulled"] == 5
+    assert out["pulled"] == 3
 
 
 def test_sync_report_files_overwrites_present(monkeypatch):

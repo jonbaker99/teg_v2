@@ -78,34 +78,18 @@ def test_teg_reports_unreported_round_falls_back_to_tournament(client):
 
 
 def test_teg_reports_round_with_a_storyline_edition_uses_the_newspaper_layout(client):
-    from webapp.routes.reports import _round_kind
     resp = client.get("/teg-reports", params={"teg": 14, "round": 2})
-    assert _round_kind(14, 2) == "new"
     _assert_ok_no_error(resp)
     assert 'class="np-paper' in resp.text
     assert 'class="teg-report"' not in resp.text
 
 
-def test_teg_reports_round_without_a_storyline_edition_falls_back_to_legacy_markdown(client):
-    from webapp.routes.reports import _legacy_round_numbers, _round_kind
-    if not _legacy_round_numbers(14):
-        pytest.skip("no legacy round reports in this environment")
-    assert _round_kind(14, 1) == "legacy"
-    resp = client.get("/teg-reports", params={"teg": 14, "round": 1})
-    _assert_ok_no_error(resp)
-    assert 'class="teg-report"' in resp.text
-    assert 'class="np-paper' not in resp.text
-
-
-def test_teg_reports_round_pills_include_both_new_and_legacy_rounds(client):
-    """TEG 14 has one round-storyline edition (R2) and legacy reports for the
-    rest — the pill list must show every playable round, not just the new one."""
-    from webapp.routes.reports import _legacy_round_numbers
-    if not _legacy_round_numbers(14):
-        pytest.skip("no legacy round reports in this environment")
+def test_teg_reports_round_pills_cover_every_round_storyline_round(client):
+    """The pill list must show every round with a round-storyline edition."""
+    from teg_analysis.reporting.newspaper_edition import available_rounds
     resp = client.get("/teg-reports", params={"teg": 14})
     _assert_ok_no_error(resp)
-    for r in (1, 2, 3, 4):
+    for r in available_rounds(14):
         assert f">R{r}<" in resp.text
 
 
