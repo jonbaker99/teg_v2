@@ -630,6 +630,7 @@ The point is not paying for work you're not changing. Restyling for tone doesn't
 storylines.
 
 ```bash
+python scripts/storyline_full_report_experiment.py --tegs 18                    # all stages
 python scripts/storyline_full_report_experiment.py --tegs 18 --to storylines   # 1 call
 python scripts/storyline_full_report_experiment.py --tegs 18 --from voice      # 1 call
 python scripts/storyline_full_report_experiment.py --tegs 2-6 --to storylines  # 5 calls
@@ -879,6 +880,12 @@ The round-level equivalent of the tournament storyline-first pipeline (`story_pl
 
 **Shape**: `assemble_round_storyline_bundle(teg, round)` → `build_round_storyline_plan` (`ROUND_STORYLINE_SYSTEM_PROMPT` / `RoundStorylinePlan`, one LLM call) → `build_round_storyline_draft` (per-storyline, fact-isolated, `ROUND_DRAFT_WRITER_SYSTEM_PROMPT`) → `authoring.restyle_voice(round_num=...)` (voice pass) → `newspaper_edition.build_edition(teg, round_num=...)` (free, deterministic). Orchestrated by `scripts/storyline_round_report_experiment.py`, same `--from`/`--to` stage-slicing as the tournament script, plus `--rounds` (run as a TEG × round cross-product) and `--dry-run` (write the composed prompt, no LLM call).
 
+Run all rounds for one tournament; `--from` and `--to` work as in [Running only the stages you need](#running-only-the-stages-you-need----from-and---to):
+
+```bash
+python scripts/storyline_round_report_experiment.py --tegs 18 --rounds 1-4
+```
+
 **Two mandatory storylines**, not three: `round_story` (the best round of the day, grounded in the as-of-date all-time round ranks already computed by `commentary.create_round_summary` — never later rounds) and `race_story` (how the round moved the three competitions — a deterministic before/after diff of two `round_report._competition_state_at_round` snapshots, not left to the model — becoming the winners-declared coronation story on the final round). Plus 0–3 discovered storylines, same quality bar as the tournament pipeline. `DESCRIPTOR_RULE` reaches the round editor unconditionally; `DOUBLE_RULE` only on the final round, since only then does the bundle carry real `double` figures (`history_context.build_double_context`) — see `round_storyline.py`'s module docstring for the full reasoning, and `tests/test_reporting_prompts.py` for the assertions.
 
 **Leak safety is the central design constraint.** A mid-tournament round bundle must not know what happened in later rounds of the same TEG — the future clubhouse use case (STATUS.md item 4) generates a round report as soon as its scores are in, when later rounds don't exist. Several enrichment sources are whole-TEG-scoped and would otherwise leak (`course_history.detect_course_records`/`build_player_course_history`, `history_context.build_win_counts`, `win_anatomy.build_win_anatomy`, `tournament_shape`). The two `course_history` functions gained a `through_round=` parameter bounding "prior" to earlier TEGs *or* earlier rounds of this TEG; the win-anatomy/win-counts/double keys are added to the bundle only when `is_final_round`. `round_storyline._assert_no_future_rounds` walks the assembled bundle and raises if anything still leaked through — see `tests/test_round_storyline.py` for the tests against real TEG data.
@@ -1042,6 +1049,12 @@ compacts, it *contaminates*: a responder that has already read the bundle starts
 skimming the repeat, which is precisely what the API call it stands in for never
 does. A cold subagent reads every prompt in full, which is the behaviour being
 replicated.
+
+Inspect prompts waiting for an answer:
+
+```bash
+python -m teg_analysis.reporting.mailbox status
+```
 
 **Answering by hand.** `request.md` is self-contained — system prompt, user
 message, and for structured calls the full JSON Schema. The run prints the exact

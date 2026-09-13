@@ -102,12 +102,24 @@ Use this table as a lookup. Read only sources relevant to the current task; do n
 
 When a to-do surfaces mid-conversation, add it to the right area's `TODOS.md` before ending the session.
 
+## Isolate agent work in task worktrees
+
+- Every agent task that changes repository files must use a dedicated branch and Git worktree, including small code or documentation changes. Read-only work may inspect the existing checkout.
+- Reserve the primary checkout for the user's manual work. Never edit files or switch branches there unless the user explicitly requests that exception.
+- Before editing, establish the task's worktree, verify its absolute path and branch, and report both briefly. Run all edits, tests and Git commands from that worktree.
+- Continue an existing task in its existing worktree. Start unrelated work in a new worktree. Switching between Claude Code and Codex does not create a new task.
+- One lead agent owns each task worktree. Subagents receive its absolute path, branch and non-overlapping file assignments. They must verify their location before editing.
+- Only the lead updates shared task notes, coordinates shared writes and performs Git mutations. Preserve unrelated dirty and untracked files.
+- Never switch branches, reset, clean or remove another task's worktree. Do not merge into the primary checkout while the user is changing it; coordinate integration first.
+- If relevant starting changes are uncommitted, preserve them and clarify which belong in the task. A new worktree does not automatically include them.
+
+Worktree recovery setup and limitations: `README.md` → *Shared CLI recovery*.
+
 ## Active Context Tracking
+
 - At startup, read `.current_session.md` and the recovery context supplied by project hooks. For a continuation request, inspect relevant diffs and continue the recorded next action. A new request takes precedence.
 - Maintain concise task notes in `.current_session.md`: goal/scope and acceptance criteria, decisions and constraints, owned files, exact checks/results, unresolved issues, permissions already granted and immediate next action. Update at task start, after meaningful edits/tests or decisions, before lengthy work, and before ending. Record failures too; don't wait for a requested handoff.
 - Hooks automatically save user requests, recent tool outcomes and Git state in `.agent-handoff/state.json`. These facts supplement task notes; they cannot infer decisions or prove completion. Unknown exit codes are not passing checks.
-- One lead session per worktree. Subagents may edit explicitly assigned, non-overlapping files under that lead. Only the lead updates session and recovery notes, coordinates shared writes, and performs Git mutations. Preserve unrelated dirty and untracked work. Setup and limitations: `README.md` → *Shared CLI recovery*.
-- Separate unfinished features use separate branches and worktree folders, even when one feature is paused. Create the new branch in its own worktree; never switch the branch in another active feature's folder.
 - Concurrent app instances use different ports. Worktrees do not isolate external services or writable data stores; inspect configuration and coordinate shared writes before running both.
 
 ## Development commands
@@ -120,30 +132,11 @@ uvicorn webapp.app:app --reload      # run the webapp (the deployed app)
 pip install -r requirements.txt      # install deps
 python -m pytest tests/ -v           # run the test suite
 streamlit run streamlit/nav.py       # legacy Streamlit app — frozen, rarely needed
-
-# Reports. Default is the Anthropic API (bills per token).
-python -m teg_analysis.reporting.backfill --tegs 2-18
-python -m teg_analysis.reporting.backfill --tegs 14 --plan        # claude.ai plan usage
-python -m teg_analysis.reporting.backfill --tegs 14 --paste gpt5  # paste into another model
-python -m teg_analysis.reporting.mailbox status                   # prompts waiting
-python -m scripts.export_cowork_kit --tegs 4,14,17 --out DIR # report kit for rewriting outside the pipeline
-
-# Storyline-first reports. Stage flags (--from/--to), costs, recipes:
-#   teg_analysis/reporting/README.md -> "Running only the stages you need"
-python scripts/storyline_full_report_experiment.py --tegs 18
-
-# Storyline-first ROUND reports (round_storyline.py). Same stage flags, plus --rounds
-# (TEG x round cross-product) and --dry-run (write the prompt, no LLM call):
-#   teg_analysis/reporting/README.md -> "Round reports"
-python scripts/storyline_round_report_experiment.py --tegs 18 --rounds 1-4
-
-# Retrofit a new content rule onto reports already written, without a full rerun:
-#   teg_analysis/reporting/README.md -> "Retrofitting a new rule onto reports already written"
-python scripts/apply_report_rules.py --tegs 14,16,18 --restyle-only  # deterministic blocks only, no LLM
-python scripts/apply_report_rules.py --tegs 14,16,18                 # + one corrections call per TEG
 ```
 
-> `--plan` and `--paste` hand each prompt off through `data/llm_mailbox` instead of calling the API; the `teg-report-respond` skill answers `--plan` runs, you answer `--paste` runs by hand. Both can run at once. On the Claude-Code-on-the-web container, install pytest into the same interpreter as the deps: `pip install -r requirements.txt && pip install pytest` — bare `pytest` there is a `uv`-isolated binary that can't see pip-installed deps.
+Report generation commands, stage selection, billing and mailbox hand-off: [Reporting README](teg_analysis/reporting/README.md#running-only-the-stages-you-need----from-and---to).
+
+On the Claude-Code-on-the-web container, install pytest into the same interpreter as the deps: `pip install -r requirements.txt && pip install pytest` — bare `pytest` there is a `uv`-isolated binary that cannot see pip-installed deps.
 
 ## Architecture
 
@@ -194,23 +187,7 @@ FastAPI threadpools them. `async def` handlers doing blocking work stall every p
 
 ### Local Python can outrun Railway's
 
-Real incident, 2026-09-12: Railway was deploying on Python 3.11 while local dev ran 3.14, which
-silently accepts syntax 3.11 rejects (PEP 701's relaxed f-string grammar, nested same-quote strings
-inside an f-string, 3.12+ only). The code imported fine locally and passed local tests, then was a
-hard `SyntaxError` in production; since the broken module sat in `webapp.app`'s import graph, the
-whole app failed to start — Railway showed "Application failed to respond" with no traceback in the
-UI, only in the deploy log.
-
-**Fix in place**: the repo root pins `.python-version` (3.12 as of this writing), and Railway's
-mise-based build reads it — confirmed against the deploy log after the pin was added. This narrows
-the gap but doesn't close it: local dev environments can still run newer than the pin (3.13/3.14),
-so newer-than-pin syntax is still a live risk, just for a smaller feature set. **Keep the local
-interpreter in sync with `.python-version`** — don't let this drift into "the file says 3.12 but
-nobody's venv actually is." Check before pushing: `python scripts/check_python_compat.py` (reads
-`.python-version` itself, so it always checks against whatever's actually pinned; needs a matching
-interpreter on PATH — `brew install python@3.12`, or whatever version the file names, if missing).
-If the pin ever changes, re-verify it actually took effect on Railway (the deploy log names the
-`mise`-installed version) rather than assuming the file alone is sufficient.
+Keep the local interpreter in sync with the repo's `.python-version`. Before pushing Python changes, run `python scripts/check_python_compat.py`; it reads the pin and requires a matching interpreter on PATH. If the pin changes, verify the Python version actually installed in Railway's deploy log. Incident history and setup: [Webapp local environment](webapp/README.md#local-environment).
 
 ### Pandas strict dtypes
 
@@ -280,7 +257,7 @@ This file has drifted before. Actively resist it. **On every session where you t
 - A capability change makes an instruction here unnecessary or inefficient — e.g. a workaround the tool now handles natively, or a manual ritual now automated.
 - A pinned version, model name, or tool behaviour referenced here no longer matches reality.
 - A section describes state (what's done, what's next) rather than durable instruction. State belongs in `STATUS.md`.
-- This file exceeds ~200 lines. That's the point where adherence degrades. Move something out.
+- Repeated rules, incident narratives or specialised recipes make this file harder to follow. Consolidate repetition and move detail into existing reference documents, keeping actionable rules here.
 - The freshness date at the top is more than 6 months old.
 
 **Quarterly (or when the above fires), run a review:** ask Claude to check each section of this file against the codebase and against current Claude Code capabilities, and report contradictions, dead references and obsolete workarounds. Update the freshness date when done.

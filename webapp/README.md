@@ -23,12 +23,13 @@ Visit `http://localhost:8000` in your browser. Use the theme switcher in the nav
   `TemplateResponse` calls to the modern `TemplateResponse(request, name, context)`
   signature, then drop the pins. (A related variant of this error also appears on
   Python 3.14 with jinja2 3.1.x — use Python 3.12/3.13 there.)
-- **Known gotcha — local dev can outrun the deploy Python version:** the repo root
-  pins `.python-version` (3.12 as of this writing), which Railway's mise-based build
-  reads, but a local interpreter newer than the pin (3.13/3.14) still silently accepts
-  syntax the pin rejects — a real site-wide outage, 2026-09-12, before the pin existed
-  (see CLAUDE.md's "Local Python can outrun Railway's" invariant). Check before
-  pushing: `python scripts/check_python_compat.py` (reads `.python-version` itself).
+- **Known gotcha — local dev can outrun the deploy Python version:** keep the local interpreter aligned with `.python-version` and run `python scripts/check_python_compat.py` before pushing Python changes. The incident history and setup details are below.
+
+#### Python deployment compatibility
+
+Real incident, 2026-09-12: Railway was deploying on Python 3.11 while local dev ran 3.14, which silently accepts syntax 3.11 rejects (PEP 701's relaxed f-string grammar, nested same-quote strings inside an f-string, 3.12+ only). The code imported fine locally and passed local tests, then was a hard `SyntaxError` in production; since the broken module sat in `webapp.app`'s import graph, the whole app failed to start — Railway showed "Application failed to respond" with no traceback in the UI, only in the deploy log.
+
+**Fix in place**: the repo root pins `.python-version` (3.12 as of this writing), and Railway's mise-based build reads it — confirmed against the deploy log after the pin was added. This narrows the gap but doesn't close it: local dev environments can still run newer than the pin (3.13/3.14), so newer-than-pin syntax is still a live risk, just for a smaller feature set. **Keep the local interpreter in sync with `.python-version`** — don't let this drift into "the file says 3.12 but nobody's venv actually is." Check before pushing: `python scripts/check_python_compat.py` (reads `.python-version` itself, so it always checks against whatever's actually pinned; needs a matching interpreter on PATH — `brew install python@3.12`, or whatever version the file names, if missing). If the pin ever changes, re-verify it actually took effect on Railway (the deploy log names the `mise`-installed version) rather than assuming the file alone is sufficient.
 
 ## Admin / data management
 
