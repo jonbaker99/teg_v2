@@ -6,6 +6,18 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 ## IN PROGRESS
 
+- [ ] **Verify live report refresh after deployment (2026-09-13).**
+  Report sync now includes tournament/round
+  `*_report_storylinefirst_styled.md` and `*_storyline_plan.json` in “Sync all
+  reports from GitHub”. Then run the sync and check deterministic blocks live.
+  Regression tests reproduce stale volume reads before the fix; 33 sync tests
+  pass afterward. Manual workaround: select those files in `data/commentary`
+  and use “Pull selected”.
+- [x] **Immediate feedback for Pull selected (2026-09-13).** Buttons show
+  “Checking selected files…” during preview metadata requests, disable repeat
+  submissions and show busy confirmation labels before copy progress. Verified
+  with a delayed local browser flow through preview, progress and completion.
+
 - [x] **Review shared UI polish on `ui/shared-polish-review`** — navigation,
   title alignment, mobile component insets, tab scroll cues and GET failure
   feedback implemented; user approved for merge 2026-09-12. Automated browser
@@ -161,7 +173,11 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 - [ ] **Reconcile UI documentation** — README still describes mobile/dark mode
   and report generation as unbuilt; design principles retain fit-content widths
   and serif-caption claims. Align docs with shipped code and clarify typography
-  and accent rules before further redesigns.
+  and accent rules before further redesigns. README also lists three named
+  themes, while `theme.py` now registers two (Clean Page and Clean Layered).
+- [ ] **Match local webapp/test Python to the deployment pin** — the existing
+  venv runs 3.14.7 while `.python-version` pins 3.12. The compatibility parser
+  passes under installed 3.12, but the test/app runtime still needs alignment.
 
 - [ ] **Prefer CSS bar charts over Plotly where feasible** — the bestball/worstball
   contribution bars (`build_bestball_contribution_bars`) use lightweight CSS bars
@@ -186,8 +202,19 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
   `teg_analysis/reporting/`.
 
 ## PLAYER PROFILES
-- [ ] Revisit again to make UI cleaner and less cluttered
-- [ ] UI design pass** — `/player/{code}` and the `/player` roster have been significantly reworked (metric cards, career highlights, records/worsts, bar charts, roster cards with stars). Functionality is complete. Revisit with fresh eyes for: layout rhythm and section ordering, chart sizing and padding, card density, label clarity, mobile view. See `webapp/routes/player.py` and `webapp/templates/partials/player_overview.html`.
+- [ ] **Align career-average definitions** — during the profile design review,
+  Jon's headline gross average rendered `+20.5`, while the chart reference line
+  rendered `+20.7` (Stableford: `36.1` versus `36.0`). `_metric_specs` weights each round equally; `_trend_fig`
+  averages the per-TEG bars equally. Agree the intended definition and label or
+  align the reference line. Keep this separate from the layout change.
+- [x] **Grouped player-detail layout** — approved interactive direction implemented
+  2026-09-13. Compact player picker, grouped glance/cabinet blocks, four neutral
+  Career Highlights cards, trend before expandable results and complete held
+  records on Records & Streaks. The liked roster is unchanged.
+- [ ] **Less generic player-detail aesthetic** — revisit the approved structure
+  after shipment. User wants less of a "generic AI webpage": refine card
+  sameness, rhythm, hierarchy and scorecard character without losing grouping
+  or Career Highlights cards. Show an interactive direction before more changes.
 
 - [ ] **"Design vibe" (lo-fi/mono) attempt — rejected on review, more work needed before retrying.**
   The `/player` roster redesign (merged, PR #71) established a lo-fi/mono-first

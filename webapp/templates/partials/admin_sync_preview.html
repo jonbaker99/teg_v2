@@ -75,9 +75,11 @@
     <input type="hidden" name="confirm" value="1">
     <input type="hidden" name="commit_message" value="{{ commit_message }}">
     {% for n in names %}<input type="hidden" name="files" value="{{ n }}">{% endfor %}
-    <button type="button" class="btn-action"
-            hx-post="/admin/volume-sync/{{ action }}" hx-target="#sync-body" hx-swap="innerHTML">
-      {% if is_pull %}⬇️ Confirm pull{% else %}⬆️ Confirm push{% endif %}
+    <button type="button" class="btn-action sync-request-button"
+            hx-post="/admin/volume-sync/{{ action }}" hx-target="#sync-body" hx-swap="innerHTML show:top"
+            hx-indicator="this" hx-disabled-elt="#sync-body button">
+      <span class="sync-button-label">{% if is_pull %}⬇️ Confirm pull{% else %}⬆️ Confirm push{% endif %}</span>
+      <span class="htmx-indicator" role="status">{% if is_pull %}Starting pull…{% else %}Pushing selected files…{% endif %}</span>
     </button>
     <a href="/admin/volume-sync?folder={{ folder }}" class="text-link" style="align-self:center;">Cancel</a>
   </form>

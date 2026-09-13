@@ -388,6 +388,14 @@ def test_sync_report_files_filters_to_report_patterns(monkeypatch):
     gh = {
         "data/commentary": {
             "teg_9_report_styled.md": 1,          # report — pull
+            "teg_9_round_1_report_styled.md": 1,  # report — pull
+            "teg_9_report_storylinefirst_styled.md": 1,
+            "teg_9_storyline_plan.json": 1,
+            "teg_9_round_1_report_storylinefirst_styled.md": 1,
+            "teg_9_round_1_storyline_plan.json": 1,
+            "teg_9_report_storylinefirst.md": 1,  # voice-stage draft — ignore
+            "teg_9_round_1_report_storylinedraft.md": 1,
+            "teg_9_story_plan.json": 1,           # legacy pipeline plan — ignore
             "teg_9_dry_draft.md": 1,              # junk — ignore
         },
         "data/commentary/drafts": {
@@ -406,11 +414,47 @@ def test_sync_report_files_filters_to_report_patterns(monkeypatch):
 
     assert set(pulled_names) == {
         "teg_9_report_styled.md",
+        "teg_9_round_1_report_styled.md",
+        "teg_9_report_storylinefirst_styled.md",
+        "teg_9_storyline_plan.json",
+        "teg_9_round_1_report_storylinefirst_styled.md",
+        "teg_9_round_1_storyline_plan.json",
         "teg_9_main_report.md",
         "teg_9_satire.md",
     }
     assert "teg_9_dry_draft.md" not in pulled_names       # non-report junk excluded
-    assert out["pulled"] == 3
+    assert out["pulled"] == 8
+
+
+@pytest.mark.parametrize("round_num", [None, 4])
+def test_sync_report_files_refreshes_volume_edition(monkeypatch, tmp_path, round_num):
+    """Existing edition artefacts are replaced, then volume-first reads see them."""
+    from teg_analysis.io import read_text_file, volume_operations
+    from teg_analysis.reporting.newspaper_edition import artefact_paths
+
+    paths = artefact_paths(18, round_num)
+    payloads = {paths[0]: b"regenerated deterministic blocks", paths[1]: b'{"updated": true}'}
+    for rel in paths:
+        stored = tmp_path / rel
+        stored.parent.mkdir(parents=True, exist_ok=True)
+        stored.write_text("old cached artefact")
+
+    monkeypatch.setattr(volume_operations, "_is_railway", lambda: True)
+    monkeypatch.setattr(volume_operations, "_get_volume_path", lambda rel: str(tmp_path / rel))
+    monkeypatch.setattr(sync, "list_github_files", lambda folder: {
+        rel.rsplit("/", 1)[1]: len(payload) for rel, payload in payloads.items()
+    } if folder == "data/commentary" else {})
+    monkeypatch.setattr(sync, "github_download_bytes", lambda rel: payloads[rel])
+
+    out = sync.sync_report_files()
+
+    assert out["pulled"] == 2
+    assert out["failed"] == []
+    for rel in paths:
+        assert read_text_file(rel) == payloads[rel].decode()
+        backups = sync.backups_for(rel)
+        assert len(backups) == 1
+        assert (tmp_path / backups[0]["backup_rel"]).read_text() == "old cached artefact"
 
 
 def test_sync_report_files_overwrites_present(monkeypatch):

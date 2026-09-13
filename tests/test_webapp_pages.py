@@ -107,6 +107,73 @@ def test_player_page_renders(client):
     _assert_ok_no_error(resp)
 
 
+def test_player_grouped_overview_preserves_full_history_and_landmarks(client):
+    from webapp.routes.player import _build_overview_context, _build_roster
+
+    ctx = _build_overview_context("JB")
+    assert [card["label"] for card in ctx["glance"]] == [
+        "TEGs played", "Current handicap", "Avg gross / round", "Avg Stableford",
+    ]
+    roster = next(player for player in _build_roster() if player["code"] == "JB")
+    assert ctx["glance"][1]["value"] == roster["handicap"]
+    assert [card["label"] for card in ctx["landmarks"]] == ["Holes in One", "Eagles", "Birdies"]
+    assert [item["label"] for item in ctx["highlights"]] == [
+        "Best Round", "Best TEG", "Best Course", "Worst Course",
+    ]
+    assert ctx["teg_result_count"] == 17
+    # Collapsing is progressive enhancement: the complete table remains in HTML.
+    assert ctx["teg_table_html"].count("<tr>") == 18
+    resp = client.get("/player/JB")
+    _assert_ok_no_error(resp)
+    assert 'class="pp-overview-grid"' in resp.text
+    assert 'data-result-count="17"' in resp.text
+    assert resp.text.index("Career Highlights") < resp.text.index("Career Trend") < resp.text.index("TEG Results")
+    assert 'data-player-switch' in resp.text
+    assert 'title-stars' not in resp.text
+    assert 'player_pills' not in resp.text
+
+
+def test_player_records_tab_keeps_every_held_record_and_worst(client):
+    from markupsafe import escape
+    from webapp.routes.player import _build_overview_context
+
+    ctx = _build_overview_context("JB")
+    resp = client.get("/player/JB/tab/records")
+    _assert_ok_no_error(resp)
+    assert "All-time records and worsts held" in resp.text
+    for record in ctx["records_held"] + ctx["worsts_held"]:
+        assert escape(record["label"]) in resp.text
+        assert escape(str(record["value"])) in resp.text
+        if record.get("detail"):
+            assert escape(record["detail"]) in resp.text
+    assert "Personal Bests" in resp.text
+    assert "Streaks" in resp.text
+
+
+def test_player_with_no_scores_has_honest_empty_state(client, monkeypatch):
+    from webapp.routes import player
+
+    known = player.get_player_dict()
+    monkeypatch.setattr(player, "get_player_dict", lambda: {**known, "ZZ": "New PLAYER"})
+    resp = client.get("/player/ZZ")
+    _assert_ok_no_error(resp)
+    assert "No TEG data" in resp.text
+    assert "No silverware yet" in resp.text
+    assert "No outright TEG records held" in resp.text
+    assert 'data-expand-profile-results' not in resp.text
+    resp = client.get("/player/ZZ/tab/records")
+    _assert_ok_no_error(resp)
+    assert "No outright TEG worsts held" in resp.text
+
+
+def test_player_missing_handicap_is_unranked(client, monkeypatch):
+    from webapp.routes import player
+
+    monkeypatch.setattr(player, "_current_playing_handicaps", lambda: {})
+    glance = player._build_overview_context("JB")["glance"]
+    assert glance[1] == {"label": "Current handicap", "value": "–", "rank": "–"}
+
+
 @pytest.mark.parametrize("tab", ["overview", "rounds", "scoring", "records"])
 def test_player_tab_partials_render(client, tab):
     resp = client.get(f"/player/{REAL_PLAYER_CODE}/tab/{tab}")

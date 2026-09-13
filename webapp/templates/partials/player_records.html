@@ -1,4 +1,18 @@
 <div>
+    <section class="pp-block pp-held-records">
+        <h2 class="pp-section-title">All-time records and worsts held</h2>
+        <div class="pp-held-grid">
+            {% for r in records_held + worsts_held %}
+            <article class="pp-held-item">
+                <h3 class="pp-label">{{ r.label }}{% if r.shared %} · shared{% endif %}</h3>
+                <strong>{{ r.value }}</strong>
+                {% if r.detail %}<p class="pp-context">{{ r.detail }}</p>{% endif %}
+            </article>
+            {% endfor %}
+        </div>
+        {% if not records_held %}<p class="pp-context">No outright TEG records held.</p>{% endif %}
+        {% if not worsts_held %}<p class="pp-context">No outright TEG worsts held.</p>{% endif %}
+    </section>
     {% for section in sections %}
     {% if not loop.first %}
     <hr class="divider--dotted my-6">

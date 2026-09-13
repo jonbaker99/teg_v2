@@ -733,6 +733,16 @@ def _build_overview_context(player_code: str) -> dict:
     winners = deps.cached_winners()
     rd_data = cached_round_data()
     specs = _metric_specs(all_data, rd_data, winners)
+    metrics = _build_overview_metrics(player_code, all_data, specs)
+    cards = {card["label"]: card for row in metrics for card in row}
+    glance = [
+        {**cards["TEGs Played"], "label": "TEGs played"},
+        {"label": "Current handicap", "value": _current_playing_handicaps().get(name, "–"),
+         "rank": "–"},
+        {**cards["Avg Gross vs Par"], "label": "Avg gross / round"},
+        {**cards["Avg Stableford"], "label": "Avg Stableford"},
+    ]
+    highlight_order = {"Best Round": 0, "Best TEG": 1, "Best Course": 2, "Worst Course": 3}
 
     # Pre-compute per-TEG finishing ranks once; used for both table and chart labels.
     teg_rank_map: dict[int, dict] = {}
@@ -814,10 +824,14 @@ def _build_overview_context(player_code: str) -> dict:
         "teg_table_html": teg_table_html,
         "chart_gross_json": chart_gross_json,
         "chart_stab_json": chart_stab_json,
-        "highlights": _build_highlights(player_code),
+        "glance": glance,
+        "landmarks": [cards[label] for label in ("Holes in One", "Eagles", "Birdies")],
+        "teg_result_count": len(player_teg),
+        "highlights": sorted(_build_highlights(player_code),
+                             key=lambda h: highlight_order.get(h["label"], 4)),
         "records_held": _records_held(get_player_dict()[player_code]),
         "worsts_held": _worsts_held(get_player_dict()[player_code]),
-        "metrics": _build_overview_metrics(player_code, all_data, specs),
+        "metrics": metrics,
         "trophy": _build_trophy_section(player_code, specs),
     }
 
@@ -1101,7 +1115,23 @@ def _build_records_context(player_code: str) -> dict:
     except (KeyError, ValueError) as exc:
         logger.warning("Could not build streaks for %s: %s", player_code, exc)
 
-    return {"sections": sections}
+    return {
+        "sections": sections,
+        "records_held": _records_held(name),
+        "worsts_held": _worsts_held(name),
+    }
+
+
+def _current_playing_handicaps() -> dict:
+    """Use the same next/in-progress TEG handicap on roster and detail pages."""
+    try:
+        _, next_tegnum, _ = get_next_teg_and_check_if_in_progress_fast()
+        hc_df, _ = get_current_handicaps_formatted(next_tegnum - 1, next_tegnum)
+        hc_col = f"TEG {next_tegnum}"
+        return dict(zip(hc_df["Handicap"], hc_df[hc_col].astype(int)))
+    except Exception:
+        logger.exception("Could not load current handicaps for player profiles")
+        return {}
 
 
 # ---------------------------------------------------------------------------
@@ -1120,14 +1150,7 @@ def _build_roster() -> list[dict]:
 
     # Current playing handicap = each player's HC for the next (or in-progress)
     # TEG. Map name → HC; players absent from the table just show "–".
-    try:
-        _, next_tegnum, _ = get_next_teg_and_check_if_in_progress_fast()
-        hc_df, _ = get_current_handicaps_formatted(next_tegnum - 1, next_tegnum)
-        hc_col = f"TEG {next_tegnum}"
-        current_hc = dict(zip(hc_df["Handicap"], hc_df[hc_col].astype(int)))
-    except Exception:
-        logger.exception("Could not load current handicaps for roster cards")
-        current_hc = {}
+    current_hc = _current_playing_handicaps()
 
     cards = []
     for code, name in get_player_dict().items():

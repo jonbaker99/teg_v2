@@ -599,19 +599,17 @@ def push_files(folder: str, names: list[str], commit_message: str = None) -> dic
 # refresh lever: it re-pulls every report file from GitHub, overwriting the
 # store copy (with a backup first, via :func:`pull_files`).
 
-# The report files served by webapp/routes/reports.py, per folder. We sync only
-# these (not every draft/version .md that shares the folder) to keep the set small.
-# `round_\d+_report_styled` (the pre-round-storyline round naming) and the
-# `data/commentary/round_reports` folder entry were both dropped 2026-09-13 —
-# archived along with the data they matched once round-storyline backfill
-# covered every round (see `SYNC_FOLDERS`'s comment above). NOTE: this dict
-# was never updated for the storyline-first naming
-# (`teg_N_report_storylinefirst_styled.md` / the round equivalent) either
-# before or after that change — it only ever matched the legacy convention.
-# Whether `sync_report_files()` needs to cover storyline-first filenames too
-# is a separate, pre-existing question this cleanup didn't investigate.
+# Published edition markdown and its plan JSON (tournament and round,
+# legacy and storyline-first naming alike), plus legacy report files.
+# Intermediate drafts and legacy story plans are not needed by the reader.
+# The `data/commentary/round_reports` folder entry (pre-round-storyline
+# 2025-vintage round reports, a different naming convention this regex never
+# matched) was dropped 2026-09-13 — archived to
+# `data/commentary/archive 2026 v4/round_reports/` once round-storyline
+# backfill covered every round.
 _REPORT_FILE_PATTERNS = {
-    "data/commentary": re.compile(r"^teg_\d+_report_styled\.md$"),
+    "data/commentary": re.compile(
+        r"^teg_\d+_(?:round_\d+_)?(?:report_(?:storylinefirst_)?styled\.md|storyline_plan\.json)$"),
     "data/commentary/drafts": re.compile(
         r"^teg_\d+_(main_report|satire)\.md$"),
 }
