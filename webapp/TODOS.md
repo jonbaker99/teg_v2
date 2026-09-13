@@ -6,6 +6,18 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 ## IN PROGRESS
 
+- [ ] **Verify live report refresh after deployment (2026-09-13).**
+  Report sync now includes tournament/round
+  `*_report_storylinefirst_styled.md` and `*_storyline_plan.json` in “Sync all
+  reports from GitHub”. Then run the sync and check deterministic blocks live.
+  Regression tests reproduce stale volume reads before the fix; 33 sync tests
+  pass afterward. Manual workaround: select those files in `data/commentary`
+  and use “Pull selected”.
+- [x] **Immediate feedback for Pull selected (2026-09-13).** Buttons show
+  “Checking selected files…” during preview metadata requests, disable repeat
+  submissions and show busy confirmation labels before copy progress. Verified
+  with a delayed local browser flow through preview, progress and completion.
+
 - [x] **Review shared UI polish on `ui/shared-polish-review`** — navigation,
   title alignment, mobile component insets, tab scroll cues and GET failure
   feedback implemented; user approved for merge 2026-09-12. Automated browser

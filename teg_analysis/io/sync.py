@@ -596,11 +596,11 @@ def push_files(folder: str, names: list[str], commit_message: str = None) -> dic
 # refresh lever: it re-pulls every report file from GitHub, overwriting the
 # store copy (with a backup first, via :func:`pull_files`).
 
-# The report files served by webapp/routes/reports.py, per folder. We sync only
-# these (not every draft/version .md that shares the folder) to keep the set small.
+# Published edition markdown and its plan JSON, plus legacy report files.
+# Intermediate drafts and legacy story plans are not needed by the reader.
 _REPORT_FILE_PATTERNS = {
     "data/commentary": re.compile(
-        r"^teg_\d+_(report_styled|round_\d+_report_styled)\.md$"),
+        r"^teg_\d+_(?:round_\d+_)?(?:report_(?:storylinefirst_)?styled\.md|storyline_plan\.json)$"),
     "data/commentary/drafts": re.compile(
         r"^teg_\d+_(main_report|satire)\.md$"),
     "data/commentary/round_reports": re.compile(

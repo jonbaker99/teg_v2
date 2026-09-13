@@ -12,6 +12,16 @@ scrollbars. HTMX read requests expose busy state and dismissible failure
 feedback. No data-write changes. User reviewed and approved the UI for merge;
 automated browser visual verification was unavailable.
 
+## 2026-09-13 — Report sync refreshes current editions with immediate feedback
+
+“Sync all reports from GitHub” now includes tournament and round storyline-first styled markdown
+and storyline plan JSON. It previously pulled only legacy report filenames,
+leaving regenerated current editions stale on the Railway volume. Existing
+backup and cache-clearing behavior is retained; no report regeneration needed.
+Pull/Push selected now show “Checking selected files…” during the slow GitHub
+preview request and disable repeated clicks. Confirmation shows a busy label
+before copy progress starts, and the preview/progress scrolls into view.
+
 ## Where things stand
 
 **`teg_analysis/`** — Phases 1–7 cleanup complete (all Streamlit imports removed; aggregation/streaks/scoring refactored; dead code removed). Merged to `main`. Canonical analysis layer, fully UI-agnostic.

@@ -125,8 +125,11 @@ view automatically. What that path can't do is refresh a **regenerated** report
 `sync.sync_report_files()` is that refresh lever: it re-pulls every report file
 from GitHub, overwriting the store copy (backup first). It's wired to the admin
 **"Sync all reports from GitHub"** button on `/admin/volume-sync`. Only files
-matching the report naming patterns are synced (`_REPORT_FILE_PATTERNS`), not
-every draft/version `.md` sharing the folder.
+matching the report naming patterns are synced (`_REPORT_FILE_PATTERNS`): current
+`teg_N_report_storylinefirst_styled.md` + `teg_N_storyline_plan.json`, their
+`round_R_` equivalents, and legacy report files. Intermediate drafts are excluded.
+Both current artefacts must refresh together: the edition reads its markdown
+and plan through the same volume-first cache.
 
 **File catalog (reference only):** `teg_analysis/io/file_catalog.py`
 (`DATA_FILE_CATALOG`) describes each data file — role, format, how it's updated,

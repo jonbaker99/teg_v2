@@ -226,6 +226,10 @@ real Live round use; not triggered yet.
   commit). The "store" is the Railway volume in production and the local working
   tree in dev. Use this to move just the reference CSVs you changed for a new TEG
   without a full redeploy.
+- **Feedback:** Pull/Push selected immediately show “Checking selected files…”
+  while GitHub metadata is fetched. Action buttons are disabled during the
+  request. Confirmation shows “Starting pull…” before the existing polling
+  progress bar reports processed files; previews and progress scroll into view.
 - **Info icons:** each catalogued file in the status table carries a small **ℹ**
   that shows its role + how-it's-updated on hover and deep-links to the matching
   row on the **File guide** page (`get_file_definition` / `file_anchor`).

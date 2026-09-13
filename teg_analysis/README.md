@@ -30,6 +30,7 @@ teg_analysis/
     github_operations.py GitHub API integration
     volume_operations.py Railway volume management
     sync.py          Selective GitHub <-> store sync — build_sync_status/pull_files/push_files,
+                     sync_report_files (published storyline markdown + plan JSON, and legacy reports),
                      pre-action preview (build_sync_preview) + text diff (file_diff),
                      pre-overwrite store backups + restore_backup/list_sync_backups/backups_for
                      (restore backs up the replaced copy too),
