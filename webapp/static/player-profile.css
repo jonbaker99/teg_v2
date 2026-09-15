@@ -56,8 +56,17 @@
 .pp-profile .pp-section-head .pp-section-title { margin: 0; }
 .pp-chart-controls { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .pp-chart-controls .pill { font-family: inherit; color: var(--text-secondary); border-color: var(--table-cell-border); }
-.pp-chart-controls .pill--active { color: var(--text-primary); border-color: var(--text-primary); background: transparent; }
+/* Active measure must read without colour: bold weight + underline, not just
+   the accent colour swap (R4.2 gate: "obvious without relying on colour
+   alone"). */
+.pp-chart-controls .pill--active { color: var(--text-primary); border-color: var(--text-primary); background: transparent; font-weight: 700; text-decoration: underline; text-underline-offset: 0.2em; }
 .pp-trend-chart { height: 280px; width: 100%; }
+.pp-rounds-chart { height: 320px; width: 100%; }
+/* Measure + direction, stated without hover (R4.2) -- phone-only: desktop
+   already carries the chart's y-axis title plus (for Career Trend) the
+   pill label as its measure identity, and hover already gives direction
+   context there via a pointer, unlike on a phone. */
+.pp-chart-direction { display: none; }
 .pp-record-teasers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; font-size: 0.75rem; margin-bottom: 0.5rem; }
 .pp-record-teasers dd { font-size: 1.15rem; font-weight: 600; }
 .pp-table-wrap { overflow-x: auto; }
@@ -89,7 +98,9 @@
     .pp-highlight { padding: 0.85rem; }
     .pp-highlight .pp-label { min-height: 3.2rem; }
     .pp-trend-chart { height: 260px; }
+    .pp-rounds-chart { height: 260px; }
     .pp-chart-controls .pill { min-height: 44px; }
+    .pp-chart-direction { display: block; font: 700 0.7rem/1.4 'Roboto Mono', monospace; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 0.5rem; }
     .pp-record-teasers { grid-template-columns: 1fr; gap: 0.75rem; }
     .pp-held-grid { grid-template-columns: 1fr; }
     .pp-landmarks summary { min-height: 44px; padding-block: 0.65rem; }

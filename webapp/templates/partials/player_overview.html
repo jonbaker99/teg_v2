@@ -62,8 +62,8 @@
                 {% if chart_stab_json %}<button type="button" class="pill{% if not chart_gross_json %} pill--active{% endif %} chart-pill" aria-pressed="{{ 'false' if chart_gross_json else 'true' }}" data-chart-target="#chart-stableford">Stableford</button>{% endif %}
             </div>
         </div>
-        {% if chart_gross_json %}<div id="chart-gross" class="chart-panel"><div class="chart-container pp-trend-chart" data-figure="{{ chart_gross_json }}"></div></div>{% endif %}
-        {% if chart_stab_json %}<div id="chart-stableford" class="chart-panel{% if chart_gross_json %} hidden{% endif %}"><div class="chart-container pp-trend-chart" data-figure="{{ chart_stab_json }}"></div></div>{% endif %}
+        {% if chart_gross_json %}<div id="chart-gross" class="chart-panel"><div class="chart-container pp-trend-chart" data-figure="{{ chart_gross_json }}"></div><p class="pp-chart-direction">Lower = better</p></div>{% endif %}
+        {% if chart_stab_json %}<div id="chart-stableford" class="chart-panel{% if chart_gross_json %} hidden{% endif %}"><div class="chart-container pp-trend-chart" data-figure="{{ chart_stab_json }}"></div><p class="pp-chart-direction">Higher = better</p></div>{% endif %}
     </section>
     {% endif %}
     <section class="pp-block">

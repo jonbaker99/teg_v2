@@ -208,6 +208,63 @@ def test_player_tab_partials_render(client, tab):
 
 
 # ---------------------------------------------------------------------------
+# Player profile progression charts (R4.2): Career Trend (Overview) and
+# Gross vs Par by Round (Rounds) must state their measure/direction and stay
+# readable at phone widths, reusing player-profile.js's existing tick-
+# thinning/theme-adaptation pattern rather than a second chart system.
+# ---------------------------------------------------------------------------
+
+def test_player_overview_trend_panels_state_direction_without_hover(client):
+    # DM has both a gross and a Stableford trend chart (see
+    # test_player_grouped_overview_preserves_full_history_and_landmarks for
+    # JB's equivalent gross-only/Stableford-only edge cases) -- each panel
+    # must carry its own static direction copy, not rely on a shared caption
+    # or a hover tooltip a touch device can't trigger.
+    resp = client.get(f"/player/{REAL_PLAYER_CODE}/tab/overview")
+    _assert_ok_no_error(resp)
+    gross_panel = resp.text.split('id="chart-gross"', 1)[1].split("</div></div>", 1)[0]
+    stab_panel = resp.text.split('id="chart-stableford"', 1)[1].split("</div></div>", 1)[0]
+    assert "Lower = better" in gross_panel
+    assert "Higher = better" in stab_panel
+    # Lowercase per the established aria-pressed contract (R3.4 fix).
+    assert 'aria-pressed="True"' not in resp.text and 'aria-pressed="False"' not in resp.text
+
+
+def test_player_rounds_chart_direction_copy_and_no_inline_height(client):
+    resp = client.get(f"/player/{REAL_PLAYER_CODE}/tab/rounds")
+    _assert_ok_no_error(resp)
+    assert "Lower = better" in resp.text
+    assert "pp-rounds-chart" in resp.text
+    # The inline height style was moved to CSS (player-profile.css) so the
+    # <=640px breakpoint can override it -- an inline style would win over
+    # any CSS rule and silently defeat that.
+    chart_div = resp.text.split('class="chart-container pp-rounds-chart"', 1)[1].split(">", 1)[0]
+    assert "style=" not in chart_div
+
+
+def test_rounds_chart_teg_group_labels_distinguishable_from_row_label():
+    # player-profile.js's initRoundsChart thins the per-TEG-group labels at
+    # phone width but must never touch the single "TEG" row-label caption --
+    # it tells them apart via xref:'paper' (only the row label sets it).
+    # This pins that server-side contract so a refactor of
+    # _build_rounds_chart can't silently break the JS's filter.
+    from webapp.routes.player import _build_rounds_chart
+    import json
+
+    fig = json.loads(_build_rounds_chart(REAL_PLAYER_CODE))
+    annotations = fig["layout"]["annotations"]
+    row_labels = [a for a in annotations if a.get("xref") == "paper"]
+    group_labels = [a for a in annotations if a.get("xref") != "paper"]
+
+    assert len(row_labels) == 1
+    assert row_labels[0]["text"] == "TEG"
+    # DM has a long history (17 TEGs) -- exactly the dense case the phone
+    # thinning exists for.
+    assert len(group_labels) >= 15
+    assert all(a["text"] != "TEG" for a in group_labels)
+
+
+# ---------------------------------------------------------------------------
 # Latest round / latest TEG
 # ---------------------------------------------------------------------------
 

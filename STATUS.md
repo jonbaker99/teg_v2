@@ -2,11 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-15 (core mobile data layouts through Best/Worstball completed on rollout branch; report PDF download; deterministic PDF builds)
+**Last updated:** 2026-09-15 (mobile tournament charts completed on rollout branch; core mobile data layouts through Best/Worstball; report PDF download)
 
 ## 2026-09-15 — Core mobile data layouts recovered on rollout branch
 
-The mobile work lost in the reboot has been recovered and extended on `codex/mobile-ui-rollout`, based on the deployed PDF/reporting commit. The pending rollout now includes the compact interactive Latest Round view, mobile History disclosure, equal-height standings rows, portrait scorecard refinements and responsive Best/Worstball field and contribution views. It remains unmerged and undeployed. Careful promotion of the proven chart treatment is next.
+The mobile work lost in the reboot has been recovered and extended on `codex/mobile-ui-rollout`, based on the deployed PDF/reporting commit. The pending rollout now includes the compact interactive Latest Round view, mobile History disclosure, equal-height standings rows, portrait scorecard refinements, responsive Best/Worstball views and phone-only tournament chart readouts for Results and Leaderboard. Desktop, iPad and `/charts` retain their prior chart output. The branch remains unmerged and undeployed; player progression charts are next.
 
 ## 2026-09-15 — Pre-rendered PDF download for reports
 
@@ -337,7 +337,7 @@ Tests: 116 passed (report/admin/sync subset).
 
 ## Next priorities
 
-1. **Mobile UI + dark mode** — the app shell is live, and core data layouts through R3.4 are committed on `codex/mobile-ui-rollout`. **Next: R4 chart promotion, then the remaining page audit and device QA.** Approach + progress + pickup pointer: `webapp/MOBILE_PLAN.md`; scorecard work-package: `webapp/SCORECARD_PORT.md`; mockups in `webapp/mobile_mockups/` (served at `/mockups/`).
+1. **Mobile UI + dark mode** — the app shell, core data layouts through R3.4 and tournament chart treatment are committed on `codex/mobile-ui-rollout`. **Next: R4.2 player progression charts, then scoring-analysis charts and the remaining page audit.** Approach + progress + pickup pointer: `webapp/MOBILE_PLAN.md`; scorecard work-package: `webapp/SCORECARD_PORT.md`; mockups in `webapp/mobile_mockups/` (served at `/mockups/`).
 2. **Webapp formatting pass** — visual polish, number formatting, table styling consistency, layout refinement, plus the WIP heatmap. In progress in local branches.
 3. **REST API** — proper `/api` layer over `teg_analysis`, so any client can use the analysis layer without Python. Currently a placeholder in `teg_analysis/api/`.
 4. **Retire Streamlit** — delete `streamlit/` once the REST API and webapp are production-ready. Nothing depends on it now; it is kept only as a reference.
