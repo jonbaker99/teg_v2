@@ -2,7 +2,7 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-15 (report PDF download; standfirst font fix; earlier context retained)
+**Last updated:** 2026-09-15 (report PDF download; standfirst now Libre Franklin italic; deterministic PDF builds)
 
 ## 2026-09-15 — Pre-rendered PDF download for reports
 
@@ -18,6 +18,21 @@ can drift from its report or from `newspaper_preview.css` with no automatic sign
 `--check` detects it, nothing enforces it yet (follow-up in `webapp/TODOS.md`). Detail:
 `webapp/README.md`, `teg_analysis/reporting/README.md` → *Pre-render to PDF*,
 `teg_analysis/reporting/ARTEFACTS.md` → *The PDF artefact*, `DATA_FLOW.md` → §10.
+
+## 2026-09-15 — Standfirsts now set in Libre Franklin italic
+
+Follow-on from the entry below. After an A/B of five treatments (upright sans, sans italic, and a
+vertical-bar variant of serif italic / sans / sans italic), Jon chose **sans italic**: upright Libre
+Franklin read as a label under the headline, the italic reads as a voice introducing the story. The
+`.sf-contrast` rule now sets `font-style:italic`, covering the lead, sub-article and mobile
+standfirsts alike. `.topbar .tb-title` also uses `--font-contrast` but sets no style, so it stays
+upright — both axes are loaded and bundled.
+
+The PDF build also became **byte-deterministic**: Chromium stamps a fresh `/CreationDate` and `/ID`
+into every render, so previously every rebuild rewrote all 84 files and cost a ~24 MB diff even when
+no report had changed. Those fields are now normalised in place (equal-length replacement, so the
+xref offsets stay valid), meaning a rebuild only produces new blobs for reports that genuinely
+changed.
 
 ## 2026-09-15 — Standfirsts now set in Libre Franklin
 

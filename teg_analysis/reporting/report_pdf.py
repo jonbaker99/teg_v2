@@ -64,6 +64,7 @@ import hashlib
 import json
 import math
 import pathlib
+import re
 import time
 from typing import Any, Callable, Iterable
 
@@ -96,6 +97,16 @@ PDF_DIR = "data/commentary/pdfs"
 #: `embedded_font_css()` below inlines them as `data:` URIs, so the build
 #: needs no network at all and can't silently degrade.
 _REQUIRED_FONT_FAMILIES = ("Fraunces", "Source Serif 4", "IBM Plex Mono", "Libre Franklin")
+
+#: (family, style) pairs that must each have their OWN loaded face — not just
+#: the family name. `newspaper_preview.css`'s `.sf-contrast` standfirst rules
+#: set `font-style:italic` on Libre Franklin text; if `faces.json` only had
+#: the upright face bundled, `document.fonts` would still report the family
+#: "loaded" (from the upright face) while Chromium silently synthesises a
+#: fake oblique for the italic request — exactly the failure mode this guard
+#: exists to catch. Checked in addition to, not instead of,
+#: `_REQUIRED_FONT_FAMILIES`.
+_REQUIRED_FONT_STYLES = (("Libre Franklin", "italic"),)
 
 #: Where the self-hosted woff2 files (and their `faces.json` metadata) live.
 #: A filesystem path, not a Python import — reading static font bytes from
@@ -249,19 +260,110 @@ def _assert_required_fonts_loaded(page: Any, teg: int, round_num: int | None) ->
     and the render falling back to a system serif/sans/mono font while still
     reporting success. Call AFTER `document.fonts.ready` resolves and BEFORE
     `page.pdf()` — never let a fallback-font PDF get written to disk.
+
+    Checks family names (`_REQUIRED_FONT_FAMILIES`) AND specific
+    (family, style) pairs (`_REQUIRED_FONT_STYLES`). The family check alone
+    is not enough for italic: if only an upright face for a family is
+    bundled, `document.fonts` still reports that family as "loaded" (from
+    the upright face), while Chromium silently synthesises a fake oblique
+    for any `font-style:italic` text — no failure, no missing family, just a
+    slanted-upright fake in place of the real italic. Distinguishing that
+    requires inspecting each loaded `FontFace`'s own `style`, not just
+    collecting family names.
     """
-    loaded_families = set(page.evaluate(
-        "() => [...document.fonts].filter(f => f.status === 'loaded').map(f => f.family)"
-    ))
+    loaded_faces = page.evaluate(
+        "() => [...document.fonts].filter(f => f.status === 'loaded')"
+        ".map(f => ({family: f.family.replace(/^[\"']|[\"']$/g, ''), style: f.style}))"
+    )
+    loaded_families = {face["family"] for face in loaded_faces}
     missing = [fam for fam in _REQUIRED_FONT_FAMILIES if fam not in loaded_families]
-    if missing:
-        target = pdf_filename(teg, round_num)
-        raise RuntimeError(
-            f"report_pdf: required font(s) failed to load for {target}: {missing}. "
-            f"document.fonts reported loaded families: {sorted(loaded_families)}. "
-            "Refusing to render a fallback-font PDF — check webapp/static/fonts/ "
-            "(faces.json + woff2 files) and embedded_font_css()."
+
+    missing_styles = [
+        f"{fam} ({style})"
+        for fam, style in _REQUIRED_FONT_STYLES
+        if not any(
+            face["family"] == fam and style in face["style"]
+            for face in loaded_faces
         )
+    ]
+
+    if missing or missing_styles:
+        target = pdf_filename(teg, round_num)
+        problems = missing + missing_styles
+        raise RuntimeError(
+            f"report_pdf: required font(s) failed to load for {target}: {problems}. "
+            f"document.fonts reported loaded faces: {sorted((f['family'], f['style']) for f in loaded_faces)}. "
+            "Refusing to render a fallback-font PDF (a missing italic face is silently "
+            "synthesised by Chromium as a fake oblique, not reported as an error) — check "
+            "webapp/static/fonts/ (faces.json + woff2 files) and embedded_font_css()."
+        )
+
+
+#: Fixed stand-in for Chromium's `/CreationDate` and `/ModDate` — same
+#: length (23 bytes: `D:` + 14 digits + `+00'00'`) as every value Chromium
+#: has been observed to emit, so swapping it in never changes the file size.
+_FIXED_PDF_DATE = b"D:20260101000000+00'00'"
+
+
+def _normalize_pdf_determinism(pdf_bytes: bytes) -> bytes:
+    """Replace Chromium's per-render `/CreationDate`, `/ModDate` and `/ID`
+    with fixed, content-derived values so re-rendering an UNCHANGED report
+    produces byte-identical PDF output.
+
+    WHY THIS EXISTS: Chromium stamps a fresh wall-clock timestamp (and,
+    depending on version, a random `/ID`) into every PDF it produces, even
+    when nothing about the page content changed. Left alone, that turns
+    every `--all` rebuild into an ~84-file, ~24MB diff, which drowns real
+    content changes in noise and makes `git blame`/review useless for this
+    directory.
+
+    CRITICAL CONSTRAINT — every replacement below is byte-length-preserving,
+    NEVER length-changing. A PDF's cross-reference table (`xref`) records
+    absolute byte OFFSETS into the file for every indirect object; shrinking
+    or growing anything before an object shifts every offset after it and
+    corrupts the file (Chromium's `page.pdf()` output here isn't rewritten
+    through a PDF library that would recompute the xref table for us — see
+    the module docstring's explanation for why not). So each substitution
+    below only ever swaps bytes for other bytes of the exact same count:
+    `/CreationDate`/`/ModDate` values are always the same 23-byte
+    `D:YYYYMMDDHHMMSS+00'00'` shape (verified against this pipeline's own
+    output), and any `/ID` hex strings are replaced by a same-length slice
+    of a sha256 digest of the (already date-normalized) bytes — deterministic
+    because it depends only on content, not wall-clock time. Any match whose
+    captured value isn't the expected length is left untouched rather than
+    forced to fit, since a wrong-length swap is exactly the corruption this
+    function must never cause.
+    """
+    def _replace_date(match: re.Match) -> bytes:
+        prefix, value, suffix = match.group(1), match.group(2), match.group(3)
+        if len(value) != len(_FIXED_PDF_DATE):
+            return match.group(0)
+        return prefix + _FIXED_PDF_DATE + suffix
+
+    result = re.sub(rb"(/CreationDate\s*\()([^)]*)(\))", _replace_date, pdf_bytes)
+    result = re.sub(rb"(/ModDate\s*\()([^)]*)(\))", _replace_date, result)
+
+    # /ID [<hex...> <hex...>] — not observed in this pipeline's current
+    # Chromium output, but handled defensively in case a future Chromium
+    # version adds one. The replacement hex is derived from a hash of the
+    # (date-normalized) content, so it stays fixed across identical renders
+    # while varying with the actual content, same spirit as `content_sha`.
+    digest_hex = hashlib.sha256(result).hexdigest()
+
+    def _replace_id(match: re.Match) -> bytes:
+        prefix, hex1, mid, hex2, suffix = match.groups()
+
+        def _fixed_hex(length: int) -> bytes:
+            repeated = (digest_hex * (length // len(digest_hex) + 1))[:length]
+            return repeated.encode("ascii")
+
+        return prefix + _fixed_hex(len(hex1)) + mid + _fixed_hex(len(hex2)) + suffix
+
+    result = re.sub(
+        rb"(/ID\s*\[\s*<)([0-9A-Fa-f]*)(>\s*<)([0-9A-Fa-f]*)(>\s*\])",
+        _replace_id, result,
+    )
+    return result
 
 
 def _render_target(page: Any, teg: int, round_num: int | None, css: str, out_dir: pathlib.Path
@@ -284,6 +386,7 @@ def _render_target(page: Any, teg: int, round_num: int | None, css: str, out_dir
         margin={"top": "0", "bottom": "0", "left": "0", "right": "0"},
         print_background=True, page_ranges="1",
     )
+    pdf_bytes = _normalize_pdf_determinism(pdf_bytes)
 
     filename = pdf_filename(teg, round_num)
     (out_dir / filename).write_bytes(pdf_bytes)

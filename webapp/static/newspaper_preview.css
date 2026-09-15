@@ -92,7 +92,13 @@
    below are nudged down so the standfirst doesn't out-weigh the headline.
    ========================================================================= */
 .sf-contrast .lead-standfirst,.sf-contrast .sub-standfirst,.sf-contrast .m-sf{
-  font-family:var(--font-contrast); font-style:normal; font-weight:500; color:var(--ink-contrast);
+  /* Italic since 2026-09-15 (Jon, after an A/B of five treatments): upright
+   * Libre Franklin read as a label sitting under the headline; the italic
+   * reads as a voice introducing the story. Covers all three standfirsts
+   * (lead, sub-article, mobile) so they stay consistent. `.topbar .tb-title`
+   * also uses --font-contrast but sets no font-style, so it stays upright —
+   * which is why the upright faces are still loaded and bundled. */
+  font-family:var(--font-contrast); font-style:italic; font-weight:500; color:var(--ink-contrast);
   padding-left:0; border-left:none; letter-spacing:0.003em;
 }
 .sf-contrast .lead-standfirst{ font-size:0.92rem; }

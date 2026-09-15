@@ -777,7 +777,15 @@ call, no cost.**
    > Libre Franklin was added 2026-09-15. `--font-contrast` had named it since the standfirst
    > redesign, but nothing ever fetched it, so standfirsts fell back to Arial on the live site and
    > to Liberation Sans in the PDFs. It is now in both the page's Google Fonts link and this
-   > bundle, so the two agree.
+   > bundle, so the two agree. Both axes are bundled: standfirsts set italic, but
+   > `.topbar .tb-title` uses `--font-contrast` upright.
+
+   **Output is byte-deterministic.** Chromium stamps a fresh `/CreationDate` and `/ID` into every
+   render, so a rebuild used to rewrite all 84 files — a ~24 MB diff — even when no report had
+   changed. Those fields are normalised after rendering, so an unchanged report produces identical
+   bytes and a rebuild only touches what actually changed. The replacement is **equal-length by
+   construction**: PDF cross-reference tables store absolute byte offsets, so a substitution of a
+   different length would corrupt the file.
 
    > Chromium exports the two *variable* families as Type3 fonts, which is why a naive `/BaseFont`
    > grep over the PDF bytes shows only IBM Plex Mono. The text is still selectable and searchable
