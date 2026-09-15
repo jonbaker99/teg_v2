@@ -132,7 +132,17 @@ uvicorn webapp.app:app --reload      # run the webapp (the deployed app)
 pip install -r requirements.txt      # install deps
 python -m pytest tests/ -v           # run the test suite
 streamlit run streamlit/nav.py       # legacy Streamlit app — frozen, rarely needed
+
+pip install -r requirements-dev.txt          # dev-only extras (Playwright, for the PDF build)
+python scripts/build_report_pdfs.py --all    # rebuild the downloadable report PDFs
+python scripts/build_report_pdfs.py --check --all  # exit 1 if any PDF is out of date
 ```
+
+The report PDFs (`data/commentary/pdfs/`) are a build artefact of the report
+markdown **and** `webapp/static/newspaper_preview.css`. Change either and they
+are stale — `--check` is what tells you. Rendering needs headless Chromium, so
+`playwright` lives in `requirements-dev.txt` and must never be added to
+`requirements.txt`, which drives the Railway build.
 
 Report generation commands, stage selection, billing and mailbox hand-off: [Reporting README](teg_analysis/reporting/README.md#running-only-the-stages-you-need----from-and---to).
 

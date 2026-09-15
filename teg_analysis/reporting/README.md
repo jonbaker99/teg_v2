@@ -727,6 +727,77 @@ call, no cost.**
 > `/teg-reports-preview` was briefly unregistered in `webapp/app.py` by a merge regression; **fixed
 > on `main` in `bb614c0`.**
 
+7. **Pre-render to PDF (offline, optional).** `python scripts/build_report_pdfs.py` (2026-09-15)
+   composes the same desktop HTML `render_desktop_html` produces and prints it to a single-page,
+   A4-width PDF via headless Chromium (Playwright) — **free, no LLM call**, ~1s per report. Not a
+   pipeline stage in the sense of 1–6 above: it reads the edition (so it needs 4–5 to have already
+   run) but nothing downstream reads its output back into the pipeline. Bundled with the site as a
+   download button, not a report artefact the writer or verifier ever sees.
+
+   ```bash
+   python scripts/build_report_pdfs.py --tegs 18              # one TEG's tournament + round reports
+   python scripts/build_report_pdfs.py --all                  # every available edition (~84, ~90s)
+   python scripts/build_report_pdfs.py --all --check           # stale/missing, renders nothing
+   ```
+
+   Writes `data/commentary/pdfs/teg_N.pdf` / `teg_N_round_R.pdf` plus a `manifest.json` recording
+   each PDF's content sha (`report_pdf.content_sha` — a hash of the rendered body HTML + the CSS
+   text). `webapp/routes/reports.py` reads that manifest to decide whether `/teg-reports` shows a
+   Download PDF button, and serves the bytes straight from `data/commentary/pdfs/` — the webapp
+   never renders one itself. **Never runs on Railway**: headless Chromium is deliberately not a
+   Railway dependency, so this is a local/CI step whose output is committed like any other report
+   artefact (`data/commentary/pdfs` is a `SYNC_FOLDERS` entry, so `/admin/volume-sync` can pull it
+   onto the Railway volume).
+
+   **Dev-only dependency.** `playwright>=1.40` lives in `requirements-dev.txt`, never
+   `requirements.txt` — installing it needs an extra `playwright install chromium` step that has no
+   place in a production deploy, and `requirements.txt` drives the Railway build. Both
+   `report_pdf.py` and this script import `playwright` lazily, inside the functions that use it, so
+   `teg_analysis/` still imports cleanly with neither Playwright nor a UI package installed (the "No
+   frontend imports" test guard covers this too). Install locally with
+   `pip install -r requirements-dev.txt`.
+
+   **Staleness is the known weakness.** A PDF is a build artefact of the report markdown *plus*
+   `webapp/static/newspaper_preview.css` — change either and the PDF silently falls behind. There is
+   no watcher: `--check` is the detector, comparing each target's current content sha against the
+   manifest without opening a browser, and it's the thing to run (and act on) after regenerating a
+   report or editing that stylesheet. Rebuilding the PDF set today is a **separate, manual** step
+   from generating the report itself — see `webapp/TODOS.md` for wiring it into the generation
+   pipeline.
+
+   **Fonts are self-hosted and inlined, not fetched.** `webapp/static/fonts/` holds the
+   latin/latin-ext woff2 subsets for Fraunces, Source Serif 4, IBM Plex Mono and Libre Franklin;
+   `embedded_font_css()` base64-inlines them as `@font-face` data URIs, so the build needs no
+   network and renders identically on a Mac, in CI, or in a sandboxed container. This is not a
+   nicety: the first build of the set silently produced 84 PDFs set in Liberation Serif because the
+   render host could not reach `fonts.googleapis.com` and the fallback looked plausible. A guard
+   now fails the build if any of the four families is not `status === 'loaded'` after
+   `document.fonts.ready`, so that cannot recur silently.
+
+   > Libre Franklin was added 2026-09-15. `--font-contrast` had named it since the standfirst
+   > redesign, but nothing ever fetched it, so standfirsts fell back to Arial on the live site and
+   > to Liberation Sans in the PDFs. It is now in both the page's Google Fonts link and this
+   > bundle, so the two agree. Both axes are bundled: standfirsts set italic, but
+   > `.topbar .tb-title` uses `--font-contrast` upright.
+
+   **Output is byte-deterministic.** Chromium stamps a fresh `/CreationDate` and `/ID` into every
+   render, so a rebuild used to rewrite all 84 files — a ~24 MB diff — even when no report had
+   changed. Those fields are normalised after rendering, so an unchanged report produces identical
+   bytes and a rebuild only touches what actually changed. The replacement is **equal-length by
+   construction**: PDF cross-reference tables store absolute byte offsets, so a substitution of a
+   different length would corrupt the file.
+
+   > Chromium exports the two *variable* families as Type3 fonts, which is why a naive `/BaseFont`
+   > grep over the PDF bytes shows only IBM Plex Mono. The text is still selectable and searchable
+   > (verified); it is also why the set is ~20 MB rather than ~7 MB.
+
+   Mechanics worth knowing if you touch `report_pdf.py`: the desktop layout is composed at a
+   1180px viewport (`LAYOUT_WIDTH`) — what makes the desktop, not mobile, CSS apply — then printed
+   at 794px = 210mm (`PAPER_WIDTH`, `SCALE = PAPER_WIDTH / LAYOUT_WIDTH`), so the *viewport* stays
+   desktop-sized while the *page* shrinks to A4. Full rationale, including why the order of
+   operations (`set_content` → wait for fonts → `emulate_media("screen")` → measure height →
+   `page.pdf()`) cannot be reordered, is in the module docstring.
+
 ### The storyline hierarchy and the champion register
 
 Two rules added 2026-08-14 that govern what the report is *about*, independent of vehicles.
@@ -1158,7 +1229,7 @@ default (`high`). It is the primary cost/latency lever and is untested here — 
 
 ## UI surfaces
 
-- **Webapp (primary)** — `/teg-reports` page (see `webapp/routes/reports.py` + `webapp/templates/teg_reports.html`) and the Report tab on `/results` (see `webapp/routes/history.py` `_results_context()` `tab == "report"` branch).
+- **Webapp (primary)** — `/teg-reports` page (see `webapp/routes/reports.py` + `webapp/templates/teg_reports.html`) and the Report tab on `/results` (see `webapp/routes/history.py` `_results_context()` `tab == "report"` branch). `/teg-reports` also offers a **Download PDF** button, gated on `data/commentary/pdfs/manifest.json`, serving a pre-rendered A4 PDF built offline by `scripts/build_report_pdfs.py` — see *Pre-render to PDF* above and `webapp/README.md`.
 - **Newspaper edition (live, not linked)** — `/teg-reports-preview` (`webapp/routes/report_preview.py` + `webapp/templates/teg_reports_preview.html`), rendering the storyline-first artefacts through `newspaper_edition.py`. Not in the nav, and only TEGs 14/16/18 have the artefacts; switching `/teg-reports` over is the open decision.
 - **Streamlit (legacy, still wired)** — `streamlit/teg_reports.py` prefers the new styled MD, falls back to the legacy `teg_N_main_report.md`.
 

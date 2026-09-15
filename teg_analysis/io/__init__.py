@@ -20,6 +20,7 @@ from .file_operations import (
     write_file,
     read_text_file,
     write_text_file,
+    read_binary_file,
     backup_file,
     check_for_complete_and_duplicate_data,
 )
@@ -73,6 +74,7 @@ __all__ = [
     'write_file',
     'read_text_file',
     'write_text_file',
+    'read_binary_file',
     'backup_file',
     'check_for_complete_and_duplicate_data',
     # GitHub operations

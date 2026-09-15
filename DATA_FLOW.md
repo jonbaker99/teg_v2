@@ -25,6 +25,7 @@ data/
   bestball.parquet        ← pre-computed per-round bestball/worstball totals (read by the webapp for all-time ranking; rebuilt on every add/delete)
   commentary_*.parquet    ← AI-generated commentary (round/tournament summaries, streaks)
   commentary/             ← the LLM report pipeline's artefacts (see below) — markdown + story-plan JSON
+  commentary/pdfs/        ← pre-rendered A4 PDFs of reports (teg_N.pdf, teg_N_round_R.pdf) + manifest.json — built offline, no LLM
   commentary/variants/    ← per-model artefact sets for comparison runs — GITIGNORED
   llm_mailbox/            ← prompt hand-off for `--plan` / `--paste` report runs — GITIGNORED, transient
 ```
@@ -54,6 +55,13 @@ safe to delete**: `commentary/variants/<name>/` is a parallel artefact set for o
 `--plan` and `--paste` runs (one directory per run: `run.json`, per-call `request.md` / `response.*`, a
 `FINISHED` marker). Neither is written by `write_file` and neither goes to the Railway volume — report
 generation is offline-only. Full reference: `teg_analysis/reporting/ARTEFACTS.md`.
+
+`commentary/pdfs/` is different: it **is** committed (a `SYNC_FOLDERS` entry, so
+`/admin/volume-sync` can pull it onto the Railway volume like any other report artefact), holding a
+pre-rendered A4-width PDF per tournament/round report plus a `manifest.json` the webapp reads to
+decide whether to show a Download PDF button. Built offline by `scripts/build_report_pdfs.py`
+(headless Chromium via Playwright, a dev-only dependency — deliberately never a Railway one); the
+webapp only ever serves the bytes. See [§10](#10-report-build--scores--published-report) below.
 
 `live_rounds.csv` / `live_rounds/{token}.csv` back multi-device live round entry (`teg_analysis/analysis/live_round.py`, `/live-round/{token}`) — an admin starts a live round for an already-set-up TEG+Round, gets a shareable link, and players enter scores from their own phones with the server (not client clocks) arbitrating write order and flagging genuine conflicts. The per-round staging file is written `defer_github=True` on every score entry (volume-only, never committed — it's a staging area, not the record) and is archived once finalized, at which point its scores are converted to the same long-format shape the "add a round" flow uses and written via the existing `execute_data_update` — one GitHub commit, same as any other round addition. See `DATA_STORAGE_INGESTION_PLAN.md`, "Phase 3.4 design", for the full model (conflict resolution, polling, device identity).
 
@@ -404,7 +412,12 @@ flowchart TD
     NE --> W1["/teg-reports<br/>webapp/routes/reports.py<br/>render_desktop_html() + edition JSON"]
     NE --> PR["scripts/build_newspaper_edition<br/>→ editions.json + inlines it<br/>→ /report-layouts/ prototypes"]
 
+    NE -.->|"offline, manual<br/>no LLM"| PDF["scripts/build_report_pdfs.py<br/>Chromium/Playwright, dev-only"]
+    PDF --> PDFf(["data/commentary/pdfs/teg_N[_round_R].pdf<br/>+ manifest.json"])
+    PDFf --> PDFR["GET /teg-reports/pdf<br/>read_binary_file() — bytes only,<br/>never rendered on Railway"]
+
     W1 --> BR["Browser"]
+    PDFR --> BR
 ```
 
 ### Hop by hop
@@ -455,6 +468,21 @@ runs on any TEG that has *either* plan, not just the three with both.
 | 11 | `newspaper_edition.build_edition(teg)` parses the styled MD **plus** the storyline plan into one edition dict | *(memory)* | 12a, 12b | no |
 | 12a | `render_desktop_html()` + edition JSON → `/teg-reports` (`webapp/routes/reports.py`, `templates/teg_reports.html`) | HTML | the reader — live | no |
 | 12b | `scripts/build_newspaper_edition` → writes `editions.json` **and** inlines it into the prototype pages (one command; `scripts/inline_editions` still runs standalone to re-inline without a rebuild) | `editions.json`, `composite.html` etc. | `/report-layouts/` | no |
+
+**PDF pre-render (offline, manual, optional)** — a side branch off the same `build_edition`, not
+part of the reader-facing route above it:
+
+| # | Step | Writes | Read by | LLM? |
+|---|---|---|---|---|
+| 13 | `scripts/build_report_pdfs.py` — same `build_edition()` + `render_desktop_html()` as 12a, printed to a single-page A4 PDF by headless Chromium (Playwright, dev-only dependency — never installed on Railway) | `data/commentary/pdfs/teg_N[_round_R].pdf`, `manifest.json` (content sha per PDF) | 14 | no |
+| — | `git push` — same offline path as step 9; not the app's write path | GitHub → `data/commentary/pdfs` (a `SYNC_FOLDERS` entry) | Railway volume, via `/admin/volume-sync` | no |
+| 14 | `GET /teg-reports/pdf` (`webapp/routes/reports.py`) → `read_binary_file()` | *(response bytes)* | the browser, as a download | no |
+
+Run **manually** after generating or regenerating a report, or after editing
+`webapp/static/newspaper_preview.css` — nothing triggers step 13 automatically yet (tracked in
+`webapp/TODOS.md`). `--check` (no rendering) reports whether a PDF's content sha still matches its
+source, so staleness is at least detectable even though it isn't yet enforced. Detail:
+`teg_analysis/reporting/README.md` → *Pre-render to PDF*, `ARTEFACTS.md` → *The PDF artefact*.
 
 ### Three things that are easy to get wrong
 

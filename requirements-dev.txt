@@ -1,0 +1,15 @@
+# Dev-only dependencies — never merge this into requirements.txt.
+#
+# requirements.txt drives the Railway build (`railway.toml` -> `uvicorn
+# webapp.app:app`) and must stay webapp-only. Playwright pulls in a browser
+# automation stack the webapp never runs and, on a first install, needs a
+# separate `playwright install chromium` step to fetch an actual browser —
+# neither belongs in a production deploy. Kept in this separate file so a
+# Railway build never sees it.
+#
+# Used by: teg_analysis/reporting/report_pdf.py, scripts/build_report_pdfs.py
+# (both import playwright lazily so teg_analysis/ still imports cleanly
+# without this installed).
+#
+# Install locally with: pip install -r requirements-dev.txt
+playwright>=1.40

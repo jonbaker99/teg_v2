@@ -2,7 +2,48 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-13 (grouped player-detail redesign; earlier reporting context retained)
+**Last updated:** 2026-09-15 (report PDF download; standfirst now Libre Franklin italic; deterministic PDF builds)
+
+## 2026-09-15 — Pre-rendered PDF download for reports
+
+`/teg-reports` gained a Download PDF button: each tournament/round report now has a pre-rendered,
+single-page A4 PDF carrying the desktop newspaper layout regardless of the downloading device.
+PDFs are built **offline** by `python scripts/build_report_pdfs.py --all` (headless Chromium via
+Playwright, ~1s/report, ~90s for all 84) — Railway never renders one, matching the existing rule
+that the webapp only reads finished reports. `read_binary_file` (new, `teg_analysis/io/file_operations.py`)
+serves the bytes; the button is gated on `data/commentary/pdfs/manifest.json` so an unbuilt report
+shows no button rather than a dead link. Playwright is a dev-only dependency
+(`requirements-dev.txt`) and never enters `requirements.txt`. **Known weakness, by design:** a PDF
+can drift from its report or from `newspaper_preview.css` with no automatic signal —
+`--check` detects it, nothing enforces it yet (follow-up in `webapp/TODOS.md`). Detail:
+`webapp/README.md`, `teg_analysis/reporting/README.md` → *Pre-render to PDF*,
+`teg_analysis/reporting/ARTEFACTS.md` → *The PDF artefact*, `DATA_FLOW.md` → §10.
+
+## 2026-09-15 — Standfirsts now set in Libre Franklin italic
+
+Follow-on from the entry below. After an A/B of five treatments (upright sans, sans italic, and a
+vertical-bar variant of serif italic / sans / sans italic), Jon chose **sans italic**: upright Libre
+Franklin read as a label under the headline, the italic reads as a voice introducing the story. The
+`.sf-contrast` rule now sets `font-style:italic`, covering the lead, sub-article and mobile
+standfirsts alike. `.topbar .tb-title` also uses `--font-contrast` but sets no style, so it stays
+upright — both axes are loaded and bundled.
+
+The PDF build also became **byte-deterministic**: Chromium stamps a fresh `/CreationDate` and `/ID`
+into every render, so previously every rebuild rewrote all 84 files and cost a ~24 MB diff even when
+no report had changed. Those fields are now normalised in place (equal-length replacement, so the
+xref offsets stay valid), meaning a rebuild only produces new blobs for reports that genuinely
+changed.
+
+## 2026-09-15 — Standfirsts now set in Libre Franklin
+
+`--font-contrast` has named `'Libre Franklin'` since the standfirst redesign (2026-09-11), but the
+font was never in `teg_reports.html`'s Google Fonts link — so every standfirst on the live site
+silently fell back to Arial, and to Liberation Sans in the new PDFs. Found while checking font
+fidelity in the PDF build. Fixed on both sides: added to the page's font link (29 KB latin subset)
+and bundled into `webapp/static/fonts/` for the PDF build, whose font-load guard now covers all
+four families. The 84 PDFs were rebuilt. Jon picked Libre Franklin over three alternatives
+(Arial as-is, the pre-2026-09-11 upright serif, a serif italic) — it is the treatment the
+`.sf-contrast` sizes were tuned for.
 
 ## 2026-09-13 — Grouped player detail approved
 

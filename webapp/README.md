@@ -824,6 +824,24 @@ HTML builders).
   TEG select once `available_rounds(teg)` is non-empty. Start at
   `report_layout_prototypes/README.md` for the chosen elements and
   composition rule.
+  - **Download PDF (2026-09-15).** `/teg-reports` shows a Download PDF button
+    next to a report whenever one has been pre-rendered — `GET
+    /teg-reports/pdf?teg=&round=` streams the bytes as an `application/pdf`
+    attachment via `read_binary_file` (`teg_analysis/io/file_operations.py`),
+    the binary counterpart of `read_text_file`: same volume-then-GitHub
+    behaviour, so it works on Railway exactly like the report markdown does.
+    The button's visibility is driven by `data/commentary/pdfs/manifest.json`
+    (`_pdf_manifest`, `lru_cache`d and wired into
+    `deps.register_cache_clearer`), not by probing for the file — a report
+    without a PDF yet simply shows no button instead of a link that 404s.
+    **The webapp only ever serves a PDF, never renders one.** PDFs are
+    pre-rendered offline (Chromium via Playwright) by
+    `scripts/build_report_pdfs.py` and committed to
+    `data/commentary/pdfs/`; `data/commentary/pdfs` is one of the
+    `SYNC_FOLDERS` `/admin/volume-sync` can pull, same as any other report
+    artefact. Build mechanics, staleness checking and why headless Chromium
+    is deliberately not a Railway dependency: `teg_analysis/reporting/README.md`
+    → *Pre-render to PDF*.
   - **First slice shipped:** the **Scorecard** page now renders a portrait
     (holes-as-rows) layout on phones (`≤640px`) for all three views, with a
     Gross/Stableford toggle and dark-ready (inert) colour tokens. Desktop/iPad

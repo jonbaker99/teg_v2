@@ -93,6 +93,34 @@ by `scripts/storyline_round_report_experiment.py --tegs N --rounds R`; read by
 `newspaper_edition.build_edition(teg, round_num=R)`. Currently on disk only for TEG 14 R2 and TEG
 18 R3/R4 (the validation runs — see STATUS.md), not backfilled.
 
+## The PDF artefact
+
+Not part of either text pipeline above — a presentation-only extra, built from whichever pipeline's
+edition `newspaper_edition.build_edition(teg)` can currently parse (storyline-first, today). Lives at
+`data/commentary/pdfs/`, not loose in `data/commentary/` with everything else.
+
+| File | What it is | Made by | Read by |
+|---|---|---|---|
+| `teg_N.pdf` / `teg_N_round_R.pdf` | **A single-page, A4-width PDF** of the desktop newspaper layout, carrying that layout regardless of what device downloads it | `scripts/build_report_pdfs.py` (offline, Playwright/Chromium — **no LLM call**) | `GET /teg-reports/pdf` (`webapp/routes/reports.py`, via `read_binary_file`) |
+| `manifest.json` | One entry per built PDF: `sha` (`report_pdf.content_sha` — a hash of the rendered body HTML + `newspaper_preview.css`), `bytes`, `built_at` | the same script, on every run | `webapp/routes/reports.py`'s `_pdf_manifest()` (gates the Download PDF button) and the script's own `--check` |
+
+Rebuild or check it — free, no LLM, ~1s per report:
+
+```bash
+python scripts/build_report_pdfs.py --tegs 18       # one TEG
+python scripts/build_report_pdfs.py --all            # every available edition (~84, ~90s)
+python scripts/build_report_pdfs.py --all --check    # stale/missing report, renders nothing
+```
+
+**Staleness is the thing to watch.** A PDF is a snapshot of the report markdown *plus*
+`webapp/static/newspaper_preview.css` at build time — regenerate a report, or edit that stylesheet,
+and its PDF is out of date with no automatic signal. Run `--check` after either, and rebuild what it
+flags. This is presentation-layer-only; a stale PDF never affects the on-screen report.
+
+Needs `playwright` (dev-only, `requirements-dev.txt` — **never** `requirements.txt`, which drives the
+Railway build): `pip install -r requirements-dev.txt`. Full build mechanics and why headless Chromium
+is deliberately not a Railway dependency: [README.md](README.md) → *Pre-render to PDF*.
+
 ### "The bundle" is not a file
 
 This trips people up. **The bundle is in-memory only** — the ~26k-token blob of scored beats,
@@ -193,6 +221,7 @@ stages. Freeze what you aren't changing.
 | Mechanical fault checks | `verify.py` | **free** | ⑨ |
 | Standings / records / CSS hooks | `render.py` | **free** | ⑩ |
 | Visual design | `webapp/static/teg_reports.css` | **free** | ⑪ |
+| Pre-rendered download PDF | `scripts/build_report_pdfs.py` | **free** (no LLM) | ⑫ |
 
 ---
 
@@ -521,6 +550,22 @@ Idempotent — running it twice produces byte-identical output. Safe to re-run a
 
 Edit `webapp/static/teg_reports.css` and reload. No Python involved.
 (There is a second copy under `streamlit/`; it is dead code — see known issue 6.)
+
+### ⑫ Pre-rendered download PDF — free (no LLM)
+
+```bash
+python scripts/build_report_pdfs.py --tegs 17           # rebuild one TEG's PDFs
+python scripts/build_report_pdfs.py --all --check         # is anything stale? renders nothing
+```
+
+Needs `playwright` (`pip install -r requirements-dev.txt` — dev-only, never in `requirements.txt`).
+Run `--check` after regenerating a report or editing `webapp/static/newspaper_preview.css`; it names
+exactly what's stale or missing, comparing a content sha against `manifest.json` without opening a
+browser. See [The PDF artefact](#the-pdf-artefact) above and README.md → *Pre-render to PDF* for the
+full mechanics.
+
+*Did it work?* `--check` reports up to date, and the new/changed PDF opens as a single A4 page in the
+desktop layout, not the mobile one.
 
 ---
 
