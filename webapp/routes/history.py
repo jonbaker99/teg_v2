@@ -47,6 +47,7 @@ from webapp.chart_utils import (
     adjusted_stableford,
     adjusted_grossvp,
     get_teg_chart_readout,
+    CROWDED_FIELD_THRESHOLD,
 )
 from webapp.tables import df_to_html as _df_to_html
 
@@ -697,6 +698,7 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
             "lb_cards": lb_cards,
             "lb_hero": lb_hero,
             "chart_readout": chart_readout,
+            "chart_crowded_threshold": CROWDED_FIELD_THRESHOLD,
             "teg_name": teg_name,
             "chart_types": RESULTS_CHART_TYPES,
             "active_chart_variant": chart_variant,

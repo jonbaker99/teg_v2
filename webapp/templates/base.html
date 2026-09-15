@@ -312,7 +312,11 @@
                 Plotly.purge(el);
                 var fig = JSON.parse(el.dataset.figure);
                 Plotly.newPlot(el, fig.data, fig.layout, {responsive: true, displayModeBar: false})
-                    .then(function() { attachSeriesHighlight(el, fig); attachChartReadoutFocus(el, fig); })
+                    .then(function() {
+                        attachSeriesHighlight(el, fig);
+                        applyMobileChartTreatment(el, fig);
+                        attachChartReadoutFocus(el, fig);
+                    })
                     .catch(function() { /* no-highlight is an acceptable degradation */ });
             });
         }
@@ -361,6 +365,54 @@
                 el.on('plotly_unhover', function() { resetOpacity(); });
             } catch (err) {
                 // Degrade to no-highlight.
+            }
+        }
+
+        // R4.1: opt-in phone-only chart treatment. The server always renders
+        // ONE figure with its full desktop/iPad contract (native legend,
+        // full "Player: value" labels, wide margin -- see
+        // create_cumulative_graph); charts that also carry the below-chart
+        // readout (wrapped in .chart-block, opted in via that wrapper alone
+        // -- Latest Round's own chart never has one) get reshaped into the
+        // compact phone contract HERE, client-side, from the exact same
+        // figure, rather than the server computing and shipping two
+        // divergent figures. Only runs at <=640px; desktop/iPad never see
+        // this function do anything (early return), so their output is
+        // byte-identical to the pre-R4.1 figure.
+        function applyMobileChartTreatment(el, fig) {
+            try {
+                var block = el.closest('.chart-block');
+                if (!block) return;
+                if (!window.matchMedia('(max-width: 640px)').matches) return;
+
+                var threshold = parseInt(block.dataset.crowdedThreshold, 10);
+                if (!threshold) threshold = 6;
+
+                // add_round_annotations (chart_utils.py) tags its R1/R2/...
+                // divider labels with yref:'paper'; per-player end-of-line
+                // labels never set yref, so this split needs no server change.
+                var roundLabels = [];
+                var playerLabels = [];
+                (fig.layout.annotations || []).forEach(function(a) {
+                    (a.yref === 'paper' ? roundLabels : playerLabels).push(a);
+                });
+
+                var shortLabels = playerLabels.length >= threshold ? [] : playerLabels.map(function(a) {
+                    // "Player: value" -> "Player value" -- the proven Latest
+                    // Round end-label format, needing far less width.
+                    var shorter = {};
+                    for (var k in a) shorter[k] = a[k];
+                    shorter.text = (a.text || '').replace(': ', ' ');
+                    return shorter;
+                });
+
+                Plotly.relayout(el, {
+                    showlegend: false,
+                    margin: {r: 36, t: 8, b: 10, l: 0},
+                    annotations: roundLabels.concat(shortLabels),
+                });
+            } catch (err) {
+                // Degrade to the desktop figure exactly as server-rendered.
             }
         }
 

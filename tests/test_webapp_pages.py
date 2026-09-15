@@ -392,9 +392,14 @@ def test_standings_page_has_mobile_table_hook(client):
 
 
 # ---------------------------------------------------------------------------
-# Tournament race chart (R4.1): the proven Latest Round chart contract
-# (no native legend, compact margin, short end labels, below-chart readout)
-# applied to /results and /leaderboard's cumulative race chart.
+# Tournament race chart (R4.1): create_cumulative_graph keeps exactly ONE
+# figure-building contract -- the pre-R4.1 desktop/iPad one (native legend,
+# full "Player: value" labels, wide margin) -- unconditionally, regardless of
+# field size or caller (/results, /leaderboard, and the unlinked /charts all
+# get this same figure). The phone-only compact contract (no legend, short
+# labels, crowded-field label suppression) is applied client-side to that
+# same figure (base.html::applyMobileChartTreatment) and is not something
+# Python builds or this test suite can exercise directly.
 # ---------------------------------------------------------------------------
 
 def _race_rows(players, rounds=2):
@@ -411,31 +416,22 @@ def _race_rows(players, rounds=2):
     return pd.DataFrame(rows)
 
 
-def test_race_chart_no_native_legend_and_compact_margin():
-    df = _race_rows(["AB", "DM", "GW"])
-    fig = create_cumulative_graph(df, "TEG 1", "Val Cum TEG", title="")
-    assert fig.layout.showlegend is False
-    assert fig.layout.margin.r == 36
-    # Short "code value" end labels (no colon) -- the proven Latest Round
-    # format, which needs far less width than "Player: value" did.
-    texts = [a.text for a in fig.layout.annotations if a.text and not a.text.startswith("R")]
-    assert any(t.split(" ")[0] == "AB" and ":" not in t for t in texts)
-
-
-def test_race_chart_crowded_field_suppresses_on_chart_labels():
-    small = _race_rows([f"P{i}" for i in range(CROWDED_FIELD_THRESHOLD)])
+def test_race_chart_keeps_native_legend_and_full_labels_regardless_of_field_size():
+    # Desktop/iPad contract must not depend on player count -- no server-side
+    # crowded-field branching, unlike the phone-only client treatment.
+    small = _race_rows(["AB", "DM", "GW"])
     crowded = _race_rows([f"P{i}" for i in range(CROWDED_FIELD_THRESHOLD + 1)])
 
     fig_small = create_cumulative_graph(small, "TEG 1", "Val Cum TEG", title="")
     fig_crowded = create_cumulative_graph(crowded, "TEG 1", "Val Cum TEG", title="")
 
-    player_labels_small = [a for a in fig_small.layout.annotations if a.text and not a.text.startswith("R")]
-    player_labels_crowded = [a for a in fig_crowded.layout.annotations if a.text and not a.text.startswith("R")]
-    assert len(player_labels_small) == CROWDED_FIELD_THRESHOLD
-    assert len(player_labels_crowded) == 0
-    # Lines themselves are unaffected -- only the on-chart labels are dropped;
-    # the readout (get_teg_chart_readout) is what identifies players instead.
-    assert len(fig_crowded.data) == CROWDED_FIELD_THRESHOLD + 1
+    for fig, n_players in ((fig_small, 3), (fig_crowded, CROWDED_FIELD_THRESHOLD + 1)):
+        assert fig.layout.showlegend is not False  # native legend on (default True)
+        assert fig.layout.margin.r == 100
+        player_labels = [a for a in fig.layout.annotations if a.text and not a.text.startswith("R")]
+        assert len(player_labels) == n_players
+        # Full "Player: value" form (colon), not the compact phone label.
+        assert all(":" in a.text for a in player_labels)
 
 
 def test_race_chart_readout_colours_agree_with_chart_even_when_unsorted():
@@ -464,10 +460,9 @@ def test_race_chart_readout_colours_agree_with_chart_even_when_unsorted():
     ("/leaderboard/table", "tab"),
 ])
 def test_race_chart_readout_matches_rendered_traces(client, path, tab_param):
-    # HTMX-rendered state: every player the chart actually draws must have a
-    # matching readout button (same code), so tapping a button can always
-    # find its trace -- and vice versa, no orphaned button for a player the
-    # chart didn't draw.
+    # HTMX-rendered state: the readout's player codes must exactly match the
+    # figure's trace names -- not just a subset -- so every button has a
+    # trace to focus and every trace has a button, in both directions.
     resp = client.get(path, params={"teg": 18, tab_param: "net", "chart_variant": "adjusted"})
     _assert_ok_no_error(resp)
     assert "chart-block" in resp.text
@@ -476,12 +471,20 @@ def test_race_chart_readout_matches_rendered_traces(client, path, tab_param):
     figure_codes = set(re.findall(r'&#34;name&#34;:&#34;(\w{2,3})&#34;', resp.text))
     readout_codes = set(re.findall(r'data-chart-focus="(\w+)"', resp.text))
     assert readout_codes
-    assert readout_codes <= figure_codes
+    assert readout_codes == figure_codes
 
-    resp = client.get("/leaderboard")
+
+def test_race_chart_readout_markup_present_regardless_of_viewport(client):
+    # Desktop/iPad hides the readout via CSS (.chart-block .lr-readout is
+    # display:none by default, re-shown only inside the <=640px media
+    # query -- see webapp/static/mobile.css), not a server-side branch. The
+    # server has no viewport to branch on, so the readout markup -- and the
+    # threshold the client-side crowded-field check needs -- must always be
+    # in the response.
+    resp = client.get("/results/table", params={"teg": 18, "tab": "net", "chart_variant": "adjusted"})
     _assert_ok_no_error(resp)
-    assert "standings-page" in resp.text
-    assert "table-wrapper--no-pin" in resp.text
+    assert "lr-readout" in resp.text
+    assert re.search(r'data-crowded-threshold="\d+"', resp.text)
 
 
 def test_honours_page_renders(client):

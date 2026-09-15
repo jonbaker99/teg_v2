@@ -11,6 +11,12 @@
 .mobile-tabbar { display: none; }
 .lb-hero { display: none; }
 .lb-cards { display: none; }
+/* Tournament race chart (R4.1, /results + /leaderboard): the readout is a
+   phone-only substitute for the native legend that desktop/iPad still shows
+   (create_cumulative_graph keeps that legend unconditionally -- see
+   chart_utils.py). Scoped to .chart-block so Latest Round's own .lr-readout,
+   which IS shown on desktop by design, is untouched. */
+.chart-block .lr-readout { display: none; }
 
 @media (max-width: 640px) {
   /* Leave room for the fixed bottom bar so content never hides behind it. */
@@ -507,6 +513,13 @@
   .lr-chart-tools label { display: grid; gap: 4px; color: var(--text-muted, #666); font: 700 11px/1.2 'Roboto Mono', monospace; letter-spacing: .04em; text-transform: uppercase; }
   .lr-chart-tools select { min-height: 44px; font-size: 16px; }
   .lr-readout { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 8px; }
+  /* Re-enable the tournament race chart's readout at phone width -- the
+     desktop-hide rule above (.chart-block .lr-readout { display: none })
+     has higher specificity than the generic .lr-readout rule just above,
+     so it needs an equally-specific override here; grid-template-columns
+     etc. still fall through from that generic rule since this only sets
+     display. */
+  .chart-block .lr-readout { display: grid; }
   .lr-readout-entry { min-height: 44px; display: flex; align-items: center; justify-content: flex-start; gap: 8px; padding: 4px 6px; border: 0; border-radius: 5px; color: var(--text-primary, #1b241f); background: transparent; text-align: left; }
   .lr-readout-entry.is-active { background: var(--table-toprank-bg, #edf5ee); font-weight: 700; }
   .lr-initials { color: var(--accent, #17683c); font: 700 12px 'Roboto Mono', monospace; }

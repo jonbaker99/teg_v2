@@ -11,7 +11,7 @@
 <h3 class="chart-title">{{ chart_title }}</h3>
 <p class="chart-description">{{ chart_subtitle }}</p>
 {% if figure_json %}
-<div class="chart-block">
+<div class="chart-block" data-crowded-threshold="{{ chart_crowded_threshold }}">
 <div class="data-card data-card--padded">
     <div class="chart-container" data-figure="{{ figure_json }}" style="height:450px;"></div>
 </div>

@@ -222,8 +222,14 @@ def format_value(value, chart_type):
 #: Above this many players, on-chart end-of-line labels start to collide (the
 #: readout list below the chart -- see get_teg_chart_readout -- carries player
 #: identity/value instead; see webapp/MOBILE_PLAN.md R4's "do not force direct
-#: labels onto large fields" gate). No TEG in the current data reaches this,
-#: so it's exercised by synthetic tests, not live data.
+#: labels onto large fields" gate). Applied client-side only (base.html's
+#: applyMobileChartTreatment), at phone widths -- the desktop/iPad figure
+#: keeps its native legend and full annotations unconditionally (see
+#: create_cumulative_graph), so this constant never changes what the server
+#: renders. Threaded through to the client via the "chart_crowded_threshold"
+#: template context / .chart-block[data-crowded-threshold] attribute (see
+#: webapp/routes/history.py::_results_context) so there is one source of
+#: truth, not a duplicated magic number in JS.
 CROWDED_FIELD_THRESHOLD = 6
 
 
@@ -276,15 +282,10 @@ def create_cumulative_graph(df, chosen_teg, y_series, title, y_calculation=None,
 
     fig = go.Figure()
 
-    players = teg_data['Pl'].unique()
     color_map = get_teg_player_color_map(df, chosen_teg)
-    # Above the threshold, on-chart labels would collide -- skip them and
-    # rely on the below-chart readout (get_teg_chart_readout) instead of
-    # forcing direct labels onto a crowded field.
-    crowded = len(players) > CROWDED_FIELD_THRESHOLD
 
     traces = []
-    for player in players:
+    for player in teg_data['Pl'].unique():
         player_data = teg_data[teg_data['Pl'] == player]
 
         if y_calculation:
@@ -300,36 +301,34 @@ def create_cumulative_graph(df, chosen_teg, y_series, title, y_calculation=None,
             line=dict(width=2),
         ))
 
-        if not crowded:
-            last_x = player_data['x_value'].iloc[-1]
-            last_y = y_values.iloc[-1]
-            formatted_value = format_value(last_y, chart_type)
-            # Short "code value" form (no colon) -- matches the proven Latest
-            # Round end-of-line label, which needs far less width than the
-            # old "Player: value" text did.
-            fig.add_annotation(
-                x=last_x,
-                y=last_y,
-                text=f"{player} {formatted_value}",
-                showarrow=False,
-                xanchor='left',
-                yanchor='middle',
-                xshift=4,
-                font=dict(size=9, color=color_map[player])
-            )
+        # Full "Player: value" end-of-line label -- the desktop/iPad figure
+        # contract, unconditional and unrelated to field size. The phone-only
+        # compact contract (no legend, short labels, crowded-field label
+        # suppression) is applied client-side to the SAME figure
+        # (base.html::applyMobileChartTreatment), not computed here, so this
+        # function has exactly one figure-building code path regardless of
+        # viewport.
+        last_x = player_data['x_value'].iloc[-1]
+        last_y = y_values.iloc[-1]
+        formatted_value = format_value(last_y, chart_type)
+        fig.add_annotation(
+            x=last_x,
+            y=last_y,
+            text=f"{player}: {formatted_value}",
+            showarrow=False,
+            xanchor='left',
+            yanchor='middle',
+            xshift=5,
+            font=dict(size=10, color=color_map[player])
+        )
 
     fig.add_traces(traces)
 
     fig.update_layout(
         yaxis_title=y_axis_label if y_axis_label else f'Cumulative {y_series}',
         hovermode='x unified',
-        # Native legend stays off -- the below-chart readout (rendered by the
-        # caller from get_teg_chart_readout) already covers "which colour is
-        # which player", tappable without hover, so the legend was pure
-        # duplication of that plus the end-of-line labels. Matches the
-        # proven Latest Round chart contract (create_round_graph).
-        showlegend=False,
-        margin=dict(r=36, t=8, b=10, l=0),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, traceorder='normal', itemsizing='constant'),
+        margin=dict(r=100, t=0, b=10, l=0),
         font=dict(family="monospace")
     )
 
