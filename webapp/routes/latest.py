@@ -48,7 +48,7 @@ from teg_analysis.core.metadata import get_scorecard_data, get_teg_metadata
 from teg_analysis.display.scorecards import (
     build_round_comparison_responsive,
     build_eclectic_scorecard_table,
-    build_bestball_worstball_scorecard,
+    build_bestball_worstball_responsive,
     build_bestball_contribution_bars,
     build_teg_eclectic_scorecard,
     build_eclectic_contribution_bars,
@@ -560,8 +560,12 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                 if rank_html:
                     sections.append({"title": None, "table_html": rank_html, "raw": True})
 
-                card_html = build_bestball_worstball_scorecard(round_data)
-                sections.append({"title": None, "table_html": card_html})
+                # Responsive block: landscape (holes as columns) on desktop/iPad,
+                # portrait (holes as rows) on phone -- own .data-card/.table-wrapper
+                # wrapping already baked in (see build_round_comparison_responsive),
+                # so this section is raw.
+                card_html = build_bestball_worstball_responsive(round_data)
+                sections.append({"title": None, "table_html": card_html, "raw": True})
 
                 # Per-player contribution breakdown (CSS bar charts) below the card.
                 bars_html = build_bestball_contribution_bars(round_data)

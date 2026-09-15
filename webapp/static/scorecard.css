@@ -508,12 +508,17 @@ html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="0"] span { c
 .bw-scorecard td.player-label { font-weight: 400; }
 .bw-scorecard .bw-team-row .player-label { font-weight: 600; }
 
-.bw-scorecard .bw-cell {
+/* .bw-scorecard-portrait (holes-as-rows companion, R3.4) shares the same
+   .bw-cell best/worst highlight language -- only the layout differs, so
+   these rules are selector-shared rather than duplicated. */
+.bw-scorecard .bw-cell,
+.bw-scorecard-portrait .bw-cell {
   text-align: center;
   vertical-align: middle;
   background-color: white;
 }
-.bw-scorecard .bw-cell span {
+.bw-scorecard .bw-cell span,
+.bw-scorecard-portrait .bw-cell span {
   font-size: 11px;
   font-family: 'Roboto Mono', monospace;
   color: #b3b3b3; /* neutral holes de-emphasised */
@@ -522,7 +527,9 @@ html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="0"] span { c
    number; best and worst share the same fill lightness and border weight so
    neither dominates. */
 .bw-scorecard .bw-cell.bw-player-best span,
-.bw-scorecard .bw-cell.bw-player-worst span {
+.bw-scorecard .bw-cell.bw-player-worst span,
+.bw-scorecard-portrait .bw-cell.bw-player-best span,
+.bw-scorecard-portrait .bw-cell.bw-player-worst span {
   display: inline-block;
   min-width: 22px;
   padding: 1px 4px;
@@ -530,12 +537,14 @@ html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="0"] span { c
   border: 1px solid transparent;
   font-weight: 600;
 }
-.bw-scorecard .bw-cell.bw-player-best span {
+.bw-scorecard .bw-cell.bw-player-best span,
+.bw-scorecard-portrait .bw-cell.bw-player-best span {
   background-color: #eaf4ec;
   border-color: #bcdcc1;
   color: #1f7a2a;
 }
-.bw-scorecard .bw-cell.bw-player-worst span {
+.bw-scorecard .bw-cell.bw-player-worst span,
+.bw-scorecard-portrait .bw-cell.bw-player-worst span {
   background-color: #ededed;
   border-color: #c2c2c2;
   color: #444;
@@ -579,24 +588,34 @@ html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="0"] span { c
 }
 
 /* Dark mode */
-html[data-mode="dark"] .bw-scorecard .bw-cell { background-color: #1d1d1a; }
-html[data-mode="dark"] .bw-scorecard .bw-cell span { color: #6a6a6a; }
-html[data-mode="dark"] .bw-scorecard .bw-cell.bw-player-best span {
+html[data-mode="dark"] .bw-scorecard .bw-cell,
+html[data-mode="dark"] .bw-scorecard-portrait .bw-cell { background-color: #1d1d1a; }
+html[data-mode="dark"] .bw-scorecard .bw-cell span,
+html[data-mode="dark"] .bw-scorecard-portrait .bw-cell span { color: #6a6a6a; }
+html[data-mode="dark"] .bw-scorecard .bw-cell.bw-player-best span,
+html[data-mode="dark"] .bw-scorecard-portrait .bw-cell.bw-player-best span {
   background-color: #1f3a22; border-color: #2f5a35; color: #8fdc97;
 }
-html[data-mode="dark"] .bw-scorecard .bw-cell.bw-player-worst span {
+html[data-mode="dark"] .bw-scorecard .bw-cell.bw-player-worst span,
+html[data-mode="dark"] .bw-scorecard-portrait .bw-cell.bw-player-worst span {
   background-color: #3a3a3a; border-color: #555; color: #d8d8d8;
 }
-html[data-mode="dark"] .bw-scorecard td.totals { background-color: #26261f; }
+html[data-mode="dark"] .bw-scorecard td.totals,
+html[data-mode="dark"] .bw-scorecard-portrait td.totals { background-color: #26261f; }
 html[data-mode="dark"] .bw-scorecard th:nth-child(11),
 html[data-mode="dark"] .bw-scorecard td:nth-child(11) { border-left-color: #3a3a3a; }
 html[data-mode="dark"] .bw-rank-num { background-color: #2a2a26; }
 
 /* ===== BESTBALL / WORSTBALL CONTRIBUTION TABLES =====
-   Two side-by-side tables (Bestball, Worstball), each: Player | Impact | Holes.
-   Impact is the headline number; Holes is a CSS bar overlaying a solid 'solo'
-   fill on a pale 'holes' fill, with the count just past the bar end. The pair
-   wraps to stacked when there isn't room for both. */
+   Base rules here are the shared contract used by both the bestball/worstball
+   pair (build_bestball_contribution_bars) and Latest TEG's eclectic table
+   (build_eclectic_contribution_bars) -- Player | Impact | a bar overlaying a
+   solid 'solo' fill on a pale 'holes'/total fill, with the impact value as a
+   headline column and the count label positioned per-row via inline style.
+   The bestball/worstball pair (scoped under .bw-bars-pair below) overrides a
+   few of these for its own denser, prototype-matched treatment; eclectic's
+   single table keeps this base look unchanged. The pair wraps to stacked
+   when there isn't room for both tables. */
 .bw-bars-pair {
   display: flex;
   flex-wrap: wrap;
@@ -633,7 +652,7 @@ html[data-mode="dark"] .bw-rank-num { background-color: #2a2a26; }
 .bw-bars-table th.player-label,
 .bw-bars-table td.player-label { text-align: left; }
 .bw-bars-table td.player-label { font-weight: 400; font-size: 11px; white-space: nowrap; }
-/* Impact — the headline metric: larger, bold, coloured by format. */
+/* Impact -- the headline metric: larger, bold, coloured by format. */
 .bw-col-impact { text-align: center; }
 .bw-impact { font-weight: 700; font-size: 14px; }
 .bw-impact--best { color: #1f7a2a; }
@@ -682,6 +701,32 @@ html[data-mode="dark"] .bw-rank-num { background-color: #2a2a26; }
 .bw-bar-val small { font-weight: 400; color: var(--color-text-secondary); margin-left: 1px; }
 .bw-bar-val.bw-bar-zero { color: #b3b3b3; font-weight: 400; }
 
+/* Bestball/worstball-pair override: matches the approved mobile prototype --
+   a taller track, wider percentage-based columns and the solo/shared count
+   sitting inside the track's left edge on a translucent backing (rather than
+   just past the bar end), so it stays legible over either fill colour and is
+   never placed after the bar. Eclectic (outside .bw-bars-pair) is untouched. */
+.bw-bars-pair .bw-bars-table col.bw-bars-player { width: 34%; }
+.bw-bars-pair .bw-bars-table col.bw-bars-impact { width: 18%; }
+@media (max-width: 640px) {
+  .bw-bars-pair .bw-bars-table col.bw-bars-player { width: 30%; }
+}
+.bw-bars-pair .bw-bar-track { height: 18px; }
+.bw-bars-pair .bw-bar-val {
+  left: 4px;
+  z-index: 3;
+  padding: 2px 3px;
+  border-radius: 2px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.68);
+  font-size: 10px;
+  line-height: 1;
+}
+.bw-bars-pair .bw-bar--best .bw-bar-val,
+.bw-bars-pair .bw-bar--worst .bw-bar-val { color: #fff; }
+.bw-bars-pair .bw-bar-val small { color: inherit; }
+.bw-bars-pair .bw-bar-val.bw-bar-zero { color: var(--color-text-secondary); background: transparent; font-weight: 400; }
+
 /* Dark mode */
 html[data-mode="dark"] .bw-bars-title--best { color: #8fdc97; }
 html[data-mode="dark"] .bw-bars-title--worst { color: #d8d8d8; }
@@ -694,6 +739,9 @@ html[data-mode="dark"] .bw-bar--worst .bw-bar-fill--pale { background-color: #3a
 html[data-mode="dark"] .bw-bar--worst .bw-bar-fill--solid { background-color: #8a8a8a; }
 html[data-mode="dark"] .bw-bar--best .bw-bar-val { color: #8fdc97; }
 html[data-mode="dark"] .bw-bar--worst .bw-bar-val { color: #c9c9c9; }
+html[data-mode="dark"] .bw-bars-pair .bw-bar--best .bw-bar-val,
+html[data-mode="dark"] .bw-bars-pair .bw-bar--worst .bw-bar-val { color: #fff; }
+html[data-mode="dark"] .bw-bars-pair .bw-bar-val.bw-bar-zero { color: var(--color-text-secondary); }
 
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {

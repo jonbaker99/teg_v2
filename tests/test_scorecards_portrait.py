@@ -18,6 +18,9 @@ from teg_analysis.display.scorecards import (
     build_round_comparison_gross_table,
     build_round_comparison_gross_portrait,
     build_round_comparison_stableford_portrait,
+    build_bestball_worstball_scorecard,
+    build_bestball_worstball_scorecard_portrait,
+    build_bestball_contribution_bars,
 )
 
 PARS = [4, 5, 4, 3, 4, 4, 5, 3, 4, 4, 4, 3, 5, 4, 4, 3, 5, 4]  # par 72
@@ -156,3 +159,134 @@ def test_field_stableford_portrait_totals_match_per_player():
     totals = _grand_total_cells(sf)  # [par, DM, JB, GP] in sorted order
     expected = [sum(PARS)] + [int(data[data['Pl'] == c]['Stableford'].sum()) for c in ['DM', 'JB', 'GP']]
     assert totals == expected
+
+
+# --- Bestball / Worstball (R3.4) ---------------------------------------------
+
+def test_bestball_portrait_header_matches_landscape_players():
+    data = _field_df()
+    portrait = build_bestball_worstball_scorecard_portrait(data)
+    header = re.search(r'<thead>(.*?)</thead>', portrait).group(1)
+    cols = re.findall(r'<th class="col-header">(\w+)</th>', header)
+    assert cols == ['Best', 'Worst', 'DM', 'JB', 'GP']  # ascending gross, same order as the field card
+
+
+def test_bestball_portrait_parity_with_landscape():
+    # Every (best, worst) team-cell pair and every per-player vs-par cell must
+    # match between the two orientations, since they're built from the same
+    # per-hole min/max and per-player GrossVP.
+    data = _field_df()
+    landscape = build_bestball_worstball_scorecard(data)
+    portrait = build_bestball_worstball_scorecard_portrait(data)
+    team_cells = lambda html: sorted(re.findall(r'data-vs-par="(-?\d+)"', html))
+    assert team_cells(landscape) == team_cells(portrait)
+
+
+def test_bestball_portrait_matches_landscape_per_coordinate():
+    """Stronger than the multiset check above: every (player, hole) coordinate
+    must show the same displayed value AND the same best/worst class in both
+    orientations -- not just an equal bag of values, which could hide a
+    transposition or a class assigned to the wrong player/hole."""
+    data = _field_df()
+    landscape = build_bestball_worstball_scorecard(data)
+    portrait = build_bestball_worstball_scorecard_portrait(data)
+
+    cell_re = re.compile(r'<td class="(bw-cell[^"]*)"[^>]*><span[^>]*>([^<]+)</span></td>')
+
+    # Landscape: one <tr> per player, starting with a plain player-label td
+    # and followed by 18 bw-cell tds in hole order (1..18). The Bestball /
+    # Worstball team rows use score-cell tds, not bw-cell, so they never
+    # match this shape.
+    player_rows = re.findall(r'<tr><td class="player-label">.*?</td>(.*?)</tr>', landscape)
+    player_rows = [row for row in player_rows if 'bw-cell' in row]
+    assert len(player_rows) == 3  # DM, JB, GP
+
+    landscape_by_coord = {}
+    for p_idx, row in enumerate(player_rows):
+        cells = cell_re.findall(row)
+        assert len(cells) == 18
+        for hole_idx, (cls, label) in enumerate(cells, start=1):
+            landscape_by_coord[(p_idx, hole_idx)] = (label, cls)
+
+    # Portrait: one data <tr> per hole (not a totals row), starting with the
+    # hole number, then Best/Worst score-cells, then one bw-cell per player
+    # in the same sorted-player order as the landscape rows above.
+    data_rows = re.findall(r'<tr><td class="hole-label">(\d+)</td>(.*?)</tr>', portrait)
+    assert len(data_rows) == 18
+
+    portrait_by_coord = {}
+    for hole_str, row in data_rows:
+        hole = int(hole_str)
+        cells = cell_re.findall(row)
+        assert len(cells) == 3
+        for p_idx, (cls, label) in enumerate(cells):
+            portrait_by_coord[(p_idx, hole)] = (label, cls)
+
+    assert landscape_by_coord == portrait_by_coord
+    assert len(landscape_by_coord) == 18 * 3
+
+    # Cross-check a sample of coordinates against directly-computed ground
+    # truth (per-hole field min/max from the raw data), so a shared bug in
+    # both builders' helper wouldn't slip through as "parity".
+    codes = ['DM', 'JB', 'GP']  # ascending gross, same order as both tables
+    for hole in (1, 9, 18):
+        hole_vals = data[data['Hole'] == hole].set_index('Pl')['GrossVP']
+        hmin, hmax = int(hole_vals.min()), int(hole_vals.max())
+        for p_idx, code in enumerate(codes):
+            v = int(hole_vals[code])
+            expect_cls = 'bw-cell bw-player-best' if v == hmin else (
+                'bw-cell bw-player-worst' if v == hmax else 'bw-cell')
+            assert landscape_by_coord[(p_idx, hole)][1] == expect_cls
+
+
+def test_bestball_portrait_totals_match_per_player():
+    data = _field_df()
+    portrait = build_bestball_worstball_scorecard_portrait(data)
+    totals = _grand_total_cells_signed(portrait)
+    hole_min = {h: int(data[data['Hole'] == h]['GrossVP'].min()) for h in range(1, 19)}
+    hole_max = {h: int(data[data['Hole'] == h]['GrossVP'].max()) for h in range(1, 19)}
+    expected = [sum(hole_min.values()), sum(hole_max.values())] + [
+        int(data[data['Pl'] == c]['GrossVP'].sum()) for c in ['DM', 'JB', 'GP']
+    ]
+    assert totals == expected
+
+
+def _grand_total_cells_signed(portrait_html):
+    """Like _grand_total_cells, but for vs-par labels (E/+N/-N), not raw ints."""
+    row = re.search(r'<tr class="totals-row grand-total">(.*?)</tr>', portrait_html).group(1)
+    labels = re.findall(r'<td class="totals">([+\-]?\d+|E)</td>', row)
+    return [0 if lab == 'E' else int(lab) for lab in labels]
+
+
+def test_contribution_bars_sorted_and_zero_is_literal():
+    data = _field_df()
+    html = build_bestball_contribution_bars(data)
+    best_section = html.split("bw-bars-title--worst")[0]
+    worst_section = html[len(best_section):]
+
+    def impact_values(section):
+        # Impact is its own headline column: <td class="bw-col-impact"><span
+        # class="bw-impact bw-impact--{kind}|--zero">value</span></td>.
+        return [0 if v == '0' else int(v) for v in
+                re.findall(r'class="bw-impact[^"]*">([+\-]?\d+|0)</span>', section)]
+
+    best_values = impact_values(best_section)
+    worst_values = impact_values(worst_section)
+    assert len(best_values) == len(worst_values) == 3
+    assert best_values == sorted(best_values)  # ascending (bestball impact <= 0)
+    assert worst_values == sorted(worst_values, reverse=True)  # descending (worstball impact >= 0)
+    # An exact-zero impact renders as literal '0', not the en-dash placeholder.
+    if 0 in best_values or 0 in worst_values:
+        assert '>0</span>' in html
+    assert '–</span>' not in html
+
+
+def test_contribution_bars_solo_shared_and_accessible_label():
+    data = _field_df()
+    html = build_bestball_contribution_bars(data)
+    # The bar itself carries an accessible text alternative and shows the
+    # solo/shared counts inside its track -- never the impact value, and
+    # never merged into (or placed after) the bar's fill.
+    assert 'role="img"' in html
+    assert re.search(r'aria-label="Solo \d+; shared \d+"', html)
+    assert re.search(r'<span class="bw-bar-val[^"]*">\d+<small>· \d+</small></span>', html)

@@ -668,6 +668,18 @@
      shares the remainder evenly via table-layout:fixed's own distribution --
      matches the approved prototype's .standings-table, which likewise only
      pins the first two columns and lets round/total columns split the rest. */
+
+  /* ── Standalone Bestball/Worstball summary (/bestball, R3.4 correction) ──
+     A separate TEG-wide leaderboard, not the per-round field/contribution
+     builders -- it needs its own containment, not a shared implementation.
+     Its results table already gets the generic pinned-column horizontal
+     scroller (.table-wrapper, above); the fix here is the mode/TEG/sort/n
+     control row, which mixes tab buttons, two selects and a number input
+     with no explicit widths -- without min-width:0, a flex item's default
+     min-width:auto (its unbroken content width) can push the row wider than
+     the viewport even though the row wraps. */
+  .bestball-page .section-controls > * { min-width: 0; }
+  .bestball-page .section-controls .theme-select { max-width: 100%; }
 }
 @media (min-width: 390px) and (max-width: 640px) {
   .latest-round-page .lr-readout { grid-template-columns: repeat(3, minmax(0, 1fr)); }
