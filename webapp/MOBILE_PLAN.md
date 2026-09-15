@@ -42,10 +42,9 @@ behind a `≤640px` breakpoint or an opt-in `data-mode`).
     (`partials/lb_cards.html`, fed by `lb_cards`/`lb_hero` from
     `_results_context`); the desktop table + text callout hide at ≤640px.
   - **App bar (M1.4):** compacted nav height/padding + soft elevation.
-- ✅ **Core data layouts R2–R3.3** (pending integration from `codex/mobile-ui-rollout`) — compact interactive Latest Round with stable HTMX URL state, mobile History disclosure, equal-height standings rows and portrait scorecard refinements. The Latest Round chart also proves the mobile chart pattern against the former HTMX blocker.
+- ✅ **Core data layouts R2–R3.4** (pending integration from `codex/mobile-ui-rollout`) — compact interactive Latest Round with stable HTMX URL state, mobile History disclosure, equal-height standings rows, portrait scorecard refinements and responsive Best/Worstball field and contribution views. The Latest Round chart also proves the mobile chart pattern against the former HTMX blocker.
 
 **▶ Pick up here (the remaining UI work):**
-- **Best/Worstball R3.4** — transpose the field card for phones and refine contribution bars while preserving desktop.
 - **Charts** (M2.8) — promote the proven Latest Round mobile preset to other charts where useful.
 - **Per-page pass** (M2.9) — finish spacing, tap targets, empty states, safe-area insets and the remaining route audit.
 - **Dark-mode page-title contrast** — `.page-title` is near-invisible on dark
