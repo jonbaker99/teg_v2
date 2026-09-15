@@ -50,6 +50,10 @@ jupyter notebook ad_hoc_analysis/quickstart.ipynb
 # View outstanding to-dos across the project
 python todos.py          # outstanding items only
 python todos.py --all    # include completed items too
+
+# Rebuild the downloadable report PDFs (needs: pip install -r requirements-dev.txt)
+python scripts/build_report_pdfs.py --all    # every tournament and round report
+python scripts/build_report_pdfs.py --check --all   # exit 1 if any is out of date
 ```
 
 See [TODOS.md](TODOS.md) for the central to-do index. Each area (`webapp/`, `streamlit/`, `teg_analysis/`) has its own `TODOS.md` file for working details.

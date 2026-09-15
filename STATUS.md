@@ -2,7 +2,22 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-13 (grouped player-detail redesign; earlier reporting context retained)
+**Last updated:** 2026-09-15 (pre-rendered PDF download for reports; earlier context retained)
+
+## 2026-09-15 — Pre-rendered PDF download for reports
+
+`/teg-reports` gained a Download PDF button: each tournament/round report now has a pre-rendered,
+single-page A4 PDF carrying the desktop newspaper layout regardless of the downloading device.
+PDFs are built **offline** by `python scripts/build_report_pdfs.py --all` (headless Chromium via
+Playwright, ~1s/report, ~90s for all 84) — Railway never renders one, matching the existing rule
+that the webapp only reads finished reports. `read_binary_file` (new, `teg_analysis/io/file_operations.py`)
+serves the bytes; the button is gated on `data/commentary/pdfs/manifest.json` so an unbuilt report
+shows no button rather than a dead link. Playwright is a dev-only dependency
+(`requirements-dev.txt`) and never enters `requirements.txt`. **Known weakness, by design:** a PDF
+can drift from its report or from `newspaper_preview.css` with no automatic signal —
+`--check` detects it, nothing enforces it yet (follow-up in `webapp/TODOS.md`). Detail:
+`webapp/README.md`, `teg_analysis/reporting/README.md` → *Pre-render to PDF*,
+`teg_analysis/reporting/ARTEFACTS.md` → *The PDF artefact*, `DATA_FLOW.md` → §10.
 
 ## 2026-09-13 — Grouped player detail approved
 

@@ -38,6 +38,8 @@ SYNC_FOLDERS = [
     "data",
     "data/commentary",
     "data/commentary/drafts",
+    # Pre-rendered A4-width report PDFs, built by scripts/build_report_pdfs.py.
+    "data/commentary/pdfs",
 ]
 
 # Where pre-overwrite backups of store files are kept (one dated dir per pull).

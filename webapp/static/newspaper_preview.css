@@ -126,6 +126,36 @@
 }
 .np-back-link:hover{ color:var(--accent, #256B3D); }
 
+/* The two right-hand chrome links ("Download PDF", "Go to Full Results").
+ * Grouped so they stay together when .section-controls wraps on a narrow
+ * screen — left as two separate flex children they split across the wrap,
+ * stranding one of them under the round pills. */
+.np-chrome-links{
+  display:flex; align-items:center; gap:1rem; flex-wrap:wrap;
+}
+
+/* Deliberately the same quiet text treatment as .np-back-link rather than a
+ * .pill or a filled button (2026-09-15, Jon: "discreet"). The report is the
+ * thing on this page; the download is an affordance, not a call to action.
+ * Shown on desktop and on the mobile index alike — no width gating, the only
+ * thing that hides it is the .np-reading rule that hides the whole control
+ * row while a story is open on a phone. */
+.np-pdf-link{
+  font-size:0.85rem; font-weight:500; text-decoration:none;
+  color:var(--text-muted, #666); white-space:nowrap;
+}
+.np-pdf-link:hover{ color:var(--accent, #256B3D); }
+
+@media (max-width:700px){
+  /* Comfortable tap target on a phone without making the link look like a
+     button — vertical padding only, so the text stays flush with the round
+     pills above it instead of being indented by its own inline padding. */
+  .np-pdf-link, .np-back-link{
+    padding:0.35rem 0; min-height:2.2rem; display:inline-flex; align-items:center;
+  }
+  .np-chrome-links{ gap:1.1rem; }
+}
+
 /* TEG select, sized/weighted to match the .pill buttons it sits next to
  * (2026-09-12, Jon: font/colour didn't match) — .theme-select's sitewide
  * defaults (400 weight, 12px) read as a visibly different, thinner control

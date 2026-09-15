@@ -6,6 +6,21 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 ## IN PROGRESS
 
+- [ ] **Wire PDF build into report generation (2026-09-15).** `/teg-reports`'s Download PDF button
+  reads pre-rendered PDFs (`data/commentary/pdfs/`) built by a separate, manual
+  `scripts/build_report_pdfs.py` run — generating a report (via `backfill.py` or
+  `/admin/reports`) does not also build its PDF, so a newly generated report shows no
+  Download PDF button until someone remembers to run the script. Maybe-later, flagged by Jon,
+  not yet scoped. Detail: `teg_analysis/reporting/README.md` → *Pre-render to PDF*.
+- [ ] **`--font-contrast` names a font the page never loads (2026-09-15).** The newspaper
+  standfirsts set in `var(--font-contrast)` = `'Libre Franklin', Arial, sans-serif`
+  (`newspaper_preview.css`), but `teg_reports.html`'s Google Fonts link requests only Fraunces,
+  Source Serif 4 and IBM Plex Mono — Libre Franklin is never fetched, so every standfirst on the
+  live site has always fallen back to Arial/system sans. Spotted while checking font fidelity in
+  the PDF build, which falls back the same way (to Liberation Sans, metric-compatible with Arial,
+  so the PDF matches what the site actually shows today). Either add Libre Franklin to the font
+  link or change the declaration to name the fallback honestly — a one-line fix either way, but it
+  is a deliberate design choice, not a bug to silently pick for someone.
 - [ ] **Verify live report refresh after deployment (2026-09-13).**
   Report sync now includes tournament/round
   `*_report_storylinefirst_styled.md` and `*_storyline_plan.json` in “Sync all

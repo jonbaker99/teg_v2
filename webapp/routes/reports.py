@@ -46,13 +46,18 @@ the GitHub API, caches the result).
 """
 
 import json
+import logging
+from functools import lru_cache
 from pathlib import Path
 from typing import Optional
 
-from fastapi import APIRouter, Request
-from fastapi.responses import HTMLResponse
+from fastapi import APIRouter, HTTPException, Request
+from fastapi.responses import HTMLResponse, Response
 from fastapi.templating import Jinja2Templates
 from github import GithubException
+
+from teg_analysis.io import read_binary_file, read_text_file
+from teg_analysis.reporting.report_pdf import PDF_DIR, pdf_filename
 
 from teg_analysis.reporting.newspaper_edition import (
     available_report_tegs,
@@ -63,6 +68,8 @@ from teg_analysis.reporting.newspaper_edition import (
     has_edition,
     render_desktop_html,
 )
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
@@ -79,9 +86,54 @@ _PRE_TEG8_CAPTION = ( ""
 # GitHub round-trip on Railway), so a newly synced report would not appear
 # until the process restarted without this. Cleared on any data-cache clear
 # (incl. the report-sync button).
+# ---------------------------------------------------------------------------
+# Pre-rendered PDFs
+#
+# The PDFs are built offline by `scripts/build_report_pdfs.py` and committed to
+# `data/commentary/pdfs/` — the webapp only ever reads them, never renders one
+# (rendering needs headless Chromium, which is deliberately not a Railway
+# dependency; see `teg_analysis/reporting/report_pdf.py`).
+#
+# Whether a given report HAS a PDF is answered from the manifest the build
+# script writes alongside them, not by probing for the file. On Railway a
+# missing file costs a GitHub round-trip, and the button is rendered on every
+# page load for every TEG — probing would put one of those in the hot path each
+# time a report without a PDF was opened. One small cached JSON read covers the
+# whole set instead.
+# ---------------------------------------------------------------------------
+
+@lru_cache(maxsize=1)
+def _pdf_manifest() -> dict:
+    """The PDF build manifest, or an empty dict if there isn't one yet.
+
+    Never raises: a missing or malformed manifest just means "no PDFs", which
+    hides the download button rather than breaking the page.
+    """
+    try:
+        return json.loads(read_text_file(f"{PDF_DIR}/manifest.json"))
+    except Exception as exc:  # noqa: BLE001 - absence is normal, not an error
+        logger.debug("No PDF manifest available: %s", exc)
+        return {}
+
+
+def _pdf_key(teg: int, round_num: Optional[int]) -> str:
+    """Manifest key for one edition — matches `pdf_filename` without the suffix."""
+    return pdf_filename(teg, round_num).removesuffix(".pdf")
+
+
+def has_pdf(teg: int, round_num: Optional[int]) -> bool:
+    """True when a pre-rendered PDF exists for this edition."""
+    return _pdf_key(teg, round_num) in (_pdf_manifest().get("entries") or {})
+
+
+def _clear_pdf_manifest_cache() -> None:
+    _pdf_manifest.cache_clear()
+
+
 try:  # pragma: no cover - trivial wiring
     from webapp import deps as _deps
     _deps.register_cache_clearer(clear_edition_caches)
+    _deps.register_cache_clearer(_clear_pdf_manifest_cache)
 except Exception:  # noqa: BLE001 - never let cache wiring break the route module
     pass
 
@@ -117,6 +169,7 @@ def teg_reports(request: Request, teg: Optional[int] = None, round: Optional[int
                 "no_report_message": None,
                 "back_link": None,
                 "back_label": None,
+                "pdf_available": False,
             },
         )
 
@@ -179,5 +232,41 @@ def teg_reports(request: Request, teg: Optional[int] = None, round: Optional[int
                 f"/results?teg={selected_teg}" if edition is not None else None
             ),
             "back_label": f"Round {selected_round} detail" if selected_round else "Full Results",
+            # Download button is rendered only when this edition actually has a
+            # pre-rendered PDF, so a report whose PDF hasn't been built yet
+            # simply shows no button rather than a link that 404s.
+            "pdf_available": edition is not None and has_pdf(selected_teg, selected_round),
+        },
+    )
+
+
+@router.get("/teg-reports/pdf")
+def teg_report_pdf(teg: int, round: Optional[int] = None):
+    """Serve the pre-rendered A4-width PDF for one tournament or round report.
+
+    Bytes only — this route never renders anything. The PDFs are built offline
+    (`scripts/build_report_pdfs.py`) and read through `read_binary_file`, which
+    is volume-then-GitHub aware on Railway exactly like the report artefacts
+    themselves.
+    """
+    name = pdf_filename(teg, round)
+    try:
+        data = read_binary_file(f"{PDF_DIR}/{name}")
+    except (FileNotFoundError, GithubException) as exc:
+        what = f"round {round}" if round else "tournament"
+        raise HTTPException(
+            status_code=404,
+            detail=f"No PDF available for the TEG {teg} {what} report.",
+        ) from exc
+
+    # A filename someone will recognise in their downloads folder, rather than
+    # the storage name.
+    label = f"TEG-{teg}-round-{round}" if round else f"TEG-{teg}"
+    return Response(
+        content=data,
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": f'attachment; filename="{label}-report.pdf"',
+            "Cache-Control": "public, max-age=3600",
         },
     )

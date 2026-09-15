@@ -10,8 +10,13 @@ import logging
 from pathlib import Path
 import pandas as pd
 
+from github import GithubException
+
 from . import volume_operations
 from .github_operations import read_from_github, read_text_from_github, write_text_to_github, write_to_github
+# No circular import here: sync.py only imports github_operations/volume_operations,
+# never file_operations, so this top-level import is safe.
+from .sync import github_download_bytes
 
 logger = logging.getLogger(__name__)
 
@@ -193,6 +198,65 @@ def read_text_file(file_path: str) -> str:
         # Local development
         local_path = volume_operations._get_local_path(file_path)
         return local_path.read_text(encoding='utf-8')
+
+
+def read_binary_file(file_path: str) -> bytes:
+    """Reads a binary file from the local filesystem or a mounted volume.
+
+    This function reads binary files (e.g., .pdf) from a mounted volume
+    if running on Railway, or from the local filesystem if running locally.
+    If the file is not found in the volume on Railway, it fetches from GitHub
+    and caches it to the volume.
+
+    Args:
+        file_path (str): The path to the binary file.
+
+    Returns:
+        bytes: The raw content of the file.
+
+    Raises:
+        FileNotFoundError: If the file does not exist locally, or is absent
+            from both the volume and GitHub (so callers can distinguish "not
+            generated yet" from a real read/network error, which propagates
+            as-is).
+    """
+    if volume_operations._is_railway():
+        volume_path = volume_operations._get_volume_path(file_path)
+
+        # Simple check: does file exist in volume?
+        if os.path.exists(volume_path):
+            # Fast path: read from volume (NO API calls)
+            try:
+                with open(volume_path, 'rb') as f:
+                    return f.read()
+            except Exception as e:
+                logger.warning(f"Error reading from volume {volume_path}: {e}")
+                # If volume read fails, fall back to GitHub
+                pass
+
+        # File not cached or volume read failed: download and cache
+        try:
+            content = github_download_bytes(file_path)
+        except GithubException as e:
+            if e.status == 404:
+                raise FileNotFoundError(file_path) from e
+            logger.error(f"Error reading {file_path} from GitHub: {e}")
+            raise
+        except Exception as e:
+            logger.error(f"Error reading {file_path} from GitHub: {e}")
+            raise
+
+        # Cache to volume for next time
+        volume_operations._ensure_volume_dir(volume_path)
+        with open(volume_path, 'wb') as f:
+            f.write(content)
+
+        logger.info(f"Cached {file_path} to volume for future reads")
+        return content
+    else:
+        # Local development
+        local_path = volume_operations._get_local_path(file_path)
+        return local_path.read_bytes()
 
 
 def write_text_file(file_path: str, content: str, commit_message: str = "Update text file", defer_github: bool = False):
