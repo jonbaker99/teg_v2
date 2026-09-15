@@ -2,7 +2,7 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-15 (pre-rendered PDF download for reports; earlier context retained)
+**Last updated:** 2026-09-15 (report PDF download; standfirst font fix; earlier context retained)
 
 ## 2026-09-15 — Pre-rendered PDF download for reports
 
@@ -18,6 +18,17 @@ can drift from its report or from `newspaper_preview.css` with no automatic sign
 `--check` detects it, nothing enforces it yet (follow-up in `webapp/TODOS.md`). Detail:
 `webapp/README.md`, `teg_analysis/reporting/README.md` → *Pre-render to PDF*,
 `teg_analysis/reporting/ARTEFACTS.md` → *The PDF artefact*, `DATA_FLOW.md` → §10.
+
+## 2026-09-15 — Standfirsts now set in Libre Franklin
+
+`--font-contrast` has named `'Libre Franklin'` since the standfirst redesign (2026-09-11), but the
+font was never in `teg_reports.html`'s Google Fonts link — so every standfirst on the live site
+silently fell back to Arial, and to Liberation Sans in the new PDFs. Found while checking font
+fidelity in the PDF build. Fixed on both sides: added to the page's font link (29 KB latin subset)
+and bundled into `webapp/static/fonts/` for the PDF build, whose font-load guard now covers all
+four families. The 84 PDFs were rebuilt. Jon picked Libre Franklin over three alternatives
+(Arial as-is, the pre-2026-09-11 upright serif, a serif italic) — it is the treatment the
+`.sf-contrast` sizes were tuned for.
 
 ## 2026-09-13 — Grouped player detail approved
 

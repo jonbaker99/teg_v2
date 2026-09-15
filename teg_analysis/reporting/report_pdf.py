@@ -83,18 +83,19 @@ SCALE = PAPER_WIDTH / LAYOUT_WIDTH
 #: `--out` default and the manifest's home.
 PDF_DIR = "data/commentary/pdfs"
 
-#: Same three font families (Fraunces / Source Serif 4 / IBM Plex Mono) the
-#: live preview page loads via `webapp/templates/teg_reports.html`'s
-#: `fonts.googleapis.com` `<link>`. THAT link is right for a browser tab —
-#: it has a live network. Chromium in the PDF-build container does not: all
-#: external requests it makes fail (the container's `HTTPS_PROXY` is honoured
-#: by `curl`, never by Chromium), so linking the same URL here used to make
-#: the render silently fall back to system serif/sans/mono and still exit 0.
-#: Fixed by self-hosting: the woff2 files this exact CSS spec resolves to are
-#: downloaded once into `webapp/static/fonts/` (see that folder's
-#: `faces.json`) and `embedded_font_css()` below inlines them as `data:`
-#: URIs, so the build needs no network at all and can't silently degrade.
-_REQUIRED_FONT_FAMILIES = ("Fraunces", "Source Serif 4", "IBM Plex Mono")
+#: Same four font families (Fraunces / Source Serif 4 / IBM Plex Mono /
+#: Libre Franklin) the live preview page loads via
+#: `webapp/templates/teg_reports.html`'s `fonts.googleapis.com` `<link>`.
+#: THAT link is right for a browser tab — it has a live network. Chromium in
+#: the PDF-build container does not: all external requests it makes fail
+#: (the container's `HTTPS_PROXY` is honoured by `curl`, never by Chromium),
+#: so linking the same URL here used to make the render silently fall back
+#: to system serif/sans/mono and still exit 0. Fixed by self-hosting: the
+#: woff2 files this exact CSS spec resolves to are downloaded once into
+#: `webapp/static/fonts/` (see that folder's `faces.json`) and
+#: `embedded_font_css()` below inlines them as `data:` URIs, so the build
+#: needs no network at all and can't silently degrade.
+_REQUIRED_FONT_FAMILIES = ("Fraunces", "Source Serif 4", "IBM Plex Mono", "Libre Franklin")
 
 #: Where the self-hosted woff2 files (and their `faces.json` metadata) live.
 #: A filesystem path, not a Python import — reading static font bytes from
@@ -120,7 +121,7 @@ def _embedded_font_css_cached(fonts_dir_str: str) -> str:
     if missing:
         raise RuntimeError(
             f"report_pdf: {fonts_dir}/faces.json is missing font(s) {missing} — "
-            "expected Fraunces, Source Serif 4 and IBM Plex Mono."
+            "expected Fraunces, Source Serif 4, IBM Plex Mono and Libre Franklin."
         )
 
     rules = []
@@ -145,14 +146,15 @@ def _embedded_font_css_cached(fonts_dir_str: str) -> str:
 
 
 def embedded_font_css(fonts_dir: pathlib.Path | str = _FONTS_DIR) -> str:
-    """`@font-face` CSS for Fraunces / Source Serif 4 / IBM Plex Mono, each
-    `src` a `data:font/woff2;base64,...` URI — no network fetch, ever.
+    """`@font-face` CSS for Fraunces / Source Serif 4 / IBM Plex Mono /
+    Libre Franklin, each `src` a `data:font/woff2;base64,...` URI — no
+    network fetch, ever.
 
     Built from `fonts_dir`'s `faces.json` (family, style, weight — including
     variable-font weight ranges like `"400 900"` — stretch, optical-sizing
     and unicode-range, one entry per downloaded woff2). Memoized per
     `fonts_dir` so rendering ~84 reports in one `render_pdfs` call reads and
-    base64-encodes the ~16 files once, not once per report.
+    base64-encodes the ~18 files once, not once per report.
     """
     return _embedded_font_css_cached(str(fonts_dir))
 
@@ -181,9 +183,10 @@ def paper_html(body_html: str, css: str, font_css: str | None = None) -> str:
     dependency on where that comes from — see "No frontend imports" above;
     `scripts/build_report_pdfs.py` is the one that knows it lives at
     `webapp/static/newspaper_preview.css`). `font_css` defaults to
-    `embedded_font_css()` (Fraunces / Source Serif 4 / IBM Plex Mono, inlined
-    as `data:` URIs — no `fonts.googleapis.com` fetch, which Chromium in this
-    container cannot reach); pass it explicitly only to override for a test.
+    `embedded_font_css()` (Fraunces / Source Serif 4 / IBM Plex Mono /
+    Libre Franklin, inlined as `data:` URIs — no `fonts.googleapis.com`
+    fetch, which Chromium in this container cannot reach); pass it
+    explicitly only to override for a test.
     """
     if font_css is None:
         font_css = embedded_font_css()

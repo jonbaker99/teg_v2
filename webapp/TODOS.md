@@ -12,15 +12,14 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
   `/admin/reports`) does not also build its PDF, so a newly generated report shows no
   Download PDF button until someone remembers to run the script. Maybe-later, flagged by Jon,
   not yet scoped. Detail: `teg_analysis/reporting/README.md` → *Pre-render to PDF*.
-- [ ] **`--font-contrast` names a font the page never loads (2026-09-15).** The newspaper
-  standfirsts set in `var(--font-contrast)` = `'Libre Franklin', Arial, sans-serif`
-  (`newspaper_preview.css`), but `teg_reports.html`'s Google Fonts link requests only Fraunces,
-  Source Serif 4 and IBM Plex Mono — Libre Franklin is never fetched, so every standfirst on the
-  live site has always fallen back to Arial/system sans. Spotted while checking font fidelity in
-  the PDF build, which falls back the same way (to Liberation Sans, metric-compatible with Arial,
-  so the PDF matches what the site actually shows today). Either add Libre Franklin to the font
-  link or change the declaration to name the fallback honestly — a one-line fix either way, but it
-  is a deliberate design choice, not a bug to silently pick for someone.
+- [x] **`--font-contrast` now actually loads (2026-09-15).** The newspaper standfirsts set in
+  `var(--font-contrast)` = `'Libre Franklin', Arial, sans-serif`, but Libre Franklin was never
+  fetched — so every standfirst on the live site had always fallen back to Arial. Spotted while
+  checking font fidelity in the PDF build. Jon compared four treatments (Arial as-is, Libre
+  Franklin, the pre-2026-09-11 upright serif, and a serif italic) and chose Libre Franklin —
+  the design the `.sf-contrast` sizes were tuned for. Added to the Google Fonts link in
+  `teg_reports.html` (29 KB latin subset) and bundled into `webapp/static/fonts/` for the PDF
+  build, which now also fails if it doesn't load.
 - [ ] **Verify live report refresh after deployment (2026-09-13).**
   Report sync now includes tournament/round
   `*_report_storylinefirst_styled.md` and `*_storyline_plan.json` in “Sync all

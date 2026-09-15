@@ -766,14 +766,18 @@ call, no cost.**
    pipeline.
 
    **Fonts are self-hosted and inlined, not fetched.** `webapp/static/fonts/` holds the
-   latin/latin-ext woff2 subsets for Fraunces, Source Serif 4 and IBM Plex Mono (16 files, 488 KB);
+   latin/latin-ext woff2 subsets for Fraunces, Source Serif 4, IBM Plex Mono and Libre Franklin;
    `embedded_font_css()` base64-inlines them as `@font-face` data URIs, so the build needs no
    network and renders identically on a Mac, in CI, or in a sandboxed container. This is not a
    nicety: the first build of the set silently produced 84 PDFs set in Liberation Serif because the
    render host could not reach `fonts.googleapis.com` and the fallback looked plausible. A guard
-   now fails the build if any of the three families is not `status === 'loaded'` after
-   `document.fonts.ready`, so that cannot recur silently. The live page still links Google Fonts as
-   before — this is a build-time change only.
+   now fails the build if any of the four families is not `status === 'loaded'` after
+   `document.fonts.ready`, so that cannot recur silently.
+
+   > Libre Franklin was added 2026-09-15. `--font-contrast` had named it since the standfirst
+   > redesign, but nothing ever fetched it, so standfirsts fell back to Arial on the live site and
+   > to Liberation Sans in the PDFs. It is now in both the page's Google Fonts link and this
+   > bundle, so the two agree.
 
    > Chromium exports the two *variable* families as Type3 fonts, which is why a naive `/BaseFont`
    > grep over the PDF bytes shows only IBM Plex Mono. The text is still selectable and searchable
