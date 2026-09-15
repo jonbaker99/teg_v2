@@ -7,13 +7,22 @@ error-context marker" check, not a content assertion: these exist to catch a
 column rename or refactor breaking a page outright, not to pin exact output.
 """
 
+import re
+
 import pytest
 import pandas as pd
 from starlette.testclient import TestClient
 
 from webapp.app import app
 from webapp.nav import NAV_SECTIONS
-from webapp.chart_utils import create_round_graph, get_round_player_color_map
+from webapp.chart_utils import (
+    create_round_graph,
+    get_round_player_color_map,
+    create_cumulative_graph,
+    get_teg_player_color_map,
+    get_teg_chart_readout,
+    CROWDED_FIELD_THRESHOLD,
+)
 
 REAL_PLAYER_CODE = "DM"
 
@@ -380,6 +389,94 @@ def test_standings_page_has_mobile_table_hook(client):
     assert "standings-page" in resp.text
     assert "table-wrapper--no-pin" in resp.text
     assert "leaderboard-table" in resp.text
+
+
+# ---------------------------------------------------------------------------
+# Tournament race chart (R4.1): the proven Latest Round chart contract
+# (no native legend, compact margin, short end labels, below-chart readout)
+# applied to /results and /leaderboard's cumulative race chart.
+# ---------------------------------------------------------------------------
+
+def _race_rows(players, rounds=2):
+    """Synthetic TEG-wide cumulative rows: one row per (player, round, hole),
+    'Val Cum TEG' rising by 1 each hole so each player's final value is
+    predictable (rounds * 18)."""
+    rows = []
+    for rnd in range(1, rounds + 1):
+        for hole in range(1, 19):
+            for i, player in enumerate(players):
+                cum = (rnd - 1) * 18 + hole
+                rows.append({"TEG": "TEG 1", "Round": rnd, "Hole": hole, "Pl": player,
+                             "Val Cum TEG": cum + i})  # offset so players don't tie
+    return pd.DataFrame(rows)
+
+
+def test_race_chart_no_native_legend_and_compact_margin():
+    df = _race_rows(["AB", "DM", "GW"])
+    fig = create_cumulative_graph(df, "TEG 1", "Val Cum TEG", title="")
+    assert fig.layout.showlegend is False
+    assert fig.layout.margin.r == 36
+    # Short "code value" end labels (no colon) -- the proven Latest Round
+    # format, which needs far less width than "Player: value" did.
+    texts = [a.text for a in fig.layout.annotations if a.text and not a.text.startswith("R")]
+    assert any(t.split(" ")[0] == "AB" and ":" not in t for t in texts)
+
+
+def test_race_chart_crowded_field_suppresses_on_chart_labels():
+    small = _race_rows([f"P{i}" for i in range(CROWDED_FIELD_THRESHOLD)])
+    crowded = _race_rows([f"P{i}" for i in range(CROWDED_FIELD_THRESHOLD + 1)])
+
+    fig_small = create_cumulative_graph(small, "TEG 1", "Val Cum TEG", title="")
+    fig_crowded = create_cumulative_graph(crowded, "TEG 1", "Val Cum TEG", title="")
+
+    player_labels_small = [a for a in fig_small.layout.annotations if a.text and not a.text.startswith("R")]
+    player_labels_crowded = [a for a in fig_crowded.layout.annotations if a.text and not a.text.startswith("R")]
+    assert len(player_labels_small) == CROWDED_FIELD_THRESHOLD
+    assert len(player_labels_crowded) == 0
+    # Lines themselves are unaffected -- only the on-chart labels are dropped;
+    # the readout (get_teg_chart_readout) is what identifies players instead.
+    assert len(fig_crowded.data) == CROWDED_FIELD_THRESHOLD + 1
+
+
+def test_race_chart_readout_colours_agree_with_chart_even_when_unsorted():
+    # Same shape as test_round_chart_colours_agree_with_readout_map_even_when_unsorted:
+    # rows deliberately unsorted so a readout colour map computed without
+    # first sorting by Round/Hole could disagree with the chart's own colours.
+    rows = []
+    for rnd in range(1, 3):
+        for hole in range(1, 19):
+            for player in ("GW", "AB", "JB"):
+                rows.append({"TEG": "TEG 1", "Round": rnd, "Hole": hole, "Pl": player,
+                             "Val Cum TEG": (rnd - 1) * 18 + hole})
+    df = pd.DataFrame(rows).sample(frac=1, random_state=7).reset_index(drop=True)
+
+    color_map = get_teg_player_color_map(df, "TEG 1")
+    fig = create_cumulative_graph(df, "TEG 1", "Val Cum TEG", title="")
+    chart_colors = {trace.name: trace.line.color for trace in fig.data}
+    assert chart_colors == color_map
+
+    readout = get_teg_chart_readout(df, "TEG 1", "Val Cum TEG")
+    assert {item["code"]: item["color"] for item in readout} == color_map
+
+
+@pytest.mark.parametrize("path,tab_param", [
+    ("/results/table", "tab"),
+    ("/leaderboard/table", "tab"),
+])
+def test_race_chart_readout_matches_rendered_traces(client, path, tab_param):
+    # HTMX-rendered state: every player the chart actually draws must have a
+    # matching readout button (same code), so tapping a button can always
+    # find its trace -- and vice versa, no orphaned button for a player the
+    # chart didn't draw.
+    resp = client.get(path, params={"teg": 18, tab_param: "net", "chart_variant": "adjusted"})
+    _assert_ok_no_error(resp)
+    assert "chart-block" in resp.text
+    # data-figure is HTML-escaped (rendered inside an attribute), so quotes
+    # come through as &#34; rather than literal ".
+    figure_codes = set(re.findall(r'&#34;name&#34;:&#34;(\w{2,3})&#34;', resp.text))
+    readout_codes = set(re.findall(r'data-chart-focus="(\w+)"', resp.text))
+    assert readout_codes
+    assert readout_codes <= figure_codes
 
     resp = client.get("/leaderboard")
     _assert_ok_no_error(resp)

@@ -312,7 +312,7 @@
                 Plotly.purge(el);
                 var fig = JSON.parse(el.dataset.figure);
                 Plotly.newPlot(el, fig.data, fig.layout, {responsive: true, displayModeBar: false})
-                    .then(function() { attachSeriesHighlight(el, fig); })
+                    .then(function() { attachSeriesHighlight(el, fig); attachChartReadoutFocus(el, fig); })
                     .catch(function() { /* no-highlight is an acceptable degradation */ });
             });
         }
@@ -361,6 +361,45 @@
                 el.on('plotly_unhover', function() { resetOpacity(); });
             } catch (err) {
                 // Degrade to no-highlight.
+            }
+        }
+
+        // Click/tap-to-focus a player's line, no hover required: pairs a
+        // chart with a sibling readout of [data-chart-focus] buttons (one
+        // per player, tappable without hovering the SVG -- see R4's "select
+        // a player without hover" gate) inside a shared .chart-block
+        // wrapper. Purely client-side restyle, no server round-trip and no
+        // URL state (unlike Latest Round's rewind-aware focus/deep-link
+        // system, which this doesn't need). Re-bound on every render since
+        // Plotly.purge above tears down the old DOM/listeners.
+        function attachChartReadoutFocus(el, fig) {
+            try {
+                var block = el.closest('.chart-block');
+                if (!block) return;
+                var buttons = block.querySelectorAll('[data-chart-focus]');
+                if (!buttons.length) return;
+                var current = '';
+
+                function apply(name) {
+                    var opacities = fig.data.map(function(tr) {
+                        return (!name || tr.name === name) ? 1 : 0.18;
+                    });
+                    Plotly.restyle(el, {opacity: opacities});
+                    buttons.forEach(function(btn) {
+                        var active = btn.dataset.chartFocus === name;
+                        btn.classList.toggle('is-active', active);
+                        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+                    });
+                }
+
+                buttons.forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        current = (current === btn.dataset.chartFocus) ? '' : btn.dataset.chartFocus;
+                        apply(current);
+                    });
+                });
+            } catch (err) {
+                // Degrade to no-focus-interaction.
             }
         }
 

@@ -10,7 +10,7 @@ from fastapi import APIRouter, Request, Query
 from fastapi.templating import Jinja2Templates
 from markupsafe import escape
 
-from teg_analysis.core.players import get_name_to_code
+from teg_analysis.core.players import get_name_to_code, get_player_name
 from teg_analysis.analysis.history import (
     prepare_complete_history_table_fast,
     calculate_trophy_jacket_doubles,
@@ -42,7 +42,12 @@ from webapp.deps import (
     get_net_competition_measure,
     get_rounds_for_teg,
 )
-from webapp.chart_utils import create_cumulative_graph, adjusted_stableford, adjusted_grossvp
+from webapp.chart_utils import (
+    create_cumulative_graph,
+    adjusted_stableford,
+    adjusted_grossvp,
+    get_teg_chart_readout,
+)
 from webapp.tables import df_to_html as _df_to_html
 
 logger = logging.getLogger(__name__)
@@ -538,33 +543,40 @@ def _results_chart_meta(tab: str, variant: str, net_measure: str, teg_name: str)
     }
 
 
+def _race_series_spec(tab: str, variant: str, net_measure: str) -> tuple:
+    """Resolve (y_series, y_calculation, chart_type, y_axis_label) for a
+    tournament race chart's (tab, variant, net_measure) combination. Shared
+    by _build_race_figure_json and _build_race_chart_readout so the figure
+    and its below-chart readout always describe the same series."""
+    stableford = net_measure == "Stableford"
+
+    if tab == "gross":
+        if variant == "ranking":
+            return "Rank_GrossVP_TEG", None, "ranking", "Tournament Ranking"
+        elif variant == "adjusted":
+            return "GrossVP Cum TEG", adjusted_grossvp, "gross", "Gross vs bogey"
+        else:
+            return "GrossVP Cum TEG", None, "gross", "Cumulative gross vs par"
+
+    if variant == "ranking":
+        return "Rank_Stableford_TEG", None, "ranking", "Tournament Ranking"
+    elif variant == "adjusted":
+        if stableford:
+            return "Stableford Cum TEG", adjusted_stableford, "stableford", "Stableford (adjusted)"
+        else:
+            return "NetVP Cum TEG", adjusted_grossvp, "gross", "Net vs par (adjusted)"
+    else:
+        if stableford:
+            return "Stableford Cum TEG", None, "stableford", "Cumulative Stableford"
+        else:
+            return "NetVP Cum TEG", None, "gross", "Cumulative net vs par"
+
+
 def _build_race_figure_json(tab: str, variant: str, net_measure: str, teg_name: str) -> str | None:
     """Build race chart JSON for the given (tab, variant, net_measure) combination."""
     try:
         df = cached_load_all_data()
-        stableford = net_measure == "Stableford"
-
-        if tab == "gross":
-            if variant == "ranking":
-                y_series, y_calc, chart_type, ylabel = "Rank_GrossVP_TEG", None, "ranking", "Tournament Ranking"
-            elif variant == "adjusted":
-                y_series, y_calc, chart_type, ylabel = "GrossVP Cum TEG", adjusted_grossvp, "gross", "Gross vs bogey"
-            else:
-                y_series, y_calc, chart_type, ylabel = "GrossVP Cum TEG", None, "gross", "Cumulative gross vs par"
-        else:
-            if variant == "ranking":
-                y_series, y_calc, chart_type, ylabel = "Rank_Stableford_TEG", None, "ranking", "Tournament Ranking"
-            elif variant == "adjusted":
-                if stableford:
-                    y_series, y_calc, chart_type, ylabel = "Stableford Cum TEG", adjusted_stableford, "stableford", "Stableford (adjusted)"
-                else:
-                    y_series, y_calc, chart_type, ylabel = "NetVP Cum TEG", adjusted_grossvp, "gross", "Net vs par (adjusted)"
-            else:
-                if stableford:
-                    y_series, y_calc, chart_type, ylabel = "Stableford Cum TEG", None, "stableford", "Cumulative Stableford"
-                else:
-                    y_series, y_calc, chart_type, ylabel = "NetVP Cum TEG", None, "gross", "Cumulative net vs par"
-
+        y_series, y_calc, chart_type, ylabel = _race_series_spec(tab, variant, net_measure)
         fig = create_cumulative_graph(
             df, teg_name, y_series, title="",
             y_calculation=y_calc, y_axis_label=ylabel, chart_type=chart_type,
@@ -572,6 +584,23 @@ def _build_race_figure_json(tab: str, variant: str, net_measure: str, teg_name: 
         return fig.to_json()
     except Exception:
         return None
+
+
+def _build_race_chart_readout(tab: str, variant: str, net_measure: str, teg_name: str) -> list:
+    """Player code/name/value/colour list for the race chart's below-chart
+    readout (see get_teg_chart_readout) -- identifies each line without
+    hovering the chart, and stays legible even on fields too crowded for
+    the chart's own on-chart labels (create_cumulative_graph's
+    CROWDED_FIELD_THRESHOLD)."""
+    try:
+        df = cached_load_all_data()
+        y_series, y_calc, chart_type, _ylabel = _race_series_spec(tab, variant, net_measure)
+        readout = get_teg_chart_readout(df, teg_name, y_series, y_calculation=y_calc, chart_type=chart_type)
+        for item in readout:
+            item["name"] = get_player_name(item["code"])
+        return readout
+    except Exception:
+        return []
 
 
 def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjusted") -> dict:
@@ -659,6 +688,7 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
 
         chart_meta = _results_chart_meta(tab, chart_variant, net_measure, teg_name)
         figure_json = _build_race_figure_json(tab, chart_variant, net_measure, teg_name)
+        chart_readout = _build_race_chart_readout(tab, chart_variant, net_measure, teg_name)
         return {
             "is_leaderboard": True,
             "section_title": f"{competition} {status_word} Leaderboard",
@@ -666,6 +696,7 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
             "table_html": table_html,
             "lb_cards": lb_cards,
             "lb_hero": lb_hero,
+            "chart_readout": chart_readout,
             "teg_name": teg_name,
             "chart_types": RESULTS_CHART_TYPES,
             "active_chart_variant": chart_variant,

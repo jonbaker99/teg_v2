@@ -219,6 +219,54 @@ def format_value(value, chart_type):
         return f"{value:.0f}"
 
 
+#: Above this many players, on-chart end-of-line labels start to collide (the
+#: readout list below the chart -- see get_teg_chart_readout -- carries player
+#: identity/value instead; see webapp/MOBILE_PLAN.md R4's "do not force direct
+#: labels onto large fields" gate). No TEG in the current data reaches this,
+#: so it's exercised by synthetic tests, not live data.
+CROWDED_FIELD_THRESHOLD = 6
+
+
+def get_teg_player_color_map(df, chosen_teg) -> dict:
+    """Player code -> hex colour for one TEG's tournament race chart, in the
+    exact same order/assignment create_cumulative_graph uses internally
+    (first appearance in Round/Hole-sorted TEG data, taken from
+    px.colors.qualitative.Plotly).
+
+    Callers that render a player-colour readout OUTSIDE the actual Plotly
+    figure (webapp/routes/history.py's chart_readout list) must call this
+    rather than re-deriving their own mapping -- see get_round_player_color_map
+    for why two independently computed maps can disagree.
+    """
+    teg_data = df[df['TEG'] == chosen_teg].sort_values(['Round', 'Hole'])
+    codes = teg_data['Pl'].unique()
+    colors = px.colors.qualitative.Plotly[:len(codes)]
+    return dict(zip(codes, colors))
+
+
+def get_teg_chart_readout(df, chosen_teg, y_series, y_calculation=None, chart_type='default') -> list:
+    """Player code/final-value/colour list for the tournament race chart's
+    below-chart readout. Mirrors the final value each player's end-of-line
+    annotation would show (see create_cumulative_graph) -- the readout exists
+    precisely so that value/identity stays visible without hovering the
+    chart, and stays legible even for fields too crowded for on-chart labels.
+    """
+    teg_data = df[df['TEG'] == chosen_teg].sort_values(['Round', 'Hole'])
+    color_map = get_teg_player_color_map(df, chosen_teg)
+    readout = []
+    for player in teg_data['Pl'].unique():
+        player_data = teg_data[teg_data['Pl'] == player]
+        y_values = y_calculation(player_data) if y_calculation else player_data[y_series]
+        if y_values.empty:
+            continue
+        readout.append({
+            "code": str(player),
+            "value": format_value(y_values.iloc[-1], chart_type),
+            "color": color_map.get(player, ''),
+        })
+    return readout
+
+
 def create_cumulative_graph(df, chosen_teg, y_series, title, y_calculation=None, y_axis_label=None, chart_type='default', plotly_theme=None):
     teg_data = df[df['TEG'] == chosen_teg].sort_values(['Round', 'Hole'])
     teg_data['x_value'] = (teg_data['Round'] - 1) * 18 + teg_data['Hole']
@@ -228,11 +276,15 @@ def create_cumulative_graph(df, chosen_teg, y_series, title, y_calculation=None,
 
     fig = go.Figure()
 
-    colors = px.colors.qualitative.Plotly[:len(teg_data['Pl'].unique())]
-    color_map = dict(zip(teg_data['Pl'].unique(), colors))
+    players = teg_data['Pl'].unique()
+    color_map = get_teg_player_color_map(df, chosen_teg)
+    # Above the threshold, on-chart labels would collide -- skip them and
+    # rely on the below-chart readout (get_teg_chart_readout) instead of
+    # forcing direct labels onto a crowded field.
+    crowded = len(players) > CROWDED_FIELD_THRESHOLD
 
     traces = []
-    for player in teg_data['Pl'].unique():
+    for player in players:
         player_data = teg_data[teg_data['Pl'] == player]
 
         if y_calculation:
@@ -248,27 +300,36 @@ def create_cumulative_graph(df, chosen_teg, y_series, title, y_calculation=None,
             line=dict(width=2),
         ))
 
-        last_x = player_data['x_value'].iloc[-1]
-        last_y = y_values.iloc[-1]
-        formatted_value = format_value(last_y, chart_type)
-        fig.add_annotation(
-            x=last_x,
-            y=last_y,
-            text=f"{player}: {formatted_value}",
-            showarrow=False,
-            xanchor='left',
-            yanchor='middle',
-            xshift=5,
-            font=dict(size=10, color=color_map[player])
-        )
+        if not crowded:
+            last_x = player_data['x_value'].iloc[-1]
+            last_y = y_values.iloc[-1]
+            formatted_value = format_value(last_y, chart_type)
+            # Short "code value" form (no colon) -- matches the proven Latest
+            # Round end-of-line label, which needs far less width than the
+            # old "Player: value" text did.
+            fig.add_annotation(
+                x=last_x,
+                y=last_y,
+                text=f"{player} {formatted_value}",
+                showarrow=False,
+                xanchor='left',
+                yanchor='middle',
+                xshift=4,
+                font=dict(size=9, color=color_map[player])
+            )
 
     fig.add_traces(traces)
 
     fig.update_layout(
         yaxis_title=y_axis_label if y_axis_label else f'Cumulative {y_series}',
         hovermode='x unified',
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, traceorder='normal', itemsizing='constant'),
-        margin=dict(r=100, t=0, b=10, l=0),
+        # Native legend stays off -- the below-chart readout (rendered by the
+        # caller from get_teg_chart_readout) already covers "which colour is
+        # which player", tappable without hover, so the legend was pure
+        # duplication of that plus the end-of-line labels. Matches the
+        # proven Latest Round chart contract (create_round_graph).
+        showlegend=False,
+        margin=dict(r=36, t=8, b=10, l=0),
         font=dict(family="monospace")
     )
 
