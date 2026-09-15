@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-    <link rel="stylesheet" href="/static/themes/base-vars.css?v=26">
+    <link rel="stylesheet" href="/static/themes/base-vars.css?v=27">
     <link rel="stylesheet" href="/static/themes/{{ request.state.theme }}.css?v=23">
     <!-- Report styling (.teg-report) — loaded globally so reports render the same
          wherever they appear (TEG Reports, Results/Latest report tabs). -->
@@ -15,7 +15,7 @@
     <!-- Dark mode — inert until <html data-mode="dark">; default is light. -->
     <link rel="stylesheet" href="/static/themes/dark.css?v=1">
     <!-- Mobile app shell — all rules gated to ≤640px; inert on desktop/iPad. -->
-    <link rel="stylesheet" href="/static/mobile.css?v=4">
+    <link rel="stylesheet" href="/static/mobile.css?v=20">
     <!-- Structural hierarchy debug overlay (dev tool; inert unless body.debug-structure) -->
     <link rel="stylesheet" href="/static/themes/debug-structure.css?v=3">
     <!-- Material Symbols — nav/contents icons (names defined once in webapp/nav.py) -->
@@ -366,6 +366,52 @@
 
         document.addEventListener('DOMContentLoaded', function() { renderCharts(document); });
         document.addEventListener('htmx:afterSettle', function(e) { renderCharts(e.detail.elt); });
+
+        // Safety-net resize once EVERYTHING has finished loading (fonts,
+        // external CSS/CDN scripts, images) -- Plotly's responsive:true
+        // relies on a ResizeObserver on the chart's own container, but a
+        // charts rendered at DOMContentLoaded can still end up sized against
+        // a transient layout if a later font swap or a slow external
+        // stylesheet (Material Symbols/flag-icons, both third-party CDN
+        // requests in <head>) reflows the page after that container's size
+        // was first observed. This reproduces intermittently on real,
+        // slower mobile connections rather than a fast local/dev server, so
+        // it's cheap, generic hardening rather than a fix pinned to one
+        // observed repro. Mirrors the same Plotly.Plots.resize call already
+        // used when the chart-pill switcher reveals a hidden chart panel.
+        window.addEventListener('load', function() {
+            document.querySelectorAll('.chart-container.js-plotly-plot').forEach(function(el) {
+                try { Plotly.Plots.resize(el); } catch (err) { /* no-op if not a real plot yet */ }
+            });
+        });
+    })();
+    </script>
+    <!-- Equal-height player-name rows: any table using .player-name (History,
+         Standings) breaks ALL its names onto two lines the moment ONE name
+         wraps between forename/surname, rather than letting rows mix one-
+         and two-line heights. Shared here (not per-page) so it re-runs after
+         every HTMX swap (TEG/tab change) via the same afterSettle hook the
+         chart renderer uses, not just on first load. -->
+    <script>
+    (function() {
+        function checkNameBreaks(root) {
+            root.querySelectorAll('.history-table, .leaderboard-table').forEach(function(table) {
+                table.classList.remove('names-break');
+                var names = table.querySelectorAll('.player-name');
+                if (!names.length) return;
+                var lineH = parseFloat(getComputedStyle(names[0]).lineHeight);
+                if (!lineH || isNaN(lineH)) lineH = 21;
+                for (var i = 0; i < names.length; i++) {
+                    if (names[i].offsetHeight > lineH * 1.2) {
+                        table.classList.add('names-break');
+                        break;
+                    }
+                }
+            });
+        }
+        document.addEventListener('DOMContentLoaded', function() { checkNameBreaks(document); });
+        document.addEventListener('htmx:afterSettle', function(e) { checkNameBreaks(e.detail.elt); });
+        window.addEventListener('resize', function() { checkNameBreaks(document); });
     })();
     </script>
     <!-- Chart pill switcher: toggles sibling .chart-panel visibility within a

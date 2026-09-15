@@ -754,6 +754,23 @@ html[data-mode="dark"] .bw-bar--worst .bw-bar-val { color: #c9c9c9; }
   font-size: var(--font-size-small);
   border-bottom: 2px solid var(--color-border-strong);
 }
+/* Hole/PAR headers stay small, muted and letter-spaced (label-like); the
+   player/round column headers are the thing you actually scan down a long
+   holes-as-rows table, so they get more weight: larger, full-strength ink,
+   no letter-spacing. */
+.scorecard-table-portrait .hole-header,
+.scorecard-table-portrait .par-header {
+  font-size: 10px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+.scorecard-table-portrait .col-header {
+  font-size: var(--font-size-base);
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--color-text);
+}
 /* Hole + PAR columns: left-aligned, narrow, pinned while wide tables scroll */
 .scorecard-table-portrait .hole-header,
 .scorecard-table-portrait .hole-label {
@@ -789,11 +806,23 @@ html[data-mode="dark"] .bw-bar--worst .bw-bar-val { color: #c9c9c9; }
   width: calc(var(--shape-size) * 1.15);
   max-width: calc(var(--shape-size) * 1.15);
 }
-/* Subtotal rows (OUT / IN / TOTAL) */
+/* Subtotal rows (OUT / IN / TOTAL) — thin rules only, no background fill, to
+   match the approved prototype's plain-card totals treatment rather than
+   reading as a separate shaded block. */
 .scorecard-table-portrait .totals-row td,
-.scorecard-table-portrait .totals { background-color: var(--color-background); font-weight: bold; }
+.scorecard-table-portrait .totals { font-weight: bold; }
 .scorecard-table-portrait .totals-row.front-back-divider td { border-bottom: 1px solid var(--color-border); }
 .scorecard-table-portrait .grand-total td { border-top: 2px solid var(--color-border-strong); }
+/* .sc-combined: the single-round Gross+Stableford card has only two data
+   columns labelled with words ("Gross"/"Stableford"), not player/round
+   codes, so it needs more than the shape-sized minimum or the header text
+   clips. table-layout:fixed still bounds it to the viewport. */
+.scorecard-table-portrait.sc-combined .col-header,
+.scorecard-table-portrait.sc-combined td.score-cell,
+.scorecard-table-portrait.sc-combined td.totals:not(.par-cell) {
+  width: auto;
+  max-width: none;
+}
 
 /* Horizontal-scroll wrapper for the wide (whole-TEG / field) portrait tables */
 .sc-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }

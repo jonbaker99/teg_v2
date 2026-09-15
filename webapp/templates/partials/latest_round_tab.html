@@ -33,12 +33,20 @@
   </div>
   {% endif %}
   {% if metric_tabs %}
+  {# Desktop: existing .pill-group/.pill/.pill--active classes (already
+     styled in base-vars.css, matching the Score type/Display mode controls
+     above) give these a visible selected state above 640px. Phone: the
+     approved prototype's .metric-grid/.metric-pills (report_layout_prototypes/
+     mobile_data.css) reflow the same buttons into a 2x2 grid instead of a
+     pill row -- mobile.css overrides .metric-pill/.is-active there; both
+     class pairs sit on the same button so neither breakpoint loses styling. #}
   <div class="section-controls">
-    <div class="pill-group" role="group" aria-label="Metric">
+    <div class="metric-grid pill-group" role="group" aria-label="Metric">
       {% for mid, mlabel in metric_tabs %}
-      <button class="pill{% if mid == active_metric %} pill--active{% endif %}"
+      <button class="metric-pill pill{% if mid == active_metric %} is-active pill--active{% endif %}"
               hx-get="/latest-round/tab" hx-target="#lr-content" hx-swap="innerHTML"
-              hx-vals='{"teg": "{{ teg }}", "round": "{{ round }}", "tab": "scoreboard", "metric": "{{ mid }}"}'>
+              data-lr-query="metric" value="{{ mid }}"
+              hx-vals='{"teg": "{{ teg }}", "round": "{{ round }}", "tab": "scoreboard", "metric": "{{ mid }}", "scale": "{{ chart_scale|default("normal") }}", "rewind": "{{ chart_rewind|default(18) }}"}'>
         {{ mlabel }}
       </button>
       {% endfor %}
@@ -46,20 +54,56 @@
   </div>
   {% endif %}
   {% for section in sections %}
-    {% if section.title %}<div class="card-header">{{ section.title }}</div>{% endif %}
+    {% if metric_tabs and loop.first %}
+    <div class="section-title-row"><h3>Round leaderboard</h3></div>
+    {% elif section.title %}<div class="card-header">{{ section.title }}</div>{% endif %}
     {% if section.raw %}{{ section.table_html | safe }}
     {% else %}<div class="data-card"><div class="table-wrapper">{{ section.table_html | safe }}</div></div>{% endif %}
   {% endfor %}
-  {% if figure_json %}
+  {% if not figure_json and chart_build_error %}
+  <h3 class="chart-title">{{ chart_title }}</h3>
+  <p class="text-muted text-sm">{{ chart_build_error }}</p>
+  {% elif figure_json %}
   <h3 class="chart-title">{{ chart_title }}</h3>
   <div class="data-card data-card--padded">
-    <div class="chart-container" data-figure="{{ figure_json }}" style="height:380px;"></div>
+    <div class="chart-container lr-chart" role="img" aria-label="{{ chart_title }}; select a player in the focus control or chart legend" data-figure="{{ figure_json }}" style="height:380px;"></div>
+  </div>
+  <div class="lr-chart-tools" data-lr-chart-tools>
+    <div class="lr-readout" role="group" aria-label="Player focus and values">
+      {% for item in chart_readout|default([]) %}
+      <button type="button" class="lr-readout-entry{% if item.active %} is-active{% endif %}" data-lr-focus="{{ item.code }}" aria-pressed="{{ 'true' if item.active else 'false' }}" aria-label="Focus {{ item.name }}; value {{ item.value }}"><span class="lr-initials"{% if item.color %} style="color: {{ item.color }};"{% endif %}>{{ item.code }}</span><strong>{{ item.value }}</strong></button>
+      {% endfor %}
+    </div>
+    {% if active_metric in ['Stableford', 'GrossVP'] %}
+    {# Toggle-switch look ported from the approved prototype's switchControl()
+       (report_layout_prototypes/mobile_data.js/.css) -- lr-scale-toggle is
+       kept as a second class purely so the existing JS hooks in
+       latest_round.html (data-lr-query handling, htmx:configRequest) keep
+       matching this element unchanged; only the visual/markup structure and
+       aria-checked (correct for role="switch", replacing aria-pressed) are new. #}
+    <button type="button" class="scale-switch lr-scale-toggle" role="switch" data-lr-query="scale" value="{{ chart_scale|default("normal") }}" hx-get="/latest-round/tab" hx-target="#lr-content" hx-swap="innerHTML" hx-include="#lr-teg-select, #lr-round-select, #lr-tab-input" hx-vals='{"scale": "{{ "normal" if chart_scale == "adjusted" else "adjusted" }}", "metric": "{{ active_metric }}"}' aria-checked="{{ 'true' if chart_scale == 'adjusted' else 'false' }}" aria-label="Chart scale">
+      <span class="scale-switch-label">Normal scale</span>
+      <span class="switch-track"><span class="switch-thumb"></span></span>
+      <span class="scale-switch-label">{{ 'Vs 2 points / hole' if active_metric == 'Stableford' else 'Vs bogey golf' }}</span>
+    </button>
+    {% endif %}
+    {# A <label> may wrap exactly one form control; this row has three
+       (two step buttons plus the range), so the caption is a plain <span>
+       tied to the input via aria-labelledby instead of a wrapping label. #}
+    <div class="lr-rewind">
+      <span id="lr-rewind-caption" class="lr-rewind-caption">Through hole</span>
+      <button type="button" class="lr-rewind-step" data-lr-step="-1" aria-label="Previous hole">&lsaquo;</button>
+      <input id="lr-rewind-input" name="rewind" type="range" min="1" max="18" value="{{ chart_rewind|default(18) }}" aria-labelledby="lr-rewind-caption" data-lr-query="rewind" hx-get="/latest-round/tab" hx-trigger="change" hx-target="#lr-content" hx-swap="innerHTML" hx-include="#lr-teg-select, #lr-round-select, #lr-tab-input" hx-vals='{"metric": "{{ active_metric }}", "scale": "{{ chart_scale|default("normal") }}", "player": "{{ chart_player|default("") }}"}'>
+      <button type="button" class="lr-rewind-step" data-lr-step="1" aria-label="Next hole">&rsaquo;</button>
+      <output>{{ chart_rewind|default(18) }}</output>
+    </div>
   </div>
   {% endif %}
   {% if caption %}<p class="text-muted text-sm mt-3">{{ caption }}</p>{% endif %}
 {% else %}
 <p class="text-muted text-sm">No data available.</p>
 {% endif %}
+{% if not lr_full_page %}
 {% if rounds is defined %}
 <input id="lr-round-select" name="round" type="hidden" value="{{ round }}" hx-swap-oob="true">
 <div id="lr-round-pills" hx-swap-oob="true">
@@ -69,10 +113,26 @@
             hx-target="#lr-content"
             hx-include="#lr-teg-select, #lr-tab-input"
             hx-vals='{"round": {{ r }}}'
-            onclick="document.getElementById('lr-round-select').value='{{ r }}'">
-        Round {{ r }}
+            data-lr-history="push"
+            onclick="document.getElementById('lr-round-select').value='{{ r }}'"
+            aria-label="Round {{ r }}">
+        R{{ r }}
     </button>
     {% endfor %}
 </div>
 {% endif %}
 <p id="lr-context-header" hx-swap-oob="true" class="text-muted text-sm mb-3">{{ context_header }}</p>
+{# lr-chart-state now HAS a full-page counterpart (latest_round.html, as a
+   sibling of #lr-content, matching #lr-context-header's placement) -- guard
+   this OOB copy the same way as everything else in this {% if not
+   lr_full_page %} block, so a full-page render doesn't emit the id twice.
+   This div's target used to live nested inside #lr-content (from this same
+   include), which meant its own OOB-swap-in-place update was destroyed by
+   the very next step of the SAME swap cycle (htmx's OOB pass runs before
+   the main target's innerHTML replace) -- so by the time any JS listener
+   could read it on htmx:afterSwap, it no longer existed, on every response,
+   confirmed live via document.getElementById('lr-chart-state') === null
+   during the event. Moving the target outside #lr-content (like the
+   header) fixes that. #}
+<div id="lr-chart-state" hidden hx-swap-oob="true" data-teg="{{ teg }}" data-round="{{ round }}" data-tab="{{ (tab if tab is defined else active_tab) | default('scoreboard') }}" data-metric="{{ active_metric|default('Sc') }}" data-scale="{{ chart_scale|default('normal') }}" data-player="{{ chart_player|default('') }}" data-rewind="{{ chart_rewind|default(18) }}"></div>
+{% endif %}

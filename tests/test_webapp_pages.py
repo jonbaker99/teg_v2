@@ -8,10 +8,12 @@ column rename or refactor breaking a page outright, not to pin exact output.
 """
 
 import pytest
+import pandas as pd
 from starlette.testclient import TestClient
 
 from webapp.app import app
 from webapp.nav import NAV_SECTIONS
+from webapp.chart_utils import create_round_graph, get_round_player_color_map
 
 REAL_PLAYER_CODE = "DM"
 
@@ -47,6 +49,22 @@ _NAV_URLS = [
 def test_nav_page_renders(client, url):
     resp = client.get(url)
     _assert_ok_no_error(resp)
+
+
+def test_history_page_has_round_disclosure(client):
+    # R3.1: the TEG cell becomes a disclosure toggle when round_info.csv has
+    # matching round-by-round metadata for that TEG.
+    resp = client.get("/history")
+    _assert_ok_no_error(resp)
+    assert "history-toggle" in resp.text
+    assert "id='history-18-details'" in resp.text
+    start = resp.text.index("id='history-18-details'")
+    end = resp.text.index("</tr>", start)
+    detail_html = resp.text[start:end]
+    assert detail_html.count("<li>") == 4  # TEG 18 played four rounds
+    assert "PGA Catalunya" in detail_html
+    # Preserved verbatim, not disturbed by the disclosure markup change.
+    assert "Green Jacket awarded in TEG 5" in resp.text
 
 
 # ---------------------------------------------------------------------------
@@ -189,6 +207,139 @@ def test_latest_round_page_renders(client):
     _assert_ok_no_error(resp)
 
 
+def test_latest_round_page_has_no_duplicate_oob_ids(client):
+    # The tab partial normally re-renders these via hx-swap-oob after an
+    # HTMX swap, replacing the existing element in place. On a full page
+    # load the partial is {% include %}d directly into the same document,
+    # so its OOB fragment must be suppressed there -- otherwise the page
+    # ships two elements sharing each id (a real bug found by manual
+    # browser testing: a second, unstyled round-pills bar rendered further
+    # down the page).
+    resp = client.get("/latest-round")
+    _assert_ok_no_error(resp)
+    # lr-chart-state has no full-page counterpart (only ever rendered by the
+    # partial), so it must still ship here -- otherwise htmx has no element
+    # to OOB-swap into on the very first tab switch and silently drops it,
+    # permanently breaking metric/scale/player/rewind reconciliation.
+    for element_id in ("lr-round-pills", "lr-round-select", "lr-context-header", "lr-chart-state"):
+        assert resp.text.count(f'id="{element_id}"') == 1, f"duplicate/missing id={element_id!r} in /latest-round"
+
+    # The standalone tab partial (what an HTMX swap actually receives) must
+    # still emit exactly one OOB copy of each -- htmx replaces the existing
+    # in-DOM element by id, so this response element is not a duplicate.
+    tab_resp = client.get("/latest-round/tab", params={"teg": 18, "round": 1, "tab": "scoreboard"})
+    _assert_ok_no_error(tab_resp)
+    for element_id in ("lr-round-pills", "lr-round-select", "lr-context-header", "lr-chart-state"):
+        assert tab_resp.text.count(f'id="{element_id}"') == 1, f"missing/duplicate id={element_id!r} in /latest-round/tab"
+
+
+def test_latest_round_non_scoreboard_tab_echoes_chart_state(client):
+    # A non-scoreboard tab (e.g. Records) has no chart of its own and never
+    # computed active_metric/chart_scale/chart_player/chart_rewind -- without
+    # echoing the incoming values back, #lr-chart-state falls back to
+    # hardcoded template defaults and silently resets the user's real
+    # scoreboard-tab selection the moment they switch tabs and back.
+    resp = client.get("/latest-round/tab", params={
+        "teg": 18, "round": 4, "tab": "records",
+        "metric": "Stableford", "scale": "adjusted", "player": "DM", "rewind": "9",
+    })
+    _assert_ok_no_error(resp)
+    assert 'data-metric="Stableford"' in resp.text
+    assert 'data-scale="adjusted"' in resp.text
+    assert 'data-player="DM"' in resp.text
+    assert 'data-rewind="9"' in resp.text
+
+
+def test_latest_round_mobile_scoreboard_contract(client):
+    resp = client.get("/latest-round", params={"teg": "invalid", "round": "invalid", "metric": "Stableford", "scale": "adjusted", "player": "invalid", "rewind": "9"})
+    _assert_ok_no_error(resp)
+    # Main row: # / Player / Personal rank / All-time rank / Total.
+    assert all(f">{heading}<" in resp.text for heading in ("#", "Player", "Personal rank", "All-time rank", "Total"))
+    # Section heading names the metric (moved out of the table into the
+    # "Round leaderboard" / metric-name section-title-row).
+    assert "Round leaderboard" in resp.text and "Stableford" in resp.text
+    # Expandable detail row: Out/In split + per-hole score mix, collapsed by default.
+    assert "data-lr-rank-toggle" in resp.text
+    assert 'aria-expanded="false"' in resp.text
+    assert "rank-detail-row" in resp.text and "hidden" in resp.text
+    assert ">Out<" in resp.text and ">In<" in resp.text
+    assert "Score mix" in resp.text
+    assert "data-lr-page" in resp.text
+    assert "data-lr-focus=" in resp.text
+    assert "Through hole" in resp.text
+    assert 'data-lr-scale="adjusted"' in resp.text
+    assert 'data-lr-step="-1"' in resp.text and 'data-lr-step="1"' in resp.text
+    assert 'data-lr-history="push"' not in resp.text.split('data-lr-query="metric"', 1)[1].split('</div>', 1)[0]
+
+
+def test_latest_round_invalid_state_defaults_without_failure(client):
+    resp = client.get("/latest-round/tab", params={"teg": "bad", "round": "bad", "tab": "bad", "metric": "bad", "scale": "adjusted", "player": "bad", "rewind": "bad"})
+    _assert_ok_no_error(resp)
+    # metric="bad" falls back to "Sc" -> friendly "Score".
+    assert all(f">{heading}<" in resp.text for heading in ("#", "Player", "Personal rank", "All-time rank", "Total"))
+    assert "Round leaderboard" in resp.text and "Score" in resp.text
+    assert ">Out<" in resp.text and ">In<" in resp.text
+    assert 'aria-pressed="true"' not in resp.text
+
+
+def test_round_chart_rewind_keeps_endpoint_and_faint_future():
+    rows = [{"TEG": "TEG 1", "Round": 1, "Hole": hole, "Pl": "AB", "Sc Cum Round": hole, "GrossVP Cum Round": hole, "Stableford Cum Round": hole * 2} for hole in range(1, 19)]
+    fig = create_round_graph(pd.DataFrame(rows), "TEG 1", 1, "Sc Cum Round", "Round", rewind=9)
+    assert list(fig.data[0].x)[-1] == 9
+    assert list(fig.data[1].x)[0] == 9
+    assert fig.data[1].opacity == 0.2
+    # Both segments share player identity (name) so JS focus-by-name can
+    # target them together, but the future segment is tagged distinctly so
+    # focusing this player doesn't raise its un-played faint continuation to
+    # full opacity (which would defeat the rewind fade).
+    assert fig.data[0].name == fig.data[1].name == "AB"
+    assert fig.data[0].meta is None
+    assert fig.data[1].meta == "future"
+
+
+def test_round_chart_colours_agree_with_readout_map_even_when_unsorted():
+    # Rows deliberately NOT sorted by Hole and NOT grouped by player, so a
+    # colour map derived without first sorting by Hole (like the chart itself
+    # does) could assign codes in a different order than the chart -- this
+    # would make webapp/routes/latest.py's readout swatches (built from
+    # get_round_player_color_map) disagree with the actual chart line
+    # colours for some players.
+    rows = []
+    for hole in range(1, 19):
+        for player in ("GW", "AB", "JB"):
+            rows.append({"TEG": "TEG 1", "Round": 1, "Hole": hole, "Pl": player,
+                         "Sc Cum Round": hole, "GrossVP Cum Round": hole, "Stableford Cum Round": hole * 2})
+    df = pd.DataFrame(rows).sample(frac=1, random_state=7).reset_index(drop=True)
+
+    color_map = get_round_player_color_map(df, "TEG 1", 1)
+    fig = create_round_graph(df, "TEG 1", 1, "Sc Cum Round", "Round")
+
+    chart_colors = {trace.name: trace.line.color for trace in fig.data}
+    assert chart_colors == color_map
+
+
+def test_latest_round_chart_build_failure_shows_fallback_not_silence(client, monkeypatch):
+    # Previously a bare `except Exception: pass` left figure_json None and
+    # the whole chart+readout+scale+rewind block silently vanished with no
+    # indication anything failed, while the page still returned 200 -- an
+    # empty region a user could easily miss, not the scoreboard table's own
+    # equivalent failure (which does render a "No data." fallback).
+    import webapp.routes.latest as latest_mod
+
+    def boom(*args, **kwargs):
+        raise RuntimeError("forced chart failure")
+
+    monkeypatch.setattr(latest_mod, "create_round_graph", boom)
+    resp = client.get("/latest-round/tab", params={"teg": 18, "round": 4, "tab": "scoreboard"})
+    _assert_ok_no_error(resp)
+    assert "chart-title" in resp.text
+    assert "Chart unavailable for this round." in resp.text
+    assert "chart-container" not in resp.text
+    # The OOB chart-state echo must still ship even when the chart itself
+    # failed to build, or the client-side dataset/URL sync goes stale.
+    assert 'id="lr-chart-state"' in resp.text
+
+
 @pytest.mark.parametrize("tab", ["scoreboard", "scoring", "eclectic", "streaks"])
 def test_latest_round_tab_partials_render(client, tab):
     resp = client.get("/latest-round/tab", params={"teg": 18, "round": 1, "tab": tab})
@@ -218,6 +369,22 @@ def test_results_page_renders(client):
 def test_results_table_tab_renders(client):
     resp = client.get("/results/table", params={"teg": 18, "tab": "net"})
     _assert_ok_no_error(resp)
+
+
+def test_standings_page_has_mobile_table_hook(client):
+    # R3.2: results.html and leaderboard.html share the .standings-page hook
+    # (mobile.css) that reveals the real table on phones (instead of only the
+    # M2.7 card reflow) and opts it out of the generic sticky-column scroll.
+    resp = client.get("/results", params={"teg": 18})
+    _assert_ok_no_error(resp)
+    assert "standings-page" in resp.text
+    assert "table-wrapper--no-pin" in resp.text
+    assert "leaderboard-table" in resp.text
+
+    resp = client.get("/leaderboard")
+    _assert_ok_no_error(resp)
+    assert "standings-page" in resp.text
+    assert "table-wrapper--no-pin" in resp.text
 
 
 def test_honours_page_renders(client):

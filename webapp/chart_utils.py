@@ -297,8 +297,29 @@ def create_cumulative_graph(df, chosen_teg, y_series, title, y_calculation=None,
     return fig
 
 
+def get_round_player_color_map(df, chosen_teg, chosen_round) -> dict:
+    """Player code -> hex colour for one round's chart, in the exact same
+    order/assignment create_round_graph uses internally (first appearance in
+    Hole-sorted round data, taken from px.colors.qualitative.Plotly).
+
+    Callers that render a player-colour legend/readout OUTSIDE the actual
+    Plotly figure (webapp/routes/latest.py's chart_readout list, rendered by
+    partials/latest_round_tab.html's .lr-readout buttons) must call this
+    rather than re-deriving their own mapping, so a player's colour always
+    matches between the chart lines and the readout -- two independently
+    computed `dict(zip(unique_codes, palette))`s would only agree if both
+    walk the codes in the identical order, which is easy to accidentally
+    break (e.g. a differently-filtered or differently-sorted frame).
+    """
+    rd_data = df[(df['TEG'] == chosen_teg) & (df['Round'] == chosen_round)].sort_values(['Hole'])
+    codes = rd_data['Pl'].unique()
+    colors = px.colors.qualitative.Plotly[:len(codes)]
+    return dict(zip(codes, colors))
+
+
 def create_round_graph(df, chosen_teg, chosen_round, y_series, title,
-                       y_calculation=None, y_axis_label=None, chart_type='default', plotly_theme=None):
+                       y_calculation=None, y_axis_label=None, chart_type='default', plotly_theme=None,
+                       scale='normal', rewind=18, focus_player=''):
     """Cumulative chart through the holes of a single round (x = hole 1..18)."""
     rd_data = df[(df['TEG'] == chosen_teg) & (df['Round'] == chosen_round)].sort_values(['Hole'])
     rd_data = rd_data.copy()
@@ -306,39 +327,84 @@ def create_round_graph(df, chosen_teg, chosen_round, y_series, title,
     x_axis_max = 18
 
     fig = go.Figure()
-    colors = px.colors.qualitative.Plotly[:len(rd_data['Pl'].unique())]
-    color_map = dict(zip(rd_data['Pl'].unique(), colors))
+    color_map = get_round_player_color_map(df, chosen_teg, chosen_round)
 
     traces = []
     for player in rd_data['Pl'].unique():
         player_data = rd_data[rd_data['Pl'] == player]
         y_values = y_calculation(player_data) if y_calculation else player_data[y_series]
+        if scale == 'adjusted':
+            if chart_type == 'stableford':
+                y_values = y_values - (2 * player_data['Hole'])
+            elif chart_type == 'gross':
+                y_values = y_values - player_data['Hole']
+        visible = player_data['Hole'] <= max(1, min(int(rewind or 18), 18))
+        line_opacity = 1 if (not focus_player or player == focus_player) else 0.18
 
         traces.append(go.Scatter(
-            x=player_data['x_value'], y=y_values, mode='lines+markers', name=player,
+            x=player_data.loc[visible, 'x_value'], y=y_values.loc[visible], mode='lines+markers', name=player,
             line=dict(width=2),
             marker=dict(symbol="circle", size=6, line=dict(width=1, color="white")),
+            opacity=line_opacity,
         ))
+        if not visible.all():
+            future = player_data[player_data['Hole'] >= max(1, min(int(rewind or 18), 18))]
+            traces.append(go.Scatter(
+                x=future['x_value'], y=y_values.loc[future.index],
+                mode='lines+markers', name=player, showlegend=False,
+                line=dict(width=2), marker=dict(symbol="circle", size=5), opacity=0.2,
+                # Tags this as the faint "future" continuation so the focus()
+                # JS in latest_round.html can keep it capped at its faded
+                # opacity even when this player is the focused one, instead
+                # of raising it to full opacity (which defeated the rewind
+                # fade and made the whole line look "un-rewound").
+                meta="future",
+            ))
 
-        last_x = player_data['x_value'].iloc[-1]
-        last_y = y_values.iloc[-1]
+        # Short end-of-line label (player code + value, e.g. "GW 44") --
+        # kept per the approved reference, which shows exactly this next to
+        # each line's last plotted point. Native legend stays off
+        # (showlegend=False below) since .lr-readout already covers the
+        # "which colour is which player" job; these annotations instead
+        # cover "what's each player's live value", right at the line ends,
+        # which the readout re-states below the chart but not inline. Two
+        # letters + a short number needs far less width than the player's
+        # full name did, so the right margin can stay tight.
+        label_idx = player_data.loc[visible, 'Hole'].idxmax() if visible.any() else player_data['Hole'].idxmax()
+        last_x = player_data.loc[label_idx, 'x_value']
+        last_y = y_values.loc[label_idx]
         fig.add_annotation(
-            x=last_x, y=last_y, text=f"{player}: {format_value(last_y, chart_type)}",
-            showarrow=False, xanchor='left', yanchor='middle', xshift=5,
-            font=dict(size=10, color=color_map[player]),
+            x=last_x, y=last_y, text=f"{player} {format_value(last_y, chart_type)}",
+            showarrow=False, xanchor='left', yanchor='middle', xshift=4,
+            font=dict(size=9, color=color_map[player]),
         )
 
     fig.add_traces(traces)
     fig.update_layout(
-        yaxis_title=y_axis_label if y_axis_label else f'Cumulative {y_series}',
         hovermode='x unified',
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, traceorder='normal', itemsizing='constant'),
-        margin=dict(r=100, t=0, b=10, l=0),
+        # Native Plotly legend stays off -- .lr-readout (the player
+        # focus/value buttons below the chart) already does that job. The
+        # y-axis title text is dropped too (numeric ticks alone, per the
+        # reference) to free up horizontal space on phone widths; the tight
+        # right margin only needs to fit the short end-of-line labels above,
+        # not the wide legend/title layout this used to carry.
+        showlegend=False,
+        margin=dict(r=36, t=8, b=10, l=0),
         font=dict(family="monospace"),
     )
     fig.update_xaxes(visible=True, showline=True, linewidth=1, linecolor="#ccc",
-                     ticks="outside", tickmode="linear", tick0=1, dtick=1,
-                     title_text="Hole", range=[0.5, 18.5])
+                     ticks="outside", tickmode="linear", tick0=1, dtick=3,
+                     title_text="Hole", range=[0.5, 18.5],
+                     # Light vertical gridlines (following the same reduced
+                     # tick spacing), matching the reference's combined
+                     # horizontal+vertical grid -- the horizontal grid
+                     # already comes from get_chart_style()'s yaxis.showgrid.
+                     showgrid=True, gridcolor="rgba(0,0,0,0.06)", gridwidth=1)
+    fig.update_yaxes(title_text=None)
+    if int(rewind or 18) != 18:
+        # Rewind uses the endpoint as the inspection point. Future holes remain
+        # visible as a faint continuation without a misleading unified hover.
+        fig.update_layout(hovermode=False)
     if chart_type == 'ranking':
         fig.update_yaxes(autorange='reversed')
     for trace in fig.data:

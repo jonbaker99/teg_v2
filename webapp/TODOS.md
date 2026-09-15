@@ -299,8 +299,9 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 - [X] **Phase M1 — app shell on phones** — bottom tab bar, app bar, segmented controls, sticky-column tables. Done (see `MOBILE_PLAN.md` → Status).
 - [X] **Phase M2.7 — leaderboard card reflow** — `/leaderboard` + `/results` standings as hero pods + card rows on phones.
-- [ ] **Phase M2.8 — mobile chart preset** — blocked on the parked HTMX chart bug.
-- [ ] **Phase M2.9 — per-page mobile pass** — spacing, tap targets, empty states; consider card reflow for Latest Round / Records. Pickup pointer: `MOBILE_PLAN.md` → Status.
+- [ ] **Phase M2.8 — mobile chart preset** — the Latest Round vertical slice is complete on `codex/mobile-ui-rollout`; promote the proven pattern to other charts where it helps.
+- [ ] **Phase M2.9 — per-page mobile pass** — core layouts through R3.3 are complete on `codex/mobile-ui-rollout`; next is R3.4 Best/Worstball, followed by the remaining route audit. Pickup pointer: `MOBILE_PLAN.md` → Status.
+- [ ] **Latest Round overlapping-request ordering** — a rare response race can let an older HTMX request replace newer state. Treat as a later resilience fix unless real use shows it is material.
 - [ ] **Dark mode: page-title contrast on dark** — `.page-title` nearly invisible in dark mode (pre-existing, seen during M2 verification; part of the deferred dark QA sweep).
 - [ ] **Records table horizontal overflow on narrow screens** — long location strings (e.g. `TEG 8 (Lisbon Coast, Portugal, 2015)`) push the `/records` tables past the panel/viewport at narrow widths, causing horizontal scroll. Pre-existing (unrelated to the page-gutter fix). Apply the mobile table approach — sticky-column / horizontal-scroll container or name-shortening — per `design_principles.md` → Tables.
 

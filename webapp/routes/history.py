@@ -23,6 +23,8 @@ from teg_analysis.analysis.player_rankings import (
     create_combined_position_summary,
 )
 from teg_analysis.core.metadata import get_scorecard_data
+from teg_analysis.io.file_operations import read_file
+from teg_analysis.constants import ROUND_INFO_CSV
 from teg_analysis.display.scorecards import (
     build_round_comparison_responsive,
 )
@@ -109,41 +111,131 @@ def _wrap_player_name(name) -> str:
             f"<span class='last'>{escape(last)}</span></span>")
 
 
-def _history_table_html(df: pd.DataFrame) -> str:
+def _round_metadata_by_teg() -> dict:
+    """{TEGNum: [{"round": n, "course": str, "date": str}, ...]}, sorted by round,
+    from round_info.csv (the same canonical per-round source `get_teg_metadata`
+    already reads). Powers the mobile History disclosure row's round-by-round
+    detail. Read and grouped once per request, not per table row. Missing or
+    unreadable metadata degrades to an empty dict -- the winners table itself
+    must never depend on this succeeding."""
+    try:
+        round_info = read_file(ROUND_INFO_CSV)
+    except Exception:
+        logger.exception("_round_metadata_by_teg: round_info.csv unavailable")
+        return {}
+    result: dict = {}
+    for teg_num, group in round_info.sort_values(["TEGNum", "Round"]).groupby("TEGNum"):
+        result[int(teg_num)] = [
+            {"round": int(r["Round"]), "course": str(r["Course"]), "date": str(r["Date"])}
+            for _, r in group.iterrows()
+        ]
+    return result
+
+
+def _history_table_html(df: pd.DataFrame, round_metadata: dict | None = None) -> str:
     """Render the TEG History table the way the Streamlit page does: a compound
     TEG/area cell (area as smaller secondary text beneath the TEG label), the
     standalone Area column dropped, the TEG Trophy winner emphasised, and player
-    names wrapped in first/last spans."""
+    names wrapped in first/last spans.
+
+    When `round_metadata` (see `_round_metadata_by_teg`) has an entry for a TEG,
+    its TEG cell becomes a disclosure toggle revealing a full-width row with the
+    area and each round's course/date -- the mobile History layout's expandable
+    detail (desktop is unaffected; the toggle is a real <button>, but its default
+    chrome is reset to match the plain cell it replaces, so it looks identical
+    until interacted with). A TEG absent from round_metadata (e.g. a not-yet-
+    played "TBC" entry) renders a plain, non-interactive TEG cell instead."""
     if df is None or df.empty:
         return "<p class='text-muted text-sm'>No data available.</p>"
 
+    round_metadata = round_metadata or {}
     name_cols = ["TEG Trophy", "Green Jacket", "HMM Wooden Spoon"]
     headers = ["TEG"] + name_cols
+    # Mobile columns are too narrow for "HMM Wooden Spoon" etc. on one line;
+    # desktop keeps the full name (default-visible .th-full), mobile swaps to
+    # the approved prototype's short Trophy/Jacket/Spoon heading (.th-short,
+    # hidden by default in base-vars.css, shown only in .history-page).
+    short_headers = {"TEG Trophy": "Trophy", "Green Jacket": "Jacket", "HMM Wooden Spoon": "Spoon"}
 
     rows = ["<table class='teg-table history-table'>", "<thead><tr>"]
     for col in headers:
-        rows.append(f"<th>{escape(col)}</th>")
+        short = short_headers.get(col)
+        if short:
+            rows.append(f"<th><span class='th-full'>{escape(col)}</span><span class='th-short'>{escape(short)}</span></th>")
+        else:
+            rows.append(f"<th>{escape(col)}</th>")
     rows.append("</tr></thead><tbody>")
 
     for _, row in df.iterrows():
-        teg = escape(str(row.get("TEG", "")))
+        teg_raw = str(row.get("TEG", ""))
+        # Split the trailing "(YYYY)" out of its own span -- desktop keeps
+        # showing it inline (unstyled, so visually identical to before); the
+        # mobile column is narrow enough that "TEG 2" alone already needs
+        # two lines with the flag, so mobile.css hides .teg-year there.
+        teg_parts = re.match(r"^(.*?)(\s*\([^)]*\))?$", teg_raw)
+        teg_main = escape(teg_parts.group(1) if teg_parts else teg_raw)
+        teg_year = escape(teg_parts.group(2).strip()) if teg_parts and teg_parts.group(2) else ""
         area_raw = str(row.get("Area", ""))
         area = area_raw.split(",")[0].strip()
         flag_html = _area_flag_html(area_raw)
-        teg_cell = (
-            f"<div class='teg-cell'>"
-            f"{flag_html}"
+        teg_num_match = re.search(r"\d+", teg_raw)
+        teg_num = int(teg_num_match.group()) if teg_num_match else None
+        rounds = round_metadata.get(teg_num) if teg_num is not None else None
+
+        # Year renders twice, CSS-toggled by viewport (same technique as the
+        # short/full headers above): desktop's original compound label keeps
+        # it on the TEG-number line (.teg-year, default-visible); the
+        # approved prototype's compact mobile line puts it with the flag/
+        # area instead (.teg-year--mobile, hidden by default, shown only in
+        # .history-page) -- "TEG 2" alone fits the narrow column, but the
+        # year is still visible at a glance rather than hidden behind a tap.
+        # Mobile's collapsed row shows two lines: "TEG n" then flag + year --
+        # no region text there (region only appears in the expanded detail
+        # row). The flag renders twice, CSS-toggled by viewport (same
+        # technique as the year above): desktop keeps it as a whole-height
+        # swatch beside the two-line text (.teg-flag-desktop); mobile shows a
+        # second copy inline with the year on its own line (.teg-mobile-meta).
+        teg_label = (
             f"<span class='teg-text'>"
-            f"<span class='teg-label'>{teg}</span>"
+            f"<span class='teg-label'>{teg_main}"
+            + (f" <span class='teg-year'>{teg_year}</span>" if teg_year else "")
+            + f"</span>"
             f"<span class='area-label'>{escape(area)}</span>"
+            f"<span class='teg-mobile-meta'>{flag_html}"
+            + (f"<span class='teg-year--mobile'>{teg_year}</span>" if teg_year else "")
+            + f"</span>"
             f"</span>"
-            f"</div>"
         )
+        teg_flag_desktop = f"<span class='teg-flag-desktop'>{flag_html}</span>" if flag_html else ""
+        detail_id = f"history-{teg_num}-details"
+        if rounds:
+            teg_cell = (
+                f"<button type='button' class='teg-cell history-toggle' "
+                f"data-history-toggle aria-expanded='false' aria-controls='{detail_id}'>"
+                f"{teg_flag_desktop}{teg_label}</button>"
+            )
+        else:
+            teg_cell = f"<div class='teg-cell'>{teg_flag_desktop}{teg_label}</div>"
+
         rows.append("<tr>")
         rows.append(f"<td>{teg_cell}</td>")
         for col in name_cols:
             rows.append(f"<td>{_wrap_player_name(row.get(col))}</td>")
         rows.append("</tr>")
+
+        if rounds:
+            courses = "".join(
+                f"<li><b>R{r['round']}</b><span>{escape(r['course'])}</span>"
+                f"<small>{escape(r['date'])}</small></li>"
+                for r in rounds
+            )
+            rows.append(
+                f"<tr class='history-detail-row' id='{detail_id}' hidden>"
+                f"<td colspan='{len(headers)}'>"
+                f"<div class='history-meta'><p><b>{escape(area_raw)}</b></p>"
+                f"<ol>{courses}</ol></div>"
+                f"</td></tr>"
+            )
     rows.append("</tbody></table>")
     return "".join(rows)
 
@@ -210,7 +302,8 @@ def _ranking_table_html(df: pd.DataFrame, player_col: str = "Player",
 def history_page(request: Request):
     try:
         df = prepare_complete_history_table_fast()
-        table_html = _history_table_html(df)
+        round_metadata = _round_metadata_by_teg()
+        table_html = _history_table_html(df, round_metadata)
         table_html += ("<p class='text-muted text-sm mt-3'>*Green Jacket awarded in TEG 5 for "
                        "best stableford round; DM had best gross score.</p>")
     except Exception as e:
@@ -384,8 +477,8 @@ def _leaderboard_table_html(df: pd.DataFrame) -> str:
             val = row[col]
             if col == "Player":
                 code = get_name_to_code().get(str(val))
-                cell = (f"<a href='/player/{code}'>{escape(str(val))}</a>" if code
-                        else escape(str(val)))
+                name_html = _wrap_player_name(val)
+                cell = f"<a href='/player/{code}'>{name_html}</a>" if code else name_html
                 rows.append(f"<td class='col-player'>{cell}</td>")
             elif col == "Rank":
                 rows.append(f"<td class='col-rank'>{escape(str(val))}</td>")

@@ -435,7 +435,10 @@ def build_single_round_combined_portrait(df: pd.DataFrame) -> str:
     sf = {int(r['Hole']): int(r['Stableford']) for _, r in df.iterrows()}
     title = {int(r['Hole']): _cell_title(r) for _, r in df.iterrows()}
 
-    parts = ['<table class="scorecard-table-portrait">',
+    # Only two data columns here ("Gross"/"Stableford" -- words, not the
+    # player/round codes the other portrait tables use), so the shared narrow
+    # score-column width would clip the headers; sc-combined widens them.
+    parts = ['<table class="scorecard-table-portrait sc-combined">',
              _portrait_header(['Gross', 'Stableford']), '<tbody>']
 
     def data_rows(holes):

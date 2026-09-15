@@ -5,7 +5,7 @@
 {% if callout %}<p class="result-callout lb-callout">{{ callout | safe }}</p>{% endif %}
 {% include "partials/lb_cards.html" %}
 <div class="data-card lb-table-card">
-    <div class="table-wrapper">{{ table_html | safe }}</div>
+    <div class="table-wrapper table-wrapper--no-pin">{{ table_html | safe }}</div>
 </div>
 
 <h3 class="chart-title">{{ chart_title }}</h3>
