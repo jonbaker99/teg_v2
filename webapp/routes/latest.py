@@ -66,6 +66,10 @@ from webapp.deps import (
     get_rounds_for_teg,
     parse_teg_label,
 )
+# Reuses /results' & /history's first/last-name-span wrap convention rather
+# than inventing a third; leaderboard.py already imports from history.py the
+# same way, so this isn't a new inter-route-module pattern.
+from webapp.routes.history import _wrap_player_name
 from webapp.chart_utils import create_round_graph, format_value, get_round_player_color_map
 from webapp.tables import df_to_html as _table_df_to_html
 
@@ -135,32 +139,21 @@ def _player_score_mix(counts: pd.DataFrame, player_code: str, field: str) -> str
     return ', '.join(parts)
 
 
-def _compact_player_name(name: str) -> str:
-    """'Jon Baker' -> 'J. Baker'. Ported from the approved prototype's
-    compactName() (report_layout_prototypes/mobile_data.js) -- avoids the
-    mid-word ellipsis truncation a narrow Player column otherwise forces
-    ("David M...", "Gregg W..."). Unlike the prototype we don't force the
-    surname's casing: player names in this repo (players.csv / get_player_name)
-    are already properly cased, so there's nothing to normalise."""
-    parts = str(name or '').split()
-    if len(parts) < 2:
-        return name
-    return f"{parts[0][0]}. {' '.join(parts[1:])}"
-
-
 def _build_scoreboard_table(values: pd.DataFrame, mix_counts: pd.DataFrame,
                             mix_field: str, uid_prefix: str) -> str:
     """Render the Scoreboards-tab table: a 5-column main row (# / Player /
-    Personal rank / All-time rank / Total) plus a per-player expandable
+    Total / Personal rank / All-time rank) plus a per-player expandable
     detail row (Out/In split + per-hole score mix), collapsed by default.
 
-    Visual language (column order, .leaderboard table styling, .rank-toggle
-    "+"/"-" disclosure, .detail-grid) is ported from the approved prototype
-    at report_layout_prototypes/mobile_data.{js,css} -- see the matching CSS
-    in webapp/static/mobile.css -- with one explicit swap the user made:
-    the prototype's main row is # / Player / Out / In / Total; this one
-    is # / Player / Personal rank / All-time rank / Total, with Out/In
-    (plus a score mix the prototype doesn't have) moved into the detail row.
+    Visual language (.leaderboard table styling, .rank-toggle "+"/"-"
+    disclosure, .detail-grid) is ported from the approved prototype at
+    report_layout_prototypes/mobile_data.{js,css} -- see the matching CSS
+    in webapp/static/mobile.css -- with explicit swaps the user made: the
+    prototype's main row is # / Player / Out / In / Total; this one is
+    # / Player / Total / Personal rank / All-time rank, with Out/In (plus
+    a score mix the prototype doesn't have) moved into the detail row, and
+    Total placed immediately after Player (ahead of the rank context
+    columns) since it's the number that matters most.
     ``values`` columns: Rank, Pl, Player, Out, In, Total (already
     display-formatted strings), Personal rank, All-time rank.
     """
@@ -177,13 +170,15 @@ def _build_scoreboard_table(values: pd.DataFrame, mix_counts: pd.DataFrame,
 
     out = ["<table class='teg-table leaderboard'><colgroup>",
            "<col class='lr-rank-col'><col class='lr-player-col'>",
-           "<col class='lr-personal-col'><col class='lr-alltime-col'><col class='lr-total-col'>",
+           "<col class='lr-total-col'><col class='lr-personal-col'><col class='lr-alltime-col'>",
+           "<col class='lr-toggle-col'>",
            "</colgroup><thead><tr>",
            "<th scope='col'>#</th>",
            "<th scope='col'>Player</th>",
+           "<th scope='col'>Total</th>",
            "<th scope='col'>Personal rank</th>",
            "<th scope='col'>All-time rank</th>",
-           "<th scope='col'>Total</th>",
+           "<th scope='col'></th>",
            "</tr></thead><tbody>"]
 
     for _, row in values.iterrows():
@@ -192,22 +187,33 @@ def _build_scoreboard_table(values: pd.DataFrame, mix_counts: pd.DataFrame,
         mix = _player_score_mix(mix_counts, code, mix_field)
         personal_rank = row.get('Personal rank') or '—'
         all_time_rank = row.get('All-time rank') or '—'
-        row_class = " class='rank-1'" if str(row['Rank']) == '1' else ''
+        # Ties for first all get the leader shading, not just the literal
+        # rank-1 row -- Rank is already "1" or "1=" for a tie (see
+        # scoring.py's tied-rank pattern).
+        row_class = " class='rank-1'" if str(row['Rank']).rstrip('=') == '1' else ''
         out.append(
             f"<tr{row_class}>"
             f"<td>{escape(str(row['Rank']))}</td>"
-            "<td class='player-name'>"
+            # Cell class is deliberately NOT "player-name" -- that class
+            # belongs to the inner <span> _wrap_player_name() emits (shared
+            # display:inline-block styling with History/Standings). Reusing
+            # it on the <td> too made base-vars.css's ".player-name { display:
+            # inline-block }" rule match the <td> itself, breaking its
+            # table-cell layout (shrink-wrapped to content width, leaving a
+            # gap in the row -- visible as a "missing" border segment).
+            f"<td class='lr-player-cell'>{_wrap_player_name(str(row['Player']))}</td>"
+            f"<td class='lr-total-cell'>{escape(str(row['Total']))}</td>"
+            f"<td class='lr-rank-context'>{rank_cell(personal_rank)}</td>"
+            f"<td class='lr-rank-context'>{rank_cell(all_time_rank)}</td>"
+            "<td class='lr-toggle-td'>"
             f"<button type=\"button\" class=\"rank-toggle\" data-lr-rank-toggle "
-            f"aria-expanded=\"false\" aria-controls=\"{escape(detail_id)}\">"
-            f"<b>{escape(_compact_player_name(str(row['Player'])))}</b></button></td>"
-            f"<td>{rank_cell(personal_rank)}</td>"
-            f"<td>{rank_cell(all_time_rank)}</td>"
-            f"<td>{escape(str(row['Total']))}</td>"
+            f"aria-expanded=\"false\" aria-controls=\"{escape(detail_id)}\" "
+            f"aria-label=\"Toggle details for {escape(str(row['Player']))}\"></button></td>"
             "</tr>"
         )
         out.append(
             f"<tr class=\"rank-detail-row\" id=\"{escape(detail_id)}\" hidden>"
-            "<td colspan=\"5\">"
+            "<td colspan=\"6\">"
             "<div class=\"detail-grid\">"
             f"<span>Out<b>{escape(str(row['Out']))}</b></span>"
             f"<span>In<b>{escape(str(row['In']))}</b></span>"
@@ -385,7 +391,7 @@ def _echo_chart_state(ctx: dict, metric: str, scale: str, player: str, rewind) -
     tab, silently resetting the user's real metric/scale/player/rewind
     selection the moment they switch away from Scoreboards and back."""
     ctx.setdefault("active_metric", metric if metric in dict(METRIC_TABS) else "Sc")
-    ctx.setdefault("chart_scale", scale if scale in ("normal", "adjusted") else "normal")
+    ctx.setdefault("chart_scale", scale if scale in ("normal", "adjusted") else "adjusted")
     ctx.setdefault("chart_player", player or "")
     try:
         ctx.setdefault("chart_rewind", max(1, min(int(rewind or 18), 18)))
@@ -396,7 +402,7 @@ def _echo_chart_state(ctx: dict, metric: str, scale: str, player: str, rewind) -
 
 def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                               score_type: str = "GrossVP", metric: str = "Sc",
-                              display_mode: str = "count", scale: str = "normal",
+                              display_mode: str = "count", scale: str = "adjusted",
                               player: str = "", rewind: int = 18) -> dict:
     try:
         rd_data = cached_round_data()
@@ -409,7 +415,7 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
 
         if tab == "scoreboard":
             metric = metric if metric in dict(METRIC_TABS) else "Sc"
-            scale = scale if scale in ("normal", "adjusted") else "normal"
+            scale = scale if scale in ("normal", "adjusted") else "adjusted"
             if metric not in ("Stableford", "GrossVP"):
                 scale = "normal"
             valid_players = {str(p) for p in teg_rd['Pl'].dropna().unique()}
@@ -514,9 +520,10 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                 upto = player_df[player_df['Hole'] <= point].sort_values('Hole')
                 if upto.empty:
                     continue
+                # Always the real (unadjusted) score -- "adjusted" only
+                # reshapes the chart line's Y position, never the score
+                # actually achieved.
                 value = upto[y_series].iloc[-1]
-                if scale == 'adjusted':
-                    value -= (2 * point if chart_type == 'stableford' else point if chart_type == 'gross' else 0)
                 chart_readout.append({"code": str(code), "name": get_player_name(str(code)),
                                       "value": format_value(value, chart_type),
                                       "active": str(code) == player,
@@ -652,7 +659,7 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
 def latest_round_page(request: Request, teg: Optional[str] = Query(None),
                        round: Optional[str] = Query(None),
                        tab: str = Query("scoreboard"), metric: str = Query("Sc"),
-                       scale: str = Query("normal"), player: str = Query(""),
+                       scale: str = Query("adjusted"), player: str = Query(""),
                        rewind: str = Query("18")):
     rd_data = cached_round_data()
     teg_numbers = get_available_teg_numbers()
@@ -710,7 +717,7 @@ def latest_round_page(request: Request, teg: Optional[str] = Query(None),
 def latest_round_tab(request: Request, teg: str = Query(...), round: str = Query(...),
                            tab: str = Query("scoreboard"), score_type: str = Query("GrossVP"),
                            metric: str = Query("Sc"), display_mode: str = Query("count"),
-                           scale: str = Query("normal"), player: str = Query(""),
+                           scale: str = Query("adjusted"), player: str = Query(""),
                            rewind: str = Query("18")):
     teg_numbers = get_available_teg_numbers()
     try:

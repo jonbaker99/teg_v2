@@ -92,19 +92,12 @@ html[data-mode="dark"] .data-card {
   border-color: #2e2e29;
 }
 
-/* A few rules in the theme files hard-code a colour rather than using a var.
-   Override just the ones visible with the default title (ts-a) + card header
-   (ch3) styles so the default look reads correctly in dark.
-   (.nav-link.active no longer needs an override here (2026-09-13) — clean.css
+/* (.nav-link.active no longer needs an override here (2026-09-13) — clean.css
    now points it at var(--accent) instead of a literal #1a1a1a, so it already
-   resolves to this file's brightened accent under html[data-mode="dark"].) */
-html[data-mode="dark"] body.ch-ch3 .card-header {
-  color: var(--text-primary);
-}
-html[data-mode="dark"] body.ch-ch1 .card-header {
-  background: #2a2922;
-  color: #c8c6bb;
-}
+   resolves to this file's brightened accent under html[data-mode="dark"].)
+   .section-title/.card-header (2026-09 heading-hierarchy decision) use
+   var(--accent) directly, so they need no dark-mode override here either —
+   verified live via screenshot. */
 html[data-mode="dark"] .nav {
   box-shadow: none;
   border-bottom: 1px solid #2a2a24;

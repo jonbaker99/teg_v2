@@ -866,11 +866,11 @@ def build_bestball_contribution_bars(round_data: pd.DataFrame) -> str:
 
     Each table has one row per player (ordered by impact, most impactful
     first) with three columns: Player, the signed Impact value (headline
-    number, exact zero shown as literal '0') and a Solo/shared bar -- a pale
-    fill for total holes contributed to overlaid with a solid fill for the
-    solo-earned subset, both proportional to that table's own holes scale,
-    with the 'solo · shared' counts sitting inside the bar. The two tables
-    sit next to each other when there's room and wrap to stacked when narrow.
+    number, exact zero shown as literal '0', unchanged from the CSS-bar
+    version) and two plain, de-emphasised numeric columns -- Holes (total
+    holes contributed to) and Solo (the subset earned alone) -- replacing the
+    former solo/shared progress bar. The two tables sit next to each other
+    when there's room and wrap to stacked when narrow.
     """
     if round_data is None or round_data.empty:
         return "<p class='text-muted text-sm'>No data available.</p>"
@@ -883,31 +883,10 @@ def build_bestball_contribution_bars(round_data: pd.DataFrame) -> str:
     by_pl = {row['Pl']: row for _, row in contrib.iterrows()}
     rows = [(name, by_pl[code]) for code, name in _get_sorted_players(round_data) if code in by_pl]
 
-    def _pct(value: int, scale: int) -> int:
-        # Full 0-100% range -- the largest holes value in the table fills the
-        # whole track, matching the approved prototype (mobile_data.js's
-        # contributionBar). The solo/shared label sits inside the track via
-        # CSS, not past the bar end, so there's no need to reserve trailing
-        # space for it.
-        v = abs(int(value))
-        return 0 if v == 0 else round(100 * v / scale)
-
     def _impact_mark(value: int, kind: str) -> str:
         if value == 0:
             return '<span class="bw-impact bw-impact--zero">0</span>'
         return f'<span class="bw-impact bw-impact--{kind}">{_vp_label(value)}</span>'
-
-    def _contribution_bar(holes: int, solo: int, kind: str, scale: int) -> str:
-        shared = max(0, holes - solo)
-        label = f'{solo}<small>· {shared}</small>'
-        zcls = '' if holes else ' bw-bar-zero'
-        title = f'Solo {solo}; shared {shared}'
-        return (f'<div class="bw-bar bw-bar--{kind}" role="img" aria-label="{title}">'
-                f'<div class="bw-bar-track" title="{title}">'
-                f'<div class="bw-bar-fill bw-bar-fill--pale" style="width:{_pct(holes, scale)}%"></div>'
-                f'<div class="bw-bar-fill bw-bar-fill--solid" style="width:{_pct(solo, scale)}%"></div>'
-                f'<span class="bw-bar-val{zcls}">{label}</span>'
-                '</div></div>')
 
     def _table(kind: str, fmt_label: str, holes_key: str, solo_key: str, impact_key: str) -> str:
         # Bestball impact is <=0 (shots saved); ascending puts the biggest
@@ -916,20 +895,22 @@ def build_bestball_contribution_bars(round_data: pd.DataFrame) -> str:
         # first" for the sign this table actually uses. Stable, so equal
         # impacts keep the gross-score order.
         ordered = sorted(rows, key=lambda nr: int(nr[1][impact_key]), reverse=(kind == 'worst'))
-        scale = max([1] + [int(r[holes_key]) for _, r in rows])
         out = ['<div class="bw-bars-col">',
                f'<div class="bw-bars-title bw-bars-title--{kind}">{fmt_label}</div>',
                '<table class="bw-bars-table"><colgroup>'
-               '<col class="bw-bars-player"><col class="bw-bars-impact"><col></colgroup><thead>',
+               '<col class="bw-bars-player"><col class="bw-bars-impact"><col class="bw-bars-context">'
+               '<col class="bw-bars-context"></colgroup><thead>',
                '<tr><th class="player-label">Player</th>'
-               '<th class="bw-col-impact">Impact</th><th>Solo · shared</th></tr>',
+               '<th class="bw-col-impact">Impact</th>'
+               '<th class="bw-col-context">Holes</th><th class="bw-col-context">Solo</th></tr>',
                '</thead><tbody>']
         for name, r in ordered:
             holes, solo, impact = int(r[holes_key]), int(r[solo_key]), int(r[impact_key])
             out.append('<tr>')
             out.append(f'<td class="player-label">{_player_name_spans(name)}</td>')
             out.append(f'<td class="bw-col-impact">{_impact_mark(impact, kind)}</td>')
-            out.append(f'<td>{_contribution_bar(holes, solo, kind, scale)}</td>')
+            out.append(f'<td class="bw-col-context">{holes}</td>')
+            out.append(f'<td class="bw-col-context">{solo}</td>')
             out.append('</tr>')
         out.append('</tbody></table></div>')
         return ''.join(out)

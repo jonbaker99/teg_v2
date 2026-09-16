@@ -2,7 +2,7 @@
 {% block title_suffix %} — Scorecard{% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="/static/scorecard.css?v=24">
+<link rel="stylesheet" href="/static/scorecard.css?v=25">
 <script>
 function updateScorecardControls() {
     var view = (document.getElementById('sc-type') || {}).value;
@@ -56,7 +56,7 @@ document.addEventListener('htmx:afterSettle', function() {
                         hx-vals='{"round": {{ r }}}'
                         hx-indicator="#loading"
                         onclick="document.getElementById('sc-round').value='{{ r }}'">
-                    Round {{ r }}
+                    R{{ r }}
                 </button>
                 {% endfor %}
             </div>

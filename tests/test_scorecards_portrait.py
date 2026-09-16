@@ -281,12 +281,13 @@ def test_contribution_bars_sorted_and_zero_is_literal():
     assert '–</span>' not in html
 
 
-def test_contribution_bars_solo_shared_and_accessible_label():
+def test_contribution_bars_holes_and_solo_columns():
     data = _field_df()
     html = build_bestball_contribution_bars(data)
-    # The bar itself carries an accessible text alternative and shows the
-    # solo/shared counts inside its track -- never the impact value, and
-    # never merged into (or placed after) the bar's fill.
-    assert 'role="img"' in html
-    assert re.search(r'aria-label="Solo \d+; shared \d+"', html)
-    assert re.search(r'<span class="bw-bar-val[^"]*">\d+<small>· \d+</small></span>', html)
+    # Holes contributed to / solo holes are plain, de-emphasised numeric
+    # columns (not a CSS bar) -- impact stays the headline column, unchanged.
+    assert 'bw-bar-track' not in html
+    assert 'bw-bar-fill' not in html
+    assert html.count('<th class="bw-col-context">Holes</th>') == 2
+    assert html.count('<th class="bw-col-context">Solo</th>') == 2
+    assert re.search(r'<td class="bw-col-context">\d+</td>', html)

@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% block title_suffix %} — Design Lab{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&family=Lora:wght@400;600&display=swap">
+<style>
+  .hh-intro { font-size: 0.875rem; color: var(--text-muted); max-width: 62rem; margin-bottom: 2rem; }
+  .hh-section { margin-top: 2.75rem; }
+  .hh-section:first-of-type { margin-top: 0; }
+  .hh-section h2 { font-family: var(--font-heading), serif; font-size: 1.375rem; margin: 0 0 0.25rem 0; }
+  .hh-section .hh-desc { font-size: 0.8125rem; color: var(--text-muted); margin: 0 0 1rem 0; }
+
+  .hh-switcher { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.25rem; }
+  .hh-switcher a {
+    font-size: 0.75rem; padding: 0.3rem 0.6rem; border-radius: 0.25rem;
+    border: 1px solid var(--table-cell-border, #ddd); text-decoration: none; color: var(--text-secondary);
+  }
+  .hh-switcher a.hh-current { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  .hh-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; }
+  .hh-card { border: 1px solid var(--table-cell-border, #e0e0e0); border-radius: 0.375rem; overflow: hidden; background: var(--bg-card, #fff); }
+  .hh-card-label {
+    background: var(--nav-hover-bg, #f0f0f0); padding: 0.35rem 0.75rem; font-size: 0.7rem;
+    font-weight: 700; color: var(--text-muted); border-bottom: 1px solid var(--table-cell-border, #e0e0e0);
+  }
+  .hh-card-body { padding: 1.1rem 1.25rem; }
+  .hh-caption { font-size: 0.7rem; color: var(--text-muted); padding: 0.5rem 0.75rem; border-top: 1px dashed var(--table-cell-border, #e0e0e0); font-family: 'Roboto Mono', monospace; line-height: 1.5; }
+
+  .hh-live-note { font-size: 0.75rem; color: var(--text-muted); margin: -0.5rem 0 1rem 0; }
+
+  /* ── Tab-label alternatives (scoped, don't touch real .tab-underline) ── */
+  .hh-tabs { display: flex; gap: 0.25rem; flex-wrap: wrap; }
+  .hh-tab-current { background: transparent; border: none; border-bottom: 2px solid transparent; padding: 0.375rem 0.75rem; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); }
+  .hh-tab-current.hh-active { color: var(--accent); border-bottom-color: var(--accent); }
+  .hh-tab-robotomono { font-family: 'Roboto Mono', monospace; border: none; border-bottom: 2px solid transparent; background: transparent; padding: 0.4rem 0.75rem; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary); }
+  .hh-tab-robotomono.hh-active { color: var(--accent); border-bottom-color: var(--accent); }
+  .hh-tab-kicker { font-family: 'IBM Plex Mono', 'Courier New', monospace; border: none; border-bottom: 2px solid transparent; background: transparent; padding: 0.4rem 0.75rem; font-size: 0.71rem; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: var(--text-secondary); }
+  .hh-tab-kicker.hh-active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ── Section sub-header alternatives ── */
+  .hh-subhead-current { font-size: 16px; margin: 0; font-family: var(--font-body, inherit); font-weight: 700; color: var(--text-primary); }
+  .hh-subhead-kicker { font-family: 'IBM Plex Mono', 'Courier New', monospace; font-weight: 700; font-size: 0.71rem; letter-spacing: 0.13em; text-transform: uppercase; color: var(--accent); margin: 0; }
+  .hh-subhead-robotomono { font-family: 'Roboto Mono', monospace; font-weight: 700; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin: 0; }
+  .hh-subhead-serif { font-family: var(--font-heading), serif; font-weight: 400; font-size: 1rem; color: var(--text-primary); margin: 0; }
+
+  /* ── Chart / table title alternatives ── */
+  .hh-charttitle-current { font-family: var(--font-heading), serif; font-size: 1.0625rem; font-weight: 600; color: var(--text-primary); margin: 0; }
+  .hh-charttitle-kicker { font-family: 'IBM Plex Mono', 'Courier New', monospace; font-weight: 700; font-size: 0.71rem; letter-spacing: 0.13em; text-transform: uppercase; color: var(--accent); margin: 0; }
+  .hh-charttitle-robotomono { font-family: 'Roboto Mono', monospace; font-weight: 700; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin: 0; }
+
+  @media (max-width: 400px) {
+    .hh-grid { grid-template-columns: 1fr; }
+  }
+
+</style>
+{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+    <span class="page-label">Design</span>
+    <h1 class="page-title">Headers &amp; Titles Comparison</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<p class="hh-intro">
+    This page is a decision tool, not a live page. Jon flagged that the site's page titles, tab
+    labels, section sub-headers, chart/table titles and card headers are inconsistent, with no
+    real hierarchy. Each section below shows the current treatment next to candidate
+    alternatives — including the small mono all-caps "kicker" style used in the rendered
+    reports — so a winner can be picked per level rather than applying one style everywhere.
+    Captions list the exact CSS values to transcribe later. To see combinations of all five
+    together on a full mocked-up page (title, tabs, sections, a table and a chart), visit
+    <a href="/design/preview">/design/preview</a>.
+</p>
+
+<!-- ══════════════════════════ 1. PAGE TITLE ══════════════════════════ -->
+<div class="hh-section" id="title-section">
+    <h2>1. Page title</h2>
+    <p class="hh-desc">
+        Existing live infrastructure (<code>webapp/theme.py</code> + <code>base-vars.css</code>
+        <code>.ts-*</code> rules), previously unwired. Switching sets the <code>title_style</code>
+        cookie site-wide — this page's own title above updates immediately on reload.
+    </p>
+    <div class="hh-switcher">
+        {% for id, label in title_styles %}
+        <a href="/design/set-title-style?value={{ id }}&back=/design/headers%23title-section" class="{% if request.state.title_style == id %}hh-current{% endif %}">{{ label }}</a>
+        {% endfor %}
+    </div>
+    <p class="hh-live-note">
+        Currently live: <strong>{{ request.state.title_style }}</strong> — the page title above ("Headers &amp; Titles Comparison") is rendering in this style right now.
+        Full static gallery of every option (including ones not wired to a cookie): <a href="/design/titles">/design/titles</a>.
+    </p>
+</div>
+
+<!-- ══════════════════════════ 2. CARD HEADER ══════════════════════════ -->
+<div class="hh-section" id="card-header-section">
+    <h2>2. Card header</h2>
+    <p class="hh-desc">
+        Card header is retired as its own decision (2026-09). It's no longer a separate on/off
+        category with CH1/CH2/CH3 variants — it now always renders, unconditionally, in the same
+        mono-caps treatment as the section sub-header below (see §4). The
+        <code>card_header</code> cookie and <code>/design/set-card-header</code> route still exist
+        for other design-lab pages that reference them, but they no longer change how
+        <code>.card-header</code> looks on the live site.
+    </p>
+    <p class="hh-live-note">Live-rendered sample, in its one and only style now:</p>
+    <div class="card-header">Sample card header</div>
+    <div class="data-card" style="padding:1rem; border:1px solid var(--table-cell-border,#e0e0e0); border-radius:0.25rem;">Sample card body content.</div>
+</div>
+
+<!-- ══════════════════════════ 3. TAB LABEL ══════════════════════════ -->
+<div class="hh-section">
+    <h2>3. Tab label</h2>
+    <p class="hh-desc">Alternatives below are scoped to this page only — the real <code>.tab-underline</code> CSS is untouched.</p>
+    <div class="hh-grid">
+        <div class="hh-card">
+            <div class="hh-card-label">Current — .tab-underline</div>
+            <div class="hh-card-body">
+                <div class="hh-tabs">
+                    <span class="hh-tab-current hh-active">Round</span>
+                    <span class="hh-tab-current">Streaks</span>
+                    <span class="hh-tab-current">History</span>
+                </div>
+            </div>
+            <div class="hh-caption">font: inherit, 500, 0.875rem; no transform; border-bottom 2px solid accent on active.</div>
+        </div>
+        <div class="hh-card">
+            <div class="hh-card-label">Alt A — Roboto Mono caps</div>
+            <div class="hh-card-body">
+                <div class="hh-tabs">
+                    <span class="hh-tab-robotomono hh-active">Round</span>
+                    <span class="hh-tab-robotomono">Streaks</span>
+                    <span class="hh-tab-robotomono">History</span>
+                </div>
+            </div>
+            <div class="hh-caption">'Roboto Mono', 700, 0.68rem, letter-spacing 0.08em, uppercase.</div>
+        </div>
+        <div class="hh-card">
+            <div class="hh-card-label">Alt B — Report kicker (IBM Plex Mono)</div>
+            <div class="hh-card-body">
+                <div class="hh-tabs">
+                    <span class="hh-tab-kicker hh-active">Round</span>
+                    <span class="hh-tab-kicker">Streaks</span>
+                    <span class="hh-tab-kicker">History</span>
+                </div>
+            </div>
+            <div class="hh-caption">'IBM Plex Mono', 700, 0.71rem, letter-spacing 0.13em, uppercase, color: accent.</div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════ 4. SECTION SUB-HEADER ══════════════════════════ -->
+<div class="hh-section">
+    <h2>4. Section sub-header</h2>
+    <p class="hh-desc">The heading that introduces a block within a tab, e.g. "Round leaderboard" on /latest-round.</p>
+    <div class="hh-grid">
+        <div class="hh-card">
+            <div class="hh-card-label">Current — .section-title-row h3</div>
+            <div class="hh-card-body"><h3 class="hh-subhead-current">Round leaderboard</h3></div>
+            <div class="hh-caption">inherit body font, 700, 16px, no transform.</div>
+        </div>
+        <div class="hh-card">
+            <div class="hh-card-label">Alt A — Report kicker (IBM Plex Mono)</div>
+            <div class="hh-card-body"><h3 class="hh-subhead-kicker">Round leaderboard</h3></div>
+            <div class="hh-caption">'IBM Plex Mono', 700, 0.71rem, letter-spacing 0.13em, uppercase, color: accent.</div>
+        </div>
+        <div class="hh-card">
+            <div class="hh-card-label">Alt B — Roboto Mono (already used for table headers)</div>
+            <div class="hh-card-body"><h3 class="hh-subhead-robotomono">Round leaderboard</h3></div>
+            <div class="hh-caption">'Roboto Mono', 700, 0.7rem, letter-spacing 0.1em, uppercase, color: text-muted.</div>
+        </div>
+        <div class="hh-card">
+            <div class="hh-card-label">Alt C — Serif (Lora, editorial)</div>
+            <div class="hh-card-body"><h3 class="hh-subhead-serif">Round leaderboard</h3></div>
+            <div class="hh-caption">var(--font-heading) serif, 400, 1rem, no transform.</div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════ 5. CHART / TABLE TITLE ══════════════════════════ -->
+<div class="hh-section">
+    <h2>5. Chart title / table title</h2>
+    <p class="hh-desc">Current is <code>.chart-title</code> / generic <code>&lt;h2 class="section-title"&gt;</code> — plain, no mono/caps treatment.</p>
+    <div class="hh-grid">
+        <div class="hh-card">
+            <div class="hh-card-label">Current — .chart-title / .section-title</div>
+            <div class="hh-card-body">
+                <p class="hh-charttitle-current">Cumulative Stableford through round</p>
+                <p class="hh-charttitle-current" style="margin-top:0.75rem;">Round leaderboard</p>
+            </div>
+            <div class="hh-caption">var(--font-heading) serif, 600, 1.0625rem, no transform.</div>
+        </div>
+        <div class="hh-card">
+            <div class="hh-card-label">Alt A — Report kicker (IBM Plex Mono)</div>
+            <div class="hh-card-body">
+                <p class="hh-charttitle-kicker">Cumulative Stableford through round</p>
+                <p class="hh-charttitle-kicker" style="margin-top:0.75rem;">Round leaderboard</p>
+            </div>
+            <div class="hh-caption">'IBM Plex Mono', 700, 0.71rem, letter-spacing 0.13em, uppercase, color: accent.</div>
+        </div>
+        <div class="hh-card">
+            <div class="hh-card-label">Alt B — Roboto Mono (already used elsewhere)</div>
+            <div class="hh-card-body">
+                <p class="hh-charttitle-robotomono">Cumulative Stableford through round</p>
+                <p class="hh-charttitle-robotomono" style="margin-top:0.75rem;">Round leaderboard</p>
+            </div>
+            <div class="hh-caption">'Roboto Mono', 700, 0.7rem, letter-spacing 0.1em, uppercase, color: text-muted.</div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

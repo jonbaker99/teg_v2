@@ -392,20 +392,27 @@ def create_round_graph(df, chosen_teg, chosen_round, y_series, title,
     traces = []
     for player in rd_data['Pl'].unique():
         player_data = rd_data[rd_data['Pl'] == player]
-        y_values = y_calculation(player_data) if y_calculation else player_data[y_series]
+        y_values_raw = y_calculation(player_data) if y_calculation else player_data[y_series]
+        y_values = y_values_raw
         if scale == 'adjusted':
             if chart_type == 'stableford':
-                y_values = y_values - (2 * player_data['Hole'])
+                y_values = y_values_raw - (2 * player_data['Hole'])
             elif chart_type == 'gross':
-                y_values = y_values - player_data['Hole']
+                y_values = y_values_raw - player_data['Hole']
         visible = player_data['Hole'] <= max(1, min(int(rewind or 18), 18))
         line_opacity = 1 if (not focus_player or player == focus_player) else 0.18
+        # Hover text always shows the real (unadjusted) score -- same reasoning
+        # as the end-of-line label below: adjusted only reshapes the line's Y
+        # position, the score it reports must stay the actual one achieved.
+        hover_text = y_values_raw.apply(lambda v: format_value(v, chart_type))
+        hover_template = '%{fullData.name}: %{text}<extra></extra>'
 
         traces.append(go.Scatter(
             x=player_data.loc[visible, 'x_value'], y=y_values.loc[visible], mode='lines+markers', name=player,
             line=dict(width=2),
             marker=dict(symbol="circle", size=6, line=dict(width=1, color="white")),
             opacity=line_opacity,
+            text=hover_text.loc[visible], hovertemplate=hover_template,
         ))
         if not visible.all():
             future = player_data[player_data['Hole'] >= max(1, min(int(rewind or 18), 18))]
@@ -413,6 +420,7 @@ def create_round_graph(df, chosen_teg, chosen_round, y_series, title,
                 x=future['x_value'], y=y_values.loc[future.index],
                 mode='lines+markers', name=player, showlegend=False,
                 line=dict(width=2), marker=dict(symbol="circle", size=5), opacity=0.2,
+                text=hover_text.loc[future.index], hovertemplate=hover_template,
                 # Tags this as the faint "future" continuation so the focus()
                 # JS in latest_round.html can keep it capped at its faded
                 # opacity even when this player is the focused one, instead
@@ -430,11 +438,15 @@ def create_round_graph(df, chosen_teg, chosen_round, y_series, title,
         # which the readout re-states below the chart but not inline. Two
         # letters + a short number needs far less width than the player's
         # full name did, so the right margin can stay tight.
+        # The label text always shows the real (unadjusted) score -- "adjusted"
+        # only reshapes the line's Y position to make relative gaps easier to
+        # read; it never changes the score a player actually achieved.
         label_idx = player_data.loc[visible, 'Hole'].idxmax() if visible.any() else player_data['Hole'].idxmax()
         last_x = player_data.loc[label_idx, 'x_value']
         last_y = y_values.loc[label_idx]
+        last_y_raw = y_values_raw.loc[label_idx]
         fig.add_annotation(
-            x=last_x, y=last_y, text=f"{player} {format_value(last_y, chart_type)}",
+            x=last_x, y=last_y, text=f"{player} {format_value(last_y_raw, chart_type)}",
             showarrow=False, xanchor='left', yanchor='middle', xshift=4,
             font=dict(size=9, color=color_map[player]),
         )

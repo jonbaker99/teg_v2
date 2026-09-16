@@ -18,7 +18,7 @@
                     hx-get="/scoring/streaks/tab" hx-target="#st-content" hx-swap="innerHTML"
                     hx-include="[name='d_teg'], [name='d_player']"
                     hx-vals='{"tab": "detail", "d_round": "{{ r }}"}'>
-                {% if r == 'All' %}All{% else %}Round {{ r }}{% endif %}
+                {% if r == 'All' %}All{% else %}R{{ r }}{% endif %}
             </button>
             {% endfor %}
         </div>

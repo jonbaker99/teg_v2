@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="/static/scorecard.css?v=24">
+<link rel="stylesheet" href="/static/scorecard.css?v=25">
 {% endblock %}
 
 {% block page_title %}
@@ -13,7 +13,7 @@
 
 {% block content %}
 {% set lr_full_page = true %}
-<div class="latest-round-page" data-lr-page data-lr-teg="{{ selected_teg }}" data-lr-round="{{ selected_round }}" data-lr-active-tab="{{ active_tab }}" data-lr-metric="{{ active_metric|default('Sc') }}" data-lr-scale="{{ chart_scale|default('normal') }}" data-lr-player="{{ chart_player|default('') }}" data-lr-rewind="{{ chart_rewind|default(18) }}">
+<div class="latest-round-page" data-lr-page data-lr-teg="{{ selected_teg }}" data-lr-round="{{ selected_round }}" data-lr-active-tab="{{ active_tab }}" data-lr-metric="{{ active_metric|default('Sc') }}" data-lr-scale="{{ chart_scale|default('adjusted') }}" data-lr-player="{{ chart_player|default('') }}" data-lr-rewind="{{ chart_rewind|default(18) }}">
 
 <p id="lr-context-header" class="text-muted text-sm mb-3">{{ context_header }}</p>
 
@@ -81,7 +81,7 @@
    even for a single, non-overlapping request. #lr-context-header survives
    because it already lived outside #lr-content; this gives #lr-chart-state
    the same safety. #}
-<div id="lr-chart-state" hidden data-teg="{{ selected_teg }}" data-round="{{ selected_round }}" data-tab="{{ active_tab }}" data-metric="{{ active_metric|default('Sc') }}" data-scale="{{ chart_scale|default('normal') }}" data-player="{{ chart_player|default('') }}" data-rewind="{{ chart_rewind|default(18) }}"></div>
+<div id="lr-chart-state" hidden data-teg="{{ selected_teg }}" data-round="{{ selected_round }}" data-tab="{{ active_tab }}" data-metric="{{ active_metric|default('Sc') }}" data-scale="{{ chart_scale|default('adjusted') }}" data-player="{{ chart_player|default('') }}" data-rewind="{{ chart_rewind|default(18) }}"></div>
 
 {# The tab row lives outside #lr-content, so an HTMX TEG/round change never
    re-renders it — keep the Report link's target and visibility in sync here.
@@ -144,12 +144,15 @@
         var tabInput = document.getElementById('lr-tab-input');
         var activeTab = tabInput ? tabInput.value : page.dataset.lrActiveTab;
         var metric = page.dataset.lrMetric || 'Sc';
-        var scale = page.dataset.lrScale || 'normal';
+        var scale = page.dataset.lrScale || 'adjusted';
         var player = page.dataset.lrPlayer || '';
         var rewind = page.dataset.lrRewind || '18';
         if (activeTab === 'scoreboard') {
             url.searchParams.set('metric', metric);
-            if (scale === 'adjusted' && (metric === 'Stableford' || metric === 'GrossVP')) url.searchParams.set('scale', scale);
+            // Adjusted is the default -- only persist scale in the URL when
+            // it deviates (Normal), same reasoning as any other non-default
+            // control value.
+            if (scale === 'normal' && (metric === 'Stableford' || metric === 'GrossVP')) url.searchParams.set('scale', scale);
             else url.searchParams.delete('scale');
             if (player) url.searchParams.set('player', player); else url.searchParams.delete('player');
             // Set explicitly from the stored dataset value, not just via the
@@ -230,7 +233,7 @@
                 round: (params && params.round) || (roundInput ? roundInput.value : page.dataset.lrRound),
                 tab: (params && params.tab) || (tabInput ? tabInput.value : page.dataset.lrActiveTab),
                 metric: elt.dataset.lrQuery === 'metric' ? elt.value : (page.dataset.lrMetric || 'Sc'),
-                scale: elt.classList.contains('lr-scale-toggle') ? (elt.getAttribute('aria-checked') === 'true' ? 'normal' : 'adjusted') : (page.dataset.lrScale || 'normal'),
+                scale: elt.classList.contains('lr-scale-toggle') ? (elt.getAttribute('aria-checked') === 'true' ? 'normal' : 'adjusted') : (page.dataset.lrScale || 'adjusted'),
                 player: elt.dataset.lrQuery === 'player' ? (elt.value || '') : (page.dataset.lrPlayer || ''),
                 rewind: elt.dataset.lrQuery === 'rewind' ? elt.value : (page.dataset.lrRewind || '18'),
                 push: elt.matches('[data-lr-history="push"]'),
@@ -288,7 +291,7 @@
         page.dataset.lrRound = echoed('round', requested.round || page.dataset.lrRound);
         page.dataset.lrActiveTab = echoed('tab', requested.tab || page.dataset.lrActiveTab);
         page.dataset.lrMetric = echoed('metric', requested.metric || 'Sc');
-        page.dataset.lrScale = echoed('scale', requested.scale || 'normal');
+        page.dataset.lrScale = echoed('scale', requested.scale || 'adjusted');
         page.dataset.lrPlayer = echoed('player', requested.player || '');
         page.dataset.lrRewind = echoed('rewind', requested.rewind || '18');
         // beforeSwap already applied the requested values optimistically;

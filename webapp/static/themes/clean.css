@@ -105,7 +105,10 @@
    Everything uses the sans UI face (via --font-heading / --font-body above)
    EXCEPT three identity/chrome elements, which keep the site's Lora serif:
      1. the site title / masthead wordmark (.nav-brand);
-     2. the main site navigation links (top nav + its dropdown items);
+     2. the top-level main site navigation links/buttons (top nav only —
+        dropdown menu items intentionally match the top-level sans look
+        instead; see ui-polish.css's .nav-dropdown-btn override, which
+        already won this for the button itself);
      3. page (H1) titles — the big page title, and the player-profile name,
         which acts as that page's H1.
    Defined here (global, token-driven) so it holds across every page without
@@ -114,8 +117,7 @@
     font-family: var(--font-serif);
 }
 .nav-link,
-.nav-dropdown-btn,
-.nav-dropdown-menu a {
+.nav-dropdown-btn {
     font-family: var(--font-serif);
 }
 .page-title-area .page-title,

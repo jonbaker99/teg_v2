@@ -702,30 +702,32 @@ html[data-mode="dark"] .bw-rank-num { background-color: #2a2a26; }
 .bw-bar-val.bw-bar-zero { color: #b3b3b3; font-weight: 400; }
 
 /* Bestball/worstball-pair override: matches the approved mobile prototype --
-   a taller track, wider percentage-based columns and the solo/shared count
-   sitting inside the track's left edge on a translucent backing (rather than
-   just past the bar end), so it stays legible over either fill colour and is
-   never placed after the bar. Eclectic (outside .bw-bars-pair) is untouched. */
+   wider percentage-based Player/Impact columns. Eclectic (outside
+   .bw-bars-pair) keeps its own solo/shared bar, untouched. */
 .bw-bars-pair .bw-bars-table col.bw-bars-player { width: 34%; }
 .bw-bars-pair .bw-bars-table col.bw-bars-impact { width: 18%; }
+.bw-bars-pair .bw-bars-table col.bw-bars-context { width: 24%; }
 @media (max-width: 640px) {
   .bw-bars-pair .bw-bars-table col.bw-bars-player { width: 30%; }
+  /* Two 280px-min columns (.bw-bars-col's desktop flex-basis, above) don't
+     fit side by side under ~560px -- they were wrapping to their own rows
+     but still each claiming up to 300px, leaving lopsided empty space
+     rather than each table filling the phone's actual width. Full-width
+     stacking removes that gap. */
+  .bw-bars-pair { gap: 0.9rem; }
+  .bw-bars-pair .bw-bars-col { flex: 1 1 100%; min-width: 0; }
 }
-.bw-bars-pair .bw-bar-track { height: 18px; }
-.bw-bars-pair .bw-bar-val {
-  left: 4px;
-  z-index: 3;
-  padding: 2px 3px;
-  border-radius: 2px;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.68);
-  font-size: 10px;
-  line-height: 1;
+/* Holes contributed to / solo: plain, de-emphasised numeric columns --
+   supporting context, not the headline (Impact stays the prominent one). */
+.bw-bars-pair .bw-bars-table th.bw-col-context,
+.bw-bars-pair .bw-bars-table td.bw-col-context {
+  color: var(--color-text-secondary);
+  font-size: 12px;
 }
-.bw-bars-pair .bw-bar--best .bw-bar-val,
-.bw-bars-pair .bw-bar--worst .bw-bar-val { color: #fff; }
-.bw-bars-pair .bw-bar-val small { color: inherit; }
-.bw-bars-pair .bw-bar-val.bw-bar-zero { color: var(--color-text-secondary); background: transparent; font-weight: 400; }
+html[data-mode="dark"] .bw-bars-pair .bw-bars-table th.bw-col-context,
+html[data-mode="dark"] .bw-bars-pair .bw-bars-table td.bw-col-context {
+  color: var(--color-text-secondary);
+}
 
 /* Dark mode */
 html[data-mode="dark"] .bw-bars-title--best { color: #8fdc97; }
@@ -868,6 +870,18 @@ html[data-mode="dark"] .bw-bars-pair .bw-bar-val.bw-bar-zero { color: var(--colo
 .scorecard-table-portrait.sc-combined .col-header,
 .scorecard-table-portrait.sc-combined td.score-cell,
 .scorecard-table-portrait.sc-combined td.totals:not(.par-cell) {
+  width: auto;
+  max-width: none;
+}
+/* .bw-scorecard-portrait: same problem as .sc-combined above -- more score
+   columns (Bes/Wor + one per player) than the shape-size minimum leaves room
+   for, so the shape-size-capped columns leave the table narrower than its
+   .sc-scroll wrapper and margin:0 auto centers that narrow table into the
+   middle of the phone screen with big side gutters. */
+.bw-scorecard-portrait { margin: 0; width: 100%; }
+.bw-scorecard-portrait .col-header,
+.bw-scorecard-portrait td.score-cell,
+.bw-scorecard-portrait td.totals:not(.par-cell) {
   width: auto;
   max-width: none;
 }

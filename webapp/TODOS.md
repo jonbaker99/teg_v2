@@ -232,7 +232,10 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
   Career Highlights cards, trend before expandable results and complete held
   records on Records & Streaks. The liked roster is unchanged.
 - [ ] **Less generic player-detail aesthetic** — revisit the approved structure
-  after the wider UI work, not as the next task (decision 2026-09-13).
+  after the wider UI work, not as the next task (decision 2026-09-13). Reconfirmed
+  2026-09-16 (Jon, reviewing the mobile rollout): individual player pages still read
+  as too much mono font — matches the "no definition/structure" rejection reasoning
+  below, kept open rather than re-attempted inline with the mobile pass.
   User wants less of a "generic AI webpage": refine card
   sameness, rhythm, hierarchy and scorecard character without losing grouping
   or Career Highlights cards. Show an interactive direction before more changes.
@@ -304,6 +307,9 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 - [ ] **Latest Round overlapping-request ordering** — a rare response race can let an older HTMX request replace newer state. Treat as a later resilience fix unless real use shows it is material.
 - [ ] **Dark mode: page-title contrast on dark** — `.page-title` nearly invisible in dark mode (pre-existing, seen during M2 verification; part of the deferred dark QA sweep).
 - [ ] **Records table horizontal overflow on narrow screens** — long location strings (e.g. `TEG 8 (Lisbon Coast, Portugal, 2015)`) push the `/records` tables past the panel/viewport at narrow widths, causing horizontal scroll. Pre-existing (unrelated to the page-gutter fix). Apply the mobile table approach — sticky-column / horizontal-scroll container or name-shortening — per `design_principles.md` → Tables.
+- [ ] **Latest Round chart: add a "tournament ranking" scale/mode option** (2026-09-16, Jon). Flagged alongside the Normal/Adjusted scale rework as a later addition, not scoped yet — the chart would show each player's live ranking position through the round rather than (or alongside) their cumulative score.
+- [ ] **Latest Round: tables on the Scoring/Streaks/Records tabs need mobile work** (2026-09-16, Jon). Scoreboard and Bestball/Worstball tabs have had their mobile table passes (compact leaderboard, contribution table); the other tabs still render their desktop table markup unstyled for phone width.
+- [ ] **Latest Round: Scorecard tab has excess side padding on phones** (2026-09-16, Jon). Unlike `/scorecard`'s own portrait treatment, the Scorecard tab inside Latest Round has no `mobile.css` entry yet — confirmed still outstanding. Jon said to leave it for now.
 
 ## Planned enhancements
 

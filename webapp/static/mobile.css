@@ -117,45 +117,53 @@
 
   /* ── Controls (M1.5): segmented tabs + thumb-friendly pills/selects ── */
 
-  /* In-page primary tab rows (.section-nav of .tab-underline) become an
-     iOS-style segmented control. Scrolls horizontally if the labels overflow
-     (e.g. the 5-tab metric rows on the Latest pages). Site-wide default —
-     Latest Round overrides this below with its own plain-underline treatment
-     (`.main-content .latest-round-page > .section-nav`), which wins on
-     specificity without this block needing to know about that page. */
+  /* In-page primary tab rows (.section-nav of .tab-underline): site-wide
+     plain-underline treatment, matching desktop's .tab-underline look
+     (base-vars.css) rather than boxing it into an iOS segmented control.
+     Scrolls horizontally if the labels overflow, with a right-edge fade so
+     an overflowing row reads as scrollable. Ported from Latest Round's
+     original page-scoped override, now generalised so every page's tab row
+     gets the same treatment (`.latest-round-page` kept only its own
+     page-specific inset margin below). */
   .section-nav {
     display: flex;
     flex-wrap: nowrap;              /* base style wraps; a segment must not */
-    gap: 3px;
-    padding: 3px;
-    background: var(--btn-inactive-bg, #f5f4f0);
-    border: 1px solid var(--table-cell-border, #e0e0e0);
-    border-radius: 11px;
+    gap: 0;
+    margin: 0 0 12px;
+    padding: 0 18px 0 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    mask-image: linear-gradient(to right, #000 calc(100% - 18px), transparent);
   }
   .section-nav::-webkit-scrollbar { display: none; }
   .section-nav .tab-underline {
-    flex: 1 0 auto;
-    border: none;
-    border-radius: 8px;
-    padding: 9px 12px;
+    flex: 0 0 auto;
+    min-height: 44px;
+    padding: 10px 12px 8px;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    color: var(--text-secondary, #555555);
     font-size: 0.875rem;
     font-weight: 600;
     white-space: nowrap;
     text-align: center;
-    color: var(--text-secondary, #555555);
   }
-  .section-nav .tab-underline:hover { border: none; }
+  .section-nav .tab-underline:hover { border-bottom: 2px solid transparent; }
   .section-nav .tab-underline--active,
   .section-nav .tab-underline--active:hover,
   .section-nav .tab-underline.active,
   .section-nav .tab-underline.active:hover {
-    background: var(--bg-card, #ffffff);
+    border-bottom-color: var(--accent, forestgreen);
+    background: transparent;
+    box-shadow: none;
     color: var(--accent, forestgreen);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10);
-    border: none;
   }
 
   /* Pills: bigger tap targets. */
@@ -344,44 +352,9 @@
     box-shadow: none;
   }
   .main-content .latest-round-page > .section-nav {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 0;
-    margin: 0 var(--lr-inset) 12px;
+    margin-left: var(--lr-inset);
+    margin-right: var(--lr-inset);
     max-width: none;
-    padding: 0 18px 0 0;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    mask-image: linear-gradient(to right, #000 calc(100% - 18px), transparent);
-  }
-  .main-content .latest-round-page > .section-nav::-webkit-scrollbar { display: none; }
-  .main-content .latest-round-page > .section-nav .tab-underline {
-    flex: 0 0 auto;
-    min-height: 44px;
-    padding: 10px 12px 8px;
-    border: 0;
-    border-bottom: 2px solid transparent;
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
-    color: var(--text-secondary, #555555);
-    font-size: 0.875rem;
-    font-weight: 600;
-    white-space: nowrap;
-    text-align: center;
-  }
-  .main-content .latest-round-page > .section-nav .tab-underline--active,
-  .main-content .latest-round-page > .section-nav .tab-underline--active:hover,
-  .main-content .latest-round-page > .section-nav .tab-underline.active,
-  .main-content .latest-round-page > .section-nav .tab-underline.active:hover {
-    border-bottom-color: var(--accent, forestgreen);
-    background: transparent;
-    box-shadow: none;
-    color: var(--accent, forestgreen);
   }
   .latest-round-page #lr-content .section-controls { gap: 6px; margin-bottom: 12px; }
   .latest-round-page #lr-content .pill { min-height: 44px; font-size: 14px; padding-inline: 11px; }
@@ -413,9 +386,15 @@
   /* "Round leaderboard" + currently-selected metric name, replacing a plain
      uppercase label heading -- ported from the reference's .section-title-row. */
   .latest-round-page #lr-content .section-title-row {
-    display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 0 var(--lr-inset);
+    display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+    margin: 20px var(--lr-inset) 0; padding-top: 10px;
   }
-  .latest-round-page #lr-content .section-title-row h3 { margin: 0; font-size: 16px; }
+  /* The h3 carries class="section-title" (canonical site-wide mono-caps
+     heading, base-vars.css) -- just reset its margin to 0 here so it aligns
+     on the same baseline as the metric-name <p> beside it in this flex row. */
+  .latest-round-page #lr-content .section-title-row h3.section-title {
+    margin: 0;
+  }
   .latest-round-page #lr-content .section-title-row p { margin: 0; color: var(--text-muted, #666); font-size: 14px; }
 
   /* Leaderboard table -- ported line-for-line from the approved reference's
@@ -430,10 +409,11 @@
     width: 100%; margin-top: 9px; border-collapse: collapse; table-layout: fixed; font-size: 14px;
   }
   .latest-round-page #lr-content table.leaderboard .lr-rank-col { width: 7%; }
-  .latest-round-page #lr-content table.leaderboard .lr-player-col { width: 38%; }
-  .latest-round-page #lr-content table.leaderboard .lr-personal-col { width: 18%; }
-  .latest-round-page #lr-content table.leaderboard .lr-alltime-col { width: 22%; }
-  .latest-round-page #lr-content table.leaderboard .lr-total-col { width: 15%; }
+  .latest-round-page #lr-content table.leaderboard .lr-player-col { width: 32%; }
+  .latest-round-page #lr-content table.leaderboard .lr-personal-col { width: 15%; }
+  .latest-round-page #lr-content table.leaderboard .lr-alltime-col { width: 18%; }
+  .latest-round-page #lr-content table.leaderboard .lr-total-col { width: 18%; }
+  .latest-round-page #lr-content table.leaderboard .lr-toggle-col { width: 10%; }
   .latest-round-page #lr-content table.leaderboard th {
     padding: 0 6px 8px; color: var(--text-muted, #666); text-align: right;
     font: 700 11px/1.2 'Roboto Mono', monospace; letter-spacing: .03em; text-transform: uppercase;
@@ -447,8 +427,26 @@
   .latest-round-page #lr-content table.leaderboard td { text-align: center; }
   .latest-round-page #lr-content table.leaderboard th:nth-child(2),
   .latest-round-page #lr-content table.leaderboard td:nth-child(2) { text-align: left; }
+  /* Player-name markup switched from a single <b> to the shared
+     .player-name/.first/.last span structure (base-vars.css) so this table
+     gets the same "if one name wraps, all do, and rows stay equal height"
+     JS/CSS treatment as History/Standings, instead of its own bespoke
+     abbreviated-name shortening. The <td> itself is deliberately classed
+     .lr-player-cell, not .player-name -- that class is the inner <span>'s
+     (see webapp/routes/latest.py); reusing it on the <td> too made the
+     shared "span.player-name { display: inline-block }" rule match the <td>
+     itself, breaking its table-cell layout. */
+  .latest-round-page #lr-content table.leaderboard td.lr-player-cell {
+    font-weight: 700;
+  }
+  .latest-round-page #lr-content table.leaderboard .player-name {
+    min-width: 0;
+    line-height: 1.15;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
   .latest-round-page #lr-content table.leaderboard td {
-    padding: 12px 5px; border-top: 1px solid var(--table-cell-border, #e0e0e0);
+    padding: 12px 5px;
     font-family: 'Roboto Mono', monospace; font-variant-numeric: tabular-nums; white-space: nowrap;
   }
   .latest-round-page #lr-content table.leaderboard th:first-child,
@@ -456,9 +454,10 @@
     position: static;
     padding-inline: 2px;
     color: var(--text-muted, #666);
+    background-color: transparent;
   }
   .latest-round-page #lr-content table.leaderboard th:last-child,
-  .latest-round-page #lr-content table.leaderboard td:last-child { padding-inline: 8px; }
+  .latest-round-page #lr-content table.leaderboard td:last-child { padding-inline: 2px; }
   .latest-round-page #lr-content table.leaderboard .lr-rank-value { white-space: nowrap; }
   .latest-round-page #lr-content table.leaderboard .lr-rank-value small {
     margin-left: 1px;
@@ -466,26 +465,35 @@
     font-size: .78em;
     font-weight: 400;
   }
+  /* De-emphasise the contextual rank columns -- Total is the column that
+     matters, Personal/All-time rank are supporting context. */
+  .latest-round-page #lr-content table.leaderboard td.lr-rank-context {
+    color: var(--text-muted, #666);
+  }
+  /* Total: the important column -- bigger, bold, accent colour. */
+  .latest-round-page #lr-content table.leaderboard td.lr-total-cell {
+    font-size: 1.15em;
+    font-weight: 700;
+    color: var(--text-primary, #1b241f);
+  }
+  /* Leader shading: tied-first rows all get it (Rank is "1" or "1="). */
+  .latest-round-page #lr-content table.leaderboard tr.rank-1 {
+    background-color: var(--table-toprank-bg, #F3F7F3);
+  }
   .latest-round-page #lr-content table.leaderboard tr.rank-1 td { font-weight: 700; }
   .latest-round-page #lr-content table.leaderboard tr.rank-1 td:first-child { color: var(--accent, #17683c); }
+  .latest-round-page #lr-content table.leaderboard tr.rank-1 td.lr-total-cell { color: var(--accent, #17683c); }
 
   /* Row expand/collapse (Out/In split + per-hole score mix) -- rank-toggle
-     "+"/"-" and detail-grid ported from the same reference. */
+     "+"/"-" moved to its own narrow final column (not overlaid on the player
+     name) -- detail-grid ported from the same reference. */
+  .latest-round-page #lr-content table.leaderboard td.lr-toggle-td { padding-inline: 0; }
   .latest-round-page #lr-content .rank-toggle {
     width: 100%; min-height: 44px; margin: -12px 0; padding: 12px 0;
-    border: 0; background: transparent; color: inherit; font: inherit;
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 8px; text-align: left;
+    border: 0; background: transparent; color: var(--accent, #17683c); font: inherit;
+    font-size: 18px; line-height: 1; text-align: center; cursor: pointer;
   }
-  .latest-round-page #lr-content .rank-toggle b {
-    min-width: 0;
-    line-height: 1.15;
-    white-space: normal;
-    overflow-wrap: anywhere;
-  }
-  .latest-round-page #lr-content .rank-toggle::after {
-    content: "+"; flex: none; color: var(--accent, #17683c); font-size: 18px; line-height: 1;
-  }
+  .latest-round-page #lr-content .rank-toggle::after { content: "+"; }
   .latest-round-page #lr-content .rank-toggle[aria-expanded="true"]::after { content: "\2013"; }
   .latest-round-page #lr-content .rank-detail-row td { padding: 0 !important; background: var(--btn-inactive-bg, #f5f4f0); }
   .latest-round-page #lr-content .rank-detail-row .detail-grid {
@@ -533,7 +541,7 @@
      latest_round_tab.html and the lr-scale-toggle class note there). */
   .latest-round-page #lr-content .scale-switch {
     display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px;
-    margin: 10px 0 0; padding: 0; border: 0; background: transparent; color: inherit;
+    margin: 0 var(--lr-inset) 8px; padding: 0; border: 0; background: transparent; color: inherit;
   }
   .latest-round-page #lr-content .scale-switch-label { font-size: 13px; color: var(--text-muted, #666); }
   .latest-round-page #lr-content .scale-switch[aria-checked="false"] .scale-switch-label:first-of-type,
@@ -542,7 +550,7 @@
   }
   .latest-round-page #lr-content .switch-track {
     position: relative; flex: none; width: 40px; height: 22px; border: 1px solid var(--table-cell-border, #d5ddd7);
-    border-radius: 999px; background: var(--btn-inactive-bg, #f5f4f0);
+    border-radius: 999px; background: var(--table-toprank-bg, #F3F7F3);
     transition: background .15s ease, border-color .15s ease;
   }
   .latest-round-page #lr-content .scale-switch[aria-checked="true"] .switch-track {
@@ -559,9 +567,34 @@
   .lr-rewind-step { width: 44px; height: 44px; border: 1px solid var(--table-cell-border, #d5ddd7); border-radius: 8px; color: var(--accent, #17683c); background: var(--bg-card, #fff); font-size: 20px; flex: 0 0 auto; }
   .lr-rewind output { min-width: 2ch; color: var(--text-primary, #1b241f); font-size: 14px; text-align: right; flex: 0 0 auto; }
   .latest-round-page .lr-chart { height: 320px !important; min-height: 280px; }
-  .latest-round-page .chart-title { margin: 16px var(--lr-inset) 6px; padding-inline: 0; font-size: 15px; }
-  .latest-round-page .data-card--padded { padding: 0; }
+  /* Tiny left breathing room -- the chart's own Plotly margin.l is 0 (chart_utils.py's
+     create_round_graph), so its y-axis tick labels otherwise sit flush against the
+     screen edge on this full-bleed page. */
+  .latest-round-page .data-card--padded { padding: 0 0 0 8px; }
   .latest-round-page .plotly .legend text { font-size: 11px !important; }
+
+  /* Bestball tab: .card-header ("Player contributions") and the bars'
+     "Bestball"/"Worstball" titles have zero horizontal padding of their own
+     at phone width (the full-bleed #lr-content .data-card override above
+     already strips the layered-theme card's usual inset) -- give them the
+     same small page-edge gutter as everything else on this page. The
+     table/pair itself not overflowing is handled in scorecard.css (its own
+     .bw-bars-pair @media block), not here, since that CSS is shared with the
+     non-mobile /bestball page and .bw-bars-pair isn't part of this page's
+     content structurally -- it's simplest to keep both halves of one visual
+     fix next to the rules they're overriding. */
+  .latest-round-page #lr-content .card-header,
+  .latest-round-page #lr-content .bw-bars-title {
+    margin-left: var(--lr-inset);
+    margin-right: var(--lr-inset);
+  }
+  /* Bestball/Worstball rank-summary labels near the top of the tab -- same
+     page-edge gutter as everything else, since .bw-rank-summary is a
+     `raw: True` section with no .data-card wrapper/padding of its own. */
+  .latest-round-page #lr-content .bw-rank-summary {
+    margin-left: var(--lr-inset);
+    margin-right: var(--lr-inset);
+  }
 
   /* ── History (TEG winners table, R3.1) ──
      Same ancestor-gutter fix Latest Round needed: Tailwind's .main-content.px-6
@@ -601,13 +634,23 @@
   /* Collapsed mobile row: line 1 "TEG n", line 2 flag + year -- no region
      text and no separate flag column (region only shows in the expanded
      detail row, see .history-meta below). */
-  .history-page .history-table .area-label { display: none; }
-  .history-page .history-table .teg-flag-desktop { display: none; }
+  .history-page .history-table .area-row { display: none; }
+  /* Bold the TEG-number line, de-emphasise the flag/year line beneath it --
+     same grey used for the desktop region text -- so "TEG XX" reads as the
+     primary label and flag+year as secondary context, roughly matching its
+     width. */
+  .history-page .history-table .teg-label { font-weight: 700; }
   .history-page .history-table .teg-mobile-meta {
     display: flex;
     align-items: center;
-    gap: 0.35em;
+    gap: 0.3em;
     margin-top: 1px;
+    font-size: 0.8125rem;
+    font-weight: 400;
+  }
+  .history-page .history-table .teg-mobile-meta .teg-flag.fi {
+    width: 0.95em;
+    align-self: auto;
   }
   /* Full column names don't fit these columns on one line; the approved
      prototype's short Trophy/Jacket/Spoon heading does. */
@@ -616,21 +659,27 @@
   .history-page .history-table th:not(:first-child),
   .history-page .history-table td:not(:first-child) { text-align: center; }
   .history-page .history-table .teg-cell { min-height: 44px; }
-  .history-page .history-table button.teg-cell {
-    position: relative;
-    padding-right: 20px;
+  /* Disclosure "+/-" moved out of the TEG cell into its own narrow final
+     column -- the TEG cell/button stays the full-width tap target, but the
+     visual indicator now lives beside it rather than overlapping the label.
+     :has() reaches back into the row to read the toggle button's state
+     (already relied on elsewhere in this file, e.g. .main-content:has()). */
+  .history-page .history-table th.history-toggle-th,
+  .history-page .history-table td.history-toggle-td {
+    display: table-cell;
+    width: 22px;
+    padding: 9px 2px;
+    text-align: center;
   }
-  .history-page .history-table button.teg-cell::after {
+  .history-page .history-table .history-toggle-indicator::before {
     content: "+";
-    position: absolute;
-    right: 2px;
-    top: 50%;
-    transform: translateY(-50%);
     color: var(--accent, #17683c);
     font-size: 16px;
     line-height: 1;
   }
-  .history-page .history-table button.teg-cell[aria-expanded="true"]::after { content: "\2013"; }
+  .history-page .history-table tr:has(button.teg-cell[aria-expanded="true"]) .history-toggle-indicator::before {
+    content: "\2013";
+  }
   .history-page .history-detail-row td { padding: 0; background: var(--btn-inactive-bg, #f5f4f0); }
   .history-page .history-meta { padding: 10px 12px 12px; color: var(--text-muted, #666); font-size: 11px; }
   .history-page .history-meta p { margin: 0 0 6px; }

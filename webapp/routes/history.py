@@ -156,7 +156,12 @@ def _history_table_html(df: pd.DataFrame, round_metadata: dict | None = None) ->
 
     round_metadata = round_metadata or {}
     name_cols = ["TEG Trophy", "Green Jacket", "HMM Wooden Spoon"]
-    headers = ["TEG"] + name_cols
+    # Trailing unlabelled column: the round/course/date disclosure "+/-"
+    # indicator. Desktop keeps the TEG cell itself as the full-width click
+    # target (unchanged) and never shows this column (display:none,
+    # base-vars.css); mobile hides the indicator that used to overlay the TEG
+    # cell and shows it here instead, in a narrow final column.
+    headers = ["TEG"] + name_cols + [""]
     # Mobile columns are too narrow for "HMM Wooden Spoon" etc. on one line;
     # desktop keeps the full name (default-visible .th-full), mobile swaps to
     # the approved prototype's short Trophy/Jacket/Spoon heading (.th-short,
@@ -168,8 +173,10 @@ def _history_table_html(df: pd.DataFrame, round_metadata: dict | None = None) ->
         short = short_headers.get(col)
         if short:
             rows.append(f"<th><span class='th-full'>{escape(col)}</span><span class='th-short'>{escape(short)}</span></th>")
-        else:
+        elif col:
             rows.append(f"<th>{escape(col)}</th>")
+        else:
+            rows.append("<th class='history-toggle-th'></th>")
     rows.append("</tr></thead><tbody>")
 
     for _, row in df.iterrows():
@@ -178,9 +185,9 @@ def _history_table_html(df: pd.DataFrame, round_metadata: dict | None = None) ->
         # showing it inline (unstyled, so visually identical to before); the
         # mobile column is narrow enough that "TEG 2" alone already needs
         # two lines with the flag, so mobile.css hides .teg-year there.
-        teg_parts = re.match(r"^(.*?)(\s*\([^)]*\))?$", teg_raw)
+        teg_parts = re.match(r"^(.*?)(?:\s*\(([^)]*)\))?$", teg_raw)
         teg_main = escape(teg_parts.group(1) if teg_parts else teg_raw)
-        teg_year = escape(teg_parts.group(2).strip()) if teg_parts and teg_parts.group(2) else ""
+        teg_year = escape(teg_parts.group(2)) if teg_parts and teg_parts.group(2) else ""
         area_raw = str(row.get("Area", ""))
         area = area_raw.split(",")[0].strip()
         flag_html = _area_flag_html(area_raw)
@@ -198,35 +205,43 @@ def _history_table_html(df: pd.DataFrame, round_metadata: dict | None = None) ->
         # Mobile's collapsed row shows two lines: "TEG n" then flag + year --
         # no region text there (region only appears in the expanded detail
         # row). The flag renders twice, CSS-toggled by viewport (same
-        # technique as the year above): desktop keeps it as a whole-height
-        # swatch beside the two-line text (.teg-flag-desktop); mobile shows a
-        # second copy inline with the year on its own line (.teg-mobile-meta).
+        # technique as the year above): desktop puts it on the region line,
+        # sized to that line's text height (.teg-flag-desktop, inside
+        # .area-row); mobile shows a second copy inline with the year on its
+        # own line (.teg-mobile-meta).
+        teg_flag_desktop = f"<span class='teg-flag-desktop'>{flag_html}</span>" if flag_html else ""
         teg_label = (
             f"<span class='teg-text'>"
             f"<span class='teg-label'>{teg_main}"
             + (f" <span class='teg-year'>{teg_year}</span>" if teg_year else "")
             + f"</span>"
-            f"<span class='area-label'>{escape(area)}</span>"
+            f"<span class='area-row'>{teg_flag_desktop}<span class='area-label'>{escape(area)}</span></span>"
             f"<span class='teg-mobile-meta'>{flag_html}"
             + (f"<span class='teg-year--mobile'>{teg_year}</span>" if teg_year else "")
             + f"</span>"
             f"</span>"
         )
-        teg_flag_desktop = f"<span class='teg-flag-desktop'>{flag_html}</span>" if flag_html else ""
         detail_id = f"history-{teg_num}-details"
         if rounds:
             teg_cell = (
                 f"<button type='button' class='teg-cell history-toggle' "
                 f"data-history-toggle aria-expanded='false' aria-controls='{detail_id}'>"
-                f"{teg_flag_desktop}{teg_label}</button>"
+                f"{teg_label}</button>"
             )
         else:
-            teg_cell = f"<div class='teg-cell'>{teg_flag_desktop}{teg_label}</div>"
+            teg_cell = f"<div class='teg-cell'>{teg_label}</div>"
 
         rows.append("<tr>")
         rows.append(f"<td>{teg_cell}</td>")
         for col in name_cols:
             rows.append(f"<td>{_wrap_player_name(row.get(col))}</td>")
+        if rounds:
+            rows.append(
+                "<td class='history-toggle-td'>"
+                "<span class='history-toggle-indicator' aria-hidden='true'></span></td>"
+            )
+        else:
+            rows.append("<td class='history-toggle-td'></td>")
         rows.append("</tr>")
 
         if rounds:

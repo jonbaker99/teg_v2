@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% block title_suffix %} — Design Preview{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&family=Lora:wght@400;600&display=swap">
+<style>
+  .dp-intro { font-size: 0.8125rem; color: var(--text-muted); max-width: 56rem; margin-bottom: 1.25rem; }
+  .dp-controls {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0.75rem;
+    padding: 0.9rem 1rem; margin-bottom: 1.75rem;
+    background: var(--nav-hover-bg, #f5f4f0); border: 1px solid var(--table-cell-border, #e0e0e0);
+    border-radius: 0.375rem;
+  }
+  .dp-control label { display: block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 0.25rem; }
+  .dp-control select { width: 100%; font-size: 0.8125rem; padding: 0.3rem 0.4rem; }
+  .dp-control .dp-hint { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+  /* ── Dummy tab row -- three named alternatives, same definitions as
+     design_lab.html's Tab label section, duplicated here (small, self-
+     contained dev tool; design_lab.html stays the source of truth for the
+     option definitions themselves). ── */
+  .dp-tabs { display: flex; gap: 0.25rem; flex-wrap: wrap; border-bottom: 1px solid var(--table-cell-border, #e0e0e0); margin-bottom: 1.5rem; padding-bottom: 0; }
+  [data-tab-style="current"] .dp-tab { background: transparent; border: none; border-bottom: 2px solid transparent; padding: 0.5rem 0.9rem; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); cursor: pointer; font-family: inherit; }
+  [data-tab-style="current"] .dp-tab.dp-active { color: var(--accent); border-bottom-color: var(--accent); }
+  [data-tab-style="altA"] .dp-tab { font-family: 'Roboto Mono', monospace; border: none; border-bottom: 2px solid transparent; background: transparent; padding: 0.55rem 0.9rem; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary); cursor: pointer; }
+  [data-tab-style="altA"] .dp-tab.dp-active { color: var(--accent); border-bottom-color: var(--accent); }
+  [data-tab-style="altB"] .dp-tab { font-family: 'IBM Plex Mono', 'Courier New', monospace; border: none; border-bottom: 2px solid transparent; background: transparent; padding: 0.55rem 0.9rem; font-size: 0.71rem; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: var(--text-secondary); cursor: pointer; }
+  [data-tab-style="altB"] .dp-tab.dp-active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ── Dummy section sub-header -- same four options as design_lab.html
+     section 4. ── */
+  [data-subhead-style="current"] .dp-subhead { font-size: 16px; margin: 0 0 0.75rem; font-family: inherit; font-weight: 700; color: var(--text-primary); }
+  [data-subhead-style="altA"] .dp-subhead { font-family: 'IBM Plex Mono', 'Courier New', monospace; font-weight: 700; font-size: 0.71rem; letter-spacing: 0.13em; text-transform: uppercase; color: var(--accent); margin: 0 0 0.75rem; }
+  [data-subhead-style="altB"] .dp-subhead { font-family: 'Roboto Mono', monospace; font-weight: 700; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin: 0 0 0.75rem; }
+  [data-subhead-style="altC"] .dp-subhead { font-family: 'Lora', serif; font-weight: 400; font-size: 1rem; color: var(--text-primary); margin: 0 0 0.75rem; }
+
+  /* ── Dummy chart/table title -- same three options as design_lab.html
+     section 5. ── */
+  [data-charttitle-style="current"] .dp-charttitle { font-family: var(--font-heading), serif; font-size: 1.0625rem; font-weight: 600; color: var(--text-primary); margin: 0 0 0.5rem; }
+  [data-charttitle-style="altA"] .dp-charttitle { font-family: 'IBM Plex Mono', 'Courier New', monospace; font-weight: 700; font-size: 0.71rem; letter-spacing: 0.13em; text-transform: uppercase; color: var(--accent); margin: 0 0 0.5rem; }
+  [data-charttitle-style="altB"] .dp-charttitle { font-family: 'Roboto Mono', monospace; font-weight: 700; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin: 0 0 0.5rem; }
+
+  .dp-section { margin-bottom: 2.25rem; }
+  .dp-chart { height: 280px; }
+</style>
+{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+    <span class="page-label">Latest TEG</span>
+    <h1 class="page-title">Latest Round in Context</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<p class="dp-intro">
+    Dummy content shaped like <code>/latest-round</code> (title, tabs, two sections, a table, a chart)
+    so combinations of all five header levels can be judged together, not just in isolation. Page title
+    uses the real site-wide <code>ts-*</code> cookie (changing it reloads the page, same as
+    <a href="/design/headers">/design/headers</a>); card header is retired as a switchable option
+    (see §2 below); the other three switch instantly, client-side, using the same option
+    definitions as that page.
+    <a href="/design/apply-starting-combo">Apply starting combo</a> sets Page title = A and Card header = Off in one click.
+</p>
+
+<div class="dp-controls">
+    <div class="dp-control">
+        <label for="dp-title-select">1. Page title</label>
+        <select id="dp-title-select" onchange="window.location.href='/design/set-title-style?value='+this.value+'&back=/design/preview'">
+            {% for id, label in title_styles %}
+            <option value="{{ id }}" {% if request.state.title_style == id %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <p class="dp-hint">Reloads on change (real cookie)</p>
+    </div>
+    <div class="dp-control">
+        <label for="dp-card-header-select">2. Card header</label>
+        <select id="dp-card-header-select" onchange="window.location.href='/design/set-card-header?value='+this.value+'&back=/design/preview'">
+            {% for id, label in card_header_styles %}
+            <option value="{{ id }}" {% if request.state.card_header_style == id %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <p class="dp-hint">Retired (2026-09) — card header always renders now, in the same style regardless of this cookie. See <a href="/design/headers#card-header-section">Design → Headers §2</a>.</p>
+    </div>
+    <div class="dp-control">
+        <label for="dp-tab-select">3. Tab label</label>
+        <select id="dp-tab-select" data-target="tab-style">
+            <option value="current">Current</option>
+            <option value="altA">Alt A — Roboto Mono caps</option>
+            <option value="altB" selected>Alt B — Report kicker</option>
+        </select>
+        <p class="dp-hint">Instant preview</p>
+    </div>
+    <div class="dp-control">
+        <label for="dp-subhead-select">4. Section sub-header</label>
+        <select id="dp-subhead-select" data-target="subhead-style">
+            <option value="current">Current</option>
+            <option value="altA">Alt A — Report kicker</option>
+            <option value="altB">Alt B — Roboto Mono</option>
+            <option value="altC" selected>Alt C — Serif (Lora)</option>
+        </select>
+        <p class="dp-hint">Instant preview</p>
+    </div>
+    <div class="dp-control">
+        <label for="dp-charttitle-select">5. Chart / table title</label>
+        <select id="dp-charttitle-select" data-target="charttitle-style">
+            <option value="current">Current</option>
+            <option value="altA" selected>Alt A — Report kicker</option>
+            <option value="altB">Alt B — Roboto Mono</option>
+        </select>
+        <p class="dp-hint">Instant preview</p>
+    </div>
+</div>
+
+<div id="dp-page" data-tab-style="altB" data-subhead-style="altC" data-charttitle-style="altA">
+
+    <div class="dp-tabs">
+        <button type="button" class="dp-tab dp-active">Round</button>
+        <button type="button" class="dp-tab">Streaks</button>
+        <button type="button" class="dp-tab">History</button>
+    </div>
+
+    <div class="dp-section">
+        <h3 class="dp-subhead">Round leaderboard</h3>
+        <p class="dp-charttitle">Cumulative Stableford through round</p>
+        <div class="data-card data-card--padded">
+            <div id="dp-chart" class="dp-chart"></div>
+        </div>
+    </div>
+
+    <div class="dp-section">
+        <h3 class="dp-subhead">Round leaderboard</h3>
+        <div class="table-wrapper">
+            <table class="teg-table">
+                <thead>
+                    <tr><th>#</th><th>Player</th><th>Total</th><th>Personal rank</th><th>All-time rank</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td>Alex Baker</td><td>38</td><td>2/9</td><td>14/210</td></tr>
+                    <tr><td>2</td><td>Gregg Williams</td><td>35</td><td>4/9</td><td>52/210</td></tr>
+                    <tr><td>3</td><td>Jon Baker</td><td>33</td><td>6/9</td><td>88/210</td></tr>
+                    <tr><td>4</td><td>David Mullin</td><td>31</td><td>7/9</td><td>110/210</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="dp-section">
+        <p class="dp-charttitle">Player contributions</p>
+        <div class="table-wrapper">
+            <table class="teg-table">
+                <thead><tr><th>Player</th><th>Impact</th><th>Holes</th><th>Solo</th></tr></thead>
+                <tbody>
+                    <tr><td>Alex Baker</td><td>-4</td><td>7</td><td>3</td></tr>
+                    <tr><td>Gregg Williams</td><td>-2</td><td>5</td><td>1</td></tr>
+                    <tr><td>Jon Baker</td><td>0</td><td>3</td><td>0</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+(function () {
+    var page = document.getElementById('dp-page');
+    ['dp-tab-select', 'dp-subhead-select', 'dp-charttitle-select'].forEach(function (id) {
+        var el = document.getElementById(id);
+        el.addEventListener('change', function () {
+            page.dataset[el.dataset.target.replace(/-([a-z])/g, function (m, c) { return c.toUpperCase(); })] = el.value;
+        });
+    });
+    page.querySelectorAll('.dp-tab').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            page.querySelectorAll('.dp-tab').forEach(function (b) { b.classList.remove('dp-active'); });
+            btn.classList.add('dp-active');
+        });
+    });
+
+    // Small dummy chart, dummy per-hole cumulative data for three players --
+    // just enough to see a chart title sitting above a real Plotly chart.
+    var holes = Array.from({length: 18}, function (_, i) { return i + 1; });
+    function cumulative(seed) {
+        var total = 0, out = [];
+        for (var i = 0; i < 18; i++) { total += (i * 7 + seed) % 5; out.push(total); }
+        return out;
+    }
+    Plotly.newPlot('dp-chart', [
+        {x: holes, y: cumulative(1), mode: 'lines+markers', name: 'AB'},
+        {x: holes, y: cumulative(3), mode: 'lines+markers', name: 'GW'},
+        {x: holes, y: cumulative(5), mode: 'lines+markers', name: 'JB'},
+    ], {
+        margin: {t: 10, r: 20, b: 30, l: 30}, font: {family: 'monospace'},
+        xaxis: {title: 'Hole'}, showlegend: true,
+    }, {displayModeBar: false, responsive: true});
+})();
+</script>
+{% endblock %}
