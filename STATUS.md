@@ -2,11 +2,15 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-15 (mobile tournament charts completed on rollout branch; core mobile data layouts through Best/Worstball; report PDF download)
+**Last updated:** 2026-09-16 (player progression chart mobile treatment landed on rollout branch, pending review; scoring-analysis charts next)
+
+## 2026-09-16 — Player progression charts mobile treatment (pending review)
+
+`codex/mobile-ui-rollout` gains R4.2: the player profile's Career Trend and Gross vs Par by Round charts now state measure/direction without hover on phones, and the Rounds chart reuses `player-profile.js`'s existing tick-thinning/theme-adaptation/live-breakpoint pattern instead of a new chart system, keeping dense histories (a 17-TEG player was the stress case) readable at 320px. Desktop and iPad are unchanged. Committed directly (checkpoint `890c510`) to avoid losing progress ahead of the usual review step — **needs review**. Scoring-analysis charts (R4.3) are next.
 
 ## 2026-09-15 — Core mobile data layouts recovered on rollout branch
 
-The mobile work lost in the reboot has been recovered and extended on `codex/mobile-ui-rollout`, based on the deployed PDF/reporting commit. The pending rollout now includes the compact interactive Latest Round view, mobile History disclosure, equal-height standings rows, portrait scorecard refinements, responsive Best/Worstball views and phone-only tournament chart readouts for Results and Leaderboard. Desktop, iPad and `/charts` retain their prior chart output. The branch remains unmerged and undeployed; player progression charts are next.
+The mobile work lost in the reboot has been recovered and extended on `codex/mobile-ui-rollout`, based on the deployed PDF/reporting commit. The pending rollout now includes the compact interactive Latest Round view, mobile History disclosure, equal-height standings rows, portrait scorecard refinements, responsive Best/Worstball views and phone-only tournament chart readouts for Results and Leaderboard. Desktop, iPad and `/charts` retain their prior chart output. The branch remains unmerged and undeployed.
 
 ## 2026-09-15 — Pre-rendered PDF download for reports
 
