@@ -6,9 +6,11 @@ from pathlib import Path
 import pandas as pd
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
+from markupsafe import escape
 
 from teg_analysis.analysis.rankings import get_ranked_teg_data, get_ranked_round_data
 from teg_analysis.analysis.records import identify_aggregate_records_and_pbs
+from teg_analysis.core.players import get_name_to_code
 from teg_analysis.display.formatters import prepare_records_table
 from webapp.deps import (
     cached_ranked_teg_data,
@@ -18,7 +20,7 @@ from webapp.deps import (
     cached_round_data,
     get_filtered_teg_data,
 )
-from webapp.tables import df_to_html as _df_to_html
+from webapp.tables import df_to_html as _df_to_html, EMPTY_TABLE_HTML
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +43,47 @@ TOP_MEASURES = [
     ("NetVP", "Net"),
     ("Stableford", "Stableford"),
 ]
+
+
+def _build_top_performances_byline_html(display: pd.DataFrame, id_cols: list) -> str:
+    """Mobile-only byline-row list for Top Performances.
+
+    The desktop table gives the 6 id/location columns equal width, which is
+    fine on a wide screen but overflows badly on a phone (Area/Course text is
+    often longer than its ~1/6 share). Below 640px (mobile.css) we swap to
+    this list instead: the primary line (#, Player, measure value) stays the
+    at-a-glance leaderboard fact, and the id_cols collapse onto one muted
+    sub-line so the row still fits without truncating any of the data.
+    Mirrors the .sc-landscape/.sc-portrait dual-markup + CSS-toggle pattern
+    used elsewhere (build_bestball_worstball_responsive et al.) rather than
+    trying to reflow the table itself.
+    """
+    if display is None or display.empty:
+        return ""
+
+    cols = list(display.columns)
+    measure_col = cols[2]  # '#', 'Player', <measure friendly name>, *id_cols
+    name_to_code = get_name_to_code()
+
+    rows_html = ['<div class="tp-list">']
+    for _, row in display.iterrows():
+        rank = escape(str(row['#']))
+        player_name = str(row['Player'])
+        code = name_to_code.get(player_name)
+        player_text = escape(player_name)
+        player_html = f"<a href='/player/{code}'>{player_text}</a>" if code else player_text
+        value = escape(str(row[measure_col]))
+        sub = " · ".join(escape(str(row[c])) for c in id_cols)
+        rows_html.append(
+            '<div class="tp-row">'
+            f'<div class="tp-top"><span class="tp-rank">{rank}</span>'
+            f'<span class="tp-player">{player_html}</span>'
+            f'<span class="tp-value">{value}</span></div>'
+            f'<div class="tp-sub">{sub}</div>'
+            '</div>'
+        )
+    rows_html.append('</div>')
+    return ''.join(rows_html)
 
 
 def _top_tab_context(tab: str, measure: str = "GrossVP", n: int = 3) -> dict:
@@ -97,7 +140,11 @@ def _top_tab_context(tab: str, measure: str = "GrossVP", n: int = 3) -> dict:
         label = f"{prefix} {n} {noun}: {measure_friendly}"
         caption = ("Note: TEG 2 is excluded from all TEG-level analysis as it only had "
                    "3 rounds compared to the standard 4 rounds.") if is_teg else None
-        sections = [{"title": label, "table_html": _df_to_html(display)}]
+        table_html = (
+            f'<div class="tp-table">{_df_to_html(display)}</div>'
+            f'{_build_top_performances_byline_html(display, id_cols)}'
+        )
+        sections = [{"title": label, "table_html": table_html}]
         return {"sections": sections, "caption": caption}
     except Exception as e:
         logger.exception("_top_tab_context failed")
@@ -176,6 +223,57 @@ def _format_measure_col(df: pd.DataFrame, measure: str, friendly_name: str) -> p
     return df
 
 
+def _pb_summary_html(df: pd.DataFrame, cell_classes: dict) -> str:
+    """Render the PB Summary table with two-line measure cells.
+
+    Every measure cell (Score/Gross/Net/Stfd) is a ``(value, context)`` tuple
+    -- e.g. ``("88", "TEG 10|R4")`` -- rather than one concatenated string,
+    because at phone width the concatenated form ("88 (TEG 10|R4)") doesn't
+    fit and overflows (see mobile.css's ".pbv"/".pbc" rules, which stack and
+    center the two lines below 640px; above that, the CSS just puts them on
+    one line, matching the old plain-string look). ``df_to_html`` only knows
+    how to escape a single scalar per cell, so this is a small dedicated
+    renderer for this one table rather than teaching it nested spans. Mirrors
+    df_to_html's own structure/escaping (webapp/tables.py) -- same header
+    loop, same cell_classes override, same not-a-generic-API scope.
+    """
+    if df is None or df.empty:
+        return EMPTY_TABLE_HTML
+
+    cols = list(df.columns)
+    rows = ["<table class='teg-table'><thead><tr>"]
+    for col in cols:
+        rows.append(f"<th>{escape(str(col))}</th>")
+    rows.append("</tr></thead><tbody>")
+
+    for row_idx, (_, row) in enumerate(df.iterrows()):
+        rows.append("<tr>")
+        for col in cols:
+            cls = cell_classes.get((row_idx, col)) if cell_classes else None
+            cls_attr = f" class='{cls}'" if cls else ""
+            val = row[col]
+            if isinstance(val, tuple):
+                value_str, context_str = val
+                # The " (" / ")" separators are plain text nodes (not CSS
+                # content) so that with no CSS at all -- i.e. desktop/iPad,
+                # where .pbv/.pbc/.pb-sep get no rules outside the mobile
+                # media query -- the cell reads exactly as the old
+                # concatenated string ("88 (TEG 10|R4)"), byte-for-byte the
+                # same rendered text. Mobile hides .pb-sep and stacks
+                # .pbv/.pbc as two centered lines instead.
+                rows.append(
+                    f"<td{cls_attr}><span class='pbv'>{escape(str(value_str))}</span>"
+                    f"<span class='pb-sep'> (</span>"
+                    f"<span class='pbc'>{escape(str(context_str))}</span>"
+                    f"<span class='pb-sep'>)</span></td>"
+                )
+            else:
+                rows.append(f"<td{cls_attr}>{escape(str(val))}</td>")
+        rows.append("</tr>")
+    rows.append("</tbody></table>")
+    return "".join(rows)
+
+
 def _pb_summary_context(view: str = "rounds") -> dict:
     """Build PB summary table: one row per player, columns for each measure."""
     try:
@@ -215,21 +313,26 @@ def _pb_summary_context(view: str = "rounds") -> dict:
                 else:
                     return _when_round(r)
 
+            # Each measure cell is a (value, context) tuple -- e.g.
+            # ("88", "TEG 10|R4") -- rendered as a two-line cell by
+            # _pb_summary_html, rather than one concatenated string that
+            # overflows at phone width.
+
             # Score (lowest is best)
             best_sc = pdata.loc[pdata['Sc'].idxmin()]
-            row['Score'] = f"{int(best_sc['Sc'])} ({_when(best_sc)})"
+            row['Score'] = (str(int(best_sc['Sc'])), _when(best_sc))
 
             # Gross vs Par (lowest is best)
             best_g = pdata.loc[pdata['GrossVP'].idxmin()]
-            row['Gross'] = f"{_format_vs_par(best_g['GrossVP'])} ({_when(best_g)})"
+            row['Gross'] = (_format_vs_par(best_g['GrossVP']), _when(best_g))
 
             # Net vs Par (lowest is best)
             best_n = pdata.loc[pdata['NetVP'].idxmin()]
-            row['Net'] = f"{_format_vs_par(best_n['NetVP'])} ({_when(best_n)})"
+            row['Net'] = (_format_vs_par(best_n['NetVP']), _when(best_n))
 
             # Stableford (highest is best)
             best_s = pdata.loc[pdata['Stableford'].idxmax()]
-            row['Stfd'] = f"{int(best_s['Stableford'])} ({_when(best_s)})"
+            row['Stfd'] = (str(int(best_s['Stableford'])), _when(best_s))
 
             best_numeric[player] = {
                 'Score': int(best_sc['Sc']),
@@ -262,7 +365,7 @@ def _pb_summary_context(view: str = "rounds") -> dict:
             title = "Personal Best 9s"
         else:
             title = "Personal Best Rounds"
-        sections = [{"title": title, "table_html": _df_to_html(display, cell_classes=cell_classes)}]
+        sections = [{"title": title, "table_html": _pb_summary_html(display, cell_classes)}]
         return {"sections": sections}
     except Exception as e:
         logger.exception("_pb_summary_context failed")

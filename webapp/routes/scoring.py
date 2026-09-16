@@ -6,7 +6,9 @@ from pathlib import Path
 import pandas as pd
 from fastapi import APIRouter, Request, Query
 from fastapi.templating import Jinja2Templates
+from markupsafe import escape
 
+from teg_analysis.core.players import get_name_to_code
 from teg_analysis.analysis.scoring import (
     calculate_par_performance_matrix,
     format_par_performance_table,
@@ -44,7 +46,7 @@ from webapp.deps import (
     parse_teg_label,
 )
 from webapp.chart_utils import get_chart_style
-from webapp.tables import df_to_html as _df_to_html
+from webapp.tables import df_to_html as _df_to_html, EMPTY_TABLE_HTML
 
 logger = logging.getLogger(__name__)
 
@@ -335,8 +337,26 @@ def scoring_by_teg_page(request: Request):
     try:
         all_data = cached_load_all_data()
         agg = aggregate_data(all_data, 'TEG', measures=['GrossVP'])
-        pivot = agg.pivot_table(index='TEGNum', columns='Player', values='GrossVP', aggfunc='first')
-        pivot = pivot.round(1).reset_index().rename(columns={'TEGNum': 'TEG'})
+        # Pivot on 'Pl' (initials) rather than 'Player' (full name) for header
+        # columns; the chart above keeps 'Player' for legend legibility.
+        pivot = agg.pivot_table(index='TEGNum', columns='Pl', values='GrossVP', aggfunc='first')
+        player_cols = list(pivot.columns)
+        pivot = pivot.reset_index()
+
+        # GrossVP per TEG is a sum of whole-number per-round vs-par values,
+        # so it is always a whole number in practice (verified against real
+        # data: 0 fractional values across all TEG/player combinations).
+        # Format defensively anyway: whole numbers with no decimal, any
+        # genuinely fractional value to 1dp.
+        def _fmt_cell(v):
+            if pd.isna(v):
+                return ''
+            return f"{int(v)}" if float(v) == int(v) else f"{v:.1f}"
+
+        for c in player_cols:
+            pivot[c] = pivot[c].apply(_fmt_cell)
+        pivot['TEGNum'] = pivot['TEGNum'].astype(int).astype(str)
+        pivot = pivot.rename(columns={'TEGNum': 'TEG'})
         table_html = _df_to_html(pivot)
         chart_json = _by_teg_chart(agg)
     except Exception as e:
@@ -372,6 +392,45 @@ def _format_vp(val, decimals=0):
     if decimals == 0:
         return f"{int(val):+d}"
     return f"{val:+.{decimals}f}"
+
+
+def _two_line_cell_table_html(df: pd.DataFrame, composite_col: str, table_class: str = "teg-table") -> str:
+    """Render a table where one column holds a "value (context)" composite
+    string (e.g. "75 (+4)"), splitting it into two text-node spans.
+
+    Mirrors _pb_summary_html's exact mechanism (webapp/routes/performance.py,
+    the PB Summary table): the " (" / ")" separators are plain text nodes,
+    not CSS-generated content, so with no CSS at all (desktop/iPad, which
+    get no rules outside mobile.css's @media block) the cell reads exactly
+    as the old concatenated string. mobile.css's .course-records-page rules
+    stack the value/context spans into two centered lines and hide the
+    separators below 640px.
+    """
+    if df is None or df.empty:
+        return EMPTY_TABLE_HTML
+    cols = list(df.columns)
+    rows = [f"<table class='{table_class}'><thead><tr>"]
+    for col in cols:
+        rows.append(f"<th>{escape(str(col))}</th>")
+    rows.append("</tr></thead><tbody>")
+    for _, row in df.iterrows():
+        rows.append("<tr>")
+        for col in cols:
+            val = row[col]
+            if col == composite_col and isinstance(val, str) and val.endswith(')') and ' (' in val:
+                value_str, _, context_str = val.partition(' (')
+                context_str = context_str[:-1]
+                rows.append(
+                    f"<td><span class='cr-v'>{escape(value_str)}</span>"
+                    f"<span class='cr-sep'> (</span>"
+                    f"<span class='cr-c'>{escape(context_str)}</span>"
+                    f"<span class='cr-sep'>)</span></td>"
+                )
+            else:
+                rows.append(f"<td>{escape(str(val))}</td>")
+        rows.append("</tr>")
+    rows.append("</tbody></table>")
+    return "".join(rows)
 
 
 def _get_course_areas():
@@ -424,7 +483,10 @@ def _course_tab_context(tab: str, area: str = "All Areas") -> dict:
                 df = pd.DataFrame(records)
                 df['_sort'] = df['Score'].str.extract(r'(\d+)').astype(int)
                 df = df.sort_values('_sort').drop(columns='_sort')
-                sections.append({"title": "Course Records (Gross)", "table_html": _df_to_html(df)})
+                sections.append({
+                    "title": "Course Records (Gross)",
+                    "table_html": _two_line_cell_table_html(df, "Score", "teg-table cr-records-table"),
+                })
 
                 # Summary: records held per player
                 holder_counts = df.groupby('Player')['Course'].nunique().reset_index()
@@ -480,7 +542,11 @@ def _course_tab_context(tab: str, area: str = "All Areas") -> dict:
             sections.append({"title": "Summary by Course", "table_html": _df_to_html(summary)})
 
         elif tab == "averages":
-            pivot = rd_data.pivot_table(values='GrossVP', index='Course', columns='Player', aggfunc='mean')
+            # Pivot on 'Pl' (initials) -- same dense metric-grid treatment as
+            # Matrix/By TEG; the Course column wraps to two lines instead of
+            # needing to fit a full course name on one, freeing width for
+            # the 7 initials + Total columns (mobile.css).
+            pivot = rd_data.pivot_table(values='GrossVP', index='Course', columns='Pl', aggfunc='mean')
             # Add Total column
             pivot['Total'] = rd_data.groupby('Course')['GrossVP'].mean()
             pivot = pivot.round(1).reset_index()
@@ -489,27 +555,27 @@ def _course_tab_context(tab: str, area: str = "All Areas") -> dict:
             for col in pivot.columns:
                 if col != 'Course':
                     pivot[col] = pivot[col].apply(lambda v: _format_vp(v, 1))
-            sections.append({"title": "Average Gross vs Par by Course", "table_html": _df_to_html(pivot)})
+            sections.append({"title": "Average Gross vs Par by Course", "table_html": _df_to_html(pivot, table_class="teg-table cr-matrix-table")})
 
         elif tab == "bests":
-            pivot = rd_data.pivot_table(values='GrossVP', index='Course', columns='Player', aggfunc='min')
+            pivot = rd_data.pivot_table(values='GrossVP', index='Course', columns='Pl', aggfunc='min')
             pivot['Total'] = rd_data.groupby('Course')['GrossVP'].min()
             pivot = pivot.reset_index()
             pivot.columns.name = None
             for col in pivot.columns:
                 if col != 'Course':
                     pivot[col] = pivot[col].apply(lambda v: _format_vp(v, 0))
-            sections.append({"title": "Best Gross vs Par by Course", "table_html": _df_to_html(pivot)})
+            sections.append({"title": "Best Gross vs Par by Course", "table_html": _df_to_html(pivot, table_class="teg-table cr-matrix-table")})
 
         elif tab == "worsts":
-            pivot = rd_data.pivot_table(values='GrossVP', index='Course', columns='Player', aggfunc='max')
+            pivot = rd_data.pivot_table(values='GrossVP', index='Course', columns='Pl', aggfunc='max')
             pivot['Total'] = rd_data.groupby('Course')['GrossVP'].max()
             pivot = pivot.reset_index()
             pivot.columns.name = None
             for col in pivot.columns:
                 if col != 'Course':
                     pivot[col] = pivot[col].apply(lambda v: _format_vp(v, 0))
-            sections.append({"title": "Worst Gross vs Par by Course", "table_html": _df_to_html(pivot)})
+            sections.append({"title": "Worst Gross vs Par by Course", "table_html": _df_to_html(pivot, table_class="teg-table cr-matrix-table")})
 
         return {"sections": sections}
     except Exception as e:
@@ -552,6 +618,28 @@ ALL_ROUNDS_MEASURES = [
 ]
 
 
+def _build_all_rounds_byline_html(out: pd.DataFrame, friendly: str) -> str:
+    """Mobile-only byline-row list for All Rounds.
+
+    'Player' is already the full name (no naming-rule change needed here).
+    Primary line is Player + the selected measure value; the rest
+    (Course, TEG-Round, Year, PB Rank) demote to one muted sub-line.
+    """
+    if out is None or out.empty:
+        return ""
+    name_to_code = get_name_to_code()
+    rows_html = []
+    for _, row in out.iterrows():
+        player_html = _player_link_html(row['Player'], name_to_code)
+        primary = (
+            f'<span class="bl-player">{player_html}</span>'
+            f'<span class="bl-value">{escape(str(row[friendly]))}</span>'
+        )
+        sub = f'{row["Course"]} · {row["TEG-Round"]} · {int(row["Year"])} · PB {row["PB Rank"]}'
+        rows_html.append(_byline_row_html(primary, sub, "ar-row"))
+    return _byline_list_html(rows_html, "ar-list")
+
+
 def _all_rounds_context(area: str, course: str, player: str, measure: str, n: int) -> dict:
     try:
         rd = cached_ranked_round_data().copy()
@@ -582,7 +670,7 @@ def _all_rounds_context(area: str, course: str, player: str, measure: str, n: in
 
         title = f"All rounds for {player} at {course}"
         return {
-            "table_html": _df_to_html(out),
+            "table_html": _df_to_html(out) + _build_all_rounds_byline_html(out, friendly),
             "result_title": title,
             "areas": _get_course_areas(),
             "measures": ALL_ROUNDS_MEASURES,
@@ -890,10 +978,69 @@ def scoring_distributions_content(request: Request, field="Stableford", player="
     })
 
 
+# --- Byline-row helpers (mobile-only list, shared across Changes/Comebacks/
+# All Rounds) -----------------------------------------------------------------
+#
+# Same dual-markup + CSS-toggle mechanism as Top Performances'
+# .tp-table/.tp-list (see _build_top_performances_byline_html,
+# webapp/routes/performance.py): the desktop <table> is untouched, and this
+# renders an alongside phone-only list -- a primary line with the 2-3
+# headline facts, and a muted secondary line with everything else joined by
+# " · ". mobile.css hides one or the other per breakpoint.
+
+def _player_link_html(name, name_to_code: dict) -> str:
+    text = escape(str(name))
+    code = name_to_code.get(str(name))
+    return f"<a href='/player/{code}'>{text}</a>" if code else str(text)
+
+
+def _byline_row_html(primary_html: str, sub_text: str, row_class: str) -> str:
+    return (
+        f'<div class="{row_class}"><div class="bl-top">{primary_html}</div>'
+        f'<div class="bl-sub">{escape(sub_text)}</div></div>'
+    )
+
+
+def _byline_list_html(rows_html: list, list_class: str) -> str:
+    if not rows_html:
+        return ""
+    return f'<div class="{list_class}">' + "".join(rows_html) + '</div>'
+
+
 # --- /scoring/changes ---------------------------------------------------------
 
 CHANGES_TABS = [("improvements", "Biggest improvements"), ("worsenings", "Biggest worsenings")]
 _CHANGES_TOP_N = 10
+
+
+def _build_changes_byline_html(out: pd.DataFrame) -> str:
+    """Mobile-only byline-row list for Changes vs Previous Round.
+
+    The desktop table gives 'Player' and five context columns (TEG, Round,
+    Course, Year, Previous Rd) equal footing -- fine on a wide screen, but
+    the player's full name plus all of that crowds a phone row. Leads with
+    the two headline facts (Score, Change -- the "what changed" number) next
+    to the full name, and demotes TEG/Round/Course/Year/Previous Rd onto one
+    muted sub-line so nothing is dropped, just reordered by importance.
+    """
+    if out is None or out.empty:
+        return ""
+    name_to_code = get_name_to_code()
+    rows_html = []
+    for _, row in out.iterrows():
+        player_html = _player_link_html(row['Player'], name_to_code)
+        change_text = f"{int(row['Change']):+d}"
+        primary = (
+            f'<span class="bl-player">{player_html}</span>'
+            f'<span class="bl-value">{escape(str(int(row["Sc"])))}</span>'
+            f'<span class="bl-delta">{escape(change_text)}</span>'
+        )
+        sub = (
+            f'{row["TEG"]} · Round {int(row["Round"])} · {row["Course"]} · '
+            f'{int(row["Year"])} · Previous {int(row["Previous Rd"])}'
+        )
+        rows_html.append(_byline_row_html(primary, sub, "ch-row"))
+    return _byline_list_html(rows_html, "ch-list")
 
 
 def _changes_context(teg: str = "All TEGs", across: str = "within",
@@ -918,7 +1065,7 @@ def _changes_context(teg: str = "All TEGs", across: str = "within",
                     "rows": rows, "tabs": CHANGES_TABS, "active_tab": tab, "top_n": _CHANGES_TOP_N}
 
         rd[['Sc', 'Previous Rd', 'Change']] = rd[['Sc', 'Previous Rd', 'Change']].astype(int)
-        out = rd[['Pl', 'TEG', 'Round', 'Course', 'Year', 'Sc', 'Previous Rd', 'Change']].copy()
+        out = rd[['Player', 'TEG', 'Round', 'Course', 'Year', 'Sc', 'Previous Rd', 'Change']].copy()
         out['Year'] = out['Year'].astype(int)
 
         if tab == "worsenings":
@@ -931,7 +1078,7 @@ def _changes_context(teg: str = "All TEGs", across: str = "within",
                 out = out.nsmallest(_CHANGES_TOP_N, 'Change', keep='all')
 
         return {
-            "table_html": _df_to_html(out),
+            "table_html": _df_to_html(out) + _build_changes_byline_html(out),
             "teg_options": teg_options,
             "selected_teg": teg,
             "across": across,
@@ -990,6 +1137,39 @@ def _fmt_comebacks(df: pd.DataFrame, measure: str) -> pd.DataFrame:
     return out
 
 
+def _build_comebacks_byline_html(df: pd.DataFrame, id_col: str, headline_cols: list, context_cols: list) -> str:
+    """Mobile-only byline-row list for one /scoring/comebacks section.
+
+    The 6 sections on this page come from 4 different calculator functions
+    (teg_analysis.analysis.aggregation) and each has its own column shape --
+    e.g. the "Biggest Leads Lost..." tables identify the player via a
+    'Leader After R3' column, not 'Player' -- so the headline/context split
+    is passed in per call (see _comebacks_context) rather than assumed.
+    Primary line: identity + whatever column(s) that section's title is
+    actually about (its "headline" figure). Sub-line: everything else,
+    joined with " · ", same as the other byline lists on this page.
+    """
+    if df is None or df.empty:
+        return ""
+    name_to_code = get_name_to_code()
+    rows_html = []
+    for _, row in df.iterrows():
+        player_html = _player_link_html(row[id_col], name_to_code)
+        # Label the headline figure(s) too -- a bare "2" reads as ambiguous
+        # (rank? gap? hole?) without the column name a desktop <th> gives it.
+        value = " · ".join(escape(f"{c}: {row[c]}") for c in headline_cols)
+        primary = f'<span class="bl-player">{player_html}</span><span class="bl-value">{value}</span>'
+        # Context values are bare numbers/labels with no self-evident unit
+        # (Rank After R3, Hole of Max Lead, ...); prefix each with its column
+        # name so the sub-line reads as facts, not an unlabeled number dump.
+        # 'TEG' already reads as "TEG 7" in the data, so it's left bare.
+        sub = " · ".join(
+            str(row[c]) if c == "TEG" else f"{c} {row[c]}" for c in context_cols
+        )
+        rows_html.append(_byline_row_html(primary, sub, "cb-row"))
+    return _byline_list_html(rows_html, "cb-list")
+
+
 def _comebacks_context(competition: str = "gross", n: int = 5) -> dict:
     """Build sections for the comebacks page."""
     try:
@@ -1003,42 +1183,85 @@ def _comebacks_context(competition: str = "gross", n: int = 5) -> dict:
         sections = []
 
         # 1. Best & Worst Final Rounds
+        # Columns: TEG, Player, Final Round, Final Round Score, Rank After R3,
+        # Total Score, Final Rank. Headline = Final Round Score (that's the
+        # table's whole point); context = everything else.
         differentials = calculate_final_round_differentials(all_data, round_info, measure)
         if differentials is not None and not differentials.empty:
-            sections.append({"title": "Best Final Round Performances", "table_html": _df_to_html(fmt(differentials.head(n)))})
-            worst = differentials.tail(n).iloc[::-1]
-            sections.append({"title": "Worst Final Round Performances", "table_html": _df_to_html(fmt(worst))})
+            best_fmt = fmt(differentials.head(n))
+            sections.append({
+                "title": "Best Final Round Performances",
+                "table_html": _df_to_html(best_fmt) + _build_comebacks_byline_html(
+                    best_fmt, "Player", ["Final Round Score"],
+                    ["TEG", "Final Round", "Rank After R3", "Total Score", "Final Rank"]),
+            })
+            worst_fmt = fmt(differentials.tail(n).iloc[::-1])
+            sections.append({
+                "title": "Worst Final Round Performances",
+                "table_html": _df_to_html(worst_fmt) + _build_comebacks_byline_html(
+                    worst_fmt, "Player", ["Final Round Score"],
+                    ["TEG", "Final Round", "Rank After R3", "Total Score", "Final Rank"]),
+            })
 
             # Worst performances by leaders going into the final round (Rank After R3 == 1)
             leaders = differentials[differentials["Rank After R3"] == 1.0].copy()
             if not leaders.empty:
                 leaders = leaders.sort_values("Final Round Score", ascending=(measure != "GrossVP"))
+                leaders_fmt = fmt(leaders.head(n))
                 sections.append({
                     "title": "Worst Final Round Performances by Leaders",
                     "caption": "Leaders going into the final round (Rank After R3 = 1)",
-                    "table_html": _df_to_html(fmt(leaders.head(n))),
+                    "table_html": _df_to_html(leaders_fmt) + _build_comebacks_byline_html(
+                        leaders_fmt, "Player", ["Final Round Score"],
+                        ["TEG", "Final Round", "Rank After R3", "Total Score", "Final Rank"]),
                 })
         else:
             sections.append({"title": "Best & Worst Final Rounds", "table_html": "<p class='text-muted text-sm'>No data available.</p>"})
 
         # 2. Biggest Leads Lost After R3
+        # Columns: TEG, Leader After R3, Gap to 2nd, Winner, Leader Final
+        # Position. Identity column is 'Leader After R3', not 'Player' --
+        # headline = Gap to 2nd (the size of the lost lead).
         leads_r3 = calculate_biggest_leads_lost_after_r3(all_data, round_info, measure)
         if leads_r3 is not None and not leads_r3.empty:
-            sections.append({"title": "Biggest Leads Lost Going Into Final Round", "table_html": _df_to_html(fmt(leads_r3.head(n)))})
+            leads_r3_fmt = fmt(leads_r3.head(n))
+            sections.append({
+                "title": "Biggest Leads Lost Going Into Final Round",
+                "table_html": _df_to_html(leads_r3_fmt) + _build_comebacks_byline_html(
+                    leads_r3_fmt, "Leader After R3", ["Gap to 2nd"],
+                    ["TEG", "Winner", "Leader Final Position"]),
+            })
         else:
             sections.append({"title": "Biggest Leads Lost Going Into Final Round", "table_html": "<p class='text-muted text-sm'>No data available.</p>"})
 
         # 3. Biggest Leads Lost During R4
+        # Columns: TEG, Player, Max Lead in R4, Hole of Max Lead, Winner,
+        # Final Gap. Headline = Max Lead in R4.
         leads_r4 = calculate_biggest_leads_lost_in_r4(all_data, round_info, measure)
         if leads_r4 is not None and not leads_r4.empty:
-            sections.append({"title": "Biggest Leads Lost During Final Round", "table_html": _df_to_html(fmt(leads_r4.head(n)))})
+            leads_r4_fmt = fmt(leads_r4.head(n))
+            sections.append({
+                "title": "Biggest Leads Lost During Final Round",
+                "table_html": _df_to_html(leads_r4_fmt) + _build_comebacks_byline_html(
+                    leads_r4_fmt, "Player", ["Max Lead in R4"],
+                    ["TEG", "Hole of Max Lead", "Winner", "Final Gap"]),
+            })
         else:
             sections.append({"title": "Biggest Leads Lost During Final Round", "table_html": "<p class='text-muted text-sm'>No data available.</p>"})
 
         # 4. Biggest Comebacks
+        # Columns: TEG, Player, Gap After R3, Player R4 Score, Leader R4
+        # Score, Gap Closed, Final Position, Winner. Headline = Gap Closed
+        # (the table's title is literally about that figure).
         comebacks = calculate_biggest_comebacks(all_data, round_info, measure)
         if comebacks is not None and not comebacks.empty:
-            sections.append({"title": "Biggest Comebacks in Final Round", "table_html": _df_to_html(fmt(comebacks.head(n)))})
+            comebacks_fmt = fmt(comebacks.head(n))
+            sections.append({
+                "title": "Biggest Comebacks in Final Round",
+                "table_html": _df_to_html(comebacks_fmt) + _build_comebacks_byline_html(
+                    comebacks_fmt, "Player", ["Gap Closed"],
+                    ["TEG", "Gap After R3", "Player R4 Score", "Leader R4 Score", "Final Position", "Winner"]),
+            })
         else:
             sections.append({"title": "Biggest Comebacks in Final Round", "table_html": "<p class='text-muted text-sm'>No data available.</p>"})
 
@@ -1334,13 +1557,37 @@ def _heatmap_context(
 
         html.append("</tbody></table>")
 
-        return {
+        result = {
             "table_html": "".join(html),
             "legend_html": _hm_legend_html(colors, dm_min, dm_mid, dm_max),
             "domain_min": dm_min,
             "domain_mid": dm_mid,
             "domain_max": dm_max,
         }
+
+        # Mobile transpose: only for the default Player x Hole view (19 columns
+        # including the row-label column, too dense to fit phone width without
+        # scroll). Hole-rows/initials-columns is what "transposing" that grid
+        # means and fits in ~8 columns. Any other row/col pick the user chose
+        # via the dropdowns is left as-is on mobile (existing scrollable
+        # table, no transposed view) -- out of scope per design review.
+        # Reuse the resolved domain (dm_min/dm_mid/dm_max) rather than the
+        # raw params so the transposed table's heat colours match the
+        # primary table exactly, including any user-set range override.
+        if row_by == "Player" and col_by == "Hole":
+            mobile = _heatmap_context(
+                row_by="Hole", col_by="Pl",
+                sort_by_score=sort_by_score,
+                show_col_totals=show_col_totals,
+                show_row_avg=show_row_avg,
+                palette=palette,
+                reverse=reverse,
+                domain_min=dm_min, domain_mid=dm_mid, domain_max=dm_max,
+            )
+            if "table_html" in mobile:
+                result["table_html_mobile"] = mobile["table_html"]
+
+        return result
     except Exception as e:
         logger.exception("_heatmap_context failed")
         return {"error": str(e)}

@@ -85,7 +85,10 @@
 <input type="hidden" id="pb-view-select" name="view" value="{{ selected_view }}">
 
 {# --- Tab content (HTMX target) --- #}
-<div id="pb-content" class="section-panel">
+{# .personal-bests-page is the phone-layout hook (mobile.css) for the PB
+   Summary two-line cells -- on the persistent target div (not the swapped
+   inner content) so it survives tab swaps, matching .standings-page. #}
+<div id="pb-content" class="section-panel personal-bests-page">
     {% include "partials/personal_bests_tab.html" %}
 </div>
 

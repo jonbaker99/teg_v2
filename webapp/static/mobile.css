@@ -11,12 +11,33 @@
 .mobile-tabbar { display: none; }
 .lb-hero { display: none; }
 .lb-cards { display: none; }
+/* Records (/records): mobile tap-to-reveal list, dual-rendered alongside
+   the unchanged desktop <table> -- see the @media block below. */
+.records-list { display: none; }
+/* Top Performances byline-row list (R4.x): a phone-only substitute for the
+   6-equal-column table, whose location column (Area/Course) overflows badly
+   at phone width. Desktop/iPad keep the table; .tp-table is hidden instead,
+   below. */
+.tp-list { display: none; }
 /* Tournament race chart (R4.1, /results + /leaderboard): the readout is a
    phone-only substitute for the native legend that desktop/iPad still shows
    (create_cumulative_graph keeps that legend unconditionally -- see
    chart_utils.py). Scoped to .chart-block so Latest Round's own .lr-readout,
    which IS shown on desktop by design, is untouched. */
 .chart-block .lr-readout { display: none; }
+/* Handicaps (/handicaps): phone-only vertical Player/Handicap/Change list,
+   replacing the 2-up tile grid (too many tiles to scan as a ranking on a
+   phone). Same already-sorted tiles data, just a second markup shape. */
+.hc-list { display: none; }
+/* Scoring byline-row lists (Changes/Comebacks/All Rounds, mobile-only) --
+   dual-rendered alongside the unchanged desktop <table>s, same pattern as
+   .tp-list above. See the @media block below for the real rules. */
+.ch-list, .cb-list, .ar-list { display: none; }
+/* Heatmap (/scoring/heatmap): mobile-only transposed table (Hole rows,
+   player-initial columns), dual-rendered alongside the unchanged desktop
+   <table> -- only present when the default Player x Hole view is active,
+   see _heatmap_context. .hm-desktop hides instead, below. */
+.hm-mobile { display: none; }
 
 @media (max-width: 640px) {
   /* Leave room for the fixed bottom bar so content never hides behind it. */
@@ -84,9 +105,19 @@
   .page-title-area {
     padding-inline: 0.75rem;
   }
-  .main-content {
-    padding-left: 0;
-    padding-right: 0;
+  /* base.html's <main> carries Tailwind's .px-6 (24px), loaded after this
+     file, so a bare .main-content rule can't win on specificity/source
+     order -- matching the .px-6 class here ties it and this file wins by
+     appearing later. 12px matches .page-title-area's inset above so titles
+     and content line up by default; the three full-bleed pages below zero
+     it back out. */
+  .main-content.px-6 {
+    padding-inline: 12px;
+  }
+  .main-content.px-6:has(> .latest-round-page),
+  .main-content.px-6:has(> .history-page),
+  .main-content.px-6:has(> .standings-page) {
+    padding-inline: 0;
   }
   .page-title-area .page-title { font-size: 1.35rem; }
 
@@ -137,7 +168,8 @@
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    mask-image: linear-gradient(to right, #000 calc(100% - 18px), transparent);
+    mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+    scroll-padding-inline: 28px;
   }
   .section-nav::-webkit-scrollbar { display: none; }
   .section-nav .tab-underline {
@@ -219,6 +251,77 @@
   .table-wrapper:not(.table-wrapper--no-pin) .teg-table tbody tr.top-rank td:first-child,
   .overflow-x-auto:not(.table-wrapper--no-pin) .teg-table tbody tr.top-rank td:first-child {
     background-color: var(--table-toprank-bg, #F3F7F3);
+  }
+
+  /* ── Records (/records, tap-to-reveal) ──
+     Markup: _build_records_html (webapp/routes/records.py) emits the
+     unchanged desktop <table class="records-table"> and a sibling
+     <div class="records-list"> of <details class="rec-row"> per row, one
+     render, one HTML string -- same dual-markup + CSS-toggle mechanism as
+     .lb-table-card/.lb-cards below. The compact <summary> is Label (only on
+     a group's first row, matching the table's "blank repeated label" rule)
+     + Value + identity (name, or an initials list when a record is shared
+     by 3+ people); native <details> supplies the disclosure with no JS. */
+  .records-page .records-table { display: none; }
+  .records-page .records-list { display: block; }
+  .records-page .rec-row {
+    border-bottom: 1px solid var(--table-cell-border, #e0e0e0);
+  }
+  .records-page .rec-row:first-child {
+    border-top: 1px solid var(--table-cell-border, #e0e0e0);
+  }
+  .records-page .rec-summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 10px 4px;
+    list-style: none;
+    cursor: pointer;
+  }
+  .records-page .rec-summary::-webkit-details-marker { display: none; }
+  .records-page .rec-summary::marker { content: ""; }
+  .records-page .rec-label {
+    flex: 1 1 38%;
+    min-width: 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary, #1b241f);
+  }
+  .records-page .rec-value {
+    flex: 0 0 auto;
+    min-width: 2.5em;
+    text-align: right;
+    font-weight: 700;
+    font-family: 'Roboto Mono', monospace;
+    color: var(--text-primary, #1b241f);
+  }
+  .records-page .rec-identity {
+    flex: 1 1 34%;
+    min-width: 0;
+    text-align: right;
+    font-size: 13px;
+    color: var(--text-secondary, #555555);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .records-page .rec-chevron {
+    flex: 0 0 auto;
+    width: 1em;
+    text-align: center;
+    color: var(--accent, #17683c);
+    font-size: 16px;
+    line-height: 1;
+  }
+  .records-page .rec-chevron::before { content: "+"; }
+  .records-page .rec-row[open] .rec-chevron::before { content: "\2013"; }
+  .records-page .rec-detail {
+    padding: 2px 4px 10px 4px;
+    background: var(--btn-inactive-bg, #f5f4f0);
+    color: var(--text-muted, #666);
+    font-size: 12px;
+    border-radius: 0 0 6px 6px;
   }
 
   /* ── Leaderboard hero (M2.7): card-reflowed standings ──
@@ -333,10 +436,6 @@
   /* Latest round vertical slice. Keep the scoreboard readable at 320px and
      let its chart use the full phone width. */
   .latest-round-page { --lr-inset: 12px; }
-  /* base.html supplies Tailwind's px-6 on every main-content. Its utility is
-     loaded after the generic mobile shell, so target this one page directly
-     instead of relying on the weaker global reset above. */
-  .main-content.px-6:has(> .latest-round-page) { padding-inline: 0; }
   .latest-round-page #lr-context-header { margin-left: var(--lr-inset); margin-right: var(--lr-inset); }
   .latest-round-page > .section-controls { margin-left: 0; margin-right: 0; }
   .latest-round-page > .section-controls .pill,
@@ -596,13 +695,74 @@
     margin-right: var(--lr-inset);
   }
 
+  /* ── Eclectic Records (/eclectic-records, proportional columns) ──
+     format_eclectic_records_table always emits Player, TEG/Course, Total,
+     Rounds in that fixed order (teg_analysis/analysis/eclectic.py) and
+     df_to_html renders them with no col_class, so there's no col-player hook
+     to target -- nth-child on the plain .teg-table is the only way in. At an
+     equal 25% split, long names ("Gregg Williams") overflow ~42px into the
+     TEG column while Total/Rounds (single- and double-digit numbers) sit on
+     width they never use, so the columns are weighted by actual content
+     instead: Player gets the space long names need, Total/Rounds shrink to
+     what a number needs, TEG/Course takes the remainder. */
+  .eclectic-records-page table.teg-table { table-layout: fixed; }
+  .eclectic-records-page table.teg-table th:nth-child(1),
+  .eclectic-records-page table.teg-table td:nth-child(1) {
+    width: 44%;
+    overflow-wrap: anywhere;
+  }
+  .eclectic-records-page table.teg-table th:nth-child(2),
+  .eclectic-records-page table.teg-table td:nth-child(2) { width: 22%; }
+  .eclectic-records-page table.teg-table th:nth-child(3),
+  .eclectic-records-page table.teg-table td:nth-child(3),
+  .eclectic-records-page table.teg-table th:nth-child(4),
+  .eclectic-records-page table.teg-table td:nth-child(4) { width: 17%; }
+
+  /* ── Handicaps (/handicaps, vertical list) ──
+     .hc-tiles' auto-fit grid packs several 2-up tiles per phone row, which
+     reads as a scattered layout rather than a ranking -- .hc-list is the
+     same already-sorted (lowest handicap first) data as one column instead,
+     so "who's improving" scans top to bottom like a leaderboard. */
+  .hc-tiles { display: none; }
+  .hc-list {
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .hc-list tr { border-top: 1px solid var(--table-cell-border, #e0e0e0); }
+  .hc-list tr:first-child { border-top: none; }
+  .hc-list td { padding: 10px 4px; vertical-align: middle; }
+  .hc-list-name {
+    font-size: 0.9375rem;
+    color: var(--text-primary);
+  }
+  .hc-list-value {
+    width: 20%;
+    text-align: right;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .hc-list-delta {
+    width: 30%;
+    text-align: right;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+  .hc-list-delta.hc-delta--down,
+  .hc-list-delta.hc-delta--up,
+  .hc-list-delta.hc-delta--none {
+    background: none;
+    padding: 10px 4px;
+    border-radius: 0;
+  }
+
   /* ── History (TEG winners table, R3.1) ──
-     Same ancestor-gutter fix Latest Round needed: Tailwind's .main-content.px-6
-     re-applies 24px inline padding after the generic reset above, so a page-
-     scoped hook has to null it out again. table-wrapper--no-pin (set in
-     data_table.html) drops the generic sticky-first-column treatment, since a
-     fixed-width four-column layout fits without horizontal scroll. */
-  .main-content.px-6:has(> .history-page) { padding-inline: 0; }
+     table-wrapper--no-pin (set in data_table.html) drops the generic
+     sticky-first-column treatment, since a fixed-width four-column layout
+     fits without horizontal scroll. */
   .history-page { padding-inline: 12px; }
   .history-page .history-table { table-layout: fixed; font-size: 13px; }
   .history-page .history-table th,
@@ -701,13 +861,47 @@
   .history-page .history-meta li span { display: block; color: var(--text-primary, #1b241f); }
   .history-page .history-meta li small { display: block; color: var(--text-muted, #666); }
 
+  /* ── Personal Bests & Top Performances (two-line cells, byline rows) ──
+     Personal Bests' PB Summary cell was one concatenated string
+     ("88 (TEG 10|R4)") -- too wide for a phone column. Split into a bold
+     value line + a muted context line, both centered (not left-aligned --
+     left-aligned read as mis-aligned against the numeric column above it in
+     design review) so the cell reads as one unit rather than two ends of a
+     sentence. Top Performances' 6 equal-width columns overflow on the
+     location column (Area/Course can run much longer than its ~1/6 share);
+     rather than shrink that text further, the byline row keeps the three
+     leaderboard facts (#, Player, value) as the primary line and drops the
+     id_cols onto one muted sub-line, so nothing truncates. */
+  .personal-bests-page .pbv,
+  .personal-bests-page .pbc { display: block; text-align: center; }
+  .personal-bests-page .pbv { font: 700 13.5px 'Roboto Mono', monospace; }
+  .personal-bests-page .pbc { font-size: 9.5px; color: var(--text-muted, #666); margin-top: 1px; }
+  /* The " (" / ")" text nodes are what makes desktop/iPad's unstyled markup
+     read as the old "value (context)" string (see _pb_summary_html) -- once
+     stacked into two lines here, they're noise. */
+  .personal-bests-page .pb-sep { display: none; }
+
+  .tp-table { display: none; }
+  .tp-list { display: block; }
+  .tp-row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px 4px;
+    border-bottom: 1px solid var(--border-color, #e3e1da);
+  }
+  .tp-row:last-child { border-bottom: none; }
+  .tp-top { display: flex; align-items: baseline; gap: 8px; }
+  .tp-rank { font: 700 12px 'Roboto Mono', monospace; color: var(--text-muted, #666); min-width: 18px; }
+  .tp-player { flex: 1; font-weight: 600; overflow-wrap: anywhere; }
+  .tp-value { font: 700 13px 'Roboto Mono', monospace; }
+  .tp-sub { font-size: 11px; color: var(--text-muted, #666); padding-left: 26px; }
+
   /* ── Standings (Full Results + Latest Leaderboard, R3.2) ──
      Shared by results.html and leaderboard.html -- both render the exact
      same table_html/lb_cards/lb_hero markup from the same context builder
      (_results_context, webapp/routes/history.py), so one hook covers both
-     pages rather than duplicating this block per page. Same ancestor-gutter
-     fix Latest Round/History needed. */
-  .main-content.px-6:has(> .standings-page) { padding-inline: 0; }
+     pages rather than duplicating this block per page. */
   .standings-page { padding-inline: 12px; }
   /* .lb-table-card is hidden by the generic M2.7 card-reflow rule above
      (line ~215) in favour of .lb-cards; reveal the real table here instead
@@ -731,6 +925,47 @@
      matches the approved prototype's .standings-table, which likewise only
      pins the first two columns and lets round/total columns split the rest. */
 
+  /* ── Player rankings (/player-rankings, honest scroll cue) ──
+     .player-ranking-table is 18 TEGs wide; forcing it to width:100% was
+     tried and rejected in design review as too dense to read (~16px/cell
+     at 320px), so it keeps its comfortable fixed cell sizing (base-vars.css)
+     and stays a genuine horizontal scroller. A site-wide scroll-shadow on
+     every .table-wrapper was also tried this session and reverted for
+     looking heavy globally -- this is a narrower, page-scoped reintroduction
+     for these two tables only, which are wide enough that the scroll
+     affordance needs to be obvious rather than discovered by accident. Classic
+     four-layer background-attachment technique: the "local" gradient layers
+     scroll with the table content (so the fade disappears once you've
+     scrolled to the end) and sit on top of the "scroll" layers, which stay
+     pinned to the viewport edge as a constant shadow. The summary table
+     beneath (.position-table) is also .teg-table inside the same
+     .table-wrapper markup and, measured, also overflows at 320-375px (it
+     has more columns than fit even without the 18-TEG grid's density), so
+     it gets the same cue rather than being left to scroll silently. */
+  .table-wrapper:has(.player-ranking-table),
+  .table-wrapper:has(.position-table) {
+    background-image:
+      linear-gradient(to right, transparent, transparent),
+      linear-gradient(to right, var(--bg-card, #ffffff), transparent),
+      linear-gradient(to right, transparent, rgba(0, 0, 0, 0.08)),
+      linear-gradient(to left, var(--bg-card, #ffffff), rgba(0, 0, 0, 0.08));
+    background-position: left, left, right, right;
+    background-repeat: no-repeat;
+    background-size: 20px 100%, 20px 100%, 20px 100%, 20px 100%;
+    background-attachment: local, scroll, local, scroll;
+  }
+  /* Sticky first ("Pl") column already gets position:sticky/left:0 from the
+     generic Tables (M1.6) rule above (targets .teg-table, which this table
+     also is); add a visible edge so scrolled content has a clear boundary
+     instead of sliding underneath with no separation. */
+  .player-ranking-table th:first-child,
+  .player-ranking-table td:first-child,
+  .position-table th:first-child,
+  .position-table td:first-child {
+    border-right: 1px solid var(--table-cell-border, #e0e0e0);
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.06);
+  }
+
   /* ── Standalone Bestball/Worstball summary (/bestball, R3.4 correction) ──
      A separate TEG-wide leaderboard, not the per-round field/contribution
      builders -- it needs its own containment, not a shared implementation.
@@ -742,6 +977,239 @@
      the viewport even though the row wraps. */
   .bestball-page .section-controls > * { min-width: 0; }
   .bestball-page .section-controls .theme-select { max-width: 100%; }
+
+  /* ── Scoring Matrix & By TEG (dense grid, initials) ──
+     /scoring/matrix and /scoring/by-teg both show a dense TEG-by-player
+     grid. Both already use 'Pl' (initials) as column headers/keys on the
+     Python side, which is what makes fitting the full grid at phone width
+     possible without horizontal scroll: force table-layout: fixed at 100%
+     width, and shrink to the small monospace size from the accepted
+     design-review mock (11px body / 9.5px header). Scoped to each page's
+     own persistent wrapper (not the shared scoring_matrix_content.html
+     partial itself), so /scoring/by-par -- which reuses that same partial
+     but keeps full-width desktop-style formatting -- is unaffected. */
+  .scoring-matrix-page .teg-table,
+  .scoring-byteg-page .teg-table {
+    table-layout: fixed;
+    width: 100%;
+    font-family: 'Roboto Mono', monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  .scoring-matrix-page .teg-table thead th,
+  .scoring-byteg-page .teg-table thead th {
+    font-size: 9.5px;
+    padding: 5px 6px;
+    /* "Average" (Matrix's widest header) doesn't fit an equal-fixed-width
+       column at this size without wrapping -- allow it to break rather
+       than bleed past the column and force horizontal scroll. */
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.15;
+  }
+  .scoring-matrix-page .teg-table tbody td,
+  .scoring-byteg-page .teg-table tbody td {
+    font-size: 11px;
+    padding: 5px 6px;
+    color: var(--text-primary);
+    /* By-9 level adds a third label column ("Front"/"Back") alongside
+       TEG + Round at the same equal-fixed-width share as the score
+       columns -- too narrow for that word at any legible size without
+       either overflowing into the next cell or wrapping. Score/initial
+       values are always short enough that this never triggers for them. */
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.15;
+  }
+  /* Right-align every numeric column; the first (TEG) column stays left. */
+  .scoring-matrix-page .teg-table thead th:not(:first-child),
+  .scoring-byteg-page .teg-table thead th:not(:first-child),
+  .scoring-matrix-page .teg-table tbody td:not(:first-child),
+  .scoring-byteg-page .teg-table tbody td:not(:first-child) {
+    text-align: right;
+  }
+  /* table-layout: fixed takes column widths from the header row, so a
+     narrower TEG column (its content is always 1-2 digits) frees width for
+     the columns that actually need it. Matrix's Average column runs to
+     1dp ("+110.6") and is the widest content on the page -- widen it via
+     the same mechanism, or it overflows its equal-share column and forces
+     horizontal scroll (checked against real data: TEG averages do reach
+     6 characters). By-teg has no Average column, so it only needs the
+     narrower first column. */
+  .scoring-matrix-page .teg-table thead th:first-child,
+  .scoring-byteg-page .teg-table thead th:first-child {
+    width: 11%;
+  }
+  .scoring-matrix-page .teg-table thead th:last-child {
+    width: 15%;
+  }
+  /* By-Round (10 cols total) and By-9 (11 cols total) add a "Round" label
+     column as their 2nd column, and By-9 adds a further "FrontBack" label
+     column as its 3rd -- both need more room than a data column to avoid
+     wrapping letter-by-letter ("Front"/"Back" bleeding across several
+     lines). By-TEG's 2nd column is a player initial (AB etc), not a label
+     column, so these are scoped with :nth-last-child to match only the
+     column counts where position 2/3 really is Round/FrontBack. */
+  .scoring-matrix-page .teg-table thead th:nth-child(2):nth-last-child(9),
+  .scoring-matrix-page .teg-table thead th:nth-child(2):nth-last-child(10) {
+    width: 9%;
+  }
+  .scoring-matrix-page .teg-table thead th:nth-child(3):nth-last-child(9) {
+    width: 15%;
+  }
+
+  /* ── Scoring: byline rows (Changes / Comebacks / All Rounds) ──
+     Changes vs Previous Round, Final Round Comebacks and All Rounds each
+     show a <table> with one wide identity column (full player name, no
+     abbreviation per naming rule) plus several context columns (TEG,
+     Round, Course, Year, ...) at roughly equal width -- fine on desktop,
+     but the full name alone can crowd a phone-width column before any
+     context is added. Below 640px each swaps to a phone-only byline list
+     (dual-rendered alongside the unchanged desktop table, same
+     .tp-table/.tp-list toggle mechanism as Top Performances): a primary
+     line with the identity + the 1-3 headline figures, and a muted
+     secondary line with everything else joined by " · ". */
+  .scoring-changes-page .teg-table,
+  .scoring-comebacks-page .teg-table,
+  .scoring-all-rounds-page .teg-table { display: none; }
+  .scoring-changes-page .ch-list,
+  .scoring-comebacks-page .cb-list,
+  .scoring-all-rounds-page .ar-list { display: block; }
+  .ch-row, .cb-row, .ar-row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px 4px;
+    border-bottom: 1px solid var(--border-color, #e3e1da);
+  }
+  .ch-row:last-child, .cb-row:last-child, .ar-row:last-child { border-bottom: none; }
+  .bl-top { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .bl-player { flex: 1; font-weight: 600; overflow-wrap: anywhere; min-width: 40%; }
+  .bl-value, .bl-delta {
+    font: 700 13px 'Roboto Mono', monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  .bl-sub { font-size: 11px; color: var(--text-muted, #666); }
+
+  /* ── Course Analysis: two-line composite cell (Gross Records) ──
+     _two_line_cell_table_html splits the Gross Records "Score" cell's
+     concatenated "75 (+4)" string into value/context spans (mirrors
+     .pbv/.pbc, Personal Bests' PB Summary table). Net Records' single
+     "Net vs Par" value ("+65") is never composite, so it needs no
+     equivalent and stays untouched. Scoped to .cr-records-table (not
+     every .teg-table on this page) so the "Records by Player" summary
+     table directly beneath -- plain Player/Records-Held, no composite
+     cell -- is unaffected. */
+  .course-records-page table.cr-records-table .cr-v,
+  .course-records-page table.cr-records-table .cr-c { display: block; text-align: center; }
+  .course-records-page table.cr-records-table .cr-v { font: 700 13.5px 'Roboto Mono', monospace; }
+  .course-records-page table.cr-records-table .cr-c { font-size: 9.5px; color: var(--text-muted, #666); margin-top: 1px; }
+  .course-records-page table.cr-records-table .cr-sep { display: none; }
+
+  /* ── Heatmap (/scoring/heatmap, mobile transpose) ──
+     .hm-desktop (the original Player-rows/Hole-columns table, 19 columns)
+     is too dense to fit phone width; .hm-mobile (Hole-rows/initials-columns,
+     present only for the default view -- see _heatmap_context) fits in
+     ~8 columns instead. Reuses the exact dense-grid sizing already shipped
+     for Scoring Matrix & By TEG above, since Jon asked for "the same font
+     size as in the matrix prototype" -- table-layout:fixed at 100% width,
+     11px body / 9.5px header Roboto Mono. Heat-map cell background colours
+     come from inline styles (_hm_cell_style) and are untouched by this
+     rule; only type size/layout change. When a non-default row/col
+     dimension is selected, table_html_mobile is absent, .hm-mobile stays
+     empty, and .hm-desktop's own existing (scrollable) rules apply as
+     they always have -- no regression for that case. */
+  /* Only hide .hm-desktop when a .hm-mobile sibling actually exists (the
+     default Player x Hole view) -- for any other row/col dimension the
+     template omits .hm-mobile entirely, and .hm-desktop must stay visible
+     (falling back to its existing scrollable behaviour) or the table
+     disappears with nothing in its place. */
+  .hm-desktop:has(~ .hm-mobile) { display: none; }
+  .hm-mobile { display: block; }
+  .hm-mobile .teg-table {
+    table-layout: fixed;
+    width: 100%;
+    font-family: 'Roboto Mono', monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  .hm-mobile .teg-table thead th {
+    font-size: 9.5px;
+    padding: 5px 4px;
+    line-height: 1.15;
+  }
+  .hm-mobile .teg-table tbody td {
+    font-size: 11px;
+    padding: 5px 4px;
+    line-height: 1.15;
+  }
+  .hm-mobile .teg-table thead th:first-child,
+  .hm-mobile .teg-table tbody td.row-label {
+    text-align: left;
+    width: 14%;
+  }
+
+  /* ── By Par (/scoring/by-par, proportional columns) ──
+     Same problem/fix as Eclectic Records: Player (full name, up to
+     "Gregg Williams") vs. four short numeric columns (Par 3/4/5, Total,
+     values like "+0.89") at an equal 20% split. Reuses that page's exact
+     technique -- table-layout:fixed with weighted nth-child widths --
+     rather than inventing a new one for the same shape of problem. */
+  .by-par-panel table.teg-table {
+    table-layout: fixed;
+    width: 100%;
+    font-family: 'Roboto Mono', monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  .by-par-panel table.teg-table thead th,
+  .by-par-panel table.teg-table tbody td {
+    font-size: 11px;
+    padding: 5px 4px;
+  }
+  .by-par-panel table.teg-table thead th { font-size: 9.5px; }
+  .by-par-panel table.teg-table th:nth-child(1),
+  .by-par-panel table.teg-table td:nth-child(1) {
+    width: 34%;
+    text-align: left;
+    overflow-wrap: anywhere;
+  }
+  .by-par-panel table.teg-table th:not(:first-child),
+  .by-par-panel table.teg-table td:not(:first-child) {
+    width: 16.5%;
+    text-align: right;
+  }
+
+  /* ── Course Analysis: Averages/Bests/Worsts (wrap + dense grid) ──
+     A first attempt reused Matrix's single-line first-column treatment
+     here and it didn't fit: 8 value columns (7 initials + Total) at
+     Matrix's font, and course names up to 29 characters ("Prince's -
+     Dunes / Himalayas") squeezed into ~34% of the row. Letting the course
+     column wrap onto two lines instead of forcing one frees width for the
+     value columns -- narrower first column, same small monospace values
+     as Matrix/By TEG, tighter padding since there are more columns here
+     than Matrix ever has. */
+  .course-records-page table.cr-matrix-table {
+    table-layout: fixed;
+    width: 100%;
+    font-family: 'Roboto Mono', monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  .course-records-page table.cr-matrix-table thead th,
+  .course-records-page table.cr-matrix-table tbody td {
+    font-size: 10px;
+    padding: 4px 3px;
+    line-height: 1.2;
+  }
+  .course-records-page table.cr-matrix-table thead th { font-size: 9px; }
+  .course-records-page table.cr-matrix-table th:first-child,
+  .course-records-page table.cr-matrix-table td:first-child {
+    width: 22%;
+    text-align: left;
+    white-space: normal;
+    overflow-wrap: break-word;
+  }
+  .course-records-page table.cr-matrix-table th:not(:first-child),
+  .course-records-page table.cr-matrix-table td:not(:first-child) {
+    text-align: right;
+  }
 }
 @media (min-width: 390px) and (max-width: 640px) {
   .latest-round-page .lr-readout { grid-template-columns: repeat(3, minmax(0, 1fr)); }

@@ -27,6 +27,19 @@
         </div>
         {% endfor %}
     </div>
+    {# Phone-only alternative to the tile grid: a vertical Player/Handicap/
+       Change list, already sorted lowest-to-highest handicap by the route
+       (current_hc.sort_values(..., ascending=True)). Same tiles data, no
+       Python change needed -- mobile.css toggles which one renders. #}
+    <table class="hc-list">
+        {% for t in tiles %}
+        <tr>
+            <td class="hc-list-name">{{ t.name_parts | join(' ') }}</td>
+            <td class="hc-list-value">{{ t.value }}</td>
+            <td class="hc-list-delta hc-delta--{{ t.delta_dir }}">{{ t.delta_arrow }} {{ t.delta_text }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 </div>
 <p class="text-muted text-sm mt-2">Change shows difference in HC vs previous TEG</p>
 

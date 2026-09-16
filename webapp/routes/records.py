@@ -1,5 +1,6 @@
 """Records routes."""
 
+import re
 from pathlib import Path
 
 import pandas as pd
@@ -47,9 +48,47 @@ _NUMERIC_COLS = {
 # Columns that should be centered (rank-like)
 _RANK_COLS = {'Rank', '#', ''}
 
+# Sentinel values used in place of a player identity when a record is shared
+# by 3+ people (see prepare_streak_records_table / prepare_score_count_records_table):
+# the "who" moves into the other detail column as an initials list instead.
+# Used to correct the per-row exception below.
+_PLACEHOLDER_IDENTITY_RE = re.compile(r'^\(\d+\s+times?\)$')
+
+
+def _is_placeholder_identity(val) -> bool:
+    val_str = str(val).strip()
+    return val_str == '→' or bool(_PLACEHOLDER_IDENTITY_RE.match(val_str))
+
+
+def _pick_detail_col_idx(df: pd.DataFrame, cols: list, candidates: list) -> int:
+    """Of the two non-value/title columns, pick the one that's the long
+    "detail" (venue/date) string to collapse behind a tap, vs. the short
+    "identity" (name) one always shown -- e.g. teg/round/9hole put the name
+    in column 2 and venue/date in column 3, every row, consistently. Decided
+    once per render from average string length, not re-derived per row: for
+    those tabs the two columns play a fixed role throughout the table.
+
+    Streaks/score_counts break that column-level consistency: whenever a
+    record is shared by 3+ people, the "name" column holds a placeholder
+    ('->' or '(N times)') and the *other* column holds the real identity
+    (an initials list), row by row within the same table. So this picks a
+    per-table default by average length, and the caller applies a narrow,
+    per-row override only for those placeholder values -- not a second
+    general heuristic, just correcting the one known exception.
+    """
+    if len(candidates) != 2:
+        return candidates[-1] if candidates else -1
+    a, b = candidates
+    avg_len_a = df[cols[a]].dropna().astype(str).str.len().mean() if not df.empty else 0
+    avg_len_b = df[cols[b]].dropna().astype(str).str.len().mean() if not df.empty else 0
+    return b if avg_len_b >= avg_len_a else a
+
 
 def _build_records_html(df: pd.DataFrame) -> str:
-    """Convert a records DataFrame to a styled HTML table with alignment classes."""
+    """Convert a records DataFrame to a styled HTML table (desktop/iPad,
+    unchanged) plus a mobile-only tap-to-reveal list of the same rows.
+    mobile.css shows exactly one of the two per breakpoint (same
+    dual-markup + CSS-toggle mechanism as .lb-table-card/.lb-cards)."""
     if df is None or df.empty:
         return "<p class='text-muted text-sm'>No data available.</p>"
 
@@ -62,8 +101,17 @@ def _build_records_html(df: pd.DataFrame) -> str:
             value_col_idx = i
             break
 
+    # The remaining columns (not the title, not the value) are the
+    # identity/detail pair the mobile list needs to tell apart.
+    other_idx = [i for i in range(1, len(cols)) if i != value_col_idx]
+    detail_col_idx = _pick_detail_col_idx(df, cols, other_idx) if len(other_idx) == 2 else None
+    identity_col_idx = None
+    if detail_col_idx is not None:
+        identity_col_idx = [i for i in other_idx if i != detail_col_idx][0]
+
     rows = []
     rows.append("<table class='records-table records-table--borderless'>")
+    list_items = []
 
     prev_title = None
     for _, row in df.iterrows():
@@ -91,7 +139,35 @@ def _build_records_html(df: pd.DataFrame) -> str:
                 rows.append(f"<td class='col-player'>{val}</td>")
         rows.append("</tr>")
 
+        # Mobile row: same label/value, but identity vs. detail swap per-row
+        # when the "identity" slot actually holds a shared-record placeholder
+        # (see _is_placeholder_identity) -- the initials list in the other
+        # column is the real answer to "who" for those rows.
+        label_html = row[cols[0]] if show_title else ""
+        value_html = row[cols[value_col_idx]] if value_col_idx is not None else ""
+        if identity_col_idx is not None:
+            id_val, det_val = row[cols[identity_col_idx]], row[cols[detail_col_idx]]
+            if _is_placeholder_identity(id_val):
+                id_val, det_val = det_val, id_val
+        else:
+            id_val, det_val = "", ""
+
+        list_items.append(
+            "<details class='rec-row'>"
+            "<summary class='rec-summary'>"
+            f"<span class='rec-label'>{label_html}</span>"
+            f"<span class='rec-value'>{value_html}</span>"
+            f"<span class='rec-identity'>{id_val}</span>"
+            "<span class='rec-chevron' aria-hidden='true'></span>"
+            "</summary>"
+            f"<div class='rec-detail'>{det_val}</div>"
+            "</details>"
+        )
+
     rows.append("</tbody></table>")
+    rows.append("<div class='records-list'>")
+    rows.extend(list_items)
+    rows.append("</div>")
     return "".join(rows)
 
 

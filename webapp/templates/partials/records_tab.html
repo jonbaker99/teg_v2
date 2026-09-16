@@ -1,7 +1,10 @@
 {% if error %}
 <div class="error-box">{{ error }}</div>
 {% else %}
-<div>
+{# .records-page scopes the mobile tap-to-reveal CSS (mobile.css); this
+   partial renders standalone via HTMX tab switches too, so the class lives
+   here rather than only on the top-level records.html wrapper. #}
+<div class="records-page">
     {% for section in sections %}
     {% if not loop.first %}
     <hr class="divider--dotted">
