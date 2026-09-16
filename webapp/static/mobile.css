@@ -1146,6 +1146,36 @@
     text-align: left;
     width: 14%;
   }
+
+  /* ── By Par (/scoring/by-par, proportional columns) ──
+     Same problem/fix as Eclectic Records: Player (full name, up to
+     "Gregg Williams") vs. four short numeric columns (Par 3/4/5, Total,
+     values like "+0.89") at an equal 20% split. Reuses that page's exact
+     technique -- table-layout:fixed with weighted nth-child widths --
+     rather than inventing a new one for the same shape of problem. */
+  .by-par-panel table.teg-table {
+    table-layout: fixed;
+    width: 100%;
+    font-family: 'Roboto Mono', monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  .by-par-panel table.teg-table thead th,
+  .by-par-panel table.teg-table tbody td {
+    font-size: 11px;
+    padding: 5px 4px;
+  }
+  .by-par-panel table.teg-table thead th { font-size: 9.5px; }
+  .by-par-panel table.teg-table th:nth-child(1),
+  .by-par-panel table.teg-table td:nth-child(1) {
+    width: 34%;
+    text-align: left;
+    overflow-wrap: anywhere;
+  }
+  .by-par-panel table.teg-table th:not(:first-child),
+  .by-par-panel table.teg-table td:not(:first-child) {
+    width: 16.5%;
+    text-align: right;
+  }
 }
 @media (min-width: 390px) and (max-width: 640px) {
   .latest-round-page .lr-readout { grid-template-columns: repeat(3, minmax(0, 1fr)); }
