@@ -3,23 +3,19 @@
 {% block extra_head %}
 <script>
 (function () {
-    function checkHistoryNameBreaks() {
-        var table = document.querySelector('.history-table');
-        if (!table) return;
-        table.classList.remove('names-break');
-        var names = table.querySelectorAll('.player-name');
-        if (!names.length) return;
-        var lineH = parseFloat(getComputedStyle(names[0]).lineHeight);
-        if (!lineH || isNaN(lineH)) lineH = 21;
-        for (var i = 0; i < names.length; i++) {
-            if (names[i].offsetHeight > lineH * 1.2) {
-                table.classList.add('names-break');
-                break;
-            }
-        }
-    }
-    document.addEventListener('DOMContentLoaded', checkHistoryNameBreaks);
-    window.addEventListener('resize', checkHistoryNameBreaks);
+    // Per-TEG round/course/date disclosure -- plain client-side toggle, no
+    // server round-trip (same pattern as Latest Round's rank-toggle: native
+    // <button> semantics already give Enter/Space activation and a visible
+    // focus ring, so no extra keyboard handling is needed here).
+    document.addEventListener('click', function (event) {
+        var toggle = event.target.closest('[data-history-toggle]');
+        if (!toggle) return;
+        var detail = document.getElementById(toggle.getAttribute('aria-controls'));
+        if (!detail) return;
+        var expanded = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+        detail.hidden = expanded;
+    });
 })();
 </script>
 {% endblock %}
@@ -40,6 +36,12 @@
     <div class="data-card"><div class="table-wrapper">{{ section.table_html | safe }}</div></div>
   {% endfor %}
 {% else %}
-  <div class="data-card"><div class="table-wrapper">{{ table_html | safe }}</div></div>
+  {# active_page == 'history' is the only caller of this branch that needs its
+     own phone layout (fixed-width columns, no sticky-scroll, the disclosure
+     row) -- everything else sharing this template keeps its current markup
+     untouched. table-wrapper--no-pin opts out of the generic sticky-first-
+     column/horizontal-scroll treatment (mobile.css), since History's mobile
+     columns fit without scrolling once fixed-width. #}
+  <div class="data-card{% if active_page == 'history' %} history-page{% endif %}"><div class="table-wrapper{% if active_page == 'history' %} table-wrapper--no-pin{% endif %}">{{ table_html | safe }}</div></div>
 {% endif %}
 {% endblock %}

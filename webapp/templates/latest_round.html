@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="/static/scorecard.css?v=22">
+<link rel="stylesheet" href="/static/scorecard.css?v=25">
 {% endblock %}
 
 {% block page_title %}
@@ -12,15 +12,17 @@
 {% endblock %}
 
 {% block content %}
+{% set lr_full_page = true %}
+<div class="latest-round-page" data-lr-page data-lr-teg="{{ selected_teg }}" data-lr-round="{{ selected_round }}" data-lr-active-tab="{{ active_tab }}" data-lr-metric="{{ active_metric|default('Sc') }}" data-lr-scale="{{ chart_scale|default('adjusted') }}" data-lr-player="{{ chart_player|default('') }}" data-lr-rewind="{{ chart_rewind|default(18) }}">
 
 <p id="lr-context-header" class="text-muted text-sm mb-3">{{ context_header }}</p>
 
 <div class="section-controls flex flex-wrap items-center gap-4">
-    <select id="lr-teg-select" class="theme-select"
+        <select id="lr-teg-select" class="theme-select"
             hx-get="/latest-round/tab"
             hx-target="#lr-content"
             hx-include="#lr-round-select, #lr-tab-input"
-            name="teg">
+            name="teg" data-lr-history="push">
         {% for t in teg_numbers %}
         <option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>
         {% endfor %}
@@ -33,8 +35,9 @@
                 hx-target="#lr-content"
                 hx-include="#lr-teg-select, #lr-tab-input"
                 hx-vals='{"round": {{ r }}}'
-                onclick="document.getElementById('lr-round-select').value='{{ r }}'">
-            Round {{ r }}
+                data-lr-history="push" onclick="document.getElementById('lr-round-select').value='{{ r }}'"
+                aria-label="Round {{ r }}">
+            R{{ r }}
         </button>
         {% endfor %}
     </div>
@@ -46,6 +49,7 @@
 <div class="section-nav">
     {% for tab_id, tab_label in tabs %}
     <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
+            data-lr-tab="{{ tab_id }}" data-lr-history="push"
             onclick="document.getElementById('lr-tab-input').value='{{ tab_id }}';
                      htmx.trigger(document.getElementById('lr-teg-select'), 'change')">
         {{ tab_label }}
@@ -60,8 +64,24 @@
 </div>
 
 <div id="lr-content" class="section-panel">
-    {% include "partials/latest_round_tab.html" %}
+    {% include "partials/latest_round_tab.html" with context %}
 </div>
+
+{# Full-page counterpart for #lr-chart-state, sibling to #lr-content like
+   #lr-context-header above -- NOT nested inside it. The partial's own OOB
+   copy (guarded by {% if not lr_full_page %}) previously WAS the only
+   instance, nested inside #lr-content by way of the include above; that
+   meant its own OOB-swap-in-place update was immediately destroyed by the
+   very next step of the SAME swap (htmx's findAndSwapOobElements runs
+   BEFORE the main target's innerHTML replace, verified against the actual
+   htmx 2.0.4 source: swap() calls the OOB pass, then swapWithStyle, then
+   only afterward fires htmx:afterSwap) -- so by the time any JS listener
+   could read it, on EVERY response, it no longer existed. Confirmed live:
+   document.getElementById('lr-chart-state') was null during htmx:afterSwap
+   even for a single, non-overlapping request. #lr-context-header survives
+   because it already lived outside #lr-content; this gives #lr-chart-state
+   the same safety. #}
+<div id="lr-chart-state" hidden data-teg="{{ selected_teg }}" data-round="{{ selected_round }}" data-tab="{{ active_tab }}" data-metric="{{ active_metric|default('Sc') }}" data-scale="{{ chart_scale|default('adjusted') }}" data-player="{{ chart_player|default('') }}" data-rewind="{{ chart_rewind|default(18) }}"></div>
 
 {# The tab row lives outside #lr-content, so an HTMX TEG/round change never
    re-renders it — keep the Report link's target and visibility in sync here.
@@ -89,4 +109,387 @@
     sync();
 })();
 </script>
+<script>
+(function () {
+    var page = document.querySelector('[data-lr-page]');
+    if (!page) return;
+    var validTabs = {{ tabs | map(attribute=0) | list | tojson }};
+    function controls() {
+        var url = new URL(window.location.href);
+        var teg = document.getElementById('lr-teg-select');
+        var round = document.getElementById('lr-round-select');
+        var tab = document.getElementById('lr-tab-input');
+        if (teg) url.searchParams.set('teg', teg.value);
+        if (round) url.searchParams.set('round', round.value);
+        if (tab && validTabs.indexOf(tab.value) >= 0) url.searchParams.set('tab', tab.value);
+        return url;
+    }
+    function syncUrl(replace) {
+        var url = controls();
+        page.querySelectorAll('[data-lr-query]').forEach(function (el) {
+            // Metric buttons all carry data-lr-query="metric" (only the
+            // clicked/active one should feed the URL -- metric is also set
+            // explicitly below from page.dataset, so this mainly matters
+            // for the rewind <input>, which isn't a BUTTON and always passes).
+            if (el.tagName === 'BUTTON' && !el.classList.contains('lr-scale-toggle') && !el.classList.contains('is-active')) return;
+            if (el.value) url.searchParams.set(el.dataset.lrQuery, el.value);
+        });
+        // Read the hidden tab input directly rather than page.dataset.lrActiveTab --
+        // a tab button's onclick sets the input's value and synchronously fires the
+        // HTMX request (see the tab buttons above) BEFORE the body-level click
+        // listener below gets a turn to update lrActiveTab, so at the point this
+        // runs (from htmx:beforeRequest) the dataset would still hold the tab we're
+        // navigating AWAY from -- e.g. returning to Scoreboards would still read
+        // the old non-scoreboard tab and strip metric/scale/player/rewind below.
+        var tabInput = document.getElementById('lr-tab-input');
+        var activeTab = tabInput ? tabInput.value : page.dataset.lrActiveTab;
+        var metric = page.dataset.lrMetric || 'Sc';
+        var scale = page.dataset.lrScale || 'adjusted';
+        var player = page.dataset.lrPlayer || '';
+        var rewind = page.dataset.lrRewind || '18';
+        if (activeTab === 'scoreboard') {
+            url.searchParams.set('metric', metric);
+            // Adjusted is the default -- only persist scale in the URL when
+            // it deviates (Normal), same reasoning as any other non-default
+            // control value.
+            if (scale === 'normal' && (metric === 'Stableford' || metric === 'GrossVP')) url.searchParams.set('scale', scale);
+            else url.searchParams.delete('scale');
+            if (player) url.searchParams.set('player', player); else url.searchParams.delete('player');
+            // Set explicitly from the stored dataset value, not just via the
+            // [data-lr-query] loop above -- that loop only finds the rewind
+            // <input> when the scoreboard tab's markup is already in the DOM,
+            // which isn't true when navigating IN to scoreboard from another tab.
+            url.searchParams.set('rewind', rewind);
+        } else {
+            ['metric', 'scale', 'player', 'rewind'].forEach(function (key) { url.searchParams.delete(key); });
+        }
+        history[replace ? 'replaceState' : 'pushState']({}, '', url);
+    }
+    // -- Pending vs. confirmed state --------------------------------------
+    // page.dataset.lr{Teg,Round,ActiveTab,Metric,Scale,Player,Rewind} is
+    // CONFIRMED state: what's actually rendered right now. It is mutated in
+    // exactly one place below (the successful htmx:afterSwap commit) plus
+    // the client-only chart-focus handler (which never makes a request, so
+    // it's immediately confirmed).
+    //
+    // Every in-flight request's "what is THIS request asking for" snapshot
+    // is stashed on that request's OWN requestConfig object, not a shared
+    // variable -- htmx:configRequest's event.detail IS the requestConfig for
+    // that request, and every later event for the SAME request (beforeSwap/
+    // afterSwap/responseError/sendError/timeout) exposes the identical
+    // object again via event.detail.requestConfig (verified against the
+    // actual bundled htmx 2.0.4 source, base.html:8). A shared variable here
+    // would let two overlapping requests -- e.g. a round change and a
+    // metric change in flight together -- stomp on each other: whichever
+    // response arrived last would win regardless of which one it actually
+    // belonged to, so an earlier response could commit a later request's
+    // (unrelated) round/metric against its own (mismatched) rendered HTML.
+    var retryPending = null; // set just before a retry's htmx.ajax() call, so
+                              // configRequest can replay it verbatim instead
+                              // of recomputing (and clobbering) it from the
+                              // rolled-back live controls.
+    var lastFailedPending = null; // which snapshot Retry replays next.
+    var errorBanner = null;
+    function pendingFor(event) {
+        var detail = event && event.detail;
+        if (!detail) return null;
+        if (detail._lrPending) return detail._lrPending; // configRequest itself
+        if (detail.requestConfig) return detail.requestConfig._lrPending || null;
+        return null;
+    }
+    document.body.addEventListener('htmx:configRequest', function (event) {
+        var elt = event.detail && event.detail.elt;
+        if (!elt || !elt.closest('[data-lr-page]')) return;
+        var snapshot;
+        if (retryPending) {
+            // Replaying a known-failed request: event.detail.parameters was
+            // already seeded correctly via htmx.ajax()'s `values` option
+            // below, so leave it alone -- recomputing from elt/page.dataset
+            // here would silently substitute the rolled-back (pre-failure)
+            // controls for what actually failed.
+            snapshot = retryPending;
+            retryPending = null;
+        } else {
+            var params = event.detail.parameters;
+            var tegSelect = document.getElementById('lr-teg-select');
+            var roundInput = document.getElementById('lr-round-select');
+            var tabInput = document.getElementById('lr-tab-input');
+            // teg/round/tab: read from the OUTGOING request's own resolved
+            // parameters (htmx has already applied this element's hx-vals/
+            // hx-include by the time configRequest fires), not from the
+            // live DOM controls -- a control like the metric-pill buttons
+            // has no hx-include and sends teg/round/tab baked into its own
+            // hx-vals at the page's last render, which can legitimately
+            // disagree with #lr-round-select's live value if a DIFFERENT
+            // pending interaction (e.g. a round pill's onclick, which sets
+            // that shared hidden input immediately on click, before any
+            // request settles) has already changed it. Reading what was
+            // actually sent keeps the snapshot honest about what this
+            // request's OWN response will actually contain, regardless of
+            // what any other in-flight or queued interaction is doing to
+            // shared controls.
+            snapshot = {
+                teg: (params && params.teg) || (tegSelect ? tegSelect.value : page.dataset.lrTeg),
+                round: (params && params.round) || (roundInput ? roundInput.value : page.dataset.lrRound),
+                tab: (params && params.tab) || (tabInput ? tabInput.value : page.dataset.lrActiveTab),
+                metric: elt.dataset.lrQuery === 'metric' ? elt.value : (page.dataset.lrMetric || 'Sc'),
+                scale: elt.classList.contains('lr-scale-toggle') ? (elt.getAttribute('aria-checked') === 'true' ? 'normal' : 'adjusted') : (page.dataset.lrScale || 'adjusted'),
+                player: elt.dataset.lrQuery === 'player' ? (elt.value || '') : (page.dataset.lrPlayer || ''),
+                rewind: elt.dataset.lrQuery === 'rewind' ? elt.value : (page.dataset.lrRewind || '18'),
+                push: elt.matches('[data-lr-history="push"]'),
+                focusRewind: elt.id === 'lr-rewind-input',
+            };
+            if (params) {
+                params.metric = snapshot.metric;
+                params.scale = snapshot.scale;
+                params.player = snapshot.player;
+                params.rewind = snapshot.rewind;
+            }
+        }
+        event.detail._lrPending = snapshot;
+    });
+    // htmx:beforeSwap fires (for a response it's actually going to swap)
+    // before htmx:afterSwap -- reconcile the visible controls here, ahead of
+    // the OTHER script block's own afterSwap-driven Report-link sync() above,
+    // so that handler never reads a control this one hasn't updated yet.
+    // This is still the merely-REQUESTED value (afterSwap corrects it to
+    // whatever the server actually rendered) -- just enough to keep the
+    // brief visual gap between beforeSwap and afterSwap from looking wrong.
+    document.body.addEventListener('htmx:beforeSwap', function (event) {
+        var detail = event.detail;
+        if (!detail || detail.target !== document.getElementById('lr-content')) return;
+        if (detail.shouldSwap === false) return;
+        var requested = pendingFor(event) || {};
+        var tegSelect = document.getElementById('lr-teg-select');
+        var roundInput = document.getElementById('lr-round-select');
+        var tabInput = document.getElementById('lr-tab-input');
+        if (tegSelect && requested.teg) tegSelect.value = requested.teg;
+        if (roundInput && requested.round) roundInput.value = requested.round;
+        if (tabInput && requested.tab) tabInput.value = requested.tab;
+        if (requested.tab) {
+            page.querySelectorAll('.section-nav .tab-underline[data-lr-tab]').forEach(function (btn) {
+                btn.classList.toggle('tab-underline--active', btn.dataset.lrTab === requested.tab);
+            });
+        }
+    });
+    document.body.addEventListener('htmx:afterSwap', function (evt) {
+        if (!evt.target || evt.target.id !== 'lr-content') return;
+        var requested = pendingFor(evt) || {};
+        var state = document.getElementById('lr-chart-state');
+        // Prefer the server-canonical echo over what was merely requested --
+        // the server can clamp an out-of-range round/tab, or clear a player
+        // no longer on the roster, to something other than what was asked
+        // for. #lr-chart-state always ships (even on the {"error": ...}
+        // branch), so read from it whenever the attribute is actually
+        // present -- `!== undefined`, not `||`: an intentionally cleared
+        // player echoes back as "", which `"" || fallback` would wrongly
+        // discard in favour of a stale requested value.
+        function echoed(key, fallback) {
+            return (state && state.dataset[key] !== undefined) ? state.dataset[key] : fallback;
+        }
+        page.dataset.lrTeg = echoed('teg', requested.teg || page.dataset.lrTeg);
+        page.dataset.lrRound = echoed('round', requested.round || page.dataset.lrRound);
+        page.dataset.lrActiveTab = echoed('tab', requested.tab || page.dataset.lrActiveTab);
+        page.dataset.lrMetric = echoed('metric', requested.metric || 'Sc');
+        page.dataset.lrScale = echoed('scale', requested.scale || 'adjusted');
+        page.dataset.lrPlayer = echoed('player', requested.player || '');
+        page.dataset.lrRewind = echoed('rewind', requested.rewind || '18');
+        // beforeSwap already applied the requested values optimistically;
+        // correct every control to whatever just got committed above.
+        var tegSelect = document.getElementById('lr-teg-select');
+        var roundInput = document.getElementById('lr-round-select');
+        var tabInput = document.getElementById('lr-tab-input');
+        if (tegSelect) tegSelect.value = page.dataset.lrTeg;
+        if (roundInput) roundInput.value = page.dataset.lrRound;
+        if (tabInput) tabInput.value = page.dataset.lrActiveTab;
+        page.querySelectorAll('.section-nav .tab-underline[data-lr-tab]').forEach(function (btn) {
+            btn.classList.toggle('tab-underline--active', btn.dataset.lrTab === page.dataset.lrActiveTab);
+        });
+        syncUrl(!requested.push);
+        if (requested.focusRewind) {
+            var input = document.getElementById('lr-rewind-input');
+            if (input) input.focus();
+        }
+        if (errorBanner) { errorBanner.remove(); errorBanner = null; }
+    });
+    // -- Failure recovery ---------------------------------------------------
+    // Nothing above ever wrote to page.dataset or the URL for a request that
+    // hasn't succeeded, so on failure there is no dataset/history to roll
+    // back -- only the handful of controls that change as an inherent,
+    // unavoidable side effect of the user's own interaction (the TEG
+    // <select>'s value, the rewind range's value/output) or via base.html's
+    // global, request-outcome-blind "move the active class on click" tab/pill
+    // handlers (base.html ~239-259). Reset exactly those back to confirmed.
+    function rollbackToConfirmedState() {
+        var tegSelect = document.getElementById('lr-teg-select');
+        var roundInput = document.getElementById('lr-round-select');
+        var tabInput = document.getElementById('lr-tab-input');
+        var rewindInput = document.getElementById('lr-rewind-input');
+        if (tegSelect) tegSelect.value = page.dataset.lrTeg;
+        if (roundInput) roundInput.value = page.dataset.lrRound;
+        if (tabInput) tabInput.value = page.dataset.lrActiveTab;
+        if (rewindInput) {
+            rewindInput.value = page.dataset.lrRewind;
+            var output = rewindInput.parentElement.querySelector('output');
+            if (output) { output.value = page.dataset.lrRewind; output.textContent = page.dataset.lrRewind; }
+        }
+        page.querySelectorAll('.section-nav .tab-underline[data-lr-tab]').forEach(function (btn) {
+            btn.classList.toggle('tab-underline--active', btn.dataset.lrTab === page.dataset.lrActiveTab);
+        });
+        page.querySelectorAll('#lr-round-pills .pill').forEach(function (p) {
+            p.classList.toggle('pill--active', p.getAttribute('aria-label') === ('Round ' + page.dataset.lrRound));
+        });
+    }
+    function retryRequest() {
+        if (!lastFailedPending) return;
+        var target = lastFailedPending;
+        retryPending = target;
+        // Rebuilt from our own typed snapshot rather than htmx's internal
+        // requestConfig -- htmx.ajax() with no `source` defaults to
+        // document.body as the triggering element, which page-scoped
+        // handlers above would then ignore entirely; passing an in-page
+        // `source` (and an explicit `values` payload naming every field this
+        // page's endpoint accepts) keeps the retry inside the normal
+        // lifecycle instead of bypassing it.
+        htmx.ajax('GET', '/latest-round/tab', {
+            source: page, target: '#lr-content', swap: 'innerHTML',
+            values: {
+                teg: target.teg, round: target.round, tab: target.tab,
+                metric: target.metric, scale: target.scale,
+                player: target.player, rewind: target.rewind,
+            },
+        });
+    }
+    function showLoadFailure() {
+        var content = document.getElementById('lr-content');
+        if (!content) return;
+        if (!errorBanner || !errorBanner.isConnected) {
+            errorBanner = document.createElement('div');
+            errorBanner.setAttribute('data-lr-error-banner', '');
+            errorBanner.setAttribute('role', 'alert');
+            // Inline, not a new mobile.css rule -- reuses two existing
+            // classes (text-muted/text-sm, pill) plus a little layout glue,
+            // not a new shared component.
+            errorBanner.style.cssText = 'display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;';
+            var msg = document.createElement('p');
+            msg.className = 'text-muted text-sm';
+            msg.textContent = "Couldn't load that -- showing the previous view.";
+            var retry = document.createElement('button');
+            retry.type = 'button';
+            retry.className = 'pill';
+            retry.textContent = 'Retry';
+            // retryRequest() reads `lastFailedPending` at CLICK time, not at
+            // binding time, so if a later, different request fails while
+            // this banner is already showing, Retry picks up that newer
+            // failure for free -- and a failed retry leaves this same
+            // banner in place (only a successful htmx:afterSwap removes
+            // it), so Retry keeps working across repeated failures.
+            retry.addEventListener('click', retryRequest);
+            errorBanner.appendChild(msg);
+            errorBanner.appendChild(retry);
+            content.insertBefore(errorBanner, content.firstChild);
+        }
+        var retryBtn = errorBanner.querySelector('button');
+        if (retryBtn) retryBtn.focus();
+    }
+    function onLoadFailure(event) {
+        var elt = event.detail && event.detail.elt;
+        if (!elt || !elt.closest('[data-lr-page]')) return;
+        lastFailedPending = pendingFor(event) || lastFailedPending;
+        rollbackToConfirmedState();
+        showLoadFailure();
+    }
+    document.body.addEventListener('htmx:responseError', onLoadFailure);
+    document.body.addEventListener('htmx:sendError', onLoadFailure);
+    document.body.addEventListener('htmx:timeout', onLoadFailure);
+    // Scoreboard row expand/collapse (Out/In split + score mix) -- plain
+    // client-side toggle, no server round-trip. Native <button> semantics
+    // already give Enter/Space activation and a visible focus ring, so no
+    // extra keyboard handling is needed here.
+    document.body.addEventListener('click', function (event) {
+        var toggle = event.target.closest('[data-lr-rank-toggle]');
+        if (!toggle) return;
+        var detail = document.getElementById(toggle.getAttribute('aria-controls'));
+        if (!detail) return;
+        var expanded = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+        detail.hidden = expanded;
+    });
+    // Live number while dragging, ahead of 'change' firing the actual
+    // request -- purely visual, doesn't touch confirmed state (page.dataset)
+    // or the eventual request's own pending snapshot; configRequest/
+    // afterSwap handle those.
+    document.body.addEventListener('input', function (event) {
+        if (!event.target.matches('[data-lr-query="rewind"]')) return;
+        var output = event.target.parentElement.querySelector('output');
+        if (output) output.value = event.target.value;
+        if (output) output.textContent = event.target.value;
+    });
+    document.body.addEventListener('click', function (event) {
+        var step = event.target.closest('[data-lr-step]');
+        if (!step) return;
+        var input = page.querySelector('[data-lr-query="rewind"]');
+        if (!input) return;
+        input.value = Math.max(1, Math.min(18, Number(input.value) + Number(step.dataset.lrStep)));
+        input.dispatchEvent(new Event('change', {bubbles: true}));
+    });
+    window.addEventListener('popstate', function () {
+        window.location.reload();
+    });
+    syncUrl(true);
+    function attachFocus() {
+        var chart = document.querySelector('.latest-round-page .lr-chart.js-plotly-plot');
+        if (!chart || chart.dataset.lrFocusBound) return;
+        chart.dataset.lrFocusBound = '1';
+        // Derive the intrinsic (no-focus) baseline from trace metadata, not
+        // from trace.opacity as currently rendered -- the server bakes the
+        // requested focus_player's dimming into opacity before this binds
+        // (deep link, or after an HTMX swap carrying a stored player param),
+        // so reading opacity back would capture "already dimmed for the
+        // current focus" as the baseline and leave other lines permanently
+        // faint after the user clears focus.
+        var baseOpacity = chart.data.map(function (trace) { return trace.meta === 'future' ? 0.2 : 1; });
+        function focus(name) {
+            var opacities = chart.data.map(function (trace, i) {
+                if (!name) return baseOpacity[i];
+                if (trace.name !== name) return baseOpacity[i] * 0.18;
+                // The faint "future" continuation of the focused player's own
+                // line must stay at its rewind-faded opacity, not jump to 1 --
+                // otherwise focusing a player made their un-played holes look
+                // fully played, defeating the rewind fade.
+                return trace.meta === 'future' ? baseOpacity[i] : 1;
+            });
+            Plotly.restyle(chart, {opacity: opacities});
+            page.querySelectorAll('[data-lr-focus]').forEach(function (button) {
+                var active = button.dataset.lrFocus === name;
+                button.classList.toggle('is-active', active);
+                button.setAttribute('aria-pressed', active ? 'true' : 'false');
+            });
+            var url = new URL(window.location.href);
+            if (name) url.searchParams.set('player', name); else url.searchParams.delete('player');
+            // Purely client-side (no request involved), so it commits
+            // straight to confirmed state -- there's no in-flight request
+            // for it to wait on or be rolled back by.
+            page.dataset.lrPlayer = name;
+            history.replaceState({}, '', url);
+        }
+        chart.on('plotly_legendclick', function (event) {
+            focus(chart.data[event.curveNumber].name);
+            return false;
+        });
+        chart.on('plotly_click', function (event) {
+            if (event.points && event.points[0]) focus(chart.data[event.points[0].curveNumber].name);
+        });
+        page.querySelectorAll('[data-lr-focus]').forEach(function (button) {
+            button.addEventListener('click', function () {
+                var name = button.classList.contains('is-active') ? '' : button.dataset.lrFocus;
+                focus(name);
+            });
+        });
+    }
+    document.addEventListener('htmx:afterSettle', function () { window.setTimeout(attachFocus, 40); });
+    window.setTimeout(attachFocus, 120);
+})();
+</script>
+</div>
 {% endblock %}

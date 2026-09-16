@@ -47,3 +47,6 @@ nul
 
 #nodemodules -> what is this?
 node_modules/
+
+# Playwright MCP verification artifacts (screenshots, console logs, page snapshots)
+.playwright-mcp/

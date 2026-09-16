@@ -14,7 +14,7 @@ from teg_analysis.reporting.newspaper_edition import (
 )
 
 from teg_analysis.constants import HANDICAPS_CSV
-from teg_analysis.core.players import get_name_to_code
+from teg_analysis.core.players import get_name_to_code, get_player_name
 from teg_analysis.io.file_operations import read_file
 from teg_analysis.analysis.aggregation import (
     get_round_data,
@@ -48,7 +48,7 @@ from teg_analysis.core.metadata import get_scorecard_data, get_teg_metadata
 from teg_analysis.display.scorecards import (
     build_round_comparison_responsive,
     build_eclectic_scorecard_table,
-    build_bestball_worstball_scorecard,
+    build_bestball_worstball_responsive,
     build_bestball_contribution_bars,
     build_teg_eclectic_scorecard,
     build_eclectic_contribution_bars,
@@ -66,7 +66,11 @@ from webapp.deps import (
     get_rounds_for_teg,
     parse_teg_label,
 )
-from webapp.chart_utils import create_round_graph
+# Reuses /results' & /history's first/last-name-span wrap convention rather
+# than inventing a third; leaderboard.py already imports from history.py the
+# same way, so this isn't a new inter-route-module pattern.
+from webapp.routes.history import _wrap_player_name
+from webapp.chart_utils import create_round_graph, format_value, get_round_player_color_map
 from webapp.tables import df_to_html as _table_df_to_html
 
 logger = logging.getLogger(__name__)
@@ -112,6 +116,117 @@ def _fmt_record_value(value, metric: str) -> str:
     if metric in ('GrossVP', 'NetVP'):
         return format_vs_par(value)
     return str(int(value))
+
+
+def _player_score_mix(counts: pd.DataFrame, player_code: str, field: str) -> str:
+    """Render one player's per-hole score distribution as 'label: count, ...'.
+
+    ``counts`` is a count_scores_by_player(round_data, field) matrix (score
+    value -> row, player code -> column); this slices out one player's
+    column and formats each score level the same way the Scoring tab does
+    (_format_scoring_display / format_vs_par) rather than inventing a new
+    formatting scheme: vs-par notation for GrossVP, plain point values for
+    Stableford.
+    """
+    if counts is None or counts.empty or player_code not in counts.columns:
+        return ''
+    col = counts[player_code]
+    col = col[col > 0]
+    parts = []
+    for score_val, count in col.items():
+        label = format_vs_par(int(score_val)) if field == 'GrossVP' else str(int(score_val))
+        parts.append(f"{label}: {int(count)}")
+    return ', '.join(parts)
+
+
+def _build_scoreboard_table(values: pd.DataFrame, mix_counts: pd.DataFrame,
+                            mix_field: str, uid_prefix: str) -> str:
+    """Render the Scoreboards-tab table: a 5-column main row (# / Player /
+    Total / Personal rank / All-time rank) plus a per-player expandable
+    detail row (Out/In split + per-hole score mix), collapsed by default.
+
+    Visual language (.leaderboard table styling, .rank-toggle "+"/"-"
+    disclosure, .detail-grid) is ported from the approved prototype at
+    report_layout_prototypes/mobile_data.{js,css} -- see the matching CSS
+    in webapp/static/mobile.css -- with explicit swaps the user made: the
+    prototype's main row is # / Player / Out / In / Total; this one is
+    # / Player / Total / Personal rank / All-time rank, with Out/In (plus
+    a score mix the prototype doesn't have) moved into the detail row, and
+    Total placed immediately after Player (ahead of the rank context
+    columns) since it's the number that matters most.
+    ``values`` columns: Rank, Pl, Player, Out, In, Total (already
+    display-formatted strings), Personal rank, All-time rank.
+    """
+    from html import escape
+
+    def rank_cell(value) -> str:
+        """Keep rank text accessible while de-emphasising its denominator."""
+        text = str(value)
+        if '/' not in text:
+            return escape(text)
+        numerator, denominator = text.split('/', 1)
+        return (f'<span class="lr-rank-value">{escape(numerator)}'
+                f'<small>/{escape(denominator)}</small></span>')
+
+    out = ["<table class='teg-table leaderboard'><colgroup>",
+           "<col class='lr-rank-col'><col class='lr-player-col'>",
+           "<col class='lr-total-col'><col class='lr-personal-col'><col class='lr-alltime-col'>",
+           "<col class='lr-toggle-col'>",
+           "</colgroup><thead><tr>",
+           "<th scope='col'>#</th>",
+           "<th scope='col'>Player</th>",
+           "<th scope='col'>Total</th>",
+           "<th scope='col'>Personal rank</th>",
+           "<th scope='col'>All-time rank</th>",
+           "<th scope='col'></th>",
+           "</tr></thead><tbody>"]
+
+    for _, row in values.iterrows():
+        code = str(row['Pl'])
+        detail_id = f"{uid_prefix}-{code}"
+        mix = _player_score_mix(mix_counts, code, mix_field)
+        personal_rank = row.get('Personal rank') or '—'
+        all_time_rank = row.get('All-time rank') or '—'
+        # Ties for first all get the leader shading, not just the literal
+        # rank-1 row -- Rank is already "1" or "1=" for a tie (see
+        # scoring.py's tied-rank pattern).
+        row_class = " class='rank-1'" if str(row['Rank']).rstrip('=') == '1' else ''
+        out.append(
+            f"<tr{row_class}>"
+            f"<td>{escape(str(row['Rank']))}</td>"
+            # Cell class is deliberately NOT "player-name" -- that class
+            # belongs to the inner <span> _wrap_player_name() emits (shared
+            # display:inline-block styling with History/Standings). Reusing
+            # it on the <td> too made base-vars.css's ".player-name { display:
+            # inline-block }" rule match the <td> itself, breaking its
+            # table-cell layout (shrink-wrapped to content width, leaving a
+            # gap in the row -- visible as a "missing" border segment).
+            f"<td class='lr-player-cell'>{_wrap_player_name(str(row['Player']))}</td>"
+            f"<td class='lr-total-cell'>{escape(str(row['Total']))}</td>"
+            f"<td class='lr-rank-context'>{rank_cell(personal_rank)}</td>"
+            f"<td class='lr-rank-context'>{rank_cell(all_time_rank)}</td>"
+            "<td class='lr-toggle-td'>"
+            f"<button type=\"button\" class=\"rank-toggle\" data-lr-rank-toggle "
+            f"aria-expanded=\"false\" aria-controls=\"{escape(detail_id)}\" "
+            f"aria-label=\"Toggle details for {escape(str(row['Player']))}\"></button></td>"
+            "</tr>"
+        )
+        out.append(
+            f"<tr class=\"rank-detail-row\" id=\"{escape(detail_id)}\" hidden>"
+            "<td colspan=\"6\">"
+            "<div class=\"detail-grid\">"
+            f"<span>Out<b>{escape(str(row['Out']))}</b></span>"
+            f"<span>In<b>{escape(str(row['In']))}</b></span>"
+            "</div>"
+            "<p class=\"detail-mix\">"
+            "<span class=\"detail-mix-label\">Score mix</span> "
+            f"{escape(mix) if mix else '—'}"
+            "</p>"
+            "</td></tr>"
+        )
+
+    out.append("</tbody></table>")
+    return ''.join(out)
 
 
 def _intify_numeric(df: pd.DataFrame) -> pd.DataFrame:
@@ -268,9 +383,27 @@ SCORING_FIELDS = [("GrossVP", "Gross vs Par"), ("Stableford", "Stableford")]
 METRIC_TABS = [("Sc", "Score"), ("Stableford", "Stableford"), ("GrossVP", "Gross vs Par"), ("NetVP", "Net vs Par")]
 
 
+def _echo_chart_state(ctx: dict, metric: str, scale: str, player: str, rewind) -> dict:
+    """Fill in active_metric/chart_scale/chart_player/chart_rewind when the
+    tab body didn't already set them (every tab except scoreboard, which
+    validates and returns its own). Without this, #lr-chart-state's OOB
+    fragment falls back to hardcoded template defaults on every non-scoreboard
+    tab, silently resetting the user's real metric/scale/player/rewind
+    selection the moment they switch away from Scoreboards and back."""
+    ctx.setdefault("active_metric", metric if metric in dict(METRIC_TABS) else "Sc")
+    ctx.setdefault("chart_scale", scale if scale in ("normal", "adjusted") else "adjusted")
+    ctx.setdefault("chart_player", player or "")
+    try:
+        ctx.setdefault("chart_rewind", max(1, min(int(rewind or 18), 18)))
+    except (TypeError, ValueError):
+        ctx.setdefault("chart_rewind", 18)
+    return ctx
+
+
 def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                               score_type: str = "GrossVP", metric: str = "Sc",
-                              display_mode: str = "count") -> dict:
+                              display_mode: str = "count", scale: str = "adjusted",
+                              player: str = "", rewind: int = 18) -> dict:
     try:
         rd_data = cached_round_data()
         teg_rd = rd_data[(rd_data['TEGNum'] == teg_num) & (rd_data['Round'] == round_num)]
@@ -282,34 +415,128 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
 
         if tab == "scoreboard":
             metric = metric if metric in dict(METRIC_TABS) else "Sc"
+            scale = scale if scale in ("normal", "adjusted") else "adjusted"
+            if metric not in ("Stableford", "GrossVP"):
+                scale = "normal"
+            valid_players = {str(p) for p in teg_rd['Pl'].dropna().unique()}
+            player = player if player in valid_players else ""
+            try:
+                rewind = max(1, min(int(rewind or 18), 18))
+            except (TypeError, ValueError):
+                rewind = 18
             friendly = dict(METRIC_TABS)[metric]
             teg_str = f"TEG {teg_num}"
             try:
-                ranked = cached_ranked_round_data()
-                ctx_df = prepare_round_context_display(ranked, teg_str, round_num, metric, friendly)
-                if friendly in ctx_df.columns:
-                    ctx_df[friendly] = ctx_df[friendly].apply(lambda v: _fmt_record_value(v, metric))
-                table_html = _df_to_html(ctx_df)
+                score_data = cached_load_all_data()
+                score_data = score_data[(score_data['TEG'] == teg_str) & (score_data['Round'] == round_num)]
+                grouped = score_data.groupby('Pl', sort=False)
+                values = grouped[metric].sum().rename('Total').to_frame()
+                values['Out'] = score_data[score_data['Hole'] < 10].groupby('Pl')[metric].sum()
+                values['In'] = score_data[score_data['Hole'] >= 10].groupby('Pl')[metric].sum()
+                values = values.reset_index()
+                ascending = metric != 'Stableford'
+                values = values.sort_values('Total', ascending=ascending).reset_index(drop=True)
+                values.insert(0, 'Rank', values['Total'].rank(method='min', ascending=ascending).astype(int))
+                values['Player'] = values['Pl'].map(lambda code: get_player_name(str(code)))
+                for col in ('Out', 'In', 'Total'):
+                    values[col] = values[col].apply(lambda v: _fmt_record_value(v, metric))
+
+                # Personal-rank / all-time-rank context, reusing the same
+                # ranked-round-data helper the pre-mobile-rollout scoreboard
+                # table used (prepare_round_context_display) rather than
+                # recomputing Rank_within_player_*/Rank_within_all_* by hand.
+                # Its output keys on 'Player' (display name), which the
+                # aggregated round data agrees on for the same TEG/round.
+                try:
+                    ranked = cached_ranked_round_data()
+                    ctx_df = prepare_round_context_display(ranked, teg_str, round_num, metric, friendly)
+                    rank_ctx = ctx_df[['Player', 'Pl rank', 'All time rank']].rename(
+                        columns={'Pl rank': 'Personal rank', 'All time rank': 'All-time rank'})
+                    values = values.merge(rank_ctx, on='Player', how='left')
+                    # Tighten "n / N" -> "n/N" -- cosmetic only, saves the
+                    # width these two columns can't spare at phone widths.
+                    for col in ('Personal rank', 'All-time rank'):
+                        values[col] = values[col].astype(str).str.replace(' / ', '/', regex=False)
+                except Exception:
+                    logger.exception("_latest_round_tab_context: personal/all-time rank context failed")
+                    values['Personal rank'] = ''
+                    values['All-time rank'] = ''
+
+                # Per-hole score mix for the expandable detail row -- reuses
+                # the Scoring tab's own field selection (GrossVP vs-par
+                # notation, or Stableford point counts; Sc/NetVP have no
+                # separate per-hole formatting elsewhere in this file, so
+                # they fall back to the same GrossVP-style mix).
+                mix_field = 'Stableford' if metric == 'Stableford' else 'GrossVP'
+                mix_counts = count_scores_by_player(score_data, mix_field)
+
+                table_html = _build_scoreboard_table(
+                    values, mix_counts, mix_field,
+                    uid_prefix=f"lr-rank-{teg_num}-{round_num}")
             except Exception:
+                logger.exception("_latest_round_tab_context: scoreboard table build failed")
                 table_html = "<p class='text-muted text-sm'>No data.</p>"
             chart_title = f"Cumulative {friendly} through round"
             y_series = f"{metric} Cum Round"
             metric_chart_type = {"Sc": "default", "GrossVP": "gross", "NetVP": "gross", "Stableford": "stableford"}
             chart_type = metric_chart_type.get(metric, "default")
             figure_json = None
+            chart_build_error = None
+            chart_readout = []
             try:
                 all_data = cached_load_all_data()
                 fig = create_round_graph(
                     all_data, teg_str, round_num, y_series, title=chart_title,
                     y_axis_label=f"Cumulative {friendly}", chart_type=chart_type,
+                    scale=scale, rewind=rewind,
+                    focus_player=player,
                 )
                 figure_json = fig.to_json()
             except Exception:
+                # Previously a bare `pass`: figure_json stayed None and the
+                # whole chart+tools block (title, chart, focus readout, scale
+                # switch, rewind) silently disappeared from the page with no
+                # indication anything failed. Mirror the scoreboard table's
+                # own failure pattern (line ~472) instead of staying silent.
+                logger.exception("_latest_round_tab_context: chart build failed")
+                chart_build_error = "Chart unavailable for this round."
+            point = max(1, min(rewind, 18))
+            readout_data = teg_rd
+            try:
+                readout_data = cached_load_all_data()
+                readout_data = readout_data[(readout_data['TEG'] == teg_str) & (readout_data['Round'] == round_num)]
+            except Exception:
                 pass
+            # Same colour mapping create_round_graph uses for the chart lines
+            # -- so a player's code in the readout below is styled in their
+            # actual line colour, not a fixed generic accent colour.
+            try:
+                round_color_map = get_round_player_color_map(cached_load_all_data(), teg_str, round_num)
+            except Exception:
+                round_color_map = {}
+            for code, player_df in readout_data.groupby('Pl', sort=False):
+                if y_series not in player_df.columns:
+                    continue
+                upto = player_df[player_df['Hole'] <= point].sort_values('Hole')
+                if upto.empty:
+                    continue
+                # Always the real (unadjusted) score -- "adjusted" only
+                # reshapes the chart line's Y position, never the score
+                # actually achieved.
+                value = upto[y_series].iloc[-1]
+                chart_readout.append({"code": str(code), "name": get_player_name(str(code)),
+                                      "value": format_value(value, chart_type),
+                                      "active": str(code) == player,
+                                      "color": round_color_map.get(code, '')})
             return {"sections": [{"title": friendly, "table_html": table_html}],
                     "metric_tabs": METRIC_TABS, "active_metric": metric,
                     "chart_title": chart_title,
-                    "figure_json": figure_json}
+                    "figure_json": figure_json,
+                    "chart_build_error": chart_build_error,
+                    "chart_players": sorted(str(p) for p in teg_rd['Pl'].dropna().unique()),
+                    "chart_readout": chart_readout,
+                    "chart_scale": scale, "chart_player": player,
+                    "chart_rewind": rewind}
 
         elif tab == "scorecard":
             try:
@@ -340,8 +567,12 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                 if rank_html:
                     sections.append({"title": None, "table_html": rank_html, "raw": True})
 
-                card_html = build_bestball_worstball_scorecard(round_data)
-                sections.append({"title": None, "table_html": card_html})
+                # Responsive block: landscape (holes as columns) on desktop/iPad,
+                # portrait (holes as rows) on phone -- own .data-card/.table-wrapper
+                # wrapping already baked in (see build_round_comparison_responsive),
+                # so this section is raw.
+                card_html = build_bestball_worstball_responsive(round_data)
+                sections.append({"title": None, "table_html": card_html, "raw": True})
 
                 # Per-player contribution breakdown (CSS bar charts) below the card.
                 bars_html = build_bestball_contribution_bars(round_data)
@@ -425,22 +656,37 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
 
 
 @router.get("/latest-round")
-def latest_round_page(request: Request, teg: Optional[int] = Query(None),
-                       round: Optional[int] = Query(None)):
+def latest_round_page(request: Request, teg: Optional[str] = Query(None),
+                       round: Optional[str] = Query(None),
+                       tab: str = Query("scoreboard"), metric: str = Query("Sc"),
+                       scale: str = Query("adjusted"), player: str = Query(""),
+                       rewind: str = Query("18")):
     rd_data = cached_round_data()
     teg_numbers = get_available_teg_numbers()
     # Deep-link support (e.g. from /teg-reports' "Back to Round N" link) — an
     # invalid/absent teg or round falls back to the latest-played default.
-    if teg in teg_numbers:
-        teg_num = teg
+    try:
+        requested_teg = int(teg) if teg is not None else None
+    except (TypeError, ValueError):
+        requested_teg = None
+    if requested_teg in teg_numbers:
+        teg_num = requested_teg
         rounds = get_rounds_for_teg(teg_num)
-        round_num = round if round in rounds else (rounds[-1] if rounds else 1)
+        try:
+            requested_round = int(round) if round is not None else None
+        except (TypeError, ValueError):
+            requested_round = None
+        round_num = requested_round if requested_round in rounds else (rounds[-1] if rounds else 1)
     else:
         teg_str, round_num = get_latest_round_defaults(rd_data)
         teg_num = parse_teg_label(teg_str)
         rounds = get_rounds_for_teg(teg_num)
     context_header = _round_context_header(teg_num, int(round_num))
-    ctx = _latest_round_tab_context(teg_num, int(round_num), "scoreboard")
+    active_tab = tab if tab in {item[0] for item in LATEST_ROUND_TABS} else "scoreboard"
+    ctx = _latest_round_tab_context(teg_num, int(round_num), active_tab,
+                                    metric=metric, scale=scale, player=player,
+                                    rewind=rewind)
+    ctx = _echo_chart_state(ctx, metric, scale, player, rewind)
     return templates.TemplateResponse("latest_round.html", {
         "request": request,
         "active_page": "latest-round",
@@ -452,7 +698,7 @@ def latest_round_page(request: Request, teg: Optional[int] = Query(None),
         "teg": teg_num,
         "round": int(round_num),
         "tabs": LATEST_ROUND_TABS,
-        "active_tab": "scoreboard",
+        "active_tab": active_tab,
         "context_header": context_header,
         # {teg: [rounds with a newspaper round report]} for every TEG this
         # page can show — drives the Report link (a real navigation to
@@ -468,16 +714,35 @@ def latest_round_page(request: Request, teg: Optional[int] = Query(None),
 
 
 @router.get("/latest-round/tab")
-def latest_round_tab(request: Request, teg: int = Query(...), round: int = Query(...),
+def latest_round_tab(request: Request, teg: str = Query(...), round: str = Query(...),
                            tab: str = Query("scoreboard"), score_type: str = Query("GrossVP"),
-                           metric: str = Query("Sc"), display_mode: str = Query("count")):
+                           metric: str = Query("Sc"), display_mode: str = Query("count"),
+                           scale: str = Query("adjusted"), player: str = Query(""),
+                           rewind: str = Query("18")):
+    teg_numbers = get_available_teg_numbers()
+    try:
+        teg_num = int(teg)
+    except (TypeError, ValueError):
+        teg_num = get_default_teg_num()
+    if teg_num not in teg_numbers:
+        teg_num = get_default_teg_num()
+    teg = teg_num
     rounds = get_rounds_for_teg(teg)
-    round_num = round if round in rounds else (rounds[-1] if rounds else 1)
-    ctx = _latest_round_tab_context(teg, round_num, tab, score_type, metric, display_mode)
+    try:
+        round_num_requested = int(round)
+    except (TypeError, ValueError):
+        round_num_requested = None
+    round_num = round_num_requested if round_num_requested in rounds else (rounds[-1] if rounds else 1)
+    if tab not in {item[0] for item in LATEST_ROUND_TABS}:
+        tab = "scoreboard"
+    ctx = _latest_round_tab_context(teg, round_num, tab, score_type, metric, display_mode,
+                                    scale=scale, player=player, rewind=rewind)
+    ctx = _echo_chart_state(ctx, metric, scale, player, rewind)
     return templates.TemplateResponse("partials/latest_round_tab.html", {
         "request": request,
         "teg": teg,
         "round": round_num,
+        "tab": tab,
         "rounds": rounds,
         "context_header": _round_context_header(teg, round_num),
         **ctx,

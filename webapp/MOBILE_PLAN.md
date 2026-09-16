@@ -12,7 +12,7 @@ everywhere, card-reflow the hero tables, sticky-column scroll for the long tail.
 Hard rule throughout: **desktop/iPad stay byte-identical** (all mobile rules sit
 behind a `≤640px` breakpoint or an opt-in `data-mode`).
 
-**Done so far** (branch `claude/mobile-ui-dev`):
+**Done so far** (live work plus pending branch `codex/mobile-ui-rollout`):
 - ✅ **Dark-mode foundation** (in `main`) — `data-mode` cookie/toggle +
   `static/themes/dark.css`, opt-in, default light. See [§4.2](#42-dark-mode--foundation-built).
 - ✅ **Portrait scorecard** (in `main`) — the first real vertical slice of the app
@@ -42,11 +42,13 @@ behind a `≤640px` breakpoint or an opt-in `data-mode`).
     (`partials/lb_cards.html`, fed by `lb_cards`/`lb_hero` from
     `_results_context`); the desktop table + text callout hide at ≤640px.
   - **App bar (M1.4):** compacted nav height/padding + soft elevation.
+- ✅ **Core data layouts R2–R3.4** (pending integration from `codex/mobile-ui-rollout`) — compact interactive Latest Round with stable HTMX URL state, mobile History disclosure, equal-height standings rows, portrait scorecard refinements and responsive Best/Worstball field and contribution views. The Latest Round chart also proves the mobile chart pattern against the former HTMX blocker.
+- ✅ **R4.1 tournament race charts** (pending integration from `codex/mobile-ui-rollout`) — Results and Leaderboard gain a phone-only player readout and tap-to-focus interaction, including crowded six-player handling. Desktop, iPad and the separate `/charts` route retain their previous output.
+- ✅ **R4.2 player progression charts** (pending integration from `codex/mobile-ui-rollout`) — Career Trend and Gross vs Par by Round state their phone measure/direction without hover; the Rounds chart reuses `player-profile.js`'s existing tick-thinning/theme-adaptation/live-breakpoint pattern (dense histories, e.g. a 17-TEG player, stay readable at 320px); the measure pill's active state no longer relies on colour alone. Desktop and iPad are unchanged.
 
 **▶ Pick up here (the remaining UI work):**
-- **Charts** (M2.8) — mobile preset (still behind the parked HTMX chart bug).
-- **Per-page pass** (M2.9) — spacing, tap targets, empty states, safe-area
-  insets; extend the card reflow to Latest Round / Records if it earns it.
+- **Scoring-analysis charts R4.3** — promote the shared pattern only where it improves phone use.
+- **Per-page pass** (M2.9) — finish spacing, tap targets, empty states, safe-area insets and the remaining route audit.
 - **Dark-mode page-title contrast** — `.page-title` is near-invisible on dark
   phones (pre-existing; part of the deferred per-page dark QA).
 

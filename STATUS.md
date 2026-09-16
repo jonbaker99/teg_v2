@@ -2,7 +2,15 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-15 (report PDF download; standfirst now Libre Franklin italic; deterministic PDF builds)
+**Last updated:** 2026-09-16 (player progression chart mobile treatment landed on rollout branch, pending review; scoring-analysis charts next)
+
+## 2026-09-16 — Player progression charts mobile treatment (pending review)
+
+`codex/mobile-ui-rollout` gains R4.2: the player profile's Career Trend and Gross vs Par by Round charts now state measure/direction without hover on phones, and the Rounds chart reuses `player-profile.js`'s existing tick-thinning/theme-adaptation/live-breakpoint pattern instead of a new chart system, keeping dense histories (a 17-TEG player was the stress case) readable at 320px. Desktop and iPad are unchanged. Committed directly (checkpoint `890c510`) to avoid losing progress ahead of the usual review step — **needs review**. Scoring-analysis charts (R4.3) are next.
+
+## 2026-09-15 — Core mobile data layouts recovered on rollout branch
+
+The mobile work lost in the reboot has been recovered and extended on `codex/mobile-ui-rollout`, based on the deployed PDF/reporting commit. The pending rollout now includes the compact interactive Latest Round view, mobile History disclosure, equal-height standings rows, portrait scorecard refinements, responsive Best/Worstball views and phone-only tournament chart readouts for Results and Leaderboard. Desktop, iPad and `/charts` retain their prior chart output. The branch remains unmerged and undeployed.
 
 ## 2026-09-15 — Pre-rendered PDF download for reports
 
@@ -333,7 +341,7 @@ Tests: 116 passed (report/admin/sync subset).
 
 ## Next priorities
 
-1. **Mobile UI + dark mode** — make the webapp app-like on phones, light + dark, **without changing the laptop/iPad render**. Direction chosen: **A — full native-app feel** (bottom tab bar, sticky app bar, reflowed data). Done: dark-mode foundation (`static/themes/dark.css` + `data-mode` toggle, opt-in default light) and the portrait scorecard. **Next: Phase M1, the app shell.** Approach + progress + pickup pointer: `webapp/MOBILE_PLAN.md`; scorecard work-package: `webapp/SCORECARD_PORT.md`; mockups in `webapp/mobile_mockups/` (served at `/mockups/`).
+1. **Mobile UI + dark mode** — the app shell, core data layouts through R3.4 and tournament chart treatment are committed on `codex/mobile-ui-rollout`. **Next: R4.2 player progression charts, then scoring-analysis charts and the remaining page audit.** Approach + progress + pickup pointer: `webapp/MOBILE_PLAN.md`; scorecard work-package: `webapp/SCORECARD_PORT.md`; mockups in `webapp/mobile_mockups/` (served at `/mockups/`).
 2. **Webapp formatting pass** — visual polish, number formatting, table styling consistency, layout refinement, plus the WIP heatmap. In progress in local branches.
 3. **REST API** — proper `/api` layer over `teg_analysis`, so any client can use the analysis layer without Python. Currently a placeholder in `teg_analysis/api/`.
 4. **Retire Streamlit** — delete `streamlit/` once the REST API and webapp are production-ready. Nothing depends on it now; it is kept only as a reference.

@@ -5,14 +5,23 @@
 {% if callout %}<p class="result-callout lb-callout">{{ callout | safe }}</p>{% endif %}
 {% include "partials/lb_cards.html" %}
 <div class="data-card lb-table-card">
-    <div class="table-wrapper">{{ table_html | safe }}</div>
+    <div class="table-wrapper table-wrapper--no-pin">{{ table_html | safe }}</div>
 </div>
 
 <h3 class="chart-title">{{ chart_title }}</h3>
 <p class="chart-description">{{ chart_subtitle }}</p>
 {% if figure_json %}
+<div class="chart-block" data-crowded-threshold="{{ chart_crowded_threshold }}">
 <div class="data-card data-card--padded">
     <div class="chart-container" data-figure="{{ figure_json }}" style="height:450px;"></div>
+</div>
+{% if chart_readout %}
+<div class="lr-readout" role="group" aria-label="Player values">
+    {% for item in chart_readout %}
+    <button type="button" class="lr-readout-entry" data-chart-focus="{{ item.code }}" aria-pressed="false" aria-label="Focus {{ item.name }}; value {{ item.value }}"><span class="lr-initials"{% if item.color %} style="color: {{ item.color }};"{% endif %}>{{ item.code }}</span><strong>{{ item.value }}</strong></button>
+    {% endfor %}
+</div>
+{% endif %}
 </div>
 {% endif %}
 

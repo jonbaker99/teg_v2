@@ -219,6 +219,60 @@ def format_value(value, chart_type):
         return f"{value:.0f}"
 
 
+#: Above this many players, on-chart end-of-line labels start to collide (the
+#: readout list below the chart -- see get_teg_chart_readout -- carries player
+#: identity/value instead; see webapp/MOBILE_PLAN.md R4's "do not force direct
+#: labels onto large fields" gate). Applied client-side only (base.html's
+#: applyMobileChartTreatment), at phone widths -- the desktop/iPad figure
+#: keeps its native legend and full annotations unconditionally (see
+#: create_cumulative_graph), so this constant never changes what the server
+#: renders. Threaded through to the client via the "chart_crowded_threshold"
+#: template context / .chart-block[data-crowded-threshold] attribute (see
+#: webapp/routes/history.py::_results_context) so there is one source of
+#: truth, not a duplicated magic number in JS.
+CROWDED_FIELD_THRESHOLD = 6
+
+
+def get_teg_player_color_map(df, chosen_teg) -> dict:
+    """Player code -> hex colour for one TEG's tournament race chart, in the
+    exact same order/assignment create_cumulative_graph uses internally
+    (first appearance in Round/Hole-sorted TEG data, taken from
+    px.colors.qualitative.Plotly).
+
+    Callers that render a player-colour readout OUTSIDE the actual Plotly
+    figure (webapp/routes/history.py's chart_readout list) must call this
+    rather than re-deriving their own mapping -- see get_round_player_color_map
+    for why two independently computed maps can disagree.
+    """
+    teg_data = df[df['TEG'] == chosen_teg].sort_values(['Round', 'Hole'])
+    codes = teg_data['Pl'].unique()
+    colors = px.colors.qualitative.Plotly[:len(codes)]
+    return dict(zip(codes, colors))
+
+
+def get_teg_chart_readout(df, chosen_teg, y_series, y_calculation=None, chart_type='default') -> list:
+    """Player code/final-value/colour list for the tournament race chart's
+    below-chart readout. Mirrors the final value each player's end-of-line
+    annotation would show (see create_cumulative_graph) -- the readout exists
+    precisely so that value/identity stays visible without hovering the
+    chart, and stays legible even for fields too crowded for on-chart labels.
+    """
+    teg_data = df[df['TEG'] == chosen_teg].sort_values(['Round', 'Hole'])
+    color_map = get_teg_player_color_map(df, chosen_teg)
+    readout = []
+    for player in teg_data['Pl'].unique():
+        player_data = teg_data[teg_data['Pl'] == player]
+        y_values = y_calculation(player_data) if y_calculation else player_data[y_series]
+        if y_values.empty:
+            continue
+        readout.append({
+            "code": str(player),
+            "value": format_value(y_values.iloc[-1], chart_type),
+            "color": color_map.get(player, ''),
+        })
+    return readout
+
+
 def create_cumulative_graph(df, chosen_teg, y_series, title, y_calculation=None, y_axis_label=None, chart_type='default', plotly_theme=None):
     teg_data = df[df['TEG'] == chosen_teg].sort_values(['Round', 'Hole'])
     teg_data['x_value'] = (teg_data['Round'] - 1) * 18 + teg_data['Hole']
@@ -228,8 +282,7 @@ def create_cumulative_graph(df, chosen_teg, y_series, title, y_calculation=None,
 
     fig = go.Figure()
 
-    colors = px.colors.qualitative.Plotly[:len(teg_data['Pl'].unique())]
-    color_map = dict(zip(teg_data['Pl'].unique(), colors))
+    color_map = get_teg_player_color_map(df, chosen_teg)
 
     traces = []
     for player in teg_data['Pl'].unique():
@@ -248,6 +301,13 @@ def create_cumulative_graph(df, chosen_teg, y_series, title, y_calculation=None,
             line=dict(width=2),
         ))
 
+        # Full "Player: value" end-of-line label -- the desktop/iPad figure
+        # contract, unconditional and unrelated to field size. The phone-only
+        # compact contract (no legend, short labels, crowded-field label
+        # suppression) is applied client-side to the SAME figure
+        # (base.html::applyMobileChartTreatment), not computed here, so this
+        # function has exactly one figure-building code path regardless of
+        # viewport.
         last_x = player_data['x_value'].iloc[-1]
         last_y = y_values.iloc[-1]
         formatted_value = format_value(last_y, chart_type)
@@ -297,8 +357,29 @@ def create_cumulative_graph(df, chosen_teg, y_series, title, y_calculation=None,
     return fig
 
 
+def get_round_player_color_map(df, chosen_teg, chosen_round) -> dict:
+    """Player code -> hex colour for one round's chart, in the exact same
+    order/assignment create_round_graph uses internally (first appearance in
+    Hole-sorted round data, taken from px.colors.qualitative.Plotly).
+
+    Callers that render a player-colour legend/readout OUTSIDE the actual
+    Plotly figure (webapp/routes/latest.py's chart_readout list, rendered by
+    partials/latest_round_tab.html's .lr-readout buttons) must call this
+    rather than re-deriving their own mapping, so a player's colour always
+    matches between the chart lines and the readout -- two independently
+    computed `dict(zip(unique_codes, palette))`s would only agree if both
+    walk the codes in the identical order, which is easy to accidentally
+    break (e.g. a differently-filtered or differently-sorted frame).
+    """
+    rd_data = df[(df['TEG'] == chosen_teg) & (df['Round'] == chosen_round)].sort_values(['Hole'])
+    codes = rd_data['Pl'].unique()
+    colors = px.colors.qualitative.Plotly[:len(codes)]
+    return dict(zip(codes, colors))
+
+
 def create_round_graph(df, chosen_teg, chosen_round, y_series, title,
-                       y_calculation=None, y_axis_label=None, chart_type='default', plotly_theme=None):
+                       y_calculation=None, y_axis_label=None, chart_type='default', plotly_theme=None,
+                       scale='normal', rewind=18, focus_player=''):
     """Cumulative chart through the holes of a single round (x = hole 1..18)."""
     rd_data = df[(df['TEG'] == chosen_teg) & (df['Round'] == chosen_round)].sort_values(['Hole'])
     rd_data = rd_data.copy()
@@ -306,39 +387,96 @@ def create_round_graph(df, chosen_teg, chosen_round, y_series, title,
     x_axis_max = 18
 
     fig = go.Figure()
-    colors = px.colors.qualitative.Plotly[:len(rd_data['Pl'].unique())]
-    color_map = dict(zip(rd_data['Pl'].unique(), colors))
+    color_map = get_round_player_color_map(df, chosen_teg, chosen_round)
 
     traces = []
     for player in rd_data['Pl'].unique():
         player_data = rd_data[rd_data['Pl'] == player]
-        y_values = y_calculation(player_data) if y_calculation else player_data[y_series]
+        y_values_raw = y_calculation(player_data) if y_calculation else player_data[y_series]
+        y_values = y_values_raw
+        if scale == 'adjusted':
+            if chart_type == 'stableford':
+                y_values = y_values_raw - (2 * player_data['Hole'])
+            elif chart_type == 'gross':
+                y_values = y_values_raw - player_data['Hole']
+        visible = player_data['Hole'] <= max(1, min(int(rewind or 18), 18))
+        line_opacity = 1 if (not focus_player or player == focus_player) else 0.18
+        # Hover text always shows the real (unadjusted) score -- same reasoning
+        # as the end-of-line label below: adjusted only reshapes the line's Y
+        # position, the score it reports must stay the actual one achieved.
+        hover_text = y_values_raw.apply(lambda v: format_value(v, chart_type))
+        hover_template = '%{fullData.name}: %{text}<extra></extra>'
 
         traces.append(go.Scatter(
-            x=player_data['x_value'], y=y_values, mode='lines+markers', name=player,
+            x=player_data.loc[visible, 'x_value'], y=y_values.loc[visible], mode='lines+markers', name=player,
             line=dict(width=2),
             marker=dict(symbol="circle", size=6, line=dict(width=1, color="white")),
+            opacity=line_opacity,
+            text=hover_text.loc[visible], hovertemplate=hover_template,
         ))
+        if not visible.all():
+            future = player_data[player_data['Hole'] >= max(1, min(int(rewind or 18), 18))]
+            traces.append(go.Scatter(
+                x=future['x_value'], y=y_values.loc[future.index],
+                mode='lines+markers', name=player, showlegend=False,
+                line=dict(width=2), marker=dict(symbol="circle", size=5), opacity=0.2,
+                text=hover_text.loc[future.index], hovertemplate=hover_template,
+                # Tags this as the faint "future" continuation so the focus()
+                # JS in latest_round.html can keep it capped at its faded
+                # opacity even when this player is the focused one, instead
+                # of raising it to full opacity (which defeated the rewind
+                # fade and made the whole line look "un-rewound").
+                meta="future",
+            ))
 
-        last_x = player_data['x_value'].iloc[-1]
-        last_y = y_values.iloc[-1]
+        # Short end-of-line label (player code + value, e.g. "GW 44") --
+        # kept per the approved reference, which shows exactly this next to
+        # each line's last plotted point. Native legend stays off
+        # (showlegend=False below) since .lr-readout already covers the
+        # "which colour is which player" job; these annotations instead
+        # cover "what's each player's live value", right at the line ends,
+        # which the readout re-states below the chart but not inline. Two
+        # letters + a short number needs far less width than the player's
+        # full name did, so the right margin can stay tight.
+        # The label text always shows the real (unadjusted) score -- "adjusted"
+        # only reshapes the line's Y position to make relative gaps easier to
+        # read; it never changes the score a player actually achieved.
+        label_idx = player_data.loc[visible, 'Hole'].idxmax() if visible.any() else player_data['Hole'].idxmax()
+        last_x = player_data.loc[label_idx, 'x_value']
+        last_y = y_values.loc[label_idx]
+        last_y_raw = y_values_raw.loc[label_idx]
         fig.add_annotation(
-            x=last_x, y=last_y, text=f"{player}: {format_value(last_y, chart_type)}",
-            showarrow=False, xanchor='left', yanchor='middle', xshift=5,
-            font=dict(size=10, color=color_map[player]),
+            x=last_x, y=last_y, text=f"{player} {format_value(last_y_raw, chart_type)}",
+            showarrow=False, xanchor='left', yanchor='middle', xshift=4,
+            font=dict(size=9, color=color_map[player]),
         )
 
     fig.add_traces(traces)
     fig.update_layout(
-        yaxis_title=y_axis_label if y_axis_label else f'Cumulative {y_series}',
         hovermode='x unified',
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, traceorder='normal', itemsizing='constant'),
-        margin=dict(r=100, t=0, b=10, l=0),
+        # Native Plotly legend stays off -- .lr-readout (the player
+        # focus/value buttons below the chart) already does that job. The
+        # y-axis title text is dropped too (numeric ticks alone, per the
+        # reference) to free up horizontal space on phone widths; the tight
+        # right margin only needs to fit the short end-of-line labels above,
+        # not the wide legend/title layout this used to carry.
+        showlegend=False,
+        margin=dict(r=36, t=8, b=10, l=0),
         font=dict(family="monospace"),
     )
     fig.update_xaxes(visible=True, showline=True, linewidth=1, linecolor="#ccc",
-                     ticks="outside", tickmode="linear", tick0=1, dtick=1,
-                     title_text="Hole", range=[0.5, 18.5])
+                     ticks="outside", tickmode="linear", tick0=1, dtick=3,
+                     title_text="Hole", range=[0.5, 18.5],
+                     # Light vertical gridlines (following the same reduced
+                     # tick spacing), matching the reference's combined
+                     # horizontal+vertical grid -- the horizontal grid
+                     # already comes from get_chart_style()'s yaxis.showgrid.
+                     showgrid=True, gridcolor="rgba(0,0,0,0.06)", gridwidth=1)
+    fig.update_yaxes(title_text=None)
+    if int(rewind or 18) != 18:
+        # Rewind uses the endpoint as the inspection point. Future holes remain
+        # visible as a faint continuation without a misleading unified hover.
+        fig.update_layout(hovermode=False)
     if chart_type == 'ranking':
         fig.update_yaxes(autorange='reversed')
     for trace in fig.data:

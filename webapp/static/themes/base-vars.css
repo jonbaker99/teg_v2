@@ -224,25 +224,62 @@ h1, h2, h3, h4, h5, h6 {
     display: block;
     font-weight: 400;
 }
+/* Flag + region sit together on their own row beneath "TEG N Year",
+   flag sized to the region text's line height rather than a full-height
+   swatch -- roughly matching that row's width to the label above it. */
+.history-table .area-row {
+    display: flex;
+    align-items: center;
+    gap: 0.35em;
+    margin-top: -0.15rem;
+}
 .history-table .area-label {
     display: block;
-    margin-top: -0.15rem;
     font-size: 0.8125rem;
     color: var(--text-muted);
 }
+/* Year renders twice (once per line placement) so mobile.css can move it
+   from the TEG-number line to the compact area line without a second
+   server round-trip; only one copy is ever visible at a time -- see the
+   .history-page override in mobile.css for the mobile-width swap. */
+.history-table .teg-year--mobile { display: none; }
+/* Mobile's flag+year line (second copy of the flag, shown only in
+   .history-page); desktop keeps the region-row flag instead. */
+.history-table .teg-mobile-meta { display: none; }
+/* Full column names ("HMM Wooden Spoon") for desktop; mobile.css swaps to
+   the approved prototype's short Trophy/Jacket/Spoon heading instead. */
+.history-table .th-short { display: none; }
 .history-table .teg-cell {
-    display: flex;
-    align-items: center;
-    gap: 0.55em;
+    display: block;
 }
-.history-table .teg-cell .teg-flag.fi {
+/* A TEG with round_info.csv metadata renders .teg-cell as a real <button>
+   (mobile's disclosure toggle) instead of a <div> -- reset default button
+   chrome so it looks identical to the plain cell everywhere until the mobile
+   disclosure styling (mobile.css, .history-page) adds the +/- affordance. */
+.history-table button.teg-cell {
+    width: 100%;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+.history-table .area-row .teg-flag.fi {
     flex-shrink: 0;
-    align-self: stretch;
-    width: 1.3em;
+    width: 1em;
     border-radius: 2px;
 }
 .history-table .teg-text {
     min-width: 0;
+}
+/* Trailing disclosure-indicator column: mobile-only (.history-page,
+   mobile.css puts the +/- here instead of overlaying the TEG cell). Desktop
+   keeps the TEG cell itself as the click target and shows no column for it. */
+.history-table th.history-toggle-th,
+.history-table td.history-toggle-td {
+    display: none;
 }
 /* Emphasise the main trophy winner (first name column) */
 .history-table tbody td:nth-child(2) {
@@ -252,16 +289,26 @@ h1, h2, h3, h4, h5, h6 {
 .history-table tbody td {
     white-space: normal;
 }
-/* Default: inline-block container (measurable height) with inline first/last */
-.history-table .player-name {
+/* Default: inline-block container (measurable height) with inline first/last.
+   Shared with .leaderboard-table (Standings, R3.2) -- same wrap/no-wrap
+   consistency problem, same JS (base.html) toggling .names-break. */
+.history-table .player-name,
+.leaderboard-table .player-name,
+table.leaderboard .player-name {
     display: inline-block;
 }
-.history-table .player-name .first {
+.history-table .player-name .first,
+.leaderboard-table .player-name .first,
+table.leaderboard .player-name .first {
     display: inline;
 }
 /* JS adds .names-break when any name wraps; all names then stack */
 .history-table.names-break .player-name .first,
-.history-table.names-break .player-name .last {
+.history-table.names-break .player-name .last,
+.leaderboard-table.names-break .player-name .first,
+.leaderboard-table.names-break .player-name .last,
+table.leaderboard.names-break .player-name .first,
+table.leaderboard.names-break .player-name .last {
     display: block;
 }
 
@@ -1156,20 +1203,26 @@ body.ts-f5 .page-title-area .page-title {
 }
 
 
-/* ── Section Title (in-page, Option D style) ── */
+/* ── Section Title — small-caps mono "new content block starts here" marker.
+   Canonical spec, shared by .card-header below and by /latest-round's
+   "Round leaderboard" heading, which now just carries this class directly
+   (partials/latest_round_tab.html) instead of its own bespoke, mobile-only
+   rule (see 2026-09 heading-hierarchy decision). ── */
 .section-title {
-    font-family: var(--font-heading), serif;
-    font-size: 1.25rem;
+    font-family: 'Roboto Mono', monospace;
     font-weight: 700;
-    color: var(--text-primary);
-    margin: 0 0 1rem 0;
+    font-size: 13px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent, #17683c);
     line-height: 1.3;
+    margin: 0 0 1rem 0;
 }
 /* Breathing room above any section title that follows other content, so
    stacked sections within a panel get a consistent gap without per-template
    margins. (First section in a panel has no preceding sibling → no gap.) */
 * + .section-title {
-    margin-top: 1.75rem;
+    margin-top: 2.5rem;
 }
 
 /* ── Layout utilities ── */
@@ -1272,59 +1325,24 @@ body.ts-f5 .page-title-area .page-title {
     margin-top: 1.5rem;
 }
 
-/* ── Card header — styled via body class ch-X ── */
+/* ── Card header — now unconditional (2026-09 heading-hierarchy decision).
+   Previously gated behind a body.ch-ch1/ch2/ch3 class from a cookie-driven
+   design-lab switcher (see webapp/theme.py); "card header" as a separate
+   on/off category is retired and folded into the same section-title mono-caps
+   treatment. The body.ch-* classes/cookie machinery still exist (design lab
+   route) but nothing reads them for this any more. */
 .card-header {
-    display: none; /* hidden by default and when ch-ch0 */
-}
-
-/* CH1 — Grey bar, mono caps (sits visually on top of data-card) */
-body.ch-ch1 .card-header {
-    display: block;
-    background: #e2dfda;
-    padding: 0.4rem 1rem;
-    font-family: 'Roboto Mono', monospace;
-    font-size: 0.68rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #555;
-    border-radius: 0.25rem 0.25rem 0 0;
-    margin-top: 2rem;
-    margin-bottom: 0;
-}
-body.ch-ch1 .card-header:first-child { margin-top: 0; }
-body.ch-ch1 .card-header + .data-card {
-    border-radius: 0 0 0.25rem 0.25rem;
-    margin-top: 0;
-}
-
-/* CH2 — Mono label above card (on panel surface) */
-body.ch-ch2 .card-header {
     display: block;
     font-family: 'Roboto Mono', monospace;
-    font-size: 0.7rem;
     font-weight: 700;
-    color: #888;
+    font-size: 13px;
+    letter-spacing: 0.09em;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
-    padding-bottom: 0.4rem;
-    border-bottom: 1px solid #e0ddd8;
-    margin-top: 2rem;
-    margin-bottom: 0.5rem;
+    color: var(--accent, #17683c);
+    line-height: 1.3;
+    margin: 2.5rem 0 1rem 0;
 }
-body.ch-ch2 .card-header:first-child { margin-top: 0; }
-
-/* CH3 — Serif title above card (editorial feel) */
-body.ch-ch3 .card-header {
-    display: block;
-    font-family: 'Lora', serif;
-    font-size: 1rem;
-    font-weight: 400;
-    color: #1a1a1a;
-    margin-top: 2rem;
-    margin-bottom: 0.5rem;
-}
-body.ch-ch3 .card-header:first-child { margin-top: 0; }
+.card-header:first-child { margin-top: 0; }
 
 /* ── Chart description ── */
 .chart-description {
@@ -1429,17 +1447,22 @@ body.ch-ch3 .card-header:first-child { margin-top: 0; }
     font-weight: 600;
 }
 
-/* Chart block heading — a notch smaller than a .section-title. */
+/* Chart block heading — same canonical "new content block starts here" marker
+   as .section-title (2026-09: a table between a section header and a chart
+   title breaks the block, so every live chart title needs its own marker,
+   not a smaller/plain style). */
 .chart-title {
-    font-family: var(--font-heading), serif;
-    font-size: 1.0625rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin: 0;
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent, #17683c);
     line-height: 1.3;
+    margin: 0;
 }
 * + .chart-title {
-    margin-top: 1.75rem;
+    margin-top: 2.5rem;
 }
 
 /* Placeholder shown where the race chart will be rebuilt (roadmap 1b). */
@@ -1525,4 +1548,132 @@ body.ch-ch3 .card-header:first-child { margin-top: 0; }
 }
 .chart-note {
     margin-top: 0.5rem;
+}
+
+/* ── Latest Round chart tools, desktop/iPad baseline (R2) ──
+   Rewind, scale toggle and player-focus readout are new controls this
+   mobile rollout introduced -- there is no prior desktop presentation to
+   stay byte-identical to. mobile.css's ≤640px rules (same class names,
+   scoped under .latest-round-page #lr-content) layer their touch-sized
+   overrides on top of this baseline; nothing here is media-gated. */
+.lr-chart-tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+    margin-top: 0.75rem;
+}
+.lr-readout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+.lr-readout-entry {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.6rem;
+    border: 1px solid var(--select-border);
+    border-radius: 9999px;
+    background: var(--btn-inactive-bg);
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+.lr-readout-entry:hover {
+    border-color: var(--accent);
+    color: var(--text-primary);
+}
+.lr-readout-entry.is-active {
+    background: var(--table-toprank-bg);
+    border-color: var(--accent);
+    color: var(--text-primary);
+    font-weight: 700;
+}
+.lr-initials {
+    color: var(--accent);
+    font: 700 0.75rem 'Roboto Mono', monospace;
+}
+.lr-readout-entry strong {
+    font: 600 0.8125rem 'Roboto Mono', monospace;
+}
+.scale-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+.scale-switch-label {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+}
+.scale-switch[aria-checked="false"] .scale-switch-label:first-of-type,
+.scale-switch[aria-checked="true"] .scale-switch-label:last-of-type {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+.switch-track {
+    position: relative;
+    flex: none;
+    width: 34px;
+    height: 18px;
+    border: 1px solid var(--select-border);
+    border-radius: 999px;
+    background: var(--btn-inactive-bg);
+    transition: background .15s ease, border-color .15s ease;
+}
+.scale-switch[aria-checked="true"] .switch-track {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+.switch-thumb {
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    transition: transform .15s ease;
+}
+.scale-switch[aria-checked="true"] .switch-thumb {
+    transform: translateX(16px);
+}
+.lr-rewind {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.lr-rewind-caption {
+    color: var(--text-muted);
+    font: 700 0.6875rem/1.2 'Roboto Mono', monospace;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+.lr-rewind input {
+    accent-color: var(--accent);
+}
+.lr-rewind-step {
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 1px solid var(--select-border);
+    border-radius: 0.4rem;
+    color: var(--accent);
+    background: var(--bg-card);
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+}
+.lr-rewind-step:hover {
+    border-color: var(--accent);
+}
+.lr-rewind output {
+    min-width: 2ch;
+    color: var(--text-primary);
+    font-size: 0.8125rem;
+    text-align: right;
 }

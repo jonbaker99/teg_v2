@@ -435,7 +435,10 @@ def build_single_round_combined_portrait(df: pd.DataFrame) -> str:
     sf = {int(r['Hole']): int(r['Stableford']) for _, r in df.iterrows()}
     title = {int(r['Hole']): _cell_title(r) for _, r in df.iterrows()}
 
-    parts = ['<table class="scorecard-table-portrait">',
+    # Only two data columns here ("Gross"/"Stableford" -- words, not the
+    # player/round codes the other portrait tables use), so the shared narrow
+    # score-column width would clip the headers; sc-combined widens them.
+    parts = ['<table class="scorecard-table-portrait sc-combined">',
              _portrait_header(['Gross', 'Stableford']), '<tbody>']
 
     def data_rows(holes):
@@ -774,16 +777,100 @@ def build_bestball_worstball_scorecard(round_data: pd.DataFrame) -> str:
     return ''.join(parts)
 
 
+def build_bestball_worstball_scorecard_portrait(round_data: pd.DataFrame) -> str:
+    """Portrait field card: holes as rows, Best/Worst team columns then one
+    column per player -- the holes-as-rows companion to
+    ``build_bestball_worstball_scorecard``, following the same row/column
+    swap ``_round_comparison_portrait`` uses for the regular field card.
+
+    Args:
+        round_data: all players in one round, with Pl, Player, Hole, PAR, Sc,
+            GrossVP cols.
+
+    Returns:
+        HTML string for the portrait combined table.
+    """
+    if round_data is None or round_data.empty:
+        return "<p class='text-muted text-sm'>No data available.</p>"
+
+    sorted_players = _get_sorted_players(round_data)
+
+    hole_min, hole_max = {}, {}
+    for hole in range(1, 19):
+        vals = round_data[round_data['Hole'] == hole]['GrossVP']
+        if not vals.empty:
+            hole_min[hole] = int(vals.min())
+            hole_max[hole] = int(vals.max())
+
+    vp_by_player, title_by_player = {}, {}
+    for code, _ in sorted_players:
+        pdata = round_data[round_data['Pl'] == code].sort_values('Hole')
+        vp_by_player[code] = {int(r['Hole']): int(r['GrossVP']) for _, r in pdata.iterrows()}
+        title_by_player[code] = {int(r['Hole']): _cell_title(r) for _, r in pdata.iterrows()}
+
+    parts = ['<table class="scorecard-table-portrait bw-scorecard-portrait">',
+             '<thead><tr><th class="hole-header">Hole</th>'
+             '<th class="col-header">Best</th><th class="col-header">Worst</th>']
+    for code, _ in sorted_players:
+        parts.append(f'<th class="col-header">{code}</th>')
+    parts.append('</tr></thead><tbody>')
+
+    def data_rows(holes):
+        for hole in holes:
+            parts.append(f'<tr><td class="hole-label">{hole}</td>')
+            parts.append(_bw_team_cell(hole_min.get(hole)))
+            parts.append(_bw_team_cell(hole_max.get(hole)))
+            for code, _ in sorted_players:
+                parts.append(_bw_player_cell(vp_by_player[code].get(hole), hole_min.get(hole),
+                                              hole_max.get(hole), title_by_player[code].get(hole, '')))
+            parts.append('</tr>')
+
+    def totals_row(label, holes, extra_cls=''):
+        cls = f'totals-row {extra_cls}'.strip()
+        best_total = sum(hole_min[h] for h in holes if h in hole_min)
+        worst_total = sum(hole_max[h] for h in holes if h in hole_max)
+        parts.append(f'<tr class="{cls}"><td class="hole-label">{label}</td>')
+        parts.append(f'<td class="totals">{_vp_label(best_total)}</td>')
+        parts.append(f'<td class="totals">{_vp_label(worst_total)}</td>')
+        for code, _ in sorted_players:
+            total = sum(vp_by_player[code][h] for h in holes if h in vp_by_player[code])
+            parts.append(f'<td class="totals">{_vp_label(total)}</td>')
+        parts.append('</tr>')
+
+    data_rows(_FRONT)
+    totals_row('OUT', list(_FRONT), 'front-back-divider')
+    data_rows(_BACK)
+    totals_row('IN', list(_BACK))
+    totals_row('TOTAL', list(_ALL), 'grand-total')
+    parts.append('</tbody></table>')
+    return ''.join(parts)
+
+
+def build_bestball_worstball_responsive(round_data: pd.DataFrame) -> str:
+    """Responsive field card: the existing landscape table (holes as columns)
+    on desktop/iPad, the portrait table (holes as rows) on phone -- pure-CSS
+    toggle via .sc-landscape/.sc-portrait (mobile.css), matching the pattern
+    build_round_comparison_responsive already uses for the regular field card.
+    """
+    landscape = build_bestball_worstball_scorecard(round_data)
+    portrait = build_bestball_worstball_scorecard_portrait(round_data)
+    return (
+        f'<div class="sc-landscape data-card"><div class="table-wrapper">{landscape}</div></div>'
+        f'<div class="sc-portrait data-card"><div class="sc-scroll">{portrait}</div></div>'
+    )
+
+
 def build_bestball_contribution_bars(round_data: pd.DataFrame) -> str:
     """Build two side-by-side contribution tables (Bestball, Worstball) for the
     round.
 
-    Each table has one row per player (ordered to match the field card) and
-    three columns: Player, Impact (the signed shot contribution — the headline
-    number), and Holes (a CSS bar overlaying the solid 'solo' count on the pale
-    'holes' count). The two tables sit next to each other when there's room and
-    wrap to stacked when narrow. The holes bars share one scale across both
-    tables so they're comparable.
+    Each table has one row per player (ordered by impact, most impactful
+    first) with three columns: Player, the signed Impact value (headline
+    number, exact zero shown as literal '0', unchanged from the CSS-bar
+    version) and two plain, de-emphasised numeric columns -- Holes (total
+    holes contributed to) and Solo (the subset earned alone) -- replacing the
+    former solo/shared progress bar. The two tables sit next to each other
+    when there's room and wrap to stacked when narrow.
     """
     if round_data is None or round_data.empty:
         return "<p class='text-muted text-sm'>No data available.</p>"
@@ -796,51 +883,34 @@ def build_bestball_contribution_bars(round_data: pd.DataFrame) -> str:
     by_pl = {row['Pl']: row for _, row in contrib.iterrows()}
     rows = [(name, by_pl[code]) for code, name in _get_sorted_players(round_data) if code in by_pl]
 
-    holes_scale = max([1] + [int(r['bb_holes']) for _, r in rows] + [int(r['wb_holes']) for _, r in rows])
-
-    # Holes bar fills to at most FILL_MAX% of the track, leaving room for the
-    # count label that sits just past the end of the bar.
-    FILL_MAX = 72
-
-    def _pct(value: int) -> int:
-        v = abs(int(value))
-        return 0 if v == 0 else max(6, round(FILL_MAX * v / holes_scale))
-
-    def _holes_bar(holes: int, solo: int, kind: str) -> str:
-        hp, sp = _pct(holes), _pct(solo)
-        label = f'{holes}<small>·{solo}</small>' if holes else '–'
-        zcls = '' if holes else ' bw-bar-zero'
-        return (f'<div class="bw-bar bw-bar--{kind}">'
-                '<div class="bw-bar-track">'
-                f'<div class="bw-bar-fill bw-bar-fill--pale" style="width:{hp}%"></div>'
-                f'<div class="bw-bar-fill bw-bar-fill--solid" style="width:{sp}%"></div>'
-                '</div>'
-                f'<span class="bw-bar-val{zcls}" style="left:calc({hp}% + 6px)">{label}</span>'
-                '</div>')
-
-    def _impact(value: int, kind: str) -> str:
-        v = int(value)
-        if v == 0:
-            return '<span class="bw-impact bw-impact--zero">–</span>'
-        return f'<span class="bw-impact bw-impact--{kind}">{_vp_label(v)}</span>'
+    def _impact_mark(value: int, kind: str) -> str:
+        if value == 0:
+            return '<span class="bw-impact bw-impact--zero">0</span>'
+        return f'<span class="bw-impact bw-impact--{kind}">{_vp_label(value)}</span>'
 
     def _table(kind: str, fmt_label: str, holes_key: str, solo_key: str, impact_key: str) -> str:
-        out = [f'<div class="bw-bars-col">',
+        # Bestball impact is <=0 (shots saved); ascending puts the biggest
+        # saving first. Worstball impact is >=0 (shots added); descending
+        # puts the biggest addition first. Either way that's "most impactful
+        # first" for the sign this table actually uses. Stable, so equal
+        # impacts keep the gross-score order.
+        ordered = sorted(rows, key=lambda nr: int(nr[1][impact_key]), reverse=(kind == 'worst'))
+        out = ['<div class="bw-bars-col">',
                f'<div class="bw-bars-title bw-bars-title--{kind}">{fmt_label}</div>',
                '<table class="bw-bars-table"><colgroup>'
-               '<col class="bw-bars-player"><col class="bw-bars-impact"><col></colgroup><thead>',
+               '<col class="bw-bars-player"><col class="bw-bars-impact"><col class="bw-bars-context">'
+               '<col class="bw-bars-context"></colgroup><thead>',
                '<tr><th class="player-label">Player</th>'
-               '<th class="bw-col-impact">Impact</th><th>Holes</th></tr>',
+               '<th class="bw-col-impact">Impact</th>'
+               '<th class="bw-col-context">Holes</th><th class="bw-col-context">Solo</th></tr>',
                '</thead><tbody>']
-        # Sort by impact magnitude, biggest first (bestball biggest negative
-        # first, worstball biggest positive first), down to zero. Stable, so
-        # equal impacts keep the gross-score order.
-        ordered = sorted(rows, key=lambda nr: abs(int(nr[1][impact_key])), reverse=True)
         for name, r in ordered:
+            holes, solo, impact = int(r[holes_key]), int(r[solo_key]), int(r[impact_key])
             out.append('<tr>')
             out.append(f'<td class="player-label">{_player_name_spans(name)}</td>')
-            out.append(f'<td class="bw-col-impact">{_impact(int(r[impact_key]), kind)}</td>')
-            out.append(f'<td>{_holes_bar(int(r[holes_key]), int(r[solo_key]), kind)}</td>')
+            out.append(f'<td class="bw-col-impact">{_impact_mark(impact, kind)}</td>')
+            out.append(f'<td class="bw-col-context">{holes}</td>')
+            out.append(f'<td class="bw-col-context">{solo}</td>')
             out.append('</tr>')
         out.append('</tbody></table></div>')
         return ''.join(out)

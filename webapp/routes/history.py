@@ -10,7 +10,7 @@ from fastapi import APIRouter, Request, Query
 from fastapi.templating import Jinja2Templates
 from markupsafe import escape
 
-from teg_analysis.core.players import get_name_to_code
+from teg_analysis.core.players import get_name_to_code, get_player_name
 from teg_analysis.analysis.history import (
     prepare_complete_history_table_fast,
     calculate_trophy_jacket_doubles,
@@ -23,6 +23,8 @@ from teg_analysis.analysis.player_rankings import (
     create_combined_position_summary,
 )
 from teg_analysis.core.metadata import get_scorecard_data
+from teg_analysis.io.file_operations import read_file
+from teg_analysis.constants import ROUND_INFO_CSV
 from teg_analysis.display.scorecards import (
     build_round_comparison_responsive,
 )
@@ -40,7 +42,13 @@ from webapp.deps import (
     get_net_competition_measure,
     get_rounds_for_teg,
 )
-from webapp.chart_utils import create_cumulative_graph, adjusted_stableford, adjusted_grossvp
+from webapp.chart_utils import (
+    create_cumulative_graph,
+    adjusted_stableford,
+    adjusted_grossvp,
+    get_teg_chart_readout,
+    CROWDED_FIELD_THRESHOLD,
+)
 from webapp.tables import df_to_html as _df_to_html
 
 logger = logging.getLogger(__name__)
@@ -109,41 +117,146 @@ def _wrap_player_name(name) -> str:
             f"<span class='last'>{escape(last)}</span></span>")
 
 
-def _history_table_html(df: pd.DataFrame) -> str:
+def _round_metadata_by_teg() -> dict:
+    """{TEGNum: [{"round": n, "course": str, "date": str}, ...]}, sorted by round,
+    from round_info.csv (the same canonical per-round source `get_teg_metadata`
+    already reads). Powers the mobile History disclosure row's round-by-round
+    detail. Read and grouped once per request, not per table row. Missing or
+    unreadable metadata degrades to an empty dict -- the winners table itself
+    must never depend on this succeeding."""
+    try:
+        round_info = read_file(ROUND_INFO_CSV)
+    except Exception:
+        logger.exception("_round_metadata_by_teg: round_info.csv unavailable")
+        return {}
+    result: dict = {}
+    for teg_num, group in round_info.sort_values(["TEGNum", "Round"]).groupby("TEGNum"):
+        result[int(teg_num)] = [
+            {"round": int(r["Round"]), "course": str(r["Course"]), "date": str(r["Date"])}
+            for _, r in group.iterrows()
+        ]
+    return result
+
+
+def _history_table_html(df: pd.DataFrame, round_metadata: dict | None = None) -> str:
     """Render the TEG History table the way the Streamlit page does: a compound
     TEG/area cell (area as smaller secondary text beneath the TEG label), the
     standalone Area column dropped, the TEG Trophy winner emphasised, and player
-    names wrapped in first/last spans."""
+    names wrapped in first/last spans.
+
+    When `round_metadata` (see `_round_metadata_by_teg`) has an entry for a TEG,
+    its TEG cell becomes a disclosure toggle revealing a full-width row with the
+    area and each round's course/date -- the mobile History layout's expandable
+    detail (desktop is unaffected; the toggle is a real <button>, but its default
+    chrome is reset to match the plain cell it replaces, so it looks identical
+    until interacted with). A TEG absent from round_metadata (e.g. a not-yet-
+    played "TBC" entry) renders a plain, non-interactive TEG cell instead."""
     if df is None or df.empty:
         return "<p class='text-muted text-sm'>No data available.</p>"
 
+    round_metadata = round_metadata or {}
     name_cols = ["TEG Trophy", "Green Jacket", "HMM Wooden Spoon"]
-    headers = ["TEG"] + name_cols
+    # Trailing unlabelled column: the round/course/date disclosure "+/-"
+    # indicator. Desktop keeps the TEG cell itself as the full-width click
+    # target (unchanged) and never shows this column (display:none,
+    # base-vars.css); mobile hides the indicator that used to overlay the TEG
+    # cell and shows it here instead, in a narrow final column.
+    headers = ["TEG"] + name_cols + [""]
+    # Mobile columns are too narrow for "HMM Wooden Spoon" etc. on one line;
+    # desktop keeps the full name (default-visible .th-full), mobile swaps to
+    # the approved prototype's short Trophy/Jacket/Spoon heading (.th-short,
+    # hidden by default in base-vars.css, shown only in .history-page).
+    short_headers = {"TEG Trophy": "Trophy", "Green Jacket": "Jacket", "HMM Wooden Spoon": "Spoon"}
 
     rows = ["<table class='teg-table history-table'>", "<thead><tr>"]
     for col in headers:
-        rows.append(f"<th>{escape(col)}</th>")
+        short = short_headers.get(col)
+        if short:
+            rows.append(f"<th><span class='th-full'>{escape(col)}</span><span class='th-short'>{escape(short)}</span></th>")
+        elif col:
+            rows.append(f"<th>{escape(col)}</th>")
+        else:
+            rows.append("<th class='history-toggle-th'></th>")
     rows.append("</tr></thead><tbody>")
 
     for _, row in df.iterrows():
-        teg = escape(str(row.get("TEG", "")))
+        teg_raw = str(row.get("TEG", ""))
+        # Split the trailing "(YYYY)" out of its own span -- desktop keeps
+        # showing it inline (unstyled, so visually identical to before); the
+        # mobile column is narrow enough that "TEG 2" alone already needs
+        # two lines with the flag, so mobile.css hides .teg-year there.
+        teg_parts = re.match(r"^(.*?)(?:\s*\(([^)]*)\))?$", teg_raw)
+        teg_main = escape(teg_parts.group(1) if teg_parts else teg_raw)
+        teg_year = escape(teg_parts.group(2)) if teg_parts and teg_parts.group(2) else ""
         area_raw = str(row.get("Area", ""))
         area = area_raw.split(",")[0].strip()
         flag_html = _area_flag_html(area_raw)
-        teg_cell = (
-            f"<div class='teg-cell'>"
-            f"{flag_html}"
+        teg_num_match = re.search(r"\d+", teg_raw)
+        teg_num = int(teg_num_match.group()) if teg_num_match else None
+        rounds = round_metadata.get(teg_num) if teg_num is not None else None
+
+        # Year renders twice, CSS-toggled by viewport (same technique as the
+        # short/full headers above): desktop's original compound label keeps
+        # it on the TEG-number line (.teg-year, default-visible); the
+        # approved prototype's compact mobile line puts it with the flag/
+        # area instead (.teg-year--mobile, hidden by default, shown only in
+        # .history-page) -- "TEG 2" alone fits the narrow column, but the
+        # year is still visible at a glance rather than hidden behind a tap.
+        # Mobile's collapsed row shows two lines: "TEG n" then flag + year --
+        # no region text there (region only appears in the expanded detail
+        # row). The flag renders twice, CSS-toggled by viewport (same
+        # technique as the year above): desktop puts it on the region line,
+        # sized to that line's text height (.teg-flag-desktop, inside
+        # .area-row); mobile shows a second copy inline with the year on its
+        # own line (.teg-mobile-meta).
+        teg_flag_desktop = f"<span class='teg-flag-desktop'>{flag_html}</span>" if flag_html else ""
+        teg_label = (
             f"<span class='teg-text'>"
-            f"<span class='teg-label'>{teg}</span>"
-            f"<span class='area-label'>{escape(area)}</span>"
+            f"<span class='teg-label'>{teg_main}"
+            + (f" <span class='teg-year'>{teg_year}</span>" if teg_year else "")
+            + f"</span>"
+            f"<span class='area-row'>{teg_flag_desktop}<span class='area-label'>{escape(area)}</span></span>"
+            f"<span class='teg-mobile-meta'>{flag_html}"
+            + (f"<span class='teg-year--mobile'>{teg_year}</span>" if teg_year else "")
+            + f"</span>"
             f"</span>"
-            f"</div>"
         )
+        detail_id = f"history-{teg_num}-details"
+        if rounds:
+            teg_cell = (
+                f"<button type='button' class='teg-cell history-toggle' "
+                f"data-history-toggle aria-expanded='false' aria-controls='{detail_id}'>"
+                f"{teg_label}</button>"
+            )
+        else:
+            teg_cell = f"<div class='teg-cell'>{teg_label}</div>"
+
         rows.append("<tr>")
         rows.append(f"<td>{teg_cell}</td>")
         for col in name_cols:
             rows.append(f"<td>{_wrap_player_name(row.get(col))}</td>")
+        if rounds:
+            rows.append(
+                "<td class='history-toggle-td'>"
+                "<span class='history-toggle-indicator' aria-hidden='true'></span></td>"
+            )
+        else:
+            rows.append("<td class='history-toggle-td'></td>")
         rows.append("</tr>")
+
+        if rounds:
+            courses = "".join(
+                f"<li><b>R{r['round']}</b><span>{escape(r['course'])}</span>"
+                f"<small>{escape(r['date'])}</small></li>"
+                for r in rounds
+            )
+            rows.append(
+                f"<tr class='history-detail-row' id='{detail_id}' hidden>"
+                f"<td colspan='{len(headers)}'>"
+                f"<div class='history-meta'><p><b>{escape(area_raw)}</b></p>"
+                f"<ol>{courses}</ol></div>"
+                f"</td></tr>"
+            )
     rows.append("</tbody></table>")
     return "".join(rows)
 
@@ -210,7 +323,8 @@ def _ranking_table_html(df: pd.DataFrame, player_col: str = "Player",
 def history_page(request: Request):
     try:
         df = prepare_complete_history_table_fast()
-        table_html = _history_table_html(df)
+        round_metadata = _round_metadata_by_teg()
+        table_html = _history_table_html(df, round_metadata)
         table_html += ("<p class='text-muted text-sm mt-3'>*Green Jacket awarded in TEG 5 for "
                        "best stableford round; DM had best gross score.</p>")
     except Exception as e:
@@ -384,8 +498,8 @@ def _leaderboard_table_html(df: pd.DataFrame) -> str:
             val = row[col]
             if col == "Player":
                 code = get_name_to_code().get(str(val))
-                cell = (f"<a href='/player/{code}'>{escape(str(val))}</a>" if code
-                        else escape(str(val)))
+                name_html = _wrap_player_name(val)
+                cell = f"<a href='/player/{code}'>{name_html}</a>" if code else name_html
                 rows.append(f"<td class='col-player'>{cell}</td>")
             elif col == "Rank":
                 rows.append(f"<td class='col-rank'>{escape(str(val))}</td>")
@@ -445,33 +559,40 @@ def _results_chart_meta(tab: str, variant: str, net_measure: str, teg_name: str)
     }
 
 
+def _race_series_spec(tab: str, variant: str, net_measure: str) -> tuple:
+    """Resolve (y_series, y_calculation, chart_type, y_axis_label) for a
+    tournament race chart's (tab, variant, net_measure) combination. Shared
+    by _build_race_figure_json and _build_race_chart_readout so the figure
+    and its below-chart readout always describe the same series."""
+    stableford = net_measure == "Stableford"
+
+    if tab == "gross":
+        if variant == "ranking":
+            return "Rank_GrossVP_TEG", None, "ranking", "Tournament Ranking"
+        elif variant == "adjusted":
+            return "GrossVP Cum TEG", adjusted_grossvp, "gross", "Gross vs bogey"
+        else:
+            return "GrossVP Cum TEG", None, "gross", "Cumulative gross vs par"
+
+    if variant == "ranking":
+        return "Rank_Stableford_TEG", None, "ranking", "Tournament Ranking"
+    elif variant == "adjusted":
+        if stableford:
+            return "Stableford Cum TEG", adjusted_stableford, "stableford", "Stableford (adjusted)"
+        else:
+            return "NetVP Cum TEG", adjusted_grossvp, "gross", "Net vs par (adjusted)"
+    else:
+        if stableford:
+            return "Stableford Cum TEG", None, "stableford", "Cumulative Stableford"
+        else:
+            return "NetVP Cum TEG", None, "gross", "Cumulative net vs par"
+
+
 def _build_race_figure_json(tab: str, variant: str, net_measure: str, teg_name: str) -> str | None:
     """Build race chart JSON for the given (tab, variant, net_measure) combination."""
     try:
         df = cached_load_all_data()
-        stableford = net_measure == "Stableford"
-
-        if tab == "gross":
-            if variant == "ranking":
-                y_series, y_calc, chart_type, ylabel = "Rank_GrossVP_TEG", None, "ranking", "Tournament Ranking"
-            elif variant == "adjusted":
-                y_series, y_calc, chart_type, ylabel = "GrossVP Cum TEG", adjusted_grossvp, "gross", "Gross vs bogey"
-            else:
-                y_series, y_calc, chart_type, ylabel = "GrossVP Cum TEG", None, "gross", "Cumulative gross vs par"
-        else:
-            if variant == "ranking":
-                y_series, y_calc, chart_type, ylabel = "Rank_Stableford_TEG", None, "ranking", "Tournament Ranking"
-            elif variant == "adjusted":
-                if stableford:
-                    y_series, y_calc, chart_type, ylabel = "Stableford Cum TEG", adjusted_stableford, "stableford", "Stableford (adjusted)"
-                else:
-                    y_series, y_calc, chart_type, ylabel = "NetVP Cum TEG", adjusted_grossvp, "gross", "Net vs par (adjusted)"
-            else:
-                if stableford:
-                    y_series, y_calc, chart_type, ylabel = "Stableford Cum TEG", None, "stableford", "Cumulative Stableford"
-                else:
-                    y_series, y_calc, chart_type, ylabel = "NetVP Cum TEG", None, "gross", "Cumulative net vs par"
-
+        y_series, y_calc, chart_type, ylabel = _race_series_spec(tab, variant, net_measure)
         fig = create_cumulative_graph(
             df, teg_name, y_series, title="",
             y_calculation=y_calc, y_axis_label=ylabel, chart_type=chart_type,
@@ -479,6 +600,23 @@ def _build_race_figure_json(tab: str, variant: str, net_measure: str, teg_name: 
         return fig.to_json()
     except Exception:
         return None
+
+
+def _build_race_chart_readout(tab: str, variant: str, net_measure: str, teg_name: str) -> list:
+    """Player code/name/value/colour list for the race chart's below-chart
+    readout (see get_teg_chart_readout) -- identifies each line without
+    hovering the chart, and stays legible even on fields too crowded for
+    the chart's own on-chart labels (create_cumulative_graph's
+    CROWDED_FIELD_THRESHOLD)."""
+    try:
+        df = cached_load_all_data()
+        y_series, y_calc, chart_type, _ylabel = _race_series_spec(tab, variant, net_measure)
+        readout = get_teg_chart_readout(df, teg_name, y_series, y_calculation=y_calc, chart_type=chart_type)
+        for item in readout:
+            item["name"] = get_player_name(item["code"])
+        return readout
+    except Exception:
+        return []
 
 
 def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjusted") -> dict:
@@ -566,6 +704,7 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
 
         chart_meta = _results_chart_meta(tab, chart_variant, net_measure, teg_name)
         figure_json = _build_race_figure_json(tab, chart_variant, net_measure, teg_name)
+        chart_readout = _build_race_chart_readout(tab, chart_variant, net_measure, teg_name)
         return {
             "is_leaderboard": True,
             "section_title": f"{competition} {status_word} Leaderboard",
@@ -573,6 +712,8 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
             "table_html": table_html,
             "lb_cards": lb_cards,
             "lb_hero": lb_hero,
+            "chart_readout": chart_readout,
+            "chart_crowded_threshold": CROWDED_FIELD_THRESHOLD,
             "teg_name": teg_name,
             "chart_types": RESULTS_CHART_TYPES,
             "active_chart_variant": chart_variant,

@@ -11,6 +11,12 @@
 .mobile-tabbar { display: none; }
 .lb-hero { display: none; }
 .lb-cards { display: none; }
+/* Tournament race chart (R4.1, /results + /leaderboard): the readout is a
+   phone-only substitute for the native legend that desktop/iPad still shows
+   (create_cumulative_graph keeps that legend unconditionally -- see
+   chart_utils.py). Scoped to .chart-block so Latest Round's own .lr-readout,
+   which IS shown on desktop by design, is untouched. */
+.chart-block .lr-readout { display: none; }
 
 @media (max-width: 640px) {
   /* Leave room for the fixed bottom bar so content never hides behind it. */
@@ -111,42 +117,53 @@
 
   /* ── Controls (M1.5): segmented tabs + thumb-friendly pills/selects ── */
 
-  /* In-page primary tab rows (.section-nav of .tab-underline) become an
-     iOS-style segmented control. Scrolls horizontally if the labels overflow
-     (e.g. the 5-tab metric rows on the Latest pages). */
+  /* In-page primary tab rows (.section-nav of .tab-underline): site-wide
+     plain-underline treatment, matching desktop's .tab-underline look
+     (base-vars.css) rather than boxing it into an iOS segmented control.
+     Scrolls horizontally if the labels overflow, with a right-edge fade so
+     an overflowing row reads as scrollable. Ported from Latest Round's
+     original page-scoped override, now generalised so every page's tab row
+     gets the same treatment (`.latest-round-page` kept only its own
+     page-specific inset margin below). */
   .section-nav {
     display: flex;
     flex-wrap: nowrap;              /* base style wraps; a segment must not */
-    gap: 3px;
-    padding: 3px;
-    background: var(--btn-inactive-bg, #f5f4f0);
-    border: 1px solid var(--table-cell-border, #e0e0e0);
-    border-radius: 11px;
+    gap: 0;
+    margin: 0 0 12px;
+    padding: 0 18px 0 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    mask-image: linear-gradient(to right, #000 calc(100% - 18px), transparent);
   }
   .section-nav::-webkit-scrollbar { display: none; }
   .section-nav .tab-underline {
-    flex: 1 0 auto;
-    border: none;
-    border-radius: 8px;
-    padding: 9px 12px;
+    flex: 0 0 auto;
+    min-height: 44px;
+    padding: 10px 12px 8px;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    color: var(--text-secondary, #555555);
     font-size: 0.875rem;
     font-weight: 600;
     white-space: nowrap;
     text-align: center;
-    color: var(--text-secondary, #555555);
   }
-  .section-nav .tab-underline:hover { border: none; }
+  .section-nav .tab-underline:hover { border-bottom: 2px solid transparent; }
   .section-nav .tab-underline--active,
   .section-nav .tab-underline--active:hover,
   .section-nav .tab-underline.active,
   .section-nav .tab-underline.active:hover {
-    background: var(--bg-card, #ffffff);
+    border-bottom-color: var(--accent, forestgreen);
+    background: transparent;
+    box-shadow: none;
     color: var(--accent, forestgreen);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10);
-    border: none;
   }
 
   /* Pills: bigger tap targets. */
@@ -312,4 +329,420 @@
     text-transform: uppercase;
     color: var(--text-muted, #8c8c86);
   }
+
+  /* Latest round vertical slice. Keep the scoreboard readable at 320px and
+     let its chart use the full phone width. */
+  .latest-round-page { --lr-inset: 12px; }
+  /* base.html supplies Tailwind's px-6 on every main-content. Its utility is
+     loaded after the generic mobile shell, so target this one page directly
+     instead of relying on the weaker global reset above. */
+  .main-content.px-6:has(> .latest-round-page) { padding-inline: 0; }
+  .latest-round-page #lr-context-header { margin-left: var(--lr-inset); margin-right: var(--lr-inset); }
+  .latest-round-page > .section-controls { margin-left: 0; margin-right: 0; }
+  .latest-round-page > .section-controls .pill,
+  .latest-round-page > .section-controls .theme-select { min-height: 44px; }
+  .latest-round-page > #lr-content { min-width: 0; margin-inline: 0; }
+  /* Latest Round uses the reference's full-width data surfaces. The shared
+     layered-theme card otherwise adds a second 12px inset, card margin and
+     shadow around every table/chart after the page's own inset. */
+  .latest-round-page #lr-content .data-card {
+    margin: 9px 0;
+    padding-inline: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .main-content .latest-round-page > .section-nav {
+    margin-left: var(--lr-inset);
+    margin-right: var(--lr-inset);
+    max-width: none;
+  }
+  .latest-round-page #lr-content .section-controls { gap: 6px; margin-bottom: 12px; }
+  .latest-round-page #lr-content .pill { min-height: 44px; font-size: 14px; padding-inline: 11px; }
+  .latest-round-page #lr-content .data-card { overflow: visible; }
+  .latest-round-page #lr-content .table-wrapper { overflow: visible; }
+  .latest-round-page #lr-content table.teg-table { width: 100%; table-layout: fixed; font-size: 13px; }
+  .latest-round-page #lr-content table.teg-table th,
+  .latest-round-page #lr-content table.teg-table td { padding: 9px 5px; }
+
+  /* Metric selector: 2x2 button grid, not a pill row -- ported from the
+     approved prototype's .metric-grid/.metric-pills (report_layout_prototypes/
+     mobile_data.css), values re-themed onto this repo's own custom
+     properties (--table-cell-border/--bg-card/--text-muted/--accent/
+     --table-toprank-bg in place of the prototype's --line/--surface/
+     --muted/--accent/--chip). */
+  .latest-round-page #lr-content .metric-grid {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; overflow: visible; width: 100%;
+  }
+  .latest-round-page #lr-content .metric-pill {
+    width: 100%; min-width: 0; min-height: 44px; padding: .45rem .7rem;
+    border: 1px solid var(--table-cell-border, #d5ddd7); border-radius: .35rem;
+    color: var(--text-muted, #666); background: var(--bg-card, #fff); font-size: 16px;
+  }
+  .latest-round-page #lr-content .metric-pill.is-active {
+    border-color: var(--accent, #17683c); background: var(--table-toprank-bg, #edf5ee);
+    color: var(--text-primary, #1b241f); font-weight: 700;
+  }
+
+  /* "Round leaderboard" + currently-selected metric name, replacing a plain
+     uppercase label heading -- ported from the reference's .section-title-row. */
+  .latest-round-page #lr-content .section-title-row {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+    margin: 20px var(--lr-inset) 0; padding-top: 10px;
+  }
+  /* The h3 carries class="section-title" (canonical site-wide mono-caps
+     heading, base-vars.css) -- just reset its margin to 0 here so it aligns
+     on the same baseline as the metric-name <p> beside it in this flex row. */
+  .latest-round-page #lr-content .section-title-row h3.section-title {
+    margin: 0;
+  }
+  .latest-round-page #lr-content .section-title-row p { margin: 0; color: var(--text-muted, #666); font-size: 14px; }
+
+  /* Leaderboard table -- ported line-for-line from the approved reference's
+     .leaderboard (report_layout_prototypes/mobile_data.css), re-themed onto
+     this repo's tokens (--text-muted/--table-cell-border/--bg-card/
+     --text-primary/--accent/--btn-inactive-bg in place of --muted/--line/
+     --ink/--accent/--soft). Column order/count differ from the prototype
+     per the user's explicit swap: # / Player / Personal rank / All-time
+     rank / Total (the prototype's own reference is # / Player / Out / In /
+     Total; Out/In moved into the expandable detail row here instead). */
+  .latest-round-page #lr-content table.leaderboard {
+    width: 100%; margin-top: 9px; border-collapse: collapse; table-layout: fixed; font-size: 14px;
+  }
+  .latest-round-page #lr-content table.leaderboard .lr-rank-col { width: 7%; }
+  .latest-round-page #lr-content table.leaderboard .lr-player-col { width: 32%; }
+  .latest-round-page #lr-content table.leaderboard .lr-personal-col { width: 15%; }
+  .latest-round-page #lr-content table.leaderboard .lr-alltime-col { width: 18%; }
+  .latest-round-page #lr-content table.leaderboard .lr-total-col { width: 18%; }
+  .latest-round-page #lr-content table.leaderboard .lr-toggle-col { width: 10%; }
+  .latest-round-page #lr-content table.leaderboard th {
+    padding: 0 6px 8px; color: var(--text-muted, #666); text-align: right;
+    font: 700 11px/1.2 'Roboto Mono', monospace; letter-spacing: .03em; text-transform: uppercase;
+    /* Unlike the reference's own short Out/In/Total headers, "Personal
+       rank"/"All-time rank" need to wrap -- confirmed by an actual 375px
+       screenshot: one-line headers here overflowed their fixed-width cell
+       and bled into the next column. */
+    white-space: normal;
+  }
+  .latest-round-page #lr-content table.leaderboard th,
+  .latest-round-page #lr-content table.leaderboard td { text-align: center; }
+  .latest-round-page #lr-content table.leaderboard th:nth-child(2),
+  .latest-round-page #lr-content table.leaderboard td:nth-child(2) { text-align: left; }
+  /* Player-name markup switched from a single <b> to the shared
+     .player-name/.first/.last span structure (base-vars.css) so this table
+     gets the same "if one name wraps, all do, and rows stay equal height"
+     JS/CSS treatment as History/Standings, instead of its own bespoke
+     abbreviated-name shortening. The <td> itself is deliberately classed
+     .lr-player-cell, not .player-name -- that class is the inner <span>'s
+     (see webapp/routes/latest.py); reusing it on the <td> too made the
+     shared "span.player-name { display: inline-block }" rule match the <td>
+     itself, breaking its table-cell layout. */
+  .latest-round-page #lr-content table.leaderboard td.lr-player-cell {
+    font-weight: 700;
+  }
+  .latest-round-page #lr-content table.leaderboard .player-name {
+    min-width: 0;
+    line-height: 1.15;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .latest-round-page #lr-content table.leaderboard td {
+    padding: 12px 5px;
+    font-family: 'Roboto Mono', monospace; font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  .latest-round-page #lr-content table.leaderboard th:first-child,
+  .latest-round-page #lr-content table.leaderboard td:first-child {
+    position: static;
+    padding-inline: 2px;
+    color: var(--text-muted, #666);
+    background-color: transparent;
+  }
+  .latest-round-page #lr-content table.leaderboard th:last-child,
+  .latest-round-page #lr-content table.leaderboard td:last-child { padding-inline: 2px; }
+  .latest-round-page #lr-content table.leaderboard .lr-rank-value { white-space: nowrap; }
+  .latest-round-page #lr-content table.leaderboard .lr-rank-value small {
+    margin-left: 1px;
+    color: var(--text-muted, #666);
+    font-size: .78em;
+    font-weight: 400;
+  }
+  /* De-emphasise the contextual rank columns -- Total is the column that
+     matters, Personal/All-time rank are supporting context. */
+  .latest-round-page #lr-content table.leaderboard td.lr-rank-context {
+    color: var(--text-muted, #666);
+  }
+  /* Total: the important column -- bigger, bold, accent colour. */
+  .latest-round-page #lr-content table.leaderboard td.lr-total-cell {
+    font-size: 1.15em;
+    font-weight: 700;
+    color: var(--text-primary, #1b241f);
+  }
+  /* Leader shading: tied-first rows all get it (Rank is "1" or "1="). */
+  .latest-round-page #lr-content table.leaderboard tr.rank-1 {
+    background-color: var(--table-toprank-bg, #F3F7F3);
+  }
+  .latest-round-page #lr-content table.leaderboard tr.rank-1 td { font-weight: 700; }
+  .latest-round-page #lr-content table.leaderboard tr.rank-1 td:first-child { color: var(--accent, #17683c); }
+  .latest-round-page #lr-content table.leaderboard tr.rank-1 td.lr-total-cell { color: var(--accent, #17683c); }
+
+  /* Row expand/collapse (Out/In split + per-hole score mix) -- rank-toggle
+     "+"/"-" moved to its own narrow final column (not overlaid on the player
+     name) -- detail-grid ported from the same reference. */
+  .latest-round-page #lr-content table.leaderboard td.lr-toggle-td { padding-inline: 0; }
+  .latest-round-page #lr-content .rank-toggle {
+    width: 100%; min-height: 44px; margin: -12px 0; padding: 12px 0;
+    border: 0; background: transparent; color: var(--accent, #17683c); font: inherit;
+    font-size: 18px; line-height: 1; text-align: center; cursor: pointer;
+  }
+  .latest-round-page #lr-content .rank-toggle::after { content: "+"; }
+  .latest-round-page #lr-content .rank-toggle[aria-expanded="true"]::after { content: "\2013"; }
+  .latest-round-page #lr-content .rank-detail-row td { padding: 0 !important; background: var(--btn-inactive-bg, #f5f4f0); }
+  .latest-round-page #lr-content .rank-detail-row .detail-grid {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px; padding: 10px 10px 6px;
+  }
+  .latest-round-page #lr-content .rank-detail-row .detail-grid span {
+    padding: 8px; border-radius: 6px; background: var(--bg-card, #fff);
+    color: var(--text-muted, #666); font-size: 11px; text-transform: uppercase;
+    letter-spacing: .03em;
+  }
+  .latest-round-page #lr-content .rank-detail-row .detail-grid span b {
+    display: block; margin-top: 3px; color: var(--text-primary, #1b241f);
+    font: 600 14px 'Roboto Mono', monospace; text-transform: none; letter-spacing: normal;
+  }
+  .latest-round-page #lr-content .rank-detail-row .detail-mix {
+    margin: 0; padding: 0 10px 10px; font-size: 12px; line-height: 1.4;
+    color: var(--text-primary, #1b241f); white-space: normal; overflow-wrap: anywhere;
+  }
+  .latest-round-page #lr-content .rank-detail-row .detail-mix-label {
+    color: var(--text-muted, #666); text-transform: uppercase; font-size: 10px;
+    letter-spacing: .04em; margin-right: 6px;
+  }
+  .latest-round-page #lr-content .lr-chart-tools { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; margin: 10px var(--lr-inset) 0; }
+  .lr-chart-tools label { display: grid; gap: 4px; color: var(--text-muted, #666); font: 700 11px/1.2 'Roboto Mono', monospace; letter-spacing: .04em; text-transform: uppercase; }
+  .lr-chart-tools select { min-height: 44px; font-size: 16px; }
+  .lr-readout { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 8px; }
+  /* Re-enable the tournament race chart's readout at phone width -- the
+     desktop-hide rule above (.chart-block .lr-readout { display: none })
+     has higher specificity than the generic .lr-readout rule just above,
+     so it needs an equally-specific override here; grid-template-columns
+     etc. still fall through from that generic rule since this only sets
+     display. */
+  .chart-block .lr-readout { display: grid; }
+  .lr-readout-entry { min-height: 44px; display: flex; align-items: center; justify-content: flex-start; gap: 8px; padding: 4px 6px; border: 0; border-radius: 5px; color: var(--text-primary, #1b241f); background: transparent; text-align: left; }
+  .lr-readout-entry.is-active { background: var(--table-toprank-bg, #edf5ee); font-weight: 700; }
+  .lr-initials { color: var(--accent, #17683c); font: 700 12px 'Roboto Mono', monospace; }
+  .lr-readout-entry strong { margin-left: 0; font: 600 14px 'Roboto Mono', monospace; }
+  .lr-chart-tools select { min-width: 0; width: 100%; padding: 7px 9px; border: 1px solid var(--table-cell-border, #d5ddd7); border-radius: 8px; background: var(--bg-card, #fff); color: var(--text-primary, #1b241f); }
+
+  /* Scale toggle-switch look -- ported from the reference's switchControl()
+     (report_layout_prototypes/mobile_data.js/.css), applied to the existing
+     Normal/Adjusted scale control (same hx-get/data-lr-query behaviour,
+     only the markup/visual structure changed -- see partials/
+     latest_round_tab.html and the lr-scale-toggle class note there). */
+  .latest-round-page #lr-content .scale-switch {
+    display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px;
+    margin: 0 var(--lr-inset) 8px; padding: 0; border: 0; background: transparent; color: inherit;
+  }
+  .latest-round-page #lr-content .scale-switch-label { font-size: 13px; color: var(--text-muted, #666); }
+  .latest-round-page #lr-content .scale-switch[aria-checked="false"] .scale-switch-label:first-of-type,
+  .latest-round-page #lr-content .scale-switch[aria-checked="true"] .scale-switch-label:last-of-type {
+    color: var(--text-primary, #1b241f); font-weight: 700;
+  }
+  .latest-round-page #lr-content .switch-track {
+    position: relative; flex: none; width: 40px; height: 22px; border: 1px solid var(--table-cell-border, #d5ddd7);
+    border-radius: 999px; background: var(--table-toprank-bg, #F3F7F3);
+    transition: background .15s ease, border-color .15s ease;
+  }
+  .latest-round-page #lr-content .scale-switch[aria-checked="true"] .switch-track {
+    background: var(--accent, #17683c); border-color: var(--accent, #17683c);
+  }
+  .latest-round-page #lr-content .switch-thumb {
+    position: absolute; top: 1px; left: 1px; width: 18px; height: 18px; border-radius: 50%;
+    background: var(--bg-card, #fff); transition: transform .15s ease;
+  }
+  .latest-round-page #lr-content .scale-switch[aria-checked="true"] .switch-thumb { transform: translateX(18px); }
+  .lr-rewind { grid-column: 1 / -1; display: flex !important; align-items: center; gap: 8px; }
+  .lr-rewind-caption { flex: 0 0 auto; color: var(--text-muted, #666); font: 700 11px/1.2 'Roboto Mono', monospace; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; }
+  .lr-rewind input { flex: 1 1 auto; min-width: 0; min-height: 44px; accent-color: var(--accent, #17683c); }
+  .lr-rewind-step { width: 44px; height: 44px; border: 1px solid var(--table-cell-border, #d5ddd7); border-radius: 8px; color: var(--accent, #17683c); background: var(--bg-card, #fff); font-size: 20px; flex: 0 0 auto; }
+  .lr-rewind output { min-width: 2ch; color: var(--text-primary, #1b241f); font-size: 14px; text-align: right; flex: 0 0 auto; }
+  .latest-round-page .lr-chart { height: 320px !important; min-height: 280px; }
+  /* Tiny left breathing room -- the chart's own Plotly margin.l is 0 (chart_utils.py's
+     create_round_graph), so its y-axis tick labels otherwise sit flush against the
+     screen edge on this full-bleed page. */
+  .latest-round-page .data-card--padded { padding: 0 0 0 8px; }
+  .latest-round-page .plotly .legend text { font-size: 11px !important; }
+
+  /* Bestball tab: .card-header ("Player contributions") and the bars'
+     "Bestball"/"Worstball" titles have zero horizontal padding of their own
+     at phone width (the full-bleed #lr-content .data-card override above
+     already strips the layered-theme card's usual inset) -- give them the
+     same small page-edge gutter as everything else on this page. The
+     table/pair itself not overflowing is handled in scorecard.css (its own
+     .bw-bars-pair @media block), not here, since that CSS is shared with the
+     non-mobile /bestball page and .bw-bars-pair isn't part of this page's
+     content structurally -- it's simplest to keep both halves of one visual
+     fix next to the rules they're overriding. */
+  .latest-round-page #lr-content .card-header,
+  .latest-round-page #lr-content .bw-bars-title {
+    margin-left: var(--lr-inset);
+    margin-right: var(--lr-inset);
+  }
+  /* Bestball/Worstball rank-summary labels near the top of the tab -- same
+     page-edge gutter as everything else, since .bw-rank-summary is a
+     `raw: True` section with no .data-card wrapper/padding of its own. */
+  .latest-round-page #lr-content .bw-rank-summary {
+    margin-left: var(--lr-inset);
+    margin-right: var(--lr-inset);
+  }
+
+  /* ── History (TEG winners table, R3.1) ──
+     Same ancestor-gutter fix Latest Round needed: Tailwind's .main-content.px-6
+     re-applies 24px inline padding after the generic reset above, so a page-
+     scoped hook has to null it out again. table-wrapper--no-pin (set in
+     data_table.html) drops the generic sticky-first-column treatment, since a
+     fixed-width four-column layout fits without horizontal scroll. */
+  .main-content.px-6:has(> .history-page) { padding-inline: 0; }
+  .history-page { padding-inline: 12px; }
+  .history-page .history-table { table-layout: fixed; font-size: 13px; }
+  .history-page .history-table th,
+  .history-page .history-table td {
+    padding: 9px 6px;
+    font-variant-numeric: tabular-nums;
+  }
+  .history-page .history-table th {
+    color: var(--text-muted, #666);
+    font: 700 11px/1.2 'Roboto Mono', monospace;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    /* Desktop's base .teg-table th is white-space:nowrap, fine at desktop
+       column widths; these mobile columns are much narrower, so header
+       text (e.g. "HMM Wooden Spoon") needs to wrap instead of overflowing
+       into the next column. */
+    white-space: normal;
+  }
+  /* First column (TEG) narrower and left-aligned; the three name columns
+     share the rest and are centred, matching the approved prototype. */
+  .history-page .history-table th:first-child,
+  .history-page .history-table td:first-child { width: 26%; text-align: left; }
+  /* Move the year off the cramped TEG-number line and onto the compact
+     area line instead (matches the approved prototype's default label),
+     rather than dropping it -- it's still visible at a glance, not hidden
+     behind a tap. */
+  .history-page .history-table .teg-year { display: none; }
+  .history-page .history-table .teg-year--mobile { display: inline; }
+  /* Collapsed mobile row: line 1 "TEG n", line 2 flag + year -- no region
+     text and no separate flag column (region only shows in the expanded
+     detail row, see .history-meta below). */
+  .history-page .history-table .area-row { display: none; }
+  /* Bold the TEG-number line, de-emphasise the flag/year line beneath it --
+     same grey used for the desktop region text -- so "TEG XX" reads as the
+     primary label and flag+year as secondary context, roughly matching its
+     width. */
+  .history-page .history-table .teg-label { font-weight: 700; }
+  .history-page .history-table .teg-mobile-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.3em;
+    margin-top: 1px;
+    font-size: 0.8125rem;
+    font-weight: 400;
+  }
+  .history-page .history-table .teg-mobile-meta .teg-flag.fi {
+    width: 0.95em;
+    align-self: auto;
+  }
+  /* Full column names don't fit these columns on one line; the approved
+     prototype's short Trophy/Jacket/Spoon heading does. */
+  .history-page .history-table .th-full { display: none; }
+  .history-page .history-table .th-short { display: inline; }
+  .history-page .history-table th:not(:first-child),
+  .history-page .history-table td:not(:first-child) { text-align: center; }
+  .history-page .history-table .teg-cell { min-height: 44px; }
+  /* Disclosure "+/-" moved out of the TEG cell into its own narrow final
+     column -- the TEG cell/button stays the full-width tap target, but the
+     visual indicator now lives beside it rather than overlapping the label.
+     :has() reaches back into the row to read the toggle button's state
+     (already relied on elsewhere in this file, e.g. .main-content:has()). */
+  .history-page .history-table th.history-toggle-th,
+  .history-page .history-table td.history-toggle-td {
+    display: table-cell;
+    width: 22px;
+    padding: 9px 2px;
+    text-align: center;
+  }
+  .history-page .history-table .history-toggle-indicator::before {
+    content: "+";
+    color: var(--accent, #17683c);
+    font-size: 16px;
+    line-height: 1;
+  }
+  .history-page .history-table tr:has(button.teg-cell[aria-expanded="true"]) .history-toggle-indicator::before {
+    content: "\2013";
+  }
+  .history-page .history-detail-row td { padding: 0; background: var(--btn-inactive-bg, #f5f4f0); }
+  .history-page .history-meta { padding: 10px 12px 12px; color: var(--text-muted, #666); font-size: 11px; }
+  .history-page .history-meta p { margin: 0 0 6px; }
+  .history-page .history-meta p b { color: var(--text-primary, #1b241f); }
+  .history-page .history-meta ol {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 6px 10px;
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+  }
+  .history-page .history-meta li { padding: 2px 0; }
+  .history-page .history-meta li b {
+    display: block;
+    color: var(--text-primary, #1b241f);
+    font: 600 12px 'Roboto Mono', monospace;
+  }
+  .history-page .history-meta li span { display: block; color: var(--text-primary, #1b241f); }
+  .history-page .history-meta li small { display: block; color: var(--text-muted, #666); }
+
+  /* ── Standings (Full Results + Latest Leaderboard, R3.2) ──
+     Shared by results.html and leaderboard.html -- both render the exact
+     same table_html/lb_cards/lb_hero markup from the same context builder
+     (_results_context, webapp/routes/history.py), so one hook covers both
+     pages rather than duplicating this block per page. Same ancestor-gutter
+     fix Latest Round/History needed. */
+  .main-content.px-6:has(> .standings-page) { padding-inline: 0; }
+  .standings-page { padding-inline: 12px; }
+  /* .lb-table-card is hidden by the generic M2.7 card-reflow rule above
+     (line ~215) in favour of .lb-cards; reveal the real table here instead
+     and hide the per-player cards, so a page never shows both. .lb-hero
+     (the champion/spoon pod) stays visible -- it's a compact summary, not a
+     second full standings list, so no override needed. */
+  .standings-page .lb-table-card { display: block; }
+  .standings-page .lb-cards { display: none; }
+  .standings-page .leaderboard-table { table-layout: fixed; font-size: 13px; }
+  .standings-page .leaderboard-table th,
+  .standings-page .leaderboard-table td {
+    padding: 9px 6px;
+    font-variant-numeric: tabular-nums;
+    white-space: normal;
+  }
+  .standings-page .leaderboard-table th { font: 700 11px/1.2 'Roboto Mono', monospace; letter-spacing: .04em; text-transform: uppercase; }
+  .standings-page .leaderboard-table .col-rank { width: 10%; }
+  .standings-page .leaderboard-table .col-player { width: 30%; overflow-wrap: anywhere; }
+  /* Rank/player fixed above; every other column (one per round, plus Total)
+     shares the remainder evenly via table-layout:fixed's own distribution --
+     matches the approved prototype's .standings-table, which likewise only
+     pins the first two columns and lets round/total columns split the rest. */
+
+  /* ── Standalone Bestball/Worstball summary (/bestball, R3.4 correction) ──
+     A separate TEG-wide leaderboard, not the per-round field/contribution
+     builders -- it needs its own containment, not a shared implementation.
+     Its results table already gets the generic pinned-column horizontal
+     scroller (.table-wrapper, above); the fix here is the mode/TEG/sort/n
+     control row, which mixes tab buttons, two selects and a number input
+     with no explicit widths -- without min-width:0, a flex item's default
+     min-width:auto (its unbroken content width) can push the row wider than
+     the viewport even though the row wraps. */
+  .bestball-page .section-controls > * { min-width: 0; }
+  .bestball-page .section-controls .theme-select { max-width: 100%; }
+}
+@media (min-width: 390px) and (max-width: 640px) {
+  .latest-round-page .lr-readout { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }

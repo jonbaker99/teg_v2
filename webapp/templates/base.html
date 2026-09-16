@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-    <link rel="stylesheet" href="/static/themes/base-vars.css?v=26">
+    <link rel="stylesheet" href="/static/themes/base-vars.css?v=28">
     <link rel="stylesheet" href="/static/themes/{{ request.state.theme }}.css?v=23">
     <!-- Report styling (.teg-report) — loaded globally so reports render the same
          wherever they appear (TEG Reports, Results/Latest report tabs). -->
@@ -15,7 +15,7 @@
     <!-- Dark mode — inert until <html data-mode="dark">; default is light. -->
     <link rel="stylesheet" href="/static/themes/dark.css?v=1">
     <!-- Mobile app shell — all rules gated to ≤640px; inert on desktop/iPad. -->
-    <link rel="stylesheet" href="/static/mobile.css?v=4">
+    <link rel="stylesheet" href="/static/mobile.css?v=22">
     <!-- Structural hierarchy debug overlay (dev tool; inert unless body.debug-structure) -->
     <link rel="stylesheet" href="/static/themes/debug-structure.css?v=3">
     <!-- Material Symbols — nav/contents icons (names defined once in webapp/nav.py) -->
@@ -312,7 +312,11 @@
                 Plotly.purge(el);
                 var fig = JSON.parse(el.dataset.figure);
                 Plotly.newPlot(el, fig.data, fig.layout, {responsive: true, displayModeBar: false})
-                    .then(function() { attachSeriesHighlight(el, fig); })
+                    .then(function() {
+                        attachSeriesHighlight(el, fig);
+                        applyMobileChartTreatment(el, fig);
+                        attachChartReadoutFocus(el, fig);
+                    })
                     .catch(function() { /* no-highlight is an acceptable degradation */ });
             });
         }
@@ -364,8 +368,141 @@
             }
         }
 
+        // R4.1: opt-in phone-only chart treatment. The server always renders
+        // ONE figure with its full desktop/iPad contract (native legend,
+        // full "Player: value" labels, wide margin -- see
+        // create_cumulative_graph); charts that also carry the below-chart
+        // readout (wrapped in .chart-block, opted in via that wrapper alone
+        // -- Latest Round's own chart never has one) get reshaped into the
+        // compact phone contract HERE, client-side, from the exact same
+        // figure, rather than the server computing and shipping two
+        // divergent figures. Only runs at <=640px; desktop/iPad never see
+        // this function do anything (early return), so their output is
+        // byte-identical to the pre-R4.1 figure.
+        function applyMobileChartTreatment(el, fig) {
+            try {
+                var block = el.closest('.chart-block');
+                if (!block) return;
+                if (!window.matchMedia('(max-width: 640px)').matches) return;
+
+                var threshold = parseInt(block.dataset.crowdedThreshold, 10);
+                if (!threshold) threshold = 6;
+
+                // add_round_annotations (chart_utils.py) tags its R1/R2/...
+                // divider labels with yref:'paper'; per-player end-of-line
+                // labels never set yref, so this split needs no server change.
+                var roundLabels = [];
+                var playerLabels = [];
+                (fig.layout.annotations || []).forEach(function(a) {
+                    (a.yref === 'paper' ? roundLabels : playerLabels).push(a);
+                });
+
+                var shortLabels = playerLabels.length >= threshold ? [] : playerLabels.map(function(a) {
+                    // "Player: value" -> "Player value" -- the proven Latest
+                    // Round end-label format, needing far less width.
+                    var shorter = {};
+                    for (var k in a) shorter[k] = a[k];
+                    shorter.text = (a.text || '').replace(': ', ' ');
+                    return shorter;
+                });
+
+                Plotly.relayout(el, {
+                    showlegend: false,
+                    margin: {r: 36, t: 8, b: 10, l: 0},
+                    annotations: roundLabels.concat(shortLabels),
+                });
+            } catch (err) {
+                // Degrade to the desktop figure exactly as server-rendered.
+            }
+        }
+
+        // Click/tap-to-focus a player's line, no hover required: pairs a
+        // chart with a sibling readout of [data-chart-focus] buttons (one
+        // per player, tappable without hovering the SVG -- see R4's "select
+        // a player without hover" gate) inside a shared .chart-block
+        // wrapper. Purely client-side restyle, no server round-trip and no
+        // URL state (unlike Latest Round's rewind-aware focus/deep-link
+        // system, which this doesn't need). Re-bound on every render since
+        // Plotly.purge above tears down the old DOM/listeners.
+        function attachChartReadoutFocus(el, fig) {
+            try {
+                var block = el.closest('.chart-block');
+                if (!block) return;
+                var buttons = block.querySelectorAll('[data-chart-focus]');
+                if (!buttons.length) return;
+                var current = '';
+
+                function apply(name) {
+                    var opacities = fig.data.map(function(tr) {
+                        return (!name || tr.name === name) ? 1 : 0.18;
+                    });
+                    Plotly.restyle(el, {opacity: opacities});
+                    buttons.forEach(function(btn) {
+                        var active = btn.dataset.chartFocus === name;
+                        btn.classList.toggle('is-active', active);
+                        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+                    });
+                }
+
+                buttons.forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        current = (current === btn.dataset.chartFocus) ? '' : btn.dataset.chartFocus;
+                        apply(current);
+                    });
+                });
+            } catch (err) {
+                // Degrade to no-focus-interaction.
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() { renderCharts(document); });
         document.addEventListener('htmx:afterSettle', function(e) { renderCharts(e.detail.elt); });
+
+        // Safety-net resize once EVERYTHING has finished loading (fonts,
+        // external CSS/CDN scripts, images) -- Plotly's responsive:true
+        // relies on a ResizeObserver on the chart's own container, but a
+        // charts rendered at DOMContentLoaded can still end up sized against
+        // a transient layout if a later font swap or a slow external
+        // stylesheet (Material Symbols/flag-icons, both third-party CDN
+        // requests in <head>) reflows the page after that container's size
+        // was first observed. This reproduces intermittently on real,
+        // slower mobile connections rather than a fast local/dev server, so
+        // it's cheap, generic hardening rather than a fix pinned to one
+        // observed repro. Mirrors the same Plotly.Plots.resize call already
+        // used when the chart-pill switcher reveals a hidden chart panel.
+        window.addEventListener('load', function() {
+            document.querySelectorAll('.chart-container.js-plotly-plot').forEach(function(el) {
+                try { Plotly.Plots.resize(el); } catch (err) { /* no-op if not a real plot yet */ }
+            });
+        });
+    })();
+    </script>
+    <!-- Equal-height player-name rows: any table using .player-name (History,
+         Standings) breaks ALL its names onto two lines the moment ONE name
+         wraps between forename/surname, rather than letting rows mix one-
+         and two-line heights. Shared here (not per-page) so it re-runs after
+         every HTMX swap (TEG/tab change) via the same afterSettle hook the
+         chart renderer uses, not just on first load. -->
+    <script>
+    (function() {
+        function checkNameBreaks(root) {
+            root.querySelectorAll('.history-table, .leaderboard-table, table.leaderboard').forEach(function(table) {
+                table.classList.remove('names-break');
+                var names = table.querySelectorAll('.player-name');
+                if (!names.length) return;
+                var lineH = parseFloat(getComputedStyle(names[0]).lineHeight);
+                if (!lineH || isNaN(lineH)) lineH = 21;
+                for (var i = 0; i < names.length; i++) {
+                    if (names[i].offsetHeight > lineH * 1.2) {
+                        table.classList.add('names-break');
+                        break;
+                    }
+                }
+            });
+        }
+        document.addEventListener('DOMContentLoaded', function() { checkNameBreaks(document); });
+        document.addEventListener('htmx:afterSettle', function(e) { checkNameBreaks(e.detail.elt); });
+        window.addEventListener('resize', function() { checkNameBreaks(document); });
     })();
     </script>
     <!-- Chart pill switcher: toggles sibling .chart-panel visibility within a

@@ -8,7 +8,12 @@
 {% endblock %}
 
 {% block content %}
-
+{# .standings-page is the phone-layout hook (mobile.css) -- wraps the whole
+   page, not just #results-content, so it survives the HTMX TEG/tab swap
+   that only replaces #results-content's children. Shared with
+   leaderboard.html since both render the exact same table_html/lb_cards
+   markup from the same context builder (_results_context). #}
+<div class="standings-page">
 <div class="section-controls flex items-center gap-4">
     <select id="results-teg-select" class="theme-select"
             hx-get="/results/table"
@@ -64,4 +69,5 @@
     sync();
 })();
 </script>
+</div>
 {% endblock %}

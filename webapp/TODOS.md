@@ -42,7 +42,7 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
   Pick a legacy round from available data rather than hardcoding that fixture.
 
 
-- [ ] **Bestball/worstball on `/latest-round`** — show best/worst bestball and worstball positions in the round-in-context page.
+- [x] **Bestball/worstball on `/latest-round`** — responsive field card and contribution views completed on `codex/mobile-ui-rollout` in `c25fdeb`.
 - [ ] **`/scoring/matrix`** - score type as pills; TEG / Round / 9 as tabs
 - [x] **Remote/on-the-fly report generation — admin-triggered, the clubhouse use case (2026-09-12).**
   `/admin/reports` runs the newspaper-style pipeline (storylines → draft → voice) directly on the
@@ -232,7 +232,10 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
   Career Highlights cards, trend before expandable results and complete held
   records on Records & Streaks. The liked roster is unchanged.
 - [ ] **Less generic player-detail aesthetic** — revisit the approved structure
-  after the wider UI work, not as the next task (decision 2026-09-13).
+  after the wider UI work, not as the next task (decision 2026-09-13). Reconfirmed
+  2026-09-16 (Jon, reviewing the mobile rollout): individual player pages still read
+  as too much mono font — matches the "no definition/structure" rejection reasoning
+  below, kept open rather than re-attempted inline with the mobile pass.
   User wants less of a "generic AI webpage": refine card
   sameness, rhythm, hierarchy and scorecard character without losing grouping
   or Career Highlights cards. Show an interactive direction before more changes.
@@ -299,17 +302,20 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 - [X] **Phase M1 — app shell on phones** — bottom tab bar, app bar, segmented controls, sticky-column tables. Done (see `MOBILE_PLAN.md` → Status).
 - [X] **Phase M2.7 — leaderboard card reflow** — `/leaderboard` + `/results` standings as hero pods + card rows on phones.
-- [ ] **Phase M2.8 — mobile chart preset** — blocked on the parked HTMX chart bug.
-- [ ] **Phase M2.9 — per-page mobile pass** — spacing, tap targets, empty states; consider card reflow for Latest Round / Records. Pickup pointer: `MOBILE_PLAN.md` → Status.
+- [X] **Phase M2.8 — mobile chart preset, tournament race charts** — `create_cumulative_graph` (shared by `/results`, `/leaderboard` and the unlinked `/charts`) keeps its one desktop/iPad figure contract (native legend, full labels, wide margin) unconditionally; the compact phone contract (no legend, short end labels, labels suppressed at `CROWDED_FIELD_THRESHOLD`+ players, below-chart tap-to-focus readout) is applied client-side to that same figure only at `≤640px` (`applyMobileChartTreatment` in `base.html`), so `/charts` keeps its original contract at every width with no opt-in needed. Player-progression and scoring-analysis charts are separate, not-yet-done R4 slices.
+- [ ] **Phase M2.9 — per-page mobile pass** — core layouts through R3.4 and the M2.8 tournament-race-chart slice above are complete on `codex/mobile-ui-rollout`; next is player-progression/scoring-analysis chart promotion, followed by the remaining route audit. Pickup pointer: `MOBILE_PLAN.md` → Status.
+- [ ] **Latest Round overlapping-request ordering** — a rare response race can let an older HTMX request replace newer state. Treat as a later resilience fix unless real use shows it is material.
 - [ ] **Dark mode: page-title contrast on dark** — `.page-title` nearly invisible in dark mode (pre-existing, seen during M2 verification; part of the deferred dark QA sweep).
 - [ ] **Records table horizontal overflow on narrow screens** — long location strings (e.g. `TEG 8 (Lisbon Coast, Portugal, 2015)`) push the `/records` tables past the panel/viewport at narrow widths, causing horizontal scroll. Pre-existing (unrelated to the page-gutter fix). Apply the mobile table approach — sticky-column / horizontal-scroll container or name-shortening — per `design_principles.md` → Tables.
+- [ ] **Latest Round chart: add a "tournament ranking" scale/mode option** (2026-09-16, Jon). Flagged alongside the Normal/Adjusted scale rework as a later addition, not scoped yet — the chart would show each player's live ranking position through the round rather than (or alongside) their cumulative score.
+- [ ] **Latest Round: tables on the Scoring/Streaks/Records tabs need mobile work** (2026-09-16, Jon). Scoreboard and Bestball/Worstball tabs have had their mobile table passes (compact leaderboard, contribution table); the other tabs still render their desktop table markup unstyled for phone width.
+- [ ] **Latest Round: Scorecard tab has excess side padding on phones** (2026-09-16, Jon). Unlike `/scorecard`'s own portrait treatment, the Scorecard tab inside Latest Round has no `mobile.css` entry yet — confirmed still outstanding. Jon said to leave it for now.
 
 ## Planned enhancements
 
 - [ ] **Hole-level score correction** — inline editor to fix individual hole scores after entry. Not built in either app: Streamlit's `data_edit.py` and the webapp's `/admin/edit-data` both only cover metadata CSVs (round info, handicaps, etc.), not raw hole-level scores. Not a Streamlit-retirement blocker (Streamlit never had this either) — a standalone future enhancement.
 
 - [ ] **Score-count matrix % pill** — absolute / % toggle on `/scoring/matrix` and Scoring tab on `/latest-teg`. Use `.pill-group` component.
-- [ ] **Bestball/worstball on `/latest-round`** — show best/worst bestball and worstball positions in the round-in-context page.
 - [ ] **Related links section** — cross-page related-links block (low priority).
 - [ ] **Search/filtering** — some routes have it, not everywhere.
 

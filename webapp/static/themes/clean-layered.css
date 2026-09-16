@@ -116,32 +116,3 @@ body.ts-e2 .page-title-area {
 .data-card .records-table tbody tr:last-child td {
     border-bottom: none;
 }
-
-/* Restore CH1/CH3 card header styles — clean-page.css overrides base-vars via cascade;
-   these rules come last and win back the correct layered-theme appearance */
-body.ch-ch1 .card-header {
-    background: #e2dfda;
-    border-radius: 0.25rem 0.25rem 0 0;
-    padding: 0.4rem 1rem;
-    font-family: 'Roboto Mono', monospace;
-    font-size: 0.68rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #555;
-    margin-bottom: 0;
-    border-bottom: none;
-}
-body.ch-ch3 .card-header {
-    background: none;
-    border-radius: 0;
-    font-family: 'Lora', serif;
-    font-size: 1rem;
-    font-weight: 400;
-    color: #1a1a1a;
-    text-transform: none;
-    letter-spacing: normal;
-    padding: 0;
-    border-bottom: none;
-    margin-bottom: 0.5rem;
-}
