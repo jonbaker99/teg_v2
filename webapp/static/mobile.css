@@ -733,6 +733,31 @@
      matches the approved prototype's .standings-table, which likewise only
      pins the first two columns and lets round/total columns split the rest. */
 
+  /* ── Player rankings (/player-rankings) ──
+     Both tables (the 18-TEG-wide ranking grid and the summary beneath it)
+     fit the full phone width once table-layout:fixed can divide the columns
+     itself -- base-vars.css's desktop per-cell px widths (width/min-width/
+     max-width) fight that layout and force the table wider than its
+     container, so drop them here. Matched against base-vars.css's own
+     .teg-table.player-ranking-table/.teg-table.position-table selectors
+     (three classes), since a plain two-class selector here loses to those
+     regardless of load order. player_rankings_tab.html opts both sections
+     out of the generic scroll/pin treatment via table-wrapper--no-pin,
+     since neither needs to scroll any more. */
+  .player-ranking-table,
+  .position-table {
+    width: 100%;
+    table-layout: fixed;
+  }
+  .teg-table.player-ranking-table td,
+  .teg-table.player-ranking-table th,
+  .teg-table.position-table td,
+  .teg-table.position-table th {
+    width: auto;
+    min-width: 0;
+    max-width: none;
+  }
+
   /* ── Standalone Bestball/Worstball summary (/bestball, R3.4 correction) ──
      A separate TEG-wide leaderboard, not the per-round field/contribution
      builders -- it needs its own containment, not a shared implementation.
