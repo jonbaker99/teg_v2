@@ -44,17 +44,35 @@
         });
     }
     function initRoundsChart(redraw) {
-        var style = getComputedStyle(profile);
-        var ink = style.getPropertyValue('--text-primary').trim();
-        var muted = style.getPropertyValue('--text-secondary').trim();
-        var rule = style.getPropertyValue('--table-cell-border').trim();
         var narrow = phoneWidth.matches;
         profile.querySelectorAll('.pp-rounds-chart[data-figure]').forEach(function (chart) {
             if (!originalFigures.has(chart)) originalFigures.set(chart, chart.dataset.figure);
-            var figure = JSON.parse(originalFigures.get(chart));
+            var pristine = originalFigures.get(chart);
+
+            // Desktop/iPad: the untouched server-rendered figure, exactly as
+            // it was before R4.2 -- restored here even when resizing back
+            // from phone width, not just left alone on first render, since
+            // dataset.figure may already carry the phone-narrowed mutation
+            // from an earlier width.
+            if (!narrow) {
+                chart.dataset.figure = pristine;
+                if (redraw && window.Plotly && chart.classList.contains('js-plotly-plot')) {
+                    var pristineFigure = JSON.parse(pristine);
+                    Plotly.react(chart, pristineFigure.data, pristineFigure.layout, { responsive: true, displayModeBar: false });
+                }
+                return;
+            }
+
+            var style = getComputedStyle(profile);
+            var ink = style.getPropertyValue('--text-primary').trim();
+            var muted = style.getPropertyValue('--text-secondary').trim();
+            var rule = style.getPropertyValue('--table-cell-border').trim();
+            var figure = JSON.parse(pristine);
             // Bar colour is the RdYlGn score scale (green = better round) --
             // meaningful data, unlike the trend chart's uniform bars, so it
-            // is left alone; only axis/gridline/annotation chrome adapts.
+            // is left alone; only axis/gridline/annotation chrome adapts,
+            // and only at phone width (the chrome changes below never touch
+            // desktop/iPad output -- see the early return above).
             var layout = figure.layout;
             layout.paper_bgcolor = 'transparent';
             layout.plot_bgcolor = 'transparent';
@@ -76,7 +94,7 @@
             // TEGs) packs these centred labels too close together at 320px
             // otherwise.
             var shown = groupLabels.filter(function (_, i) {
-                return !narrow || i % 4 === 0 || i === groupLabels.length - 1;
+                return i % 4 === 0 || i === groupLabels.length - 1;
             });
             layout.annotations = shown.concat(rowLabel);
             layout.annotations.forEach(function (a) { a.font = { size: 9, color: muted }; });
