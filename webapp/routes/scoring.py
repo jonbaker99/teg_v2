@@ -542,7 +542,11 @@ def _course_tab_context(tab: str, area: str = "All Areas") -> dict:
             sections.append({"title": "Summary by Course", "table_html": _df_to_html(summary)})
 
         elif tab == "averages":
-            pivot = rd_data.pivot_table(values='GrossVP', index='Course', columns='Player', aggfunc='mean')
+            # Pivot on 'Pl' (initials) -- same dense metric-grid treatment as
+            # Matrix/By TEG; the Course column wraps to two lines instead of
+            # needing to fit a full course name on one, freeing width for
+            # the 7 initials + Total columns (mobile.css).
+            pivot = rd_data.pivot_table(values='GrossVP', index='Course', columns='Pl', aggfunc='mean')
             # Add Total column
             pivot['Total'] = rd_data.groupby('Course')['GrossVP'].mean()
             pivot = pivot.round(1).reset_index()
@@ -551,27 +555,27 @@ def _course_tab_context(tab: str, area: str = "All Areas") -> dict:
             for col in pivot.columns:
                 if col != 'Course':
                     pivot[col] = pivot[col].apply(lambda v: _format_vp(v, 1))
-            sections.append({"title": "Average Gross vs Par by Course", "table_html": _df_to_html(pivot)})
+            sections.append({"title": "Average Gross vs Par by Course", "table_html": _df_to_html(pivot, table_class="teg-table cr-matrix-table")})
 
         elif tab == "bests":
-            pivot = rd_data.pivot_table(values='GrossVP', index='Course', columns='Player', aggfunc='min')
+            pivot = rd_data.pivot_table(values='GrossVP', index='Course', columns='Pl', aggfunc='min')
             pivot['Total'] = rd_data.groupby('Course')['GrossVP'].min()
             pivot = pivot.reset_index()
             pivot.columns.name = None
             for col in pivot.columns:
                 if col != 'Course':
                     pivot[col] = pivot[col].apply(lambda v: _format_vp(v, 0))
-            sections.append({"title": "Best Gross vs Par by Course", "table_html": _df_to_html(pivot)})
+            sections.append({"title": "Best Gross vs Par by Course", "table_html": _df_to_html(pivot, table_class="teg-table cr-matrix-table")})
 
         elif tab == "worsts":
-            pivot = rd_data.pivot_table(values='GrossVP', index='Course', columns='Player', aggfunc='max')
+            pivot = rd_data.pivot_table(values='GrossVP', index='Course', columns='Pl', aggfunc='max')
             pivot['Total'] = rd_data.groupby('Course')['GrossVP'].max()
             pivot = pivot.reset_index()
             pivot.columns.name = None
             for col in pivot.columns:
                 if col != 'Course':
                     pivot[col] = pivot[col].apply(lambda v: _format_vp(v, 0))
-            sections.append({"title": "Worst Gross vs Par by Course", "table_html": _df_to_html(pivot)})
+            sections.append({"title": "Worst Gross vs Par by Course", "table_html": _df_to_html(pivot, table_class="teg-table cr-matrix-table")})
 
         return {"sections": sections}
     except Exception as e:

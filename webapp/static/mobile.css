@@ -1176,6 +1176,40 @@
     width: 16.5%;
     text-align: right;
   }
+
+  /* ── Course Analysis: Averages/Bests/Worsts (wrap + dense grid) ──
+     A first attempt reused Matrix's single-line first-column treatment
+     here and it didn't fit: 8 value columns (7 initials + Total) at
+     Matrix's font, and course names up to 29 characters ("Prince's -
+     Dunes / Himalayas") squeezed into ~34% of the row. Letting the course
+     column wrap onto two lines instead of forcing one frees width for the
+     value columns -- narrower first column, same small monospace values
+     as Matrix/By TEG, tighter padding since there are more columns here
+     than Matrix ever has. */
+  .course-records-page table.cr-matrix-table {
+    table-layout: fixed;
+    width: 100%;
+    font-family: 'Roboto Mono', monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  .course-records-page table.cr-matrix-table thead th,
+  .course-records-page table.cr-matrix-table tbody td {
+    font-size: 10px;
+    padding: 4px 3px;
+    line-height: 1.2;
+  }
+  .course-records-page table.cr-matrix-table thead th { font-size: 9px; }
+  .course-records-page table.cr-matrix-table th:first-child,
+  .course-records-page table.cr-matrix-table td:first-child {
+    width: 22%;
+    text-align: left;
+    white-space: normal;
+    overflow-wrap: break-word;
+  }
+  .course-records-page table.cr-matrix-table th:not(:first-child),
+  .course-records-page table.cr-matrix-table td:not(:first-child) {
+    text-align: right;
+  }
 }
 @media (min-width: 390px) and (max-width: 640px) {
   .latest-round-page .lr-readout { grid-template-columns: repeat(3, minmax(0, 1fr)); }
