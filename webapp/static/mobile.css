@@ -84,9 +84,19 @@
   .page-title-area {
     padding-inline: 0.75rem;
   }
-  .main-content {
-    padding-left: 0;
-    padding-right: 0;
+  /* base.html's <main> carries Tailwind's .px-6 (24px), loaded after this
+     file, so a bare .main-content rule can't win on specificity/source
+     order -- matching the .px-6 class here ties it and this file wins by
+     appearing later. 12px matches .page-title-area's inset above so titles
+     and content line up by default; the three full-bleed pages below zero
+     it back out. */
+  .main-content.px-6 {
+    padding-inline: 12px;
+  }
+  .main-content.px-6:has(> .latest-round-page),
+  .main-content.px-6:has(> .history-page),
+  .main-content.px-6:has(> .standings-page) {
+    padding-inline: 0;
   }
   .page-title-area .page-title { font-size: 1.35rem; }
 
@@ -137,7 +147,8 @@
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    mask-image: linear-gradient(to right, #000 calc(100% - 18px), transparent);
+    mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+    scroll-padding-inline: 28px;
   }
   .section-nav::-webkit-scrollbar { display: none; }
   .section-nav .tab-underline {
@@ -175,6 +186,29 @@
     font-size: 0.875rem;
   }
 
+  /* .pill-group's inline-flex + flex-wrap lets pills wrap onto new rows with
+     no control over the split, so a group of 3 (or 5) leaves one pill
+     orphaned alone on the last row instead of balancing evenly. Forcing a
+     2-column grid guarantees even rows, generalizing the same fixed-grid
+     idea already used for .latest-round-page .metric-grid. */
+  .pill-group {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .pill-group .pill {
+    width: 100%;
+    min-width: 0;
+    justify-content: center;
+  }
+  /* An odd-sized group (e.g. 3 or 5 pills) still leaves the last pill alone
+     in the final row; at half-width that reads as a stretched orphan with
+     dead space beside it (confirmed live on /personal-bests's 3-pill "View"
+     group), so give it the full row instead. */
+  .pill-group .pill:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+
   /* Page-level selects/inputs (.theme-select outside the nav): finger-sized,
      and ≥16px font so iOS Safari doesn't zoom the viewport on focus. */
   .section-controls { flex-wrap: wrap; row-gap: 0.6rem; }
@@ -200,6 +234,23 @@
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
+  /* Right-edge scroll-shadow: two gradient layers (background-attachment:
+     local) fade to the wrapper's own colour and vanish once scrolled past
+     the end; two more (background-attachment: scroll) sit underneath as a
+     fixed-to-viewport edge shadow, giving a persistent affordance that more
+     columns exist even where the fade has scrolled away. Opt out with
+     .table-wrapper--no-pin, matching the sticky-column rule below. */
+  .table-wrapper:not(.table-wrapper--no-pin),
+  .overflow-x-auto:not(.table-wrapper--no-pin) {
+    background:
+      linear-gradient(to right, var(--bg-card, #ffffff) 30%, rgba(255, 255, 255, 0)) 0 0,
+      linear-gradient(to right, rgba(255, 255, 255, 0), var(--bg-card, #ffffff) 70%) 100% 0,
+      linear-gradient(to right, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0)) 0 0,
+      linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.08)) 100% 0;
+    background-repeat: no-repeat;
+    background-size: 24px 100%, 24px 100%, 8px 100%, 8px 100%;
+    background-attachment: local, local, scroll, scroll;
+  }
   .table-wrapper:not(.table-wrapper--no-pin) .teg-table thead th:first-child,
   .table-wrapper:not(.table-wrapper--no-pin) .teg-table tbody td:first-child,
   .overflow-x-auto:not(.table-wrapper--no-pin) .teg-table thead th:first-child,
@@ -209,6 +260,8 @@
     position: sticky;
     left: 0;
     background-color: var(--bg-card, #ffffff);
+    border-right: 1px solid var(--table-cell-border, #e0e0e0);
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.06);
   }
   .table-wrapper:not(.table-wrapper--no-pin) .teg-table thead th:first-child,
   .overflow-x-auto:not(.table-wrapper--no-pin) .teg-table thead th:first-child,
@@ -333,10 +386,6 @@
   /* Latest round vertical slice. Keep the scoreboard readable at 320px and
      let its chart use the full phone width. */
   .latest-round-page { --lr-inset: 12px; }
-  /* base.html supplies Tailwind's px-6 on every main-content. Its utility is
-     loaded after the generic mobile shell, so target this one page directly
-     instead of relying on the weaker global reset above. */
-  .main-content.px-6:has(> .latest-round-page) { padding-inline: 0; }
   .latest-round-page #lr-context-header { margin-left: var(--lr-inset); margin-right: var(--lr-inset); }
   .latest-round-page > .section-controls { margin-left: 0; margin-right: 0; }
   .latest-round-page > .section-controls .pill,
@@ -597,12 +646,9 @@
   }
 
   /* ── History (TEG winners table, R3.1) ──
-     Same ancestor-gutter fix Latest Round needed: Tailwind's .main-content.px-6
-     re-applies 24px inline padding after the generic reset above, so a page-
-     scoped hook has to null it out again. table-wrapper--no-pin (set in
-     data_table.html) drops the generic sticky-first-column treatment, since a
-     fixed-width four-column layout fits without horizontal scroll. */
-  .main-content.px-6:has(> .history-page) { padding-inline: 0; }
+     table-wrapper--no-pin (set in data_table.html) drops the generic
+     sticky-first-column treatment, since a fixed-width four-column layout
+     fits without horizontal scroll. */
   .history-page { padding-inline: 12px; }
   .history-page .history-table { table-layout: fixed; font-size: 13px; }
   .history-page .history-table th,
@@ -705,9 +751,7 @@
      Shared by results.html and leaderboard.html -- both render the exact
      same table_html/lb_cards/lb_hero markup from the same context builder
      (_results_context, webapp/routes/history.py), so one hook covers both
-     pages rather than duplicating this block per page. Same ancestor-gutter
-     fix Latest Round/History needed. */
-  .main-content.px-6:has(> .standings-page) { padding-inline: 0; }
+     pages rather than duplicating this block per page. */
   .standings-page { padding-inline: 12px; }
   /* .lb-table-card is hidden by the generic M2.7 card-reflow rule above
      (line ~215) in favour of .lb-cards; reveal the real table here instead

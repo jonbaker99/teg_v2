@@ -245,6 +245,25 @@
         });
         btn.classList.add('tab-underline--active');
     });
+    // Phone-only: scroll the active tab of every .section-nav into view.
+    // Overflowing tab rows (e.g. /honours, /records) only hint "more tabs"
+    // via a right-edge fade (mobile.css), which is too subtle to notice --
+    // this makes sure the active tab (from a page-load query param, or an
+    // HTMX swap that changes which tab is active) is never left off-screen.
+    // No-ops above 640px, so desktop/iPad behaviour is unchanged. Always
+    // scans the whole document rather than the HTMX swap root: every page's
+    // .section-nav sits as a sibling of its hx-target content div, not
+    // inside it (see the click handler above), so a swapped-root-scoped
+    // query would never find it.
+    function scrollActiveTabIntoView() {
+        if (!window.matchMedia('(max-width: 640px)').matches) return;
+        document.querySelectorAll('.section-nav').forEach(function(nav) {
+            var active = nav.querySelector('.tab-underline--active, .tab-underline.active');
+            if (active) active.scrollIntoView({ inline: 'center', block: 'nearest' });
+        });
+    }
+    document.addEventListener('DOMContentLoaded', scrollActiveTabIntoView);
+    document.addEventListener('htmx:afterSettle', scrollActiveTabIntoView);
     // Global pill active state: clicking a .pill moves --active within its
     // nearest .pill-group. Works whether the pills are re-rendered by an HTMX
     // swap or sit outside the swap target (e.g. /top-performances measure pills).
