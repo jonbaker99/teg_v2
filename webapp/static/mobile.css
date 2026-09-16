@@ -186,29 +186,6 @@
     font-size: 0.875rem;
   }
 
-  /* .pill-group's inline-flex + flex-wrap lets pills wrap onto new rows with
-     no control over the split, so a group of 3 (or 5) leaves one pill
-     orphaned alone on the last row instead of balancing evenly. Forcing a
-     2-column grid guarantees even rows, generalizing the same fixed-grid
-     idea already used for .latest-round-page .metric-grid. */
-  .pill-group {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 6px;
-  }
-  .pill-group .pill {
-    width: 100%;
-    min-width: 0;
-    justify-content: center;
-  }
-  /* An odd-sized group (e.g. 3 or 5 pills) still leaves the last pill alone
-     in the final row; at half-width that reads as a stretched orphan with
-     dead space beside it (confirmed live on /personal-bests's 3-pill "View"
-     group), so give it the full row instead. */
-  .pill-group .pill:last-child:nth-child(odd) {
-    grid-column: 1 / -1;
-  }
-
   /* Page-level selects/inputs (.theme-select outside the nav): finger-sized,
      and ≥16px font so iOS Safari doesn't zoom the viewport on focus. */
   .section-controls { flex-wrap: wrap; row-gap: 0.6rem; }
@@ -234,23 +211,6 @@
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
-  /* Right-edge scroll-shadow: two gradient layers (background-attachment:
-     local) fade to the wrapper's own colour and vanish once scrolled past
-     the end; two more (background-attachment: scroll) sit underneath as a
-     fixed-to-viewport edge shadow, giving a persistent affordance that more
-     columns exist even where the fade has scrolled away. Opt out with
-     .table-wrapper--no-pin, matching the sticky-column rule below. */
-  .table-wrapper:not(.table-wrapper--no-pin),
-  .overflow-x-auto:not(.table-wrapper--no-pin) {
-    background:
-      linear-gradient(to right, var(--bg-card, #ffffff) 30%, rgba(255, 255, 255, 0)) 0 0,
-      linear-gradient(to right, rgba(255, 255, 255, 0), var(--bg-card, #ffffff) 70%) 100% 0,
-      linear-gradient(to right, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0)) 0 0,
-      linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.08)) 100% 0;
-    background-repeat: no-repeat;
-    background-size: 24px 100%, 24px 100%, 8px 100%, 8px 100%;
-    background-attachment: local, local, scroll, scroll;
-  }
   .table-wrapper:not(.table-wrapper--no-pin) .teg-table thead th:first-child,
   .table-wrapper:not(.table-wrapper--no-pin) .teg-table tbody td:first-child,
   .overflow-x-auto:not(.table-wrapper--no-pin) .teg-table thead th:first-child,
@@ -260,8 +220,6 @@
     position: sticky;
     left: 0;
     background-color: var(--bg-card, #ffffff);
-    border-right: 1px solid var(--table-cell-border, #e0e0e0);
-    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.06);
   }
   .table-wrapper:not(.table-wrapper--no-pin) .teg-table thead th:first-child,
   .overflow-x-auto:not(.table-wrapper--no-pin) .teg-table thead th:first-child,
