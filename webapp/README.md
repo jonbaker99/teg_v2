@@ -238,6 +238,13 @@ real Live round use; not triggered yet.
   (live) or your local working tree (dev), with a small-print summary of the
   implications (pull overwrites working-tree files / push makes an out-of-band API
   commit when run locally).
+- **"🔄 Sync all reports from GitHub" (current limitation):** this one-click button
+  (`sync_report_files` in `teg_analysis/io/sync.py`) re-pulls report files matched
+  by `_REPORT_FILE_PATTERNS` — `data/commentary` and `data/commentary/drafts` only.
+  It does **not** include `data/commentary/pdfs`, so regenerating a report and
+  hitting this button does not refresh its PDF. The PDFs are still reachable —
+  `data/commentary/pdfs` is a normal `SYNC_FOLDERS` entry, so picking it from the
+  folder dropdown and using the table's select-all + Pull works as usual.
 - **Safety:** each pull backs up the existing store file to
   `data/backups/sync/<timestamp>/…` *before* overwriting (`backup_store_file`); an
   inline **Backups / restore** panel lists them and restores on demand
@@ -380,6 +387,9 @@ webapp/
     themes/           # One CSS file per theme
     base-vars.css     # Default CSS variable definitions
     app.css           # Global styles, component classes
+    fonts/            # Self-hosted woff2 subsets + faces.json — NOT served to the site
+                      # (pages still link Google Fonts); exist only so the offline
+                      # report-PDF build can embed fonts without network access
 ```
 
 ### Data flow
