@@ -45,7 +45,7 @@ from webapp.deps import (
     get_rounds_for_teg,
     parse_teg_label,
 )
-from webapp.chart_utils import get_chart_style
+from webapp.chart_utils import get_chart_style, format_value, CROWDED_FIELD_THRESHOLD
 from webapp.tables import df_to_html as _df_to_html, EMPTY_TABLE_HTML
 
 logger = logging.getLogger(__name__)
@@ -304,18 +304,39 @@ def scoring_by_par_content(request: Request, teg: int = Query(0)):
 
 # --- /scoring/by-teg ----------------------------------------------------------
 
-def _by_teg_chart(agg: pd.DataFrame) -> str:
-    """Build a Plotly line chart of GrossVP by TEG per player, return JSON."""
+def _by_teg_chart(agg: pd.DataFrame) -> tuple[str, list]:
+    """Build a Plotly line chart of GrossVP by TEG per player, return
+    (figure JSON, below-chart readout). The readout mirrors each line's
+    final value/colour (see get_teg_chart_readout in chart_utils.py) so the
+    phone-only chart treatment (base.html::applyMobileChartTreatment, opted
+    into via the .chart-block wrapper in scoring_by_teg.html) can hide the
+    native legend without losing player identity -- colours are assigned
+    explicitly here, in the same order/palette Plotly's default colorway
+    would already pick, so the desktop/iPad figure is unchanged."""
     import plotly.graph_objects as go
+    import plotly.express as px
+
+    players = sorted(agg['Player'].unique())
+    palette = px.colors.qualitative.Plotly
+    color_map = {p: palette[i % len(palette)] for i, p in enumerate(players)}
+    name_to_code = get_name_to_code()
 
     fig = go.Figure()
-    for player in sorted(agg['Player'].unique()):
+    readout = []
+    for player in players:
         pdata = agg[agg['Player'] == player].sort_values('TEGNum')
+        color = color_map[player]
         fig.add_trace(go.Scatter(
             x=pdata['TEGNum'], y=pdata['GrossVP'],
             mode='lines+markers', name=player,
-            line=dict(width=2), marker=dict(size=4),
+            line=dict(width=2, color=color), marker=dict(size=4, color=color),
         ))
+        readout.append({
+            "code": name_to_code.get(player, player),
+            "name": player,
+            "value": format_value(pdata['GrossVP'].iloc[-1], 'gross'),
+            "color": color,
+        })
 
     fig.update_layout(
         xaxis_title='TEG', yaxis_title='Avg Gross vs Par',
@@ -328,12 +349,13 @@ def _by_teg_chart(agg: pd.DataFrame) -> str:
     fig.layout.yaxis.fixedrange = True
     fig.update_layout(**get_chart_style('streamlit'))
 
-    return fig.to_json()
+    return fig.to_json(), readout
 
 
 @router.get("/scoring/by-teg")
 def scoring_by_teg_page(request: Request):
     chart_json = None
+    chart_readout = []
     try:
         all_data = cached_load_all_data()
         agg = aggregate_data(all_data, 'TEG', measures=['GrossVP'])
@@ -358,7 +380,7 @@ def scoring_by_teg_page(request: Request):
         pivot['TEGNum'] = pivot['TEGNum'].astype(int).astype(str)
         pivot = pivot.rename(columns={'TEGNum': 'TEG'})
         table_html = _df_to_html(pivot)
-        chart_json = _by_teg_chart(agg)
+        chart_json, chart_readout = _by_teg_chart(agg)
     except Exception as e:
         logger.exception("scoring_by_teg_page failed")
         table_html = f"<p class='text-muted'>Error: {e}</p>"
@@ -368,6 +390,8 @@ def scoring_by_teg_page(request: Request):
         "active_page": "scoring",
         "table_html": table_html,
         "chart_json": chart_json,
+        "chart_readout": chart_readout,
+        "chart_crowded_threshold": CROWDED_FIELD_THRESHOLD,
     })
 
 
@@ -804,8 +828,14 @@ def scoring_matrix_content(request: Request, level: str = Query("teg"), score_ty
 # --- /scoring/distributions ---------------------------------------------------
 
 def _distributions_chart(display: pd.DataFrame, is_pct: bool = False,
-                          all_players_pct: list | None = None) -> str | None:
-    """Build a grouped bar chart of score distributions by player, return JSON.
+                          all_players_pct: list | None = None) -> tuple[str | None, list]:
+    """Build a grouped bar chart of score distributions by player, return
+    (figure JSON, below-chart readout). ``display``'s player columns are
+    already codes (count_scores_by_player unstacks on 'Pl'), so the readout's
+    data-chart-focus values match each bar trace's name directly -- see
+    _by_teg_chart for the equivalent full-name case. Colours are assigned
+    explicitly, in the order/palette Plotly's default colorway already picks
+    for these traces, so the desktop/iPad figure is unchanged.
 
     In percentage mode (``is_pct``), ``display`` holds per-player percentages
     and ``all_players_pct`` (aligned to ``display``'s rows) is overlaid as an
@@ -813,21 +843,40 @@ def _distributions_chart(display: pd.DataFrame, is_pct: bool = False,
     """
     try:
         import plotly.graph_objects as go
+        import plotly.express as px
+        from teg_analysis.core.players import get_player_name
 
         if display is None or display.empty:
-            return None
+            return None, []
 
         # First column is the score label, rest are players
         score_col = display.columns[0]
         player_cols = [c for c in display.columns[1:] if c not in ('Total',)]
+        palette = px.colors.qualitative.Plotly
+        color_map = {p: palette[i % len(palette)] for i, p in enumerate(player_cols)}
 
         fig = go.Figure()
+        readout = []
         for player in player_cols:
+            y_values = pd.to_numeric(display[player], errors='coerce')
+            color = color_map[player]
             fig.add_trace(go.Bar(
                 x=display[score_col],
-                y=pd.to_numeric(display[player], errors='coerce'),
+                y=y_values,
                 name=player,
+                marker=dict(color=color),
             ))
+            # No single "final value" makes sense for a distribution bar
+            # chart (a percentage-mode total is always ~100%; a count-mode
+            # total is just games played, not a distribution stat) -- this
+            # readout exists purely to keep player identity/colour visible
+            # once the native legend is hidden on phones, not to add a stat.
+            readout.append({
+                "code": player,
+                "name": get_player_name(player),
+                "value": "",
+                "color": color,
+            })
 
         if is_pct and all_players_pct is not None:
             fig.add_trace(go.Scatter(
@@ -851,9 +900,9 @@ def _distributions_chart(display: pd.DataFrame, is_pct: bool = False,
         fig.layout.yaxis.fixedrange = True
         fig.update_layout(**get_chart_style('streamlit'))
 
-        return fig.to_json()
+        return fig.to_json(), readout
     except Exception:
-        return None
+        return None, []
 
 
 def _all_players_score_pct(filtered: pd.DataFrame, field: str, index) -> list:
@@ -895,6 +944,7 @@ def _distributions_context(field="Stableford", player="All players", teg="All TE
         player_filtered = filtered if player == "All players" else filtered[filtered["Pl"] == player]
 
         chart_json = None
+        chart_readout = []
         if tab == "player":
             count_data = count_scores_by_player(player_filtered, field)
             if is_pct:
@@ -910,7 +960,7 @@ def _distributions_context(field="Stableford", player="All players", teg="All TE
             else:
                 chart_table = prepare_score_count_display(count_data, field, display_name, False)
                 all_players_pct = None
-            chart_json = _distributions_chart(chart_table, is_pct, all_players_pct)
+            chart_json, chart_readout = _distributions_chart(chart_table, is_pct, all_players_pct)
         else:
             # By TEG crosstab (respects par + player filters, not TEG)
             teg_filtered = all_data
@@ -940,6 +990,8 @@ def _distributions_context(field="Stableford", player="All players", teg="All TE
         return {
             "table_html": table_html,
             "chart_json": chart_json,
+            "chart_readout": chart_readout,
+            "chart_crowded_threshold": CROWDED_FIELD_THRESHOLD,
             "fields": DIST_FIELDS,
             "player_options": player_options,
             "teg_options": teg_options,

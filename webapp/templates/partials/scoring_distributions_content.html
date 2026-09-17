@@ -51,8 +51,17 @@
 </div>
 
 {% if chart_json %}
-<div class="data-card data-card--padded section-gap">
+<div class="chart-block section-gap" data-crowded-threshold="{{ chart_crowded_threshold }}">
+<div class="data-card data-card--padded">
     <div class="chart-container" data-figure="{{ chart_json }}" style="height:350px;"></div>
+</div>
+{% if chart_readout %}
+<div class="lr-readout" role="group" aria-label="Player key">
+    {% for item in chart_readout %}
+    <button type="button" class="lr-readout-entry" data-chart-focus="{{ item.code }}" aria-pressed="false" aria-label="Focus {{ item.name }}"><span class="lr-initials"{% if item.color %} style="color: {{ item.color }};"{% endif %}>{{ item.code }}</span><strong>{{ item.value }}</strong></button>
+    {% endfor %}
+</div>
+{% endif %}
 </div>
 {% endif %}
 
