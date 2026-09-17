@@ -78,7 +78,8 @@ teg_analysis/
                      apply_admin_edits (authoritative bulk edit; resolve_conflict wraps
                      it)/get_live_leaderboard/finalize_live_round
 
-  reporting/         LLM tournament-report pipeline (scored beats → story plan → authoring → styled MD)
+  reporting/         LLM tournament-report pipeline (scored beats → story plan → authoring →
+                     styled MD → optional offline PDF render)
                      Calls the Anthropic API by default; `--plan` runs the same prompts
                      on claude.ai plan usage instead (llm.py provider switch +
                      mailbox.py file hand-off), `--paste NAME` hands them to you for
@@ -92,6 +93,9 @@ teg_analysis/
     story_plan.py    Stage 3: structured story plan (LLM)
     authoring.py     Stage 4: dry draft, entertaining report (around-draft + lint)
     render.py        Stage 5: CSS-class styling hooks
+    report_pdf.py    Offline stage: renders the styled report to a single-page A4 PDF via
+                     headless Chromium — free, no LLM call. See reporting/README.md →
+                     Pre-render to PDF
     llm.py           Thin Anthropic wrapper (key resolution, prompt caching)
     scoring.py       3-axis combination + mode weights
 

@@ -158,7 +158,7 @@ Two distinct phases. **Streamlit is the original architecture** — self-contain
    - `core/` — data loading (`load_all_data`) and transformation
    - `analysis/` — scoring, rankings, aggregation, streaks, records, eclectic, handicaps, commentary, pipeline, data_update, history, performance, leaderboards, bestball, live_round, round_setup, round_wizard
    - `display/` — formatting, HTML tables, scorecards, nav utilities. Returns HTML strings; never calls `st.write`
-   - `reporting/` — LLM-powered tournament reports
+   - `reporting/` — LLM-powered tournament reports, plus a free, non-LLM PDF-rendering stage (`report_pdf.py`)
    - `api/` — placeholder for the REST API layer
 
 2. **`streamlit/`** — the original app, self-contained via its own `utils.py`. **Dead code kept for reference only**: not deployed, not maintained, not migrated, and nothing else in the repo depends on it. Slated for deletion. Never modify it, and don't use it as a model for new work.
