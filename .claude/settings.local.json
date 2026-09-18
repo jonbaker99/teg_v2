@@ -80,7 +80,8 @@
       "Bash(git commit *)",
       "Bash(git fetch *)",
       "Bash(gh pr *)",
-      "Bash(python3 -)"
+      "Bash(python3 -)",
+      "Bash(uvicorn webapp.app:app *)"
     ],
     "deny": [],
     "ask": [
