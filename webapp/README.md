@@ -438,36 +438,53 @@ Three themes, registered in `theme.py`. Each overrides CSS custom properties def
 | **Clean Page** | Flat single white content card on a warm grey background |
 | **Clean Layered** | 3-layer hierarchy: stone background → taupe panel → white data cards |
 
-**Typography (all clean themes, set in `clean.css`).** One sans face, **Inter**
-(2026-09-19, replaced IBM Plex Sans + Roboto Mono — see below), covers
-everything except three serif identity elements: body/UI text (section titles,
-tabs, pills, captions, page text) via `--font-sans`/`--font-heading`/`--font-body`,
-and data tables/metrics via `--font-table` — a separate token, also Inter, kept
-distinct so table content can diverge from body text again later without
+**Typography (all clean themes, set in `clean.css`).** Two families, each with
+one job (2026-09-19 direction, see decision history below):
+
+| Element | Font |
+|---|---|
+| Site title (`.nav-brand`), main nav (`.nav-link` + dropdown) | `--font-serif` (Lora) |
+| Page H1 title (`.page-title`) | `--font-serif` (Lora) |
+| Section/card headings (`.section-title`, `.chart-title`, `.card-header`) | `--font-serif` (Lora), small-caps |
+| Tab bar (`.tab-underline`) | `--font-sans` (Inter), small-caps |
+| Body/UI text, prose, table text, player names | `--font-sans`/`--font-heading`/`--font-body` (Inter) |
+| Table/metric numbers | `--font-table` (Inter, tabular figures) |
+
+`--font-table` is kept as its own token (not aliased to `--font-sans`), also
+Inter today, so table content can diverge from body text again later without
 touching `--font-sans` call sites. Table/metric numbers get column-aligned
 digits from tabular figures (`font-variant-numeric: tabular-nums lining-nums`,
 set once globally on `body` in `base-vars.css`), not from an actual monospace
-face — there's no real mono font loaded for data content any more. The site's
-**Lora serif (`--font-serif`) is retained for three identity elements only**:
-the site title (`.nav-brand`), the main nav (`.nav-link` + dropdown), and page
-H1 titles (`.page-title`). Player detail follows the same sans/tabular data
-convention, not a separate identity face. Shared serif elements are
-re-asserted in a "Serif retention" block at the foot of `clean.css` — global,
-no per-template markup.
+face — there's no real mono font loaded for data content. The tab bar stays
+Inter rather than gaining a third typeface: its hierarchy signal is case
+(small-caps, `letter-spacing: 0.02em`, sized down slightly to `0.8125rem`
+since caps read larger/heavier than mixed case at the same size) — the same
+device Lora's headings use, so both halves of the system read as one
+convention rather than two. Player
+detail follows the same convention, not a separate identity face. Shared
+serif elements are re-asserted in a "Serif retention" block at the foot of
+`clean.css` — global, no per-template markup.
 
-*Font decision history:* the site ran IBM Plex Sans (body) + Roboto Mono
-(tables/data) + Lora (identity) through 2026-09-18. Reviewing three separate
-faces across mobile/desktop showed data content shifting between a sans and a
-literal mono face read as jarring with no real benefit — tabular figures give
-the same column alignment on a single sans face. Switched everything but the
-serif identity elements to Inter. A dev-only, unlinked comparison tool at
-`/design/fonts` (`webapp/routes/font_lab.py`) renders real leaderboard/records
-content with independent Sans / Table-numbers / Serif pickers (several
-curated options each) for judging this or any future font change against real
-data before committing to it; a second dev-only tool for trying whole
-sans+serif *pairings* against the live site (not just this comparison page)
-is `/design/typography` (`webapp/theme.py`'s `FONT_PAIRINGS`, cookie-driven,
-reloads the page like the existing title-style/card-header switchers).
+*Font decision history:* IBM Plex Sans (body) + Roboto Mono (tables/data) +
+Lora (identity only) through 2026-09-18 — three faces shifting between sans
+and literal mono for data read as jarring with no real benefit (tabular
+figures give the same column alignment on a single sans face), so everything
+but identity moved to Inter. That single-sans-everywhere pass then made
+section/card headings (previously `--font-table`/Inter) read plain next to
+the surrounding Inter content with no visual "this is a heading" cue beyond
+size — so headings and the tab bar were revisited once more (2026-09-19,
+same day): headings moved to Lora (small-caps), and a third typeface (mono)
+considered for the tab bar was rejected in favour of small-caps Inter, on the
+principle that a typeface should serve a genuinely distinct *content* type,
+not decorate one UI strip. Two dev-only, unlinked comparison tools support
+this and any future revisit: `/design/fonts` (`webapp/routes/font_lab.py`)
+renders real leaderboard/records content with independent pickers for Sans /
+Table-numbers / Serif, plus separate Tab-bar-font and Section-header-font
+pickers (each with a CAPS toggle) against the same real content; `/design/
+headers` has a live tab-bar-font comparison too. `/design/typography`
+(`webapp/theme.py`'s `FONT_PAIRINGS`, cookie-driven, reloads the page like
+the existing title-style/card-header switchers) tries whole sans+serif
+*pairings* against the live site rather than a sample page.
 
 **Dark mode (orthogonal to theme).** A light/dark **mode** is independent of the
 named theme: a `mode` cookie (`theme.py: get_mode`, injected as

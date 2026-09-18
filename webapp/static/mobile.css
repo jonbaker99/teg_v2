@@ -222,7 +222,7 @@
     background: transparent;
     box-shadow: none;
     color: var(--text-secondary, #555555);
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     font-weight: 600;
     white-space: nowrap;
     text-align: center;
@@ -655,8 +655,8 @@
     display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
     margin: 20px var(--lr-inset) 0; padding-top: 10px;
   }
-  /* The h3 carries class="section-title" (canonical site-wide mono-caps
-     heading, base-vars.css) -- just reset its margin to 0 here so it aligns
+  /* The h3 carries class="section-title" (canonical site-wide small-caps
+     serif heading, base-vars.css) -- just reset its margin to 0 here so it aligns
      on the same baseline as the metric-name <p> beside it in this flex row. */
   .latest-round-page #lr-content .section-title-row h3.section-title {
     margin: 0;

@@ -2,7 +2,7 @@
 {% block title_suffix %} — Design Lab{% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&family=Lora:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=Lora:wght@400;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Space+Mono:wght@400;700&family=Big+Shoulders+Text:wght@600;700;800&display=swap">
 <style>
   .hh-intro { font-size: 0.875rem; color: var(--text-muted); max-width: 62rem; margin-bottom: 2rem; }
   .hh-section { margin-top: 2.75rem; }
@@ -24,7 +24,7 @@
     font-weight: 700; color: var(--text-muted); border-bottom: 1px solid var(--table-cell-border, #e0e0e0);
   }
   .hh-card-body { padding: 1.1rem 1.25rem; }
-  .hh-caption { font-size: 0.7rem; color: var(--text-muted); padding: 0.5rem 0.75rem; border-top: 1px dashed var(--table-cell-border, #e0e0e0); font-family: 'Roboto Mono', monospace; line-height: 1.5; }
+  .hh-caption { font-size: 0.7rem; color: var(--text-muted); padding: 0.5rem 0.75rem; border-top: 1px dashed var(--table-cell-border, #e0e0e0); font-family: var(--font-table), monospace; line-height: 1.5; }
 
   .hh-live-note { font-size: 0.75rem; color: var(--text-muted); margin: -0.5rem 0 1rem 0; }
 
@@ -52,6 +52,74 @@
     .hh-grid { grid-template-columns: 1fr; }
   }
 
+  /* ── Tab bar font picker (live, real .section-nav/.tab-underline markup) ── */
+  .hh-tabfont-picker { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.25rem; }
+  .hh-tabfont-picker label { font-size: 0.78rem; color: var(--text-secondary); }
+  .hh-tabfont-picker select { font-size: 0.8125rem; padding: 0.3rem 0.4rem; }
+  #tabfont-demo { padding: 0.75rem 0; border-bottom: 1px solid var(--table-cell-border, #e0e0e0); margin-bottom: 0.5rem; }
+
+  /* Current — plain Inter, no override (baseline for comparison) */
+  #tabfont-demo.tf-current .tab-underline { font-family: var(--font-sans), sans-serif; }
+
+  /* Space Grotesk — geometric, quirky character at normal case/weight; doesn't
+     need caps/letter-spacing to read as distinctive. */
+  #tabfont-demo.tf-space-grotesk .tab-underline {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.9rem;
+  }
+  /* IBM Plex Mono — technical kicker, same treatment already used for the
+     report-style "kicker" caption elsewhere on this page. */
+  #tabfont-demo.tf-plex-mono .tab-underline {
+    font-family: 'IBM Plex Mono', 'Courier New', monospace; font-weight: 700;
+    font-size: 0.71rem; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  /* JetBrains Mono — rounder, slightly larger coder-mono texture. */
+  #tabfont-demo.tf-jetbrains-mono .tab-underline {
+    font-family: 'JetBrains Mono', monospace; font-weight: 600;
+    font-size: 0.75rem; letter-spacing: 0.05em; text-transform: uppercase;
+  }
+  /* Space Mono — retro/quirky bold caps. */
+  #tabfont-demo.tf-space-mono .tab-underline {
+    font-family: 'Space Mono', monospace; font-weight: 700;
+    font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  /* Big Shoulders Text — condensed display, bold presence at a compact size. */
+  #tabfont-demo.tf-big-shoulders .tab-underline {
+    font-family: 'Big Shoulders Text', sans-serif; font-weight: 700;
+    font-size: 0.9375rem; letter-spacing: 0.03em; text-transform: uppercase;
+  }
+
+  /* ── 3b. IBM Plex Mono: tabs-only vs. unified structural chrome ──
+     .section-title's real shipped spec (base-vars.css) is font-family:
+     var(--font-table) [Inter], 700, 13px, letter-spacing 0.09em, uppercase,
+     accent green -- reproduced here under #chrome-demo so "current" renders
+     identically to the live site, and "unified" only changes font-family. */
+  #chrome-demo { border-bottom: 1px solid var(--table-cell-border, #e0e0e0); padding-bottom: 1.25rem; margin-bottom: 0.5rem; }
+  #chrome-demo .chrome-section-title {
+    font-family: var(--font-table), sans-serif; font-weight: 700; font-size: 13px;
+    letter-spacing: 0.09em; text-transform: uppercase; color: var(--accent, #17683c);
+    line-height: 1.3; margin: 1.5rem 0 0.5rem 0;
+  }
+  #chrome-demo .chrome-body { font-size: 0.875rem; color: var(--text-secondary); }
+
+  /* Option 1 — IBM Plex Mono on tabs only, normal case: its own distinct nav
+     element, doesn't copy the section-title kicker idiom. Section title is
+     untouched (stays Inter/current). */
+  #chrome-demo.chrome-opt1 .tab-underline {
+    font-family: 'IBM Plex Mono', 'Courier New', monospace; font-weight: 600; font-size: 0.8rem;
+  }
+
+  /* Option 2 — unified structural chrome: tabs AND section title both move to
+     IBM Plex Mono, same uppercase/letter-spaced/green treatment section-title
+     already has -- one "chrome" language (nav + headers) distinct from Inter
+     (content/data) and Lora (identity), echoing the Reports page's existing
+     IBM Plex Mono kicker style. */
+  #chrome-demo.chrome-opt2 .tab-underline {
+    font-family: 'IBM Plex Mono', 'Courier New', monospace; font-weight: 700;
+    font-size: 0.71rem; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  #chrome-demo.chrome-opt2 .chrome-section-title {
+    font-family: 'IBM Plex Mono', 'Courier New', monospace;
+  }
 </style>
 {% endblock %}
 
@@ -134,44 +202,70 @@
     </p>
 </div>
 
-<!-- ══════════════════════════ 3. TAB LABEL ══════════════════════════ -->
-<div class="hh-section">
-    <h2>3. Tab label</h2>
-    <p class="hh-desc">Alternatives below are scoped to this page only — the real <code>.tab-underline</code> CSS is untouched.</p>
-    <div class="hh-grid">
-        <div class="hh-card">
-            <div class="hh-card-label">Current — .tab-underline</div>
-            <div class="hh-card-body">
-                <div class="hh-tabs">
-                    <span class="hh-tab-current hh-active">Round</span>
-                    <span class="hh-tab-current">Streaks</span>
-                    <span class="hh-tab-current">History</span>
-                </div>
-            </div>
-            <div class="hh-caption">font: inherit, 500, 0.875rem; no transform; border-bottom 2px solid accent on active.</div>
+<!-- ══════════════════════════ 3. TAB BAR FONT ══════════════════════════ -->
+<div class="hh-section" id="tab-font-section">
+    <h2>3. Tab bar font</h2>
+    <p class="hh-desc">
+        Now that the core site font is Inter (2026-09-19, see <code>webapp/README.md</code>'s
+        font-system section), the in-page tab bar reads a bit plain sitting in the same face as
+        everything else. Real <code>.section-nav</code> / <code>.tab-underline</code> markup below
+        (the exact classes /records uses) with a live picker — five options with real character,
+        each styled (weight/size/case/spacing) for how that font actually wants to be set as a
+        tab label, not just a drop-in font-family swap. Client-side only, not wired to a cookie —
+        refresh to reset. Real labels from <a href="/records">/records</a>' tab row.
+    </p>
+    <div class="hh-tabfont-picker">
+        <label for="tabfont-select">Tab bar font</label>
+        <select id="tabfont-select">
+            <option value="current">Current — Inter (plain sans)</option>
+            <option value="space-grotesk">Space Grotesk</option>
+            <option value="plex-mono">IBM Plex Mono</option>
+            <option value="jetbrains-mono">JetBrains Mono</option>
+            <option value="space-mono">Space Mono</option>
+            <option value="big-shoulders">Big Shoulders Text (condensed display)</option>
+        </select>
+    </div>
+    <div class="section-nav tf-current" id="tabfont-demo">
+        <button class="tab-underline tab-underline--active" type="button">TEG Records</button>
+        <button class="tab-underline" type="button">Round Records</button>
+        <button class="tab-underline" type="button">9-Hole Records</button>
+        <button class="tab-underline" type="button">Streaks</button>
+        <button class="tab-underline" type="button">Score Counts</button>
+    </div>
+</div>
+
+<!-- ══════════════════════════ 3b. TABS + SECTION HEADERS ══════════════════════════ -->
+<div class="hh-section" id="chrome-section">
+    <h2>3b. IBM Plex Mono: tabs only, or unified with section headers</h2>
+    <p class="hh-desc">
+        Section headers (<code>.section-title</code> / <code>.card-header</code> -- the small
+        green uppercase labels, e.g. "BEST TEGS") aren't IBM Plex Mono today -- they're
+        <code>var(--font-table)</code> (Inter), styled bold/uppercase/letter-spaced/green. Tabs
+        sit right above them on tabbed pages, so if tabs go IBM Plex Mono <em>and copy that same
+        uppercase-kicker treatment</em>, the two read as the same idiom in two different
+        typefaces. Two ways to avoid that: keep tabs distinct (Option 1), or unify tabs +
+        section headers into one IBM Plex Mono "structural chrome" layer, separate from Inter
+        (content/data) and Lora (identity) -- and echoing the Reports page's existing IBM Plex
+        Mono kicker style.
+    </p>
+    <div class="hh-tabfont-picker">
+        <label for="chrome-select">Chrome treatment</label>
+        <select id="chrome-select">
+            <option value="current">Current — tabs and section title both Inter</option>
+            <option value="opt1">Option 1 — IBM Plex Mono tabs only (normal case)</option>
+            <option value="opt2">Option 2 — Unified IBM Plex Mono (tabs + section title, kicker style)</option>
+        </select>
+    </div>
+    <div id="chrome-demo" class="chrome-current">
+        <div class="section-nav">
+            <button class="tab-underline tab-underline--active" type="button">TEG Records</button>
+            <button class="tab-underline" type="button">Round Records</button>
+            <button class="tab-underline" type="button">9-Hole Records</button>
+            <button class="tab-underline" type="button">Streaks</button>
+            <button class="tab-underline" type="button">Score Counts</button>
         </div>
-        <div class="hh-card">
-            <div class="hh-card-label">Alt A — Roboto Mono caps</div>
-            <div class="hh-card-body">
-                <div class="hh-tabs">
-                    <span class="hh-tab-robotomono hh-active">Round</span>
-                    <span class="hh-tab-robotomono">Streaks</span>
-                    <span class="hh-tab-robotomono">History</span>
-                </div>
-            </div>
-            <div class="hh-caption">'Roboto Mono', 700, 0.68rem, letter-spacing 0.08em, uppercase.</div>
-        </div>
-        <div class="hh-card">
-            <div class="hh-card-label">Alt B — Report kicker (IBM Plex Mono)</div>
-            <div class="hh-card-body">
-                <div class="hh-tabs">
-                    <span class="hh-tab-kicker hh-active">Round</span>
-                    <span class="hh-tab-kicker">Streaks</span>
-                    <span class="hh-tab-kicker">History</span>
-                </div>
-            </div>
-            <div class="hh-caption">'IBM Plex Mono', 700, 0.71rem, letter-spacing 0.13em, uppercase, color: accent.</div>
-        </div>
+        <h3 class="chrome-section-title">Best TEGs</h3>
+        <p class="chrome-body">Best Gross &nbsp;+50&nbsp; Jon BAKER &nbsp; TEG 13 (Kent, England, 2020)</p>
     </div>
 </div>
 
@@ -234,5 +328,19 @@
         </div>
     </div>
 </div>
+
+<script>
+(function () {
+    var demo = document.getElementById('tabfont-demo');
+    document.getElementById('tabfont-select').addEventListener('change', function () {
+        demo.className = 'section-nav tf-' + this.value;
+    });
+
+    var chrome = document.getElementById('chrome-demo');
+    document.getElementById('chrome-select').addEventListener('change', function () {
+        chrome.className = 'chrome-' + this.value;
+    });
+})();
+</script>
 
 {% endblock %}

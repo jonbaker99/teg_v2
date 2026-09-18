@@ -1,12 +1,15 @@
 # Design Principles
 
-The webapp should feel **lo-fi and data-forward** — like a well-kept scorecard or a terminal, not a magazine or a SaaS dashboard. Mono-first, quietly confident, never try-hard, while still respecting real aesthetics: restraint, alignment, honest empty states, one meaningful accent.
+The webapp should feel **lo-fi and data-forward** — like a well-kept scorecard or a broadsheet masthead, not a magazine or a SaaS dashboard. Quietly confident, never try-hard, while still respecting real aesthetics: restraint, alignment, honest empty states, one meaningful accent.
 
- **Direction note (2026-07):** this supersedes the earlier "printed programme /
- serif-first" framing. The site is moving to the lo-fi mono vibe below,
- page by page (the `/player` roster is the reference implementation). Where you
- still see serif-editorial styling, treat it as *not yet converted*, not as the
- target. The one intentional serif survivor is the top page title (masthead).
+ **Typography direction (2026-09-19):** two families, each with one clear job
+ — Lora for titles and structural labels, Inter for the tab bar and all
+ content. See the **Typography** bullet below and **Typography (mechanics)**
+ further down for the full role table. This replaces both an earlier
+ "mono-first" direction and, before that, a "serif-first" one; where a page
+ still doesn't match, treat it as *not yet converted*, not as the target.
+ The `/player` roster is the reference implementation for the rest of the
+ vibe (surfaces, restraint, no decorative chrome).
 
 ## Design vibe
 
@@ -14,9 +17,10 @@ Paste-ready brief for converting a page (or judging a new one). The gut check:
 *does this look like it's trying to impress, or like it quietly does the job well?* Aim for the second.
 
 **Typography**
-- **One sans face (Inter) is the workhorse** (2026-09-19, replaced the earlier mono-first rule below). Data values, metric labels, meta lines, subtitles, repeated item/card headings (e.g. player names) and table numbers all share `--font-sans`/`--font-table` (both Inter) — no sans/mono seam between prose and data. Numbers get column-aligned digits from tabular figures (`font-variant-numeric: tabular-nums`, set once globally on `body` in `base-vars.css`), not from switching to an actual monospace face.
-- **Avoid serif.** Serif is reserved for one deliberate masthead moment (the top page title) — never for data, repeated headings, or anything appearing more than once on a page. When in doubt, sans.
-- **Hierarchy comes from weight + size + colour, not font-switching.** Values ~600 weight in the primary text colour; labels small, uppercase, letter-spaced, muted.
+- **Two families, one job each.** Lora (serif) is for titles and structural labels: site title, main nav, page title, and every section/card heading (`.section-title` / `.chart-title` / `.card-header`, set small-caps). Inter (sans) is for everything else: the tab bar and all table/page content. A third family (mono) was considered for the tab bar and rejected — it would decorate one small UI strip rather than serve a genuinely distinct content type, the one thing that earns a typeface its place here (see Typography (mechanics) below).
+- **The tab bar's hierarchy signal is case, not a typeface.** It stays Inter but goes small-caps (uppercase, `letter-spacing: 0.02em`, sized down slightly to `0.8125rem` since caps read larger/heavier than mixed case at the same size) — the same device Lora's subheaders use, so both halves of the system read as one convention rather than two.
+- **Table/metric numbers stay Inter with tabular figures** (`font-variant-numeric: tabular-nums`, set once globally on `body`), which is what gives digits mono-style column alignment without an actual monospace face.
+- **Hierarchy comes from weight + size + colour + case, not adding fonts.** Values ~600 weight in the primary text colour; labels small, uppercase, letter-spaced, muted.
 
 **Restraint (the "not try-hard" part)**
 - **No decorative identity chrome** — no avatars, monogram circles, initials-in-bubbles, or filler icons added just to fill space.
@@ -36,7 +40,7 @@ Paste-ready brief for converting a page (or judging a new one). The gut check:
 - **Theme-variable driven** — style with the CSS vars so light *and* dark both work; don't hardcode colours.
 
 **Quick checklist**
-- [ ] Data, labels, meta, and repeated headings in **sans (Inter)**; serif only on the top page title; table numbers use tabular figures, not a mono face
+- [ ] Titles and section/card headings in **Lora, small-caps**; tab bar in **Inter, small-caps**; everything else (data, prose, table content) in plain-case Inter; table numbers use tabular figures, not a mono face
 - [ ] No avatars / monograms / filler icons
 - [ ] No CTA duplicating an already-clickable element
 - [ ] Copy trimmed — factual, short, no marketing cadence
@@ -75,21 +79,36 @@ Optional add-ons depending on the page:
 
 ## Typography (mechanics)
 
-- **Inter** (`--font-sans`, aliased as `--font-heading`/`--font-body`) is the default UI/data
-  face — values, labels, meta, subtitles, repeated headings, and table/player-name cells alike.
-- **Table and metric numbers** use `--font-table` (also Inter — a separate token so it can
-  diverge again later without touching `--font-sans` call sites) plus globally-enabled tabular
-  figures (`font-variant-numeric: tabular-nums lining-nums` on `body` in `base-vars.css`), which
-  is what gives digits mono-style column alignment without an actual monospace face. There is
-  no longer a real mono font loaded for data content — see the `2026-09-19` entry in
-  `README.md`'s font-system section for the full record of the Roboto Mono → Inter switch and
-  where the dev-only `/design/fonts` comparison tool lives if this needs revisiting.
-- **Serif (Lora)** only on the top page title (`.page-title`), the site title/masthead and main
-  nav. Not for prose, data, or repeated headings.
+Role table (2026-09-19 direction — Lora for titles/structural labels, Inter for the tab bar
+and content; a third, mono, typeface was considered for the tab bar and rejected, see the
+Typography bullet above):
+
+| Element | Font | Case |
+|---|---|---|
+| Site title (`.nav-brand`), main nav (`.nav-link`, dropdown) | `--font-serif` (Lora) | as written |
+| Page title (`.page-title`) | `--font-serif` (Lora) | as written |
+| Section/card headings (`.section-title`, `.chart-title`, `.card-header`) | `--font-serif` (Lora) | small-caps |
+| Tab bar (`.tab-underline`) | `--font-sans` (Inter) | small-caps |
+| Table/page content, prose, player names | `--font-sans` (Inter) | as written |
+| Table/metric numbers | `--font-table` (Inter, tabular figures) | as written |
+
+- **`--font-table` is a separate token from `--font-sans`** (both currently Inter) so table
+  content can diverge from body text again later without touching `--font-sans` call sites.
+  Tabular figures (`font-variant-numeric: tabular-nums lining-nums`, set once globally on `body`
+  in `base-vars.css`) are what give digits mono-style column alignment without an actual
+  monospace face — there is no real mono font loaded for data content any more.
+- **Why not mono for the tab bar:** a typeface earns its place by serving a genuinely distinct
+  *content* type (Lora = identity/structure, Inter = content, Inter-tabular = numeric data). A
+  fourth or fifth face used only in a handful of short nav labels decorates one UI strip rather
+  than serving a role — small-caps Inter gets the same "this is structural chrome" signal from
+  case alone, echoing Lora's small-caps headings, so both halves of the system read as one
+  convention. See `README.md`'s font-system section for the fuller decision history (Roboto
+  Mono → Inter, then Inter → Lora for headings) and the dev-only `/design/fonts` /
+  `/design/headers` comparison tools if this needs revisiting.
 - **Captions** — explanatory/footnote text beneath tables and charts uses the `.caption`
   class (defined in `themes/base-vars.css`). Use it rather than ad-hoc `text-muted`/`text-sm`
-  combinations. *Note: `.caption` is still serif from the pre-conversion styling — a candidate
-  to move to sans as the vibe rolls out; update the class, not individual call sites.*
+  combinations. *Note: `.caption` is still sans, unlike the headings above it — a candidate to
+  reconcile if it reads inconsistent in practice; update the class, not individual call sites.*
 
 ## Layout
 
