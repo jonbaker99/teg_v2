@@ -1041,9 +1041,9 @@ def scoring_distributions_content(request: Request, field="Stableford", player="
 # " · ". mobile.css hides one or the other per breakpoint.
 
 def _player_link_html(name, name_to_code: dict) -> str:
-    text = escape(str(name))
-    code = name_to_code.get(str(name))
-    return f"<a href='/player/{code}'>{text}</a>" if code else str(text)
+    # Player profiles hidden 2026-09-18: pages not ready to be live, so this
+    # renders plain text rather than a `/player/<code>` link.
+    return escape(str(name))
 
 
 def _byline_row_html(primary_html: str, sub_text: str, row_class: str) -> str:

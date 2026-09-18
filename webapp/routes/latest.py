@@ -834,7 +834,7 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
                     })
                     sections.append({
                         "title": "Player ranks",
-                        "table_html": _table_df_to_html(display_ranks, link_players=True),
+                        "table_html": _table_df_to_html(display_ranks, link_players=False),  # profiles hidden 2026-09-18
                     })
                     if teg_num not in complete_teg_nums:
                         sections.append({

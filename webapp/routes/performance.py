@@ -10,7 +10,6 @@ from markupsafe import escape
 
 from teg_analysis.analysis.rankings import get_ranked_teg_data, get_ranked_round_data
 from teg_analysis.analysis.records import identify_aggregate_records_and_pbs
-from teg_analysis.core.players import get_name_to_code
 from teg_analysis.display.formatters import prepare_records_table
 from webapp.deps import (
     cached_ranked_teg_data,
@@ -63,15 +62,14 @@ def _build_top_performances_byline_html(display: pd.DataFrame, id_cols: list) ->
 
     cols = list(display.columns)
     measure_col = cols[2]  # '#', 'Player', <measure friendly name>, *id_cols
-    name_to_code = get_name_to_code()
 
     rows_html = ['<div class="tp-list">']
     for _, row in display.iterrows():
         rank = escape(str(row['#']))
         player_name = str(row['Player'])
-        code = name_to_code.get(player_name)
-        player_text = escape(player_name)
-        player_html = f"<a href='/player/{code}'>{player_text}</a>" if code else player_text
+        # Player profiles hidden 2026-09-18: pages not ready to be live, so
+        # this renders plain text rather than a `/player/<code>` link.
+        player_html = escape(player_name)
         value = escape(str(row[measure_col]))
         sub = " · ".join(escape(str(row[c])) for c in id_cols)
         rows_html.append(

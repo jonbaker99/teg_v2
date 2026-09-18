@@ -390,7 +390,7 @@ def _summarise_wins(winners_df: pd.DataFrame, col: str) -> str:
     grouped = grouped.drop(columns=['_nums'])
     grouped = grouped.sort_values('Wins', ascending=False).reset_index(drop=True)
 
-    return _df_to_html(grouped, link_players=True)
+    return _df_to_html(grouped, link_players=False)  # profiles hidden 2026-09-18
 
 
 def _honours_tab_context(tab: str) -> dict:
@@ -427,12 +427,12 @@ def _honours_tab_context(tab: str) -> dict:
 
         elif tab == "eagles":
             eagles = get_eagles_data(all_data)
-            sections.append({"table_html": _df_to_html(eagles, link_players=True)})
+            sections.append({"table_html": _df_to_html(eagles, link_players=False)})  # profiles hidden 2026-09-18
 
         elif tab == "hio":
             hio = get_holes_in_one_data(all_data)
             if hio is not None and not hio.empty:
-                sections.append({"table_html": _df_to_html(hio, link_players=True)})
+                sections.append({"table_html": _df_to_html(hio, link_players=False)})  # profiles hidden 2026-09-18
             else:
                 sections.append({"table_html": "<p class='text-muted text-sm'>No holes in one have yet been scored on a TEG</p>"})
 
@@ -479,13 +479,14 @@ def _teg_is_complete(teg_num: int) -> bool:
         return False
 
 
-def _leaderboard_table_html(df: pd.DataFrame, link_players: bool = True) -> str:
+def _leaderboard_table_html(df: pd.DataFrame, link_players: bool = False) -> str:
     """Render a results leaderboard: full-width, rank/score columns centred,
     player linked, and the leading row(s) tinted (rank starting with '1').
 
-    ``link_players=False`` (used by /results, which has no click-through to
-    player profiles) renders player names as plain text instead of links to
-    ``/player/<code>``. /leaderboard reuses this via the default (True)."""
+    ``link_players=False`` (default -- player profiles hidden 2026-09-18, not
+    ready to be live) renders player names as plain text instead of links to
+    ``/player/<code>``. Pass ``link_players=True`` to restore click-through
+    once the profile pages are ready."""
     if df is None or df.empty:
         return "<p class='text-muted text-sm'>No data available.</p>"
 
@@ -624,13 +625,14 @@ def _build_race_chart_readout(tab: str, variant: str, net_measure: str, teg_name
 
 
 def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjusted",
-                      link_players: bool = True) -> dict:
+                      link_players: bool = False) -> dict:
     """Build context for full results page.
 
-    ``link_players=False`` drops the click-through to player profiles (both
-    the desktop table and the phone `lb_cards`) for callers that don't want
-    it -- currently only /results, which sets it explicitly. /leaderboard
-    reuses this same context builder via the default (True), unaffected."""
+    ``link_players=False`` (default -- player profiles hidden 2026-09-18, not
+    ready to be live) drops the click-through to player profiles for both the
+    desktop table and the phone `lb_cards`. Pass ``link_players=True`` to
+    restore click-through once the profile pages are ready; /leaderboard and
+    /results both reuse this context builder via the default."""
     try:
         if tab == "scorecards":
             rounds = get_rounds_for_teg(teg_num)

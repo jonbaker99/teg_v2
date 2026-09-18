@@ -22,14 +22,15 @@ NAV_SECTIONS = [
     {
         "label": "TEG History",
         "tab": {"label": "History", "icon": "lists", "url": "/history"},
-        "active": {"history", "honours", "results", "player-rankings", "teg-reports", "player"},
+        "active": {"history", "honours", "results", "player-rankings", "teg-reports"},
         "pages": [
             ("TEG History", "/history", "history", "lists"),
             ("TEG Honours Board", "/honours", "honours", "trophy"),
             ("Full Results", "/results", "results", "sports_score"),
             ("Player Rankings", "/player-rankings", "player-rankings", "123"),
             ("TEG Reports", "/teg-reports", "teg-reports", "description"),
-            ("Player Profiles", "/player", "player", "person"),
+            # Player Profiles hidden from nav 2026-09-18: pages need more work
+            # before going live. Route/templates untouched, just unlinked.
         ],
     },
     {
