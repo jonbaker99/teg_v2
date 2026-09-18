@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% block title_suffix %} — Font Lab{% endblock %}
+
+{% block extra_head %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700&family=Work+Sans:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Karla:wght@400;500;600;700&family=Archivo:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Lora:wght@400;500;600;700&family=Source+Serif+4:wght@400;500;600;700&family=Newsreader:wght@400;500;600;700&family=Spectral:wght@400;500;600;700&family=Libre+Caslon+Text&family=Vollkorn:wght@400;600;700&family=Fraunces:wght@400;600;700&display=swap">
+<style>
+  /* ── Font Lab — dev prototype for choosing sans / table-number / serif
+     fonts, applied to real leaderboard + records content. `.col-num` and
+     `.col-player` are the real classes the production table generators
+     already emit (webapp/routes/history.py::_leaderboard_table_html and
+     webapp/routes/records.py::_build_records_html) -- no production
+     template/formatter changes needed to hook fonts onto them here. ── */
+  .font-lab { max-width: 64rem; }
+  .fl-intro { font-size: 0.8125rem; color: var(--text-muted); max-width: 56rem; margin-bottom: 1.25rem; }
+
+  .fl-panel {
+    display: grid; gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    padding: 1rem 1.1rem; margin-bottom: 1.75rem;
+    background: var(--nav-hover-bg, #f5f4f0); border: 1px solid var(--table-cell-border, #e0e0e0);
+    border-radius: 0.375rem;
+  }
+  .fl-group h3 { margin: 0 0 0.6rem; font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--text-muted); }
+  .fl-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+  .fl-row label { flex: 0 0 8.5rem; font-size: 0.78rem; color: var(--text-secondary); }
+  .fl-row select { flex: 1; font-size: 0.8125rem; padding: 0.3rem 0.4rem; }
+  .fl-actions { display: flex; align-items: flex-end; }
+
+  /* Default font vars -- fall back to the site's real current choices
+     (clean.css --font-sans / --font-serif, Roboto Mono) until JS overrides
+     them from the controls above. */
+  .font-lab {
+    --fl-num-font: 'Roboto Mono', monospace;
+    --fl-text-font: var(--font-sans), sans-serif;
+    --fl-body-font: var(--font-sans), sans-serif;
+  }
+  .font-lab .col-num,
+  .font-lab .col-rank { font-family: var(--fl-num-font); font-variant-numeric: tabular-nums lining-nums; }
+  .font-lab .col-player { font-family: var(--fl-text-font); }
+  .font-lab .fl-prose { font-family: var(--fl-body-font); }
+
+  .fl-prose { font-size: 1rem; line-height: 1.6; color: var(--text-primary); margin: 1.5rem 0; max-width: 42rem; }
+  .fl-section-gap { margin-top: 2rem; }
+</style>
+{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+    <span class="page-label">Dev tool</span>
+    <h1 class="page-title">Font Lab</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="font-lab" id="fl-page">
+<p class="fl-intro">
+    Real leaderboard and records content, fonts swapped live client-side (no reload).
+    Pick a font for each of Sans / Table (numbers) / Serif, then decide which role
+    each of Table numbers, Table text and Body text uses. Headers, page titles and
+    nav stay as already decided -- not switchable here. To try a whole sans+serif
+    pairing against the real, live site instead of this page's sample content, use
+    <a href="/design/typography">/design/typography</a>.
+</p>
+
+<div class="fl-panel">
+    <div class="fl-group">
+        <h3>1. Font per category</h3>
+        <div class="fl-row">
+            <label for="fl-cat-sans">Sans</label>
+            <select id="fl-cat-sans" data-category="sans"></select>
+        </div>
+        <div class="fl-row">
+            <label for="fl-cat-table">Table / numbers</label>
+            <select id="fl-cat-table" data-category="table"></select>
+        </div>
+        <div class="fl-row">
+            <label for="fl-cat-serif">Serif</label>
+            <select id="fl-cat-serif" data-category="serif"></select>
+        </div>
+    </div>
+    <div class="fl-group">
+        <h3>2. Apply to element</h3>
+        <div class="fl-row">
+            <label for="fl-role-num">Table numbers</label>
+            <select id="fl-role-num" data-role="num"></select>
+        </div>
+        <div class="fl-row">
+            <label for="fl-role-text">Table text (names)</label>
+            <select id="fl-role-text" data-role="text"></select>
+        </div>
+        <div class="fl-row">
+            <label for="fl-role-body">Body / prose text</label>
+            <select id="fl-role-body" data-role="body"></select>
+        </div>
+        <div class="fl-row fl-actions">
+            <button type="button" class="pill" id="fl-reset">Reset to current site fonts</button>
+        </div>
+    </div>
+</div>
+
+<h2 class="section-title">Leaderboard — TEG {{ selected_teg }}</h2>
+{% if lb.callout %}<p class="result-callout">{{ lb.callout | safe }}</p>{% endif %}
+<div class="data-card">
+    <div class="table-wrapper">{{ lb.table_html | safe }}</div>
+</div>
+
+<p class="fl-prose">
+    A quick way to judge a serif or sans face beyond a table cell: this paragraph is
+    the same content-weight as an editorial aside or a records-page footnote --
+    running text, not a data grid, set at reading size and line height.
+</p>
+
+<div class="fl-section-gap">
+<h2 class="section-title">Records — TEG Records</h2>
+{% for section in records.sections %}
+<h3 class="chart-title">{{ section.title }}</h3>
+<div class="data-card">
+    <div class="table-wrapper">{{ section.table_html | safe }}</div>
+</div>
+{% endfor %}
+{% if records.caption %}<p class="text-muted text-sm">{{ records.caption }}</p>{% endif %}
+</div>
+</div>
+
+<script>
+(function () {
+    var FONTS = {
+        sans: [
+            { id: 'ibm-plex-sans', label: 'IBM Plex Sans (current)', stack: "'IBM Plex Sans', system-ui, sans-serif" },
+            { id: 'inter', label: 'Inter', stack: "'Inter', system-ui, sans-serif" },
+            { id: 'public-sans', label: 'Public Sans', stack: "'Public Sans', system-ui, sans-serif" },
+            { id: 'work-sans', label: 'Work Sans', stack: "'Work Sans', system-ui, sans-serif" },
+            { id: 'source-sans-3', label: 'Source Sans 3', stack: "'Source Sans 3', system-ui, sans-serif" },
+            { id: 'manrope', label: 'Manrope', stack: "'Manrope', system-ui, sans-serif" },
+            { id: 'karla', label: 'Karla', stack: "'Karla', system-ui, sans-serif" },
+            { id: 'archivo', label: 'Archivo', stack: "'Archivo', system-ui, sans-serif" },
+        ],
+        table: [
+            { id: 'roboto-mono', label: 'Roboto Mono (current, mono)', stack: "'Roboto Mono', monospace" },
+            { id: 'ibm-plex-mono', label: 'IBM Plex Mono (mono)', stack: "'IBM Plex Mono', monospace" },
+            { id: 'jetbrains-mono', label: 'JetBrains Mono (mono)', stack: "'JetBrains Mono', monospace" },
+            { id: 'space-mono', label: 'Space Mono (mono)', stack: "'Space Mono', monospace" },
+            { id: 'inter-tabular', label: 'Inter (tabular, not mono)', stack: "'Inter', system-ui, sans-serif" },
+            { id: 'ibm-plex-sans-tabular', label: 'IBM Plex Sans (tabular, not mono)', stack: "'IBM Plex Sans', system-ui, sans-serif" },
+            { id: 'public-sans-tabular', label: 'Public Sans (tabular, not mono)', stack: "'Public Sans', system-ui, sans-serif" },
+            { id: 'archivo-tabular', label: 'Archivo (tabular, not mono)', stack: "'Archivo', system-ui, sans-serif" },
+        ],
+        serif: [
+            { id: 'lora', label: 'Lora (current)', stack: "'Lora', Georgia, serif" },
+            { id: 'source-serif-4', label: 'Source Serif 4', stack: "'Source Serif 4', Georgia, serif" },
+            { id: 'newsreader', label: 'Newsreader', stack: "'Newsreader', Georgia, serif" },
+            { id: 'spectral', label: 'Spectral', stack: "'Spectral', Georgia, serif" },
+            { id: 'libre-caslon-text', label: 'Libre Caslon Text', stack: "'Libre Caslon Text', Georgia, serif" },
+            { id: 'vollkorn', label: 'Vollkorn', stack: "'Vollkorn', Georgia, serif" },
+            { id: 'fraunces', label: 'Fraunces', stack: "'Fraunces', Georgia, serif" },
+        ],
+    };
+
+    var DEFAULT_FAMILY = { sans: 'ibm-plex-sans', table: 'roboto-mono', serif: 'lora' };
+    var DEFAULT_ROLE = { num: 'table', text: 'sans', body: 'sans' };
+
+    var familyChoice = Object.assign({}, DEFAULT_FAMILY);
+    var roleCategory = Object.assign({}, DEFAULT_ROLE);
+
+    var page = document.getElementById('fl-page');
+
+    function stackFor(category) {
+        var list = FONTS[category];
+        var chosen = familyChoice[category];
+        var entry = list.filter(function (f) { return f.id === chosen; })[0];
+        return entry ? entry.stack : list[0].stack;
+    }
+
+    function apply() {
+        page.style.setProperty('--fl-num-font', stackFor(roleCategory.num));
+        page.style.setProperty('--fl-text-font', stackFor(roleCategory.text));
+        page.style.setProperty('--fl-body-font', stackFor(roleCategory.body));
+    }
+
+    function populateCategorySelects() {
+        ['sans', 'table', 'serif'].forEach(function (cat) {
+            var sel = document.getElementById('fl-cat-' + cat);
+            FONTS[cat].forEach(function (f) {
+                var opt = document.createElement('option');
+                opt.value = f.id;
+                opt.textContent = f.label;
+                sel.appendChild(opt);
+            });
+            sel.value = familyChoice[cat];
+            sel.addEventListener('change', function () {
+                familyChoice[cat] = sel.value;
+                apply();
+            });
+        });
+    }
+
+    function populateRoleSelects() {
+        var catLabel = { sans: 'Sans', table: 'Table / numbers', serif: 'Serif' };
+        ['num', 'text', 'body'].forEach(function (role) {
+            var sel = document.getElementById('fl-role-' + role);
+            ['sans', 'table', 'serif'].forEach(function (cat) {
+                var opt = document.createElement('option');
+                opt.value = cat;
+                opt.textContent = catLabel[cat];
+                sel.appendChild(opt);
+            });
+            sel.value = roleCategory[role];
+            sel.addEventListener('change', function () {
+                roleCategory[role] = sel.value;
+                apply();
+            });
+        });
+    }
+
+    document.getElementById('fl-reset').addEventListener('click', function () {
+        familyChoice = Object.assign({}, DEFAULT_FAMILY);
+        roleCategory = Object.assign({}, DEFAULT_ROLE);
+        document.getElementById('fl-cat-sans').value = familyChoice.sans;
+        document.getElementById('fl-cat-table').value = familyChoice.table;
+        document.getElementById('fl-cat-serif').value = familyChoice.serif;
+        document.getElementById('fl-role-num').value = roleCategory.num;
+        document.getElementById('fl-role-text').value = roleCategory.text;
+        document.getElementById('fl-role-body').value = roleCategory.body;
+        apply();
+    });
+
+    populateCategorySelects();
+    populateRoleSelects();
+    apply();
+})();
+</script>
+{% endblock %}

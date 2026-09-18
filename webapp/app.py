@@ -15,7 +15,7 @@ from webapp.routes import (
     history, latest, performance, scoring, scorecards,
     eclectic, reports, contents,
     admin, admin_round_setup, admin_teg_setup, admin_live_round, live_round,
-    admin_new_round, admin_reports, design_lab,
+    admin_new_round, admin_reports, design_lab, font_lab,
 )
 from webapp.nav import NAV_SECTIONS
 from webapp.theme import (
@@ -24,6 +24,7 @@ from webapp.theme import (
     get_title_style, TITLE_STYLES,
     get_card_header_style, CARD_HEADER_STYLES,
     get_nav_cue, NAV_CUE_STYLES,
+    get_font_pairing, get_font_pairing_override, FONT_PAIRINGS,
 )
 
 app = FastAPI(title="TEG Stats")
@@ -60,6 +61,9 @@ async def theme_middleware(request: Request, call_next):
     request.state.card_header_styles = CARD_HEADER_STYLES
     request.state.nav_cue = get_nav_cue(request)
     request.state.nav_cue_styles = NAV_CUE_STYLES
+    request.state.font_pairing = get_font_pairing(request)
+    request.state.font_pairings = FONT_PAIRINGS
+    request.state.font_pairing_override = get_font_pairing_override(request.state.font_pairing)
     request.state.nav_sections = NAV_SECTIONS
     return await call_next(request)
 
@@ -86,6 +90,7 @@ app.include_router(admin_live_round.router)
 app.include_router(live_round.router)
 app.include_router(admin_reports.router)
 app.include_router(design_lab.router)
+app.include_router(font_lab.router)
 
 
 @app.get("/")

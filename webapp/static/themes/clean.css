@@ -1,12 +1,23 @@
-/* Clean — Minimal white; IBM Plex Sans for UI/body text, Lora serif retained
-   for the site title / main nav / page (H1) titles, Roboto Mono for tables. */
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Lora:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap');
+/* Clean — Minimal white; Inter for UI/body text and table content alike
+   (2026-09-19: replaced IBM Plex Sans + Roboto Mono -- one sans face
+   everywhere except the three serif identity elements below removes the
+   sans/mono seam between prose and data, see webapp/design_principles.md
+   §Design vibe and webapp/README.md's font-system section for the record
+   of that decision and its rationale), Lora serif retained for the site
+   title / main nav / page (H1) titles. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;500;600;700&display=swap');
 
 :root {
-    /* Typography — sans for headings/body/UI (pills, tabs, section titles, page
-       text), Lora serif kept ONLY for the identity elements re-asserted at the
-       foot of this file (site title, main nav, page H1), mono for tables. */
-    --font-sans:  'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    /* Typography — one sans face (Inter) for everything except the three
+       serif identity elements re-asserted at the foot of this file (site
+       title, main nav, page H1). --font-table is Inter too, kept as its own
+       token (not aliased to --font-sans) so table/numeric content can
+       diverge again later without touching --font-sans call sites; tabular
+       figures are enabled globally on body (see base-vars.css) rather than
+       per table, so every numeric display -- tables, metrics, scorecards --
+       gets aligned digits for free. */
+    --font-sans:  'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-table: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
     --font-serif: 'Lora', Georgia, serif;
     --font-heading: var(--font-sans);
     --font-body: var(--font-sans);
@@ -82,10 +93,11 @@
     border-bottom: none;
 }
 
-/* Roboto Mono for all table/data content */
+/* --font-table for all table/data content -- tabular-nums comes from the
+   global body rule in base-vars.css, not repeated here. */
 .teg-table,
 .records-table {
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
 }
 
 /* Active nav: bold + underline, no background. Underline/text in --accent

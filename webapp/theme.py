@@ -106,6 +106,56 @@ def get_nav_cue(request) -> str:
     return nc if nc in NAV_CUE_IDS else DEFAULT_NAV_CUE
 
 
+# Font-pairing options — controls the whole site's sans/serif typography via
+# --font-sans/--font-table/--font-serif overrides injected in base.html.
+# Dev-only exploration tool (/design/typography, not linked from nav, see
+# webapp/routes/font_lab.py): pick a pairing, then browse any real page --
+# same cookie + page-reload mechanism as title_style/card_header/nav_cue
+# above, not the instant client-side swapping /design/fonts uses for
+# comparing individual font choices against real table content.
+#
+# "inter-lora" is the shipped default (2026-09-19, see webapp/README.md's
+# font-system section for why) and needs no override -- it's what
+# static/themes/clean.css already sets -- so the default pairing renders no
+# extra <link>/<style> in base.html at all (see get_font_pairing_override).
+FONT_PAIRINGS = [
+    ("inter-lora", "Inter + Lora (shipped default)", {
+        "sans": "Inter", "serif": "Lora",
+        "google": "Inter:wght@400;500;600;700&family=Lora:wght@400;500;600;700",
+    }),
+    ("public-sans-source-serif", "Public Sans + Source Serif 4 (neutral alt)", {
+        "sans": "Public Sans", "serif": "Source Serif 4",
+        "google": "Public+Sans:wght@400;500;600;700&family=Source+Serif+4:wght@400;500;600;700",
+    }),
+    ("work-sans-spectral", "Work Sans + Spectral (warm editorial alt)", {
+        "sans": "Work Sans", "serif": "Spectral",
+        "google": "Work+Sans:wght@400;500;600;700&family=Spectral:wght@400;500;600;700",
+    }),
+    ("manrope-lora", "Manrope + Lora (distinctive alt)", {
+        "sans": "Manrope", "serif": "Lora",
+        "google": "Manrope:wght@400;500;600;700&family=Lora:wght@400;500;600;700",
+    }),
+]
+FONT_PAIRING_IDS = {p[0] for p in FONT_PAIRINGS}
+FONT_PAIRING_MAP = {p[0]: p[2] for p in FONT_PAIRINGS}
+DEFAULT_FONT_PAIRING = "inter-lora"
+
+
+def get_font_pairing(request) -> str:
+    """Read font-pairing choice from cookie, falling back to default."""
+    fp = request.cookies.get("font_pairing", DEFAULT_FONT_PAIRING)
+    return fp if fp in FONT_PAIRING_IDS else DEFAULT_FONT_PAIRING
+
+
+def get_font_pairing_override(pairing_id: str) -> dict | None:
+    """Return the {sans, serif, google} dict for a non-default pairing, or
+    None for the default (so base.html can skip the override block/extra
+    font request entirely on every normal page load)."""
+    if pairing_id == DEFAULT_FONT_PAIRING:
+        return None
+    return FONT_PAIRING_MAP.get(pairing_id)
+
+
 # Plotly theme overrides keyed by theme id.
 # Values are passed into fig.update_layout().
 

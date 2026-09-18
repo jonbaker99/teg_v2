@@ -3,12 +3,12 @@
     background: transparent;
     box-shadow: none;
 }
-.pp-profile { font-family: 'Roboto Mono', monospace; color: var(--text-primary); }
+.pp-profile { font-family: var(--font-table), sans-serif; color: var(--text-primary); }
 .pp-back, .pp-link { color: var(--text-secondary); font: inherit; font-size: 0.75rem; text-decoration: none; }
 .pp-link { background: transparent; border: 0; padding: 0; cursor: pointer; text-align: left; }
 .pp-back:hover, .pp-link:hover { text-decoration: underline; }
 .pp-identity { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin: 1.25rem 0 1.5rem; }
-.pp-name { font-family: 'Roboto Mono', monospace; font-size: 1.75rem; font-weight: 600; line-height: 1.3; margin-bottom: 0.35rem; }
+.pp-name { font-family: var(--font-table), sans-serif; font-size: 1.75rem; font-weight: 600; line-height: 1.3; margin-bottom: 0.35rem; }
 .pp-meta, .pp-context { font-size: 0.75rem; line-height: 1.6; color: var(--text-secondary); }
 .pp-player-switch { display: flex; align-items: center; gap: 0.75rem; font-size: 0.75rem; }
 .pp-player-switch select { font-family: inherit; min-height: 44px; max-width: 100%; }
@@ -30,8 +30,8 @@
 .pp-overview { display: grid; gap: 1.5rem; }
 .pp-overview-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 1.25rem; }
 .pp-block, .pp-highlight { background: var(--bg-card); border: 1px solid var(--table-cell-border); border-radius: var(--card-radius); padding: 1.25rem; min-width: 0; }
-.pp-profile .pp-section-title { font: 600 0.9rem/1.4 'Roboto Mono', monospace; margin: 0 0 1.1rem; }
-.pp-label { font: 400 0.65rem/1.6 'Roboto Mono', monospace; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.04em; }
+.pp-profile .pp-section-title { font: 600 0.9rem/1.4 var(--font-table), sans-serif; margin: 0 0 1.1rem; }
+.pp-label { font: 400 0.65rem/1.6 var(--font-table), sans-serif; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.04em; }
 .pp-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
 .pp-stats > div { min-width: 0; }
 .pp-stat-value { font-size: 1.65rem; line-height: 1.4; font-weight: 600; font-variant-numeric: tabular-nums; }
@@ -75,7 +75,7 @@
 .pp-held-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1rem; }
 .pp-held-item { border-bottom: 1px solid var(--table-cell-border); padding-bottom: 1rem; min-width: 0; }
 .pp-held-item strong { font-size: 1.4rem; font-weight: 600; }
-.pp-profile .section-title { font-family: 'Roboto Mono', monospace; }
+.pp-profile .section-title { font-family: var(--font-table), sans-serif; }
 @media (max-width: 800px) {
     .pp-overview-grid { grid-template-columns: 1fr; }
     .pp-highlight-grid { grid-template-columns: 1fr 1fr; }
@@ -101,7 +101,7 @@
        just the accent colour swap (R4.2 gate: "obvious without relying on
        colour alone"). Phone-only -- desktop/iPad keep the pre-R4.2 look. */
     .pp-chart-controls .pill--active { font-weight: 700; text-decoration: underline; text-underline-offset: 0.2em; }
-    .pp-chart-direction { display: block; font: 700 0.7rem/1.4 'Roboto Mono', monospace; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 0.5rem; }
+    .pp-chart-direction { display: block; font: 700 0.7rem/1.4 var(--font-table), sans-serif; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 0.5rem; }
     .pp-record-teasers { grid-template-columns: 1fr; gap: 0.75rem; }
     .pp-held-grid { grid-template-columns: 1fr; }
     .pp-landmarks summary { min-height: 44px; padding-block: 0.65rem; }

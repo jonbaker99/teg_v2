@@ -131,7 +131,7 @@
   border-collapse: separate;
   border-spacing: 0;
   margin: 0 auto 20px;
-  font-family: 'Roboto Mono', monospace;
+  font-family: var(--font-table), sans-serif;
   font-size: 14px;
 }
 
@@ -436,7 +436,7 @@
 }
 .eclectic-scorecard .eclectic-cell span {
   font-size: 12px;
-  font-family: 'Roboto Mono', monospace;
+  font-family: var(--font-table), sans-serif;
 }
 
 /* Eagle (-2): dark red bg, white text */
@@ -520,7 +520,7 @@ html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="0"] span { c
 .bw-scorecard .bw-cell span,
 .bw-scorecard-portrait .bw-cell span {
   font-size: 11px;
-  font-family: 'Roboto Mono', monospace;
+  font-family: var(--font-table), sans-serif;
   color: #b3b3b3; /* neutral holes de-emphasised */
 }
 /* Balanced player highlights — faint shaded box + thin border behind the
@@ -576,12 +576,12 @@ html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="0"] span { c
   padding: 3px 10px;
 }
 .bw-rank-num strong {
-  font-family: 'Roboto Mono', monospace;
+  font-family: var(--font-table), sans-serif;
   font-weight: 700;
 }
 .bw-rank-detail {
   margin-left: 6px;
-  font-family: 'Roboto Mono', monospace;
+  font-family: var(--font-table), sans-serif;
   font-weight: 400;
   font-size: 0.8em;
   color: var(--color-text-secondary);
@@ -636,7 +636,7 @@ html[data-mode="dark"] .bw-rank-num { background-color: #2a2a26; }
   border-collapse: separate;
   border-spacing: 0;
   font-size: 12px;
-  font-family: 'Roboto Mono', monospace;
+  font-family: var(--font-table), sans-serif;
 }
 .bw-bars-table col.bw-bars-player { width: 116px; }
 .bw-bars-table col.bw-bars-impact { width: 56px; }
@@ -692,7 +692,7 @@ html[data-mode="dark"] .bw-rank-num { background-color: #2a2a26; }
   top: 50%;
   transform: translateY(-50%);
   white-space: nowrap;
-  font-family: 'Roboto Mono', monospace;
+  font-family: var(--font-table), sans-serif;
   font-weight: 600;
   font-size: 11px;
 }
@@ -786,7 +786,7 @@ html[data-mode="dark"] .bw-bars-pair .bw-bar-val.bw-bar-zero { color: var(--colo
      a wider one (many rounds/players) still scrolls exactly as before. */
   table-layout: fixed;
   margin: 0 auto;
-  font-family: 'Roboto Mono', monospace;
+  font-family: var(--font-table), sans-serif;
   font-size: var(--font-size-base);
 }
 .scorecard-table-portrait th,

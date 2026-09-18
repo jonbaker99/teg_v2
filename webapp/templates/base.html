@@ -9,6 +9,19 @@
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
     <link rel="stylesheet" href="/static/themes/base-vars.css?v=30">
     <link rel="stylesheet" href="/static/themes/{{ request.state.theme }}.css?v=23">
+    {% if request.state.font_pairing_override %}
+    <!-- Dev-only font-pairing override (/design/typography, font_pairing cookie) --
+         overrides the theme CSS's --font-sans/--font-table/--font-serif above.
+         No-op and no extra font request on the default pairing. -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family={{ request.state.font_pairing_override.google }}&display=swap">
+    <style>
+        :root {
+            --font-sans: '{{ request.state.font_pairing_override.sans }}', system-ui, sans-serif;
+            --font-table: '{{ request.state.font_pairing_override.sans }}', system-ui, sans-serif;
+            --font-serif: '{{ request.state.font_pairing_override.serif }}', Georgia, serif;
+        }
+    </style>
+    {% endif %}
     <!-- Report styling (.teg-report) — loaded globally so reports render the same
          wherever they appear (TEG Reports, Results/Latest report tabs). -->
     <link rel="stylesheet" href="/static/teg_reports.css?v=23">

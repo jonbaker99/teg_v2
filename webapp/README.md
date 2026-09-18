@@ -425,7 +425,8 @@ colours and fewer phone ticks; crossing the phone breakpoint restores desktop
 rank annotations. Calculations and average weighting are unchanged. Long
 result histories initially show three recent TEGs with an expansion control;
 without JavaScript, the complete table remains visible. Profile identity,
-headings and data use mono typography, a scoped exception to the shared titles.
+headings and data use the site's standard sans/tabular typography, same as
+every other data page.
 
 ## Theme system
 
@@ -437,14 +438,36 @@ Three themes, registered in `theme.py`. Each overrides CSS custom properties def
 | **Clean Page** | Flat single white content card on a warm grey background |
 | **Clean Layered** | 3-layer hierarchy: stone background → taupe panel → white data cards |
 
-**Typography (all clean themes, set in `clean.css`).** Body/UI text (section
-titles, tabs, pills, captions, page text) uses a sans face (`--font-sans`, IBM
-Plex Sans) via `--font-heading`/`--font-body`; data tables stay Roboto Mono. The
-site's **Lora serif (`--font-serif`) is retained for three identity elements
-only**: the site title (`.nav-brand`), the main nav (`.nav-link` + dropdown), and
-page H1 titles (`.page-title`). Player detail uses its own mono identity, as
-described above. Shared serif elements are re-asserted in a
-"Serif retention" block at the foot of `clean.css` — global, no per-template markup.
+**Typography (all clean themes, set in `clean.css`).** One sans face, **Inter**
+(2026-09-19, replaced IBM Plex Sans + Roboto Mono — see below), covers
+everything except three serif identity elements: body/UI text (section titles,
+tabs, pills, captions, page text) via `--font-sans`/`--font-heading`/`--font-body`,
+and data tables/metrics via `--font-table` — a separate token, also Inter, kept
+distinct so table content can diverge from body text again later without
+touching `--font-sans` call sites. Table/metric numbers get column-aligned
+digits from tabular figures (`font-variant-numeric: tabular-nums lining-nums`,
+set once globally on `body` in `base-vars.css`), not from an actual monospace
+face — there's no real mono font loaded for data content any more. The site's
+**Lora serif (`--font-serif`) is retained for three identity elements only**:
+the site title (`.nav-brand`), the main nav (`.nav-link` + dropdown), and page
+H1 titles (`.page-title`). Player detail follows the same sans/tabular data
+convention, not a separate identity face. Shared serif elements are
+re-asserted in a "Serif retention" block at the foot of `clean.css` — global,
+no per-template markup.
+
+*Font decision history:* the site ran IBM Plex Sans (body) + Roboto Mono
+(tables/data) + Lora (identity) through 2026-09-18. Reviewing three separate
+faces across mobile/desktop showed data content shifting between a sans and a
+literal mono face read as jarring with no real benefit — tabular figures give
+the same column alignment on a single sans face. Switched everything but the
+serif identity elements to Inter. A dev-only, unlinked comparison tool at
+`/design/fonts` (`webapp/routes/font_lab.py`) renders real leaderboard/records
+content with independent Sans / Table-numbers / Serif pickers (several
+curated options each) for judging this or any future font change against real
+data before committing to it; a second dev-only tool for trying whole
+sans+serif *pairings* against the live site (not just this comparison page)
+is `/design/typography` (`webapp/theme.py`'s `FONT_PAIRINGS`, cookie-driven,
+reloads the page like the existing title-style/card-header switchers).
 
 **Dark mode (orthogonal to theme).** A light/dark **mode** is independent of the
 named theme: a `mode` cookie (`theme.py: get_mode`, injected as
@@ -460,7 +483,8 @@ The page-title (`ts-*`) and card-header (`ch-*`) **style switchers were removed
 from the nav** for Phase 1a (the nav now carries only the theme switcher). The
 cookie/CSS infrastructure stays live (`theme.py` defaults + `base-vars.css`), so
 the experiments can be re-enabled for the Phase 2 design review. Current locked
-defaults: title style `a` (mono label + serif title), card header `ch3` (serif).
+defaults: title style `a` (table-font label + serif title), card header `ch3`
+(serif).
 
 **How it works:**
 1. User clicks theme in nav dropdown
@@ -692,10 +716,14 @@ as the live site."
 - **1a — Match the Streamlit app in the Clean theme.** Make the `clean` theme
   look like the Streamlit site: consistent layout from the menu bar through to
   individual pages, no wonkiness. Fix anything obviously broken in the UI as we
-  go. *Grounding fact:* the palette/typography already match Streamlit — both
-  use Lora (headings + body) + Roboto Mono (data) + forestgreen accent, and the
-  same top-rank tint `#F3F7F3` (see `.streamlit/config.toml`). So 1a is mostly
-  **layout and spacing consistency**, not recolouring. The structural hooks
+  go. *Grounding fact (true at the time):* the palette/typography already
+  matched Streamlit — both used Lora (headings + body) + Roboto Mono (data) +
+  forestgreen accent, and the same top-rank tint `#F3F7F3` (see
+  `.streamlit/config.toml`). So 1a was mostly **layout and spacing
+  consistency**, not recolouring. Streamlit (frozen) still looks like this;
+  the webapp's typography has since diverged (see the Typography section
+  under Theme system above) — the accent colour and top-rank tint still
+  match. The structural hooks
   added in PRs #8/#9 (`.section-nav`, `.section-controls`, `.toggle-group`,
   `.section-panel`, `.data-card`, `.chart-container`) are the levers — they are
   still empty no-ops; spacing currently lives in ad-hoc per-template Tailwind

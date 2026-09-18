@@ -14,8 +14,8 @@ Paste-ready brief for converting a page (or judging a new one). The gut check:
 *does this look like it's trying to impress, or like it quietly does the job well?* Aim for the second.
 
 **Typography**
-- **Roboto Mono is the workhorse.** Data values, metric labels, meta lines, subtitles, and repeated item/card headings (e.g. player names) are all mono. Mono is the default, not the exception.
-- **Avoid serif.** Serif is reserved for one deliberate masthead moment (the top page title) — never for data, repeated headings, or anything appearing more than once on a page. When in doubt, mono.
+- **One sans face (Inter) is the workhorse** (2026-09-19, replaced the earlier mono-first rule below). Data values, metric labels, meta lines, subtitles, repeated item/card headings (e.g. player names) and table numbers all share `--font-sans`/`--font-table` (both Inter) — no sans/mono seam between prose and data. Numbers get column-aligned digits from tabular figures (`font-variant-numeric: tabular-nums`, set once globally on `body` in `base-vars.css`), not from switching to an actual monospace face.
+- **Avoid serif.** Serif is reserved for one deliberate masthead moment (the top page title) — never for data, repeated headings, or anything appearing more than once on a page. When in doubt, sans.
 - **Hierarchy comes from weight + size + colour, not font-switching.** Values ~600 weight in the primary text colour; labels small, uppercase, letter-spaced, muted.
 
 **Restraint (the "not try-hard" part)**
@@ -36,7 +36,7 @@ Paste-ready brief for converting a page (or judging a new one). The gut check:
 - **Theme-variable driven** — style with the CSS vars so light *and* dark both work; don't hardcode colours.
 
 **Quick checklist**
-- [ ] Data, labels, meta, and repeated headings in **mono**; serif only on the top page title
+- [ ] Data, labels, meta, and repeated headings in **sans (Inter)**; serif only on the top page title; table numbers use tabular figures, not a mono face
 - [ ] No avatars / monograms / filler icons
 - [ ] No CTA duplicating an already-clickable element
 - [ ] Copy trimmed — factual, short, no marketing cadence
@@ -70,17 +70,26 @@ vibe conversion for one page:
 
 Optional add-ons depending on the page:
 
-- **Data-table heavy:** "Respect the Tables section below — mono numerics, thin borders, and the narrow-screen name-shortening / horizontal-scroll approach; don't let content run off the edge."
+- **Data-table heavy:** "Respect the Tables section below — tabular-figure numerics (not mono), thin borders, and the narrow-screen name-shortening / horizontal-scroll approach; don't let content run off the edge."
 - **Look before code:** "Show me a quick mockup or describe the layout first; don't touch files until I approve the direction."
 
 ## Typography (mechanics)
 
-- **Roboto Mono** is the default UI/data face — values, labels, meta, subtitles, repeated headings.
-- **Serif (Lora)** only on the top page title (`.page-title`). Not for prose, data, or repeated headings.
+- **Inter** (`--font-sans`, aliased as `--font-heading`/`--font-body`) is the default UI/data
+  face — values, labels, meta, subtitles, repeated headings, and table/player-name cells alike.
+- **Table and metric numbers** use `--font-table` (also Inter — a separate token so it can
+  diverge again later without touching `--font-sans` call sites) plus globally-enabled tabular
+  figures (`font-variant-numeric: tabular-nums lining-nums` on `body` in `base-vars.css`), which
+  is what gives digits mono-style column alignment without an actual monospace face. There is
+  no longer a real mono font loaded for data content — see the `2026-09-19` entry in
+  `README.md`'s font-system section for the full record of the Roboto Mono → Inter switch and
+  where the dev-only `/design/fonts` comparison tool lives if this needs revisiting.
+- **Serif (Lora)** only on the top page title (`.page-title`), the site title/masthead and main
+  nav. Not for prose, data, or repeated headings.
 - **Captions** — explanatory/footnote text beneath tables and charts uses the `.caption`
   class (defined in `themes/base-vars.css`). Use it rather than ad-hoc `text-muted`/`text-sm`
   combinations. *Note: `.caption` is still serif from the pre-conversion styling — a candidate
-  to move to mono/sans as the vibe rolls out; update the class, not individual call sites.*
+  to move to sans as the vibe rolls out; update the class, not individual call sites.*
 
 ## Layout
 

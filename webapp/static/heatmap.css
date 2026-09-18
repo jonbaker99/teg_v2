@@ -2,7 +2,7 @@
    Loaded only on /scoring/heatmap via extra_head.
 
    The table element carries both .teg-table and .heatmap-table so it inherits
-   font (Roboto Mono from clean.css) and base styles from .teg-table. All
+   font (the table font, via --font-table from clean.css) and base styles from .teg-table. All
    overrides here use the double-class selector .teg-table.heatmap-table which
    has higher specificity (0,2,X) than .teg-table (0,1,X), so no !important needed.
 
