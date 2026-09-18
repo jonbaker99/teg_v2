@@ -945,7 +945,10 @@
   }
   .history-page .history-table th {
     color: var(--text-muted, #666);
-    font: 700 11px/1.2 'Roboto Mono', monospace;
+    font-family: var(--font-serif), serif;
+    font-weight: 700;
+    font-size: 11px;
+    line-height: 1.2;
     letter-spacing: .04em;
     text-transform: uppercase;
     /* Desktop's base .teg-table th is white-space:nowrap, fine at desktop
@@ -957,7 +960,14 @@
   /* First column (TEG) narrower and left-aligned; the three name columns
      share the rest and are centred, matching the approved prototype. */
   .history-page .history-table th:first-child,
-  .history-page .history-table td:first-child { width: 26%; text-align: left; }
+  .history-page .history-table td:first-child { width: 22%; text-align: left; }
+  /* Long names (e.g. "Stuart NEUMANN") wrap forename/surname onto two lines
+     (.names-break, base-vars.css) -- tighten that stack's line-height so the
+     two lines read as one name, not two separate rows. */
+  .history-page .history-table.names-break .player-name .first,
+  .history-page .history-table.names-break .player-name .last {
+    line-height: 1.2;
+  }
   /* Move the year off the cramped TEG-number line and onto the compact
      area line instead (matches the approved prototype's default label),
      rather than dropping it -- it's still visible at a glance, not hidden

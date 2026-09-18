@@ -222,18 +222,27 @@ h1, h2, h3, h4, h5, h6 {
     width: 100%;
     table-layout: fixed;
 }
+/* History overrides clean.css's .teg-table Roboto Mono default with the
+   site serif -- double-class selector needed to beat that same-specificity,
+   later-loaded rule (webapp/static/themes/clean.css). */
+.teg-table.history-table {
+    font-family: var(--font-serif), serif;
+}
 .history-table .teg-label {
     display: block;
     font-weight: 400;
 }
 /* Flag + region sit together on their own row beneath "TEG N Year",
    flag sized to the region text's line height rather than a full-height
-   swatch -- roughly matching that row's width to the label above it. */
+   swatch -- roughly matching that row's width to the label above it.
+   Second line of the TEG cell (desktop: region; mobile: .teg-mobile-meta
+   below) is sans, breaking from the table's serif for that one line. */
 .history-table .area-row {
     display: flex;
     align-items: center;
     gap: 0.35em;
     margin-top: -0.15rem;
+    font-family: var(--font-sans), sans-serif;
 }
 .history-table .area-label {
     display: block;
@@ -247,7 +256,7 @@ h1, h2, h3, h4, h5, h6 {
 .history-table .teg-year--mobile { display: none; }
 /* Mobile's flag+year line (second copy of the flag, shown only in
    .history-page); desktop keeps the region-row flag instead. */
-.history-table .teg-mobile-meta { display: none; }
+.history-table .teg-mobile-meta { display: none; font-family: var(--font-sans), sans-serif; }
 /* Full column names ("HMM Wooden Spoon") for desktop; mobile.css swaps to
    the approved prototype's short Trophy/Jacket/Spoon heading instead. */
 .history-table .th-short { display: none; }

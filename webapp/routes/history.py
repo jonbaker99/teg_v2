@@ -213,7 +213,7 @@ def _history_table_html(df: pd.DataFrame, round_metadata: dict | None = None) ->
         teg_label = (
             f"<span class='teg-text'>"
             f"<span class='teg-label'>{teg_main}"
-            + (f" <span class='teg-year'>{teg_year}</span>" if teg_year else "")
+            + (f" <span class='teg-year'>({teg_year})</span>" if teg_year else "")
             + f"</span>"
             f"<span class='area-row'>{teg_flag_desktop}<span class='area-label'>{escape(area)}</span></span>"
             f"<span class='teg-mobile-meta'>{flag_html}"
@@ -335,7 +335,6 @@ def history_page(request: Request):
         "request": request,
         "active_page": "history",
         "title": "TEG History",
-        "subtitle": "TEG locations and winners by year",
         "table_html": table_html,
         "sections": None,
     })
