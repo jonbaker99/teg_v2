@@ -42,6 +42,19 @@ TITLE_STYLES = [
     ("f3", "Title: F3 — Card grey"),
     ("f4", "Title: F4 — Card inline"),
     ("f5", "Title: F5 — Card green inline white"),
+    # Mobile-only options (2026-09-17): on phones "The El Golfo" (nav-brand)
+    # and the page title sit close together in the same bold serif, reading as
+    # near-duplicates -- desktop has enough surrounding page chrome that the
+    # same pairing doesn't clash. Jon picked M2 (brand recedes); that rule now
+    # ships unconditionally in mobile.css rather than gated behind ts-m2, so
+    # it applies regardless of which desktop title style (a/b/c/...) is
+    # chosen here -- the two concerns are independent. M1/M3 remain
+    # selectable for reference against the band-style alternatives that were
+    # passed over. All three are no-ops above 640px, so picking one here
+    # never changes desktop/iPad output.
+    ("m1", "Title: M1 — Mobile: green band (alternative, not picked)"),
+    ("m2", "Title: M2 — Mobile: brand recedes (shipped default)"),
+    ("m3", "Title: M3 — Mobile: grey band + brand recedes (alternative, not picked)"),
 ]
 
 TITLE_STYLE_IDS = {s[0] for s in TITLE_STYLES}
@@ -70,6 +83,27 @@ def get_card_header_style(request) -> str:
     """Read card header style from cookie, falling back to default."""
     ch = request.cookies.get("card_header", DEFAULT_CARD_HEADER)
     return ch if ch in CARD_HEADER_IDS else DEFAULT_CARD_HEADER
+
+
+# Nav-cue style options — controls the phone-only .section-nav "more tabs to
+# scroll" affordance via body class nc-X (mobile.css, scoped inside the
+# existing @media (max-width: 640px) block). Default is "arrows" (Jon's pick,
+# 2026-09-17); "off" (the old mask-fade-only look) and "chevron" (the
+# alternative compared against) stay selectable at /design/headers.
+NAV_CUE_STYLES = [
+    ("off", "Nav cue: Off (old mask fade only, alternative)"),
+    ("arrows", "Nav cue: Arrows at ends (shipped default)"),
+    ("chevron", "Nav cue: Faint chevron near edge (alternative, not picked)"),
+]
+NAV_CUE_IDS = {s[0] for s in NAV_CUE_STYLES}
+DEFAULT_NAV_CUE = "arrows"  # 2026-09-17: Jon picked arrows over chevron/off
+# from the mobile tab-row overflow prototyping round.
+
+
+def get_nav_cue(request) -> str:
+    """Read nav-cue style from cookie, falling back to default."""
+    nc = request.cookies.get("nav_cue", DEFAULT_NAV_CUE)
+    return nc if nc in NAV_CUE_IDS else DEFAULT_NAV_CUE
 
 
 # Plotly theme overrides keyed by theme id.

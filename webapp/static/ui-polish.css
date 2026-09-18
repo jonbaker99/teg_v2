@@ -36,6 +36,20 @@ body.ts-a .page-title-area { padding-inline: 2.5rem; }
     .main-content .section-controls { padding-inline: 0.75rem; }
     .main-content .section-nav { margin-inline: 0.75rem; max-width: calc(100% - 1.5rem); }
     .section-controls .section-nav { margin-inline: 0; max-width: 100%; }
+    /* Nav-cue arrows (mobile.css, default since 2026-09-17) sit flush at the
+       row's own edge; this rule's extra 0.75rem margin-inline just doubled
+       up with .main-content's own 0.75rem padding, giving arrows a needless
+       dead 0.75rem gap before the true content edge and shrinking how much
+       tab text fits before overflowing. Reclaimed for nc-arrows/nc-chevron
+       specifically -- the row still aligns with the title/page text edge
+       above it (.main-content's own padding), just without the doubled-up
+       inset. Other .section-nav rows (nc-off, no cue) keep the original
+       margin so their mask-fade breathing room is unaffected. */
+    body.nc-arrows .main-content .section-nav,
+    body.nc-chevron .main-content .section-nav {
+        margin-inline: 0;
+        max-width: 100%;
+    }
     .main-content :is(.section-title, .page-subtitle, .chart-title, .chart-description, .chart-controls-label, .chart-note, .caption, .result-callout) {
         padding-inline: 0.75rem;
     }

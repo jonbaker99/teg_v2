@@ -117,9 +117,11 @@ h1, h2, h3, h4, h5, h6 {
 .teg-table tbody tr:nth-child(even) {
     background-color: var(--table-stripe-bg, transparent);
 }
-.teg-table tbody tr:hover {
-    background-color: var(--table-hover-bg);
-    color: var(--table-hover-text, inherit);
+@media (hover: hover) and (pointer: fine) {
+    .teg-table tbody tr:hover {
+        background-color: var(--table-hover-bg);
+        color: var(--table-hover-text, inherit);
+    }
 }
 .teg-table tbody tr.top-rank {
     background-color: var(--table-toprank-bg);
@@ -368,15 +370,19 @@ table.leaderboard.names-break .player-name .last {
 .records-table tbody tr:nth-child(even) {
     background-color: var(--table-stripe-bg, transparent);
 }
-.records-table tbody tr:hover {
-    background-color: var(--table-hover-bg);
+@media (hover: hover) and (pointer: fine) {
+    .records-table tbody tr:hover {
+        background-color: var(--table-hover-bg);
+    }
 }
 /* Borderless: no stripes, highlight entire record group on hover */
 .records-table--borderless tbody tr:nth-child(even) {
     background-color: transparent;
 }
-.records-table--borderless tbody:hover tr {
-    background-color: var(--table-hover-bg, #f5f5f5);
+@media (hover: hover) and (pointer: fine) {
+    .records-table--borderless tbody:hover tr {
+        background-color: var(--table-hover-bg, #f5f5f5);
+    }
 }
 
 /* ── Column alignment classes ── */
@@ -406,9 +412,11 @@ table.leaderboard.names-break .player-name .last {
     cursor: pointer;
     transition: background-color 0.15s, color 0.15s;
 }
-.tab-btn:hover {
-    background-color: var(--table-hover-bg, var(--btn-inactive-bg));
-    color: var(--text-primary);
+@media (hover: hover) and (pointer: fine) {
+    .tab-btn:hover {
+        background-color: var(--table-hover-bg, var(--btn-inactive-bg));
+        color: var(--text-primary);
+    }
 }
 .tab-btn:focus-visible {
     outline: 2px solid var(--select-focus-ring, var(--accent));
@@ -496,9 +504,11 @@ a.tab-underline .tab-arrow {
     cursor: pointer;
     transition: background-color 0.15s;
 }
-.btn-inactive:hover {
-    background-color: var(--table-hover-bg, var(--btn-inactive-bg));
-    color: var(--text-primary);
+@media (hover: hover) and (pointer: fine) {
+    .btn-inactive:hover {
+        background-color: var(--table-hover-bg, var(--btn-inactive-bg));
+        color: var(--text-primary);
+    }
 }
 
 /* ── Selects ── */

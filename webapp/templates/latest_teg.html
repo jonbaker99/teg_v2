@@ -12,6 +12,12 @@
 {% endblock %}
 
 {% block content %}
+{# .latest-teg-page is the phone-layout hook (mobile.css) -- wraps the whole
+   page, not just #lt-content, so it survives the HTMX TEG/tab swap that only
+   replaces #lt-content's children. Mirrors .bestball-page's simpler wrap
+   (bestball.html) rather than Latest Round's data-lr-page (this page has no
+   chart-focus/rewind state to track, so it needs none of that machinery). #}
+<div class="latest-teg-page">
 
 <p id="lt-context-header" class="text-muted text-sm mb-3">{{ context_header }}</p>
 
@@ -65,4 +71,5 @@
     sync();
 })();
 </script>
+</div>
 {% endblock %}

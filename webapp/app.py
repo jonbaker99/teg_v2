@@ -23,6 +23,7 @@ from webapp.theme import (
     get_mode,
     get_title_style, TITLE_STYLES,
     get_card_header_style, CARD_HEADER_STYLES,
+    get_nav_cue, NAV_CUE_STYLES,
 )
 
 app = FastAPI(title="TEG Stats")
@@ -57,6 +58,8 @@ async def theme_middleware(request: Request, call_next):
     request.state.title_styles = TITLE_STYLES
     request.state.card_header_style = get_card_header_style(request)
     request.state.card_header_styles = CARD_HEADER_STYLES
+    request.state.nav_cue = get_nav_cue(request)
+    request.state.nav_cue_styles = NAV_CUE_STYLES
     request.state.nav_sections = NAV_SECTIONS
     return await call_next(request)
 

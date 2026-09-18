@@ -12,7 +12,10 @@
 {% endblock %}
 
 {% block content %}
-
+{# .eclectic-page is the phone-layout hook (mobile.css) -- wraps the whole
+   page, not just #eclectic-content, so it survives the HTMX tab/filter swap
+   that only replaces #eclectic-content's children. Matches .bestball-page. #}
+<div class="eclectic-page">
 <div class="section-controls flex flex-wrap items-center gap-4">
     <select id="eclectic-player" class="theme-select" name="player"
             hx-get="/eclectic/tab"
@@ -65,5 +68,6 @@
 
 <div id="eclectic-content" class="section-panel">
     {% include "partials/eclectic_tab.html" %}
+</div>
 </div>
 {% endblock %}
