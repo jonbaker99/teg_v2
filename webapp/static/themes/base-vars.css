@@ -1661,6 +1661,26 @@ body.ts-f5 .page-title-area .page-title {
 .scale-switch[aria-checked="true"] .switch-thumb {
     transform: translateX(16px);
 }
+/* Leaderboard/Results Net-Gross measure toggle (partials/leaderboard_table.html,
+   partials/results_table.html) -- same .scale-switch control, standalone
+   rather than inside .lr-chart-tools, so it needs its own spacing. Unlike the
+   Latest Round scale toggle, neither side (net/gross) is a "better" or "on"
+   state, so the track/thumb colouring below is deliberately identical in
+   both aria-checked states -- see design_principles.md > Components for why
+   the base .scale-switch's own unchecked colouring (var(--btn-inactive-bg),
+   #ffffff on Clean) is a trap: it's indistinguishable from the white
+   .bg-card behind it. */
+.measure-toggle {
+    margin: 0.25rem 0 1rem;
+}
+.measure-toggle .switch-track,
+.measure-toggle[aria-checked="true"] .switch-track {
+    background: var(--table-toprank-bg);
+    border-color: var(--select-border);
+}
+.measure-toggle .switch-thumb {
+    background: var(--accent);
+}
 .lr-rewind {
     display: flex;
     align-items: center;

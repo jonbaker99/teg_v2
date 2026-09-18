@@ -1,6 +1,18 @@
 {% if error %}
 <p class="text-muted">Error: {{ error }}</p>
 {% elif is_leaderboard %}
+{# Net/Gross measure toggle -- see partials/leaderboard_table.html for the
+   full rationale (shared markup pattern, id prefix swapped for /results).
+   Sits above the section title since it picks which competition is shown. #}
+<button type="button" class="scale-switch measure-toggle" role="switch"
+        aria-checked="{{ 'true' if active_tab == 'gross' else 'false' }}"
+        aria-label="Leaderboard measure"
+        onclick="document.getElementById('results-tab-input').value='{{ 'net' if active_tab == 'gross' else 'gross' }}';
+                 htmx.trigger(document.getElementById('results-teg-select'), 'change')">
+    <span class="scale-switch-label">Net</span>
+    <span class="switch-track"><span class="switch-thumb"></span></span>
+    <span class="scale-switch-label">Gross</span>
+</button>
 <h2 class="section-title">{{ section_title }}</h2>
 {% if callout %}<p class="result-callout lb-callout">{{ callout | safe }}</p>{% endif %}
 {% include "partials/lb_cards.html" %}

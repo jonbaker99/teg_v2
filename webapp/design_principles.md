@@ -118,6 +118,29 @@ Optional add-ons depending on the page:
 - Tab underline style only — active tab gets a green underline, no pill background
 - Focus rings green (forestgreen accent colour)
 
+### Toggle switches: check the "off" state, not just the "on" state
+
+The `.scale-switch` track/thumb component (base-vars.css) colours its
+`aria-checked="true"` state with `var(--accent)` and leaves `false` at
+`var(--btn-inactive-bg)` — `#ffffff` on Clean, identical to `--bg-card`. On a
+white card that unchecked track is only a 1px grey outline: it reads as
+missing/broken, not as "off". This has bitten the live site before (the
+original `.scale-switch` itself needed this fix) and again on the
+Leaderboard/Results Net-Gross toggle (`.measure-toggle`).
+
+Before shipping any new toggle: render both states side by side against the
+actual card background and confirm the unchecked state is still visibly a
+control. Two fixes, pick based on the semantics:
+
+- **A genuinely binary on/off toggle** (e.g. a scale mode with a real
+  default): keep the accent-on-checked pattern, but give the unchecked track
+  a real fill (not `--btn-inactive-bg`) — e.g. `var(--table-toprank-bg)`.
+- **A toggle between two equally-weighted options** (e.g. Net/Gross, where
+  neither side is "better"): don't recolour the track by state at all — same
+  track fill and same thumb colour in both states, so the control never
+  implies one option is active/correct and the other isn't. See
+  `.measure-toggle` in base-vars.css for the pattern.
+
 ## Themes and layouts
 
 Optimise primarily for the **Clean** theme. After any template or CSS change, verify both layouts still work:

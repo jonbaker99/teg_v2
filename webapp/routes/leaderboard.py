@@ -21,14 +21,6 @@ from webapp.routes.history import _results_context
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
-# Tab labels match /results. The Report tab is not here: it is a link, rendered
-# directly in leaderboard.html rather than driven by this list.
-LEADERBOARD_TABS = [
-    ("net", "TEG Trophy"),
-    ("gross", "Green Jacket"),
-    ("scorecards", "Scorecards"),
-]
-
 
 def _lb_context(teg_num: int, tab: str, chart_variant: str) -> dict:
     """Same content as /results, plus a link to the full Scorecard page on the
@@ -49,7 +41,6 @@ def leaderboard_page(request: Request):
         "active_page": "leaderboard",
         "teg_numbers": teg_numbers,
         "selected_teg": teg_num,
-        "leaderboard_tabs": LEADERBOARD_TABS,
         "active_lb_tab": "net",
         "active_chart_variant": "adjusted",
         "report_tegs": list(available_tegs()),
@@ -69,7 +60,6 @@ def leaderboard_table(
         "request": request,
         "selected_teg": teg,
         "active_lb_tab": tab,
-        "leaderboard_tabs": LEADERBOARD_TABS,
         "active_chart_variant": chart_variant,
         **ctx,
     })

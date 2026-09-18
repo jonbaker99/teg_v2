@@ -1,6 +1,24 @@
 {% if error %}
 <p class="text-muted">Error: {{ error }}</p>
 {% elif is_leaderboard %}
+{# Net/Gross measure toggle -- same .scale-switch control as the stableford
+   chart's normal/adjusted-scale toggle on /latest-round. Lives inside the
+   swapped #lb-content (not the static tab row above) so its aria-checked/
+   bold-label state always matches the freshly rendered active_lb_tab. Its
+   onclick mirrors the two tab-underline buttons above: set the shared hidden
+   tab input, then trigger the same htmx request via the TEG select. Sits
+   above the section title since it picks which competition's leaderboard
+   ("TEG TROPHY FINAL LEADERBOARD" vs "GREEN JACKET FINAL LEADERBOARD") is
+   about to be shown below it. #}
+<button type="button" class="scale-switch measure-toggle" role="switch"
+        aria-checked="{{ 'true' if active_lb_tab == 'gross' else 'false' }}"
+        aria-label="Leaderboard measure"
+        onclick="document.getElementById('lb-tab-input').value='{{ 'net' if active_lb_tab == 'gross' else 'gross' }}';
+                 htmx.trigger(document.getElementById('lb-teg-select'), 'change')">
+    <span class="scale-switch-label">Net</span>
+    <span class="switch-track"><span class="switch-thumb"></span></span>
+    <span class="scale-switch-label">Gross</span>
+</button>
 <h2 class="section-title">{{ section_title }}</h2>
 {% if callout %}<p class="result-callout lb-callout">{{ callout | safe }}</p>{% endif %}
 {% include "partials/lb_cards.html" %}
