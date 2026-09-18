@@ -21,7 +21,8 @@
 {% if lb_cards %}
 <div class="lb-cards">
     {% for c in lb_cards %}
-    <a class="lb-card{% if c.lead %} lb-card--lead{% endif %}"{% if c.code %} href="/player/{{ c.code }}"{% endif %}>
+    {% if link_player_cards|default(true) and c.code %}
+    <a class="lb-card{% if c.lead %} lb-card--lead{% endif %}" href="/player/{{ c.code }}">
         <span class="lb-card-rank">{{ c.rank }}</span>
         <span class="lb-card-who">
             <span class="lb-card-name">{{ c.player }}</span>
@@ -29,6 +30,16 @@
         </span>
         <span class="lb-card-total"><span class="lb-card-v">{{ c.total }}</span><span class="lb-card-u">total</span></span>
     </a>
+    {% else %}
+    <div class="lb-card{% if c.lead %} lb-card--lead{% endif %}">
+        <span class="lb-card-rank">{{ c.rank }}</span>
+        <span class="lb-card-who">
+            <span class="lb-card-name">{{ c.player }}</span>
+            <span class="lb-card-rounds">{% for label, val in c.rounds %}{{ label }} <b>{{ val }}</b>{% if not loop.last %} · {% endif %}{% endfor %}</span>
+        </span>
+        <span class="lb-card-total"><span class="lb-card-v">{{ c.total }}</span><span class="lb-card-u">total</span></span>
+    </div>
+    {% endif %}
     {% endfor %}
 </div>
 {% endif %}

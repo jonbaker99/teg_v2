@@ -7,14 +7,29 @@
     // server round-trip (same pattern as Latest Round's rank-toggle: native
     // <button> semantics already give Enter/Space activation and a visible
     // focus ring, so no extra keyboard handling is needed here).
-    document.addEventListener('click', function (event) {
-        var toggle = event.target.closest('[data-history-toggle]');
-        if (!toggle) return;
+
+    function toggleHistoryDetail(toggle) {
         var detail = document.getElementById(toggle.getAttribute('aria-controls'));
         if (!detail) return;
         var expanded = toggle.getAttribute('aria-expanded') === 'true';
         toggle.setAttribute('aria-expanded', expanded ? 'false' : 'true');
         detail.hidden = expanded;
+    }
+
+    document.addEventListener('click', function (event) {
+        var toggle = event.target.closest('[data-history-toggle]');
+        if (toggle) {
+            toggleHistoryDetail(toggle);
+            return;
+        }
+
+        // Mobile only: click anywhere in a row with a toggle button expands/collapses it
+        if (!window.matchMedia('(max-width: 640px)').matches) return;
+        var row = event.target.closest('tr');
+        if (!row) return;
+        toggle = row.querySelector('[data-history-toggle]');
+        if (!toggle) return;
+        toggleHistoryDetail(toggle);
     });
 })();
 </script>

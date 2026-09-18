@@ -13,7 +13,10 @@ from fastapi import APIRouter, Request
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 
-from webapp.theme import TITLE_STYLES, TITLE_STYLE_IDS, CARD_HEADER_STYLES, CARD_HEADER_IDS
+from webapp.theme import (
+    TITLE_STYLES, TITLE_STYLE_IDS, CARD_HEADER_STYLES, CARD_HEADER_IDS,
+    NAV_CUE_STYLES, NAV_CUE_IDS,
+)
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
@@ -26,6 +29,7 @@ def design_headers(request: Request):
         "active_page": None,
         "title_styles": TITLE_STYLES,
         "card_header_styles": CARD_HEADER_STYLES,
+        "nav_cue_styles": NAV_CUE_STYLES,
     })
 
 
@@ -50,6 +54,14 @@ def set_card_header(request: Request, value: str, back: str = "/design/headers")
     resp = RedirectResponse(url=back, status_code=303)
     if value in CARD_HEADER_IDS:
         resp.set_cookie("card_header", value, max_age=31536000, path="/")
+    return resp
+
+
+@router.get("/design/set-nav-cue")
+def set_nav_cue(request: Request, value: str, back: str = "/design/headers"):
+    resp = RedirectResponse(url=back, status_code=303)
+    if value in NAV_CUE_IDS:
+        resp.set_cookie("nav_cue", value, max_age=31536000, path="/")
     return resp
 
 

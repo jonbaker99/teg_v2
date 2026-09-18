@@ -34,10 +34,14 @@
   </div>
   {% endif %}
   {% if metric_tabs %}
+  {# Desktop: plain .pill-group/.pill/.pill--active (unchanged). Phone: the
+     same .metric-grid/.metric-pill 2x2 reflow Latest Round uses for its
+     equivalent Metric selector (latest_round_tab.html) -- both class pairs
+     sit on the same button so neither breakpoint loses styling. #}
   <div class="section-controls">
-    <div class="pill-group" role="group" aria-label="Metric">
+    <div class="metric-grid pill-group" role="group" aria-label="Metric">
       {% for mid, mlabel in metric_tabs %}
-      <button class="pill{% if mid == active_metric %} pill--active{% endif %}"
+      <button class="metric-pill pill{% if mid == active_metric %} is-active pill--active{% endif %}"
               hx-get="/latest-teg/tab" hx-target="#lt-content" hx-swap="innerHTML"
               hx-vals='{"teg": "{{ teg }}", "tab": "aggregate", "metric": "{{ mid }}"}'>
         {{ mlabel }}

@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-    <link rel="stylesheet" href="/static/themes/base-vars.css?v=28">
+    <link rel="stylesheet" href="/static/themes/base-vars.css?v=29">
     <link rel="stylesheet" href="/static/themes/{{ request.state.theme }}.css?v=23">
     <!-- Report styling (.teg-report) — loaded globally so reports render the same
          wherever they appear (TEG Reports, Results/Latest report tabs). -->
@@ -15,14 +15,14 @@
     <!-- Dark mode — inert until <html data-mode="dark">; default is light. -->
     <link rel="stylesheet" href="/static/themes/dark.css?v=1">
     <!-- Mobile app shell — all rules gated to ≤640px; inert on desktop/iPad. -->
-    <link rel="stylesheet" href="/static/mobile.css?v=22">
+    <link rel="stylesheet" href="/static/mobile.css?v=27">
     <!-- Structural hierarchy debug overlay (dev tool; inert unless body.debug-structure) -->
     <link rel="stylesheet" href="/static/themes/debug-structure.css?v=3">
     <!-- Material Symbols — nav/contents icons (names defined once in webapp/nav.py) -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0">
     <!-- Flag icons — CSS SVG flags via .fi.fi-{code} -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
-    <link rel="stylesheet" href="/static/ui-polish.css?v=1">
+    <link rel="stylesheet" href="/static/ui-polish.css?v=2">
     <script defer src="/static/ui-polish.js?v=1"></script>
     {% block extra_head %}{% endblock %}
     <style>
@@ -131,7 +131,7 @@
         }
     </style>
 </head>
-<body class="page-bg ts-{{ request.state.title_style }} ch-{{ request.state.card_header_style }}{% if wide %} layout-wide{% endif %}{% if newspaper_page %} np-host{% endif %}">
+<body class="page-bg ts-{{ request.state.title_style }} ch-{{ request.state.card_header_style }} nc-{{ request.state.nav_cue }}{% if wide %} layout-wide{% endif %}{% if newspaper_page %} np-host{% endif %}">
     <!-- Navigation -->
     <nav class="nav">
         <div class="px-6">
@@ -264,6 +264,58 @@
     }
     document.addEventListener('DOMContentLoaded', scrollActiveTabIntoView);
     document.addEventListener('htmx:afterSettle', scrollActiveTabIntoView);
+    // Nav-cue prototype (design lab: /design/headers, body.nc-arrows /
+    // body.nc-chevron; nc-off is the untouched default and does nothing
+    // here). Marks each .section-nav with data-can-scroll-left/right so the
+    // mobile.css rules under those body classes can show/hide an edge
+    // affordance that tracks real scroll position, on top of the existing
+    // mask-fade. Recomputed on load, on that row's own scroll, on window
+    // resize, and after any HTMX swap that might change tab count.
+    //
+    // The edge glyphs themselves are real DOM elements (.nav-cue-start/-end),
+    // inserted here rather than CSS ::before/::after content -- an R1 attempt
+    // used pseudo-elements with position:sticky and, on-device, they did not
+    // stay pinned to the row's visible edge while scrolling (rendered mid-row
+    // instead, tab text visible past them). Root cause unconfirmed -- some
+    // browsers restrict position:sticky on generated content inside a flex
+    // container in ways that are hard to inspect from generated boxes alone.
+    // Real elements sidestep the question entirely and can be verified with
+    // getBoundingClientRect. Only inserted when a nav-cue variant is active,
+    // so nc-off (real users' default) never touches the DOM here.
+    function ensureNavCueEls(nav) {
+        if (nav.dataset.navCueInit) return;
+        nav.dataset.navCueInit = '1';
+        var start = document.createElement('span');
+        start.className = 'nav-cue-glyph nav-cue-start';
+        start.setAttribute('aria-hidden', 'true');
+        var end = document.createElement('span');
+        end.className = 'nav-cue-glyph nav-cue-end';
+        end.setAttribute('aria-hidden', 'true');
+        nav.prepend(start);
+        nav.append(end);
+    }
+    function updateOneNavCue(nav) {
+        if (document.body.className.indexOf('nc-off') === -1) ensureNavCueEls(nav);
+        var canLeft = nav.scrollLeft > 1;
+        var canRight = nav.scrollLeft + nav.clientWidth < nav.scrollWidth - 1;
+        nav.toggleAttribute('data-can-scroll-left', canLeft);
+        nav.toggleAttribute('data-can-scroll-right', canRight);
+    }
+    function updateNavCueState(root) {
+        if (!window.matchMedia('(max-width: 640px)').matches) return;
+        (root || document).querySelectorAll('.section-nav').forEach(updateOneNavCue);
+    }
+    // Always scans the whole document, not the HTMX swap root -- same reason
+    // as scrollActiveTabIntoView above: .section-nav is a sibling of the
+    // hx-target content div, not inside it.
+    document.addEventListener('DOMContentLoaded', function() { updateNavCueState(document); });
+    document.addEventListener('htmx:afterSettle', function() { updateNavCueState(document); });
+    window.addEventListener('resize', function() { updateNavCueState(document); });
+    document.addEventListener('scroll', function(e) {
+        if (e.target.nodeType === 1 && e.target.classList.contains('section-nav')) {
+            if (window.matchMedia('(max-width: 640px)').matches) updateOneNavCue(e.target);
+        }
+    }, true);
     // Global pill active state: clicking a .pill moves --active within its
     // nearest .pill-group. Works whether the pills are re-rendered by an HTMX
     // swap or sit outside the swap target (e.g. /top-performances measure pills).

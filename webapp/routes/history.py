@@ -479,9 +479,13 @@ def _teg_is_complete(teg_num: int) -> bool:
         return False
 
 
-def _leaderboard_table_html(df: pd.DataFrame) -> str:
+def _leaderboard_table_html(df: pd.DataFrame, link_players: bool = True) -> str:
     """Render a results leaderboard: full-width, rank/score columns centred,
-    player linked, and the leading row(s) tinted (rank starting with '1')."""
+    player linked, and the leading row(s) tinted (rank starting with '1').
+
+    ``link_players=False`` (used by /results, which has no click-through to
+    player profiles) renders player names as plain text instead of links to
+    ``/player/<code>``. /leaderboard reuses this via the default (True)."""
     if df is None or df.empty:
         return "<p class='text-muted text-sm'>No data available.</p>"
 
@@ -497,7 +501,7 @@ def _leaderboard_table_html(df: pd.DataFrame) -> str:
         for col in df.columns:
             val = row[col]
             if col == "Player":
-                code = get_name_to_code().get(str(val))
+                code = get_name_to_code().get(str(val)) if link_players else None
                 name_html = _wrap_player_name(val)
                 cell = f"<a href='/player/{code}'>{name_html}</a>" if code else name_html
                 rows.append(f"<td class='col-player'>{cell}</td>")
@@ -619,8 +623,14 @@ def _build_race_chart_readout(tab: str, variant: str, net_measure: str, teg_name
         return []
 
 
-def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjusted") -> dict:
-    """Build context for full results page."""
+def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjusted",
+                      link_players: bool = True) -> dict:
+    """Build context for full results page.
+
+    ``link_players=False`` drops the click-through to player profiles (both
+    the desktop table and the phone `lb_cards`) for callers that don't want
+    it -- currently only /results, which sets it explicitly. /leaderboard
+    reuses this same context builder via the default (True), unaffected."""
     try:
         if tab == "scorecards":
             rounds = get_rounds_for_teg(teg_num)
@@ -680,7 +690,7 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
         # Format score columns (+/- signs etc.) then build the full-width table.
         for col in [c for c in lb.columns if c not in ['Rank', 'Player']]:
             lb[col] = lb[col].apply(lambda x: format_value(x, value_col))
-        table_html = _leaderboard_table_html(lb)
+        table_html = _leaderboard_table_html(lb, link_players=link_players)
 
         # Phone-only card reflow of the same standings (MOBILE_PLAN M2.7).
         # Rendered by partials/lb_cards.html; hidden above 640px by mobile.css.
@@ -688,7 +698,7 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
         lb_cards = [{
             "rank": str(row['Rank']),
             "player": str(row['Player']),
-            "code": get_name_to_code().get(str(row['Player'])),
+            "code": get_name_to_code().get(str(row['Player'])) if link_players else None,
             "rounds": [(c, str(row[c])) for c in round_cols],
             "total": str(row['Total']),
             "lead": str(row['Rank']).startswith('1'),
@@ -712,6 +722,7 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
             "table_html": table_html,
             "lb_cards": lb_cards,
             "lb_hero": lb_hero,
+            "link_player_cards": link_players,
             "chart_readout": chart_readout,
             "chart_crowded_threshold": CROWDED_FIELD_THRESHOLD,
             "teg_name": teg_name,
@@ -732,7 +743,9 @@ def results_page(request: Request, teg: Optional[int] = Query(None)):
     # invalid/absent teg falls back to the default, same as every other page's
     # teg-selector pattern.
     teg_num = teg if teg in teg_numbers else get_default_teg_num()
-    ctx = _results_context(teg_num, "net")
+    # /results has no player-profile click-through (unlike /leaderboard, which
+    # reuses this same context builder via the default).
+    ctx = _results_context(teg_num, "net", link_players=False)
     return templates.TemplateResponse("results.html", {
         "request": request,
         "active_page": "results",
@@ -751,7 +764,7 @@ def results_page(request: Request, teg: Optional[int] = Query(None)):
 @router.get("/results/table")
 def results_table(request: Request, teg: int = Query(...), tab: str = Query("net"),
                         chart_variant: str = Query("adjusted")):
-    ctx = _results_context(teg, tab, chart_variant)
+    ctx = _results_context(teg, tab, chart_variant, link_players=False)
     return templates.TemplateResponse("partials/results_table.html", {
         "request": request,
         "selected_teg": teg,

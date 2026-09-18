@@ -110,6 +110,30 @@
     <div class="data-card" style="padding:1rem; border:1px solid var(--table-cell-border,#e0e0e0); border-radius:0.25rem;">Sample card body content.</div>
 </div>
 
+<!-- ══════════════════════════ 2b. NAV CUE (mobile tab-row overflow) ══════════════════════════ -->
+<div class="hh-section" id="nav-cue-section">
+    <h2>2b. Nav cue — mobile tab-row "more to scroll" affordance</h2>
+    <p class="hh-desc">
+        Phone-width in-page tab rows (<code>.section-nav</code>, e.g. /honours' 6 tabs) only hint
+        "more tabs this way" via a subtle right-edge mask fade. These two options add a small
+        vanilla-JS-driven cue (<code>webapp/theme.py</code> + <code>base.html</code> +
+        <code>mobile.css</code>, same cookie-switcher pattern as Page title above) that reacts to
+        real scroll position. Switching sets the <code>nav_cue</code> cookie site-wide — visit any
+        page with a tab row (e.g. <a href="/honours">/honours</a>) to see it live; both are inert
+        above 640px.
+    </p>
+    <div class="hh-switcher">
+        {% for id, label in nav_cue_styles %}
+        <a href="/design/set-nav-cue?value={{ id }}&back=/design/headers%23nav-cue-section" class="{% if request.state.nav_cue == id %}hh-current{% endif %}">{{ label }}</a>
+        {% endfor %}
+    </div>
+    <p class="hh-live-note">
+        Currently live: <strong>{{ request.state.nav_cue }}</strong>. Narrow the browser to ≤640px
+        (or use a phone) and open <a href="/honours">/honours</a> to see the tab row react to
+        scroll.
+    </p>
+</div>
+
 <!-- ══════════════════════════ 3. TAB LABEL ══════════════════════════ -->
 <div class="hh-section">
     <h2>3. Tab label</h2>

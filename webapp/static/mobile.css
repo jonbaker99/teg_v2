@@ -115,11 +115,51 @@
     padding-inline: 12px;
   }
   .main-content.px-6:has(> .latest-round-page),
+  .main-content.px-6:has(> .latest-teg-page),
   .main-content.px-6:has(> .history-page),
   .main-content.px-6:has(> .standings-page) {
     padding-inline: 0;
   }
   .page-title-area .page-title { font-size: 1.35rem; }
+
+  /* ── Title/brand clash: decided 2026-09-17, Jon picked M2 ──
+     "The El Golfo" (.nav-brand) and the page title sat in the same bold
+     serif, close together, reading as near-duplicates at phone width --
+     desktop's extra chrome/spacing keeps the same pairing from clashing
+     there, so this stays mobile-only. Applied unconditionally (not gated
+     behind a ts-* body class) so it doesn't depend on -- or get lost by
+     changing -- the separate desktop title-style choice (ts-a etc, which
+     is unrelated and untouched). Recede the brand rather than decorate
+     the title, so only one of the two reads as "the heading" at a
+     glance. M1 (green band) and M3 (band + recede) are still selectable
+     from /design/headers for comparison, but M2's own rule now lives
+     here as the shipped default; picking ts-m1/ts-m2/ts-m3 there no
+     longer changes anything for the brand (the option is kept for A/B
+     reference against the other bands, not because it's still opt-in). */
+  .nav-brand {
+    font-size: 1rem;
+    font-weight: 500;
+    opacity: 0.65;
+  }
+  /* M1: band the title area in the accent green, like the existing
+     desktop-only ts-c1/ts-f1 "card" styles, so it reads as its own
+     distinct block under the plain-text nav bar instead of a second
+     stacked heading. Still a /design/headers-only comparison option. */
+  body.ts-m1 .page-title-area {
+    background: #228B22;
+    margin-inline: -0.75rem;
+    padding: 0.875rem 0.75rem;
+  }
+  html[data-mode="dark"] body.ts-m1 .page-title-area { background: #1b3a1e; }
+  body.ts-m1 .page-title-area .page-label { color: rgba(255, 255, 255, 0.65); }
+  body.ts-m1 .page-title-area .page-title { color: #ffffff; }
+  /* M3: a quieter grey band (distinct region, lower contrast than M1) on
+     top of the now-default receded brand. Still a comparison option. */
+  body.ts-m3 .page-title-area {
+    background: var(--btn-inactive-bg, #e8e5e0);
+    margin-inline: -0.75rem;
+    padding: 0.875rem 0.75rem;
+  }
 
   /* ── Full-width page (M1.x): drop the "white card on grey background"
      look from clean-page.css. On phones the white content fills the
@@ -198,6 +238,101 @@
     color: var(--accent, forestgreen);
   }
 
+  /* ── Nav cue: decided 2026-09-17, Jon picked arrows ── replaces the old
+     right-edge mask fade for signalling "more tabs this way" on overflowing
+     .section-nav rows (e.g. /honours' 6 tabs); arrows is now DEFAULT_NAV_CUE
+     (theme.py), so this is what real users see, not just a design-lab
+     preview. body.nc-chevron is kept selectable at /design/headers as the
+     quieter alternative that was compared against and passed over; nc-off
+     is kept too so the old fade-only look can still be A/B'd. Reacts to
+     real scroll position via data-can-scroll-left/right, set by
+     base.html's updateNavCueState().
+     History: R1 (2026-09-17, Jon on-device) used CSS ::before/::after with
+     `position: sticky`; on-device the glyph rendered mid-row with tab text
+     visible past it, not pinned to the edge. That was misdiagnosed as a
+     sticky-vs-flex-item bug and "fixed" with `position: absolute` (R2) --
+     wrong: an absolutely positioned descendant of the scrolling element is
+     still part of its scrolled content, so it slid along with the row
+     instead of staying pinned, and only one edge's glyph even appeared.
+     Reverting to sticky pseudo-elements (still R2) reproduced the exact
+     original mid-row symptom even with a confirmed-fresh stylesheet, so the
+     pseudo-element + sticky + flex combination itself is the problem here,
+     not caching. R3 sidesteps it: base.html's ensureNavCueEls() inserts
+     real <span class="nav-cue-glyph nav-cue-start/-end"> elements as the
+     row's first/last children (only when a variant is active), instead of
+     generated content -- verified with getBoundingClientRect to actually
+     stay flush at each edge while independently confirming the row content
+     scrolls underneath. */
+  body.nc-arrows .section-nav,
+  body.nc-chevron .section-nav {
+    position: relative;
+    mask-image: none;
+    -webkit-mask-image: none;
+    /* The base rule above reserves 18px of trailing padding for the mask
+       fade's breathing room; these variants replace the fade with a real
+       edge element instead, so that padding would just leave a dead gap
+       between the glyph and the row's true right edge. */
+    padding-right: 0;
+  }
+  .nav-cue-glyph {
+    position: sticky;
+    z-index: 2;
+    flex: 0 0 auto;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+  }
+  .section-nav[data-can-scroll-left] .nav-cue-start,
+  .section-nav[data-can-scroll-right] .nav-cue-end {
+    opacity: 1;
+  }
+
+  /* Arrows: a bold glyph on a solid chip, flush to each edge. Sized up
+     slightly from the first prototype pass (22px/0.9rem -> 26px/1.05rem)
+     per Jon's on-device check. */
+  body.nc-arrows .nav-cue-glyph {
+    width: 26px;
+    justify-content: center;
+    color: var(--accent, forestgreen);
+    font-size: 1.05rem;
+    font-weight: 700;
+    background: var(--bg-card, #ffffff);
+  }
+  body.nc-arrows .nav-cue-start { left: 0; }
+  body.nc-arrows .nav-cue-start::after { content: '\2039'; }
+  body.nc-arrows .nav-cue-end { right: 0; }
+  body.nc-arrows .nav-cue-end::after { content: '\203A'; }
+
+  /* Chevron: a lighter mark, fading in from transparent (rather than a hard
+     chip edge) so it reads as quieter than the arrows variant -- still an
+     opaque solid at its outer edge, so it fully covers the scrolled row
+     behind it, same as arrows. */
+  body.nc-chevron .nav-cue-glyph {
+    width: 20px;
+    color: var(--text-muted, #888888);
+    font-size: 0.75rem;
+    font-weight: 400;
+  }
+  body.nc-chevron .nav-cue-start {
+    left: 0;
+    justify-content: flex-start;
+    background: linear-gradient(to right, var(--bg-card, #ffffff) 60%, transparent);
+  }
+  body.nc-chevron .nav-cue-start::after { content: '\2039'; }
+  body.nc-chevron .nav-cue-end {
+    right: 0;
+    justify-content: flex-end;
+    background: linear-gradient(to left, var(--bg-card, #ffffff) 60%, transparent);
+  }
+  body.nc-chevron .nav-cue-end::after { content: '\203A'; }
+  body.nc-chevron .section-nav[data-can-scroll-left] .nav-cue-start,
+  body.nc-chevron .section-nav[data-can-scroll-right] .nav-cue-end {
+    opacity: 0.85;
+  }
+
   /* Pills: bigger tap targets. */
   .pill {
     display: inline-flex;
@@ -252,6 +387,12 @@
   .overflow-x-auto:not(.table-wrapper--no-pin) .teg-table tbody tr.top-rank td:first-child {
     background-color: var(--table-toprank-bg, #F3F7F3);
   }
+
+  /* Records tab bar sits right under the page title with only the generic
+     .section-nav 12px gap before the first table -- reads as cramped next
+     to the tap-to-reveal list below it. Extra breathing room, this page
+     only (other tab bars were left as-is; not asked for elsewhere). */
+  .records-tabs { margin-bottom: 20px; }
 
   /* ── Records (/records, tap-to-reveal) ──
      Markup: _build_records_html (webapp/routes/records.py) emits the
@@ -434,50 +575,76 @@
   }
 
   /* Latest round vertical slice. Keep the scoreboard readable at 320px and
-     let its chart use the full phone width. */
+     let its chart use the full phone width. Latest TEG (#lt-content) shares
+     the same page shape (tab row, section-controls, data-card sections) with
+     no round-specific leaderboard/chart/rewind of its own, so every rule
+     below that's purely structural is extended to it directly instead of
+     being re-typed -- only the page-scoped inset custom property itself
+     needs a Latest-TEG-specific declaration (a shared property spanning two
+     unrelated pages would be harder to reason about than one extra line). */
   .latest-round-page { --lr-inset: 12px; }
-  .latest-round-page #lr-context-header { margin-left: var(--lr-inset); margin-right: var(--lr-inset); }
-  .latest-round-page > .section-controls { margin-left: 0; margin-right: 0; }
+  .latest-teg-page { --lr-inset: 12px; }
+  .latest-round-page #lr-context-header,
+  .latest-teg-page #lt-context-header { margin-left: var(--lr-inset); margin-right: var(--lr-inset); }
+  .latest-round-page > .section-controls,
+  .latest-teg-page > .section-controls { margin-left: 0; margin-right: 0; }
   .latest-round-page > .section-controls .pill,
-  .latest-round-page > .section-controls .theme-select { min-height: 44px; }
-  .latest-round-page > #lr-content { min-width: 0; margin-inline: 0; }
-  /* Latest Round uses the reference's full-width data surfaces. The shared
-     layered-theme card otherwise adds a second 12px inset, card margin and
-     shadow around every table/chart after the page's own inset. */
-  .latest-round-page #lr-content .data-card {
+  .latest-round-page > .section-controls .theme-select,
+  .latest-teg-page > .section-controls .pill,
+  .latest-teg-page > .section-controls .theme-select { min-height: 44px; }
+  .latest-round-page > #lr-content,
+  .latest-teg-page > #lt-content { min-width: 0; margin-inline: 0; }
+  /* Latest Round/TEG use the reference's full-width data surfaces. The
+     shared layered-theme card otherwise adds a second 12px inset, card
+     margin and shadow around every table/chart after the page's own inset. */
+  .latest-round-page #lr-content .data-card,
+  .latest-teg-page #lt-content .data-card {
     margin: 9px 0;
     padding-inline: 0;
     border-radius: 0;
     box-shadow: none;
   }
-  .main-content .latest-round-page > .section-nav {
+  .main-content .latest-round-page > .section-nav,
+  .main-content .latest-teg-page > .section-nav {
     margin-left: var(--lr-inset);
     margin-right: var(--lr-inset);
     max-width: none;
   }
-  .latest-round-page #lr-content .section-controls { gap: 6px; margin-bottom: 12px; }
-  .latest-round-page #lr-content .pill { min-height: 44px; font-size: 14px; padding-inline: 11px; }
-  .latest-round-page #lr-content .data-card { overflow: visible; }
-  .latest-round-page #lr-content .table-wrapper { overflow: visible; }
-  .latest-round-page #lr-content table.teg-table { width: 100%; table-layout: fixed; font-size: 13px; }
+  .latest-round-page #lr-content .section-controls,
+  .latest-teg-page #lt-content .section-controls { gap: 6px; margin-bottom: 12px; }
+  .latest-round-page #lr-content .pill,
+  .latest-teg-page #lt-content .pill { min-height: 44px; font-size: 14px; padding-inline: 11px; }
+  .latest-round-page #lr-content .data-card,
+  .latest-teg-page #lt-content .data-card { overflow: visible; }
+  .latest-round-page #lr-content .table-wrapper,
+  .latest-teg-page #lt-content .table-wrapper { overflow: visible; }
+  .latest-round-page #lr-content table.teg-table,
+  .latest-teg-page #lt-content table.teg-table { width: 100%; table-layout: fixed; font-size: 13px; }
   .latest-round-page #lr-content table.teg-table th,
-  .latest-round-page #lr-content table.teg-table td { padding: 9px 5px; }
+  .latest-round-page #lr-content table.teg-table td,
+  .latest-teg-page #lt-content table.teg-table th,
+  .latest-teg-page #lt-content table.teg-table td { padding: 9px 5px; }
 
   /* Metric selector: 2x2 button grid, not a pill row -- ported from the
      approved prototype's .metric-grid/.metric-pills (report_layout_prototypes/
      mobile_data.css), values re-themed onto this repo's own custom
      properties (--table-cell-border/--bg-card/--text-muted/--accent/
      --table-toprank-bg in place of the prototype's --line/--surface/
-     --muted/--accent/--chip). */
-  .latest-round-page #lr-content .metric-grid {
+     --muted/--accent/--chip). Latest TEG's Aggregate-tab Metric selector
+     (partials/latest_teg_tab.html) now carries the same .metric-grid/
+     .metric-pill classes as Latest Round's, so it gets the same reflow. */
+  .latest-round-page #lr-content .metric-grid,
+  .latest-teg-page #lt-content .metric-grid {
     display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; overflow: visible; width: 100%;
   }
-  .latest-round-page #lr-content .metric-pill {
+  .latest-round-page #lr-content .metric-pill,
+  .latest-teg-page #lt-content .metric-pill {
     width: 100%; min-width: 0; min-height: 44px; padding: .45rem .7rem;
     border: 1px solid var(--table-cell-border, #d5ddd7); border-radius: .35rem;
     color: var(--text-muted, #666); background: var(--bg-card, #fff); font-size: 16px;
   }
-  .latest-round-page #lr-content .metric-pill.is-active {
+  .latest-round-page #lr-content .metric-pill.is-active,
+  .latest-teg-page #lt-content .metric-pill.is-active {
     border-color: var(--accent, #17683c); background: var(--table-toprank-bg, #edf5ee);
     color: var(--text-primary, #1b241f); font-weight: 700;
   }
@@ -683,14 +850,20 @@
      content structurally -- it's simplest to keep both halves of one visual
      fix next to the rules they're overriding. */
   .latest-round-page #lr-content .card-header,
-  .latest-round-page #lr-content .bw-bars-title {
+  .latest-round-page #lr-content .bw-bars-title,
+  .latest-teg-page #lt-content .card-header,
+  .latest-teg-page #lt-content .bw-bars-title {
     margin-left: var(--lr-inset);
     margin-right: var(--lr-inset);
   }
-  /* Bestball/Worstball rank-summary labels near the top of the tab -- same
-     page-edge gutter as everything else, since .bw-rank-summary is a
-     `raw: True` section with no .data-card wrapper/padding of its own. */
-  .latest-round-page #lr-content .bw-rank-summary {
+  /* Bestball/Worstball (Latest Round) and Eclectic (Latest TEG) rank-summary
+     labels near the top of the tab -- same page-edge gutter as everything
+     else, since .bw-rank-summary is a `raw: True` section with no .data-card
+     wrapper/padding of its own (both routes emit the same class -- see
+     _bestball_rank_summary and the eclectic-tab rank_html in
+     webapp/routes/latest.py). */
+  .latest-round-page #lr-content .bw-rank-summary,
+  .latest-teg-page #lt-content .bw-rank-summary {
     margin-left: var(--lr-inset);
     margin-right: var(--lr-inset);
   }
@@ -977,6 +1150,17 @@
      the viewport even though the row wraps. */
   .bestball-page .section-controls > * { min-width: 0; }
   .bestball-page .section-controls .theme-select { max-width: 100%; }
+
+  /* ── Eclectic Scores (/eclectic) ──
+     Same control-row overflow as Bestball above: three plain .theme-select
+     filters (player/TEG/course) in a flex-wrap row with no explicit widths,
+     so a flex item's default min-width:auto can still push the row wider
+     than the viewport even though it wraps. The tab row below it
+     (Eagles/Birdies/...) is a .section-nav, which already gets the
+     site-wide horizontal-scroll treatment (M1.6 above), so it needs no
+     page-specific fix here. */
+  .eclectic-page .section-controls > * { min-width: 0; }
+  .eclectic-page .section-controls .theme-select { max-width: 100%; }
 
   /* ── Scoring Matrix & By TEG (dense grid, initials) ──
      /scoring/matrix and /scoring/by-teg both show a dense TEG-by-player
