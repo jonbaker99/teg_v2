@@ -245,17 +245,28 @@ def _history_table_html(df: pd.DataFrame, round_metadata: dict | None = None) ->
         rows.append("</tr>")
 
         if rounds:
+            # "Round N:" + course + comma-separated date -- the comma sits in
+            # its own span (.history-meta-sep) so mobile.css can drop it when
+            # the three parts stack onto separate lines instead of reading as
+            # one sentence.
             courses = "".join(
-                f"<li><b>R{r['round']}</b><span>{escape(r['course'])}</span>"
+                f"<li><b>Round {r['round']}:</b> <span>{escape(r['course'])}"
+                f"<span class='history-meta-sep'>,</span></span> "
                 f"<small>{escape(r['date'])}</small></li>"
                 for r in rounds
             )
+            # colspan matches the visible column count (TEG + 3 name columns),
+            # not len(headers): the trailing toggle column is display:none on
+            # desktop, and a colspan that overshoots the table's real column
+            # count throws off table-layout:fixed's width math for every
+            # column once this row is revealed. A matching empty cell keeps
+            # the column count consistent with every other row.
             rows.append(
                 f"<tr class='history-detail-row' id='{detail_id}' hidden>"
-                f"<td colspan='{len(headers)}'>"
+                f"<td colspan='{len(headers) - 1}'>"
                 f"<div class='history-meta'><p><b>{escape(area_raw)}</b></p>"
                 f"<ol>{courses}</ol></div>"
-                f"</td></tr>"
+                f"</td><td class='history-toggle-td'></td></tr>"
             )
     rows.append("</tbody></table>")
     return "".join(rows)

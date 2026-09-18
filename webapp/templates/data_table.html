@@ -23,8 +23,8 @@
             return;
         }
 
-        // Mobile only: click anywhere in a row with a toggle button expands/collapses it
-        if (!window.matchMedia('(max-width: 640px)').matches) return;
+        // Click anywhere in a row with a toggle button expands/collapses it,
+        // on every viewport (desktop included).
         var row = event.target.closest('tr');
         if (!row) return;
         toggle = row.querySelector('[data-history-toggle]');

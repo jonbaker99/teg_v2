@@ -434,7 +434,7 @@
     min-width: 2.5em;
     text-align: right;
     font-weight: 700;
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     color: var(--text-primary, #1b241f);
   }
   .records-page .rec-identity {
@@ -488,7 +488,7 @@
     align-items: center;
     gap: 5px;
     margin-bottom: 5px;
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.1em;
@@ -502,7 +502,7 @@
   .lb-pod-name { font-size: 16px; font-weight: 600; line-height: 1.15; }
   .lb-pod-sub {
     margin-top: 2px;
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     font-size: 12px;
     color: var(--text-muted, #8c8c86);
   }
@@ -529,7 +529,7 @@
     border-color: color-mix(in srgb, var(--accent, forestgreen) 28%, var(--table-cell-border, #e0e0e0));
   }
   .lb-card-rank {
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     font-size: 14px;
     font-weight: 700;
     text-align: center;
@@ -549,7 +549,7 @@
   .lb-card-rounds {
     display: block;
     margin-top: 3px;
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     font-size: 11px;
     letter-spacing: 0.02em;
     color: var(--text-muted, #8c8c86);
@@ -558,7 +558,7 @@
   .lb-card-total { text-align: right; }
   .lb-card-total .lb-card-v {
     display: block;
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     font-size: 20px;
     font-weight: 700;
     line-height: 1;
@@ -567,7 +567,7 @@
   .lb-card-total .lb-card-u {
     display: block;
     margin-top: 3px;
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     font-size: 9px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -682,7 +682,7 @@
   .latest-round-page #lr-content table.leaderboard .lr-toggle-col { width: 10%; }
   .latest-round-page #lr-content table.leaderboard th {
     padding: 0 6px 8px; color: var(--text-muted, #666); text-align: right;
-    font: 700 11px/1.2 'Roboto Mono', monospace; letter-spacing: .03em; text-transform: uppercase;
+    font: 700 11px/1.2 var(--font-table), sans-serif; letter-spacing: .03em; text-transform: uppercase;
     /* Unlike the reference's own short Out/In/Total headers, "Personal
        rank"/"All-time rank" need to wrap -- confirmed by an actual 375px
        screenshot: one-line headers here overflowed their fixed-width cell
@@ -713,7 +713,7 @@
   }
   .latest-round-page #lr-content table.leaderboard td {
     padding: 12px 5px;
-    font-family: 'Roboto Mono', monospace; font-variant-numeric: tabular-nums; white-space: nowrap;
+    font-family: var(--font-table), sans-serif; font-variant-numeric: tabular-nums; white-space: nowrap;
   }
   .latest-round-page #lr-content table.leaderboard th:first-child,
   .latest-round-page #lr-content table.leaderboard td:first-child {
@@ -773,7 +773,7 @@
   }
   .latest-round-page #lr-content .rank-detail-row .detail-grid span b {
     display: block; margin-top: 3px; color: var(--text-primary, #1b241f);
-    font: 600 14px 'Roboto Mono', monospace; text-transform: none; letter-spacing: normal;
+    font: 600 14px var(--font-table), sans-serif; text-transform: none; letter-spacing: normal;
   }
   .latest-round-page #lr-content .rank-detail-row .detail-mix {
     margin: 0; padding: 0 10px 10px; font-size: 12px; line-height: 1.4;
@@ -784,7 +784,7 @@
     letter-spacing: .04em; margin-right: 6px;
   }
   .latest-round-page #lr-content .lr-chart-tools { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; margin: 10px var(--lr-inset) 0; }
-  .lr-chart-tools label { display: grid; gap: 4px; color: var(--text-muted, #666); font: 700 11px/1.2 'Roboto Mono', monospace; letter-spacing: .04em; text-transform: uppercase; }
+  .lr-chart-tools label { display: grid; gap: 4px; color: var(--text-muted, #666); font: 700 11px/1.2 var(--font-table), sans-serif; letter-spacing: .04em; text-transform: uppercase; }
   .lr-chart-tools select { min-height: 44px; font-size: 16px; }
   .lr-readout { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 8px; }
   /* Re-enable the tournament race chart's readout at phone width -- the
@@ -796,8 +796,8 @@
   .chart-block .lr-readout { display: grid; }
   .lr-readout-entry { min-height: 44px; display: flex; align-items: center; justify-content: flex-start; gap: 8px; padding: 4px 6px; border: 0; border-radius: 5px; color: var(--text-primary, #1b241f); background: transparent; text-align: left; }
   .lr-readout-entry.is-active { background: var(--table-toprank-bg, #edf5ee); font-weight: 700; }
-  .lr-initials { color: var(--accent, #17683c); font: 700 12px 'Roboto Mono', monospace; }
-  .lr-readout-entry strong { margin-left: 0; font: 600 14px 'Roboto Mono', monospace; }
+  .lr-initials { color: var(--accent, #17683c); font: 700 12px var(--font-table), sans-serif; }
+  .lr-readout-entry strong { margin-left: 0; font: 600 14px var(--font-table), sans-serif; }
   .lr-chart-tools select { min-width: 0; width: 100%; padding: 7px 9px; border: 1px solid var(--table-cell-border, #d5ddd7); border-radius: 8px; background: var(--bg-card, #fff); color: var(--text-primary, #1b241f); }
 
   /* Scale toggle-switch look -- ported from the reference's switchControl()
@@ -828,7 +828,7 @@
   }
   .latest-round-page #lr-content .scale-switch[aria-checked="true"] .switch-thumb { transform: translateX(18px); }
   .lr-rewind { grid-column: 1 / -1; display: flex !important; align-items: center; gap: 8px; }
-  .lr-rewind-caption { flex: 0 0 auto; color: var(--text-muted, #666); font: 700 11px/1.2 'Roboto Mono', monospace; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; }
+  .lr-rewind-caption { flex: 0 0 auto; color: var(--text-muted, #666); font: 700 11px/1.2 var(--font-table), sans-serif; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; }
   .lr-rewind input { flex: 1 1 auto; min-width: 0; min-height: 44px; accent-color: var(--accent, #17683c); }
   .lr-rewind-step { width: 44px; height: 44px; border: 1px solid var(--table-cell-border, #d5ddd7); border-radius: 8px; color: var(--accent, #17683c); background: var(--bg-card, #fff); font-size: 20px; flex: 0 0 auto; }
   .lr-rewind output { min-width: 2ch; color: var(--text-primary, #1b241f); font-size: 14px; text-align: right; flex: 0 0 auto; }
@@ -912,7 +912,7 @@
   .hc-list-value {
     width: 20%;
     text-align: right;
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     font-size: 1.0625rem;
     font-weight: 700;
     color: var(--text-primary);
@@ -920,7 +920,7 @@
   .hc-list-delta {
     width: 30%;
     text-align: right;
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     font-size: 0.8125rem;
     font-weight: 600;
   }
@@ -945,12 +945,8 @@
   }
   .history-page .history-table th {
     color: var(--text-muted, #666);
-    font-family: var(--font-serif), serif;
-    font-weight: 700;
-    font-size: 11px;
+    font-weight: 600;
     line-height: 1.2;
-    letter-spacing: .04em;
-    text-transform: uppercase;
     /* Desktop's base .teg-table th is white-space:nowrap, fine at desktop
        column widths; these mobile columns are much narrower, so header
        text (e.g. "HMM Wooden Spoon") needs to wrap instead of overflowing
@@ -1024,25 +1020,23 @@
     content: "\2013";
   }
   .history-page .history-detail-row td { padding: 0; background: var(--btn-inactive-bg, #f5f4f0); }
-  .history-page .history-meta { padding: 10px 12px 12px; color: var(--text-muted, #666); font-size: 11px; }
+  .history-page .history-meta { padding: 10px 12px 12px; }
   .history-page .history-meta p { margin: 0 0 6px; }
-  .history-page .history-meta p b { color: var(--text-primary, #1b241f); }
+  /* One round per line, same inline reading order and font as desktop
+     ("Round 1: Boavista, 16/05/2009") -- just stacked instead of laid out
+     in columns, since a phone-width row has no room for several rounds
+     side by side. */
   .history-page .history-meta ol {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: 6px 10px;
-    margin: 0;
-    padding-left: 0;
     list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
   }
-  .history-page .history-meta li { padding: 2px 0; }
   .history-page .history-meta li b {
-    display: block;
-    color: var(--text-primary, #1b241f);
-    font: 600 12px 'Roboto Mono', monospace;
+    font-weight: 700;
   }
-  .history-page .history-meta li span { display: block; color: var(--text-primary, #1b241f); }
-  .history-page .history-meta li small { display: block; color: var(--text-muted, #666); }
 
   /* ── Personal Bests & Top Performances (two-line cells, byline rows) ──
      Personal Bests' PB Summary cell was one concatenated string
@@ -1057,7 +1051,7 @@
      id_cols onto one muted sub-line, so nothing truncates. */
   .personal-bests-page .pbv,
   .personal-bests-page .pbc { display: block; text-align: center; }
-  .personal-bests-page .pbv { font: 700 13.5px 'Roboto Mono', monospace; }
+  .personal-bests-page .pbv { font: 700 13.5px var(--font-table), sans-serif; }
   .personal-bests-page .pbc { font-size: 9.5px; color: var(--text-muted, #666); margin-top: 1px; }
   /* The " (" / ")" text nodes are what makes desktop/iPad's unstyled markup
      read as the old "value (context)" string (see _pb_summary_html) -- once
@@ -1075,9 +1069,9 @@
   }
   .tp-row:last-child { border-bottom: none; }
   .tp-top { display: flex; align-items: baseline; gap: 8px; }
-  .tp-rank { font: 700 12px 'Roboto Mono', monospace; color: var(--text-muted, #666); min-width: 18px; }
+  .tp-rank { font: 700 12px var(--font-table), sans-serif; color: var(--text-muted, #666); min-width: 18px; }
   .tp-player { flex: 1; font-weight: 600; overflow-wrap: anywhere; }
-  .tp-value { font: 700 13px 'Roboto Mono', monospace; }
+  .tp-value { font: 700 13px var(--font-table), sans-serif; }
   .tp-sub { font-size: 11px; color: var(--text-muted, #666); padding-left: 26px; }
 
   /* ── Standings (Full Results + Latest Leaderboard, R3.2) ──
@@ -1100,7 +1094,7 @@
     font-variant-numeric: tabular-nums;
     white-space: normal;
   }
-  .standings-page .leaderboard-table th { font: 700 11px/1.2 'Roboto Mono', monospace; letter-spacing: .04em; text-transform: uppercase; }
+  .standings-page .leaderboard-table th { font: 700 11px/1.2 var(--font-table), sans-serif; letter-spacing: .04em; text-transform: uppercase; }
   .standings-page .leaderboard-table .col-rank { width: 10%; }
   .standings-page .leaderboard-table .col-player { width: 30%; overflow-wrap: anywhere; }
   /* Net/Gross measure toggle -- same touch-target bump as the latest_round_tab.html
@@ -1193,7 +1187,7 @@
   .scoring-byteg-page .teg-table {
     table-layout: fixed;
     width: 100%;
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     font-variant-numeric: tabular-nums;
   }
   .scoring-matrix-page .teg-table thead th,
@@ -1286,7 +1280,7 @@
   .bl-top { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
   .bl-player { flex: 1; font-weight: 600; overflow-wrap: anywhere; min-width: 40%; }
   .bl-value, .bl-delta {
-    font: 700 13px 'Roboto Mono', monospace;
+    font: 700 13px var(--font-table), sans-serif;
     font-variant-numeric: tabular-nums;
   }
   .bl-sub { font-size: 11px; color: var(--text-muted, #666); }
@@ -1302,7 +1296,7 @@
      cell -- is unaffected. */
   .course-records-page table.cr-records-table .cr-v,
   .course-records-page table.cr-records-table .cr-c { display: block; text-align: center; }
-  .course-records-page table.cr-records-table .cr-v { font: 700 13.5px 'Roboto Mono', monospace; }
+  .course-records-page table.cr-records-table .cr-v { font: 700 13.5px var(--font-table), sans-serif; }
   .course-records-page table.cr-records-table .cr-c { font-size: 9.5px; color: var(--text-muted, #666); margin-top: 1px; }
   .course-records-page table.cr-records-table .cr-sep { display: none; }
 
@@ -1313,7 +1307,7 @@
      ~8 columns instead. Reuses the exact dense-grid sizing already shipped
      for Scoring Matrix & By TEG above, since Jon asked for "the same font
      size as in the matrix prototype" -- table-layout:fixed at 100% width,
-     11px body / 9.5px header Roboto Mono. Heat-map cell background colours
+     11px body / 9.5px header table font. Heat-map cell background colours
      come from inline styles (_hm_cell_style) and are untouched by this
      rule; only type size/layout change. When a non-default row/col
      dimension is selected, table_html_mobile is absent, .hm-mobile stays
@@ -1329,7 +1323,7 @@
   .hm-mobile .teg-table {
     table-layout: fixed;
     width: 100%;
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     font-variant-numeric: tabular-nums;
   }
   .hm-mobile .teg-table thead th {
@@ -1357,7 +1351,7 @@
   .by-par-panel table.teg-table {
     table-layout: fixed;
     width: 100%;
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     font-variant-numeric: tabular-nums;
   }
   .by-par-panel table.teg-table thead th,
@@ -1390,7 +1384,7 @@
   .course-records-page table.cr-matrix-table {
     table-layout: fixed;
     width: 100%;
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     font-variant-numeric: tabular-nums;
   }
   .course-records-page table.cr-matrix-table thead th,

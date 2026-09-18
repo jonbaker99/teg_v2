@@ -3,6 +3,12 @@
 /* ── Typography ── */
 body {
     font-family: var(--font-body), sans-serif;
+    /* Tabular (fixed-width, lining) figures globally, inherited everywhere --
+       this is what actually gives --font-table's digits table/mono-style
+       column alignment despite Inter not being a monospace face. Harmless on
+       running prose (only affects digit width, not letterforms), so it's set
+       once here rather than repeated per table/metric/scorecard selector. */
+    font-variant-numeric: tabular-nums lining-nums;
 }
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading), sans-serif;
@@ -222,27 +228,18 @@ h1, h2, h3, h4, h5, h6 {
     width: 100%;
     table-layout: fixed;
 }
-/* History overrides clean.css's .teg-table Roboto Mono default with the
-   site serif -- double-class selector needed to beat that same-specificity,
-   later-loaded rule (webapp/static/themes/clean.css). */
-.teg-table.history-table {
-    font-family: var(--font-serif), serif;
-}
 .history-table .teg-label {
     display: block;
     font-weight: 400;
 }
 /* Flag + region sit together on their own row beneath "TEG N Year",
    flag sized to the region text's line height rather than a full-height
-   swatch -- roughly matching that row's width to the label above it.
-   Second line of the TEG cell (desktop: region; mobile: .teg-mobile-meta
-   below) is sans, breaking from the table's serif for that one line. */
+   swatch -- roughly matching that row's width to the label above it. */
 .history-table .area-row {
     display: flex;
     align-items: center;
     gap: 0.35em;
     margin-top: -0.15rem;
-    font-family: var(--font-sans), sans-serif;
 }
 .history-table .area-label {
     display: block;
@@ -256,7 +253,7 @@ h1, h2, h3, h4, h5, h6 {
 .history-table .teg-year--mobile { display: none; }
 /* Mobile's flag+year line (second copy of the flag, shown only in
    .history-page); desktop keeps the region-row flag instead. */
-.history-table .teg-mobile-meta { display: none; font-family: var(--font-sans), sans-serif; }
+.history-table .teg-mobile-meta { display: none; }
 /* Full column names ("HMM Wooden Spoon") for desktop; mobile.css swaps to
    the approved prototype's short Trophy/Jacket/Spoon heading instead. */
 .history-table .th-short { display: none; }
@@ -296,9 +293,56 @@ h1, h2, h3, h4, h5, h6 {
 .history-table tbody td:nth-child(2) {
     font-weight: 700;
 }
+/* Centre the trophy/jacket/spoon columns, headers included. */
+.history-table th:nth-child(2),
+.history-table th:nth-child(3),
+.history-table th:nth-child(4),
+.history-table tbody td:nth-child(2),
+.history-table tbody td:nth-child(3),
+.history-table tbody td:nth-child(4) {
+    text-align: center;
+}
 /* All cells allow wrapping (TEG col can break between label and year) */
 .history-table tbody td {
     white-space: normal;
+}
+/* Round/course/date disclosure detail row -- desktop default. mobile.css's
+   .history-page-scoped rules (identical selectors, loaded after this file)
+   override these within the phone-width media query with its own compact
+   grid layout; outside that query these are the only rules in effect. */
+.history-table .history-detail-row td {
+    padding: 0.9rem 1.25rem 1rem;
+    background: var(--btn-inactive-bg, #f5f4f0);
+}
+.history-table .history-meta p {
+    margin: 0 0 0.6rem;
+}
+.history-table .history-meta ol {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 2rem;
+    margin: 0;
+    padding: 0;
+}
+.history-table .history-meta li {
+    display: flex;
+    gap: 0.35em;
+}
+.history-table .history-meta li b {
+    font-weight: 700;
+}
+/* <small> defaults to a smaller, de-emphasised size in the UA stylesheet --
+   the date should read like normal text, same size/color as the course
+   name beside it. */
+.history-table .history-meta li small {
+    font-size: inherit;
+    color: inherit;
+}
+/* Row is a click target on every viewport (data_table.html toggles it on
+   click anywhere in the row, not just the button) -- show that affordance. */
+.history-table tbody tr:has(button.teg-cell) {
+    cursor: pointer;
 }
 /* Default: inline-block container (measurable height) with inline first/last.
    Shared with .leaderboard-table (Standings, R3.2) -- same wrap/no-wrap
@@ -866,7 +910,7 @@ a.tab-underline .tab-arrow {
 /* ── Player roster (Player Profiles landing) ── */
 /* Mono, lightly-spaced lead-in that sits well clear of the card grid. */
 .page-subtitle--mono {
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     font-size: 0.8rem;
     color: var(--text-muted);
     margin-bottom: 1.75rem;
@@ -897,7 +941,7 @@ a.tab-underline .tab-arrow {
 /* Lo-fi / monospaced card identity — mono name in place of the serif heading
    so the roster reads like a scorecard rather than a magazine page. */
 .player-card-name {
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     font-size: 0.95rem;
     font-weight: 600;
     letter-spacing: -0.01em;
@@ -905,7 +949,7 @@ a.tab-underline .tab-arrow {
     line-height: 1.2;
 }
 .player-card-meta {
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     font-size: 0.7rem;
     color: var(--text-muted);
 }
@@ -923,7 +967,7 @@ a.tab-underline .tab-arrow {
     width: 0.3rem;
 }
 .player-card-stars--none {
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     font-size: 0.7rem;
     color: var(--text-muted);
     opacity: 0.75;
@@ -943,14 +987,14 @@ a.tab-underline .tab-arrow {
     gap: 0.1rem;
 }
 .pc-stat-val {
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     font-size: 0.95rem;
     font-weight: 600;
     color: var(--text-primary);
     line-height: 1;
 }
 .pc-stat-lbl {
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     font-size: 0.6rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -990,13 +1034,13 @@ a.tab-underline .tab-arrow {
     margin-top: auto;
 }
 
-/* ── Page Title (default = Style A: Roboto Mono label + Lora title) ── */
+/* ── Page Title (default = Style A: table-font label + Lora title) ── */
 .page-title-area {
     padding: 1.5rem 0 0.75rem 0;
 }
 .page-title-area .page-label {
     display: block;
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     font-size: 0.65rem;
     font-weight: 500;
     text-transform: uppercase;
@@ -1228,7 +1272,7 @@ body.ts-f5 .page-title-area .page-title {
    (partials/latest_round_tab.html) instead of its own bespoke, mobile-only
    rule (see 2026-09 heading-hierarchy decision). ── */
 .section-title {
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     font-weight: 700;
     font-size: 13px;
     letter-spacing: 0.09em;
@@ -1352,7 +1396,7 @@ body.ts-f5 .page-title-area .page-title {
    route) but nothing reads them for this any more. */
 .card-header {
     display: block;
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     font-weight: 700;
     font-size: 13px;
     letter-spacing: 0.09em;
@@ -1399,7 +1443,7 @@ body.ts-f5 .page-title-area .page-title {
     color: var(--text-secondary);
 }
 .hc-tile-value {
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     font-size: 2rem;
     font-weight: 700;
     line-height: 1.1;
@@ -1407,7 +1451,7 @@ body.ts-f5 .page-title-area .page-title {
 }
 /* Change pill — inverse colour: a drop in handicap is good (green), a rise bad (red). */
 .hc-tile-delta {
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     font-size: 0.8125rem;
     font-weight: 600;
     padding: 0.1rem 0.55rem;
@@ -1471,7 +1515,7 @@ body.ts-f5 .page-title-area .page-title {
    title breaks the block, so every live chart title needs its own marker,
    not a smaller/plain style). */
 .chart-title {
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     font-weight: 700;
     font-size: 13px;
     letter-spacing: 0.09em;
@@ -1506,7 +1550,7 @@ body.ts-f5 .page-title-area .page-title {
     font-size: 0.875rem;
 }
 .chart-placeholder code {
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-table), sans-serif;
     font-size: 0.75rem;
     color: var(--text-secondary);
 }
@@ -1610,10 +1654,10 @@ body.ts-f5 .page-title-area .page-title {
 }
 .lr-initials {
     color: var(--accent);
-    font: 700 0.75rem 'Roboto Mono', monospace;
+    font: 700 0.75rem var(--font-table), sans-serif;
 }
 .lr-readout-entry strong {
-    font: 600 0.8125rem 'Roboto Mono', monospace;
+    font: 600 0.8125rem var(--font-table), sans-serif;
 }
 .scale-switch {
     display: inline-flex;
@@ -1688,7 +1732,7 @@ body.ts-f5 .page-title-area .page-title {
 }
 .lr-rewind-caption {
     color: var(--text-muted);
-    font: 700 0.6875rem/1.2 'Roboto Mono', monospace;
+    font: 700 0.6875rem/1.2 var(--font-table), sans-serif;
     letter-spacing: .04em;
     text-transform: uppercase;
     white-space: nowrap;
