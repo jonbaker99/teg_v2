@@ -366,6 +366,18 @@ table.leaderboard.names-break .player-name .first,
 table.leaderboard.names-break .player-name .last {
     display: block;
 }
+/* Desktop/tablet: centre every Scoreboards-tab column except Player (2nd),
+   including Total/TEG, Personal rank, All-time rank, Round and the toggle
+   column. Mobile has its own equivalent rule (mobile.css, @media max-width:
+   640px) -- kept separate since that file is entirely inside that query. */
+table.leaderboard th,
+table.leaderboard td {
+    text-align: center;
+}
+table.leaderboard th:nth-child(2),
+table.leaderboard td:nth-child(2) {
+    text-align: left;
+}
 
 /* ── Multi-round scorecards (Full Results → Scorecards tab) ──
    Each round is a .sc-round section holding a responsive scorecard block
@@ -537,6 +549,39 @@ a.tab-underline {
 /* The arrow flags it as a real navigation (leaves this page), not a same-page
    tab swap — differentiates it from its siblings on sight, per Jon's ask. */
 a.tab-underline .tab-arrow {
+    font-size: 0.8em;
+    margin-left: 0.2em;
+    opacity: 0.6;
+}
+
+/* Latest Round's report link, moved out of the tab bar into its own row
+   below it (mobile-ui-rollout) -- same "leaves this page" arrow affordance
+   as a.tab-underline .tab-arrow above, restated here since .lr-report-link
+   is not a .tab-underline. */
+.lr-report-row {
+    display: flex;
+    justify-content: flex-start;
+    margin: 0 0 24px;
+}
+.lr-report-link {
+    color: var(--accent);
+    font-family: var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-style: dashed;
+    text-underline-offset: 3px;
+    border-radius: 4px;
+    padding: 2px 4px;
+    margin: -2px -4px;
+}
+.lr-report-link:hover {
+    text-decoration-style: solid;
+    background: var(--table-toprank-bg);
+}
+.lr-report-link .tab-arrow {
     font-size: 0.8em;
     margin-left: 0.2em;
     opacity: 0.6;

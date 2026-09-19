@@ -379,8 +379,15 @@ def get_round_player_color_map(df, chosen_teg, chosen_round) -> dict:
 
 def create_round_graph(df, chosen_teg, chosen_round, y_series, title,
                        y_calculation=None, y_axis_label=None, chart_type='default', plotly_theme=None,
-                       scale='normal', rewind=18, focus_player=''):
-    """Cumulative chart through the holes of a single round (x = hole 1..18)."""
+                       scale='normal', rewind=18, focus_player='', adjust_basis='Hole'):
+    """Cumulative chart through the holes of a single round (x = hole 1..18).
+
+    ``adjust_basis`` is the column subtracted per-hole when scale='adjusted'
+    (default 'Hole', for within-round cumulative series). Pass 'TEG Count'
+    when ``y_series`` is a TEG-cumulative column (e.g. 'Stableford Cum TEG')
+    so the adjustment reflects holes played in the TEG so far, not just this
+    round -- same formula/column as adjusted_stableford/adjusted_grossvp
+    below, kept consistent between the two charts."""
     rd_data = df[(df['TEG'] == chosen_teg) & (df['Round'] == chosen_round)].sort_values(['Hole'])
     rd_data = rd_data.copy()
     rd_data['x_value'] = rd_data['Hole']
@@ -396,9 +403,9 @@ def create_round_graph(df, chosen_teg, chosen_round, y_series, title,
         y_values = y_values_raw
         if scale == 'adjusted':
             if chart_type == 'stableford':
-                y_values = y_values_raw - (2 * player_data['Hole'])
+                y_values = y_values_raw - (2 * player_data[adjust_basis])
             elif chart_type == 'gross':
-                y_values = y_values_raw - player_data['Hole']
+                y_values = y_values_raw - player_data[adjust_basis]
         visible = player_data['Hole'] <= max(1, min(int(rewind or 18), 18))
         line_opacity = 1 if (not focus_player or player == focus_player) else 0.18
         # Hover text always shows the real (unadjusted) score -- same reasoning

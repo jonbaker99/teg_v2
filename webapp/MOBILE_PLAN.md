@@ -47,6 +47,7 @@ behind a `≤640px` breakpoint or an opt-in `data-mode`).
 - ✅ **R4.2 player progression charts** (in `main`) — Career Trend and Gross vs Par by Round state their phone measure/direction without hover; the Rounds chart reuses `player-profile.js`'s existing tick-thinning/theme-adaptation/live-breakpoint pattern (dense histories, e.g. a 17-TEG player, stay readable at 320px); the measure pill's active state no longer relies on colour alone. Desktop and iPad are unchanged.
 - ✅ **Mobile table redesigns** (in `main`) — Records, Personal Bests, Top Performances, Eclectic Records, Player Rankings, Handicaps, Scoring Matrix/By-TEG, Changes/Comebacks/All-rounds, By-course and Course Analysis all reflow for phone widths (proportional columns, wrapping course names, double-height rows where needed). Desktop/iPad unchanged.
 - ✅ **R4.3 scoring-analysis charts** (pending integration from `codex/mobile-ui-rollout`) — `/scoring/by-teg`'s GrossVP-by-TEG line chart and `/scoring/distributions`' grouped bar chart reuse the R4.1/4.2 `.chart-block` treatment: native legend hidden and replaced by a below-chart tap-to-focus readout at ≤640px, so a 7-player field no longer eats the top of the chart in a wrapped legend. Colours are assigned explicitly server-side (matching Plotly's existing default colorway) so the desktop/iPad figures are unchanged. The distributions readout carries no numeric value (a bar-chart total isn't a meaningful stat) — it's a colour key only. `player_scoring.html`'s single-player score-distribution bar chart was left alone: single series, no legend to hide, not a fit for this pattern.
+- ✅ **`/latest-round` Scoreboard polish batch** (`codex/mobile-ui-rollout`) — un-bold player names; the `.lr-readout` pill-style chart legend unified across all page widths (also affects `/results`, `/leaderboard`, `/scoring/by-teg`, `/scoring/distributions`, which share the same CSS); rank-header column-width/centring fix (`overflow-wrap: anywhere` pitfall, see `design_principles.md`); site-wide scroll-jump fix on htmx tab-bar swaps (`base.html`, not Latest-Round-specific — also fixed `/records`); Report link moved out of the tab bar and restyled; Streaks tab headers show initials instead of full names (`/latest-round` and `/latest-teg`); new Round-vs-TEG-cumulative-total toggle on the Scoreboard tab. Full detail: `STATUS.md`.
 
 **▶ Pick up here (the remaining UI work):**
 - **Per-page pass** (M2.9) — finish spacing, tap targets, empty states, safe-area insets and the remaining route audit.
@@ -184,6 +185,11 @@ override set**, not a re-skin. Built as:
   left exactly as-is.
 
 ### 4.4 Tables on mobile (the crux)
+
+The `/latest-round` Scoreboard table is the reference implementation for tier
+2/3 fixed-column tables — see `design_principles.md` → *Mobile table pattern
+— the reference implementation* for the exact selectors, widths and two
+pitfalls already hit. Copy from there rather than re-deriving values.
 
 Three tiers, cheapest first:
 

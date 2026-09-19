@@ -46,7 +46,7 @@
       <button class="metric-pill pill{% if mid == active_metric %} is-active pill--active{% endif %}"
               hx-get="/latest-round/tab" hx-target="#lr-content" hx-swap="innerHTML"
               data-lr-query="metric" value="{{ mid }}"
-              hx-vals='{"teg": "{{ teg }}", "round": "{{ round }}", "tab": "scoreboard", "metric": "{{ mid }}", "scale": "{{ chart_scale|default("adjusted") }}", "rewind": "{{ chart_rewind|default(18) }}"}'>
+              hx-vals='{"teg": "{{ teg }}", "round": "{{ round }}", "tab": "scoreboard", "metric": "{{ mid }}", "scale": "{{ chart_scale|default("adjusted") }}", "rewind": "{{ chart_rewind|default(18) }}", "total": "{{ chart_total|default("round") }}"}'>
         {{ mlabel }}
       </button>
       {% endfor %}
@@ -55,6 +55,28 @@
   {% endif %}
   {% for section in sections %}
     {% if metric_tabs and loop.first %}
+    {% if round and round > 1 %}
+    {# Round/TEG-total switch, styled off the same .scale-switch control as
+       the Normal/Vs-bogey chart-scale toggle below, but neutral-coloured via
+       .measure-toggle (base-vars.css) -- Round vs TEG total isn't a
+       better/worse pair the way Normal/Vs-bogey scale arguably reads, so the
+       default .scale-switch accent-on-checked look would wrongly imply one
+       side is "on". Governs the table (Total column + rank-context columns)
+       as well as the chart, so it sits above the leaderboard heading rather
+       than inside .lr-chart-tools (which is chart-only). Hidden entirely on
+       round 1, where round-total and TEG-total are the same number and a
+       toggle would be misleading. #}
+    <button type="button" class="scale-switch measure-toggle lr-total-toggle" role="switch"
+            data-lr-query="total" value="{{ chart_total|default('round') }}"
+            hx-get="/latest-round/tab" hx-target="#lr-content" hx-swap="innerHTML"
+            hx-include="#lr-teg-select, #lr-round-select, #lr-tab-input"
+            hx-vals='{"total": "{{ "round" if chart_total == "teg" else "teg" }}", "metric": "{{ active_metric }}", "scale": "{{ chart_scale|default("adjusted") }}"}'
+            aria-checked="{{ 'true' if chart_total == 'teg' else 'false' }}" aria-label="Score basis">
+        <span class="scale-switch-label">Round</span>
+        <span class="switch-track"><span class="switch-thumb"></span></span>
+        <span class="scale-switch-label">TEG total</span>
+    </button>
+    {% endif %}
     <div class="section-title-row"><h3 class="section-title">Round leaderboard</h3></div>
     {% elif section.title %}<div class="card-header">{{ section.title }}</div>{% endif %}
     {% if section.raw %}{{ section.table_html | safe }}
@@ -75,7 +97,7 @@
      Sits between the title and the chart itself (not below, among the
      readout/rewind tools) so it reads as a chart-scale control, not another
      chart-interaction affordance. #}
-  <button type="button" class="scale-switch lr-scale-toggle" role="switch" data-lr-query="scale" value="{{ chart_scale|default("adjusted") }}" hx-get="/latest-round/tab" hx-target="#lr-content" hx-swap="innerHTML" hx-include="#lr-teg-select, #lr-round-select, #lr-tab-input" hx-vals='{"scale": "{{ "normal" if chart_scale == "adjusted" else "adjusted" }}", "metric": "{{ active_metric }}"}' aria-checked="{{ 'true' if chart_scale != 'normal' else 'false' }}" aria-label="Chart scale">
+  <button type="button" class="scale-switch lr-scale-toggle" role="switch" data-lr-query="scale" value="{{ chart_scale|default("adjusted") }}" hx-get="/latest-round/tab" hx-target="#lr-content" hx-swap="innerHTML" hx-include="#lr-teg-select, #lr-round-select, #lr-tab-input" hx-vals='{"scale": "{{ "normal" if chart_scale == "adjusted" else "adjusted" }}", "metric": "{{ active_metric }}", "total": "{{ chart_total|default("round") }}"}' aria-checked="{{ 'true' if chart_scale != 'normal' else 'false' }}" aria-label="Chart scale">
     <span class="scale-switch-label">Normal scale</span>
     <span class="switch-track"><span class="switch-thumb"></span></span>
     <span class="scale-switch-label">{{ 'Vs 2 points / hole' if active_metric == 'Stableford' else 'Vs bogey golf' }}</span>
@@ -96,7 +118,7 @@
     <div class="lr-rewind">
       <span id="lr-rewind-caption" class="lr-rewind-caption">Through hole</span>
       <button type="button" class="lr-rewind-step" data-lr-step="-1" aria-label="Previous hole">&lsaquo;</button>
-      <input id="lr-rewind-input" name="rewind" type="range" min="1" max="18" value="{{ chart_rewind|default(18) }}" aria-labelledby="lr-rewind-caption" data-lr-query="rewind" hx-get="/latest-round/tab" hx-trigger="change" hx-target="#lr-content" hx-swap="innerHTML" hx-include="#lr-teg-select, #lr-round-select, #lr-tab-input" hx-vals='{"metric": "{{ active_metric }}", "scale": "{{ chart_scale|default("adjusted") }}", "player": "{{ chart_player|default("") }}"}'>
+      <input id="lr-rewind-input" name="rewind" type="range" min="1" max="18" value="{{ chart_rewind|default(18) }}" aria-labelledby="lr-rewind-caption" data-lr-query="rewind" hx-get="/latest-round/tab" hx-trigger="change" hx-target="#lr-content" hx-swap="innerHTML" hx-include="#lr-teg-select, #lr-round-select, #lr-tab-input" hx-vals='{"metric": "{{ active_metric }}", "scale": "{{ chart_scale|default("adjusted") }}", "player": "{{ chart_player|default("") }}", "total": "{{ chart_total|default("round") }}"}'>
       <button type="button" class="lr-rewind-step" data-lr-step="1" aria-label="Next hole">&rsaquo;</button>
       <output>{{ chart_rewind|default(18) }}</output>
     </div>
@@ -137,5 +159,5 @@
    confirmed live via document.getElementById('lr-chart-state') === null
    during the event. Moving the target outside #lr-content (like the
    header) fixes that. #}
-<div id="lr-chart-state" hidden hx-swap-oob="true" data-teg="{{ teg }}" data-round="{{ round }}" data-tab="{{ (tab if tab is defined else active_tab) | default('scoreboard') }}" data-metric="{{ active_metric|default('Sc') }}" data-scale="{{ chart_scale|default('adjusted') }}" data-player="{{ chart_player|default('') }}" data-rewind="{{ chart_rewind|default(18) }}"></div>
+<div id="lr-chart-state" hidden hx-swap-oob="true" data-teg="{{ teg }}" data-round="{{ round }}" data-tab="{{ (tab if tab is defined else active_tab) | default('scoreboard') }}" data-metric="{{ active_metric|default('Sc') }}" data-scale="{{ chart_scale|default('adjusted') }}" data-player="{{ chart_player|default('') }}" data-rewind="{{ chart_rewind|default(18) }}" data-total="{{ chart_total|default('round') }}"></div>
 {% endif %}

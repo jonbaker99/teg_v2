@@ -2,7 +2,33 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-16 (player progression chart mobile treatment landed on rollout branch, pending review; scoring-analysis charts next)
+**Last updated:** 2026-09-19 (`/latest-round` Scoreboard mobile polish batch landed on rollout branch)
+
+## 2026-09-19 — `/latest-round` Scoreboard mobile polish batch
+
+Eight changes to `codex/mobile-ui-rollout`, all at every page width unless noted:
+- Player names on the Scoreboard table are no longer bold.
+- The `.lr-readout` pill-style chart/graph legend is now unified across all page widths, not just
+  `/latest-round` — since it shares CSS with the tournament-race and scoring-analysis charts, this
+  also affects `/results`, `/leaderboard`, `/scoring/by-teg` and `/scoring/distributions`.
+- Rank-header (Personal rank / All-time rank) column-width and centring fix — see
+  `webapp/design_principles.md` → *Mobile table pattern* for the underlying `overflow-wrap`
+  pitfall this fixed.
+- A site-wide scroll-jump bug on htmx tab-bar swaps was fixed in `base.html` — **not**
+  `/latest-round`-specific; it also fixed `/records`.
+- The Report link on `/latest-round` moved out of the tab bar to its own row below it, with
+  distinct dashed-underline italic-serif styling signalling it navigates away (same treatment
+  still owed to `/results` and `/latest-teg` — see `webapp/TODOS.md`).
+- Streaks tab headers on `/latest-round` and `/latest-teg` now show initials instead of full names.
+- New Round-vs-TEG-cumulative-total toggle on the Scoreboard tab.
+- The mobile-table pattern behind the Scoreboard table (columns, typography, primary/secondary
+  column treatment, player-name handling, row shading, expandable detail row, and two pitfalls
+  already hit) is now documented as a reusable reference in `webapp/design_principles.md`, for
+  converting other tables to this pattern later.
+
+Two follow-ups surfaced during this work and logged in `webapp/TODOS.md`: the detail-row toggle
+button has no glyph above 640px, and the Report-tab relocation is still owed to `/results` and
+`/latest-teg`.
 
 ## 2026-09-16 — Player progression charts mobile treatment (pending review)
 

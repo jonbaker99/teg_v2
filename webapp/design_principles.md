@@ -140,6 +140,48 @@ Typography bullet above):
   prefer splitting into separate tables that sit side by side and wrap to stacked
   when narrow (see the bestball/worstball Bestball and Worstball contribution tables).
 
+### Mobile table pattern — the reference implementation
+
+The `/latest-round` Scoreboard tab's "Round leaderboard" table (built by
+`_build_scoreboard_table` in `webapp/routes/latest.py`, styled by
+`table.leaderboard` rules in `webapp/static/mobile.css` under the `≤640px`
+media query) is the best-practice reference for mobile tables on this site.
+When a future page converts its table to phone-friendly markup, copy these
+selectors/values directly rather than reinventing them.
+
+| Concern | Selector / rule | Why |
+|---|---|---|
+| Full-bleed surface | `.latest-round-page` sets `--lr-inset: 12px`; `#lr-content table.leaderboard { width: 100% }` while surrounding controls (`.section-title-row`, `.lr-chart-tools`) carry `margin: … var(--lr-inset)` | The table itself runs edge-to-edge for maximum column width; only the chrome around it keeps a gutter |
+| Fixed proportional columns | `<colgroup>` with `.lr-rank-col` 7%, `.lr-player-col` 27%, `.lr-total-col` 18%, `.lr-personal-col`/`.lr-alltime-col` 19% each, `.lr-toggle-col` 10%; table has `table-layout: fixed` | Percentage widths via `colgroup` are stable regardless of content length, unlike `nth-child` or auto layout, and read as a deliberate hierarchy (Total is 18% but visually dominant — see typography below) |
+| Typography | `th`: `font: 700 11px/1.2 var(--font-table)`, `letter-spacing: .03em`, `text-transform: uppercase`, muted colour; `td`: `font-family: var(--font-table)`, `font-variant-numeric: tabular-nums`, 14px table default | Uppercase/tracked/muted headers read as structural chrome, not data; tabular-nums keeps numeric columns vertically aligned without a mono font |
+| Density | `td { padding: 12px 5px }`, first/last columns `padding-inline: 2px` | Airy enough for a 44px tap target on the toggle row without wasting width on narrow numeric columns |
+| Primary column | `.lr-total-cell { font-size: 1.15em; font-weight: 700 }` (accent colour on the leader row) | The Total is the number a player scans for first — it must out-weigh every other cell |
+| Secondary column | `.lr-rank-context { color: var(--text-muted) }`; the `/` denominator is wrapped in `<small>` via the `rank_cell()` helper | Personal/All-time rank are context, not the headline stat — demoted by colour and by shrinking the least useful half of "n/N" |
+| Player name handling | `<td class="lr-player-cell">` wraps `_wrap_player_name()`'s `<span class="player-name">` — the class lives on the inner span, never the `<td>` | **Real bug already hit**: putting `.player-name`'s `display: inline-block` rule on the `<td>` itself (by reusing the class there) broke the cell's table-cell layout — it shrink-wrapped to content width, leaving a gap that looked like a missing border segment. See the comment at `webapp/routes/latest.py` (`_build_scoreboard_table`, the `<td class='lr-player-cell'>` line) — keep cell-layout classes and text-wrapping classes on separate elements |
+| Row shading | `tr.rank-1 { background-color: var(--table-toprank-bg) }`, bold text, accent colour on rank + total cells; class is applied whenever `Rank` (post-tie-suffix-strip) is `"1"` | Highlights the leader, not alternating rows — zebra striping adds visual noise with no informational value; ties must all get the shading, not just the literal top row |
+| Expandable detail row | `.rank-toggle` button (`aria-expanded`, `aria-controls`) in its own narrow toggle column; `tr.rank-detail-row[hidden]` holds a `.detail-grid` (Out/In) plus `.detail-mix` — collapsed by default | Tier-3 "priority columns" (per `MOBILE_PLAN.md` §4.4) done properly: secondary numbers are hidden but reachable one tap away, not deleted or forced into horizontal scroll |
+
+**Pitfalls already hit and fixed here — don't repeat them:**
+1. **Cell-layout class vs. text-wrap class collision** (above) — a shared class
+   used for two different purposes (table-cell display vs. inline-block
+   name-wrapping) broke layout when both were applied to the same element.
+2. **`table-layout: fixed` silently overflows, it doesn't expand.** The
+   "Personal rank"/"All-time rank" headers are wider than their column's fixed
+   width; a 375px screenshot showed the header text bleeding into the next
+   column instead of the column growing to fit. Fixed by adding
+   `white-space: normal; overflow-wrap: anywhere;` to `table.leaderboard th`
+   (`webapp/static/mobile.css`) so headers wrap onto a second line instead of
+   overflowing. Any fixed-width column whose header text is longer than its
+   content needs the same treatment.
+
+**Preconditions — this pattern is not a default for every table.** It fits
+tables with roughly ≤6 columns, one clearly-primary numeric column, and short
+cell values. Wider stat tables belong to a different tier from
+`MOBILE_PLAN.md` §4.4 "Tables on mobile" — sticky-column horizontal scroll
+(tier 1, the site-wide default for `.teg-table`) or card reflow (tier 2, hero
+tables only). Don't force a wide table into this fixed-column layout; move it
+to sticky-scroll or card reflow instead.
+
 ## Components
 
 - All inputs (dropdowns, buttons, tabs) follow the same styling language

@@ -319,8 +319,11 @@ def test_latest_round_non_scoreboard_tab_echoes_chart_state(client):
 def test_latest_round_mobile_scoreboard_contract(client):
     resp = client.get("/latest-round", params={"teg": "invalid", "round": "invalid", "metric": "Stableford", "scale": "adjusted", "player": "invalid", "rewind": "9"})
     _assert_ok_no_error(resp)
-    # Main row: # / Player / Personal rank / All-time rank / Total.
-    assert all(f">{heading}<" in resp.text for heading in ("#", "Player", "Personal rank", "All-time rank", "Total"))
+    # Main row: # / Player / Personal rank / All-time rank / Round (Total
+    # column header is now "Round"/"TEG" depending on the round/TEG-total
+    # toggle; round 1 -- the fallback for invalid input here -- has no
+    # toggle and always shows "Round").
+    assert all(f">{heading}<" in resp.text for heading in ("#", "Player", "Personal rank", "All-time rank", "Round"))
     # Section heading names the metric (moved out of the table into the
     # "Round leaderboard" / metric-name section-title-row).
     assert "Round leaderboard" in resp.text and "Stableford" in resp.text
@@ -341,8 +344,9 @@ def test_latest_round_mobile_scoreboard_contract(client):
 def test_latest_round_invalid_state_defaults_without_failure(client):
     resp = client.get("/latest-round/tab", params={"teg": "bad", "round": "bad", "tab": "bad", "metric": "bad", "scale": "adjusted", "player": "bad", "rewind": "bad"})
     _assert_ok_no_error(resp)
-    # metric="bad" falls back to "Sc" -> friendly "Score".
-    assert all(f">{heading}<" in resp.text for heading in ("#", "Player", "Personal rank", "All-time rank", "Total"))
+    # metric="bad" falls back to "Sc" -> friendly "Score". round="bad" falls
+    # back to round 1, which has no round/TEG toggle and always shows "Round".
+    assert all(f">{heading}<" in resp.text for heading in ("#", "Player", "Personal rank", "All-time rank", "Round"))
     assert "Round leaderboard" in resp.text and "Score" in resp.text
     assert ">Out<" in resp.text and ">In<" in resp.text
     assert 'aria-pressed="true"' not in resp.text

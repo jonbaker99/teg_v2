@@ -13,7 +13,7 @@
 
 {% block content %}
 {% set lr_full_page = true %}
-<div class="latest-round-page" data-lr-page data-lr-teg="{{ selected_teg }}" data-lr-round="{{ selected_round }}" data-lr-active-tab="{{ active_tab }}" data-lr-metric="{{ active_metric|default('Sc') }}" data-lr-scale="{{ chart_scale|default('adjusted') }}" data-lr-player="{{ chart_player|default('') }}" data-lr-rewind="{{ chart_rewind|default(18) }}">
+<div class="latest-round-page" data-lr-page data-lr-teg="{{ selected_teg }}" data-lr-round="{{ selected_round }}" data-lr-active-tab="{{ active_tab }}" data-lr-metric="{{ active_metric|default('Sc') }}" data-lr-scale="{{ chart_scale|default('adjusted') }}" data-lr-player="{{ chart_player|default('') }}" data-lr-rewind="{{ chart_rewind|default(18) }}" data-lr-total="{{ chart_total|default('round') }}">
 
 <p id="lr-context-header" class="text-muted text-sm mb-3">{{ context_header }}</p>
 
@@ -46,6 +46,17 @@
     <input type="hidden" id="lr-tab-input" name="tab" value="{{ active_tab }}">
 </div>
 
+{# Report is a REAL link (not an HTMX tab) straight to this round's
+   newspaper report — same reasoning as /results' Report tab. It links to a
+   different page entirely, so it sits on its own row between the round
+   selector and the tab bar rather than looking like a same-page tab.
+   Hidden unless this TEG/round actually has one. #}
+<div class="lr-report-row">
+    <a id="lr-report-tab" class="lr-report-link"
+       href="/teg-reports?teg={{ selected_teg }}&round={{ selected_round }}"
+       {% if selected_round not in report_rounds_map.get(selected_teg, []) %}hidden{% endif %}>View round report<span class="tab-arrow" aria-hidden="true">&nearr;</span></a>
+</div>
+
 <div class="section-nav">
     {% for tab_id, tab_label in tabs %}
     <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
@@ -55,12 +66,6 @@
         {{ tab_label }}
     </button>
     {% endfor %}
-    {# Report is last, and a REAL link (not an HTMX tab) straight to this
-       round's newspaper report — same reasoning as /results' Report tab.
-       Hidden unless this TEG/round actually has one. #}
-    <a id="lr-report-tab" class="tab-underline"
-       href="/teg-reports?teg={{ selected_teg }}&round={{ selected_round }}"
-       {% if selected_round not in report_rounds_map.get(selected_teg, []) %}hidden{% endif %}>Report<span class="tab-arrow" aria-hidden="true">&nearr;</span></a>
 </div>
 
 <div id="lr-content" class="section-panel">
@@ -81,7 +86,7 @@
    even for a single, non-overlapping request. #lr-context-header survives
    because it already lived outside #lr-content; this gives #lr-chart-state
    the same safety. #}
-<div id="lr-chart-state" hidden data-teg="{{ selected_teg }}" data-round="{{ selected_round }}" data-tab="{{ active_tab }}" data-metric="{{ active_metric|default('Sc') }}" data-scale="{{ chart_scale|default('adjusted') }}" data-player="{{ chart_player|default('') }}" data-rewind="{{ chart_rewind|default(18) }}"></div>
+<div id="lr-chart-state" hidden data-teg="{{ selected_teg }}" data-round="{{ selected_round }}" data-tab="{{ active_tab }}" data-metric="{{ active_metric|default('Sc') }}" data-scale="{{ chart_scale|default('adjusted') }}" data-player="{{ chart_player|default('') }}" data-rewind="{{ chart_rewind|default(18) }}" data-total="{{ chart_total|default('round') }}"></div>
 
 {# The tab row lives outside #lr-content, so an HTMX TEG/round change never
    re-renders it — keep the Report link's target and visibility in sync here.
@@ -147,6 +152,7 @@
         var scale = page.dataset.lrScale || 'adjusted';
         var player = page.dataset.lrPlayer || '';
         var rewind = page.dataset.lrRewind || '18';
+        var total = page.dataset.lrTotal || 'round';
         if (activeTab === 'scoreboard') {
             url.searchParams.set('metric', metric);
             // Adjusted is the default -- only persist scale in the URL when
@@ -160,8 +166,11 @@
             // <input> when the scoreboard tab's markup is already in the DOM,
             // which isn't true when navigating IN to scoreboard from another tab.
             url.searchParams.set('rewind', rewind);
+            // Round is the default -- only persist total in the URL when it
+            // deviates (TEG total), same reasoning as scale above.
+            if (total === 'teg') url.searchParams.set('total', total); else url.searchParams.delete('total');
         } else {
-            ['metric', 'scale', 'player', 'rewind'].forEach(function (key) { url.searchParams.delete(key); });
+            ['metric', 'scale', 'player', 'rewind', 'total'].forEach(function (key) { url.searchParams.delete(key); });
         }
         history[replace ? 'replaceState' : 'pushState']({}, '', url);
     }
@@ -236,6 +245,7 @@
                 scale: elt.classList.contains('lr-scale-toggle') ? (elt.getAttribute('aria-checked') === 'true' ? 'normal' : 'adjusted') : (page.dataset.lrScale || 'adjusted'),
                 player: elt.dataset.lrQuery === 'player' ? (elt.value || '') : (page.dataset.lrPlayer || ''),
                 rewind: elt.dataset.lrQuery === 'rewind' ? elt.value : (page.dataset.lrRewind || '18'),
+                total: elt.classList.contains('lr-total-toggle') ? (elt.getAttribute('aria-checked') === 'true' ? 'round' : 'teg') : (page.dataset.lrTotal || 'round'),
                 push: elt.matches('[data-lr-history="push"]'),
                 focusRewind: elt.id === 'lr-rewind-input',
             };
@@ -244,6 +254,7 @@
                 params.scale = snapshot.scale;
                 params.player = snapshot.player;
                 params.rewind = snapshot.rewind;
+                params.total = snapshot.total;
             }
         }
         event.detail._lrPending = snapshot;
@@ -294,6 +305,7 @@
         page.dataset.lrScale = echoed('scale', requested.scale || 'adjusted');
         page.dataset.lrPlayer = echoed('player', requested.player || '');
         page.dataset.lrRewind = echoed('rewind', requested.rewind || '18');
+        page.dataset.lrTotal = echoed('total', requested.total || 'round');
         // beforeSwap already applied the requested values optimistically;
         // correct every control to whatever just got committed above.
         var tegSelect = document.getElementById('lr-teg-select');
@@ -308,7 +320,7 @@
         syncUrl(!requested.push);
         if (requested.focusRewind) {
             var input = document.getElementById('lr-rewind-input');
-            if (input) input.focus();
+            if (input) input.focus({ preventScroll: true });
         }
         if (errorBanner) { errorBanner.remove(); errorBanner = null; }
     });
@@ -339,6 +351,8 @@
         page.querySelectorAll('#lr-round-pills .pill').forEach(function (p) {
             p.classList.toggle('pill--active', p.getAttribute('aria-label') === ('Round ' + page.dataset.lrRound));
         });
+        var totalToggle = page.querySelector('.lr-total-toggle');
+        if (totalToggle) totalToggle.setAttribute('aria-checked', page.dataset.lrTotal === 'teg' ? 'true' : 'false');
     }
     function retryRequest() {
         if (!lastFailedPending) return;
@@ -357,6 +371,7 @@
                 teg: target.teg, round: target.round, tab: target.tab,
                 metric: target.metric, scale: target.scale,
                 player: target.player, rewind: target.rewind,
+                total: target.total,
             },
         });
     }

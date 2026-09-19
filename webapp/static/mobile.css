@@ -238,6 +238,18 @@
     color: var(--accent, forestgreen);
   }
 
+  /* Report link row, moved out of the tab bar (base-vars.css .lr-report-row/
+     .lr-report-link) -- touch-target sizing only, base-vars.css owns the
+     colour/underline/arrow styling shared with desktop. */
+  .lr-report-row {
+    margin: 0 var(--lr-inset, 0) 20px;
+  }
+  .lr-report-link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
   /* ── Nav cue: decided 2026-09-17, Jon picked arrows ── replaces the old
      right-edge mask fade for signalling "more tabs this way" on overflowing
      .section-nav rows (e.g. /honours' 6 tabs); arrows is now DEFAULT_NAV_CUE
@@ -625,6 +637,18 @@
   .latest-teg-page #lt-content table.teg-table th,
   .latest-teg-page #lt-content table.teg-table td { padding: 9px 5px; }
 
+  /* Streaks tab: first column ("Streak Type") needs more room than the
+     per-player initials columns beside it -- widen it and let the table's
+     table-layout:fixed rule above auto-share the remainder equally across
+     however many player columns exist (works for any roster size, unlike a
+     fixed per-column width). */
+  .latest-round-page #lr-content table.streaks-table th:first-child,
+  .latest-round-page #lr-content table.streaks-table td:first-child,
+  .latest-teg-page #lt-content table.streaks-table th:first-child,
+  .latest-teg-page #lt-content table.streaks-table td:first-child {
+    width: 32%;
+  }
+
   /* Metric selector: 2x2 button grid, not a pill row -- ported from the
      approved prototype's .metric-grid/.metric-pills (report_layout_prototypes/
      mobile_data.css), values re-themed onto this repo's own custom
@@ -675,19 +699,25 @@
     width: 100%; margin-top: 9px; border-collapse: collapse; table-layout: fixed; font-size: 14px;
   }
   .latest-round-page #lr-content table.leaderboard .lr-rank-col { width: 7%; }
-  .latest-round-page #lr-content table.leaderboard .lr-player-col { width: 32%; }
-  .latest-round-page #lr-content table.leaderboard .lr-personal-col { width: 15%; }
-  .latest-round-page #lr-content table.leaderboard .lr-alltime-col { width: 18%; }
+  .latest-round-page #lr-content table.leaderboard .lr-player-col { width: 27%; }
+  .latest-round-page #lr-content table.leaderboard .lr-personal-col { width: 19%; }
+  .latest-round-page #lr-content table.leaderboard .lr-alltime-col { width: 19%; }
   .latest-round-page #lr-content table.leaderboard .lr-total-col { width: 18%; }
+  /* TEG-total mode: Personal/All-time rank are hidden entirely, replaced by
+     one de-emphasised Round-score column -- takes the same combined width
+     those two columns had (19% + 19%), so the table still sums to 100%
+     without a mode-specific override. */
+  .latest-round-page #lr-content table.leaderboard .lr-round-total-col { width: 38%; }
   .latest-round-page #lr-content table.leaderboard .lr-toggle-col { width: 10%; }
   .latest-round-page #lr-content table.leaderboard th {
-    padding: 0 6px 8px; color: var(--text-muted, #666); text-align: right;
+    padding: 0 3px 8px; color: var(--text-muted, #666);
     font: 700 11px/1.2 var(--font-table), sans-serif; letter-spacing: .03em; text-transform: uppercase;
     /* Unlike the reference's own short Out/In/Total headers, "Personal
        rank"/"All-time rank" need to wrap -- confirmed by an actual 375px
        screenshot: one-line headers here overflowed their fixed-width cell
        and bled into the next column. */
     white-space: normal;
+    overflow-wrap: anywhere;
   }
   .latest-round-page #lr-content table.leaderboard th,
   .latest-round-page #lr-content table.leaderboard td { text-align: center; }
@@ -702,9 +732,6 @@
      (see webapp/routes/latest.py); reusing it on the <td> too made the
      shared "span.player-name { display: inline-block }" rule match the <td>
      itself, breaking its table-cell layout. */
-  .latest-round-page #lr-content table.leaderboard td.lr-player-cell {
-    font-weight: 700;
-  }
   .latest-round-page #lr-content table.leaderboard .player-name {
     min-width: 0;
     line-height: 1.15;
@@ -749,6 +776,13 @@
   .latest-round-page #lr-content table.leaderboard tr.rank-1 td { font-weight: 700; }
   .latest-round-page #lr-content table.leaderboard tr.rank-1 td:first-child { color: var(--accent, #17683c); }
   .latest-round-page #lr-content table.leaderboard tr.rank-1 td.lr-total-cell { color: var(--accent, #17683c); }
+  /* Player name in the leader row matches the row's accent colour like the
+     rank/total cells; bold weight already comes from the tr.rank-1 td rule
+     above, kept here since it's the leader row -- unlike every other row,
+     where the player column stays regular weight. */
+  .latest-round-page #lr-content table.leaderboard tr.rank-1 td.lr-player-cell {
+    color: var(--accent, #17683c);
+  }
 
   /* Row expand/collapse (Out/In split + per-hole score mix) -- rank-toggle
      "+"/"-" moved to its own narrow final column (not overlaid on the player
@@ -786,18 +820,15 @@
   .latest-round-page #lr-content .lr-chart-tools { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; margin: 10px var(--lr-inset) 0; }
   .lr-chart-tools label { display: grid; gap: 4px; color: var(--text-muted, #666); font: 700 11px/1.2 var(--font-table), sans-serif; letter-spacing: .04em; text-transform: uppercase; }
   .lr-chart-tools select { min-height: 44px; font-size: 16px; }
-  .lr-readout { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 8px; }
+  .lr-readout { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; }
   /* Re-enable the tournament race chart's readout at phone width -- the
      desktop-hide rule above (.chart-block .lr-readout { display: none })
      has higher specificity than the generic .lr-readout rule just above,
-     so it needs an equally-specific override here; grid-template-columns
-     etc. still fall through from that generic rule since this only sets
-     display. */
-  .chart-block .lr-readout { display: grid; }
-  .lr-readout-entry { min-height: 44px; display: flex; align-items: center; justify-content: flex-start; gap: 8px; padding: 4px 6px; border: 0; border-radius: 5px; color: var(--text-primary, #1b241f); background: transparent; text-align: left; }
-  .lr-readout-entry.is-active { background: var(--table-toprank-bg, #edf5ee); font-weight: 700; }
-  .lr-initials { color: var(--accent, #17683c); font: 700 12px var(--font-table), sans-serif; }
-  .lr-readout-entry strong { margin-left: 0; font: 600 14px var(--font-table), sans-serif; }
+     so it needs an equally-specific override here; the pill styling itself
+     (border/radius/background/font) now falls through from base-vars.css's
+     .lr-readout-entry rule -- don't re-add it here. */
+  .chart-block .lr-readout { display: flex; }
+  .lr-readout-entry { min-height: 44px; padding: 6px 12px; }
   .lr-chart-tools select { min-width: 0; width: 100%; padding: 7px 9px; border: 1px solid var(--table-cell-border, #d5ddd7); border-radius: 8px; background: var(--bg-card, #fff); color: var(--text-primary, #1b241f); }
 
   /* Scale toggle-switch look -- ported from the reference's switchControl()
@@ -819,7 +850,13 @@
     border-radius: 999px; background: var(--table-toprank-bg, #F3F7F3);
     transition: background .15s ease, border-color .15s ease;
   }
-  .latest-round-page #lr-content .scale-switch[aria-checked="true"] .switch-track {
+  /* :not(.lr-total-toggle) -- the Round/TEG-total switch below reuses this
+     same sizing (via its shared .scale-switch class) but must stay neutral
+     in both states (base-vars.css's .measure-toggle already gives it a
+     fixed --table-toprank-bg track); excluding it here is what stops this
+     higher-specificity (#lr-content-scoped) accent-on-checked rule from
+     overriding that neutral look at phone width. */
+  .latest-round-page #lr-content .scale-switch:not(.lr-total-toggle)[aria-checked="true"] .switch-track {
     background: var(--accent, #17683c); border-color: var(--accent, #17683c);
   }
   .latest-round-page #lr-content .switch-thumb {
@@ -827,6 +864,10 @@
     background: var(--bg-card, #fff); transition: transform .15s ease;
   }
   .latest-round-page #lr-content .scale-switch[aria-checked="true"] .switch-thumb { transform: translateX(18px); }
+  /* Round/TEG-total switch: a little more breathing room before the
+     leaderboard heading than the chart-scale toggle needs (that one sits
+     directly above the chart itself with no heading beneath it). */
+  .latest-round-page #lr-content .lr-total-toggle { margin-bottom: 14px; }
   .lr-rewind { grid-column: 1 / -1; display: flex !important; align-items: center; gap: 8px; }
   .lr-rewind-caption { flex: 0 0 auto; color: var(--text-muted, #666); font: 700 11px/1.2 var(--font-table), sans-serif; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; }
   .lr-rewind input { flex: 1 1 auto; min-width: 0; min-height: 44px; accent-color: var(--accent, #17683c); }
@@ -1405,7 +1446,4 @@
   .course-records-page table.cr-matrix-table td:not(:first-child) {
     text-align: right;
   }
-}
-@media (min-width: 390px) and (max-width: 640px) {
-  .latest-round-page .lr-readout { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
