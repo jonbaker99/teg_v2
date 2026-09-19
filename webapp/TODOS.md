@@ -172,6 +172,22 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 ## UI Changes
 
+- [ ] **Full aesthetics/UI review completed (2026-09-19) — pending owner
+  decision, not actioned.** `webapp/design_reviews/claude-ui-review.md`. Covers a
+  system/interaction audit, a prioritised action matrix (16 items,
+  high-impact/low-effort first), three aesthetic directions (Clean Precision
+  / Editorial Golf / Modern Telemetry) and a code prototype for a unified
+  standings component. No application code was changed by it. Headline
+  findings: the three heading classes all render identically (82 uses, one
+  visual level); there is no type scale (~95 font sizes in CSS, ~40 more
+  inline); nine uncoordinated breakpoints leave iPad portrait (768px) with
+  hamburger nav plus desktop tables; `.teg-table` is `width:auto` so the
+  leaderboard floats left of the full-width chart beneath it; and desktop vs
+  phone standings are two separate renderers of one dataset. Recommends
+  **Direction 2 (Editorial Golf)** — extending the existing newspaper report
+  design language site-wide. **Decide which items to take before any
+  implementation.** The review takes the Contents redesign option below as
+  one input and covers it in its action matrix.
 - [ ] **OPTION, not decided — Contents (`/`) page redesign (2026-09-19).**
   Mockup only, not implemented: [Contents Page Redesign
   canvas](https://claude.ai/artifact/8bBeoXbR62qiGA2KezQcAU) (desktop +

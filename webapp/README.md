@@ -378,6 +378,7 @@ webapp/
   tables.py           # Shared DataFrame -> escaped HTML table renderer (df_to_html)
   theme.py            # Theme registry + helper to resolve active theme
   chart_utils.py      # Plotly chart generation
+  design_reviews/     # Standalone UI/UX/aesthetics review docs (findings, not decisions)
   routes/             # One file per page area (history, records, scoring, etc.)
   templates/
     base.html         # Shell: nav, theme switcher, main content slot
@@ -834,9 +835,17 @@ as the live site."
 - **2b — A new, more layered / interesting theme**, built from current best
   practice rather than the existing experiments.
 
-Pending options for this phase (not decisions — flag to whoever runs a full
-aesthetics/UI review): see **UI Changes** in [TODOS.md](TODOS.md), including
-the Contents (`/`) page redesign option (2026-09-19, mockup only).
+**That full aesthetics/UI review has now been run** (2026-09-19):
+[design_reviews/claude-ui-review.md](design_reviews/claude-ui-review.md) — system/interaction audit, a
+prioritised action matrix, three aesthetic directions (mild → bold) and a
+code prototype for the standings component. **Findings are not decisions**;
+nothing in it has been actioned and no application code was changed by it.
+It takes the Contents (`/`) page redesign option below as one input and
+covers it in its action matrix.
+
+Pending options for this phase (not decisions): see **UI Changes** in
+[TODOS.md](TODOS.md), including the Contents (`/`) page redesign option
+(2026-09-19, mockup only).
 
 For Phase 2, the existing theme-chooser experiments (page-title `ts-*` variants,
 card-header `ch-*` variants, archived themes in `static/themes/archive/`) are a
