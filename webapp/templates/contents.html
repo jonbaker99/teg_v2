@@ -48,21 +48,25 @@
         .contents-grid { grid-template-columns: 1fr; gap: 1.5rem; }
     }
 
-    /* Group heading — matches Streamlit .nav-section-title (20px / 600, no rule). */
+    /* Group heading — uppercase/tracked, muted (echoes the tab bar's
+       treatment but on the section heading rather than the links). */
     .contents-section-title {
-        font-size: 1.25rem;
+        font-size: 0.8125rem;
         font-weight: 600;
-        color: var(--text-primary, #1a1a1a);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--text-secondary, #555555);
         padding-bottom: 0.5rem;
         margin-bottom: 0.25rem;
     }
 
-    /* Page links — mono, dark (Streamlit .custom-nav-link: black, hover green+bold). */
+    /* Page links — plain Inter, dark (Streamlit .custom-nav-link: black, hover green+bold). */
     .contents-links a {
         display: block;
         padding: 0.35rem 0;
-        font-family: 'Roboto Mono', monospace;
+        font-family: var(--font-sans);
         font-size: 0.875rem;
+        font-weight: 400;
         color: var(--text-primary, #1a1a1a);
         text-decoration: none;
     }
