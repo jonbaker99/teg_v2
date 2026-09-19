@@ -421,10 +421,9 @@ def _echo_chart_state(ctx: dict, metric: str, scale: str, player: str, rewind, t
     ctx.setdefault("active_metric", metric if metric in dict(METRIC_TABS) else "Sc")
     ctx.setdefault("chart_scale", scale if scale in ("normal", "adjusted") else "adjusted")
     ctx.setdefault("chart_player", player or "")
-    try:
-        ctx.setdefault("chart_rewind", max(1, min(int(rewind or 18), 18)))
-    except (TypeError, ValueError):
-        ctx.setdefault("chart_rewind", 18)
+    # Rewind removed from the UI -- always echo the full round (see the
+    # matching comment in _latest_round_tab_context).
+    ctx.setdefault("chart_rewind", 18)
     ctx.setdefault("chart_total", total if total in ("round", "teg") else "round")
     return ctx
 
@@ -457,10 +456,12 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                 scale = "normal"
             valid_players = {str(p) for p in teg_rd['Pl'].dropna().unique()}
             player = player if player in valid_players else ""
-            try:
-                rewind = max(1, min(int(rewind or 18), 18))
-            except (TypeError, ValueError):
-                rewind = 18
+            # Rewind/fast-forward-through-the-round control removed from the UI
+            # (2026-09-19, Jon) -- it made every step click swap and rebuild the
+            # whole chart, causing a visible flash. Always show the full round;
+            # an incoming ?rewind= is ignored rather than deleted from the
+            # signature, so the feature can come back later without re-plumbing.
+            rewind = 18
             friendly = dict(METRIC_TABS)[metric]
             teg_str = f"TEG {teg_num}"
             try:

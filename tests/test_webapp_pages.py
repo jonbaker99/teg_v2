@@ -301,10 +301,12 @@ def test_latest_round_page_has_no_duplicate_oob_ids(client):
 
 def test_latest_round_non_scoreboard_tab_echoes_chart_state(client):
     # A non-scoreboard tab (e.g. Records) has no chart of its own and never
-    # computed active_metric/chart_scale/chart_player/chart_rewind -- without
-    # echoing the incoming values back, #lr-chart-state falls back to
-    # hardcoded template defaults and silently resets the user's real
-    # scoreboard-tab selection the moment they switch tabs and back.
+    # computed active_metric/chart_scale/chart_player -- without echoing the
+    # incoming values back, #lr-chart-state falls back to hardcoded template
+    # defaults and silently resets the user's real scoreboard-tab selection
+    # the moment they switch tabs and back. Rewind is no longer a live
+    # control (removed 2026-09-19) -- always echoes "18" regardless of what
+    # was passed in.
     resp = client.get("/latest-round/tab", params={
         "teg": 18, "round": 4, "tab": "records",
         "metric": "Stableford", "scale": "adjusted", "player": "DM", "rewind": "9",
@@ -313,7 +315,7 @@ def test_latest_round_non_scoreboard_tab_echoes_chart_state(client):
     assert 'data-metric="Stableford"' in resp.text
     assert 'data-scale="adjusted"' in resp.text
     assert 'data-player="DM"' in resp.text
-    assert 'data-rewind="9"' in resp.text
+    assert 'data-rewind="18"' in resp.text
 
 
 def test_latest_round_mobile_scoreboard_contract(client):
@@ -335,9 +337,7 @@ def test_latest_round_mobile_scoreboard_contract(client):
     assert "Score mix" in resp.text
     assert "data-lr-page" in resp.text
     assert "data-lr-focus=" in resp.text
-    assert "Through hole" in resp.text
     assert 'data-lr-scale="adjusted"' in resp.text
-    assert 'data-lr-step="-1"' in resp.text and 'data-lr-step="1"' in resp.text
     assert 'data-lr-history="push"' not in resp.text.split('data-lr-query="metric"', 1)[1].split('</div>', 1)[0]
 
 

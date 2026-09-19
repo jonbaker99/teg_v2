@@ -112,16 +112,6 @@
       <button type="button" class="lr-readout-entry{% if item.active %} is-active{% endif %}" data-lr-focus="{{ item.code }}" aria-pressed="{{ 'true' if item.active else 'false' }}" aria-label="Focus {{ item.name }}; value {{ item.value }}"><span class="lr-initials"{% if item.color %} style="color: {{ item.color }};"{% endif %}>{{ item.code }}</span><strong>{{ item.value }}</strong></button>
       {% endfor %}
     </div>
-    {# A <label> may wrap exactly one form control; this row has three
-       (two step buttons plus the range), so the caption is a plain <span>
-       tied to the input via aria-labelledby instead of a wrapping label. #}
-    <div class="lr-rewind">
-      <span id="lr-rewind-caption" class="lr-rewind-caption">Through hole</span>
-      <button type="button" class="lr-rewind-step" data-lr-step="-1" aria-label="Previous hole">&lsaquo;</button>
-      <input id="lr-rewind-input" name="rewind" type="range" min="1" max="18" value="{{ chart_rewind|default(18) }}" aria-labelledby="lr-rewind-caption" data-lr-query="rewind" hx-get="/latest-round/tab" hx-trigger="change" hx-target="#lr-content" hx-swap="innerHTML" hx-include="#lr-teg-select, #lr-round-select, #lr-tab-input" hx-vals='{"metric": "{{ active_metric }}", "scale": "{{ chart_scale|default("adjusted") }}", "player": "{{ chart_player|default("") }}", "total": "{{ chart_total|default("round") }}"}'>
-      <button type="button" class="lr-rewind-step" data-lr-step="1" aria-label="Next hole">&rsaquo;</button>
-      <output>{{ chart_rewind|default(18) }}</output>
-    </div>
   </div>
   {% endif %}
   {% if caption %}<p class="text-muted text-sm mt-3">{{ caption }}</p>{% endif %}

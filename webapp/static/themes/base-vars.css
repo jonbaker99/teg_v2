@@ -1784,38 +1784,3 @@ body.ts-f5 .page-title-area .page-title {
 .measure-toggle .switch-thumb {
     background: var(--accent);
 }
-.lr-rewind {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-.lr-rewind-caption {
-    color: var(--text-muted);
-    font: 700 0.6875rem/1.2 var(--font-table), sans-serif;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-    white-space: nowrap;
-}
-.lr-rewind input {
-    accent-color: var(--accent);
-}
-.lr-rewind-step {
-    width: 1.75rem;
-    height: 1.75rem;
-    border: 1px solid var(--select-border);
-    border-radius: 0.4rem;
-    color: var(--accent);
-    background: var(--bg-card);
-    font-size: 1.1rem;
-    line-height: 1;
-    cursor: pointer;
-}
-.lr-rewind-step:hover {
-    border-color: var(--accent);
-}
-.lr-rewind output {
-    min-width: 2ch;
-    color: var(--text-primary);
-    font-size: 0.8125rem;
-    text-align: right;
-}

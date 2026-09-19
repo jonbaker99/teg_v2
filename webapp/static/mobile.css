@@ -868,11 +868,6 @@
      leaderboard heading than the chart-scale toggle needs (that one sits
      directly above the chart itself with no heading beneath it). */
   .latest-round-page #lr-content .lr-total-toggle { margin-bottom: 14px; }
-  .lr-rewind { grid-column: 1 / -1; display: flex !important; align-items: center; gap: 8px; }
-  .lr-rewind-caption { flex: 0 0 auto; color: var(--text-muted, #666); font: 700 11px/1.2 var(--font-table), sans-serif; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; }
-  .lr-rewind input { flex: 1 1 auto; min-width: 0; min-height: 44px; accent-color: var(--accent, #17683c); }
-  .lr-rewind-step { width: 44px; height: 44px; border: 1px solid var(--table-cell-border, #d5ddd7); border-radius: 8px; color: var(--accent, #17683c); background: var(--bg-card, #fff); font-size: 20px; flex: 0 0 auto; }
-  .lr-rewind output { min-width: 2ch; color: var(--text-primary, #1b241f); font-size: 14px; text-align: right; flex: 0 0 auto; }
   .latest-round-page .lr-chart { height: 320px !important; min-height: 280px; }
   /* Tiny left breathing room -- the chart's own Plotly margin.l is 0 (chart_utils.py's
      create_round_graph), so its y-axis tick labels otherwise sit flush against the
