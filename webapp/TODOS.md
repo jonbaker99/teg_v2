@@ -172,6 +172,24 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 ## UI Changes
 
+- [ ] **OPTION, not decided — Contents (`/`) page redesign (2026-09-19).**
+  Mockup only, not implemented: [Contents Page Redesign
+  canvas](https://claude.ai/artifact/8bBeoXbR62qiGA2KezQcAU) (desktop +
+  mobile, both a TEG-in-progress and a no-TEG-in-progress state). Proposal:
+  replace the flat three-column link grid (which mostly re-lists the top nav's
+  own section groupings) with (1) a hero strip above the columns showing live
+  status when a TEG is in progress (`_teg_is_complete()` in
+  `routes/history.py` / `routes/admin_reports.py` already has this check) —
+  "TEG N — Round R in progress" + a primary link to the leaderboard — or,
+  when no TEG is in progress, "TEG N — Final Results" + a primary link to
+  `/results` and an equally-weighted link to that TEG's report
+  (`/teg-reports`); and (2) regrouping the three columns by visitor intent
+  (History / Records+PBs+Scorecards / Scoring analysis) instead of mirroring
+  `webapp/nav.py`'s `NAV_SECTIONS` structure 1:1. This needs a proper design
+  review (does the intent-based grouping actually help, is folding Scorecards
+  into Records right, copy/wording) before any implementation — flag this
+  explicitly to whoever reviews aesthetics/UI/options next; see also
+  `webapp/README.md` → Phase 2 (better UI).
 - [ ] **Newspaper report — "standings movement" idea (2026-09-13).** While
   reviewing forest-green accent options for `/teg-reports` (`newspaper_preview.css`),
   Jon liked the simple `rail-standings`/`.sb-lab` block ("Standings movement:

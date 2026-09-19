@@ -834,6 +834,10 @@ as the live site."
 - **2b — A new, more layered / interesting theme**, built from current best
   practice rather than the existing experiments.
 
+Pending options for this phase (not decisions — flag to whoever runs a full
+aesthetics/UI review): see **UI Changes** in [TODOS.md](TODOS.md), including
+the Contents (`/`) page redesign option (2026-09-19, mockup only).
+
 For Phase 2, the existing theme-chooser experiments (page-title `ts-*` variants,
 card-header `ch-*` variants, archived themes in `static/themes/archive/`) are a
 **starting point, not a destination** — we draw inspiration from general best
