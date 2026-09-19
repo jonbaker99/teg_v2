@@ -464,6 +464,10 @@ table.leaderboard td:nth-child(2) {
 .col-player {
     text-align: left;
 }
+/* Streaks tab: de-emphasise 0 ("-") and 1 (barely a streak) cells. */
+.streaks-table .streak-muted {
+    color: var(--text-muted);
+}
 
 /* ── Buttons / Tabs ── */
 .tab-btn {
@@ -554,16 +558,26 @@ a.tab-underline .tab-arrow {
     opacity: 0.6;
 }
 
-/* Latest Round's report link, moved out of the tab bar into its own row
-   below it (mobile-ui-rollout) -- same "leaves this page" arrow affordance
-   as a.tab-underline .tab-arrow above, restated here since .lr-report-link
-   is not a .tab-underline. */
-.lr-report-row {
+/* Latest Round's, Latest TEG's, Results' and Leaderboard's report links,
+   moved out of the tab bar into their own row below it (mobile-ui-rollout)
+   -- same "leaves this page" arrow affordance as a.tab-underline .tab-arrow
+   above, restated here since these report-link classes are not
+   .tab-underline. Declarations shared verbatim across class names: one pair
+   per distinct page (latest_round.html, latest_teg.html) following the
+   .latest-round-page/.latest-teg-page convention in mobile.css, but
+   results.html and leaderboard.html reuse the SAME .res-report-row/
+   .res-report-link pair since those two templates already share a single
+   .standings-page wrapper class (same _results_context() data builder). */
+.lr-report-row,
+.lt-report-row,
+.res-report-row {
     display: flex;
     justify-content: flex-start;
     margin: 0 0 24px;
 }
-.lr-report-link {
+.lr-report-link,
+.lt-report-link,
+.res-report-link {
     color: var(--accent);
     font-family: var(--font-sans);
     text-transform: uppercase;
@@ -577,11 +591,15 @@ a.tab-underline .tab-arrow {
     padding: 2px 4px;
     margin: -2px -4px;
 }
-.lr-report-link:hover {
+.lr-report-link:hover,
+.lt-report-link:hover,
+.res-report-link:hover {
     text-decoration-style: solid;
     background: var(--table-toprank-bg);
 }
-.lr-report-link .tab-arrow {
+.lr-report-link .tab-arrow,
+.lt-report-link .tab-arrow,
+.res-report-link .tab-arrow {
     font-size: 0.8em;
     margin-left: 0.2em;
     opacity: 0.6;

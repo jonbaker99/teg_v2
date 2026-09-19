@@ -26,33 +26,41 @@
     </select>
 
     <input type="hidden" id="results-tab-input" name="tab" value="{{ active_tab }}">
+</div>
 
-    <div class="section-nav" style="margin-bottom: 0;">
-        {# Two main tabs: Leaderboard (net or gross measure, selected via the
-           toggle switch inside partials/results_table.html) and Scorecards.
-           Clicking Leaderboard while already on it preserves the current
-           measure instead of resetting to net. #}
-        <button class="tab-underline{% if active_tab != 'scorecards' %} tab-underline--active{% endif %}"
-                onclick="document.getElementById('results-tab-input').value='{{ 'net' if active_tab == 'scorecards' else active_tab }}';
-                         htmx.trigger(document.getElementById('results-teg-select'), 'change')">
-            Leaderboard
-        </button>
-        <button class="tab-underline{% if active_tab == 'scorecards' %} tab-underline--active{% endif %}"
-                onclick="document.getElementById('results-tab-input').value='scorecards';
-                         htmx.trigger(document.getElementById('results-teg-select'), 'change')">
-            Scorecards
-        </button>
-        {# Report is a REAL link, not an HTMX swap: /teg-reports' newspaper
-           typography/palette is deliberately unlike the rest of the site, so a
-           full page transition reads better than an in-place DOM swap. Shown
-           only for TEGs that have an edition — /teg-reports silently falls
-           back to its newest TEG for an unknown one (routes/reports.py), and a
-           link that quietly shows a different TEG's report is worse than no
-           link. No &round=: /results has no round-in-context. #}
-        <a id="results-report-tab" class="tab-underline"
-           href="/teg-reports?teg={{ selected_teg }}"
-           {% if selected_teg not in report_tegs %}hidden{% endif %}>Report<span class="tab-arrow" aria-hidden="true">&nearr;</span></a>
-    </div>
+{# Report is a REAL link, not an HTMX swap: /teg-reports' newspaper
+   typography/palette is deliberately unlike the rest of the site, so a
+   full page transition reads better than an in-place DOM swap. Shown
+   only for TEGs that have an edition — /teg-reports silently falls
+   back to its newest TEG for an unknown one (routes/reports.py), and a
+   link that quietly shows a different TEG's report is worse than no
+   link. No &round=: /results has no round-in-context. It sits on its own
+   row between the TEG selector and the tab bar rather than looking like
+   a same-page tab -- same reasoning as latest_teg.html's report row.
+   .res-report-row/.res-report-link are shared verbatim with
+   leaderboard.html, which already shares .standings-page with this page
+   via the same _results_context() data builder. #}
+<div class="res-report-row">
+    <a id="results-report-tab" class="res-report-link"
+       href="/teg-reports?teg={{ selected_teg }}"
+       {% if selected_teg not in report_tegs %}hidden{% endif %}>View tournament report<span class="tab-arrow" aria-hidden="true">&nearr;</span></a>
+</div>
+
+<div class="section-nav">
+    {# Two main tabs: Leaderboard (net or gross measure, selected via the
+       toggle switch inside partials/results_table.html) and Scorecards.
+       Clicking Leaderboard while already on it preserves the current
+       measure instead of resetting to net. #}
+    <button class="tab-underline{% if active_tab != 'scorecards' %} tab-underline--active{% endif %}"
+            onclick="document.getElementById('results-tab-input').value='{{ 'net' if active_tab == 'scorecards' else active_tab }}';
+                     htmx.trigger(document.getElementById('results-teg-select'), 'change')">
+        Leaderboard
+    </button>
+    <button class="tab-underline{% if active_tab == 'scorecards' %} tab-underline--active{% endif %}"
+            onclick="document.getElementById('results-tab-input').value='scorecards';
+                     htmx.trigger(document.getElementById('results-teg-select'), 'change')">
+        Scorecards
+    </button>
 </div>
 
 <div id="results-content" class="section-panel">

@@ -2,7 +2,60 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-19 (`/latest-round` Scoreboard mobile polish batch landed on rollout branch)
+**Last updated:** 2026-09-19 (Dynamic hero title/label on `/latest-round` and `/latest-teg`)
+
+## 2026-09-19 — Dynamic hero title/label, selectors moved into title area
+
+On `/latest-teg` and `/latest-round`, the TEG selector (and, on the round page, the round-pill
+selector) now sits in the page's hero title block instead of below it. The small-caps label above
+the title now shows the location/date that used to render as a separate line below the selector
+(e.g. "Catalonia, Spain | 2025"), and the page title itself is now dynamic: "TEG 18" on the teg
+page, "TEG 18, Round 4" on the round page — both update live via the existing HTMX out-of-band-swap
+mechanism when the selector changes, no page reload. Along the way, fixed a real bug: `/latest-teg`
+was missing the full-page-load duplicate-OOB guard the round page already had, causing a duplicate
+location/TEG line to render at the bottom of the tab content on first load.
+
+## 2026-09-19 — Streaks/Scoring formatting, Records expander removal, report-link relocation
+
+Five more changes to `codex/mobile-ui-rollout`, following the batch below:
+- Emojis removed from Records & PBs section headings (`🏆`/`💀`/`⭐`/`⚠️`) on `/latest-round` and `/latest-teg`.
+- Streaks tab (both pages): `0` now displays as `-`, and both `0`s and `1`s (a single occurrence barely
+  counts as a "streak") render in muted grey text; `2+` values unaffected.
+- Scoring tab (both pages): `0` now displays as `-` (plain text, no colour change).
+- Records & PBs tab (both pages): rows no longer render as a tap-to-expand `<details>` element, since
+  there was never any extra detail to reveal there — now plain rows. The standalone `/records` page's
+  real venue/date expand behaviour is unchanged (it has genuine detail to show).
+- The "Report" link, previously inline in the tab bar (looking like a same-page tab despite navigating
+  away), is now in its own distinct row with dashed-underline small-caps styling on `/latest-teg`,
+  `/results` and `/leaderboard` too — matching the treatment `/latest-round` already had. `/results` and
+  `/leaderboard` share one CSS class pair (`.res-report-row`/`.res-report-link`) since they already share
+  a page wrapper (`.standings-page`) and data builder; `/latest-teg` shares `/latest-round`'s classes via
+  comma-joined selectors.
+
+## 2026-09-19 — Records & PBs fix + `/latest-teg` parity batch
+
+Four changes to `codex/mobile-ui-rollout`:
+- **Records & PBs bug fix** (`/latest-round` and `/latest-teg`): the tab showed category headings
+  but no actual record/PB values, at every screen width. Root cause was a class-name collision —
+  `_render_records_summary()` in `webapp/routes/latest.py` reused the `records-list` class for
+  plain content, colliding with a global mobile-only `display:none` hook meant only for `/records`'
+  dual desktop-table/mobile-list markup. Fixed by routing both pages' Records & PBs tab through the
+  same `_build_records_html()` used by `/records`, so values now render correctly in both the
+  desktop table and mobile tap-to-expand list formats.
+- **Eclectic tab contribution table**: the CSS bar-chart cell for Holes on `/latest-teg`'s ECLECTIC
+  tab is now a plain Holes/Solo two-column table, matching `/latest-round`'s BESTBALL/WORSTBALL
+  contribution table. Dead bar-chart CSS removed from `scorecard.css`.
+- **Scoreboard leaderboard styling adopted onto `/latest-teg`**: the SCOREBOARD (aggregate) tab now
+  uses the same ranked `table.leaderboard` styling as `/latest-round`'s AGGREGATE SCORE tab (rank
+  badges, personal/all-time rank columns, tap-to-expand detail row — one tile per round played
+  instead of round's Out/In) — without the Plotly chart or the Round↔TEG-total toggle, both of
+  which stay round-only by design. `_build_scoreboard_table()` was generalized (`detail_cols`
+  param) to serve both pages from one implementation.
+- **Eclectic tab's "Player ranks" table**: fixed layout overflow/column misalignment by reusing the
+  same `_build_scoreboard_table()` leaderboard styling (no detail row, since there's no natural
+  per-player breakdown to hide behind a tap).
+
+See `webapp/MOBILE_PLAN.md` for phase status.
 
 ## 2026-09-19 — `/latest-round` Scoreboard mobile polish batch
 

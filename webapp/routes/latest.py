@@ -70,6 +70,7 @@ from webapp.deps import (
 # than inventing a third; leaderboard.py already imports from history.py the
 # same way, so this isn't a new inter-route-module pattern.
 from webapp.routes.history import _wrap_player_name
+from webapp.routes.records import _build_records_html
 from webapp.chart_utils import create_round_graph, format_value, get_round_player_color_map
 from webapp.tables import df_to_html as _table_df_to_html
 
@@ -79,13 +80,34 @@ router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
 
-def _df_to_html(df: pd.DataFrame, table_class: str = "teg-table") -> str:
+def _df_to_html(df: pd.DataFrame, table_class: str = "teg-table",
+                 cell_classes: Optional[dict] = None) -> str:
     """Render a teg-table: first column left-aligned (player / label),
     remaining columns centred — consistent with the /results tables."""
     return _table_df_to_html(
         df, table_class=table_class,
         col_class=lambda i, col: "col-player" if i == 0 else "col-num",
+        cell_classes=cell_classes,
     )
+
+
+def _mute_streak_pivot(pivot: pd.DataFrame) -> dict:
+    """Prep a streaks pivot (Streak Type + one column per player) for
+    display: replace genuine 0 values with '-' and return a cell_classes
+    dict that de-emphasises cells whose original value was 0 or 1 (a
+    single occurrence barely counts as a "streak"). Mutates ``pivot`` in
+    place; 2+ values and NaN cells are left untouched.
+    """
+    cell_classes: dict = {}
+    player_cols = [c for c in pivot.columns if c != 'Streak Type']
+    for row_idx, row in pivot.iterrows():
+        for col in player_cols:
+            val = row[col]
+            if pd.notna(val) and val in (0, 1):
+                cell_classes[(row_idx, col)] = "col-num streak-muted"
+    for col in player_cols:
+        pivot[col] = pivot[col].apply(lambda v: "-" if pd.notna(v) and v == 0 else v)
+    return cell_classes
 
 
 
@@ -139,8 +161,9 @@ def _player_score_mix(counts: pd.DataFrame, player_code: str, field: str) -> str
     return ', '.join(parts)
 
 
-def _build_scoreboard_table(values: pd.DataFrame, mix_counts: pd.DataFrame,
-                            mix_field: str, uid_prefix: str, total_label: str = "Round") -> str:
+def _build_scoreboard_table(values: pd.DataFrame, mix_counts: pd.DataFrame | None,
+                            mix_field: str | None, uid_prefix: str, total_label: str = "Round",
+                            detail_cols=(("Out", "Out"), ("In", "In"))) -> str:
     """Render the Scoreboards-tab table: a 5-column main row (# / Player /
     Total / Personal rank / All-time rank) plus a per-player expandable
     detail row (Out/In split + per-hole score mix), collapsed by default.
@@ -154,6 +177,13 @@ def _build_scoreboard_table(values: pd.DataFrame, mix_counts: pd.DataFrame,
     a score mix the prototype doesn't have) moved into the detail row, and
     Total placed immediately after Player (ahead of the rank context
     columns) since it's the number that matters most.
+
+    ``mix_counts``/``mix_field`` may both be ``None`` when there is nothing
+    to expand -- e.g. the eclectic tab's player-ranks table, which has no
+    per-hole score mix or Out/In-equivalent split worth a detail row. In
+    that case the whole toggle column and per-player detail row are omitted
+    entirely (not just left empty), so the table is a plain ranked list.
+
     ``values`` columns: Rank, Pl, Player, Out, In, Total (already
     display-formatted strings), and Personal rank / All-time rank -- but
     only when the Round/TEG-total toggle (webapp/routes/latest.py) is in
@@ -166,11 +196,20 @@ def _build_scoreboard_table(values: pd.DataFrame, mix_counts: pd.DataFrame,
     ``values.columns``, not a separate flag, so they stay in sync by
     construction. ``total_label`` becomes the Total column's header
     ("Round" or "TEG") so the header itself reflects what it's showing.
+
+    ``detail_cols`` drives the top row of the expandable detail panel: a
+    list of (label, column) pairs, each rendered as one ``<span>label
+    <b>value</b></span>`` tile. Defaults to the round table's Out/In split;
+    the TEG aggregate table (``_latest_teg_tab_context``) passes one tile
+    per round played instead (R1, R2, ...) since a whole TEG has no
+    front/back-9 split. ``.detail-grid`` wraps as a 2-column grid regardless
+    of how many tiles are supplied.
     """
     from html import escape
 
     show_rank_context = 'Personal rank' in values.columns and 'All-time rank' in values.columns
     show_round_total = 'RoundTotal' in values.columns
+    show_detail = mix_counts is not None and mix_field is not None
 
     def rank_cell(value) -> str:
         """Keep rank text accessible while de-emphasising its denominator."""
@@ -188,25 +227,26 @@ def _build_scoreboard_table(values: pd.DataFrame, mix_counts: pd.DataFrame,
                      if show_rank_context else "")
     round_total_col = "<col class='lr-round-total-col'>" if show_round_total else ""
     round_total_header = "<th scope='col'>Round</th>" if show_round_total else ""
+    toggle_col = "<col class='lr-toggle-col'>" if show_detail else ""
+    toggle_header = "<th scope='col'></th>" if show_detail else ""
     colspan = 6 if show_rank_context else (5 if show_round_total else 4)
 
     out = ["<table class='teg-table leaderboard'><colgroup>",
            "<col class='lr-rank-col'><col class='lr-player-col'>",
            f"<col class='lr-total-col'>{rank_cols}{round_total_col}",
-           "<col class='lr-toggle-col'>",
+           toggle_col,
            "</colgroup><thead><tr>",
            "<th scope='col'>#</th>",
            "<th scope='col'>Player</th>",
            f"<th scope='col'>{escape(total_label)}</th>",
            rank_headers,
            round_total_header,
-           "<th scope='col'></th>",
+           toggle_header,
            "</tr></thead><tbody>"]
 
     for _, row in values.iterrows():
         code = str(row['Pl'])
         detail_id = f"{uid_prefix}-{code}"
-        mix = _player_score_mix(mix_counts, code, mix_field)
         # Ties for first all get the leader shading, not just the literal
         # rank-1 row -- Rank is already "1" or "1=" for a tie (see
         # scoring.py's tied-rank pattern).
@@ -219,6 +259,13 @@ def _build_scoreboard_table(values: pd.DataFrame, mix_counts: pd.DataFrame,
                           f"<td class='lr-rank-context'>{rank_cell(all_time_rank)}</td>")
         round_total_cell = (f"<td class='lr-rank-context'>{escape(str(row['RoundTotal']))}</td>"
                             if show_round_total else '')
+        toggle_cell = (
+            "<td class='lr-toggle-td'>"
+            f"<button type=\"button\" class=\"rank-toggle\" data-lr-rank-toggle "
+            f"aria-expanded=\"false\" aria-controls=\"{escape(detail_id)}\" "
+            f"aria-label=\"Toggle details for {escape(str(row['Player']))}\"></button></td>"
+            if show_detail else ''
+        )
         out.append(
             f"<tr{row_class}>"
             f"<td>{escape(str(row['Rank']))}</td>"
@@ -233,19 +280,22 @@ def _build_scoreboard_table(values: pd.DataFrame, mix_counts: pd.DataFrame,
             f"<td class='lr-total-cell'>{escape(str(row['Total']))}</td>"
             f"{rank_cells}"
             f"{round_total_cell}"
-            "<td class='lr-toggle-td'>"
-            f"<button type=\"button\" class=\"rank-toggle\" data-lr-rank-toggle "
-            f"aria-expanded=\"false\" aria-controls=\"{escape(detail_id)}\" "
-            f"aria-label=\"Toggle details for {escape(str(row['Player']))}\"></button></td>"
+            f"{toggle_cell}"
             "</tr>"
+        )
+
+        if not show_detail:
+            continue
+
+        mix = _player_score_mix(mix_counts, code, mix_field)
+        detail_spans = ''.join(
+            f"<span>{escape(label)}<b>{escape(str(row[col]))}</b></span>"
+            for label, col in detail_cols
         )
         out.append(
             f"<tr class=\"rank-detail-row\" id=\"{escape(detail_id)}\" hidden>"
             f"<td colspan=\"{colspan}\">"
-            "<div class=\"detail-grid\">"
-            f"<span>Out<b>{escape(str(row['Out']))}</b></span>"
-            f"<span>In<b>{escape(str(row['In']))}</b></span>"
-            "</div>"
+            f"<div class=\"detail-grid\">{detail_spans}</div>"
             "<p class=\"detail-mix\">"
             "<span class=\"detail-mix-label\">Score mix</span> "
             f"{escape(mix) if mix else '—'}"
@@ -293,7 +343,10 @@ def _format_scoring_display(counts: pd.DataFrame, field: str, mode: str) -> tupl
 
     if mode == "pct":
         for col in display_df.columns[1:]:
-            display_df[col] = display_df[col].apply(lambda v: f"{int(v)}%")
+            display_df[col] = display_df[col].apply(lambda v: "-" if int(v) == 0 else f"{int(v)}%")
+    else:
+        for col in display_df.columns[1:]:
+            display_df[col] = display_df[col].apply(lambda v: "-" if int(v) == 0 else str(int(v)))
 
     return display_df, title
 
@@ -325,13 +378,35 @@ def _bestball_rank_summary(bb_all: pd.DataFrame, wb_all: pd.DataFrame,
 
 
 _RECORDS_DRAFT_NOTE = (
-    "<p class='text-muted text-sm mb-2'>⚠️ Draft — the records and PBs below "
+    "<p class='text-muted text-sm mb-2'>Draft — the records and PBs below "
     "need to be verified before the site is published.</p>"
 )
 
 
+def _records_df(rows: list) -> pd.DataFrame:
+    """Build a DataFrame in the column shape _build_records_html expects
+    (title, '' = value, ' ' = identity) -- see prepare_records_table /
+    prepare_streak_records_table in teg_analysis/display/formatters.py, the
+    /records page's equivalent builders. Unlike those, there's no per-record
+    "when" here (this is already scoped to one round/TEG), so only 3
+    columns are passed -- _build_records_html treats a lone "other" column
+    as identity rather than misreading it via its identity/detail length
+    heuristic (which assumes 2 columns). Rows sharing a title consecutively
+    collapse to one label (handled by _build_records_html itself), so
+    callers should group/sort by whatever they want to use as the title
+    column."""
+    if not rows:
+        return pd.DataFrame()
+    return pd.DataFrame(rows, columns=['title', '', ' '])
+
+
 def _render_records_summary(rd: dict, page_type: str = 'TEG') -> str:
-    """Render the records/PBs dict as grouped HTML (mirrors the Streamlit summary)."""
+    """Render the records/PBs dict as HTML, reusing the same dual
+    table/tap-to-reveal-list markup and .records-page CSS toggle as the
+    /records page (_build_records_html in webapp/routes/records.py) --
+    rather than the plain <ul> this used to emit, which collided with
+    mobile.css's global `.records-list { display: none; }` hook and was
+    never shown at any screen width."""
     from collections import defaultdict
 
     total = sum(len(rd.get(k, [])) for k in (
@@ -340,56 +415,59 @@ def _render_records_summary(rd: dict, page_type: str = 'TEG') -> str:
     if total == 0:
         return f"<p class='text-muted text-sm'>No records or personal bests for this {page_type.lower()}.</p>"
 
-    out = []
+    sections = []
 
     # --- All-time records (bests) ---
     bests = []
     for r in rd.get('aggregate_records', []):
-        bests.append(f"<strong>{r['friendly_name']}:</strong> {_fmt_record_value(r['value'], r['metric'])} ({r['player']})")
+        bests.append((r['friendly_name'], _fmt_record_value(r['value'], r['metric']), r['player']))
     for r in rd.get('9hole_records', []):
-        bests.append(f"<strong>{r['segment']} 9 - {r['friendly_name']}:</strong> {_fmt_record_value(r['value'], r['metric'])} ({r['player']})")
+        bests.append((f"{r['segment']} 9 - {r['friendly_name']}", _fmt_record_value(r['value'], r['metric']), r['player']))
     for r in rd.get('streak_records', []):
-        bests.append(f"<strong>{r['streak_type']} streak:</strong> {r['value']} holes ({r['player']})")
+        bests.append((f"{r['streak_type']} streak", f"{r['value']} holes", r['player']))
     for r in rd.get('best_score_counts', []):
-        bests.append(f"<strong>Most {r['score_type']}:</strong> {r['count']} ({r['player']})")
+        bests.append((f"Most {r['score_type']}", str(r['count']), r['player']))
     if bests:
-        out.append("<h2 class='section-title'>🏆 All-Time Records (Bests)</h2><ul class='records-list'>")
-        out += [f"<li>{b}</li>" for b in bests]
-        out.append("</ul>")
+        sections.append(("All-Time Records (Bests)", _records_df(bests)))
 
     # --- All-time records (worsts) ---
     worsts = []
     for r in rd.get('all_time_worsts', []):
-        worsts.append(f"<strong>Worst {r['friendly_name']}:</strong> {_fmt_record_value(r['value'], r['metric'])} ({r['player']})")
+        worsts.append((f"Worst {r['friendly_name']}", _fmt_record_value(r['value'], r['metric']), r['player']))
     for r in rd.get('worst_score_counts', []):
-        worsts.append(f"<strong>Most {r['score_type']}:</strong> {r['count']} ({r['player']})")
+        worsts.append((f"Most {r['score_type']}", str(r['count']), r['player']))
     if worsts:
-        out.append("<h2 class='section-title'>💀 All-Time Records (Worsts)</h2><ul class='records-list'>")
-        out += [f"<li>{w}</li>" for w in worsts]
-        out.append("</ul>")
+        sections.append(("All-Time Records (Worsts)", _records_df(worsts)))
 
-    # --- Personal bests (grouped by player) ---
-    pbs_by_player = defaultdict(list)
+    # --- Personal bests (grouped by player -- player is the title column,
+    # so consecutive entries for the same player collapse to one label,
+    # same mechanism as a shared all-time record collapsing to one row) ---
+    pbs = []
     for pb in rd.get('aggregate_pbs', []):
-        pbs_by_player[pb['player']].append(f"{pb['friendly_name']}: {_fmt_record_value(pb['value'], pb['metric'])}")
+        pbs.append((pb['player'], _fmt_record_value(pb['value'], pb['metric']), pb['friendly_name']))
     for pb in rd.get('9hole_pbs', []):
-        pbs_by_player[pb['player']].append(f"{pb['segment']} 9 - {pb['friendly_name']}: {_fmt_record_value(pb['value'], pb['metric'])}")
-    if pbs_by_player:
-        out.append("<h2 class='section-title'>⭐ Personal Bests</h2><ul class='records-list'>")
-        for player in sorted(pbs_by_player):
-            out.append(f"<li><strong>{player}:</strong> {', '.join(pbs_by_player[player])}</li>")
-        out.append("</ul>")
+        pbs.append((pb['player'], _fmt_record_value(pb['value'], pb['metric']), f"{pb['segment']} 9 - {pb['friendly_name']}"))
+    pbs.sort(key=lambda row: row[0])
+    if pbs:
+        sections.append(("Personal Bests", _records_df(pbs)))
 
     # --- Personal worsts (grouped by player) ---
-    worsts_by_player = defaultdict(list)
+    worsts_pb = []
     for w in rd.get('aggregate_worsts', []):
-        worsts_by_player[w['player']].append(f"{w['friendly_name']}: {_fmt_record_value(w['value'], w['metric'])}")
-    if worsts_by_player:
-        out.append("<h2 class='section-title'>⚠️ Personal Worsts</h2><ul class='records-list'>")
-        for player in sorted(worsts_by_player):
-            out.append(f"<li><strong>{player}:</strong> {', '.join(worsts_by_player[player])}</li>")
-        out.append("</ul>")
+        worsts_pb.append((w['player'], _fmt_record_value(w['value'], w['metric']), w['friendly_name']))
+    worsts_pb.sort(key=lambda row: row[0])
+    if worsts_pb:
+        sections.append(("Personal Worsts", _records_df(worsts_pb)))
 
+    out = ["<div class='records-page'>"]
+    for i, (title, df) in enumerate(sections):
+        if i > 0:
+            out.append("<hr class='divider--dotted'>")
+        out.append(
+            f"<div><h2 class='section-title'>{title}</h2>"
+            f"<div class='data-card'><div class='overflow-x-auto'>{_build_records_html(df)}</div></div></div>"
+        )
+    out.append("</div>")
     return "".join(out)
 
 
@@ -707,7 +785,8 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                 pivot = pivot_window_streaks(window)
                 pivot = pivot.rename(columns=get_name_to_code())
                 if not pivot.empty:
-                    sections.append({"title": "Streaks", "table_html": _df_to_html(pivot, table_class="teg-table streaks-table")})
+                    cell_classes = _mute_streak_pivot(pivot)
+                    sections.append({"title": "Streaks", "table_html": _df_to_html(pivot, table_class="teg-table streaks-table", cell_classes=cell_classes)})
                     return {"sections": sections, "caption": "Eagles / birdies / par / bogeys are all 'or better'"}
                 sections.append({"title": "Streaks", "table_html": "<p class='text-muted text-sm'>No streak data for this round.</p>"})
             except Exception as e:
@@ -836,14 +915,60 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
             friendly = dict(METRIC_TABS)[metric]
             teg_str = f"TEG {teg_num}"
             try:
+                # Same ranked-table look as the round Scoreboards tab
+                # (_build_scoreboard_table) -- reused rather than forked, with
+                # one adaptation: a whole TEG has rounds, not an Out/In
+                # front/back-9 split, so the expandable detail row shows one
+                # tile per round played (R1, R2, ...) instead of Out/In.
                 ranked = cached_ranked_teg_data()
                 ctx_df = prepare_teg_context_display(ranked, teg_str, metric, friendly)
-                if friendly in ctx_df.columns:
-                    ctx_df[friendly] = ctx_df[friendly].apply(lambda v: _fmt_record_value(v, metric))
-                table_html = _df_to_html(ctx_df)
+                if ctx_df.empty:
+                    raise ValueError(f"No TEG-level data for {teg_str}")
+                ascending = metric != 'Stableford'
+                values = ctx_df.rename(columns={
+                    friendly: 'Total', 'Pl rank': 'Personal rank', 'All time rank': 'All-time rank'})
+                values = values.sort_values('Total', ascending=ascending).reset_index(drop=True)
+                values.insert(0, 'Rank', values['Total'].rank(method='min', ascending=ascending).astype(int))
+                # 'Pl' (player code) isn't part of prepare_teg_context_display's
+                # output -- pulled back in from the same ranked frame it was
+                # built from, keyed on the display name they agree on.
+                pl_lookup = ranked[['Player', 'Pl']].drop_duplicates('Player')
+                values = values.merge(pl_lookup, on='Player', how='left')
+                for col in ('Personal rank', 'All-time rank'):
+                    values[col] = values[col].astype(str).str.replace(' / ', '/', regex=False)
+
+                # Per-round breakdown, one column per round actually played --
+                # feeds the detail row below, same role Out/In plays for a
+                # single round.
+                round_nums = get_rounds_for_teg(teg_num)
+                round_data = cached_round_data()
+                round_data = round_data[round_data['TEGNum'] == teg_num]
+                detail_cols = []
+                for r in round_nums:
+                    col = f'R{r}'
+                    round_vals = round_data[round_data['Round'] == r].set_index('Pl')[metric]
+                    values[col] = values['Pl'].map(round_vals).apply(
+                        lambda v: _fmt_record_value(v, metric) if pd.notna(v) else '—')
+                    detail_cols.append((col, col))
+
+                values['Total'] = values['Total'].apply(lambda v: _fmt_record_value(v, metric))
+
+                # Per-hole score mix for the detail row -- across every round
+                # played so far in this TEG, same mix_field selection the
+                # round Scoreboards tab uses (Stableford points, else
+                # GrossVP vs-par notation).
+                mix_field = 'Stableford' if metric == 'Stableford' else 'GrossVP'
+                all_data = cached_load_all_data()
+                teg_hole_data = all_data[all_data['TEGNum'] == teg_num]
+                mix_counts = count_scores_by_player(teg_hole_data, mix_field)
+
+                table_html = _build_scoreboard_table(
+                    values, mix_counts, mix_field, uid_prefix=f"lt-rank-{teg_num}",
+                    total_label="TEG", detail_cols=detail_cols)
             except Exception:
+                logger.exception("_latest_teg_tab_context: aggregate table build failed")
                 table_html = "<p class='text-muted text-sm'>No aggregate data available.</p>"
-            return {"sections": [{"title": friendly, "table_html": table_html}],
+            return {"sections": [{"title": "TEG leaderboard", "table_html": table_html}],
                     "metric_tabs": METRIC_TABS, "active_metric": metric}
 
         elif tab == "scoring":
@@ -891,16 +1016,26 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
                 complete_teg_nums = set(cached_complete_teg_data()['TEGNum'])
                 ranks_df = rank_teg_eclectics(all_data, teg_num, complete_teg_nums=complete_teg_nums)
                 if not ranks_df.empty:
-                    display_ranks = pd.DataFrame({
-                        'Player': ranks_df['Player'],
-                        'Eclectic': ranks_df['Total'].apply(format_vs_par),
-                        'All-time': ranks_df.apply(lambda r: f"{r['AllTimeRank']} / {r['AllTimeN']}", axis=1),
-                        'Own history': ranks_df.apply(lambda r: f"{r['OwnRank']} of {r['OwnN']}", axis=1),
-                    })
-                    sections.append({
-                        "title": "Player ranks",
-                        "table_html": _table_df_to_html(display_ranks, link_players=False),  # profiles hidden 2026-09-18
-                    })
+                    # Same ranked-table look as the Scoreboards tab
+                    # (_build_scoreboard_table) -- reused rather than a
+                    # bespoke table, with no expandable detail row: there's
+                    # no Out/In-equivalent split or per-hole score mix
+                    # worth hiding behind a tap here, just Total plus the
+                    # two rank-context columns, so mix_counts/mix_field are
+                    # both None (see _build_scoreboard_table's show_detail).
+                    ascending = True  # lower eclectic total is better
+                    name_to_code = get_name_to_code()
+                    values = ranks_df.sort_values('Total', ascending=ascending).reset_index(drop=True)
+                    values.insert(0, 'Rank', values['Total'].rank(method='min', ascending=ascending).astype(int))
+                    values['Pl'] = values['Player'].map(lambda n: name_to_code.get(n, n))
+                    values['Personal rank'] = values.apply(lambda r: f"{r['OwnRank']}/{r['OwnN']}", axis=1)
+                    values['All-time rank'] = values.apply(lambda r: f"{r['AllTimeRank']}/{r['AllTimeN']}", axis=1)
+                    values['Total'] = values['Total'].apply(format_vs_par)
+                    table_html = _build_scoreboard_table(
+                        values, mix_counts=None, mix_field=None,
+                        uid_prefix=f"lt-eclectic-{teg_num}", total_label="Eclectic",
+                        detail_cols=())
+                    sections.append({"title": "Player ranks", "table_html": table_html})
                     if teg_num not in complete_teg_nums:
                         sections.append({
                             "title": None, "raw": True,
@@ -944,7 +1079,8 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
                 pivot = pivot_window_streaks(window)
                 pivot = pivot.rename(columns=get_name_to_code())
                 if not pivot.empty:
-                    sections.append({"title": "Streaks", "table_html": _df_to_html(pivot, table_class="teg-table streaks-table")})
+                    cell_classes = _mute_streak_pivot(pivot)
+                    sections.append({"title": "Streaks", "table_html": _df_to_html(pivot, table_class="teg-table streaks-table", cell_classes=cell_classes)})
                     return {"sections": sections, "caption": "Eagles / birdies / par / bogeys are all 'or better'"}
                 sections.append({"title": "Streaks", "table_html": "<p class='text-muted text-sm'>No streak data for this TEG.</p>"})
             except Exception as e:

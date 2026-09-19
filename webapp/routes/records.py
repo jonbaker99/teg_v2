@@ -102,12 +102,19 @@ def _build_records_html(df: pd.DataFrame) -> str:
             break
 
     # The remaining columns (not the title, not the value) are the
-    # identity/detail pair the mobile list needs to tell apart.
+    # identity/detail pair the mobile list needs to tell apart. A caller
+    # with no real "detail" data (e.g. latest.py's single-round/TEG record
+    # summaries, which have nothing like /records' venue+date "when") may
+    # pass only one such column -- that one is always identity, with an
+    # empty (but present) detail panel, rather than risk the length
+    # heuristic below misreading an always-empty filler column as identity.
     other_idx = [i for i in range(1, len(cols)) if i != value_col_idx]
     detail_col_idx = _pick_detail_col_idx(df, cols, other_idx) if len(other_idx) == 2 else None
     identity_col_idx = None
     if detail_col_idx is not None:
         identity_col_idx = [i for i in other_idx if i != detail_col_idx][0]
+    elif len(other_idx) == 1:
+        identity_col_idx = other_idx[0]
 
     rows = []
     rows.append("<table class='records-table records-table--borderless'>")
@@ -146,23 +153,38 @@ def _build_records_html(df: pd.DataFrame) -> str:
         label_html = row[cols[0]] if show_title else ""
         value_html = row[cols[value_col_idx]] if value_col_idx is not None else ""
         if identity_col_idx is not None:
-            id_val, det_val = row[cols[identity_col_idx]], row[cols[detail_col_idx]]
-            if _is_placeholder_identity(id_val):
+            id_val = row[cols[identity_col_idx]]
+            det_val = row[cols[detail_col_idx]] if detail_col_idx is not None else ""
+            if detail_col_idx is not None and _is_placeholder_identity(id_val):
                 id_val, det_val = det_val, id_val
         else:
             id_val, det_val = "", ""
 
-        list_items.append(
-            "<details class='rec-row'>"
-            "<summary class='rec-summary'>"
-            f"<span class='rec-label'>{label_html}</span>"
-            f"<span class='rec-value'>{value_html}</span>"
-            f"<span class='rec-identity'>{id_val}</span>"
-            "<span class='rec-chevron' aria-hidden='true'></span>"
-            "</summary>"
-            f"<div class='rec-detail'>{det_val}</div>"
-            "</details>"
-        )
+        if detail_col_idx is None:
+            # No real detail to reveal (e.g. latest.py's single-record
+            # summaries) -- render a plain, non-expandable row: no chevron,
+            # no tap affordance, no empty <details> to open onto nothing.
+            list_items.append(
+                "<div class='rec-row rec-row--flat'>"
+                "<div class='rec-summary rec-summary--flat'>"
+                f"<span class='rec-label'>{label_html}</span>"
+                f"<span class='rec-value'>{value_html}</span>"
+                f"<span class='rec-identity'>{id_val}</span>"
+                "</div>"
+                "</div>"
+            )
+        else:
+            list_items.append(
+                "<details class='rec-row'>"
+                "<summary class='rec-summary'>"
+                f"<span class='rec-label'>{label_html}</span>"
+                f"<span class='rec-value'>{value_html}</span>"
+                f"<span class='rec-identity'>{id_val}</span>"
+                "<span class='rec-chevron' aria-hidden='true'></span>"
+                "</summary>"
+                f"<div class='rec-detail'>{det_val}</div>"
+                "</details>"
+            )
 
     rows.append("</tbody></table>")
     rows.append("<div class='records-list'>")

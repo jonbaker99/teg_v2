@@ -238,13 +238,19 @@
     color: var(--accent, forestgreen);
   }
 
-  /* Report link row, moved out of the tab bar (base-vars.css .lr-report-row/
-     .lr-report-link) -- touch-target sizing only, base-vars.css owns the
-     colour/underline/arrow styling shared with desktop. */
-  .lr-report-row {
+  /* Report link row, moved out of the tab bar (base-vars.css
+     .lr-report-row/.lr-report-link, .lt-report-row/.lt-report-link and
+     .res-report-row/.res-report-link, the latter shared by results.html
+     and leaderboard.html) -- touch-target sizing only, base-vars.css owns
+     the colour/underline/arrow styling shared with desktop. */
+  .lr-report-row,
+  .lt-report-row,
+  .res-report-row {
     margin: 0 var(--lr-inset, 0) 20px;
   }
-  .lr-report-link {
+  .lr-report-link,
+  .lt-report-link,
+  .res-report-link {
     min-height: 44px;
     display: inline-flex;
     align-items: center;
@@ -434,6 +440,13 @@
   }
   .records-page .rec-summary::-webkit-details-marker { display: none; }
   .records-page .rec-summary::marker { content: ""; }
+  /* Flat variant: rows with nothing to reveal (e.g. latest.py's single-
+     record summaries -- see _build_records_html's detail_col_idx is None
+     branch). Same flex layout as .rec-summary, minus the tap affordance;
+     no chevron column since there's nothing to disclose. */
+  .records-page .rec-summary--flat {
+    cursor: default;
+  }
   .records-page .rec-label {
     flex: 1 1 38%;
     min-width: 0;
@@ -599,11 +612,17 @@
   .latest-round-page #lr-context-header,
   .latest-teg-page #lt-context-header { margin-left: var(--lr-inset); margin-right: var(--lr-inset); }
   .latest-round-page > .section-controls,
-  .latest-teg-page > .section-controls { margin-left: 0; margin-right: 0; }
+  .latest-teg-page > .section-controls,
+  .lr-title-area .section-controls,
+  .lt-title-area .section-controls { margin-left: 0; margin-right: 0; }
   .latest-round-page > .section-controls .pill,
   .latest-round-page > .section-controls .theme-select,
   .latest-teg-page > .section-controls .pill,
-  .latest-teg-page > .section-controls .theme-select { min-height: 44px; }
+  .latest-teg-page > .section-controls .theme-select,
+  .lr-title-area .section-controls .pill,
+  .lr-title-area .section-controls .theme-select,
+  .lt-title-area .section-controls .pill,
+  .lt-title-area .section-controls .theme-select { min-height: 44px; }
   .latest-round-page > #lr-content,
   .latest-teg-page > #lt-content { min-width: 0; margin-inline: 0; }
   /* Latest Round/TEG use the reference's full-width data surfaces. The
@@ -694,22 +713,35 @@
      --ink/--accent/--soft). Column order/count differ from the prototype
      per the user's explicit swap: # / Player / Personal rank / All-time
      rank / Total (the prototype's own reference is # / Player / Out / In /
-     Total; Out/In moved into the expandable detail row here instead). */
-  .latest-round-page #lr-content table.leaderboard {
+     Total; Out/In moved into the expandable detail row here instead).
+     Shared verbatim with the TEG aggregate leaderboard (.latest-teg-page
+     #lt-content) -- same table.leaderboard markup/CSS classes, just fed a
+     per-round detail row (R1, R2, ...) instead of Out/In (see
+     _build_scoreboard_table's detail_cols parameter,
+     webapp/routes/latest.py). */
+  .latest-round-page #lr-content table.leaderboard,
+  .latest-teg-page #lt-content table.leaderboard {
     width: 100%; margin-top: 9px; border-collapse: collapse; table-layout: fixed; font-size: 14px;
   }
-  .latest-round-page #lr-content table.leaderboard .lr-rank-col { width: 7%; }
-  .latest-round-page #lr-content table.leaderboard .lr-player-col { width: 27%; }
-  .latest-round-page #lr-content table.leaderboard .lr-personal-col { width: 19%; }
-  .latest-round-page #lr-content table.leaderboard .lr-alltime-col { width: 19%; }
-  .latest-round-page #lr-content table.leaderboard .lr-total-col { width: 18%; }
-  /* TEG-total mode: Personal/All-time rank are hidden entirely, replaced by
-     one de-emphasised Round-score column -- takes the same combined width
-     those two columns had (19% + 19%), so the table still sums to 100%
-     without a mode-specific override. */
+  .latest-round-page #lr-content table.leaderboard .lr-rank-col,
+  .latest-teg-page #lt-content table.leaderboard .lr-rank-col { width: 7%; }
+  .latest-round-page #lr-content table.leaderboard .lr-player-col,
+  .latest-teg-page #lt-content table.leaderboard .lr-player-col { width: 27%; }
+  .latest-round-page #lr-content table.leaderboard .lr-personal-col,
+  .latest-teg-page #lt-content table.leaderboard .lr-personal-col { width: 19%; }
+  .latest-round-page #lr-content table.leaderboard .lr-alltime-col,
+  .latest-teg-page #lt-content table.leaderboard .lr-alltime-col { width: 19%; }
+  .latest-round-page #lr-content table.leaderboard .lr-total-col,
+  .latest-teg-page #lt-content table.leaderboard .lr-total-col { width: 18%; }
+  /* Round-only: TEG-total mode hides Personal/All-time rank, replaced by one
+     de-emphasised Round-score column -- takes the same combined width those
+     two columns had (19% + 19%). Never emitted on the TEG aggregate table
+     (no Round/TEG toggle there), so this stays round-scoped. */
   .latest-round-page #lr-content table.leaderboard .lr-round-total-col { width: 38%; }
-  .latest-round-page #lr-content table.leaderboard .lr-toggle-col { width: 10%; }
-  .latest-round-page #lr-content table.leaderboard th {
+  .latest-round-page #lr-content table.leaderboard .lr-toggle-col,
+  .latest-teg-page #lt-content table.leaderboard .lr-toggle-col { width: 10%; }
+  .latest-round-page #lr-content table.leaderboard th,
+  .latest-teg-page #lt-content table.leaderboard th {
     padding: 0 3px 8px; color: var(--text-muted, #666);
     font: 700 11px/1.2 var(--font-table), sans-serif; letter-spacing: .03em; text-transform: uppercase;
     /* Unlike the reference's own short Out/In/Total headers, "Personal
@@ -720,9 +752,13 @@
     overflow-wrap: anywhere;
   }
   .latest-round-page #lr-content table.leaderboard th,
-  .latest-round-page #lr-content table.leaderboard td { text-align: center; }
+  .latest-round-page #lr-content table.leaderboard td,
+  .latest-teg-page #lt-content table.leaderboard th,
+  .latest-teg-page #lt-content table.leaderboard td { text-align: center; }
   .latest-round-page #lr-content table.leaderboard th:nth-child(2),
-  .latest-round-page #lr-content table.leaderboard td:nth-child(2) { text-align: left; }
+  .latest-round-page #lr-content table.leaderboard td:nth-child(2),
+  .latest-teg-page #lt-content table.leaderboard th:nth-child(2),
+  .latest-teg-page #lt-content table.leaderboard td:nth-child(2) { text-align: left; }
   /* Player-name markup switched from a single <b> to the shared
      .player-name/.first/.last span structure (base-vars.css) so this table
      gets the same "if one name wraps, all do, and rows stay equal height"
@@ -732,27 +768,35 @@
      (see webapp/routes/latest.py); reusing it on the <td> too made the
      shared "span.player-name { display: inline-block }" rule match the <td>
      itself, breaking its table-cell layout. */
-  .latest-round-page #lr-content table.leaderboard .player-name {
+  .latest-round-page #lr-content table.leaderboard .player-name,
+  .latest-teg-page #lt-content table.leaderboard .player-name {
     min-width: 0;
     line-height: 1.15;
     white-space: normal;
     overflow-wrap: anywhere;
   }
-  .latest-round-page #lr-content table.leaderboard td {
+  .latest-round-page #lr-content table.leaderboard td,
+  .latest-teg-page #lt-content table.leaderboard td {
     padding: 12px 5px;
     font-family: var(--font-table), sans-serif; font-variant-numeric: tabular-nums; white-space: nowrap;
   }
   .latest-round-page #lr-content table.leaderboard th:first-child,
-  .latest-round-page #lr-content table.leaderboard td:first-child {
+  .latest-round-page #lr-content table.leaderboard td:first-child,
+  .latest-teg-page #lt-content table.leaderboard th:first-child,
+  .latest-teg-page #lt-content table.leaderboard td:first-child {
     position: static;
     padding-inline: 2px;
     color: var(--text-muted, #666);
     background-color: transparent;
   }
   .latest-round-page #lr-content table.leaderboard th:last-child,
-  .latest-round-page #lr-content table.leaderboard td:last-child { padding-inline: 2px; }
-  .latest-round-page #lr-content table.leaderboard .lr-rank-value { white-space: nowrap; }
-  .latest-round-page #lr-content table.leaderboard .lr-rank-value small {
+  .latest-round-page #lr-content table.leaderboard td:last-child,
+  .latest-teg-page #lt-content table.leaderboard th:last-child,
+  .latest-teg-page #lt-content table.leaderboard td:last-child { padding-inline: 2px; }
+  .latest-round-page #lr-content table.leaderboard .lr-rank-value,
+  .latest-teg-page #lt-content table.leaderboard .lr-rank-value { white-space: nowrap; }
+  .latest-round-page #lr-content table.leaderboard .lr-rank-value small,
+  .latest-teg-page #lt-content table.leaderboard .lr-rank-value small {
     margin-left: 1px;
     color: var(--text-muted, #666);
     font-size: .78em;
@@ -760,60 +804,79 @@
   }
   /* De-emphasise the contextual rank columns -- Total is the column that
      matters, Personal/All-time rank are supporting context. */
-  .latest-round-page #lr-content table.leaderboard td.lr-rank-context {
+  .latest-round-page #lr-content table.leaderboard td.lr-rank-context,
+  .latest-teg-page #lt-content table.leaderboard td.lr-rank-context {
     color: var(--text-muted, #666);
   }
   /* Total: the important column -- bigger, bold, accent colour. */
-  .latest-round-page #lr-content table.leaderboard td.lr-total-cell {
+  .latest-round-page #lr-content table.leaderboard td.lr-total-cell,
+  .latest-teg-page #lt-content table.leaderboard td.lr-total-cell {
     font-size: 1.15em;
     font-weight: 700;
     color: var(--text-primary, #1b241f);
   }
   /* Leader shading: tied-first rows all get it (Rank is "1" or "1="). */
-  .latest-round-page #lr-content table.leaderboard tr.rank-1 {
+  .latest-round-page #lr-content table.leaderboard tr.rank-1,
+  .latest-teg-page #lt-content table.leaderboard tr.rank-1 {
     background-color: var(--table-toprank-bg, #F3F7F3);
   }
-  .latest-round-page #lr-content table.leaderboard tr.rank-1 td { font-weight: 700; }
-  .latest-round-page #lr-content table.leaderboard tr.rank-1 td:first-child { color: var(--accent, #17683c); }
-  .latest-round-page #lr-content table.leaderboard tr.rank-1 td.lr-total-cell { color: var(--accent, #17683c); }
+  .latest-round-page #lr-content table.leaderboard tr.rank-1 td,
+  .latest-teg-page #lt-content table.leaderboard tr.rank-1 td { font-weight: 700; }
+  .latest-round-page #lr-content table.leaderboard tr.rank-1 td:first-child,
+  .latest-teg-page #lt-content table.leaderboard tr.rank-1 td:first-child { color: var(--accent, #17683c); }
+  .latest-round-page #lr-content table.leaderboard tr.rank-1 td.lr-total-cell,
+  .latest-teg-page #lt-content table.leaderboard tr.rank-1 td.lr-total-cell { color: var(--accent, #17683c); }
   /* Player name in the leader row matches the row's accent colour like the
      rank/total cells; bold weight already comes from the tr.rank-1 td rule
      above, kept here since it's the leader row -- unlike every other row,
      where the player column stays regular weight. */
-  .latest-round-page #lr-content table.leaderboard tr.rank-1 td.lr-player-cell {
+  .latest-round-page #lr-content table.leaderboard tr.rank-1 td.lr-player-cell,
+  .latest-teg-page #lt-content table.leaderboard tr.rank-1 td.lr-player-cell {
     color: var(--accent, #17683c);
   }
 
-  /* Row expand/collapse (Out/In split + per-hole score mix) -- rank-toggle
-     "+"/"-" moved to its own narrow final column (not overlaid on the player
-     name) -- detail-grid ported from the same reference. */
-  .latest-round-page #lr-content table.leaderboard td.lr-toggle-td { padding-inline: 0; }
-  .latest-round-page #lr-content .rank-toggle {
+  /* Row expand/collapse (Out/In split, or R1/R2/... for the TEG aggregate
+     table, plus per-hole score mix) -- rank-toggle "+"/"-" moved to its own
+     narrow final column (not overlaid on the player name) -- detail-grid
+     ported from the same reference. Shared with .latest-teg-page #lt-content
+     (see the table.leaderboard comment above). */
+  .latest-round-page #lr-content table.leaderboard td.lr-toggle-td,
+  .latest-teg-page #lt-content table.leaderboard td.lr-toggle-td { padding-inline: 0; }
+  .latest-round-page #lr-content .rank-toggle,
+  .latest-teg-page #lt-content .rank-toggle {
     width: 100%; min-height: 44px; margin: -12px 0; padding: 12px 0;
     border: 0; background: transparent; color: var(--accent, #17683c); font: inherit;
     font-size: 18px; line-height: 1; text-align: center; cursor: pointer;
   }
-  .latest-round-page #lr-content .rank-toggle::after { content: "+"; }
-  .latest-round-page #lr-content .rank-toggle[aria-expanded="true"]::after { content: "\2013"; }
-  .latest-round-page #lr-content .rank-detail-row td { padding: 0 !important; background: var(--btn-inactive-bg, #f5f4f0); }
-  .latest-round-page #lr-content .rank-detail-row .detail-grid {
+  .latest-round-page #lr-content .rank-toggle::after,
+  .latest-teg-page #lt-content .rank-toggle::after { content: "+"; }
+  .latest-round-page #lr-content .rank-toggle[aria-expanded="true"]::after,
+  .latest-teg-page #lt-content .rank-toggle[aria-expanded="true"]::after { content: "\2013"; }
+  .latest-round-page #lr-content .rank-detail-row td,
+  .latest-teg-page #lt-content .rank-detail-row td { padding: 0 !important; background: var(--btn-inactive-bg, #f5f4f0); }
+  .latest-round-page #lr-content .rank-detail-row .detail-grid,
+  .latest-teg-page #lt-content .rank-detail-row .detail-grid {
     display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 6px; padding: 10px 10px 6px;
   }
-  .latest-round-page #lr-content .rank-detail-row .detail-grid span {
+  .latest-round-page #lr-content .rank-detail-row .detail-grid span,
+  .latest-teg-page #lt-content .rank-detail-row .detail-grid span {
     padding: 8px; border-radius: 6px; background: var(--bg-card, #fff);
     color: var(--text-muted, #666); font-size: 11px; text-transform: uppercase;
     letter-spacing: .03em;
   }
-  .latest-round-page #lr-content .rank-detail-row .detail-grid span b {
+  .latest-round-page #lr-content .rank-detail-row .detail-grid span b,
+  .latest-teg-page #lt-content .rank-detail-row .detail-grid span b {
     display: block; margin-top: 3px; color: var(--text-primary, #1b241f);
     font: 600 14px var(--font-table), sans-serif; text-transform: none; letter-spacing: normal;
   }
-  .latest-round-page #lr-content .rank-detail-row .detail-mix {
+  .latest-round-page #lr-content .rank-detail-row .detail-mix,
+  .latest-teg-page #lt-content .rank-detail-row .detail-mix {
     margin: 0; padding: 0 10px 10px; font-size: 12px; line-height: 1.4;
     color: var(--text-primary, #1b241f); white-space: normal; overflow-wrap: anywhere;
   }
-  .latest-round-page #lr-content .rank-detail-row .detail-mix-label {
+  .latest-round-page #lr-content .rank-detail-row .detail-mix-label,
+  .latest-teg-page #lt-content .rank-detail-row .detail-mix-label {
     color: var(--text-muted, #666); text-transform: uppercase; font-size: 10px;
     letter-spacing: .04em; margin-right: 6px;
   }

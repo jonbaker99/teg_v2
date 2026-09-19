@@ -924,10 +924,10 @@ def build_bestball_contribution_bars(round_data: pd.DataFrame) -> str:
 def build_eclectic_contribution_bars(teg_data: pd.DataFrame) -> str:
     """Build a single contribution table for a TEG's eclectic.
 
-    One row per player (ordered to match the eclectic card) with three
+    One row per player (ordered to match the eclectic card) with four plain
     columns: Player, Impact (the signed shot contribution — the headline
-    number) and Holes (a CSS bar overlaying the solid 'solo' count on the
-    pale 'holes' count). Mirrors ``build_bestball_contribution_bars`` but
+    number), Holes (total holes contributed to) and Solo (the subset earned
+    alone). Mirrors ``build_bestball_contribution_bars``'s table shape but
     renders a single table (the eclectic has no best/worst pair).
     """
     if teg_data is None or teg_data.empty:
@@ -941,28 +941,6 @@ def build_eclectic_contribution_bars(teg_data: pd.DataFrame) -> str:
     by_pl = {row['Pl']: row for _, row in contrib.iterrows()}
     rows = [(name, by_pl[code]) for code, name in _get_sorted_players(teg_data) if code in by_pl]
 
-    holes_scale = max([1] + [int(r['ecl_holes']) for _, r in rows])
-
-    # Holes bar fills to at most FILL_MAX% of the track, leaving room for the
-    # count label that sits just past the end of the bar.
-    FILL_MAX = 72
-
-    def _pct(value: int) -> int:
-        v = abs(int(value))
-        return 0 if v == 0 else max(6, round(FILL_MAX * v / holes_scale))
-
-    def _holes_bar(holes: int, solo: int, kind: str) -> str:
-        hp, sp = _pct(holes), _pct(solo)
-        label = f'{holes}<small>·{solo}</small>' if holes else '–'
-        zcls = '' if holes else ' bw-bar-zero'
-        return (f'<div class="bw-bar bw-bar--{kind}">'
-                '<div class="bw-bar-track">'
-                f'<div class="bw-bar-fill bw-bar-fill--pale" style="width:{hp}%"></div>'
-                f'<div class="bw-bar-fill bw-bar-fill--solid" style="width:{sp}%"></div>'
-                '</div>'
-                f'<span class="bw-bar-val{zcls}" style="left:calc({hp}% + 6px)">{label}</span>'
-                '</div>')
-
     def _impact(value: int, kind: str) -> str:
         v = int(value)
         if v == 0:
@@ -973,19 +951,23 @@ def build_eclectic_contribution_bars(teg_data: pd.DataFrame) -> str:
     # equal impacts keep the input player order.
     ordered = sorted(rows, key=lambda nr: abs(int(nr[1]['ecl_impact'])), reverse=True)
 
-    out = ['<div class="bw-bars-col">',
+    out = ['<div class="bw-bars-pair"><div class="bw-bars-col">',
            '<table class="bw-bars-table"><colgroup>'
-           '<col class="bw-bars-player"><col class="bw-bars-impact"><col></colgroup><thead>',
+           '<col class="bw-bars-player"><col class="bw-bars-impact"><col class="bw-bars-context">'
+           '<col class="bw-bars-context"></colgroup><thead>',
            '<tr><th class="player-label">Player</th>'
-           '<th class="bw-col-impact">Impact</th><th>Holes</th></tr>',
+           '<th class="bw-col-impact">Impact</th>'
+           '<th class="bw-col-context">Holes</th><th class="bw-col-context">Solo</th></tr>',
            '</thead><tbody>']
     for name, r in ordered:
+        holes, solo, impact = int(r['ecl_holes']), int(r['ecl_solo']), int(r['ecl_impact'])
         out.append('<tr>')
         out.append(f'<td class="player-label">{_player_name_spans(name)}</td>')
-        out.append(f'<td class="bw-col-impact">{_impact(int(r["ecl_impact"]), "best")}</td>')
-        out.append(f'<td>{_holes_bar(int(r["ecl_holes"]), int(r["ecl_solo"]), "best")}</td>')
+        out.append(f'<td class="bw-col-impact">{_impact(impact, "best")}</td>')
+        out.append(f'<td class="bw-col-context">{holes}</td>')
+        out.append(f'<td class="bw-col-context">{solo}</td>')
         out.append('</tr>')
-    out.append('</tbody></table></div>')
+    out.append('</tbody></table></div></div>')
     return ''.join(out)
 
 

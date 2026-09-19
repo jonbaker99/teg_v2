@@ -136,7 +136,8 @@
     {% endfor %}
 </div>
 {% endif %}
-<p id="lr-context-header" hx-swap-oob="true" class="text-muted text-sm mb-3">{{ context_header }}</p>
+<span id="lr-context-header" hx-swap-oob="true" class="page-label">{{ context_header }}</span>
+<h1 id="lr-page-title" hx-swap-oob="true" class="page-title">TEG {{ teg }}, Round {{ round }}</h1>
 {# lr-chart-state now HAS a full-page counterpart (latest_round.html, as a
    sibling of #lr-content, matching #lr-context-header's placement) -- guard
    this OOB copy the same way as everything else in this {% if not

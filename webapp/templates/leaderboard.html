@@ -24,29 +24,35 @@
     </select>
 
     <input type="hidden" id="lb-tab-input" name="tab" value="{{ active_lb_tab }}">
+</div>
 
-    <div class="section-nav" style="margin-bottom: 0;">
-        {# Two main tabs: Leaderboard (net or gross measure, selected via the
-           toggle switch inside partials/leaderboard_table.html) and
-           Scorecards. Clicking Leaderboard while already on it preserves the
-           current measure instead of resetting to net. #}
-        <button class="tab-underline{% if active_lb_tab != 'scorecards' %} tab-underline--active{% endif %}"
-                onclick="document.getElementById('lb-tab-input').value='{{ 'net' if active_lb_tab == 'scorecards' else active_lb_tab }}';
-                         htmx.trigger(document.getElementById('lb-teg-select'), 'change')">
-            Leaderboard
-        </button>
-        <button class="tab-underline{% if active_lb_tab == 'scorecards' %} tab-underline--active{% endif %}"
-                onclick="document.getElementById('lb-tab-input').value='scorecards';
-                         htmx.trigger(document.getElementById('lb-teg-select'), 'change')">
-            Scorecards
-        </button>
-        {# Report is a REAL link, not an HTMX swap — see results.html for the
-           full reasoning. Hidden unless the selected TEG has a newspaper
-           edition (a TEG in progress never has one). #}
-        <a id="lb-report-tab" class="tab-underline"
-           href="/teg-reports?teg={{ selected_teg }}"
-           {% if selected_teg not in report_tegs %}hidden{% endif %}>Report<span class="tab-arrow" aria-hidden="true">&nearr;</span></a>
-    </div>
+{# Report is a REAL link, not an HTMX swap — see results.html for the full
+   reasoning. Hidden unless the selected TEG has a newspaper edition (a TEG
+   in progress never has one). Sits on its own row between the TEG selector
+   and the tab bar rather than looking like a same-page tab. .res-report-row/
+   .res-report-link are shared verbatim with results.html — see that file's
+   comment. #}
+<div class="res-report-row">
+    <a id="lb-report-tab" class="res-report-link"
+       href="/teg-reports?teg={{ selected_teg }}"
+       {% if selected_teg not in report_tegs %}hidden{% endif %}>View tournament report<span class="tab-arrow" aria-hidden="true">&nearr;</span></a>
+</div>
+
+<div class="section-nav">
+    {# Two main tabs: Leaderboard (net or gross measure, selected via the
+       toggle switch inside partials/leaderboard_table.html) and
+       Scorecards. Clicking Leaderboard while already on it preserves the
+       current measure instead of resetting to net. #}
+    <button class="tab-underline{% if active_lb_tab != 'scorecards' %} tab-underline--active{% endif %}"
+            onclick="document.getElementById('lb-tab-input').value='{{ 'net' if active_lb_tab == 'scorecards' else active_lb_tab }}';
+                     htmx.trigger(document.getElementById('lb-teg-select'), 'change')">
+        Leaderboard
+    </button>
+    <button class="tab-underline{% if active_lb_tab == 'scorecards' %} tab-underline--active{% endif %}"
+            onclick="document.getElementById('lb-tab-input').value='scorecards';
+                     htmx.trigger(document.getElementById('lb-teg-select'), 'change')">
+        Scorecards
+    </button>
 </div>
 
 <div id="lb-content" class="section-panel">

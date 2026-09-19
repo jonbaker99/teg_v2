@@ -5,19 +5,8 @@
 {% endblock %}
 
 {% block page_title %}
-<div class="page-title-area">
-    <span class="page-label">Latest TEG</span>
-    <h1 class="page-title">Latest Round in Context</h1>
-</div>
-{% endblock %}
-
-{% block content %}
-{% set lr_full_page = true %}
-<div class="latest-round-page" data-lr-page data-lr-teg="{{ selected_teg }}" data-lr-round="{{ selected_round }}" data-lr-active-tab="{{ active_tab }}" data-lr-metric="{{ active_metric|default('Sc') }}" data-lr-scale="{{ chart_scale|default('adjusted') }}" data-lr-player="{{ chart_player|default('') }}" data-lr-rewind="{{ chart_rewind|default(18) }}" data-lr-total="{{ chart_total|default('round') }}">
-
-<p id="lr-context-header" class="text-muted text-sm mb-3">{{ context_header }}</p>
-
-<div class="section-controls flex flex-wrap items-center gap-4">
+<div class="page-title-area lr-title-area">
+    <div class="section-controls flex flex-wrap items-center gap-4">
         <select id="lr-teg-select" class="theme-select"
             hx-get="/latest-round/tab"
             hx-target="#lr-content"
@@ -26,25 +15,33 @@
         {% for t in teg_numbers %}
         <option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>
         {% endfor %}
-    </select>
+        </select>
 
-    <div id="lr-round-pills" class="pill-group">
-        {% for r in rounds %}
-        <button class="pill{% if r == selected_round %} pill--active{% endif %}"
-                hx-get="/latest-round/tab"
-                hx-target="#lr-content"
-                hx-include="#lr-teg-select, #lr-tab-input"
-                hx-vals='{"round": {{ r }}}'
-                data-lr-history="push" onclick="document.getElementById('lr-round-select').value='{{ r }}'"
-                aria-label="Round {{ r }}">
-            R{{ r }}
-        </button>
-        {% endfor %}
+        <div id="lr-round-pills" class="pill-group">
+            {% for r in rounds %}
+            <button class="pill{% if r == selected_round %} pill--active{% endif %}"
+                    hx-get="/latest-round/tab"
+                    hx-target="#lr-content"
+                    hx-include="#lr-teg-select, #lr-tab-input"
+                    hx-vals='{"round": {{ r }}}'
+                    data-lr-history="push" onclick="document.getElementById('lr-round-select').value='{{ r }}'"
+                    aria-label="Round {{ r }}">
+                R{{ r }}
+            </button>
+            {% endfor %}
+        </div>
+        <input type="hidden" id="lr-round-select" name="round" value="{{ selected_round }}">
+
+        <input type="hidden" id="lr-tab-input" name="tab" value="{{ active_tab }}">
     </div>
-    <input type="hidden" id="lr-round-select" name="round" value="{{ selected_round }}">
-
-    <input type="hidden" id="lr-tab-input" name="tab" value="{{ active_tab }}">
+    <span id="lr-context-header" class="page-label">{{ context_header }}</span>
+    <h1 id="lr-page-title" class="page-title">TEG {{ selected_teg }}, Round {{ selected_round }}</h1>
 </div>
+{% endblock %}
+
+{% block content %}
+{% set lr_full_page = true %}
+<div class="latest-round-page" data-lr-page data-lr-teg="{{ selected_teg }}" data-lr-round="{{ selected_round }}" data-lr-active-tab="{{ active_tab }}" data-lr-metric="{{ active_metric|default('Sc') }}" data-lr-scale="{{ chart_scale|default('adjusted') }}" data-lr-player="{{ chart_player|default('') }}" data-lr-rewind="{{ chart_rewind|default(18) }}" data-lr-total="{{ chart_total|default('round') }}">
 
 {# Report is a REAL link (not an HTMX tab) straight to this round's
    newspaper report — same reasoning as /results' Report tab. It links to a

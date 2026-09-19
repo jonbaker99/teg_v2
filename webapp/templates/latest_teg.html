@@ -5,13 +5,26 @@
 {% endblock %}
 
 {% block page_title %}
-<div class="page-title-area">
-    <span class="page-label">Latest TEG</span>
-    <h1 class="page-title">Latest TEG in Context</h1>
+<div class="page-title-area lt-title-area">
+    <div class="section-controls flex items-center gap-4">
+        <select id="lt-teg-select" class="theme-select"
+                hx-get="/latest-teg/tab"
+                hx-target="#lt-content"
+                hx-include="#lt-tab-input"
+                name="teg">
+            {% for t in teg_numbers %}
+            <option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>
+            {% endfor %}
+        </select>
+        <input type="hidden" id="lt-tab-input" name="tab" value="{{ active_tab }}">
+    </div>
+    <span id="lt-context-header" class="page-label">{{ context_header }}</span>
+    <h1 id="lt-page-title" class="page-title">TEG {{ selected_teg }}</h1>
 </div>
 {% endblock %}
 
 {% block content %}
+{% set lt_full_page = true %}
 {# .latest-teg-page is the phone-layout hook (mobile.css) -- wraps the whole
    page, not just #lt-content, so it survives the HTMX TEG/tab swap that only
    replaces #lt-content's children. Mirrors .bestball-page's simpler wrap
@@ -19,19 +32,15 @@
    chart-focus/rewind state to track, so it needs none of that machinery). #}
 <div class="latest-teg-page">
 
-<p id="lt-context-header" class="text-muted text-sm mb-3">{{ context_header }}</p>
-
-<div class="section-controls flex items-center gap-4">
-    <select id="lt-teg-select" class="theme-select"
-            hx-get="/latest-teg/tab"
-            hx-target="#lt-content"
-            hx-include="#lt-tab-input"
-            name="teg">
-        {% for t in teg_numbers %}
-        <option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>
-        {% endfor %}
-    </select>
-    <input type="hidden" id="lt-tab-input" name="tab" value="{{ active_tab }}">
+{# Report is a REAL link (not an HTMX tab) straight to this TEG's newspaper
+   report — same reasoning as Latest Round's report row (latest_round.html).
+   It links to a different page entirely, so it sits on its own row between
+   the TEG selector and the tab bar rather than looking like a same-page tab.
+   Hidden unless the selected TEG has a newspaper edition. #}
+<div class="lt-report-row">
+    <a id="lt-report-tab" class="lt-report-link"
+       href="/teg-reports?teg={{ selected_teg }}"
+       {% if selected_teg not in report_tegs %}hidden{% endif %}>View tournament report<span class="tab-arrow" aria-hidden="true">&nearr;</span></a>
 </div>
 
 <div class="section-nav">
@@ -42,12 +51,6 @@
         {{ tab_label }}
     </button>
     {% endfor %}
-    {# Report is a REAL link, not an HTMX swap — see results.html for the
-       full reasoning. Hidden unless the selected TEG has a newspaper
-       edition. #}
-    <a id="lt-report-tab" class="tab-underline"
-       href="/teg-reports?teg={{ selected_teg }}"
-       {% if selected_teg not in report_tegs %}hidden{% endif %}>Report<span class="tab-arrow" aria-hidden="true">&nearr;</span></a>
 </div>
 
 <div id="lt-content" class="section-panel">
@@ -69,6 +72,25 @@
     }
     select.addEventListener('change', sync);
     sync();
+})();
+</script>
+{# Scoreboard row expand/collapse (per-round breakdown + score mix) -- same
+   plain client-side toggle as Latest Round's rank-toggle (latest_round.html),
+   duplicated here rather than shared since it's a few lines and this page
+   has none of Latest Round's other chart/history machinery to hang a shared
+   script off of. No server round-trip; native <button> semantics already
+   give Enter/Space activation and a visible focus ring. #}
+<script>
+(function () {
+    document.body.addEventListener('click', function (event) {
+        var toggle = event.target.closest('[data-lr-rank-toggle]');
+        if (!toggle) return;
+        var detail = document.getElementById(toggle.getAttribute('aria-controls'));
+        if (!detail) return;
+        var expanded = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+        detail.hidden = expanded;
+    });
 })();
 </script>
 </div>
