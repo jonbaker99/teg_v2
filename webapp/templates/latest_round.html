@@ -36,23 +36,22 @@
     </div>
     <span id="lr-context-header" class="page-label">{{ context_header }}</span>
     <h1 id="lr-page-title" class="page-title">TEG {{ selected_teg }}, Round {{ selected_round }}</h1>
+    {# Report is a REAL link (not an HTMX tab) straight to this round's
+       newspaper report — same reasoning as /results' Report tab. It links to
+       a different page entirely, so it sits right under the title in the
+       hero area rather than looking like a same-page tab or cluttering the
+       page body. Hidden unless this TEG/round actually has one. #}
+    <div class="lr-report-row">
+        <a id="lr-report-tab" class="lr-report-link"
+           href="/teg-reports?teg={{ selected_teg }}&round={{ selected_round }}"
+           {% if selected_round not in report_rounds_map.get(selected_teg, []) %}hidden{% endif %}>View round report<span class="tab-arrow" aria-hidden="true">&nearr;</span></a>
+    </div>
 </div>
 {% endblock %}
 
 {% block content %}
 {% set lr_full_page = true %}
 <div class="latest-round-page" data-lr-page data-lr-teg="{{ selected_teg }}" data-lr-round="{{ selected_round }}" data-lr-active-tab="{{ active_tab }}" data-lr-metric="{{ active_metric|default('Sc') }}" data-lr-scale="{{ chart_scale|default('adjusted') }}" data-lr-player="{{ chart_player|default('') }}" data-lr-rewind="{{ chart_rewind|default(18) }}" data-lr-total="{{ chart_total|default('round') }}">
-
-{# Report is a REAL link (not an HTMX tab) straight to this round's
-   newspaper report — same reasoning as /results' Report tab. It links to a
-   different page entirely, so it sits on its own row between the round
-   selector and the tab bar rather than looking like a same-page tab.
-   Hidden unless this TEG/round actually has one. #}
-<div class="lr-report-row">
-    <a id="lr-report-tab" class="lr-report-link"
-       href="/teg-reports?teg={{ selected_teg }}&round={{ selected_round }}"
-       {% if selected_round not in report_rounds_map.get(selected_teg, []) %}hidden{% endif %}>View round report<span class="tab-arrow" aria-hidden="true">&nearr;</span></a>
-</div>
 
 <div class="section-nav">
     {% for tab_id, tab_label in tabs %}

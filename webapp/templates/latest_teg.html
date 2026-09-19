@@ -20,6 +20,16 @@
     </div>
     <span id="lt-context-header" class="page-label">{{ context_header }}</span>
     <h1 id="lt-page-title" class="page-title">TEG {{ selected_teg }}</h1>
+    {# Report is a REAL link (not an HTMX tab) straight to this TEG's newspaper
+       report — same reasoning as Latest Round's report row (latest_round.html).
+       It links to a different page entirely, so it sits right under the title
+       in the hero area rather than looking like a same-page tab or cluttering
+       the page body. Hidden unless the selected TEG has a newspaper edition. #}
+    <div class="lt-report-row">
+        <a id="lt-report-tab" class="lt-report-link"
+           href="/teg-reports?teg={{ selected_teg }}"
+           {% if selected_teg not in report_tegs %}hidden{% endif %}>View tournament report<span class="tab-arrow" aria-hidden="true">&nearr;</span></a>
+    </div>
 </div>
 {% endblock %}
 
@@ -31,17 +41,6 @@
    (bestball.html) rather than Latest Round's data-lr-page (this page has no
    chart-focus/rewind state to track, so it needs none of that machinery). #}
 <div class="latest-teg-page">
-
-{# Report is a REAL link (not an HTMX tab) straight to this TEG's newspaper
-   report — same reasoning as Latest Round's report row (latest_round.html).
-   It links to a different page entirely, so it sits on its own row between
-   the TEG selector and the tab bar rather than looking like a same-page tab.
-   Hidden unless the selected TEG has a newspaper edition. #}
-<div class="lt-report-row">
-    <a id="lt-report-tab" class="lt-report-link"
-       href="/teg-reports?teg={{ selected_teg }}"
-       {% if selected_teg not in report_tegs %}hidden{% endif %}>View tournament report<span class="tab-arrow" aria-hidden="true">&nearr;</span></a>
-</div>
 
 <div class="section-nav">
     {% for tab_id, tab_label in tabs %}

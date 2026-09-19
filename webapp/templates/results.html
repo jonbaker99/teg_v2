@@ -1,50 +1,50 @@
 {% extends "base.html" %}
 
 {% block page_title %}
-<div class="page-title-area">
-    <span class="page-label">History</span>
-    <h1 class="page-title">Full Results</h1>
+<div class="page-title-area res-title-area">
+    <div class="section-controls flex items-center gap-4">
+        <select id="results-teg-select" class="theme-select"
+                hx-get="/results/table"
+                hx-target="#results-content"
+                hx-include="#results-tab-input, #results-chart-variant"
+                name="teg">
+            {% for t in teg_numbers %}
+            <option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>
+            {% endfor %}
+        </select>
+
+        <input type="hidden" id="results-tab-input" name="tab" value="{{ active_tab }}">
+    </div>
+    <span id="results-context-header" class="page-label">{{ context_header }}</span>
+    <h1 id="results-page-title" class="page-title">TEG {{ selected_teg }} {{ "Results" if teg_complete else "Leaderboard" }}</h1>
+    {# Report is a REAL link, not an HTMX swap: /teg-reports' newspaper
+       typography/palette is deliberately unlike the rest of the site, so a
+       full page transition reads better than an in-place DOM swap. Shown
+       only for TEGs that have an edition — /teg-reports silently falls
+       back to its newest TEG for an unknown one (routes/reports.py), and a
+       link that quietly shows a different TEG's report is worse than no
+       link. No &round=: /results has no round-in-context. It sits right
+       under the title in the hero area rather than looking like a same-page
+       tab or cluttering the page body -- same reasoning as latest_teg.html's
+       report row. .res-report-row/.res-report-link are shared verbatim with
+       leaderboard.html, which already shares .standings-page with this page
+       via the same _results_context() data builder. #}
+    <div class="res-report-row">
+        <a id="results-report-tab" class="res-report-link"
+           href="/teg-reports?teg={{ selected_teg }}"
+           {% if selected_teg not in report_tegs %}hidden{% endif %}>View tournament report<span class="tab-arrow" aria-hidden="true">&nearr;</span></a>
+    </div>
 </div>
 {% endblock %}
 
 {% block content %}
+{% set results_full_page = true %}
 {# .standings-page is the phone-layout hook (mobile.css) -- wraps the whole
    page, not just #results-content, so it survives the HTMX TEG/tab swap
    that only replaces #results-content's children. Shared with
    leaderboard.html since both render the exact same table_html/lb_cards
    markup from the same context builder (_results_context). #}
 <div class="standings-page">
-<div class="section-controls flex items-center gap-4">
-    <select id="results-teg-select" class="theme-select"
-            hx-get="/results/table"
-            hx-target="#results-content"
-            hx-include="#results-tab-input, #results-chart-variant"
-            name="teg">
-        {% for t in teg_numbers %}
-        <option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>
-        {% endfor %}
-    </select>
-
-    <input type="hidden" id="results-tab-input" name="tab" value="{{ active_tab }}">
-</div>
-
-{# Report is a REAL link, not an HTMX swap: /teg-reports' newspaper
-   typography/palette is deliberately unlike the rest of the site, so a
-   full page transition reads better than an in-place DOM swap. Shown
-   only for TEGs that have an edition — /teg-reports silently falls
-   back to its newest TEG for an unknown one (routes/reports.py), and a
-   link that quietly shows a different TEG's report is worse than no
-   link. No &round=: /results has no round-in-context. It sits on its own
-   row between the TEG selector and the tab bar rather than looking like
-   a same-page tab -- same reasoning as latest_teg.html's report row.
-   .res-report-row/.res-report-link are shared verbatim with
-   leaderboard.html, which already shares .standings-page with this page
-   via the same _results_context() data builder. #}
-<div class="res-report-row">
-    <a id="results-report-tab" class="res-report-link"
-       href="/teg-reports?teg={{ selected_teg }}"
-       {% if selected_teg not in report_tegs %}hidden{% endif %}>View tournament report<span class="tab-arrow" aria-hidden="true">&nearr;</span></a>
-</div>
 
 <div class="section-nav">
     {# Two main tabs: Leaderboard (net or gross measure, selected via the

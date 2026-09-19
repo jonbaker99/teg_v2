@@ -2,7 +2,26 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-19 (Dynamic hero title/label on `/latest-round` and `/latest-teg`)
+**Last updated:** 2026-09-19 (Report link moved under the title in the hero on all four pages)
+
+## 2026-09-19 — Report link relocated under the page title
+
+On `/latest-round`, `/latest-teg`, `/leaderboard` and `/results`, the "View report" link now sits
+right under the page title, inside the hero/background area, instead of between the selector and
+the tab bar in the page body. Keeps the page body cleaner. Purely a markup move (same ids, same
+visibility logic, same JS sync) — no behavioural change.
+
+## 2026-09-19 — Dynamic hero title/label on `/leaderboard` and `/results`
+
+Same hero restructuring as `/latest-teg`/`/latest-round` (below), applied to `/leaderboard` and
+`/results`: TEG selector moved into the hero title area with a white background, small-caps label
+now shows live location/year, and the title itself is now dynamic — "TEG {n} Results" normally, or
+"TEG {n} Leaderboard" if that TEG is still in progress (same rule on both pages, since it's driven
+by TEG state, not page identity). Updates live via HTMX out-of-band swap on TEG change, no reload.
+The Report link on `/leaderboard` is already correctly hidden for an in-progress TEG — its
+visibility check (`report_tegs`, sourced only from completed TEGs) already covers this, no code
+change needed. Caught and fixed the same class of duplicate-header-on-full-page-load bug found on
+`/latest-teg` earlier, using the same `..._full_page` guard pattern.
 
 ## 2026-09-19 — Dynamic hero title/label, selectors moved into title area
 

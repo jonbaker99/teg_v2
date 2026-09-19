@@ -667,6 +667,20 @@ a.tab-underline .tab-arrow {
     color: var(--nav-text);
 }
 
+/* /leaderboard and /results hero TEG selector: explicit white background so
+   it stands out against the page-title area, regardless of theme/mode. */
+.lb-title-area .theme-select,
+.res-title-area .theme-select {
+    background-color: #ffffff;
+    color: #1a1a1a;
+    border-color: #d0d0d0;
+}
+.lb-title-area .theme-select option,
+.res-title-area .theme-select option {
+    background-color: #ffffff;
+    color: #1a1a1a;
+}
+
 /* ── Error box (always red, all themes) ── */
 .error-box {
     background-color: #fef2f2;

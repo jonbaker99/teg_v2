@@ -2,41 +2,41 @@
 {% block title_suffix %} — Leaderboard{% endblock %}
 
 {% block page_title %}
-<div class="page-title-area">
-    <span class="page-label">Latest TEG</span>
-    <h1 class="page-title">Leaderboard</h1>
+<div class="page-title-area lb-title-area">
+    <div class="section-controls flex items-center gap-4">
+        <select id="lb-teg-select" class="theme-select"
+                hx-get="/leaderboard/table"
+                hx-target="#lb-content"
+                hx-include="#lb-tab-input, #lb-chart-variant"
+                name="teg">
+            {% for t in teg_numbers %}
+            <option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>
+            {% endfor %}
+        </select>
+
+        <input type="hidden" id="lb-tab-input" name="tab" value="{{ active_lb_tab }}">
+    </div>
+    <span id="lb-context-header" class="page-label">{{ context_header }}</span>
+    <h1 id="lb-page-title" class="page-title">TEG {{ selected_teg }} {{ "Results" if teg_complete else "Leaderboard" }}</h1>
+    {# Report is a REAL link, not an HTMX swap — see results.html for the full
+       reasoning. Hidden unless the selected TEG has a newspaper edition (a
+       TEG in progress never has one). Sits right under the title in the hero
+       area rather than looking like a same-page tab or cluttering the page
+       body. .res-report-row/.res-report-link are shared verbatim with
+       results.html — see that file's comment. #}
+    <div class="res-report-row">
+        <a id="lb-report-tab" class="res-report-link"
+           href="/teg-reports?teg={{ selected_teg }}"
+           {% if selected_teg not in report_tegs %}hidden{% endif %}>View tournament report<span class="tab-arrow" aria-hidden="true">&nearr;</span></a>
+    </div>
 </div>
 {% endblock %}
 
 {% block content %}
+{% set lb_full_page = true %}
 {# .standings-page is the shared phone-layout hook (mobile.css) -- same as
    results.html, see that file's comment for the full reasoning. #}
 <div class="standings-page">
-<div class="section-controls flex items-center gap-4">
-    <select id="lb-teg-select" class="theme-select"
-            hx-get="/leaderboard/table"
-            hx-target="#lb-content"
-            hx-include="#lb-tab-input, #lb-chart-variant"
-            name="teg">
-        {% for t in teg_numbers %}
-        <option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>
-        {% endfor %}
-    </select>
-
-    <input type="hidden" id="lb-tab-input" name="tab" value="{{ active_lb_tab }}">
-</div>
-
-{# Report is a REAL link, not an HTMX swap — see results.html for the full
-   reasoning. Hidden unless the selected TEG has a newspaper edition (a TEG
-   in progress never has one). Sits on its own row between the TEG selector
-   and the tab bar rather than looking like a same-page tab. .res-report-row/
-   .res-report-link are shared verbatim with results.html — see that file's
-   comment. #}
-<div class="res-report-row">
-    <a id="lb-report-tab" class="res-report-link"
-       href="/teg-reports?teg={{ selected_teg }}"
-       {% if selected_teg not in report_tegs %}hidden{% endif %}>View tournament report<span class="tab-arrow" aria-hidden="true">&nearr;</span></a>
-</div>
 
 <div class="section-nav">
     {# Two main tabs: Leaderboard (net or gross measure, selected via the

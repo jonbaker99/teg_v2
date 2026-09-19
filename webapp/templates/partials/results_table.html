@@ -1,3 +1,7 @@
+{% if not results_full_page %}
+<span id="results-context-header" hx-swap-oob="true" class="page-label">{{ context_header }}</span>
+<h1 id="results-page-title" hx-swap-oob="true" class="page-title">TEG {{ selected_teg }} {{ "Results" if teg_complete else "Leaderboard" }}</h1>
+{% endif %}
 {% if error %}
 <p class="text-muted">Error: {{ error }}</p>
 {% elif is_leaderboard %}

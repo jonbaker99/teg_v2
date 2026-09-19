@@ -643,6 +643,11 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
     desktop table and the phone `lb_cards`. Pass ``link_players=True`` to
     restore click-through once the profile pages are ready; /leaderboard and
     /results both reuse this context builder via the default."""
+    # Local import to avoid a module-load cycle: webapp.routes.latest already
+    # imports _wrap_player_name from this module at import time.
+    from webapp.routes.latest import _teg_context_header
+    complete = _teg_is_complete(teg_num)
+    context_header = _teg_context_header(teg_num)
     try:
         if tab == "scorecards":
             rounds = get_rounds_for_teg(teg_num)
@@ -662,7 +667,8 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
                 except Exception:
                     continue
             table_html = "".join(parts) if len(parts) > 1 else "<p class='text-muted'>No rounds found.</p>"
-            return {"result_title": "Scorecards", "table_html": table_html, "raw_table": True}
+            return {"result_title": "Scorecards", "table_html": table_html, "raw_table": True,
+                    "teg_complete": complete, "context_header": context_header}
 
         # (No `report` tab here: /results' Report tab is a link to /teg-reports,
         # which renders the newspaper edition. The old markdown-blob render of
@@ -675,7 +681,6 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
             return {"error": f"No data found for TEG {teg_num}"}
 
         teg_name = f"TEG {teg_num}"
-        complete = _teg_is_complete(teg_num)
         leader_label = "Champion" if complete else "Leader"
         status_word = "Final" if complete else "Latest"
         net_measure = get_net_competition_measure(teg_num)
@@ -741,6 +746,8 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
             "chart_types": RESULTS_CHART_TYPES,
             "active_chart_variant": chart_variant,
             "figure_json": figure_json,
+            "teg_complete": complete,
+            "context_header": context_header,
             **chart_meta,
         }
     except Exception as e:
