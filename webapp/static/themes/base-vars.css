@@ -1320,6 +1320,20 @@ body.layout-wide .content-wrapper {
 .data-card + .toggle-group {
     margin-top: 1.5rem;
 }
+/* C5: a measure control (the Leaderboard/Results Net-Gross .segmented) that
+   opens a section-panel directly under the tab bar is a second control row,
+   not new data -- read it as one compact control zone with the tabs above,
+   same convention as the .section-nav + .section-controls collapse above. */
+.section-nav + .section-panel > .toggle-group:first-child {
+    margin-top: -1rem;
+}
+/* ...and the section title right after that measure control shouldn't stack
+   its own bottom margin (1rem) with the general * + .section-title gap
+   (2.5rem) below -- the toggle row's own margin is enough before the table
+   begins. */
+.toggle-group + .section-title {
+    margin-top: 0;
+}
 
 /* ── Segmented control (C3) — .segmented on .toggle-group ──
    Control pattern 2 of 3 (see C1-handoff.md §6). Activates .toggle-group,
@@ -1787,24 +1801,4 @@ body.layout-wide .content-wrapper {
 }
 .scale-switch[aria-checked="true"] .switch-thumb {
     transform: translateX(16px);
-}
-/* Leaderboard/Results Net-Gross measure toggle (partials/leaderboard_table.html,
-   partials/results_table.html) -- same .scale-switch control, standalone
-   rather than inside .lr-chart-tools, so it needs its own spacing. Unlike the
-   Latest Round scale toggle, neither side (net/gross) is a "better" or "on"
-   state, so the track/thumb colouring below is deliberately identical in
-   both aria-checked states -- see design_principles.md > Components for why
-   the base .scale-switch's own unchecked colouring (var(--btn-inactive-bg),
-   #ffffff on Clean) is a trap: it's indistinguishable from the white
-   .bg-card behind it. */
-.measure-toggle {
-    margin: 0.25rem 0 1rem;
-}
-.measure-toggle .switch-track,
-.measure-toggle[aria-checked="true"] .switch-track {
-    background: var(--table-toprank-bg);
-    border-color: var(--select-border);
-}
-.measure-toggle .switch-thumb {
-    background: var(--accent);
 }

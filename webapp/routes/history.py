@@ -734,7 +734,10 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
         chart_readout = _build_race_chart_readout(tab, chart_variant, net_measure, teg_name)
         return {
             "is_leaderboard": True,
-            "section_title": f"{competition} {status_word} Leaderboard",
+            # C5: drop the trailing "Leaderboard" -- the page h1 already says
+            # "Leaderboard"/"Results"; repeating it here is a redundant label
+            # when the tournament is in progress ("... Latest Leaderboard").
+            "section_title": f"{competition} {status_word}",
             "callout": callout,
             "table_html": table_html,
             "lb_cards": lb_cards,
