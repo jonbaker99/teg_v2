@@ -1,10 +1,14 @@
 /* Clean Layered — 3-layer depth: background → page panel → content cards */
-@import url('clean-page.css?v=23');
+@import url('clean-page.css?v=24');
 
 /* Layer 1: outer background — warm stone */
 :root {
     --bg-page: #e0ddd8;
     --footer-bg: #e0ddd8;
+    /* Layered keeps depth at the .data-card level, not a second card level
+       above it -- so the restored content card (C1b §1, clean-page.css)
+       stays transparent here, matching .main-content below (C3). */
+    --bg-content: transparent;
 }
 body.page-bg {
     background-color: #e0ddd8 !important; /* Fix B: beats clean-page.css !important */
@@ -84,20 +88,20 @@ body.ts-e2 .page-title-area {
 
 /* main-content becomes a transparent layout container, not a card */
 .page-panel .main-content {
-    background: transparent;
+    background: var(--bg-content);
     box-shadow: none;
     border-radius: 0;
     margin: 0 1.25rem 1.25rem 1.25rem;
     padding: 1rem 0 0 0; /* tight top gap after title bar; no side padding */
 }
 
-/* Layer 3: data cards — white, compact, sitting on the page panel */
+/* Layer 3: data cards — white, compact, sitting on the page panel.
+   box-shadow now reads --shadow-card (C3) -- same values, tokenised since
+   this is the one surface that token is for (C1-handoff.md §4). */
 .data-card {
     background: #ffffff;
     border-radius: 0.25rem;
-    box-shadow:
-        0 1px 2px rgba(90,70,50,0.08),
-        0 4px 14px rgba(90,70,50,0.13);
+    box-shadow: var(--shadow-card);
     /* padding: 0.5rem 1.25rem; */
     padding: 0px 12px;
     /* margin-top: 0.75rem;

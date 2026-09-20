@@ -24,8 +24,11 @@
     box-shadow: none;
     border-radius: 0;
 }
-.pp-tab { border: 0; border-bottom: 2px solid transparent; background: transparent; padding: 0.65rem 0; color: var(--text-secondary); font: inherit; font-size: 0.8rem; cursor: pointer; min-height: 44px; }
-.pp-tab--active { border-bottom-color: var(--text-primary); color: var(--text-primary); font-weight: 600; }
+/* .pp-tab/.pp-tab--active retired (C3): the profile tab buttons now carry
+   .tab-underline/.tab-underline--active (base-vars.css) -- a second,
+   divergent tab implementation (font size, case, indicator colour) folded
+   into the site's one canonical tab pattern. See C1-handoff.md §6,
+   C3-handoff.md. */
 .pp-loading { font-size: 0.75rem; color: var(--text-secondary); }
 .pp-overview { display: grid; gap: 1.5rem; }
 .pp-overview-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 1.25rem; }

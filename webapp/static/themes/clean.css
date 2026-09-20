@@ -85,6 +85,78 @@
     --badge-muted-text: #999999;
 
     --divider-color: #e8e8e8;
+
+    /* ── Clean Editorial Precision — foundation tokens (C3, 2026-09-20) ──
+       Per webapp/design_reviews/ui_workstream/C1-handoff.md + C1b-handoff.md.
+       Declared here, not base-vars.css (which declares zero custom
+       properties -- C1 §1's own finding). These are a NEW parallel token
+       set for the components this chat migrates (headings, tabs, segmented
+       controls, the restored content card); --text-primary/--text-muted/
+       --accent/--bg-card above remain live for everything not yet migrated
+       -- this is not a site-wide rename. Dark counterparts: dark.css. */
+
+    /* Type scale — px, not rem, so a future root-size change can't rescale
+       tables. --fs-500 is reserved, unused: C1 found no heading needs a
+       third level (see the merged .section-title/.card-header/.chart-title
+       rule below). */
+    --fs-100: 11px;
+    --fs-200: 12px;
+    --fs-300: 14px;
+    --fs-400: 16px;
+    --fs-500: 20px;
+    --fs-600: 28px;
+    --fs-700: 36px;
+
+    /* Spacing ramp — 4px base */
+    --sp-1: 4px;
+    --sp-2: 8px;
+    --sp-3: 12px;
+    --sp-4: 16px;
+    --sp-5: 24px;
+    --sp-6: 32px;
+    --sp-7: 48px;
+
+    /* Radius — collapses 13 legacy literal values to three */
+    --r-0: 0;
+    --r-1: 3px;
+    --r-2: 6px;
+
+    /* Rules */
+    --rule-color: #e0e0e0; /* same value as --table-cell-border; a token
+        name new components read instead of reaching for the table-specific
+        one */
+    --rule-hair: 1px solid var(--rule-color);
+    --rule-strong: 2px solid var(--ink);
+    --rule-inset: inset 3px 0 0;
+
+    /* Shadow — one token, Clean Layered's .data-card only; every other
+       surface uses a hairline instead of a shadow */
+    --shadow-card: 0 1px 2px rgba(90,70,50,0.08), 0 4px 14px rgba(90,70,50,0.13);
+
+    /* Semantic colour roles */
+    --ink: #1a1a1a;
+    --ink-2: #555555;
+    --ink-muted: #6f6f6f; /* corrected from the spec's #767676: that value
+        fails 4.5:1 on the Clean Page panel (#f5f3f0) at 4.10:1; #6f6f6f
+        passes at 4.54:1 -- verified during C1's mockup construction */
+    --green: forestgreen; /* same colour as --accent; a semantic name for
+        "active selection / live status / positive state" -- see the named
+        heading exception below */
+    --focus: var(--ink); /* C1b F3: not a new hue. The case that matters is
+        focus landing on an already-selected, already-green segment --
+        --ink stays visible there where a green ring would just read as
+        "more selected." */
+    --success: var(--green);
+    --warning: #8a6d1f;
+    --failure: #a3302a;
+    --hover-bg: var(--table-hover-bg);
+    --leader-tint: #E4EFE4; /* C1b L2 (owner-selected) — replaces --sand,
+        which the owner rejected as a new hue */
+    --leader-tint-hover: #C9E0C9; /* fixes the flaw L2 first shipped with:
+        hovering the leader row must deepen, not hold flat or lighten */
+    --bg-content: #ffffff; /* restored white content card, distinct from
+        --bg-panel -- C1b §1; clean-page.css/clean-layered.css override this
+        per layout, same as --bg-page today */
 }
 
 /* Light nav: no shadow, no border — active link underline is enough */
