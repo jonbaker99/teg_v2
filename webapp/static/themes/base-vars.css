@@ -1802,3 +1802,26 @@ body.layout-wide .content-wrapper {
 .scale-switch[aria-checked="true"] .switch-thumb {
     transform: translateX(16px);
 }
+/* C6a fix: restored after C5 removed this believing it was dead. It has one
+   remaining call site -- /latest-round's Round/TEG-total toggle
+   (.lr-total-toggle, partials/latest_round_tab.html) -- which still carries
+   this class and, per its own template comment, needs it for the same
+   reason the Leaderboard/Results Net-Gross toggle did before its C3
+   .segmented migration: neither Round nor TEG-total is a "better"/"on"
+   state, so the base .scale-switch accent-on-checked look is the wrong
+   semantic here. Without this rule the control silently regressed to
+   white-track/white-thumb-on-white-card when unchecked -- exactly the bug
+   design_principles.md's "Toggle switches: check the 'off' state" section
+   already documents as having "bitten the live site before". See
+   C6-review.md (B1) and C6a-handoff.md. */
+.measure-toggle {
+    margin: 0.25rem 0 1rem;
+}
+.measure-toggle .switch-track,
+.measure-toggle[aria-checked="true"] .switch-track {
+    background: var(--table-toprank-bg);
+    border-color: var(--select-border);
+}
+.measure-toggle .switch-thumb {
+    background: var(--accent);
+}
