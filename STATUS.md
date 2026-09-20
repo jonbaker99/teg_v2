@@ -2,7 +2,32 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-20 (Consistent UI C4 responsive/table contract pass)
+**Last updated:** 2026-09-20 (Consistent UI stage complete: C5, C6 review, C6a fix — live on main)
+
+## 2026-09-20 — UI implementation roadmap Consistent UI stage complete: C5 rhythm pass, C6 review, C6a fix
+
+Closes out Consistent UI (C1–C6). All now merged to `main` and deployed.
+
+- **C5** (leaderboard/results rhythm/controls) — compacted the tab-row-to-table gap on
+  `/leaderboard`/`/results` (two targeted margin fixes, `base-vars.css`), migrated `/results`'
+  Net/Gross toggle from `.scale-switch` to `.segmented` to match `/leaderboard` (C3), and dropped
+  a redundant "Leaderboard" word from the section title when a TEG is in progress. Full detail:
+  `webapp/design_reviews/ui_workstream/C5-handoff.md`.
+- **C6** (independent review gate, read-only) — verified the combined C1–C5 diff live across 380
+  page loads (all in-scope public routes × 5 widths × light/dark × both Clean layouts). Found one
+  confirmed blocker: C5's removal of `.measure-toggle` CSS (believed dead after the Leaderboard
+  migration) also silently broke `/latest-round`'s Round/TEG-total toggle, which still needs it
+  and regressed to an invisible white-on-white unchecked state. Also corrected two automated
+  Playwright-sweep misreads before they entered the record (`/contents`'s headings were reported
+  as matching C3's merged rule but are actually a separate, never-migrated style; a toggle was
+  misidentified as Stableford/Gross when it's Round/TEG-total). Full findings, corrections and
+  verdict: `webapp/design_reviews/ui_workstream/C6-review.md`.
+- **C6a** (blocker fix) — restored the deleted `.measure-toggle` rule, scoped by comment to its
+  one remaining call site. Verified before/after computed styles and that the Leaderboard's
+  `.segmented` control is unaffected. `webapp/design_reviews/ui_workstream/C6a-handoff.md`.
+
+**Next:** Improve stage, starting with **I1** (unify the public standings renderer) — see
+`webapp/design_reviews/ui-implementation-roadmap.md`.
 
 ## 2026-09-20 — UI implementation roadmap Consistent UI stage: C4 responsive/table contract pass
 
