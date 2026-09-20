@@ -68,6 +68,26 @@ html[data-mode="dark"] {
   --badge-muted-text: #86857e;
 
   --divider-color: #2e2e29;
+
+  /* ── Clean Editorial Precision — foundation tokens, dark counterparts (C3) ──
+     Mirrors clean.css's :root block; see that file for the full rationale.
+     Type scale, spacing and radius are mode-independent (px), so only the
+     colour-dependent tokens are re-pointed here. */
+  --rule-color: #2e2e29; /* same value as --table-cell-border dark */
+  --ink: #ececea;
+  --ink-2: #b6b4aa;
+  --ink-muted: #9c9a8f; /* verified 5.98–6.47:1 on the dark surfaces this
+      workstream's components use */
+  --green: #6cc77f;
+  --focus: var(--ink);
+  --warning: #c9a227;
+  --failure: #e06a63;
+  --hover-bg: var(--table-hover-bg);
+  --leader-tint: #1f3320;
+  --leader-tint-hover: #2c4a2d;
+  --bg-content: #16150f; /* flat -- matches production's existing
+      .main-content/.page-panel dark treatment (this file, below); dark mode
+      needed no C1b "restore the white card" fix, only light did */
 }
 
 /* Both clean-page.css and clean-layered.css hard-code body.page-bg with
@@ -75,7 +95,7 @@ html[data-mode="dark"] {
    --bg-page and shows through as a light band wherever a page's content
    sits on transparent panels (e.g. the Contents grid's card gaps). */
 html[data-mode="dark"] body.page-bg {
-  background-color: #16150f !important;
+  background-color: var(--bg-page) !important;
 }
 
 /* Clean Layered theme hard-codes its three surfaces (stone / taupe / white) on
@@ -85,7 +105,7 @@ html[data-mode="dark"] body.page-bg {
    them to the same near-black is a no-op. */
 html[data-mode="dark"] .page-panel,
 html[data-mode="dark"] .main-content {
-  background: #16150f;
+  background: var(--bg-page);
 }
 html[data-mode="dark"] .data-card {
   background: #1d1d1a;
@@ -102,15 +122,15 @@ html[data-mode="dark"] .data-card {
    value above instead of introducing a new surface colour. */
 html[data-mode="dark"] body.ts-e2 .page-title-outer,
 html[data-mode="dark"] body.ts-e2 .page-title-area {
-  background: #16150f;
+  background: var(--bg-page);
 }
 
 /* (.nav-link.active no longer needs an override here (2026-09-13) — clean.css
    now points it at var(--accent) instead of a literal #1a1a1a, so it already
    resolves to this file's brightened accent under html[data-mode="dark"].)
-   .section-title/.card-header (2026-09 heading-hierarchy decision) use
-   var(--accent) directly, so they need no dark-mode override here either —
-   verified live via screenshot. */
+   .section-title/.card-header/.chart-title (heading-hierarchy decision, C3)
+   use var(--green) directly, which is re-pointed above, so they need no
+   dark-mode override here either — verified live via screenshot. */
 html[data-mode="dark"] .nav {
   box-shadow: none;
   border-bottom: 1px solid #2a2a24;

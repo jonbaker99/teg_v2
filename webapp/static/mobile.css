@@ -857,16 +857,15 @@
      (see the table.leaderboard comment above). */
   .latest-round-page #lr-content table.leaderboard td.lr-toggle-td,
   .latest-teg-page #lt-content table.leaderboard td.lr-toggle-td { padding-inline: 0; }
+  /* "+"/"−" ::after glyph content lives in base-vars.css now, declared once
+     unscoped (C3 -- fixes the duplication F6a routed here; see that file's
+     comment above this selector). Only sizing stays phone-scoped here. */
   .latest-round-page #lr-content .rank-toggle,
   .latest-teg-page #lt-content .rank-toggle {
     width: 100%; min-height: 44px; margin: -12px 0; padding: 12px 0;
     border: 0; background: transparent; color: var(--accent, #17683c); font: inherit;
     font-size: 18px; line-height: 1; text-align: center; cursor: pointer;
   }
-  .latest-round-page #lr-content .rank-toggle::after,
-  .latest-teg-page #lt-content .rank-toggle::after { content: "+"; }
-  .latest-round-page #lr-content .rank-toggle[aria-expanded="true"]::after,
-  .latest-teg-page #lt-content .rank-toggle[aria-expanded="true"]::after { content: "\2013"; }
   .latest-round-page #lr-content .rank-detail-row td,
   .latest-teg-page #lt-content .rank-detail-row td { padding: 0 !important; background: var(--btn-inactive-bg, #f5f4f0); }
   .latest-round-page #lr-content .rank-detail-row .detail-grid,

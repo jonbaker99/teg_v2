@@ -7,8 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-    <link rel="stylesheet" href="/static/themes/base-vars.css?v=32">
-    <link rel="stylesheet" href="/static/themes/{{ request.state.theme }}.css?v=24">
+    <link rel="stylesheet" href="/static/themes/base-vars.css?v=33">
+    <link rel="stylesheet" href="/static/themes/{{ request.state.theme }}.css?v=25">
     {% if request.state.font_pairing_override %}
     <!-- Dev-only font-pairing override (/design/typography, font_pairing cookie) --
          overrides the theme CSS's --font-sans/--font-table/--font-serif above.
@@ -26,9 +26,9 @@
          wherever they appear (TEG Reports, Results/Latest report tabs). -->
     <link rel="stylesheet" href="/static/teg_reports.css?v=23">
     <!-- Dark mode — inert until <html data-mode="dark">; default is light. -->
-    <link rel="stylesheet" href="/static/themes/dark.css?v=2">
+    <link rel="stylesheet" href="/static/themes/dark.css?v=3">
     <!-- Mobile app shell — all rules gated to ≤640px; inert on desktop/iPad. -->
-    <link rel="stylesheet" href="/static/mobile.css?v=33">
+    <link rel="stylesheet" href="/static/mobile.css?v=34">
     <!-- Structural hierarchy debug overlay (dev tool; inert unless body.debug-structure) -->
     <link rel="stylesheet" href="/static/themes/debug-structure.css?v=3">
     <!-- Material Symbols — nav/contents icons (names defined once in webapp/nav.py) -->

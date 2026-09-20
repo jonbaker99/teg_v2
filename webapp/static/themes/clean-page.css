@@ -1,5 +1,5 @@
 /* Clean Page — Clean theme + warm grey background with white content card */
-@import url('clean.css?v=23');
+@import url('clean.css?v=24');
 
 :root {
     --bg-page: #f5f3f0;
@@ -16,9 +16,17 @@ body.page-bg {
     border-bottom: 1px solid #e0e0e0;
 }
 
-/* Content area as a white card floating on the grey background */
+/* Content area as a white card floating on the grey background.
+   background now reads --bg-content (C3, C1b §1) -- same #ffffff value, a
+   token so dark mode / a future layout can re-point it instead of
+   overriding this literal. Radius, shadow and padding stay their existing
+   literal values (4px / 40px), not migrated to --r-1 (3px) / --sp-6 (32px)
+   -- neither token matches the current value exactly, and C3's brief is to
+   preserve existing rendering, not introduce an unflagged pixel shift here.
+   The --sp-6-vs-40px question C1b left open is about the padding above;
+   this chat's decision is to keep 40px unchanged -- see C3-handoff.md. */
 .main-content {
-    background: #ffffff;
+    background: var(--bg-content);
     border-radius: 0.25rem;
     box-shadow: 0 1px 4px rgba(0,0,0,0.08);
     margin-top: 1.5rem;

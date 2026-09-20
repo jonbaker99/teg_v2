@@ -2,8 +2,8 @@
 {% block title_suffix %} — {{ player_name }}{% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="/static/player-profile.css?v=3">
-<script src="/static/player-profile.js?v=3" defer></script>
+<link rel="stylesheet" href="/static/player-profile.css?v=4">
+<script src="/static/player-profile.js?v=4" defer></script>
 {% endblock %}
 
 {% block page_title %}
@@ -28,7 +28,7 @@
 </div>
 <nav class="section-nav pp-tabs" aria-label="Profile sections">
     {% for tab_id, tab_label in tabs %}
-    <button type="button" class="pp-tab{% if tab_id == active_tab %} pp-tab--active{% endif %}"
+    <button type="button" class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
             aria-pressed="{{ 'true' if tab_id == active_tab else 'false' }}"
             aria-controls="tab-content" data-profile-tab="{{ tab_id }}"
             hx-get="/player/{{ player_code }}/tab/{{ tab_id }}"

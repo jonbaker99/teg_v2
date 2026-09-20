@@ -186,7 +186,31 @@ to sticky-scroll or card reflow instead.
 
 - All inputs (dropdowns, buttons, tabs) follow the same styling language
 - Tab underline style only — active tab gets a green underline, no pill background
-- Focus rings green (forestgreen accent colour)
+- Focus rings green (forestgreen accent colour) sitewide by default — **except**
+  the three foundation control patterns below (`.tab-underline`, `.segmented`
+  `.seg-option`, `.action`), which use `--focus` (= `--ink`) instead: a
+  keyboard ring identical to "selected" is a real bug on a green-selected
+  segment. See **Hit areas** and `C1b-handoff.md` §3 (decision F3).
+
+### Hit areas: two-tier, not a flat 44px minimum
+
+**Correction (2026-09-20, C3):** this file previously implied a single 44px
+floor for every interactive control (see the Latest Round scoreboard table's
+44px toggle target, still correct as far as it goes). That's a touch-device
+rule, not a universal one — the actual contract, resolved during the C1
+review after finding the shipped desktop `.rank-toggle` (28×28px, F1/F6b)
+already didn't match the stated flat rule:
+
+- **`@media (pointer: coarse)` or ≤640px** → **44×44px minimum** (touch)
+- **fine pointer / ≥641px** → **28×28px minimum** for icon-only controls
+  (e.g. `.rank-toggle`, `.action`), **36px height** for labelled controls
+  (e.g. `.tab-underline`, `.seg-option`)
+
+The rule was wrong, not the shipped code. Two site-wide phone defaults still
+fall short of the 44px touch floor and remain open — `.pill` and
+`.section-controls select` are 40px by default (`mobile.css:358`, `:366`),
+reaching 44px today only through page-scoped overrides; fixing the two
+default rules is C4's, not this correction's.
 
 ### Toggle switches: check the "off" state, not just the "on" state
 
