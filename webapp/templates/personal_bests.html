@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block body_attrs %} data-public-state-keys="tab,measure,n,view"{% endblock %}
 
 {% block page_title %}
 <div class="page-title-area">
@@ -13,33 +14,25 @@
 <div class="section-nav">
     {% for tab_id, tab_label in tabs %}
     <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
+            data-public-state-key="tab" data-public-state-value="{{ tab_id }}"
             hx-get="/personal-bests/tab"
             hx-target="#pb-content"
             hx-include="#pb-measure, #pb-n-select, #pb-view-select"
             hx-vals='{"tab": "{{ tab_id }}"}'
             hx-swap="innerHTML"
-            onclick="
-                document.getElementById('pb-tab-input').value='{{ tab_id }}';
-                var ctrl = document.getElementById('pb-controls');
-                var sumCtrl = document.getElementById('pb-summary-controls');
-                if ('{{ tab_id }}' === 'pb_summary') {
-                    ctrl.style.display = 'none';
-                    sumCtrl.style.display = '';
-                } else {
-                    ctrl.style.display = '';
-                    sumCtrl.style.display = 'none';
-                }
-            ">
+            onclick="document.getElementById('pb-tab-input').value='{{ tab_id }}';">
         {{ tab_label }}
     </button>
     {% endfor %}
 </div>
 
 {# --- Summary controls (shown only on PB Summary tab) --- #}
-<div id="pb-summary-controls" class="pill-group mb-6" role="group" aria-label="View"
+<div id="pb-summary-controls" class="segmented mb-6" role="group" aria-label="View"
+     data-public-visible-when="tab=pb_summary"
      style="{% if active_tab != 'pb_summary' %}display:none{% endif %}">
     {% for vid, vlabel in summary_views %}
-    <button class="pill{% if vid == selected_view %} pill--active{% endif %}"
+    <button class="seg-option" aria-pressed="{{ 'true' if vid == selected_view else 'false' }}"
+            data-public-state-key="view" data-public-state-value="{{ vid }}"
             hx-get="/personal-bests/tab"
             hx-target="#pb-content"
             hx-vals='{"tab": "pb_summary", "view": "{{ vid }}"}'
@@ -52,10 +45,12 @@
 
 {# --- Measure + N controls (hidden on PB Summary tab) --- #}
 <div id="pb-controls" class="section-controls flex items-center gap-4"
+     data-public-hidden-when="tab=pb_summary"
      style="{% if active_tab == 'pb_summary' %}display:none{% endif %}">
-    <div class="pill-group" role="group" aria-label="Measure">
+    <div class="segmented" role="group" aria-label="Measure">
         {% for mid, mlabel in measures %}
-        <button class="pill{% if mid == selected_measure %} pill--active{% endif %}"
+        <button class="seg-option" aria-pressed="{{ 'true' if mid == selected_measure else 'false' }}"
+                data-public-state-key="measure" data-public-state-value="{{ mid }}"
                 hx-get="/personal-bests/tab"
                 hx-target="#pb-content"
                 hx-include="#pb-tab-input, #pb-n-select"

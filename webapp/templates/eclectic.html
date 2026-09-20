@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block body_attrs %} data-public-state-keys="dimension,player,teg,course"{% endblock %}
 
 {% block extra_head %}
 <link rel="stylesheet" href="/static/scorecard.css?v=26">
@@ -54,6 +55,7 @@
 <div class="section-nav">
     {% for tab_id, tab_label in tabs %}
     <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
+            data-public-state-key="dimension" data-public-state-value="{{ tab_id }}"
             hx-get="/eclectic/tab?dimension={{ tab_id }}"
             hx-target="#eclectic-content"
             hx-include="#eclectic-player, #eclectic-teg, #eclectic-course"

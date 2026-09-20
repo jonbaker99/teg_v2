@@ -7,7 +7,7 @@ from pathlib import Path
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
-from fastapi import APIRouter, Request, HTTPException
+from fastapi import APIRouter, Request, HTTPException, Query
 from fastapi.templating import Jinja2Templates
 from markupsafe import escape
 
@@ -1211,13 +1211,27 @@ def player_index(request: Request):
     })
 
 
+def _player_tab_payload(player_code: str, tab_name: str):
+    if tab_name == "overview":
+        return _build_overview_context(player_code), "partials/player_overview.html"
+    if tab_name == "rounds":
+        return _build_rounds_context(player_code), "partials/player_rounds.html"
+    if tab_name == "scoring":
+        return _build_scoring_context(player_code), "partials/player_scoring.html"
+    if tab_name == "records":
+        return _build_records_context(player_code), "partials/player_records.html"
+    return _build_overview_context(player_code), "partials/player_overview.html"
+
+
 @router.get("/player/{player_code}")
-def player_page(request: Request, player_code: str):
+def player_page(request: Request, player_code: str, tab: str = Query("overview")):
     pc = _validate_player(player_code)
     name = get_player_dict()[pc]
+    valid_tabs = {tab_id for tab_id, _ in PLAYER_TABS}
+    active_tab = tab if tab in valid_tabs else "overview"
 
     subtitle = _build_subtitle(pc)
-    overview_ctx = _build_overview_context(pc)
+    tab_ctx, tab_template = _player_tab_payload(pc, active_tab)
 
     return templates.TemplateResponse("player.html", {
         "request": request,
@@ -1227,8 +1241,9 @@ def player_page(request: Request, player_code: str):
         "player_list": _get_player_list(),
         "subtitle": subtitle,
         "tabs": PLAYER_TABS,
-        "active_tab": "overview",
-        **overview_ctx,
+        "active_tab": active_tab,
+        "tab_template": tab_template,
+        **tab_ctx,
     })
 
 
@@ -1236,20 +1251,10 @@ def player_page(request: Request, player_code: str):
 def player_tab(request: Request, player_code: str, tab_name: str):
     pc = _validate_player(player_code)
 
-    if tab_name == "overview":
-        ctx = _build_overview_context(pc)
-        template = "partials/player_overview.html"
-    elif tab_name == "rounds":
-        ctx = _build_rounds_context(pc)
-        template = "partials/player_rounds.html"
-    elif tab_name == "scoring":
-        ctx = _build_scoring_context(pc)
-        template = "partials/player_scoring.html"
-    elif tab_name == "records":
-        ctx = _build_records_context(pc)
-        template = "partials/player_records.html"
-    else:
+    valid_tabs = {tab_id for tab_id, _ in PLAYER_TABS}
+    if tab_name not in valid_tabs:
         raise HTTPException(status_code=404, detail=f"Unknown tab: {tab_name}")
+    ctx, template = _player_tab_payload(pc, tab_name)
 
     return templates.TemplateResponse(template, {
         "request": request,

@@ -1,5 +1,5 @@
 {% if error %}
-<div class="error-box">{{ error }}</div>
+{% include "partials/_public_response_error.html" %}
 {% else %}
 <h2 class="section-title">{{ chart_title }}</h2>
 <div class="data-card data-card--padded">

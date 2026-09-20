@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block body_attrs %} data-public-state-keys="mode,teg,sort_best,n"{% endblock %}
 
 {% block page_title %}
 <div class="page-title-area">
@@ -15,6 +16,7 @@
 <div class="section-controls flex items-center gap-4">
     <div class="section-nav" style="margin-bottom: 0;">
         <button class="tab-underline{% if active_mode == 'bestball' %} tab-underline--active{% endif %}"
+                data-public-state-key="mode" data-public-state-value="bestball"
                 hx-get="/bestball/content?mode=bestball"
                 hx-target="#bb-content"
                 hx-include="#bb-teg, #bb-sort, #bb-n"
@@ -23,6 +25,7 @@
             Bestball
         </button>
         <button class="tab-underline{% if active_mode == 'worstball' %} tab-underline--active{% endif %}"
+                data-public-state-key="mode" data-public-state-value="worstball"
                 hx-get="/bestball/content?mode=worstball"
                 hx-target="#bb-content"
                 hx-include="#bb-teg, #bb-sort, #bb-n"

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block body_attrs %} data-public-state-keys="teg,tab,score_type,metric,display_mode"{% endblock %}
 
 {% block extra_head %}
 <link rel="stylesheet" href="/static/scorecard.css?v=26">
@@ -45,6 +46,7 @@
 <div class="section-nav">
     {% for tab_id, tab_label in tabs %}
     <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
+            data-public-state-key="tab" data-public-state-value="{{ tab_id }}"
             onclick="document.getElementById('lt-tab-input').value='{{ tab_id }}';
                      htmx.trigger(document.getElementById('lt-teg-select'), 'change')">
         {{ tab_label }}
@@ -69,7 +71,8 @@
         tab.href = '/teg-reports?teg=' + teg;
         tab.hidden = withReports.indexOf(teg) === -1;
     }
-    select.addEventListener('change', sync);
+    document.addEventListener('public-state:commit', sync);
+    document.addEventListener('public-state:rollback', sync);
     sync();
 })();
 </script>

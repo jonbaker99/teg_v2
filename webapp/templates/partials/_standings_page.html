@@ -10,7 +10,7 @@
 <h1 id="{{ ns }}-page-title" hx-swap-oob="true" class="page-title">TEG {{ selected_teg }} {{ "Results" if teg_complete else "Leaderboard" }}</h1>
 {% endif %}
 {% if error %}
-<p class="text-muted">Error: {{ error }}</p>
+{% include "partials/_public_response_error.html" %}
 {% elif is_leaderboard %}
 {# Net/Gross measure control -- .segmented (C3), replacing the .scale-switch
    binary-switch control: neither Net nor Gross is an "on" state, so a
@@ -25,9 +25,11 @@
 <div class="toggle-group">
     <div class="segmented" role="group" aria-label="Leaderboard measure">
         <button type="button" class="seg-option" aria-pressed="{{ 'false' if active_measure == 'gross' else 'true' }}"
+                data-public-state-key="tab" data-public-state-value="net"
                 onclick="document.getElementById('{{ ns }}-tab-input').value='net';
                          htmx.trigger(document.getElementById('{{ ns }}-teg-select'), 'change')">Net</button>
         <button type="button" class="seg-option" aria-pressed="{{ 'true' if active_measure == 'gross' else 'false' }}"
+                data-public-state-key="tab" data-public-state-value="gross"
                 onclick="document.getElementById('{{ ns }}-tab-input').value='gross';
                          htmx.trigger(document.getElementById('{{ ns }}-teg-select'), 'change')">Gross</button>
     </div>
@@ -77,6 +79,7 @@
     <div class="segmented" role="group" aria-label="Chart type">
         {% for cid, clabel in chart_types %}
         <button type="button" class="seg-option" aria-pressed="{{ 'true' if cid == active_chart_variant else 'false' }}"
+                data-public-state-key="chart_variant" data-public-state-value="{{ cid }}"
                 onclick="document.getElementById('{{ ns }}-chart-variant').value='{{ cid }}';
                          htmx.trigger(document.getElementById('{{ ns }}-teg-select'), 'change')">
             {{ clabel }}

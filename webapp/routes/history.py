@@ -453,13 +453,14 @@ def _honours_tab_context(tab: str) -> dict:
 
 
 @router.get("/honours")
-def honours_page(request: Request):
-    ctx = _honours_tab_context("trophy")
+def honours_page(request: Request, tab: str = Query("trophy")):
+    tab = tab if tab in {tab_id for tab_id, _label in HONOURS_TABS} else "trophy"
+    ctx = _honours_tab_context(tab)
     return templates.TemplateResponse("honours.html", {
         "request": request,
         "active_page": "honours",
         "tabs": HONOURS_TABS,
-        "active_tab": "trophy",
+        "active_tab": tab,
         **ctx,
     })
 
@@ -758,21 +759,29 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
 
 
 @router.get("/results")
-def results_page(request: Request, teg: Optional[int] = Query(None)):
+def results_page(
+    request: Request,
+    teg: Optional[int] = Query(None),
+    tab: str = Query("net"),
+    chart_variant: str = Query("adjusted"),
+):
     teg_numbers = get_available_teg_numbers()
     # Deep-link support (e.g. from /teg-reports' "Back to Results" link) — an
     # invalid/absent teg falls back to the default, same as every other page's
     # teg-selector pattern.
     teg_num = teg if teg in teg_numbers else get_default_teg_num()
+    tab = tab if tab in {"net", "gross", "scorecards"} else "net"
+    chart_variant = (chart_variant if chart_variant in {value for value, _label in RESULTS_CHART_TYPES}
+                     else "adjusted")
     # /results has no player-profile click-through (unlike /leaderboard, which
     # reuses this same context builder via the default).
-    ctx = _results_context(teg_num, "net", link_players=False)
+    ctx = _results_context(teg_num, tab, chart_variant, link_players=False)
     return templates.TemplateResponse("results.html", {
         "request": request,
         "active_page": "results",
         "teg_numbers": teg_numbers,
         "selected_teg": teg_num,
-        "active_tab": "net",
+        "active_tab": tab,
         # TEGs with a newspaper edition — drives whether the Report tab (a real
         # link to /teg-reports, not an HTMX swap) is shown. lru_cached in
         # newspaper_edition and cleared via deps.register_cache_clearer, so this
@@ -863,14 +872,19 @@ def _player_rankings_context(tab: str, row_dim: str = "Pl", col_dim: str = "TEGN
 
 
 @router.get("/player-rankings")
-def player_rankings_page(request: Request, row_dim: str = Query("Pl"), col_dim: str = Query("TEGNum")):
-    default_tab = "trophy"
-    ctx = _player_rankings_context(default_tab, row_dim, col_dim)
+def player_rankings_page(
+    request: Request,
+    tab: str = Query("trophy"),
+    row_dim: str = Query("Pl"),
+    col_dim: str = Query("TEGNum"),
+):
+    tab = tab if tab in {tab_id for tab_id, _label in PLAYER_RANKINGS_TABS} else "trophy"
+    ctx = _player_rankings_context(tab, row_dim, col_dim)
     return templates.TemplateResponse("player_rankings.html", {
         "request": request,
         "active_page": "player-rankings",
         "tabs": PLAYER_RANKINGS_TABS,
-        "active_tab": default_tab,
+        "active_tab": tab,
         **ctx,
     })
 

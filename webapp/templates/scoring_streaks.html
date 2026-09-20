@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block body_attrs %} data-public-state-keys="tab,direction,mode,d_teg,d_round,d_player"{% endblock %}
 
 {% block page_title %}
 <div class="page-title-area">
@@ -12,6 +13,7 @@
 <div class="section-nav">
     {% for tab_id, tab_label in tabs %}
     <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
+            data-public-state-key="tab" data-public-state-value="{{ tab_id }}"
             hx-get="/scoring/streaks/tab"
             hx-target="#st-content"
             hx-include="#st-direction, #st-mode"
@@ -19,8 +21,6 @@
             hx-swap="innerHTML"
             onclick="
                 document.getElementById('st-tab-input').value='{{ tab_id }}';
-                var ctrl = document.getElementById('st-controls');
-                ctrl.style.display = '{{ tab_id }}' === 'player' ? '' : 'none';
             ">
         {{ tab_label }}
     </button>
@@ -28,12 +28,14 @@
 </div>
 
 <div id="st-controls" class="section-controls flex flex-wrap items-start gap-6"
+     data-public-visible-when="tab=player"
      {% if active_tab != 'player' %}style="display:none"{% endif %}>
     <div class="pill-field">
         <span class="pill-field-label">Direction</span>
-        <div class="pill-group" role="group" aria-label="Direction">
+        <div class="segmented" role="group" aria-label="Direction">
             {% for did, dlabel in [('good', 'Good'), ('bad', 'Bad')] %}
-            <button class="pill{% if did == direction %} pill--active{% endif %}"
+            <button class="seg-option" aria-pressed="{{ 'true' if did == direction else 'false' }}"
+                    data-public-state-key="direction" data-public-state-value="{{ did }}"
                     hx-get="/scoring/streaks/tab" hx-target="#st-content"
                     hx-include="#st-tab-input, #st-mode"
                     hx-vals='{"direction": "{{ did }}"}' hx-swap="innerHTML"
@@ -45,9 +47,10 @@
     </div>
     <div class="pill-field">
         <span class="pill-field-label">Streak type</span>
-        <div class="pill-group" role="group" aria-label="Streak type">
+        <div class="segmented" role="group" aria-label="Streak type">
             {% for mid, mlabel in [('max', 'All-time Max'), ('current', 'Current')] %}
-            <button class="pill{% if mid == mode %} pill--active{% endif %}"
+            <button class="seg-option" aria-pressed="{{ 'true' if mid == mode else 'false' }}"
+                    data-public-state-key="mode" data-public-state-value="{{ mid }}"
                     hx-get="/scoring/streaks/tab" hx-target="#st-content"
                     hx-include="#st-tab-input, #st-direction"
                     hx-vals='{"mode": "{{ mid }}"}' hx-swap="innerHTML"

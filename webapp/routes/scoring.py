@@ -114,14 +114,20 @@ def _birdies_tab_context(tab: str, score_type: str = "Birdies") -> dict:
 
 
 @router.get("/scoring/birdies")
-def scoring_birdies_page(request: Request):
-    ctx = _birdies_tab_context("career", "Birdies")
+def scoring_birdies_page(
+    request: Request,
+    tab: str = Query("career"),
+    score_type: str = Query("Birdies"),
+):
+    tab = tab if tab in {tab_id for tab_id, _label in BIRDIES_TABS} else "career"
+    score_type = score_type if score_type in _BIRDIES_LABEL_TO_FIELD else "Birdies"
+    ctx = _birdies_tab_context(tab, score_type)
     return templates.TemplateResponse("scoring_birdies.html", {
         "request": request,
         "active_page": "scoring",
         "tabs": BIRDIES_TABS,
-        "active_tab": "career",
-        "score_type": "Birdies",
+        "active_tab": tab,
+        "score_type": score_type,
         "score_types": [label for label, _ in BIRDIES_SCORE_TYPES],
         **ctx,
     })
@@ -230,16 +236,25 @@ def _streak_tab_context(tab: str, direction: str = "good", mode: str = "max",
 
 
 @router.get("/scoring/streaks")
-def scoring_streaks_page(request: Request):
-    active_tab = "player"
-    direction = "good"
-    mode = "max"
-    ctx = _streak_tab_context(active_tab, direction, mode)
+def scoring_streaks_page(
+    request: Request,
+    tab: str = Query("player"),
+    direction: str = Query("good"),
+    mode: str = Query("max"),
+    d_teg: str = Query("All"),
+    d_round: str = Query("All"),
+    d_player: str = Query("All"),
+):
+    tab = tab if tab in {tab_id for tab_id, _label in STREAK_TABS} else "player"
+    direction = direction if direction in {"good", "bad"} else "good"
+    mode = mode if mode in {"max", "current"} else "max"
+    d_round = d_round if d_round == "All" or d_round.isdigit() else "All"
+    ctx = _streak_tab_context(tab, direction, mode, d_teg, d_round, d_player)
     return templates.TemplateResponse("scoring_streaks.html", {
         "request": request,
         "active_page": "scoring",
         "tabs": STREAK_TABS,
-        "active_tab": active_tab,
+        "active_tab": tab,
         "direction": direction,
         "mode": mode,
         **ctx,
@@ -608,15 +623,20 @@ def _course_tab_context(tab: str, area: str = "All Areas") -> dict:
 
 
 @router.get("/scoring/by-course")
-def scoring_by_course_page(request: Request, area: str = Query("All Areas")):
+def scoring_by_course_page(
+    request: Request,
+    tab: str = Query("gross_records"),
+    area: str = Query("All Areas"),
+):
     areas = _get_course_areas()
-    active_tab = "gross_records"
-    ctx = _course_tab_context(active_tab, area)
+    tab = tab if tab in {tab_id for tab_id, _label in COURSE_TABS} else "gross_records"
+    area = area if area in areas else "All Areas"
+    ctx = _course_tab_context(tab, area)
     return templates.TemplateResponse("scoring_by_course.html", {
         "request": request,
         "active_page": "scoring",
         "tabs": COURSE_TABS,
-        "active_tab": active_tab,
+        "active_tab": tab,
         "areas": areas,
         "selected_area": area,
         **ctx,
@@ -802,16 +822,22 @@ def _matrix_context(level: str = "teg", score_type: str = "GrossVP") -> dict:
 
 
 @router.get("/scoring/matrix")
-def scoring_matrix_page(request: Request):
-    ctx = _matrix_context("teg", "GrossVP")
+def scoring_matrix_page(
+    request: Request,
+    level: str = Query("teg"),
+    score_type: str = Query("GrossVP"),
+):
+    level = level if level in {level_id for level_id, _label in MATRIX_LEVELS} else "teg"
+    score_type = score_type if score_type in {type_id for type_id, _label in MATRIX_TYPES} else "GrossVP"
+    ctx = _matrix_context(level, score_type)
     return templates.TemplateResponse("scoring_matrix.html", {
         "request": request,
         "active_page": "scoring",
         "wide": True,
         "levels": MATRIX_LEVELS,
         "score_types": MATRIX_TYPES,
-        "selected_level": "teg",
-        "selected_type": "GrossVP",
+        "selected_level": level,
+        "selected_type": score_type,
         **ctx,
     })
 

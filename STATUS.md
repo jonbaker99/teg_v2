@@ -2,7 +2,19 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-20 (I1: unified public standings renderer — worktree, not yet merged)
+**Last updated:** 2026-09-20 (I2: public interaction and canonical URL contract — worktree, not yet merged)
+
+## 2026-09-20 — UI implementation roadmap Improve stage: I2 public interaction and URL state
+
+Branch `codex/ui-i2`, based on `2f0baef` after I1 and its mobile-polish follow-ups. Not yet merged.
+
+Public read-only HTMX pages now share one opt-in state controller. Tabs denote views, segmented controls denote exclusive measures, and compact actions handle Retry. Selected state and canonical history commit only after the main target swaps successfully. Failed transports or marked application errors retain the previous view and URL, restore confirmed controls, and can replay the exact GET.
+
+Full-page routes now accept the same public state as their partial endpoints across standings, Latest TEG, history, player profiles, scorecards, scoring, performance, eclectic, bestball and charts. Direct links, reload, sharing, Back and forward therefore reproduce the confirmed view. Latest Round's audited pending/confirmed controller remains intact; only its failure presentation joins the shared visual pattern.
+
+Verified with focused page tests under pinned Python 3.12 and browser flows covering direct links, reload, successful and failed swaps, retry, one history entry per response, Back/forward, standings OOB swaps, marked application errors and a Latest Round regression check. Full detail: `webapp/design_reviews/ui_workstream/I2-handoff.md`.
+
+**Next:** owner review and merge decision, then I3 (Contents product contract) or the next roadmap item.
 
 ## 2026-09-20 — UI implementation roadmap Improve stage: I1 unified standings renderer
 

@@ -53,13 +53,22 @@ def _bestball_context(mode: str = "bestball", teg: int = 0, sort_best: bool = Tr
 
 
 @router.get("/bestball")
-def bestball_page(request: Request, teg: int = 0, sort_best: bool = True, n: int = 3):
-    ctx = _bestball_context("bestball", teg, sort_best, n)
+def bestball_page(
+    request: Request,
+    mode: str = "bestball",
+    teg: int = 0,
+    sort_best: bool = True,
+    n: int = 3,
+):
     teg_numbers = get_available_teg_numbers()
+    mode = mode if mode in {"bestball", "worstball"} else "bestball"
+    teg = teg if teg in teg_numbers else 0
+    n = n if 1 <= n <= 100 else 3
+    ctx = _bestball_context(mode, teg, sort_best, n)
     return templates.TemplateResponse("bestball.html", {
         "request": request,
         "active_page": "scorecards",
-        "active_mode": "bestball",
+        "active_mode": mode,
         "teg_numbers": teg_numbers,
         "selected_teg": teg,
         "sort_best": sort_best,

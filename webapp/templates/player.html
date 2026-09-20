@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block body_attrs %} data-public-state-keys="tab"{% endblock %}
 {% block title_suffix %} — {{ player_name }}{% endblock %}
 
 {% block extra_head %}
@@ -29,19 +30,18 @@
 <nav class="section-nav pp-tabs" aria-label="Profile sections">
     {% for tab_id, tab_label in tabs %}
     <button type="button" class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
+            data-public-state-key="tab" data-public-state-value="{{ tab_id }}"
             aria-pressed="{{ 'true' if tab_id == active_tab else 'false' }}"
             aria-controls="tab-content" data-profile-tab="{{ tab_id }}"
             hx-get="/player/{{ player_code }}/tab/{{ tab_id }}"
-            hx-target="#tab-content"
-            hx-indicator="#player-loading">
+            hx-target="#tab-content">
         {{ tab_label }}
     </button>
     {% endfor %}
-    <span id="player-loading" class="htmx-indicator pp-loading" role="status">Loading…</span>
 </nav>
 
 <div id="tab-content" class="section-panel">
-    {% include "partials/player_overview.html" %}
+    {% include tab_template %}
 </div>
 </div>
 {% endblock %}

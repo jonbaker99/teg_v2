@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block body_attrs %} data-public-state-keys="teg,type"{% endblock %}
 {% block title_suffix %} — Charts{% endblock %}
 
 {% block page_title %}
@@ -16,18 +17,11 @@
                 hx-get="/charts/figure"
                 hx-target="#chart-container"
                 hx-include="#chart-type-input"
-                hx-indicator="#chart-loading"
                 class="teg-select">
             {% for t in teg_numbers %}
             <option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>
             {% endfor %}
         </select>
-        <span id="chart-loading" class="htmx-indicator">
-            <svg class="animate-spin h-5 w-5 accent-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-            </svg>
-        </span>
     </div>
 </div>
 
@@ -36,12 +30,12 @@
     <input type="hidden" id="chart-type-input" name="type" value="{{ selected_type }}">
     {% for type_id, type_label in chart_types %}
     <button class="tab-underline{% if type_id == selected_type %} tab-underline--active{% endif %}"
+            data-public-state-key="type" data-public-state-value="{{ type_id }}"
             onclick="document.getElementById('chart-type-input').value='{{ type_id }}'"
             hx-get="/charts/figure"
             hx-target="#chart-container"
             hx-include="#chart-teg-select"
-            hx-vals='{"type": "{{ type_id }}"}'
-            hx-indicator="#chart-loading">
+            hx-vals='{"type": "{{ type_id }}"}'>
         {{ type_label }}
     </button>
     {% endfor %}

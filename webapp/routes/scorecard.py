@@ -58,11 +58,6 @@ def _format_date(date_str: str) -> str:
         return str(date_str)
 
 
-def _default_player_code() -> str:
-    """Return the first player code (alphabetically by name)."""
-    return _player_list()[0][0]
-
-
 def _scorecard_context_one_round_one_player(teg_num: int, round_num: int, player_code: str) -> dict:
     """Build context for single player, single round view."""
     try:
@@ -177,6 +172,25 @@ def _build_scorecard_context(
         return _scorecard_context_one_round_all_players(teg_num, round_num)
 
 
+def _normalise_scorecard_state(
+    teg: int | None,
+    round_num: int | None,
+    player: str | None,
+    view_type: str,
+) -> tuple[int, int, str, str, list[int], list[tuple[str, str]], list[int]]:
+    """Return canonical state and selector options for either scorecard route."""
+    teg_numbers = get_available_teg_numbers()
+    teg_num = teg if teg in teg_numbers else get_default_teg_num()
+    rounds = get_rounds_for_teg(teg_num)
+    selected_round = round_num if round_num in rounds else (rounds[-1] if rounds else 1)
+    player_list = _player_list()
+    player_codes = {code for code, _name in player_list}
+    selected_player = player if player in player_codes else player_list[0][0]
+    type_ids = {type_id for type_id, _label in ALL_TYPES}
+    selected_type = view_type if view_type in type_ids else TYPE_ONE_ROUND_ALL_PLAYERS
+    return teg_num, selected_round, selected_player, selected_type, rounds, player_list, teg_numbers
+
+
 @router.get("/scorecard")
 def scorecard_page(
     request: Request,
@@ -185,11 +199,9 @@ def scorecard_page(
     player: str = None,
     type: str = TYPE_ONE_ROUND_ALL_PLAYERS,
 ):
-    teg_num = teg or get_default_teg_num()
-    teg_numbers = get_available_teg_numbers()
-    rounds = get_rounds_for_teg(teg_num)
-    round_num = round if round is not None else (rounds[-1] if rounds else 1)
-    player_code = player or _default_player_code()
+    teg_num, round_num, player_code, type, rounds, player_list, teg_numbers = _normalise_scorecard_state(
+        teg, round, player, type,
+    )
 
     ctx = _build_scorecard_context(type, teg_num, round_num, player_code)
 
@@ -201,7 +213,7 @@ def scorecard_page(
         "selected_round": round_num,
         "selected_player": player_code,
         "selected_type": type,
-        "player_list": _player_list(),
+        "player_list": player_list,
         "all_types": ALL_TYPES,
         "rounds": rounds,
         **ctx,
@@ -216,9 +228,9 @@ def scorecard_content(
     player: str = Query(None),
     type: str = Query(TYPE_ONE_ROUND_ALL_PLAYERS),
 ):
-    rounds = get_rounds_for_teg(teg)
-    round_num = round if (round is not None and round in rounds) else (rounds[-1] if rounds else 1)
-    player_code = player or _default_player_code()
+    teg, round_num, player_code, type, rounds, _player_list_value, _teg_numbers = _normalise_scorecard_state(
+        teg, round, player, type,
+    )
 
     ctx = _build_scorecard_context(type, teg, round_num, player_code)
 

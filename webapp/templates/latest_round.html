@@ -325,9 +325,8 @@
     // hasn't succeeded, so on failure there is no dataset/history to roll
     // back -- only the handful of controls that change as an inherent,
     // unavoidable side effect of the user's own interaction (the TEG
-    // <select>'s value, the rewind range's value/output) or via base.html's
-    // global, request-outcome-blind "move the active class on click" tab/pill
-    // handlers (base.html ~239-259). Reset exactly those back to confirmed.
+    // <select>'s value, the rewind range's value/output and hidden tab/round
+    // inputs). Reset exactly those back to confirmed.
     function rollbackToConfirmedState() {
         var tegSelect = document.getElementById('lr-teg-select');
         var roundInput = document.getElementById('lr-round-select');
@@ -378,16 +377,12 @@
             errorBanner = document.createElement('div');
             errorBanner.setAttribute('data-lr-error-banner', '');
             errorBanner.setAttribute('role', 'alert');
-            // Inline, not a new mobile.css rule -- reuses two existing
-            // classes (text-muted/text-sm, pill) plus a little layout glue,
-            // not a new shared component.
-            errorBanner.style.cssText = 'display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;';
-            var msg = document.createElement('p');
-            msg.className = 'text-muted text-sm';
+            errorBanner.className = 'request-feedback';
+            var msg = document.createElement('span');
             msg.textContent = "Couldn't load that -- showing the previous view.";
             var retry = document.createElement('button');
             retry.type = 'button';
-            retry.className = 'pill';
+            retry.className = 'action';
             retry.textContent = 'Retry';
             // retryRequest() reads `lastFailedPending` at CLICK time, not at
             // binding time, so if a later, different request fails while

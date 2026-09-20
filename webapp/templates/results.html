@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block body_attrs %} data-public-state-keys="teg,tab,chart_variant"{% endblock %}
 
 {% block page_title %}
 <div class="page-title-area res-title-area">
@@ -52,11 +53,13 @@
        Clicking Leaderboard while already on it preserves the current
        measure instead of resetting to net. #}
     <button class="tab-underline{% if active_tab != 'scorecards' %} tab-underline--active{% endif %}"
+            data-public-state-key="tab" data-public-state-values="net,gross"
             onclick="document.getElementById('results-tab-input').value='{{ 'net' if active_tab == 'scorecards' else active_tab }}';
                      htmx.trigger(document.getElementById('results-teg-select'), 'change')">
         Leaderboard
     </button>
     <button class="tab-underline{% if active_tab == 'scorecards' %} tab-underline--active{% endif %}"
+            data-public-state-key="tab" data-public-state-value="scorecards"
             onclick="document.getElementById('results-tab-input').value='scorecards';
                      htmx.trigger(document.getElementById('results-teg-select'), 'change')">
         Scorecards
@@ -80,7 +83,8 @@
         tab.href = '/teg-reports?teg=' + teg;
         tab.hidden = withReports.indexOf(teg) === -1;
     }
-    select.addEventListener('change', sync);
+    document.addEventListener('public-state:commit', sync);
+    document.addEventListener('public-state:rollback', sync);
     sync();
 })();
 </script>

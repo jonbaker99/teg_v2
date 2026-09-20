@@ -91,18 +91,23 @@ def _eclectic_tab_context(
 @router.get("/eclectic")
 def eclectic_page(
     request: Request,
+    dimension: str = Query("Player"),
     player: str = Query(""),
     teg: int = Query(0),
     course: str = Query(""),
 ):
     all_data = cached_load_all_data()
     filter_opts = _get_eclectic_filter_options(all_data)
-    ctx = _eclectic_tab_context("Player", player=player, teg=teg, course=course)
+    dimension = dimension if dimension in {tab_id for tab_id, _label in ECLECTIC_TABS} else "Player"
+    player = player if player in filter_opts["players"] else ""
+    teg = teg if teg in filter_opts["tegs"] else 0
+    course = course if course in filter_opts["courses"] else ""
+    ctx = _eclectic_tab_context(dimension, player=player, teg=teg, course=course)
     return templates.TemplateResponse("eclectic.html", {
         "request": request,
         "active_page": "scorecards",
         "tabs": ECLECTIC_TABS,
-        "active_tab": "Player",
+        "active_tab": dimension,
         "selected_player": player,
         "selected_teg": teg,
         "selected_course": course,
@@ -160,14 +165,15 @@ def _eclectic_records_context(dimension: str) -> dict:
 
 
 @router.get("/eclectic-records")
-def eclectic_records_page(request: Request):
-    default_tab = "TEGNum"
-    ctx = _eclectic_records_context(default_tab)
+def eclectic_records_page(request: Request, dimension: str = Query("TEGNum")):
+    dimension = (dimension if dimension in {tab_id for tab_id, _label in ECLECTIC_RECORDS_TABS}
+                 else "TEGNum")
+    ctx = _eclectic_records_context(dimension)
     return templates.TemplateResponse("eclectic_records.html", {
         "request": request,
         "active_page": "scorecards",
         "tabs": ECLECTIC_RECORDS_TABS,
-        "active_tab": default_tab,
+        "active_tab": dimension,
         **ctx,
     })
 

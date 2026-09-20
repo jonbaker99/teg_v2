@@ -550,11 +550,12 @@ for you and still threadpools the handler).
 - Nav links use `hx-get="/route" hx-target="#main-content"`
 - Server returns only the content fragment (from `templates/partials/`)
 - HTMX swaps into `#main-content` without full page reload
+- Public read-only pages declare canonical query keys with `data-public-state-keys`; `ui-polish.js` commits selection and history after a successful main-target swap, and restores the confirmed state with shared Retry feedback after failure.
 
 ### Common page patterns
 
 - **Simple selector + full-page reload** (e.g. `/teg-reports`): a vanilla form `GET` with `<select onchange="this.form.submit()">`. Cheap when no partial update is needed.
-- **HTMX tab bar** (e.g. `/results` in `templates/results.html`): a hidden input holds the active tab; each tab button sets that input then triggers `htmx.trigger(…, 'change')` on the TEG `<select>`, which has `hx-get="/route/table"` returning the partial.
+- **HTMX tab bar** (e.g. `/results` in `templates/results.html`): a hidden input holds the requested tab; each tab triggers the TEG selector's HTMX GET. The shared public-state controller leaves the confirmed tab and URL unchanged until the response swaps successfully.
 - **`_results_context()`-style HTMX endpoint**: a `{tab}` switch returns `{result_title, table_html}` rendered into `partials/results_table.html` — see `webapp/routes/history.py`.
 
 ### Component classes (in app.css / base-vars.css)
@@ -971,10 +972,7 @@ The default title aligns with panel text on desktop. On phones, shared controls
 and named text classes receive a 12px component inset; data surfaces retain
 full width. Tab rows retain a thin scrollbar to suggest sideways scrolling.
 
-HTMX GET targets expose `aria-busy`; section panels dim while loading. Failed
-GETs show a dismissible message above content, cleared by successful recovery
-on the same target. Writes are not retried. Existing immediate tab/pill
-highlighting remains; synchronising selection with responses is separate work.
+Public read-only HTMX pages expose `aria-busy` while loading and commit selected controls plus canonical history only after a successful main-target swap. Transport failures and marked application errors keep the prior view and URL, restore confirmed controls, and show shared Retry and Dismiss actions. Retry replays the exact failed GET; writes are never retried. Latest Round retains its separately audited pending/confirmed controller.
 
 Review `/leaderboard`, `/results`, `/latest-round`, `/records`, `/scorecard`,
 `/player`, and `/teg-reports` on desktop and phone widths. Also check 640–900px

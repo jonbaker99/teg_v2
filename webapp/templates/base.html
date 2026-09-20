@@ -35,8 +35,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0">
     <!-- Flag icons — CSS SVG flags via .fi.fi-{code} -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
-    <link rel="stylesheet" href="/static/ui-polish.css?v=2">
-    <script defer src="/static/ui-polish.js?v=1"></script>
+    <link rel="stylesheet" href="/static/ui-polish.css?v=3">
+    <script defer src="/static/ui-polish.js?v=2"></script>
     {% block extra_head %}{% endblock %}
     <style>
         /* Material Symbols base (Google's css2 endpoint ships only @font-face). */
@@ -144,7 +144,7 @@
         }
     </style>
 </head>
-<body class="page-bg ts-{{ request.state.title_style }} ch-{{ request.state.card_header_style }} nc-{{ request.state.nav_cue }}{% if wide %} layout-wide{% endif %}{% if newspaper_page %} np-host{% endif %}">
+<body class="page-bg ts-{{ request.state.title_style }} ch-{{ request.state.card_header_style }} nc-{{ request.state.nav_cue }}{% if wide %} layout-wide{% endif %}{% if newspaper_page %} np-host{% endif %}"{% block body_attrs %}{% endblock %}>
     <!-- Navigation -->
     <nav class="nav">
         <div class="px-6">
@@ -187,7 +187,13 @@
         <div class="page-panel">
             <div class="content-wrapper">
                 <main id="main-content" class="main-content px-6 py-8">
-                    <div id="request-feedback" class="request-feedback" role="alert" hidden><span></span><button type="button" aria-label="Dismiss request message">×</button></div>
+                    <div id="request-feedback" class="request-feedback" role="status" aria-live="polite" hidden>
+                        <span data-request-message></span>
+                        <div class="request-feedback-actions">
+                            <button type="button" class="action" data-request-retry hidden>Retry</button>
+                            <button type="button" class="action" data-request-dismiss aria-label="Dismiss request message">Dismiss</button>
+                        </div>
+                    </div>
                     {% block content %}{% endblock %}
                 </main>
             </div>
@@ -255,19 +261,9 @@
             }
         });
     })();
-    // Global in-page tab active state: clicking a primary tab (a .tab-underline
-    // inside a .section-nav) moves the active underline to it. Scoped to the
-    // nearest .section-nav so multiple tab bars on a page don't interfere, and
-    // so sub-toggles (.toggle-group) keep their own per-page handlers.
-    document.addEventListener('click', function(e) {
-        var btn = e.target.closest('.section-nav .tab-underline');
-        if (!btn) return;
-        var nav = btn.closest('.section-nav');
-        nav.querySelectorAll('.tab-underline').forEach(function(b) {
-            b.classList.remove('tab-underline--active');
-        });
-        btn.classList.add('tab-underline--active');
-    });
+    // Public tab state is committed by ui-polish.js after a successful HTMX
+    // response. Templates render the initial state; failed requests leave it
+    // untouched. Non-HTMX links keep native navigation semantics.
     // Phone-only: scroll the active tab of every .section-nav into view.
     // Overflowing tab rows (e.g. /honours, /records) only hint "more tabs"
     // via a right-edge fade (mobile.css), which is too subtle to notice --
@@ -339,18 +335,8 @@
             if (window.matchMedia('(max-width: 640px)').matches) updateOneNavCue(e.target);
         }
     }, true);
-    // Global pill active state: clicking a .pill moves --active within its
-    // nearest .pill-group. Works whether the pills are re-rendered by an HTMX
-    // swap or sit outside the swap target (e.g. /top-performances measure pills).
-    document.addEventListener('click', function(e) {
-        var pill = e.target.closest('.pill-group .pill');
-        if (!pill) return;
-        var group = pill.closest('.pill-group');
-        group.querySelectorAll('.pill').forEach(function(p) {
-            p.classList.remove('pill--active');
-        });
-        pill.classList.add('pill--active');
-    });
+    // Public pill/segment state follows the same successful-response contract
+    // in ui-polish.js. Client-only chart controls keep their own handlers.
     // Global hover tooltip for any element carrying data-tip (scorecard cells,
     // eclectic cells). A single floating div, positioned at the cursor with
     // position:fixed so it is never clipped by the table's scroll wrappers.

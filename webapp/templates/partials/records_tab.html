@@ -1,5 +1,5 @@
 {% if error %}
-<div class="error-box">{{ error }}</div>
+{% include "partials/_public_response_error.html" %}
 {% else %}
 {# .records-page scopes the mobile tap-to-reveal CSS (mobile.css); this
    partial renders standalone via HTMX tab switches too, so the class lives
