@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en" data-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C1b mockup — compact action, before/after</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;600;700&display=swap');
+:root {
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Lora', Georgia, serif;
+    --fs-100: 11px; --fs-200: 12px; --fs-300: 14px; --fs-400: 16px;
+    --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 24px; --sp-6: 32px;
+    --r-1: 3px;
+    --rule-color: #e0e0e0;
+    --ink: #1a1a1a; --ink-2: #555555; --ink-muted: #6f6f6f;
+    --green: #228B22;
+    --focus: var(--ink);
+    --failure: #a3302a;
+    --hover-bg: #F3F7F3;
+    --bg-outer: #f5f3f0; --bg-content: #ffffff; --bg-card: #ffffff;
+    /* Production's real .pill values (base-vars.css), for the honest "before" */
+    --pill-bg: #ffffff; --pill-border: #d0d0d0; --pill-text: #555555;
+    --pill-active-bg: #F3F7F3; --pill-active-border: forestgreen; --pill-active-text: forestgreen;
+}
+html[data-mode="dark"] {
+    color-scheme: dark;
+    --ink: #ececea; --ink-2: #b6b4aa; --ink-muted: #9c9a8f;
+    --rule-color: #2e2e29; --green: #6cc77f; --focus: var(--ink); --failure: #e06a63;
+    --hover-bg: #1b2a1d;
+    --bg-outer: #16150f; --bg-content: #16150f; --bg-card: #1d1d1a;
+    --pill-bg: #1d1d1a; --pill-border: #2e2e29; --pill-text: #b6b4aa;
+    --pill-active-bg: #1b2a1d; --pill-active-border: #6cc77f; --pill-active-text: #6cc77f;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg-outer); color: var(--ink); font-family: var(--font-sans); font-variant-numeric: tabular-nums lining-nums; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 1000px; margin: 0 auto; padding: var(--sp-5); }
+h1 { font-family: var(--font-serif); font-size: 22px; margin: 0 0 var(--sp-2); }
+
+.grammar {
+    display: flex; gap: var(--sp-5); flex-wrap: wrap; margin: 0 0 var(--sp-6);
+    padding: var(--sp-4); background: var(--bg-content); border-radius: var(--r-1);
+}
+.grammar-item { display: flex; flex-direction: column; gap: 2px; }
+.grammar-item .k { font-size: var(--fs-100); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; color: var(--green); }
+.grammar-item .v { font-size: var(--fs-300); color: var(--ink); }
+.grammar-item .v b { font-weight: 600; }
+
+.example { margin-bottom: var(--sp-6); }
+.example h2 { font-family: var(--font-serif); font-size: 14px; margin: 0 0 var(--sp-1); text-transform: uppercase; letter-spacing: 0.07em; color: var(--green); }
+.example p.ctx { font-size: var(--fs-200); color: var(--ink-muted); margin: 0 0 var(--sp-4); max-width: 640px; }
+
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-6); align-items: start; }
+@media (max-width: 760px) { .row { grid-template-columns: 1fr; } }
+.col { background: var(--bg-content); border-radius: var(--r-1); padding: var(--sp-4); }
+.col-head { display: flex; align-items: center; gap: var(--sp-2); margin-bottom: var(--sp-3); }
+.col-head .tag { font-size: var(--fs-100); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px; border-radius: var(--r-1); background: var(--rule-color); color: var(--ink-2); }
+.col-head.after .tag { background: var(--green); color: #fff; }
+.note { font-size: var(--fs-200); color: var(--ink-muted); margin-top: var(--sp-3); }
+
+/* .action geometry (after, all three instances) */
+.action { border: 0; background: transparent; color: var(--green); font-family: var(--font-sans); cursor: pointer; border-radius: var(--r-1); min-width: 28px; min-height: 28px; font-size: 16px; line-height: 1; }
+.action:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* ===== Instance 1: standings rank toggle -- ALREADY consistent with .action
+   in production since F1/F6 (28px desktop / 44px phone, transparent, green,
+   +/- glyph). Shown once, not duplicated as before/after, because there is
+   no visual change here -- only noted, not silently skipped. ===== */
+table.standings { width: 100%; border-collapse: collapse; }
+table.standings td { font-size: var(--fs-300); padding: var(--sp-2); text-align: right; border-bottom: 1px solid var(--rule-color); }
+table.standings td.col-player { text-align: left; }
+.action.rank-toggle::after { content: "+"; }
+.action.rank-toggle[aria-expanded="true"]::after { content: "\2212"; }
+
+/* ===== Instance 2: retry after failed load =====
+   BEFORE: production's actual .pill -- rounded-full, bordered, the same
+   shape used for round-number navigation and Net/Gross measure pills
+   (base-vars.css:1710). Real values reproduced here, not approximated. */
+.pill-before {
+    display: inline-block; background: var(--pill-bg); border: 1px solid var(--pill-border);
+    border-radius: 9999px; padding: 0.3rem 0.85rem; font-size: 0.8125rem; font-weight: 500;
+    color: var(--pill-text); cursor: pointer; font-family: var(--font-sans);
+}
+.retry-block { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-4); border: 1px dashed var(--failure); border-radius: var(--r-1); }
+.retry-icon { color: var(--failure); font-size: var(--fs-400); }
+.retry-text { font-size: var(--fs-300); flex: 1; }
+.retry-text b { color: var(--failure); }
+.action.retry { min-width: auto; padding: 6px var(--sp-3); border: 1px solid var(--green); font-size: var(--fs-300); font-weight: 600; }
+.action.retry::after { content: "Retry"; }
+
+/* ===== Instance 3: History disclosure =====
+   BEFORE/AFTER: production's actual pattern -- the WHOLE cell is the click
+   target (button.teg-cell, full width, no visible button chrome of its own;
+   base-vars.css:267-276), and the +/- indicator lives in its own narrow
+   trailing column at phone widths only (mobile.css:1114-1129). Reproduced
+   faithfully, not invented -- this mockup does NOT change that interaction
+   pattern, only tokenises the indicator's colour/weight to match the other
+   two .action instances. See the flagged desktop gap below the example. */
+.history-row {
+    display: flex; align-items: center; justify-content: space-between; width: 100%;
+    background: transparent; border: 0; padding: var(--sp-2) 0; font: inherit; text-align: left;
+    color: inherit; cursor: pointer; font-size: var(--fs-300); border-bottom: 1px solid var(--rule-color);
+    min-height: 44px; /* matches production's mobile.css .teg-cell min-height:44px -- the row is the real click target */
+}
+.history-ind { width: 22px; text-align: center; font-size: 16px; line-height: 1; flex: none; }
+.history-ind.before::before { content: "+"; color: #999999; } /* production's un-tokenised literal colour, before C1's --ink-muted correction */
+.history-ind.after::before { content: "+"; color: var(--green); }
+.history-row[aria-expanded="true"] .history-ind::before { content: "\2212"; }
+.history-detail { display: none; font-size: var(--fs-200); color: var(--ink-muted); padding: var(--sp-2) 0 0 var(--sp-2); border-left: 1px solid var(--rule-color); margin-left: var(--sp-2); }
+.history-detail.is-open { display: block; }
+
+.flag-box {
+    margin-top: var(--sp-6); padding: var(--sp-4); background: var(--bg-content);
+    border-left: 3px solid var(--ink-muted); border-radius: 0 var(--r-1) var(--r-1) 0; font-size: var(--fs-200); color: var(--ink-2);
+}
+.flag-box b { color: var(--ink); }
+
+@media (max-width: 640px) {
+    .action, .action.retry { min-width: 44px; min-height: 44px; font-size: 20px; }
+    .action.retry { font-size: var(--fs-300); }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+    <h1>Compact action — before / after, real instances</h1>
+    <div class="grammar">
+        <div class="grammar-item"><span class="k">Tabs</span><span class="v"><b>Which view</b> — mutually exclusive pages</span></div>
+        <div class="grammar-item"><span class="k">Segmented</span><span class="v"><b>Which measure</b> — mutually exclusive data lenses</span></div>
+        <div class="grammar-item"><span class="k">Action</span><span class="v"><b>Do or reveal something</b> — not a view, not a measure</span></div>
+    </div>
+
+    <div class="example">
+        <h2>1 — Standings rank toggle</h2>
+        <p class="ctx">No before/after here: production's <code>.rank-toggle</code> is already the <code>.action</code> pattern (F1/F6 already fixed its 28px/44px sizing and green +/- glyph). Shown once for completeness, not duplicated.</p>
+        <div class="col" style="max-width: 420px;">
+            <table class="standings">
+                <tbody>
+                    <tr><td class="col-player">Gregg WILLIAMS</td><td style="width:44px;"><button class="action rank-toggle" type="button" aria-expanded="false" aria-label="Toggle round detail"></button></td></tr>
+                    <tr><td class="col-player">David MULLIN</td><td style="width:44px;"><button class="action rank-toggle" type="button" aria-expanded="true" aria-label="Toggle round detail"></button></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="example">
+        <h2>2 — Retry after a failed load</h2>
+        <p class="ctx">This one does change. Today <code>latest_round.html</code> builds the retry button with <code>className = 'pill'</code> — the exact rounded pill shape shared with round-number navigation and Net/Gross measure pills, reproduced below at its real values. <code>.action</code> replaces it: a labelled action reads as "do this," not "navigate to this."</p>
+        <div class="row">
+            <div class="col">
+                <div class="col-head"><span class="tag">Before — today's <code>.pill</code></span></div>
+                <div class="retry-block">
+                    <span class="retry-icon">&#9888;</span>
+                    <span class="retry-text"><b>Couldn't load this round.</b> Check your connection and try again.</span>
+                    <button class="pill-before" type="button">Retry</button>
+                </div>
+                <p class="note">Rounded-full, bordered — identical shape to the round pills and measure pills elsewhere on the same page.</p>
+            </div>
+            <div class="col">
+                <div class="col-head after"><span class="tag">After — <code>.action</code></span></div>
+                <div class="retry-block">
+                    <span class="retry-icon">&#9888;</span>
+                    <span class="retry-text"><b>Couldn't load this round.</b> Check your connection and try again.</span>
+                    <button class="action retry" type="button"></button>
+                </div>
+                <p class="note">Square geometry, green border and text, no fill — reads as an action, not a navigation pill.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="example">
+        <h2>3 — History cell disclosure</h2>
+        <p class="ctx">Reproduced faithfully: the entire row is the click target (<code>button.teg-cell</code>, no chrome of its own), with a small +/- indicator in a separate narrow column — today shown at phone widths only. This mockup does not redesign that interaction, only tokenises the indicator's colour.</p>
+        <div class="row">
+            <div class="col">
+                <div class="col-head"><span class="tag">Before</span></div>
+                <button class="history-row" type="button" aria-expanded="true">
+                    <span>TEG 14 — Boavista, 2021</span>
+                    <span class="history-ind before"></span>
+                </button>
+                <button class="history-row" type="button" aria-expanded="false">
+                    <span>TEG 15 — West Cliffs, 2022</span>
+                    <span class="history-ind before"></span>
+                </button>
+                <div class="history-detail is-open">Gregg WILLIAMS, −11, PGA Catalunya</div>
+                <p class="note">Indicator uses <code>#999999</code> — production's literal, un-tokenised muted colour (the one C1's <code>--ink-muted</code> correction already targets for readability).</p>
+            </div>
+            <div class="col">
+                <div class="col-head after"><span class="tag">After</span></div>
+                <button class="history-row" type="button" aria-expanded="true">
+                    <span>TEG 14 — Boavista, 2021</span>
+                    <span class="history-ind after"></span>
+                </button>
+                <button class="history-row" type="button" aria-expanded="false">
+                    <span>TEG 15 — West Cliffs, 2022</span>
+                    <span class="history-ind after"></span>
+                </button>
+                <div class="history-detail is-open">Gregg WILLIAMS, −11, PGA Catalunya</div>
+                <p class="note">Indicator now <code>--green</code>, matching the other two <code>.action</code> instances — same colour language, same interaction, no behaviour change.</p>
+            </div>
+        </div>
+        <div class="flag-box">
+            <b>Related gap, not fixed here:</b> production shows this +/- indicator only below 641px — the indicator column is <code>display: none</code> on desktop (<code>base-vars.css:288-289</code>), so above that width the only affordance that the row is clickable is <code>cursor: pointer</code>. Flagged for the owner to decide whether desktop should gain the same indicator; out of scope for this comparison, which only tokenises the existing mobile treatment.
+        </div>
+    </div>
+</div>
+<script>
+(function () {
+    var mode = new URLSearchParams(location.search).get('mode');
+    if (mode === 'light' || mode === 'dark') document.documentElement.setAttribute('data-mode', mode);
+    document.querySelectorAll('.rank-toggle').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            btn.setAttribute('aria-expanded', btn.getAttribute('aria-expanded') !== 'true');
+        });
+    });
+    document.querySelectorAll('.history-row').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            btn.setAttribute('aria-expanded', btn.getAttribute('aria-expanded') !== 'true');
+        });
+    });
+})();
+</script>
+</body>
+</html>

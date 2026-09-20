@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en" data-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C1b comparison — focus ring (F1/F2/F3)</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;600;700&display=swap');
+:root {
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Lora', Georgia, serif;
+    --fs-100: 11px; --fs-200: 12px; --fs-300: 14px; --fs-400: 16px;
+    --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 24px; --sp-6: 32px;
+    --r-1: 3px;
+    --rule-color: #e0e0e0;
+    --ink: #1a1a1a; --ink-2: #555555; --ink-muted: #6f6f6f;
+    --green: #228B22;
+    --hover-bg: #F3F7F3;
+    --bg-outer: #f5f3f0; --bg-content: #ffffff; --bg-card: #ffffff;
+}
+html[data-mode="dark"] {
+    color-scheme: dark;
+    --ink: #ececea; --ink-2: #b6b4aa; --ink-muted: #9c9a8f;
+    --rule-color: #2e2e29; --green: #6cc77f;
+    --hover-bg: #1b2a1d;
+    --bg-outer: #16150f; --bg-content: #16150f; --bg-card: #1d1d1a;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg-outer); color: var(--ink); font-family: var(--font-sans); font-variant-numeric: tabular-nums lining-nums; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: var(--sp-5); }
+h1 { font-family: var(--font-serif); font-size: 22px; margin: 0 0 var(--sp-2); }
+.rule {
+    font-size: var(--fs-300); color: var(--ink-2); max-width: 800px; margin: 0 0 var(--sp-3);
+    padding: var(--sp-3) var(--sp-4); background: var(--bg-content); border-left: 3px solid var(--green); border-radius: 0 var(--r-1) var(--r-1) 0;
+}
+.rule b { color: var(--ink); }
+.instructions { font-size: var(--fs-200); color: var(--ink-muted); margin: 0 0 var(--sp-6); }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(240px, 1fr)); gap: var(--sp-5); }
+@media (max-width: 900px) { .grid { grid-template-columns: 1fr; max-width: 420px; } }
+.option { background: var(--bg-content); border-radius: var(--r-1); padding: var(--sp-4); }
+.option .tag {
+    display: inline-block; font-size: var(--fs-100); font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; padding: 2px 8px; border-radius: var(--r-1); margin-bottom: var(--sp-2);
+}
+.option--rec .tag { background: var(--green); color: #fff; }
+.option:not(.option--rec) .tag { background: var(--rule-color); color: var(--ink-2); }
+.option h3 { font-size: var(--fs-400); margin: 0 0 var(--sp-1); }
+.option p { font-size: var(--fs-200); color: var(--ink-muted); margin: 0 0 var(--sp-4); }
+
+.case-label { font-size: var(--fs-100); text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-muted); margin: var(--sp-4) 0 var(--sp-2); }
+.case-label:first-of-type { margin-top: 0; }
+
+/* Shared segmented control -- selected option is green-tinted, the exact
+   collision case: does focus survive being placed on a green control? */
+.segmented { display: inline-flex; border: 1px solid var(--rule-color); border-radius: var(--r-1); overflow: hidden; background: var(--bg-card); margin-bottom: var(--sp-2); }
+.seg-option { appearance: none; border: none; background: transparent; cursor: pointer; font-family: var(--font-sans); font-size: var(--fs-300); font-weight: 500; color: var(--ink-2); padding: 7px var(--sp-4); border-right: 1px solid var(--rule-color); }
+.seg-option:last-child { border-right: none; }
+.seg-option[aria-pressed="true"] { color: var(--green); font-weight: 700; background: var(--hover-bg); }
+
+.tab-underline { background: transparent; border: none; border-bottom: 2px solid transparent; padding: 6px var(--sp-3); font-size: var(--fs-200); font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--ink-2); font-family: var(--font-sans); cursor: pointer; }
+.tab-underline--active { color: var(--green); border-bottom-color: var(--green); font-weight: 600; }
+@media (max-width: 640px), (pointer: coarse) {
+    .seg-option { min-height: 44px; padding: var(--sp-3) var(--sp-4); }
+    .tab-underline { min-height: 44px; padding: var(--sp-2) var(--sp-3); display: inline-flex; align-items: center; }
+}
+
+/* F1: green ring, offset 2px, plus a background-coloured 1px halo so the ring sits fully outside the box */
+.f1 .seg-option:focus-visible, .f1 .tab-underline:focus-visible {
+    outline: 2px solid var(--green); outline-offset: 3px; box-shadow: 0 0 0 1px var(--bg-content);
+}
+/* F2: green dashed, offset 2px */
+.f2 .seg-option:focus-visible, .f2 .tab-underline:focus-visible {
+    outline: 2px dashed var(--green); outline-offset: 2px;
+}
+/* F3 (recommend): ink solid, offset 2px -- reuses --ink, no new hue */
+.f3 .seg-option:focus-visible, .f3 .tab-underline:focus-visible {
+    outline: 2px solid var(--ink); outline-offset: 2px;
+}
+
+.verdict { margin-top: var(--sp-3); padding-top: var(--sp-2); border-top: 1px solid var(--rule-color); font-size: var(--fs-200); }
+.verdict.good { color: var(--green); font-weight: 600; }
+.verdict.bad { color: var(--ink-muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+    <h1>Focus ring — three alternatives</h1>
+    <p class="rule">
+        <b>The bug being fixed:</b> production's global <code>:focus-visible</code> outline
+        and "selected" state are both green — keyboard focus is visually identical to
+        selection. The owner's instinct is not to introduce another hue.
+    </p>
+    <p class="instructions">Tab into each column with the keyboard (or click, then Tab) to compare. Each column repeats the same two cases: a plain tab, and the <b>selected</b> segment of a measure control — the case that matters, because the selected segment is already green.</p>
+    <div class="grid">
+        <div class="option f1">
+            <div class="tag">F1</div>
+            <h3>Green ring, offset, halo</h3>
+            <p>2px green outline, 3px offset, background-coloured halo pushes it fully clear of the box.</p>
+            <div class="case-label">Plain tab</div>
+            <nav><button class="tab-underline tab-underline--active" type="button">Leaderboard</button><button class="tab-underline" type="button">Scorecards</button></nav>
+            <div class="case-label">Selected segment (already green)</div>
+            <div class="segmented"><button class="seg-option" type="button" aria-pressed="true">Net</button><button class="seg-option" type="button" aria-pressed="false">Gross</button></div>
+            <div class="verdict bad">Focus ring is still green — on the selected segment it reads as "more selected," not "this is where the keyboard is."</div>
+        </div>
+        <div class="option f2">
+            <div class="tag">F2</div>
+            <h3>Green dashed</h3>
+            <p>2px dashed green, offset 2px — texture differs from the solid underline used for selection.</p>
+            <div class="case-label">Plain tab</div>
+            <nav><button class="tab-underline tab-underline--active" type="button">Leaderboard</button><button class="tab-underline" type="button">Scorecards</button></nav>
+            <div class="case-label">Selected segment (already green)</div>
+            <div class="segmented"><button class="seg-option" type="button" aria-pressed="true">Net</button><button class="seg-option" type="button" aria-pressed="false">Gross</button></div>
+            <div class="verdict bad">More distinguishable than F1 thanks to the dash texture, but still the same hue as "selected" — weakest exactly where it matters most.</div>
+        </div>
+        <div class="option option--rec f3">
+            <div class="tag">Recommend — F3</div>
+            <h3>Ink solid, offset</h3>
+            <p>2px <code>--ink</code> outline, offset 2px. No new hue — reuses the primary text token.</p>
+            <div class="case-label">Plain tab</div>
+            <nav><button class="tab-underline tab-underline--active" type="button">Leaderboard</button><button class="tab-underline" type="button">Scorecards</button></nav>
+            <div class="case-label">Selected segment (already green)</div>
+            <div class="segmented"><button class="seg-option" type="button" aria-pressed="true">Net</button><button class="seg-option" type="button" aria-pressed="false">Gross</button></div>
+            <div class="verdict good">Ink reads clearly against the green-tinted selected segment in both modes — the one case F1/F2 fail. "Selection is green, focus is ink."</div>
+        </div>
+    </div>
+</div>
+<script>
+(function () {
+    var mode = new URLSearchParams(location.search).get('mode');
+    if (mode === 'light' || mode === 'dark') document.documentElement.setAttribute('data-mode', mode);
+})();
+</script>
+</body>
+</html>

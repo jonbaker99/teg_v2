@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en" data-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C1b comparison — leader row (L1/L2/L3)</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;600;700&display=swap');
+:root {
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Lora', Georgia, serif;
+    --fs-100: 11px; --fs-200: 12px; --fs-300: 14px; --fs-400: 16px;
+    --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 24px; --sp-6: 32px; --sp-7: 48px;
+    --r-1: 3px;
+    --rule-color: #e0e0e0;
+    --ink: #1a1a1a; --ink-2: #555555; --ink-muted: #6f6f6f;
+    --green: #228B22;
+    --hover-bg: #F3F7F3;
+    --bg-outer: #f5f3f0; --bg-content: #ffffff; --bg-card: #ffffff;
+    /* L2 tint, deliberately one step darker than --hover-bg so the leader row
+       reads as distinct from a hovered ordinary row at rest. --l2-tint-hover
+       is the C1b fix (owner selected plain L2, which shipped with a flaw --
+       see below): a third, deeper step applied specifically when the leader
+       row itself is hovered, so it visibly intensifies instead of holding
+       flat or (worse, if a generic tr:hover rule won the cascade) going
+       lighter. */
+    --l2-tint: #E4EFE4;
+    --l2-tint-hover: #C9E0C9;
+}
+html[data-mode="dark"] {
+    color-scheme: dark;
+    --ink: #ececea; --ink-2: #b6b4aa; --ink-muted: #9c9a8f;
+    --rule-color: #2e2e29; --green: #6cc77f;
+    --hover-bg: #1b2a1d;
+    --bg-outer: #16150f; --bg-content: #16150f; --bg-card: #1d1d1a;
+    --l2-tint: #1f3320;
+    --l2-tint-hover: #2c4a2d;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg-outer); color: var(--ink); font-family: var(--font-sans); font-variant-numeric: tabular-nums lining-nums; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: var(--sp-5); }
+h1 { font-family: var(--font-serif); font-size: 22px; margin: 0 0 var(--sp-2); }
+.rule {
+    font-size: var(--fs-300); color: var(--ink-2); max-width: 760px; margin: 0 0 var(--sp-6);
+    padding: var(--sp-3) var(--sp-4); background: var(--bg-content); border-left: 3px solid var(--green); border-radius: 0 var(--r-1) var(--r-1) 0;
+}
+.rule b { color: var(--ink); }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(240px, 1fr)); gap: var(--sp-5); }
+@media (max-width: 900px) { .grid { grid-template-columns: 1fr; max-width: 420px; } }
+.option { background: var(--bg-content); border-radius: var(--r-1); overflow: hidden; }
+.option-head { padding: var(--sp-3) var(--sp-4); border-bottom: 1px solid var(--rule-color); }
+.option-head .tag {
+    display: inline-block; font-size: var(--fs-100); font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; padding: 2px 8px; border-radius: var(--r-1); margin-bottom: var(--sp-1);
+}
+.option--rec .option-head .tag { background: var(--green); color: #fff; }
+.option:not(.option--rec) .option-head .tag { background: var(--rule-color); color: var(--ink-2); }
+.option-head h3 { font-size: var(--fs-400); margin: 0; }
+.option-head p { font-size: var(--fs-200); color: var(--ink-muted); margin: var(--sp-1) 0 0; }
+
+table { width: 100%; border-collapse: collapse; font-family: var(--font-sans); }
+th {
+    font-size: var(--fs-100); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 700;
+    color: var(--ink-muted); text-align: right; border-bottom: 2px solid var(--ink); padding: var(--sp-2) var(--sp-2);
+}
+th.col-player, td.col-player { text-align: left; }
+td { font-size: var(--fs-300); padding: var(--sp-2) var(--sp-2); text-align: right; border-bottom: 1px solid var(--rule-color); }
+td.col-total { font-weight: 700; }
+tr:hover td { background: var(--hover-bg); }
+
+/* L1: no fill -- inset rule + bold name + green total */
+.l1 tr.is-leader { box-shadow: inset 3px 0 0 var(--green); }
+.l1 tr.is-leader td.col-player { font-weight: 600; }
+.l1 tr.is-leader td.col-total { color: var(--green); }
+
+/* L2: two-step green tint -- leader tint one step darker than hover tint.
+   Owner selected L2. Fixed here: a third, deeper tint fires when the
+   leader row itself is hovered (:hover specifically on .is-leader, so it
+   always wins over the generic tr:hover rule above it in source order)
+   instead of holding flat or losing to the lighter --hover-bg. */
+.l2 tr.is-leader td { background: var(--l2-tint); }
+.l2 tr.is-leader:hover td { background: var(--l2-tint-hover); }
+.l2 tr.is-leader td.col-total { font-weight: 700; }
+
+/* L3: no fill -- strong rule under the row + bold total */
+.l3 tr.is-leader td { border-bottom: 2px solid var(--ink); }
+.l3 tr.is-leader td.col-total { font-weight: 700; }
+
+.verdict { margin-top: var(--sp-3); padding: var(--sp-3) var(--sp-4); font-size: var(--fs-200); }
+.verdict.good { color: var(--green); font-weight: 600; }
+.verdict.bad { color: var(--ink-muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+    <h1>Leader row — three alternatives</h1>
+    <p class="rule">
+        <b>The bug being fixed:</b> in production, <code>--table-hover-bg</code> and
+        <code>--table-toprank-bg</code> are the same colour (<code>#F3F7F3</code>) — the
+        leader row and a hovered row are indistinguishable. The owner rejected a new
+        warm hue (C1's <code>--sand</code>), so each alternative below stays in the
+        existing green family. <b>Hover a leader row in each table to see how it behaves.</b>
+    </p>
+    <p class="rule" style="border-left-color: var(--ink-muted);">
+        <b>Decision:</b> the owner selected <b>L2</b>. L2 as first mocked had a real flaw
+        (see its verdict below) — fixed in this revision before shipping it. L1 and L3
+        are kept here for the record, not carried forward.
+    </p>
+    <div class="grid">
+        <div class="option l1">
+            <div class="option-head">
+                <span class="tag">L1 (not selected)</span>
+                <h3>No fill — inset rule + weight</h3>
+                <p>3px green inset rule, bold player name, green Total. Hover tints on top, unobstructed.</p>
+            </div>
+            <table>
+                <thead><tr><th class="col-player">Player</th><th>Total</th></tr></thead>
+                <tbody>
+                    <tr class="is-leader"><td class="col-player">Gregg WILLIAMS</td><td class="col-total">−14</td></tr>
+                    <tr><td class="col-player">David MULLIN</td><td class="col-total">−5</td></tr>
+                    <tr><td class="col-player">John PATTERSON</td><td class="col-total">+3</td></tr>
+                </tbody>
+            </table>
+            <div class="verdict bad">Was the lead's recommendation (different visual channel, never collides with hover) — owner preferred the tint look of L2 instead.</div>
+        </div>
+        <div class="option option--rec l2">
+            <div class="option-head">
+                <span class="tag">Selected — L2</span>
+                <h3>Two-step green tint</h3>
+                <p>Leader tint one shade darker than the hover tint. Hover the leader row: it now deepens further, fixed below.</p>
+            </div>
+            <table>
+                <thead><tr><th class="col-player">Player</th><th>Total</th></tr></thead>
+                <tbody>
+                    <tr class="is-leader"><td class="col-player">Gregg WILLIAMS</td><td class="col-total">−14</td></tr>
+                    <tr><td class="col-player">David MULLIN</td><td class="col-total">−5</td></tr>
+                    <tr><td class="col-player">John PATTERSON</td><td class="col-total">+3</td></tr>
+                </tbody>
+            </table>
+            <div class="verdict good">Fixed: leader row now has its own <code>:hover</code> rule with a deeper tint, so it always intensifies rather than flattening or losing to the generic row-hover colour.</div>
+        </div>
+        <div class="option l3">
+            <div class="option-head">
+                <span class="tag">L3 (not selected)</span>
+                <h3>Strong rule under the row</h3>
+                <p>No fill; 2px ink rule under the leader row + bold Total.</p>
+            </div>
+            <table>
+                <thead><tr><th class="col-player">Player</th><th>Total</th></tr></thead>
+                <tbody>
+                    <tr class="is-leader"><td class="col-player">Gregg WILLIAMS</td><td class="col-total">−14</td></tr>
+                    <tr><td class="col-player">David MULLIN</td><td class="col-total">−5</td></tr>
+                    <tr><td class="col-player">John PATTERSON</td><td class="col-total">+3</td></tr>
+                </tbody>
+            </table>
+            <div class="verdict bad">Reads as "end of a group" (like a header underline), not "this is the leader".</div>
+        </div>
+    </div>
+</div>
+<script>
+(function () {
+    var mode = new URLSearchParams(location.search).get('mode');
+    if (mode === 'light' || mode === 'dark') document.documentElement.setAttribute('data-mode', mode);
+})();
+</script>
+</body>
+</html>

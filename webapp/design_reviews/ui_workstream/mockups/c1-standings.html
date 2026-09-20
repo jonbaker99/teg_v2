@@ -3,12 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>C1 mockup — Standings (/leaderboard)</title>
+<title>C1b mockup — Standings (/leaderboard)</title>
 <style>
 /* =========================================================================
-   Clean Editorial Precision — token set (C1 proposal)
+   Clean Editorial Precision — token set (C1 proposal, revised by C1b)
    Self-contained: no app CSS imported, no app CSS imports this file.
    Reproduction: ?layout=page|layered&mode=light|dark (JS below applies it).
+
+   C1b changes from C1 (see C1b-handoff.md):
+   1. --bg-content restored: C1's mockups set --bg-panel == --bg-outer,
+      silently flattening production's white .main-content card on the
+      grey page. That was a mockup defect, not a proposal -- reverted here,
+      light mode only (dark mode was already flat in production).
+   2. Leader row: --sand removed. L1 selected -- no fill, green inset rule +
+      green Total + bold name. Fixes the real bug (--table-hover-bg and
+      --table-toprank-bg are the same colour in production) without a new
+      hue, per the owner's rejection of --sand.
+   3. --focus: green -> --ink (F3). Fixes the real bug (global focus-visible
+      outline and "selected" both render green in production) without a
+      new hue -- reuses the existing --ink token instead.
    ========================================================================= */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;600;700&display=swap');
 
@@ -39,40 +52,59 @@
     --ink-2: #555555;
     --ink-muted: #6f6f6f; /* corrected from spec's #767676 during verification: #767676 fails 4.5:1 on the Clean Page panel (#f5f3f0) at 4.10 -- #6f6f6f passes at 4.54 */
     --green: #228B22; /* forestgreen keyword resolved */
-    --sand: #f2ede1;
-    --focus: #1a6fd4;
+    --focus: var(--ink); /* C1b F3: was #1a6fd4 (a new blue hue). --ink reuses an existing token and stays visible on a green-tinted selected segment, where green-on-green focus would not. */
     --success: var(--green);
     --warning: #8a6d1f;
     --failure: #a3302a;
-    --hover-bg: #F3F7F3; /* unchanged existing green hover tint -- kept distinct from --sand so leader row and hovered row read as different states */
+    --hover-bg: #F3F7F3;
+    /* C1b leader-row L2 (owner selected, revised from C1's --sand): a
+       two-step green tint, one shade darker than --hover-bg so the leader
+       row reads distinct from a hovered ordinary row at rest. --leader-hover
+       is the fix for L2's own flaw found during comparison (see
+       mockups/c1b-leader-row.html) -- without it, hovering the leader row
+       itself either held flat or (if a generic tr:hover rule won the
+       cascade) went *lighter*, the opposite of emphasis. */
+    --leader-tint: #E4EFE4;
+    --leader-tint-hover: #C9E0C9;
 
     /* Layout surfaces -- overridden per data-layout below */
     --bg-outer: #ffffff;
     --bg-panel: #ffffff;
+    --bg-content: #ffffff; /* C1b: the restored white content card, distinct from --bg-panel */
+    --bg-card: #ffffff;
+    --shadow-content: none;
+    --content-border: none;
+    --shadow-card: none;
+    --card-border: none;
+}
+
+/* Clean Page layout (default): grey page, white content card, white data-cards float on the content card (unchanged from production) */
+html[data-layout="page"] {
+    --bg-outer: #f5f3f0;
+    --bg-panel: #f5f3f0;
+    --bg-content: #ffffff;
+    --shadow-content: 0 1px 4px rgba(0,0,0,0.08);
+    --content-border: none;
     --bg-card: #ffffff;
     --shadow-card: none;
     --card-border: none;
 }
 
-/* Clean Page layout (default): flat single white card on warm grey */
-html[data-layout="page"] {
-    --bg-outer: #f5f3f0;
-    --bg-panel: #f5f3f0;
-    --bg-card: #ffffff;
-    --shadow-card: 0 1px 4px rgba(0,0,0,0.08);
-    --card-border: none;
-}
-
-/* Clean Layered layout: 3-layer hierarchy, data-card gets a real shadow */
+/* Clean Layered layout: 3-layer hierarchy -- outer stone, panel taupe, content card transparent over the panel (production keeps depth at the .data-card level, not the content-card level), data-cards get the real shadow */
 html[data-layout="layered"] {
     --bg-outer: #e0ddd8;
     --bg-panel: #f5f3f0;
+    --bg-content: transparent;
+    --shadow-content: none;
+    --content-border: none;
     --bg-card: #ffffff;
     --shadow-card: 0 1px 2px rgba(90,70,50,0.08), 0 4px 14px rgba(90,70,50,0.13);
     --card-border: 1px solid var(--rule-color);
 }
 
-/* Dark mode -- orthogonal to layout, re-points the same roles */
+/* Dark mode -- orthogonal to layout, re-points the same roles. Content card
+   stays flat in dark mode, matching production (dark.css already sets
+   .main-content/.page-panel to the same near-black as the page). */
 html[data-mode="dark"] {
     color-scheme: dark;
     --ink: #ececea;
@@ -80,19 +112,22 @@ html[data-mode="dark"] {
     --ink-muted: #9c9a8f; /* verified 5.98-6.47:1 on dark surfaces used below */
     --rule-color: #2e2e29;
     --green: #6cc77f;
-    --sand: #403420; /* verified: green-on-sand 5.85:1, distinguishable from card bg (contrast 1.39, a deliberate warm-vs-neutral cue, not a luminance jump) */
-    --focus: #5b9bde;
+    --focus: var(--ink);
     --warning: #c9a227;
     --failure: #e06a63;
     --hover-bg: #1b2a1d;
+    --leader-tint: #1f3320;
+    --leader-tint-hover: #2c4a2d;
     --bg-outer: #16150f;
     --bg-panel: #16150f;
+    --bg-content: #16150f;
+    --shadow-content: none;
     --bg-card: #1d1d1a;
     --shadow-card: none;
 }
-html[data-mode="dark"][data-layout="page"] { --bg-panel: #16150f; --bg-card: #1d1d1a; }
+html[data-mode="dark"][data-layout="page"] { --bg-panel: #16150f; --bg-content: #16150f; --bg-card: #1d1d1a; }
 html[data-mode="dark"][data-layout="layered"] {
-    --bg-outer: #0f0e0a; --bg-panel: #16150f; --bg-card: #1d1d1a;
+    --bg-outer: #0f0e0a; --bg-panel: #16150f; --bg-content: #16150f; --bg-card: #1d1d1a;
     --shadow-card: 0 1px 2px rgba(0,0,0,0.4), 0 4px 14px rgba(0,0,0,0.5);
     --card-border: 1px solid var(--rule-color);
 }
@@ -106,11 +141,25 @@ body {
     font-variant-numeric: tabular-nums lining-nums;
     -webkit-font-smoothing: antialiased;
 }
-.page-wrap { max-width: 1000px; margin: 0 auto; padding: 0 var(--sp-5); }
+.page-wrap { max-width: 1000px; margin: 0 auto; padding: var(--sp-5); }
 .panel { background: var(--bg-panel); }
 
+/* ---- Restored white content card (C1b) -- production's .main-content,
+   expressed in tokens. --sp-6 (32px) side padding, not production's literal
+   40px -- 40px is not on the 4px ramp; recorded as a deliberate 8px
+   tightening, not an eighth step added to the scale. ---- */
+.content-card {
+    background: var(--bg-content);
+    box-shadow: var(--shadow-content);
+    border: var(--content-border);
+    border-radius: var(--r-1);
+    margin: var(--sp-5) 0;
+    padding: var(--sp-6);
+}
+@media (max-width: 640px) { .content-card { padding: var(--sp-4); margin: var(--sp-4) 0; } }
+
 /* ---- Page title (H1) -- unchanged from current system, expressed in tokens ---- */
-.page-title-area { padding: var(--sp-5) 0 var(--sp-3); }
+.page-title-area { padding: 0 0 var(--sp-3); }
 .page-label {
     display: block; font-family: var(--font-sans); font-size: var(--fs-100);
     font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em;
@@ -216,13 +265,19 @@ body {
     border-bottom: 1px solid var(--rule-color);
 }
 .standings-table td.col-total { font-size: 1.15em; font-weight: 700; }
-.standings-table tr.is-leader {
-    background: var(--sand);
-    box-shadow: inset 3px 0 0 var(--green);
-}
-.standings-table tr.is-leader td.col-total { color: var(--green); }
+/* ---- Leader row: L2 (owner selected) -- two-step green tint, one shade
+   darker than --hover-bg so the leader row reads distinct from a hovered
+   ordinary row at rest. Replaces C1's --sand tint, which the owner rejected
+   as a new hue; also replaces the lead's own L1 recommendation, which the
+   owner passed over in favour of this tint look. The leader row gets its
+   own :hover rule with a deeper tint (--leader-tint-hover) so hovering it
+   intensifies rather than holding flat or losing to the lighter generic
+   row-hover colour -- the flaw the plain version of L2 shipped with during
+   comparison. See C1b-handoff.md L1/L2/L3 and mockups/c1b-leader-row.html. ---- */
+.standings-table tr.is-leader td { background: var(--leader-tint); }
+.standings-table tr.is-leader td.col-total { font-weight: 700; }
 .standings-table tr:hover td { background: var(--hover-bg); }
-.standings-table tr.is-leader:hover td { background: var(--sand); } /* leader tint wins over hover -- distinguishable now that sand != hover-bg */
+.standings-table tr.is-leader:hover td { background: var(--leader-tint-hover); }
 .round-strip { display: none; font-size: var(--fs-100); color: var(--ink-muted); }
 .round-strip b { color: var(--ink); font-weight: 600; }
 
@@ -233,7 +288,6 @@ body {
 }
 
 @media (max-width: 640px) {
-    .page-wrap { padding: 0 var(--sp-4); }
     .standings-table th.col-r1, .standings-table th.col-r2, .standings-table th.col-r3, .standings-table th.col-r4,
     .standings-table td.col-r1, .standings-table td.col-r2, .standings-table td.col-r3, .standings-table td.col-r4 { display: none; }
     .round-strip { display: block; margin-top: 2px; }
@@ -257,6 +311,8 @@ footer.note {
         <span class="page-label">TEG History</span>
         <h1 class="page-title">TEG 18 Results</h1>
     </div>
+
+    <div class="content-card">
 
     <nav class="section-nav" aria-label="Leaderboard sections">
         <button class="tab-underline tab-underline--active" type="button">Leaderboard</button>
@@ -352,12 +408,16 @@ footer.note {
             </div>
         </div>
     </div>
+
+    </div>
 </div>
 </div>
 <footer class="note">
-    C1 mockup — Clean Editorial Precision proposal. Representative TEG 18 data (5 players; no
-    real 8-player fixture exists in this checkout, see P0-handoff.md). Reproduce with
-    <code>?layout=page|layered&amp;mode=light|dark</code>. Base commit e50078d.
+    C1b mockup — revises C1's Clean Editorial Precision proposal (white content
+    card restored, L2 leader row, F3 ink focus ring). Representative TEG 18
+    data (5 players; no real 8-player fixture exists in this checkout, see
+    P0-handoff.md). Reproduce with
+    <code>?layout=page|layered&amp;mode=light|dark</code>. Base commit 809b97d.
 </footer>
 <script>
 (function () {

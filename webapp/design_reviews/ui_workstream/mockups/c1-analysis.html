@@ -3,14 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>C1 mockup — Analysis (/records)</title>
+<title>C1b mockup — Analysis (/records)</title>
 <style>
 /* =========================================================================
-   Clean Editorial Precision — token set (C1 proposal)
+   Clean Editorial Precision — token set (C1 proposal, revised by C1b)
    Self-contained: no app CSS imported, no app CSS imports this file.
    Identical token block to c1-standings.html -- see that file's comments
    for the reasoning behind each value; not repeated verbatim here.
    Reproduction: ?layout=page|layered&mode=light|dark (JS below applies it).
+
+   C1b changes: --bg-content restored (white content card, light mode only);
+   --focus -> --ink (F3, was a new blue hue). No leader row on this page, so
+   the L1 leader-row change does not apply here.
    ========================================================================= */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;600;700&display=swap');
 
@@ -27,41 +31,57 @@
     --ink-2: #555555;
     --ink-muted: #6f6f6f; /* corrected from spec's #767676, see c1-standings.html */
     --green: #228B22;
-    --sand: #f2ede1;
-    --focus: #1a6fd4;
+    --focus: var(--ink); /* C1b F3: was #1a6fd4 -- see c1-standings.html */
     --success: var(--green);
     --warning: #8a6d1f;
     --failure: #a3302a;
     --hover-bg: #F3F7F3;
 
-    --bg-outer: #ffffff; --bg-panel: #ffffff; --bg-card: #ffffff;
-    --shadow-card: none; --card-border: none;
+    --bg-outer: #ffffff; --bg-panel: #ffffff; --bg-content: #ffffff; --bg-card: #ffffff;
+    --shadow-content: none; --content-border: none; --shadow-card: none; --card-border: none;
 }
-html[data-layout="page"] { --bg-outer: #f5f3f0; --bg-panel: #f5f3f0; --bg-card: #ffffff; --shadow-card: 0 1px 4px rgba(0,0,0,0.08); }
+html[data-layout="page"] {
+    --bg-outer: #f5f3f0; --bg-panel: #f5f3f0; --bg-content: #ffffff;
+    --shadow-content: 0 1px 4px rgba(0,0,0,0.08); --content-border: none;
+    --bg-card: #ffffff; --shadow-card: none; --card-border: none;
+}
 html[data-layout="layered"] {
-    --bg-outer: #e0ddd8; --bg-panel: #f5f3f0; --bg-card: #ffffff;
+    --bg-outer: #e0ddd8; --bg-panel: #f5f3f0; --bg-content: transparent; --shadow-content: none;
+    --bg-card: #ffffff;
     --shadow-card: 0 1px 2px rgba(90,70,50,0.08), 0 4px 14px rgba(90,70,50,0.13);
     --card-border: 1px solid var(--rule-color);
 }
 html[data-mode="dark"] {
     color-scheme: dark;
     --ink: #ececea; --ink-2: #b6b4aa; --ink-muted: #9c9a8f;
-    --rule-color: #2e2e29; --green: #6cc77f; --sand: #403420;
-    --focus: #5b9bde; --warning: #c9a227; --failure: #e06a63; --hover-bg: #1b2a1d;
-    --bg-outer: #16150f; --bg-panel: #16150f; --bg-card: #1d1d1a; --shadow-card: none;
+    --rule-color: #2e2e29; --green: #6cc77f;
+    --focus: var(--ink); --warning: #c9a227; --failure: #e06a63; --hover-bg: #1b2a1d;
+    --bg-outer: #16150f; --bg-panel: #16150f; --bg-content: #16150f; --shadow-content: none;
+    --bg-card: #1d1d1a; --shadow-card: none;
 }
 html[data-mode="dark"][data-layout="layered"] {
-    --bg-outer: #0f0e0a; --bg-panel: #16150f; --bg-card: #1d1d1a;
+    --bg-outer: #0f0e0a; --bg-panel: #16150f; --bg-content: #16150f; --bg-card: #1d1d1a;
     --shadow-card: 0 1px 2px rgba(0,0,0,0.4), 0 4px 14px rgba(0,0,0,0.5);
     --card-border: 1px solid var(--rule-color);
 }
 
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg-outer); color: var(--ink); font-family: var(--font-sans); font-variant-numeric: tabular-nums lining-nums; -webkit-font-smoothing: antialiased; }
-.page-wrap { max-width: 720px; margin: 0 auto; padding: 0 var(--sp-5); }
+.page-wrap { max-width: 720px; margin: 0 auto; padding: var(--sp-5); }
 .panel { background: var(--bg-panel); }
 
-.page-title-area { padding: var(--sp-5) 0 var(--sp-3); }
+/* Restored white content card (C1b) -- see c1-standings.html for rationale */
+.content-card {
+    background: var(--bg-content);
+    box-shadow: var(--shadow-content);
+    border: var(--content-border);
+    border-radius: var(--r-1);
+    margin: var(--sp-5) 0;
+    padding: var(--sp-6);
+}
+@media (max-width: 640px) { .content-card { padding: var(--sp-4); margin: var(--sp-4) 0; } }
+
+.page-title-area { padding: 0 0 var(--sp-3); }
 .page-label { display: block; font-size: var(--fs-100); font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-muted); margin-bottom: var(--sp-1); }
 .page-title { font-family: var(--font-serif); font-weight: 600; color: var(--ink); margin: 0; line-height: 1.15; font-size: var(--fs-600); }
 @media (min-width: 768px) { .page-title { font-size: var(--fs-700); } }
@@ -132,6 +152,8 @@ footer.note {
         <span class="page-label">Records</span>
         <h1 class="page-title">TEG Records</h1>
     </div>
+
+    <div class="content-card">
 
     <nav class="section-nav" aria-label="Records sections">
         <button class="tab-underline tab-underline--active" type="button">TEG Records</button>
@@ -204,13 +226,16 @@ footer.note {
             </details>
         </div>
     </div>
+
+    </div>
 </div>
 </div>
 <footer class="note">
-    C1 mockup — Clean Editorial Precision proposal. Record values/owners are real
+    C1b mockup — revises C1's Clean Editorial Precision proposal (white content
+    card restored, F3 ink focus ring). Record values/owners are real
     (TEG Records tab, current data); location/year context is representative, not
     verified against the live dataset. Reproduce with
-    <code>?layout=page|layered&amp;mode=light|dark</code>. Base commit e50078d.
+    <code>?layout=page|layered&amp;mode=light|dark</code>. Base commit 809b97d.
 </footer>
 <script>
 (function () {
