@@ -61,18 +61,24 @@
    .pill-group used as a measure row" -- Standard/Adjusted/Ranking are
    exactly that (mutually exclusive views of the same series, none
    "better"), not an action, so .pill-group was the wrong pattern here.
-   No hidden input needed: each option already carries its own hx-vals,
-   unlike Net/Gross which triggers the shared TEG select's change event. #}
+   Request pattern also switched to match Net/Gross exactly: each button
+   sets the hidden input then triggers 'change' on the TEG <select>
+   (results.html/leaderboard.html, outside the swapped #{{ ns }}-content,
+   already includes #{{ ns }}-chart-variant in its hx-include) rather than
+   carrying hx-get itself, the way the old .pill buttons did. A button that
+   both fires the request AND is destroyed by the swap it causes is the
+   element whose focus the browser has to drop mid-request -- on some
+   mobile browsers that shows as the page jumping to the top. The TEG
+   select never leaves the DOM, so it never loses focus/scroll this way -
+   same reasoning as the tab-underline buttons above it. #}
 <input type="hidden" id="{{ ns }}-chart-variant" name="chart_variant" value="{{ active_chart_variant }}">
 <p class="chart-controls-label">Choose chart type:</p>
 <div class="toggle-group">
     <div class="segmented" role="group" aria-label="Chart type">
         {% for cid, clabel in chart_types %}
         <button type="button" class="seg-option" aria-pressed="{{ 'true' if cid == active_chart_variant else 'false' }}"
-                onclick="document.getElementById('{{ ns }}-chart-variant').value='{{ cid }}'"
-                hx-get="{{ route_base }}/table" hx-target="#{{ ns }}-content"
-                hx-include="#{{ ns }}-teg-select, #{{ ns }}-tab-input"
-                hx-vals='{"chart_variant": "{{ cid }}"}'>
+                onclick="document.getElementById('{{ ns }}-chart-variant').value='{{ cid }}';
+                         htmx.trigger(document.getElementById('{{ ns }}-teg-select'), 'change')">
             {{ clabel }}
         </button>
         {% endfor %}
