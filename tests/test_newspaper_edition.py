@@ -8,6 +8,7 @@ row-packing rule this pins.
 from __future__ import annotations
 
 import pytest
+import pandas as pd
 
 pytestmark = [pytest.mark.unit]
 
@@ -19,6 +20,109 @@ from teg_analysis.reporting.newspaper_edition import (
     plan_rows,
     split_value_qualifier,
 )
+
+
+def _configure_report_discovery(monkeypatch, completed, in_progress,
+                                tournament_tegs=(), round_tegs=()):
+    """Patch status files and report artefact probes for discovery tests."""
+    from teg_analysis.reporting import newspaper_edition
+
+    status_files = {
+        newspaper_edition.COMPLETED_TEGS_CSV: completed,
+        newspaper_edition.IN_PROGRESS_TEGS_CSV: in_progress,
+    }
+
+    def fake_read_file(path):
+        result = status_files[path]
+        if isinstance(result, Exception):
+            raise result
+        return result
+
+    monkeypatch.setattr(newspaper_edition, "read_file", fake_read_file)
+    monkeypatch.setattr(
+        newspaper_edition, "has_edition",
+        lambda teg, round_num=None: round_num is None and teg in tournament_tegs,
+    )
+    monkeypatch.setattr(
+        newspaper_edition, "available_rounds",
+        lambda teg: (1,) if teg in round_tegs else (),
+    )
+    newspaper_edition.available_tegs.cache_clear()
+    newspaper_edition.available_report_tegs.cache_clear()
+    return newspaper_edition
+
+
+@pytest.fixture
+def report_discovery(monkeypatch):
+    """Keep lru-cached discovery isolated from the rest of the suite."""
+    from teg_analysis.reporting import newspaper_edition
+
+    yield lambda completed, in_progress, **kwargs: _configure_report_discovery(
+        monkeypatch, completed, in_progress, **kwargs
+    )
+    newspaper_edition.available_tegs.cache_clear()
+    newspaper_edition.available_report_tegs.cache_clear()
+
+
+def test_available_tegs_remains_completed_only(report_discovery):
+    edition = report_discovery(
+        pd.DataFrame({"TEGNum": [11]}),
+        pd.DataFrame({"TEGNum": [12]}),
+        tournament_tegs=(11, 12),
+    )
+
+    assert edition.available_tegs() == (11,)
+
+
+def test_available_report_tegs_includes_in_progress_round_only(report_discovery):
+    edition = report_discovery(
+        pd.DataFrame({"TEGNum": [11]}),
+        pd.DataFrame({"TEGNum": [12]}),
+        round_tegs=(12,),
+    )
+
+    assert edition.available_report_tegs() == (12,)
+
+
+def test_available_report_tegs_excludes_candidates_without_artefacts(report_discovery):
+    edition = report_discovery(
+        pd.DataFrame({"TEGNum": [11]}),
+        pd.DataFrame({"TEGNum": [12]}),
+    )
+
+    assert edition.available_report_tegs() == ()
+
+
+def test_available_report_tegs_deduplicates_valid_candidates(report_discovery):
+    edition = report_discovery(
+        pd.DataFrame({"TEGNum": [11, "11", 12, 0, "bad"]}),
+        pd.DataFrame({"TEGNum": [12, 13, 2.5]}),
+        tournament_tegs=(11, 12, 13),
+    )
+
+    assert edition.available_report_tegs() == (11, 12, 13)
+
+
+@pytest.mark.parametrize(
+    ("completed", "in_progress", "expected"),
+    [
+        (FileNotFoundError(), pd.DataFrame({"TEGNum": [12]}), (12,)),
+        (pd.DataFrame({"unexpected": [11]}), pd.DataFrame({"TEGNum": [12]}), (12,)),
+        (pd.DataFrame({"TEGNum": [11]}), FileNotFoundError(), (11,)),
+        (pd.DataFrame({"TEGNum": [11]}), pd.DataFrame({"unexpected": [12]}), (11,)),
+    ],
+    ids=("completed-missing", "completed-malformed", "in-progress-missing", "in-progress-malformed"),
+)
+def test_available_report_tegs_preserves_the_other_status_file(
+    report_discovery, completed, in_progress, expected,
+):
+    edition = report_discovery(
+        completed,
+        in_progress,
+        tournament_tegs=(11, 12),
+    )
+
+    assert edition.available_report_tegs() == expected
 
 
 def _article(words: int, kicker: str = "SIDEBAR") -> dict:

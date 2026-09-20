@@ -44,6 +44,7 @@ from teg_analysis.io import read_file, read_text_file
 
 COMMENTARY_DIR = "data/commentary"
 COMPLETED_TEGS_CSV = "data/completed_tegs.csv"
+IN_PROGRESS_TEGS_CSV = "data/in_progress_tegs.csv"
 
 
 class ArticleFilter(NamedTuple):
@@ -225,12 +226,45 @@ def available_report_tegs() -> tuple[int, ...]:
     that exists for that TEG — which requires the TEG itself to be selectable
     first).
     """
+    candidates = (
+        _report_teg_candidates(COMPLETED_TEGS_CSV)
+        | _report_teg_candidates(IN_PROGRESS_TEGS_CSV)
+    )
+    return tuple(t for t in sorted(candidates) if has_edition(t) or available_rounds(t))
+
+
+def _report_teg_candidates(path: str) -> set[int]:
+    """Return usable TEG numbers from one report-status CSV.
+
+    Report discovery must not turn a missing or temporarily malformed status
+    file into an empty reports index: Railway can refresh the completed and
+    in-progress files independently. Keep valid rows, and let the caller union
+    the two sources.
+    """
     try:
-        completed = read_file(COMPLETED_TEGS_CSV)
-        candidates = sorted(int(n) for n in completed["TEGNum"].astype(int).unique())
-    except Exception:          # noqa: BLE001 - no CSV, unreadable, unexpected shape
-        return ()
-    return tuple(t for t in candidates if has_edition(t) or available_rounds(t))
+        values = read_file(path)["TEGNum"]
+    except Exception:          # noqa: BLE001 - missing, unreadable, or wrong schema
+        return set()
+
+    candidates: set[int] = set()
+    for value in values:
+        if isinstance(value, bool):
+            continue
+        try:
+            if isinstance(value, str):
+                if not value.strip().isdigit():
+                    continue
+                teg = int(value)
+            else:
+                teg = int(value)
+                if value != teg:
+                    continue
+            if teg < 1:
+                continue
+        except (TypeError, ValueError, OverflowError):
+            continue
+        candidates.add(teg)
+    return candidates
 
 
 def clear_edition_caches() -> None:

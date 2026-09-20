@@ -120,6 +120,51 @@ def test_teg_reports_round_pills_cover_every_round_storyline_round(client):
         assert f">R{r}<" in resp.text
 
 
+def test_teg_reports_keeps_requested_in_progress_round_edition(client, monkeypatch):
+    """A direct round-report link must not fall back to the latest completed TEG."""
+    from teg_analysis.reporting import newspaper_edition
+    from webapp.routes import reports
+
+    in_progress_teg = 99
+    selected = []
+
+    def fake_read_file(path):
+        if path == newspaper_edition.COMPLETED_TEGS_CSV:
+            return pd.DataFrame({"TEGNum": [18]})
+        if path == newspaper_edition.IN_PROGRESS_TEGS_CSV:
+            return pd.DataFrame({"TEGNum": [in_progress_teg]})
+        raise AssertionError(f"unexpected status-file read: {path}")
+
+    def fake_build_edition(teg, round_num=None):
+        selected.append((teg, round_num))
+        return {"teg": teg, "round": round_num}
+
+    monkeypatch.setattr(newspaper_edition, "read_file", fake_read_file)
+    monkeypatch.setattr(newspaper_edition, "has_edition", lambda *_: False)
+    monkeypatch.setattr(
+        newspaper_edition,
+        "available_rounds",
+        lambda teg: (1,) if teg == in_progress_teg else (),
+    )
+    newspaper_edition.available_report_tegs.cache_clear()
+    monkeypatch.setattr(reports, "available_report_tegs", newspaper_edition.available_report_tegs)
+    monkeypatch.setattr(reports, "available_rounds", lambda teg: (1,) if teg == in_progress_teg else ())
+    monkeypatch.setattr(reports, "has_edition", lambda *_: False)
+    monkeypatch.setattr(reports, "build_edition", fake_build_edition)
+    monkeypatch.setattr(reports, "render_desktop_html", lambda edition, rail: "")
+    monkeypatch.setattr(reports, "for_page", lambda edition: edition)
+    monkeypatch.setattr(reports, "has_pdf", lambda *_: False)
+
+    try:
+        resp = client.get("/teg-reports", params={"teg": in_progress_teg, "round": 1})
+    finally:
+        newspaper_edition.available_report_tegs.cache_clear()
+
+    _assert_ok_no_error(resp)
+    assert selected == [(in_progress_teg, 1)]
+    assert f'<option value="{in_progress_teg}" selected>' in resp.text
+
+
 # ---------------------------------------------------------------------------
 # Player profile
 # ---------------------------------------------------------------------------
