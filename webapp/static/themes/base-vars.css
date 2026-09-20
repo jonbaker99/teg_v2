@@ -1584,6 +1584,15 @@ body.layout-wide .content-wrapper {
     width: 100%;
 }
 
+/* Per-row round strip (I1, partials/_standings_table.html): hidden by
+   default -- the round values are visible instead as .col-round table
+   cells at this width. mobile.css reveals this and hides .col-round at
+   <=640px so exactly one copy of each round value is ever visible or in
+   the accessibility tree. */
+.standings-rounds {
+    display: none;
+}
+
 /* ── Leader row — L2, the owner-selected fix (C3) ──
    The bug (C1-handoff.md §1): --table-hover-bg and --table-toprank-bg are
    both #F3F7F3, so the leader row and a hovered row are pixel-identical.
@@ -1591,9 +1600,10 @@ body.layout-wide .content-wrapper {
    rule above -- .top-rank is used site-wide (Records, History, …) and this
    chat migrates the smallest representative set, not every table; a global
    retint is C5's job (C1-handoff.md §10). This also affects /results,
-   which renders through the same _leaderboard_table_html() and shares this
-   exact bug -- an intentional, flagged side effect, not scope creep: both
-   pages show the same table shape with the same broken leader/hover colour.
+   which renders through the same unified standings table (I1,
+   partials/_standings_table.html) and shares this exact bug -- an
+   intentional, flagged side effect, not scope creep: both pages show the
+   same table shape with the same broken leader/hover colour.
    Specificity note (load-bearing, see C1b-handoff.md §6): the :hover
    variant below (3 class-level selectors: leaderboard-table + top-rank +
    :hover) must stay higher-specificity than both the bare .top-rank rule

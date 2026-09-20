@@ -4,8 +4,9 @@ fonts against real leaderboard and records content.
 Not part of the product surface: no auth, not linked from nav, not in
 STATUS/TODOS. Font swapping is entirely client-side via CSS custom
 properties (no cookies, no reload) so options can be compared instantly;
-`.col-num` / `.col-player` are the real classes `_leaderboard_table_html`
-(webapp/routes/history.py) and `_build_records_html` (webapp/routes/
+`.col-num` / `.col-player` are the real classes the unified standings table
+(partials/_standings_table.html, fed by `_standings_rows` in
+webapp/routes/history.py) and `_build_records_html` (webapp/routes/
 records.py) already emit, so the same font-lab.css rules apply to both
 tables with no changes to production table-generation code.
 """

@@ -2,7 +2,37 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-20 (Consistent UI stage complete: C5, C6 review, C6a fix — live on main)
+**Last updated:** 2026-09-20 (I1: unified public standings renderer — worktree, not yet merged)
+
+## 2026-09-20 — UI implementation roadmap Improve stage: I1 unified standings renderer
+
+Branch `claude/ui-i1`, worktree, based on `bb3f8df` (C6/C6a's accepted base). Not yet merged.
+
+`/leaderboard` and `/results` already shared one context builder but shipped three overlapping
+render paths: a Python HTML-string table, a phone-only card list (`.lb-cards`) that turned out to
+be CSS-dead at every viewport since R3.2 (`.standings-page .lb-cards { display: none }` always
+won), and two page partials that had silently drifted (`/leaderboard`'s Scorecards tab was
+double-wrapping already-complete markup, the same defect class F4 fixed on Latest Round).
+
+Replaced all three with one semantic Jinja standings table (`partials/_standings_table.html`, fed
+by `_standings_rows` in `webapp/routes/history.py`) behind one shared page partial
+(`partials/_standings_page.html`), included by two thin id-prefixed wrappers so route URLs,
+element ids and HTMX swap targets are unchanged. The table reflows at ≤640px: each row's round
+values render once as desktop `<td>` cells and once as a `.standings-rounds` strip, with CSS
+showing exactly one copy per viewport — so the two can't drift the way the old card path did.
+Deleted the dead `.lb-cards`/`.lb-card*` markup and CSS; fixed `/leaderboard`'s Scorecards
+double-wrap along the way. Player links stay off (`link_players=False`, unchanged default).
+
+Verified: `tests/test_webapp_pages.py` (83 passed, 8 new — round-count-varies, strip/cell parity,
+ties, empty state, card-markup-gone, `/leaderboard` and `/results` render byte-identical standings,
+Gross omits the spoon); `tests/test_imports.py` + `tests/test_no_streamlit_imports.py`;
+`scripts/check_pandas_compat.py` (0 errors); `scripts/check_python_compat.py`. Browser: TEG 18
+(5 players), TEG 7 (6 players, `NetVP` era — no eight-player TEG exists), TEG 2 (3 rounds), TEG 14
+(4 players) at 320–1280px, light/dark, both Clean layouts; HTMX TEG-swap re-fires `names-break`
+and keeps the race-chart readout wired. Full detail: `webapp/design_reviews/ui_workstream/I1-handoff.md`.
+
+**Next:** owner review and merge decision, then I2 (public interaction/URL state) or I3 (Contents
+product contract) — see `webapp/design_reviews/ui-implementation-roadmap.md`.
 
 ## 2026-09-20 — UI implementation roadmap Consistent UI stage complete: C5 rhythm pass, C6 review, C6a fix
 

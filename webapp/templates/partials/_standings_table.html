@@ -1,0 +1,44 @@
+{#- Unified standings table (I1). One semantic table backs both the desktop
+    columns and the phone round-strip: each row carries its round values
+    twice in markup (once as <td class="col-round">, once inside
+    .standings-rounds), and mobile.css shows exactly one copy per viewport
+    via display:none rather than swapping templates -- so the two can never
+    disagree. Fed by _standings_rows() (webapp/routes/history.py), shared
+    verbatim by partials/_standings_page.html for both /leaderboard and
+    /results (same _results_context() data builder). -#}
+{% if not standings.rows %}
+<p class="text-muted text-sm">No data available.</p>
+{% else %}
+<table class="teg-table leaderboard-table standings-table">
+  <thead>
+    <tr>
+      <th class="col-rank">Rank</th>
+      <th class="col-player">Player</th>
+      {% for label in standings.round_labels %}
+      <th class="col-num col-round">{{ label }}</th>
+      {% endfor %}
+      <th class="col-num col-total total">Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in standings.rows %}
+    <tr{% if r.lead %} class="top-rank"{% endif %}>
+      <td class="col-rank">{{ r.rank }}</td>
+      <td class="col-player">
+        {% if r.code %}<a href="/player/{{ r.code }}">{% endif %}
+        <span class="player-name"><span class="first">{{ r.first }}</span> <span class="last">{{ r.last }}</span></span>
+        {% if r.code %}</a>{% endif %}
+        {# Phone-only round strip: same values as the .col-round cells
+           below, hidden above 640px (base-vars.css) and revealed in place
+           of the round columns at 640px and under (mobile.css). #}
+        <span class="standings-rounds">{% for label, val in r.rounds %}{{ label }} <b>{{ val }}</b>{% if not loop.last %} &middot; {% endif %}{% endfor %}</span>
+      </td>
+      {% for label, val in r.rounds %}
+      <td class="col-num col-round">{{ val }}</td>
+      {% endfor %}
+      <td class="col-num total col-total">{{ r.total }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}

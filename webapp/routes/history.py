@@ -489,42 +489,48 @@ def _teg_is_complete(teg_num: int) -> bool:
         return False
 
 
-def _leaderboard_table_html(df: pd.DataFrame, link_players: bool = False) -> str:
-    """Render a results leaderboard: full-width, rank/score columns centred,
-    player linked, and the leading row(s) tinted (rank starting with '1').
+def _split_player_name(name) -> tuple:
+    """Split "David MULLIN" into (first, last) plain strings -- the same
+    forename/surname split _wrap_player_name uses, but unescaped and
+    unwrapped so Jinja can emit the .player-name/.first/.last spans itself
+    (partials/_standings_table.html). Mirrors _wrap_player_name exactly so
+    the two never drift."""
+    if not isinstance(name, str) or not name.strip():
+        return ("" if name is None else str(name), "")
+    first, *rest = re.split(r"\s+", name.strip(), maxsplit=1)
+    return (first, rest[0] if rest else "")
+
+
+def _standings_rows(df: pd.DataFrame, link_players: bool = False) -> dict:
+    """Structured standings for the unified Jinja renderer (I1): round labels
+    plus one dict per player, built once and shared by the desktop table
+    columns and the phone round-strip inside the same <tr> -- so the two
+    copies can never drift the way a duplicated card partial could.
 
     ``link_players=False`` (default -- player profiles hidden 2026-09-18, not
-    ready to be live) renders player names as plain text instead of links to
-    ``/player/<code>``. Pass ``link_players=True`` to restore click-through
-    once the profile pages are ready."""
+    ready to be live) omits the player code so the template renders plain
+    text instead of a link to ``/player/<code>``. Pass ``link_players=True``
+    to restore click-through once the profile pages are ready."""
     if df is None or df.empty:
-        return "<p class='text-muted text-sm'>No data available.</p>"
+        return {"round_labels": [], "rows": []}
 
-    rows = ["<table class='teg-table leaderboard-table'>", "<thead><tr>"]
-    for col in df.columns:
-        cls = "col-rank" if col == "Rank" else ("col-player" if col == "Player" else "col-num")
-        rows.append(f"<th class='{cls}'>{escape(str(col))}</th>")
-    rows.append("</tr></thead><tbody>")
-
+    round_labels = [c for c in df.columns if c not in ("Rank", "Player", "Total")]
+    rows = []
     for _, row in df.iterrows():
-        tr_cls = " class='top-rank'" if str(row["Rank"]).startswith("1") else ""
-        rows.append(f"<tr{tr_cls}>")
-        for col in df.columns:
-            val = row[col]
-            if col == "Player":
-                code = get_name_to_code().get(str(val)) if link_players else None
-                name_html = _wrap_player_name(val)
-                cell = f"<a href='/player/{code}'>{name_html}</a>" if code else name_html
-                rows.append(f"<td class='col-player'>{cell}</td>")
-            elif col == "Rank":
-                rows.append(f"<td class='col-rank'>{escape(str(val))}</td>")
-            elif col == "Total":
-                rows.append(f"<td class='col-num total'>{escape(str(val))}</td>")
-            else:
-                rows.append(f"<td class='col-num'>{escape(str(val))}</td>")
-        rows.append("</tr>")
-    rows.append("</tbody></table>")
-    return "".join(rows)
+        rank = str(row["Rank"])
+        player = str(row["Player"])
+        first, last = _split_player_name(player)
+        rows.append({
+            "rank": rank,
+            "player": player,
+            "first": first,
+            "last": last,
+            "code": get_name_to_code().get(player) if link_players else None,
+            "rounds": [(label, str(row[label])) for label in round_labels],
+            "total": str(row["Total"]),
+            "lead": rank.startswith("1"),
+        })
+    return {"round_labels": round_labels, "rows": rows}
 
 
 def _results_chart_meta(tab: str, variant: str, net_measure: str, teg_name: str) -> dict:
@@ -639,10 +645,12 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
     """Build context for full results page.
 
     ``link_players=False`` (default -- player profiles hidden 2026-09-18, not
-    ready to be live) drops the click-through to player profiles for both the
-    desktop table and the phone `lb_cards`. Pass ``link_players=True`` to
-    restore click-through once the profile pages are ready; /leaderboard and
-    /results both reuse this context builder via the default."""
+    ready to be live) drops the click-through to player profiles in the
+    unified standings table (both its desktop columns and its phone round-
+    strip render from the same row, see `_standings_rows`). Pass
+    ``link_players=True`` to restore click-through once the profile pages
+    are ready; /leaderboard and /results both reuse this context builder via
+    the default."""
     # Local import to avoid a module-load cycle: webapp.routes.latest already
     # imports _wrap_player_name from this module at import time.
     from webapp.routes.latest import _teg_context_header
@@ -704,28 +712,20 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
             callout = (f"{leader_label}: <strong>{escape(champion)}</strong> &nbsp;|&nbsp; "
                        f"Wooden spoon: <strong>{escape(spoon)}</strong>")
 
-        # Format score columns (+/- signs etc.) then build the full-width table.
+        # Format score columns (+/- signs etc.), then build the unified
+        # structured standings (I1) -- one Jinja table that reflows into a
+        # compact round-strip at phone width, replacing both the old HTML-
+        # string table and the now-deleted .lb-cards duplicate.
         for col in [c for c in lb.columns if c not in ['Rank', 'Player']]:
             lb[col] = lb[col].apply(lambda x: format_value(x, value_col))
-        table_html = _leaderboard_table_html(lb, link_players=link_players)
+        standings = _standings_rows(lb, link_players=link_players)
 
-        # Phone-only card reflow of the same standings (MOBILE_PLAN M2.7).
-        # Rendered by partials/lb_cards.html; hidden above 640px by mobile.css.
-        round_cols = [c for c in lb.columns if c not in ('Rank', 'Player', 'Total')]
-        lb_cards = [{
-            "rank": str(row['Rank']),
-            "player": str(row['Player']),
-            "code": get_name_to_code().get(str(row['Player'])) if link_players else None,
-            "rounds": [(c, str(row[c])) for c in round_cols],
-            "total": str(row['Total']),
-            "lead": str(row['Rank']).startswith('1'),
-        } for _, row in lb.iterrows()]
         lb_hero = {
             "label": leader_label,
             "champion": champion,
-            "champion_total": lb_cards[0]["total"] if lb_cards else "",
+            "champion_total": standings["rows"][0]["total"] if standings["rows"] else "",
             "spoon": spoon if tab != "gross" else None,
-            "spoon_total": lb_cards[-1]["total"] if lb_cards else "",
+            "spoon_total": standings["rows"][-1]["total"] if standings["rows"] else "",
             "unit": "pts" if value_col == "Stableford" else "vs par",
         }
 
@@ -739,8 +739,7 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
             # when the tournament is in progress ("... Latest Leaderboard").
             "section_title": f"{competition} {status_word}",
             "callout": callout,
-            "table_html": table_html,
-            "lb_cards": lb_cards,
+            "standings": standings,
             "lb_hero": lb_hero,
             "link_player_cards": link_players,
             "chart_readout": chart_readout,

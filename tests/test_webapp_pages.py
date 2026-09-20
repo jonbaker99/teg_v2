@@ -498,6 +498,116 @@ def test_standings_page_has_mobile_table_hook(client):
 
 
 # ---------------------------------------------------------------------------
+# Unified standings renderer (I1) -- one Jinja table (partials/
+# _standings_table.html, fed by history._standings_rows) replaced the old
+# HTML-string table, the dead .lb-cards phone path and the two drifting page
+# partials. These tests pin: one row per player with one column per round;
+# the round strip and the round cells carry the same values; ties and the
+# empty state; the two routes render byte-identical standings markup; the
+# deleted card markup never reappears; Gross omits the wooden spoon.
+# ---------------------------------------------------------------------------
+
+def _standings_table_html(html: str) -> str:
+    m = re.search(r'<table class="teg-table leaderboard-table standings-table">.*?</table>', html, re.S)
+    assert m, "standings table not found in response"
+    return m.group(0)
+
+
+def _standings_tbody_rows(table_html: str) -> list:
+    tbody = re.search(r"<tbody>(.*?)</tbody>", table_html, re.S).group(1)
+    return re.findall(r"<tr(?:\s+class=\"top-rank\")?>(.*?)</tr>", tbody, re.S)
+
+
+def test_standings_table_has_one_row_per_player_and_round_column(client):
+    # TEG 18: 5 players, 4 rounds. TEG 2: 3 rounds (fewest in the data) --
+    # guards the round-count-varies case, not just the common 4-round shape.
+    resp18 = client.get("/results/table", params={"teg": 18, "tab": "net"})
+    table18 = _standings_table_html(resp18.text)
+    assert len(re.findall(r'<th class="col-num col-round">', table18)) == 4
+    assert len(_standings_tbody_rows(table18)) == 5
+
+    resp2 = client.get("/results/table", params={"teg": 2, "tab": "net"})
+    table2 = _standings_table_html(resp2.text)
+    assert len(re.findall(r'<th class="col-num col-round">', table2)) == 3
+
+
+def test_standings_round_strip_matches_round_cells(client):
+    # The desktop <td class="col-round"> cells and the phone
+    # .standings-rounds strip are two renderings of the *same* r.rounds list
+    # (partials/_standings_table.html) -- this is the guard that stops them
+    # drifting the way the old duplicated card markup could have.
+    resp = client.get("/results/table", params={"teg": 18, "tab": "net"})
+    table = _standings_table_html(resp.text)
+    rows = _standings_tbody_rows(table)
+    assert rows
+    for row in rows:
+        cell_values = re.findall(r'<td class="col-num col-round">([^<]*)</td>', row)
+        strip = re.search(r'<span class="standings-rounds">(.*?)</span>', row, re.S)
+        assert strip, "row missing .standings-rounds"
+        strip_values = re.findall(r"<b>([^<]*)</b>", strip.group(1))
+        assert cell_values == strip_values
+
+
+def test_standings_ties_share_rank_and_leader_treatment():
+    # Unit test on _standings_rows directly: real TEG data may not contain a
+    # tie on any given day, so this pins the '=' suffix and shared `lead`
+    # flag against a synthetic tied leaderboard shaped like create_leaderboard's
+    # output (Rank as string, ties suffixed with '=').
+    from webapp.routes.history import _standings_rows
+
+    lb = pd.DataFrame({
+        "Rank": ["1=", "1=", "3"],
+        "Player": ["Alice ONE", "Bob TWO", "Carol THREE"],
+        "R1": ["+1", "+1", "+3"],
+        "Total": ["+1", "+1", "+3"],
+    })
+    standings = _standings_rows(lb, link_players=False)
+    rows = standings["rows"]
+    assert [r["rank"] for r in rows] == ["1=", "1=", "3"]
+    assert [r["lead"] for r in rows] == [True, True, False]
+    assert rows[0]["first"] == "Alice" and rows[0]["last"] == "ONE"
+
+
+def test_standings_empty_frame_is_honest():
+    from webapp.routes.history import _standings_rows
+
+    standings = _standings_rows(pd.DataFrame(), link_players=False)
+    assert standings == {"round_labels": [], "rows": []}
+    standings_none = _standings_rows(None, link_players=False)
+    assert standings_none == {"round_labels": [], "rows": []}
+
+
+def test_standings_card_markup_is_gone(client):
+    # I1 deleted the stale .lb-cards/.lb-card* phone path (dead at every
+    # viewport per CSS specificity -- .standings-page .lb-cards always won
+    # with display:none). This is the regression guard against it returning.
+    for path, params in [
+        ("/results", {"teg": 18}),
+        ("/leaderboard", {}),
+        ("/results/table", {"teg": 18, "tab": "net"}),
+        ("/leaderboard/table", {"teg": 18, "tab": "net"}),
+    ]:
+        resp = client.get(path, params=params)
+        _assert_ok_no_error(resp)
+        assert "lb-card" not in resp.text
+
+
+def test_leaderboard_and_results_render_the_same_standings(client):
+    # The whole point of I1: both routes render through the same context
+    # builder AND the same table partial, so their standings markup for the
+    # same TEG/tab must be identical, not merely similar.
+    resp_results = client.get("/results/table", params={"teg": 18, "tab": "net"})
+    resp_lb = client.get("/leaderboard/table", params={"teg": 18, "tab": "net"})
+    assert _standings_table_html(resp_results.text) == _standings_table_html(resp_lb.text)
+
+
+def test_gross_tab_omits_wooden_spoon(client):
+    resp = client.get("/results/table", params={"teg": 18, "tab": "gross"})
+    _assert_ok_no_error(resp)
+    assert "Wooden spoon" not in resp.text
+
+
+# ---------------------------------------------------------------------------
 # Tournament race chart (R4.1): create_cumulative_graph keeps exactly ONE
 # figure-building contract -- the pre-R4.1 desktop/iPad one (native legend,
 # full "Player: value" labels, wide margin) -- unconditionally, regardless of
