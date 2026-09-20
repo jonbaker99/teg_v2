@@ -2,7 +2,7 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-20 (Fix stage F1–F6 shipped: rank-toggle glyph, dark-title contrast, Scoring header overflow, Records double-wrap, long-page nav persistence)
+**Last updated:** 2026-09-20 (Fix stage F1–F6 shipped; long-page nav delta guard and cross-route sweep completed)
 
 ## 2026-09-20 — UI implementation roadmap Fix stage (F1–F6) shipped
 
@@ -23,9 +23,11 @@ Shipped:
   wasn't marked `raw`, so the shared renderer's own card markup got wrapped a second time,
   visible in Clean Layered above 640px. Fixed by setting `raw: True`, matching the neighbouring
   scorecard/bestball sections.
-- **Long-page navigation not reappearing on upward scroll** — the sticky-nav scroll handler
-  computed hide state from absolute `scrollY` only; now tracks scroll direction and shows the
-  nav immediately on any upward movement.
+- **Long-page navigation persistence** — the sticky-nav scroll handler originally computed hide
+  state from absolute `scrollY` only. F5 added direction tracking; a follow-up now filters isolated
+  micro-jitter and reveals after 8px of uninterrupted upward movement. A 384-state public sweep
+  across 32 route states, both Clean layouts, light/dark, and 390/768/1280px closed F6's missing
+  cross-route verification follow-up without finding a nav regression.
 - Three other suspected defects (standalone `/records` overflow, Latest Round Streaks, Latest
   Round Scorecard phone inset) were investigated and found **not reproduced** — closed with
   evidence in `webapp/TODOS.md` rather than "fixed."
@@ -33,7 +35,7 @@ Shipped:
   cache-bust query strings bumped so the fixes reach returning visitors.
 
 Full evidence trail (screenshots, browser verification matrices, per-stage root-cause analysis):
-`webapp/design_reviews/ui_workstream/{P0,F1,F2,F3,F4,F5,F6a}-handoff.md`. A read-only F6 review
+`webapp/design_reviews/ui_workstream/{P0,F1,F2,F3,F4,F5,F5-followups,F6a}-handoff.md`. A read-only F6 review
 gate found two evidence-integrity issues (a stale/mismatched F3 screenshot pair, an unrecorded
 P0 finding) before Consistent UI could proceed — both resolved in the F6a follow-up.
 
