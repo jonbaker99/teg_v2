@@ -2,7 +2,44 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-19 (New page: Round Score Distribution)
+**Last updated:** 2026-09-20 (Fix stage F1–F6 shipped: rank-toggle glyph, dark-title contrast, Scoring header overflow, Records double-wrap, long-page nav persistence)
+
+## 2026-09-20 — UI implementation roadmap Fix stage (F1–F6) shipped
+
+Public UI defect-fix stage from `webapp/design_reviews/ui-implementation-roadmap.md`, staged as
+five independent chats (F1–F5) plus a read-only review gate (F6) and its remediation follow-up.
+Shipped:
+
+- **Desktop rank-toggle glyph/hit-area** — the `/latest-round`/`/latest-teg` `+`/`-` expand
+  button on the Scoreboard detail row was invisible and unclickable above 640px (`mobile.css`'s
+  glyph rule never reaches desktop widths). Added a desktop-scoped counterpart, later corrected
+  to explicitly exclude phone widths so its `min-width` couldn't leak there.
+- **Dark-mode `title_style=e2` contrast** — that title variant hard-codes a light title-band
+  background with no dark override; fixed with a `dark.css` override.
+- **Latest Round Scoring tab phone header overflow** — the score-count pivot's raw field-name
+  header (`GrossVP`/`Stableford`) bled into the adjacent column at ≤640px; given its own class
+  and the existing site wrap pattern.
+- **Latest Round/TEG Records & PBs double-wrapped in an extra card** — the records section
+  wasn't marked `raw`, so the shared renderer's own card markup got wrapped a second time,
+  visible in Clean Layered above 640px. Fixed by setting `raw: True`, matching the neighbouring
+  scorecard/bestball sections.
+- **Long-page navigation not reappearing on upward scroll** — the sticky-nav scroll handler
+  computed hide state from absolute `scrollY` only; now tracks scroll direction and shows the
+  nav immediately on any upward movement.
+- Three other suspected defects (standalone `/records` overflow, Latest Round Streaks, Latest
+  Round Scorecard phone inset) were investigated and found **not reproduced** — closed with
+  evidence in `webapp/TODOS.md` rather than "fixed."
+- The three CSS files changed (`base-vars.css`, `dark.css`, `mobile.css`) had their `base.html`
+  cache-bust query strings bumped so the fixes reach returning visitors.
+
+Full evidence trail (screenshots, browser verification matrices, per-stage root-cause analysis):
+`webapp/design_reviews/ui_workstream/{P0,F1,F2,F3,F4,F5,F6a}-handoff.md`. A read-only F6 review
+gate found two evidence-integrity issues (a stale/mismatched F3 screenshot pair, an unrecorded
+P0 finding) before Consistent UI could proceed — both resolved in the F6a follow-up.
+
+**Next:** Consistent UI (C1–C6) — the roadmap's next stage, establishing a shared visual system
+on top of this base. One item from this stage remains open, not fixed: `/latest-round` Scoreboard
+has a 12px page-level overflow at 390px (`webapp/TODOS.md`), assigned to C4.
 
 ## 2026-09-19 — New page: `/scoring/round-distribution`
 

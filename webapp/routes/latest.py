@@ -758,7 +758,7 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                     'best_score_counts': counts['best_score_counts'],
                     'worst_score_counts': counts['worst_score_counts'],
                 }
-                sections.append({"title": None, "table_html": _render_records_summary(rd_dict, 'Round')})
+                sections.append({"title": None, "table_html": _render_records_summary(rd_dict, 'Round'), "raw": True})
             except Exception as e:
                 logger.exception("_latest_round_tab_context failed")
                 sections.append({"title": "Records & PBs", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
@@ -771,7 +771,7 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
             if not round_data.empty:
                 counts = count_scores_by_player(round_data, field)
                 display_df, title = _format_scoring_display(counts, field, mode)
-                sections.append({"title": title, "table_html": _df_to_html(display_df)})
+                sections.append({"title": title, "table_html": _df_to_html(display_df, table_class="teg-table scoring-table")})
             else:
                 sections.append({"title": "Scoring", "table_html": "<p class='text-muted text-sm'>No scoring data.</p>"})
             return {"sections": sections, "scoring_fields": SCORING_FIELDS, "score_type": field, "display_mode": mode}
@@ -979,7 +979,7 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
             if not teg_data.empty:
                 counts = count_scores_by_player(teg_data, field)
                 display_df, title = _format_scoring_display(counts, field, mode)
-                sections.append({"title": title, "table_html": _df_to_html(display_df)})
+                sections.append({"title": title, "table_html": _df_to_html(display_df, table_class="teg-table scoring-table")})
             else:
                 sections.append({"title": "Scoring", "table_html": "<p class='text-muted text-sm'>No scoring data.</p>"})
             return {"sections": sections, "scoring_fields": SCORING_FIELDS, "score_type": field, "display_mode": mode}
@@ -1106,7 +1106,7 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
                     'best_score_counts': counts['best_score_counts'],
                     'worst_score_counts': counts['worst_score_counts'],
                 }
-                sections.append({"title": None, "table_html": _render_records_summary(rd_dict, 'TEG')})
+                sections.append({"title": None, "table_html": _render_records_summary(rd_dict, 'TEG'), "raw": True})
             except Exception as e:
                 logger.exception("_latest_teg_tab_context failed")
                 sections.append({"title": "Records & PBs", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
