@@ -214,12 +214,15 @@
         var nav = document.querySelector('.nav');
         var navHeight = nav.offsetHeight;
         var threshold = 300;
+        var lastY = window.scrollY;
         nav.style.position = 'sticky';
         nav.style.top = '0';
         nav.style.transition = 'none';
         window.addEventListener('scroll', function() {
             var y = window.scrollY;
-            if (y <= threshold) {
+            var scrollingUp = y < lastY;
+            lastY = y;
+            if (y <= threshold || scrollingUp) {
                 nav.style.top = '0';
             } else {
                 var offset = Math.min(y - threshold, navHeight);
