@@ -670,6 +670,19 @@
     width: 32%;
   }
 
+  /* Scoring tab: the pivot's index column header is the raw field name
+     ("GrossVP"/"Stableford", 7-10 chars) -- too long for an equal
+     fixed-layout column's default nowrap header, so it overflows into the
+     next column instead of expanding (table-layout:fixed doesn't grow to
+     fit content). Same fix already used by scoring-matrix-page/
+     scoring-byteg-page's .teg-table thead th below: let it wrap instead. */
+  .latest-round-page #lr-content table.scoring-table th,
+  .latest-teg-page #lt-content table.scoring-table th {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.15;
+  }
+
   /* Metric selector: 2x2 button grid, not a pill row -- ported from the
      approved prototype's .metric-grid/.metric-pills (report_layout_prototypes/
      mobile_data.css), values re-themed onto this repo's own custom
