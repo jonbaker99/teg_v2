@@ -130,6 +130,44 @@ Scorecards-tab fix).
   C6, untouched here.
 - Nothing new found blocking. No regressions identified in the browser sweep or test run.
 
+## Follow-up polish pass (owner review, same session)
+
+Four items raised against a screenshot of the phone build:
+
+1. **Report-link-to-tab-row gap too big / tab-row-to-Net-Gross gap missing (mobile).** Root cause:
+   C5's `.section-nav + .section-panel > .toggle-group:first-child { margin-top: -1rem }`
+   (`base-vars.css`) was tuned against desktop's `.section-nav { margin-bottom: 2rem }` ("32px →
+   16px net gap" per C5's own handoff) — at ≤640px `.section-nav`'s margin-bottom is already reset
+   to 12px by `mobile.css`, so the same -16px pull overshot to a -1px overlap instead. Added a
+   mobile-only positive override (`margin-top: 8px`) in `mobile.css`, same selector, wins by
+   source order. Separately, `.res-report-row`'s 20px margin-bottom was stacking with
+   `.page-title-area`'s 12px padding-bottom and `.main-content`'s 32px Tailwind `py-8` top padding
+   to a 48px gap above the tab row — tightened via a `.res-report-row` override (4px, scoped by
+   class name, which is exclusive to `/leaderboard`/`/results`) and a `.standings-page`-scoped
+   `main-content` `padding-top: 8px` (reusing the existing `:has(> .standings-page)` selector, so
+   Latest Round/Latest TEG/History's own top spacing is untouched). Net: 48px → 24px above the
+   tabs, -1px → 20px below them. Verified live via computed-style measurement, not eyeballed.
+2. **Square off the CHAMPION/WOODEN SPOON pods.** `.lb-pod`'s `border-radius: 13px` (a bespoke,
+   more rounded "app card" radius) → `var(--r-1, 3px)`, the same token the Net/Gross `.segmented`
+   control right above it already uses — squares the pods off and ties them into the site's actual
+   card language instead of a one-off rounder radius.
+3. **Remove the trophy/restaurant icons.** Deleted both `material-symbols-outlined` spans from
+   `partials/_standings_hero.html`; removed the now-unused `.lb-pod-label .material-symbols-
+   outlined` rule and the `display:flex`/`gap` on `.lb-pod-label` that existed only to lay out an
+   icon beside text.
+4. **Chart-type pills not migrated to `.segmented` like Net/Gross.** Genuine oversight, not a
+   deliberate choice — `base-vars.css`'s own `.segmented` comment already states it "replaces ...
+   `.pill`/`.pill-group` used as a measure row", and Standard/Adjusted/Ranking are exactly that
+   (mutually exclusive views, none "better"). Converted `_standings_page.html`'s chart-type control
+   from `.pill-group`/`.pill` to `.toggle-group > .segmented > .seg-option` (same `aria-pressed`
+   pattern, same per-button `hx-get`/`hx-vals`), matching the Net/Gross control immediately above
+   the table. `.pill`/`.pill-group` themselves are untouched — still the right pattern for the many
+   other action/filter rows sitewide that use them; only this partial's markup changed.
+
+All four re-verified: 83/83 tests still pass; browser re-checked at 390px light/dark and 1280px
+(desktop pods are `display:none` regardless, so 1–3 are phone-only by design; item 4 checked at
+both widths, including a live HTMX click confirming `aria-pressed` still updates correctly).
+
 ## Ready / not-ready verdict for I2/I6
 
 **Ready.** The standings renderer is unified, the dead card path is gone, the one real drift bug

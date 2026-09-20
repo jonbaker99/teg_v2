@@ -9,13 +9,13 @@
 {% if lb_hero %}
 <div class="lb-hero">
     <div class="lb-pod lb-pod--champ">
-        <div class="lb-pod-label"><span class="material-symbols-outlined">trophy</span>{{ lb_hero.label }}</div>
+        <div class="lb-pod-label">{{ lb_hero.label }}</div>
         <div class="lb-pod-name">{{ lb_hero.champion }}</div>
         <div class="lb-pod-sub">{{ lb_hero.champion_total }} &middot; {{ lb_hero.unit }}</div>
     </div>
     {% if lb_hero.spoon %}
     <div class="lb-pod lb-pod--spoon">
-        <div class="lb-pod-label"><span class="material-symbols-outlined">restaurant</span>Wooden spoon</div>
+        <div class="lb-pod-label">Wooden spoon</div>
         <div class="lb-pod-name">{{ lb_hero.spoon }}</div>
         <div class="lb-pod-sub">{{ lb_hero.spoon_total }} &middot; {{ lb_hero.unit }}</div>
     </div>

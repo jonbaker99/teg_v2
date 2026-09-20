@@ -56,18 +56,27 @@
 </div>
 {% endif %}
 
+{# Chart type control -- .segmented (matching the Net/Gross control above):
+   base-vars.css's own .segmented comment says it "replaces ... .pill/
+   .pill-group used as a measure row" -- Standard/Adjusted/Ranking are
+   exactly that (mutually exclusive views of the same series, none
+   "better"), not an action, so .pill-group was the wrong pattern here.
+   No hidden input needed: each option already carries its own hx-vals,
+   unlike Net/Gross which triggers the shared TEG select's change event. #}
 <input type="hidden" id="{{ ns }}-chart-variant" name="chart_variant" value="{{ active_chart_variant }}">
 <p class="chart-controls-label">Choose chart type:</p>
-<div class="pill-group" role="group" aria-label="Chart type">
-    {% for cid, clabel in chart_types %}
-    <button class="pill{% if cid == active_chart_variant %} pill--active{% endif %}"
-            onclick="document.getElementById('{{ ns }}-chart-variant').value='{{ cid }}'"
-            hx-get="{{ route_base }}/table" hx-target="#{{ ns }}-content"
-            hx-include="#{{ ns }}-teg-select, #{{ ns }}-tab-input"
-            hx-vals='{"chart_variant": "{{ cid }}"}'>
-        {{ clabel }}
-    </button>
-    {% endfor %}
+<div class="toggle-group">
+    <div class="segmented" role="group" aria-label="Chart type">
+        {% for cid, clabel in chart_types %}
+        <button type="button" class="seg-option" aria-pressed="{{ 'true' if cid == active_chart_variant else 'false' }}"
+                onclick="document.getElementById('{{ ns }}-chart-variant').value='{{ cid }}'"
+                hx-get="{{ route_base }}/table" hx-target="#{{ ns }}-content"
+                hx-include="#{{ ns }}-teg-select, #{{ ns }}-tab-input"
+                hx-vals='{"chart_variant": "{{ cid }}"}'>
+            {{ clabel }}
+        </button>
+        {% endfor %}
+    </div>
 </div>
 {% if chart_note %}<p class="chart-note text-muted text-sm">{{ chart_note }}</p>{% endif %}
 

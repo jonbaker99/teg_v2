@@ -119,6 +119,15 @@
   .main-content.px-6:has(> .standings-page) {
     padding-inline: 0;
   }
+  /* .main-content's Tailwind py-8 (32px top) is the largest single
+     contributor to the report-link-to-tab-row gap on /leaderboard and
+     /results (the other two, .res-report-row's own margin and
+     .page-title-area's padding-bottom, are tightened separately below and
+     above). Scoped to standings-page only -- Latest Round/Latest TEG/
+     History's own top spacing is untouched, out of scope here. */
+  .main-content.px-6:has(> .standings-page) {
+    padding-top: 8px;
+  }
   .page-title-area .page-title { font-size: 1.35rem; }
 
   /* ── Title/brand clash: decided 2026-09-17, Jon picked M2 ──
@@ -237,6 +246,18 @@
     color: var(--accent, forestgreen);
   }
 
+  /* C5's `.section-nav + .section-panel > .toggle-group:first-child {
+     margin-top: -1rem }` (base-vars.css) was tuned against DESKTOP's
+     `.section-nav { margin-bottom: 2rem }` ("32px -> 16px net gap"). At
+     this width `.section-nav`'s own margin-bottom is already reset to 12px
+     above, so the same -16px pull leaves the Net/Gross control touching
+     (or overlapping) the tab row instead of sitting 16px below it. Positive
+     override, mobile only -- same selector/specificity, wins by source
+     order (mobile.css loads after base-vars.css). */
+  .section-nav + .section-panel > .toggle-group:first-child {
+    margin-top: 8px;
+  }
+
   /* Report link row, moved out of the tab bar (base-vars.css
      .lr-report-row/.lr-report-link, .lt-report-row/.lt-report-link and
      .res-report-row/.res-report-link, the latter shared by results.html
@@ -246,6 +267,16 @@
   .lt-report-row,
   .res-report-row {
     margin: 0 var(--lr-inset, 0) 20px;
+  }
+  /* .res-report-row's 20px above stacks with .page-title-area's own 12px
+     padding-bottom AND .main-content's 16px padding-top (neither of which
+     this row can see or reason about) to a ~48px gap before the tab row --
+     read as "too much space" on a phone screen. .res-report-row is only
+     ever used by results.html/leaderboard.html (unlike the shared selector
+     above), so this override needs no extra scoping and leaves Latest
+     Round/Latest TEG's own report-row spacing untouched. */
+  .res-report-row {
+    margin-bottom: 4px;
   }
   .lr-report-link,
   .lt-report-link,
@@ -505,14 +536,11 @@
     min-width: 0;
     background: var(--bg-card, #ffffff);
     border: 1px solid var(--table-cell-border, #e0e0e0);
-    border-radius: 13px;
+    border-radius: var(--r-1, 3px);
     padding: 12px 13px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 4px 16px rgba(0, 0, 0, 0.04);
   }
   .lb-pod-label {
-    display: flex;
-    align-items: center;
-    gap: 5px;
     margin-bottom: 5px;
     font-family: var(--font-table), sans-serif;
     font-size: 10px;
@@ -521,7 +549,6 @@
     text-transform: uppercase;
     color: var(--text-muted, #8c8c86);
   }
-  .lb-pod-label .material-symbols-outlined { font-size: 15px; }
   .lb-pod--champ .lb-pod-label { color: var(--accent, forestgreen); }
   .lb-pod--spoon .lb-pod-label { color: #b08400; }
   html[data-mode="dark"] .lb-pod--spoon .lb-pod-label { color: #d6ad4e; }
