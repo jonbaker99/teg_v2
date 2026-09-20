@@ -12,7 +12,7 @@ This roadmap turns the agreed UI direction into small, independent chats. Each c
 - Deferred operational recommendations remain in [gpt-ui-review.md](gpt-ui-review.md#deferred-operational-recommendations--document-now-implement-later).
 - The Clean family is the only active theme family. Its two registered layouts, Clean Page and Clean Layered, must continue to work.
 - Editorial Golf is a later experiment, not the starting implementation direction.
-- Codex is the sole editor and integrator. Claude is an independent design critic at named gates, not a co-editor.
+- Either CLI may lead an implementation chat as editor and integrator, per the model table below. Claude additionally performs the named independent review gates (F6, C6, I6, T1) and critique chats (C2, I4, E2), which stay read-only.
 
 ## How every implementation chat should run
 

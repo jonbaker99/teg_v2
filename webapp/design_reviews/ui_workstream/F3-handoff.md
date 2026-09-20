@@ -51,7 +51,7 @@ Console: 0 errors on every page checked (the pre-existing Tailwind production-CD
 
 Screenshots: `webapp/design_reviews/ui_workstream/screenshots/F3/` —
 - `f3-scoring-320-dark-6p-before.png` — the bug, 6-player fixture, dark, 320px
-- `f3-scoring-320-6p-after-light.png`, and the equivalent dark capture — after the fix
+- `f3-scoring-320-6p-after-light.png`, `f3-scoring-320-6p-after-dark.png` — after the fix, 6-player fixture, 320px, light and dark (recaptured in F6a 2026-09-20 — the originally committed pair was byte-identical to the before capture and still showed the unfixed header collision; see `F6a-handoff.md`)
 - `f3-streaks-320-6p-light.png`, `f3-streaks-320-6p-dark.png` — Streaks regression check, 6-player fixture
 - `f3-streaks-375-dark-after-tab-switch.png` — Streaks reached via a live HTMX tab click, confirming state/URL sync
 
