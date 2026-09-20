@@ -431,15 +431,14 @@ every other data page.
 
 ## Theme system
 
-Three themes, registered in `theme.py`. Each overrides CSS custom properties defined in `base-vars.css`. Default: **Clean** (flat white, matching the Streamlit site — Phase 1a).
+One Clean theme family uses the shared variables and rules in `base-vars.css` and `clean.css`. `theme.py` registers two selectable layouts. Default: **Clean Page**.
 
-| Theme | Description |
+| Registered layout | Description |
 |---|---|
-| **Clean** (default) | Minimal flat white, editorial feel — mirrors the Streamlit app |
-| **Clean Page** | Flat single white content card on a warm grey background |
+| **Clean Page** (default) | Flat single white content card on a warm grey background |
 | **Clean Layered** | 3-layer hierarchy: stone background → taupe panel → white data cards |
 
-**Typography (all clean themes, set in `clean.css`).** Two families, each with
+**Typography (both layouts, set in `clean.css`).** Two families, each with
 one job (2026-09-19 direction, see decision history below):
 
 | Element | Font |
@@ -831,17 +830,11 @@ as the live site."
 
 **Phase 2 — better UI (beyond parity).** Only after Phase 1 lands.
 
-- **2a — Improve the Clean / default theme** using design best practice.
+- **2a — Improve the Clean family** using design best practice across its two registered layouts: Clean Page and Clean Layered.
 - **2b — A new, more layered / interesting theme**, built from current best
   practice rather than the existing experiments.
 
-**That full aesthetics/UI review has now been run** (2026-09-19):
-[design_reviews/claude-ui-review.md](design_reviews/claude-ui-review.md) — system/interaction audit, a
-prioritised action matrix, three aesthetic directions (mild → bold) and a
-code prototype for the standings component. **Findings are not decisions**;
-nothing in it has been actioned and no application code was changed by it.
-It takes the Contents (`/`) page redesign option below as one input and
-covers it in its action matrix.
+**The aesthetics/UI review is documented in two layers** (2026-09-19): [design_reviews/claude-ui-review.md](design_reviews/claude-ui-review.md) is the original source inventory and direction paper; [design_reviews/gpt-ui-review.md](design_reviews/gpt-ui-review.md) critically checks it against current source and live mobile sampling, corrects stale claims, and records the agreed **Fix → Consistent UI → Improve → Experiment → Test and decide** path. [design_reviews/ui-implementation-roadmap.md](design_reviews/ui-implementation-roadmap.md) breaks that path into dependency-ordered chats with copy-ready prompts, bounded scope, checks, delegation guidance, and Claude review gates. The workstream excludes admin and operational input/update flows, and Gap is not required. Implementation has not started; the final visual direction remains open until testing.
 
 Pending options for this phase (not decisions): see **UI Changes** in
 [TODOS.md](TODOS.md), including the Contents (`/`) page redesign option
@@ -853,8 +846,8 @@ card-header `ch-*` variants, archived themes in `static/themes/archive/`) are a
 practice, current trends, and real-world sites / dashboards / data-viz as we go,
 rather than defaulting to what's already there.
 
-**Working invariant:** primary target is the **Clean** theme; after any change,
-verify Clean Layered still works (both layouts — see design_principles.md).
+**Working invariant:** the active theme family is **Clean**; after any change,
+verify both registered layouts, Clean Page and Clean Layered (see design_principles.md).
 
 ### Webapp ↔ Streamlit feature-parity audit
 

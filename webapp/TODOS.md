@@ -172,22 +172,8 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 ## UI Changes
 
-- [ ] **Full aesthetics/UI review completed (2026-09-19) — pending owner
-  decision, not actioned.** `webapp/design_reviews/claude-ui-review.md`. Covers a
-  system/interaction audit, a prioritised action matrix (16 items,
-  high-impact/low-effort first), three aesthetic directions (Clean Precision
-  / Editorial Golf / Modern Telemetry) and a code prototype for a unified
-  standings component. No application code was changed by it. Headline
-  findings: the three heading classes all render identically (82 uses, one
-  visual level); there is no type scale (~95 font sizes in CSS, ~40 more
-  inline); nine uncoordinated breakpoints leave iPad portrait (768px) with
-  hamburger nav plus desktop tables; `.teg-table` is `width:auto` so the
-  leaderboard floats left of the full-width chart beneath it; and desktop vs
-  phone standings are two separate renderers of one dataset. Recommends
-  **Direction 2 (Editorial Golf)** — extending the existing newspaper report
-  design language site-wide. **Decide which items to take before any
-  implementation.** The review takes the Contents redesign option below as
-  one input and covers it in its action matrix.
+- [ ] **Aesthetics/UI path agreed (2026-09-19) — implementation not started.** `webapp/design_reviews/claude-ui-review.md` is the original source inventory and direction paper; `webapp/design_reviews/gpt-ui-review.md` is the checked decision document; `webapp/design_reviews/ui-implementation-roadmap.md` provides dependency-ordered, copy-ready starter prompts for each chat. The agreed path is **Fix → Consistent UI → Improve → Experiment → Test and decide**, scoped to the public analysis/navigation experience. Gap-to-leader is not required. Admin, setup, score input, live-round operations, and data-update processes are deferred, with recommendations recorded for their future workstream. The selective **Editorial Golf** pilot follows consistency and product improvements. **Next action:** run the evidence-only P0 baseline chat, then the first bounded Fix chats. The final visual direction stays open until Experiment/Test. No application code was changed by the review or planning work.
+- [ ] **Long-page public navigation persistence.** The shared scroll handler currently moves the primary navigation out of view after the down-scroll threshold and does not restore it until returning near the top. In the Fix stage, make it reappear promptly on upward scroll without content jump, overlap, or interference with the phone bottom tab bar; verify long Records, Latest Round, and scoring pages at phone, tablet portrait, and desktop widths.
 - [ ] **OPTION, not decided — Contents (`/`) page redesign (2026-09-19).**
   Mockup only, not implemented: [Contents Page Redesign
   canvas](https://claude.ai/artifact/8bBeoXbR62qiGA2KezQcAU) (desktop +
@@ -227,8 +213,7 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 - [ ] **Reconcile UI documentation** — README still describes mobile/dark mode
   and report generation as unbuilt; design principles retain fit-content widths
   and serif-caption claims. Align docs with shipped code and clarify typography
-  and accent rules before further redesigns. README also lists three named
-  themes, while `theme.py` now registers two (Clean Page and Clean Layered).
+  and accent rules before further redesigns.
 - [ ] **Match local webapp/test Python to the deployment pin** — the existing
   venv runs 3.14.7 while `.python-version` pins 3.12. The compatibility parser
   passes under installed 3.12, but the test/app runtime still needs alignment.
