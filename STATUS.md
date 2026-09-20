@@ -2,7 +2,77 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-20 (Consistent UI C3 foundation merged)
+**Last updated:** 2026-09-20 (Consistent UI C4 responsive/table contract pass)
+
+## 2026-09-20 — UI implementation roadmap Consistent UI stage: C4 responsive/table contract pass
+
+Built on C3's foundation (`62b68b5`), on branch `worktree-c4-responsive-tables` in a dedicated
+worktree — not yet merged. Two parts: the roadmap's generic C4 brief (audit every public table
+route against the phone/tablet/desktop contract) plus three owner-assigned items beyond it.
+
+**Owner-assigned items:**
+
+- **`.pill`/`.section-controls select` 44px touch floor** — both defaulted to 40px on phone
+  (`mobile.css`); raised to 44px. Removed the now-redundant page-scoped 44px compensations this
+  uncovered on Latest Round/Latest TEG/Leaderboard/Results (`mobile.css`) and Player Profile's
+  chart-control pills (`player-profile.css`) — same value, no longer needed once the default
+  covers it.
+- **`.action` adopted** on `.rank-toggle` (Latest Round/Latest TEG) and History's
+  `button.teg-cell` disclosure — colour/hit-area tokens and the shared `--focus` ring (not the
+  sitewide green) only, no redesign. Both already carried higher-specificity page-scoped
+  selectors that continue to win the cascade for geometry, so rendering is unchanged except the
+  keyboard focus ring. History's desktop disclosure affordance (still no visible `+`/`-` above
+  640px, carried from C1b) remains an **open owner question** — not decided here.
+- **`.main-content` padding/radius before/after comparison** — screenshot-only, per the owner's
+  request; the tokenised alternative (`--sp-6` 32px / `--r-1` 3px vs the shipped 40px/4px
+  literal) was **not applied**. Paired screenshots:
+  `webapp/design_reviews/ui_workstream/screenshots/C4/main-content-padding/`. Finding: a visible
+  but modest ~8px-per-side tightening in Clean Page; **zero effect in Clean Layered**, since
+  `.page-panel .main-content` there already overrides padding/radius independently of the plain
+  `.main-content` rule this token swap would touch.
+
+**Table-contract audit:** every public table route (leaderboard, results, records, player,
+scorecard, latest-round/teg, and the scoring-analysis pages) checked against phone/tablet/desktop
+compression, identity-column protection and navigation — full per-route table in
+`webapp/design_reviews/ui_workstream/C4-handoff.md`. Two real gaps found and fixed:
+
+- **`/scoring/heatmap` page-level overflow at ≤390px** — the colour-legend row
+  (`.hm-legend`/`.hm-legend-range`) was an unwrapped flex row with `white-space: nowrap`, not the
+  transposed table itself. Fixed in `heatmap.css` (the file that actually wins the cascade —
+  `mobile.css` loads first, page-specific `heatmap.css` after).
+- **`/scorecard` page-level overflow at 768px in Clean Layered** — `.sc-landscape:not(.data-card)`
+  (`width: fit-content`) sized to its un-clipped table content rather than the scroll-container's
+  available width. Fixed with `max-width: 100%`; verified the title/table joint-centering this
+  rule exists for is unaffected, and the internal horizontal scroll for wider TEG-wide views still
+  works.
+
+**Regression found and fixed during verification** (not by the audit): adopting `.action` on
+`.rank-toggle` introduced a new phone `min-width: 44px` floor via CSS's per-property cascade — the
+page-scoped rank-toggle rule has higher overall specificity but never declared `min-width`, so
+`.action`'s value leaked through anyway and pushed the button past its narrow toggle-table-cell,
+causing a 2–13px page overflow on `/latest-round`/`/latest-teg` at phone widths in Clean Page.
+Fixed with an explicit `min-width: 0` override (`mobile.css`) — the button's 44px touch target
+comes from filling its column at 100% width/full row height, not from a literal 44px min-width.
+
+**Process note:** several CSS files here are served with `?v=N` cache-busting query params in
+their `<link>` tags (`mobile.css`, `scorecard.css`, `player-profile.css`). Edited without bumping
+the version, a live/test browser keeps serving the old cached file — this produced a false
+12-failure overflow report mid-session until the versions were bumped. Bump the relevant `?v=N` in
+`base.html`/the owning template whenever one of these files changes.
+
+MOBILE_PLAN.md reconciled: dark-mode page-title contrast (fixed by F1) removed from "remaining
+work"; M2.9's tap-target/route-audit scope marked covered by this pass, spacing/empty-state polish
+still open.
+
+Verified: 200-state fresh-cache overflow sweep (10 routes × 320/390/430/768/1280px × Clean
+Page/Clean Layered × light/dark) — 0 failures. Scoreboard-overflow width formula and F5's
+scroll-delta nav guard both re-confirmed intact. `python -m pytest tests/test_webapp_pages.py
+tests/test_scorecards_portrait.py -q` — 90 passed. `check_css_comments.py`,
+`check_python_compat.py`, `check_pandas_compat.py` — all clean.
+
+Full detail, per-route audit table, and screenshot manifest:
+`webapp/design_reviews/ui_workstream/C4-handoff.md`. Unresolved items:
+`webapp/TODOS.md`.
 
 ## 2026-09-20 — UI implementation roadmap Consistent UI stage: C3 foundation merged
 

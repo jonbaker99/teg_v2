@@ -125,6 +125,20 @@
   white-space: nowrap;
 }
 
+/* Page-level overflow fix (C4, 2026-09-20): .hm-legend is an unwrapped
+   flex row; .hm-legend-range's white-space: nowrap was the actual overflow
+   source at ≤390px (confirmed via getBoundingClientRect diagnosis, not the
+   transposed table) — nothing in .hm-legend's ancestry clips horizontally,
+   so the page itself grew 29-49px past the viewport (TODOS.md,
+   F5-followups-handoff.md). This file loads after mobile.css (page-scoped
+   link in scoring_heatmap.html), so the phone override belongs here, not
+   in mobile.css, or source order would silently lose to this file's own
+   unscoped .hm-legend rule above. */
+@media (max-width: 640px) {
+  .hm-legend { flex-wrap: wrap; row-gap: 2px; }
+  .hm-legend-range { flex-basis: 100%; white-space: normal; }
+}
+
 /* ── Collapsible colour-options panel ───────────────────────────────────── */
 .hm-controls-panel {
   margin-bottom: 1rem;

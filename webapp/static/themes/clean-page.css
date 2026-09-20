@@ -17,22 +17,18 @@ body.page-bg {
 }
 
 /* Content area as a white card floating on the grey background.
-   background now reads --bg-content (C3, C1b §1) -- same #ffffff value, a
-   token so dark mode / a future layout can re-point it instead of
-   overriding this literal. Radius, shadow and padding stay their existing
-   literal values (4px / 40px), not migrated to --r-1 (3px) / --sp-6 (32px)
-   -- neither token matches the current value exactly, and C3's brief is to
-   preserve existing rendering, not introduce an unflagged pixel shift here.
-   The --sp-6-vs-40px question C1b left open is about the padding above;
-   this chat's decision is to keep 40px unchanged -- see C3-handoff.md. */
+   background reads --bg-content (C3, C1b §1); radius/padding now read
+   --r-1/--sp-6 too (C4, 2026-09-20 -- the pixel shift from the prior
+   literals, 4px->3px / 40px->32px, was reviewed via before/after screenshots
+   and accepted). */
 .main-content {
     background: var(--bg-content);
-    border-radius: 0.25rem;
+    border-radius: var(--r-1);
     box-shadow: 0 1px 4px rgba(0,0,0,0.08);
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;
-    padding-left: 2.5rem;
-    padding-right: 2.5rem;
+    padding-left: var(--sp-6);
+    padding-right: var(--sp-6);
 }
 
 /* E2: title visually joins the white content card; shadow on container, not main-content */

@@ -351,11 +351,12 @@
     opacity: 0.85;
   }
 
-  /* Pills: bigger tap targets. */
+  /* Pills: bigger tap targets. 44px is the touch-floor minimum
+     (design_principles.md "Hit areas: two-tier"), not a stylistic choice. */
   .pill {
     display: inline-flex;
     align-items: center;
-    min-height: 40px;
+    min-height: 44px;
     padding: 0.45rem 1rem;
     font-size: 0.875rem;
   }
@@ -365,7 +366,7 @@
   .section-controls { flex-wrap: wrap; row-gap: 0.6rem; }
   .section-controls .theme-select,
   .section-controls .teg-select {
-    min-height: 40px;
+    min-height: 44px;
     font-size: 16px;
     border-radius: 10px;
   }
@@ -615,16 +616,9 @@
   .latest-teg-page > .section-controls,
   .lr-title-area .section-controls,
   .lt-title-area .section-controls { margin-left: 0; margin-right: 0; }
-  .latest-round-page > .section-controls .pill,
-  .latest-round-page > .section-controls .theme-select,
-  .latest-teg-page > .section-controls .pill,
-  .latest-teg-page > .section-controls .theme-select,
-  .lr-title-area .section-controls .pill,
-  .lr-title-area .section-controls .theme-select,
-  .lt-title-area .section-controls .pill,
-  .lt-title-area .section-controls .theme-select,
-  .lb-title-area .section-controls .theme-select,
-  .res-title-area .section-controls .theme-select { min-height: 44px; }
+  /* min-height: 44px on these .pill/.theme-select instances is now the
+     .pill/.section-controls base default (C4, 2026-09-20) — no page-scoped
+     compensation needed here any more. */
   .latest-round-page > #lr-content,
   .latest-teg-page > #lt-content { min-width: 0; margin-inline: 0; }
   /* Latest Round/TEG use the reference's full-width data surfaces. The
@@ -646,7 +640,7 @@
   .latest-round-page #lr-content .section-controls,
   .latest-teg-page #lt-content .section-controls { gap: 6px; margin-bottom: 12px; }
   .latest-round-page #lr-content .pill,
-  .latest-teg-page #lt-content .pill { min-height: 44px; font-size: 14px; padding-inline: 11px; }
+  .latest-teg-page #lt-content .pill { padding-inline: 11px; }
   .latest-round-page #lr-content .data-card,
   .latest-teg-page #lt-content .data-card { overflow: visible; }
   .latest-round-page #lr-content .table-wrapper,
@@ -862,7 +856,16 @@
      comment above this selector). Only sizing stays phone-scoped here. */
   .latest-round-page #lr-content .rank-toggle,
   .latest-teg-page #lt-content .rank-toggle {
-    width: 100%; min-height: 44px; margin: -12px 0; padding: 12px 0;
+    /* min-width: 0 cancels .action's phone min-width: 44px (base-vars.css) --
+       cascade applies per-property, so even though this selector has higher
+       specificity overall, .action's min-width still wins on that one
+       property unless overridden here explicitly. This button's 44px touch
+       target comes from filling its narrow table column at 100% width/full
+       row height (margin/padding below), not from being 44px wide itself --
+       a real min-width floor here pushed it past the column into
+       page-level overflow at phone widths (C4, 2026-09-20, found in the
+       verification sweep after .action was adopted). */
+    width: 100%; min-width: 0; min-height: 44px; margin: -12px 0; padding: 12px 0;
     border: 0; background: transparent; color: var(--accent, #17683c); font: inherit;
     font-size: 18px; line-height: 1; text-align: center; cursor: pointer;
   }

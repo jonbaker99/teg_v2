@@ -420,6 +420,7 @@
    .sc-landscape.data-card, which is excluded so it stays full-width. */
 .sc-landscape:not(.data-card) {
   width: fit-content;
+  max-width: 100%;
   margin: 0 auto;
 }
 

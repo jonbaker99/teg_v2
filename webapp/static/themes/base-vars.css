@@ -1382,7 +1382,18 @@ body.layout-wide .content-wrapper {
    History's disclosure button and similar ad-hoc buttons without redefining
    the geometry; no call site among C3's own three proving-ground pages
    (/leaderboard, /records, one player-profile page) needs it directly --
-   see C3-handoff.md. */
+   see C3-handoff.md.
+   C4 (2026-09-20): class added to .rank-toggle and History's
+   button.teg-cell. Both already carry higher-specificity page-scoped
+   selectors (an #id-anchored ancestor) that already matched this rule's
+   geometry/colour tokens almost exactly, so those keep winning the cascade
+   and rendering is unchanged -- the practical effect of adopting .action
+   here is the shared `.action:focus-visible` ring (`--focus`, not the
+   sitewide green), which neither control had before. History's
+   button.teg-cell also keeps its own `color: inherit; font: inherit;`
+   reset (higher specificity), so the row label does not turn green --
+   the desktop-affordance question (§ design_principles.md Hit areas) is
+   still open and this does not decide it. */
 .action {
     border: 0;
     background: transparent;
