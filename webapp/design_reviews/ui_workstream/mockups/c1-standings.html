@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en" data-layout="page" data-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C1b mockup — Standings (/leaderboard)</title>
+<style>
+/* =========================================================================
+   Clean Editorial Precision — token set (C1 proposal, revised by C1b)
+   Self-contained: no app CSS imported, no app CSS imports this file.
+   Reproduction: ?layout=page|layered&mode=light|dark (JS below applies it).
+
+   C1b changes from C1 (see C1b-handoff.md):
+   1. --bg-content restored: C1's mockups set --bg-panel == --bg-outer,
+      silently flattening production's white .main-content card on the
+      grey page. That was a mockup defect, not a proposal -- reverted here,
+      light mode only (dark mode was already flat in production).
+   2. Leader row: --sand removed. L1 selected -- no fill, green inset rule +
+      green Total + bold name. Fixes the real bug (--table-hover-bg and
+      --table-toprank-bg are the same colour in production) without a new
+      hue, per the owner's rejection of --sand.
+   3. --focus: green -> --ink (F3). Fixes the real bug (global focus-visible
+      outline and "selected" both render green in production) without a
+      new hue -- reuses the existing --ink token instead.
+   ========================================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;600;700&display=swap');
+
+:root {
+    --font-serif: 'Lora', Georgia, serif;
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+    /* Type scale — §1 */
+    --fs-100: 11px;  /* table headers, kickers, units */
+    --fs-200: 12px;  /* captions, context text */
+    --fs-300: 14px;  /* table/data default */
+    --fs-400: 16px;  /* body, control labels */
+    --fs-500: 20px;  /* H2 section label -- unused for size here: H2 stays 13px small-caps per owner decision */
+    --fs-600: 28px;  /* H1 phone */
+    --fs-700: 36px;  /* H1 desktop */
+
+    /* Spacing ramp — §3 */
+    --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 24px; --sp-6: 32px; --sp-7: 48px;
+
+    /* Radius — §3 */
+    --r-0: 0; --r-1: 3px; --r-2: 6px;
+
+    /* Rules — §3 */
+    --rule-color: #e0e0e0;
+
+    /* Semantic colour roles — §4 (light) */
+    --ink: #1a1a1a;
+    --ink-2: #555555;
+    --ink-muted: #6f6f6f; /* corrected from spec's #767676 during verification: #767676 fails 4.5:1 on the Clean Page panel (#f5f3f0) at 4.10 -- #6f6f6f passes at 4.54 */
+    --green: #228B22; /* forestgreen keyword resolved */
+    --focus: var(--ink); /* C1b F3: was #1a6fd4 (a new blue hue). --ink reuses an existing token and stays visible on a green-tinted selected segment, where green-on-green focus would not. */
+    --success: var(--green);
+    --warning: #8a6d1f;
+    --failure: #a3302a;
+    --hover-bg: #F3F7F3;
+    /* C1b leader-row L2 (owner selected, revised from C1's --sand): a
+       two-step green tint, one shade darker than --hover-bg so the leader
+       row reads distinct from a hovered ordinary row at rest. --leader-hover
+       is the fix for L2's own flaw found during comparison (see
+       mockups/c1b-leader-row.html) -- without it, hovering the leader row
+       itself either held flat or (if a generic tr:hover rule won the
+       cascade) went *lighter*, the opposite of emphasis. */
+    --leader-tint: #E4EFE4;
+    --leader-tint-hover: #C9E0C9;
+
+    /* Layout surfaces -- overridden per data-layout below */
+    --bg-outer: #ffffff;
+    --bg-panel: #ffffff;
+    --bg-content: #ffffff; /* C1b: the restored white content card, distinct from --bg-panel */
+    --bg-card: #ffffff;
+    --shadow-content: none;
+    --content-border: none;
+    --shadow-card: none;
+    --card-border: none;
+}
+
+/* Clean Page layout (default): grey page, white content card, white data-cards float on the content card (unchanged from production) */
+html[data-layout="page"] {
+    --bg-outer: #f5f3f0;
+    --bg-panel: #f5f3f0;
+    --bg-content: #ffffff;
+    --shadow-content: 0 1px 4px rgba(0,0,0,0.08);
+    --content-border: none;
+    --bg-card: #ffffff;
+    --shadow-card: none;
+    --card-border: none;
+}
+
+/* Clean Layered layout: 3-layer hierarchy -- outer stone, panel taupe, content card transparent over the panel (production keeps depth at the .data-card level, not the content-card level), data-cards get the real shadow */
+html[data-layout="layered"] {
+    --bg-outer: #e0ddd8;
+    --bg-panel: #f5f3f0;
+    --bg-content: transparent;
+    --shadow-content: none;
+    --content-border: none;
+    --bg-card: #ffffff;
+    --shadow-card: 0 1px 2px rgba(90,70,50,0.08), 0 4px 14px rgba(90,70,50,0.13);
+    --card-border: 1px solid var(--rule-color);
+}
+
+/* Dark mode -- orthogonal to layout, re-points the same roles. Content card
+   stays flat in dark mode, matching production (dark.css already sets
+   .main-content/.page-panel to the same near-black as the page). */
+html[data-mode="dark"] {
+    color-scheme: dark;
+    --ink: #ececea;
+    --ink-2: #b6b4aa;
+    --ink-muted: #9c9a8f; /* verified 5.98-6.47:1 on dark surfaces used below */
+    --rule-color: #2e2e29;
+    --green: #6cc77f;
+    --focus: var(--ink);
+    --warning: #c9a227;
+    --failure: #e06a63;
+    --hover-bg: #1b2a1d;
+    --leader-tint: #1f3320;
+    --leader-tint-hover: #2c4a2d;
+    --bg-outer: #16150f;
+    --bg-panel: #16150f;
+    --bg-content: #16150f;
+    --shadow-content: none;
+    --bg-card: #1d1d1a;
+    --shadow-card: none;
+}
+html[data-mode="dark"][data-layout="page"] { --bg-panel: #16150f; --bg-content: #16150f; --bg-card: #1d1d1a; }
+html[data-mode="dark"][data-layout="layered"] {
+    --bg-outer: #0f0e0a; --bg-panel: #16150f; --bg-content: #16150f; --bg-card: #1d1d1a;
+    --shadow-card: 0 1px 2px rgba(0,0,0,0.4), 0 4px 14px rgba(0,0,0,0.5);
+    --card-border: 1px solid var(--rule-color);
+}
+
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    background: var(--bg-outer);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-variant-numeric: tabular-nums lining-nums;
+    -webkit-font-smoothing: antialiased;
+}
+.page-wrap { max-width: 1000px; margin: 0 auto; padding: var(--sp-5); }
+.panel { background: var(--bg-panel); }
+
+/* ---- Restored white content card (C1b) -- production's .main-content,
+   expressed in tokens. --sp-6 (32px) side padding, not production's literal
+   40px -- 40px is not on the 4px ramp; recorded as a deliberate 8px
+   tightening, not an eighth step added to the scale. ---- */
+.content-card {
+    background: var(--bg-content);
+    box-shadow: var(--shadow-content);
+    border: var(--content-border);
+    border-radius: var(--r-1);
+    margin: var(--sp-5) 0;
+    padding: var(--sp-6);
+}
+@media (max-width: 640px) { .content-card { padding: var(--sp-4); margin: var(--sp-4) 0; } }
+
+/* ---- Page title (H1) -- unchanged from current system, expressed in tokens ---- */
+.page-title-area { padding: 0 0 var(--sp-3); }
+.page-label {
+    display: block; font-family: var(--font-sans); font-size: var(--fs-100);
+    font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--ink-muted); margin-bottom: var(--sp-1);
+}
+.page-title {
+    font-family: var(--font-serif); font-weight: 600; color: var(--ink);
+    margin: 0; line-height: 1.15; font-size: var(--fs-600);
+}
+@media (min-width: 768px) { .page-title { font-size: var(--fs-700); } }
+
+/* ---- H2 section label -- §2: .section-title/.card-header/.chart-title unified.
+   Owner decision: keep the existing Lora 700/13px/small-caps/green treatment
+   unchanged. All three become aliases of this one rule (only .card-header
+   keeps its own larger top margin, preserved as the "starts a new group"
+   signal, not a different rank). ---- */
+.section-title, .card-header, .chart-title {
+    font-family: var(--font-serif); font-weight: 700; font-size: 13px;
+    letter-spacing: 0.09em; text-transform: uppercase; color: var(--green);
+    line-height: 1.3; margin: 0 0 var(--sp-4) 0;
+}
+.card-header { margin-top: var(--sp-7); }
+.card-header:first-child { margin-top: 0; }
+
+/* ---- data-card ---- */
+.data-card {
+    background: var(--bg-card);
+    box-shadow: var(--shadow-card);
+    border: var(--card-border);
+    border-radius: var(--r-0);
+}
+
+/* ---- Control pattern 1: Tabs (.section-nav > .tab-underline) -- unchanged geometry, tokenised ---- */
+.section-nav { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin-bottom: var(--sp-6); }
+.tab-underline {
+    background: transparent; border: none; border-bottom: 2px solid transparent;
+    border-radius: var(--r-0); padding: 6px var(--sp-3); font-size: var(--fs-200);
+    font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em;
+    color: var(--ink-2); font-family: var(--font-sans); cursor: pointer;
+}
+.tab-underline:hover { color: var(--ink); border-bottom-color: var(--ink-muted); }
+.tab-underline:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.tab-underline--active, .tab-underline--active:hover { color: var(--green); border-bottom-color: var(--green); font-weight: 600; }
+@media (max-width: 640px), (pointer: coarse) {
+    .tab-underline { min-height: 44px; padding: var(--sp-2) var(--sp-3); display: inline-flex; align-items: center; }
+}
+
+/* ---- Control pattern 2: Segmented measure (.segmented on .toggle-group) --
+   replaces .scale-switch/.measure-toggle for Net/Gross and .pill pairs used
+   as measures. No "off" state -- both options read equally weighted until
+   chosen, per design_principles.md's own toggle-switch decision rule. ---- */
+.toggle-group { display: inline-flex; align-items: center; gap: var(--sp-3); margin-bottom: var(--sp-4); flex-wrap: wrap; }
+.segmented {
+    display: inline-flex; border: 1px solid var(--rule-color); border-radius: var(--r-1);
+    overflow: hidden; background: var(--bg-card);
+}
+.seg-option {
+    appearance: none; border: none; background: transparent; cursor: pointer;
+    font-family: var(--font-sans); font-size: var(--fs-300); font-weight: 500;
+    color: var(--ink-2); padding: 7px var(--sp-4); min-height: 36px; border-right: 1px solid var(--rule-color);
+}
+.seg-option:last-child { border-right: none; }
+.seg-option:hover { background: var(--hover-bg); color: var(--ink); }
+.seg-option:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.seg-option[aria-pressed="true"] { color: var(--green); font-weight: 700; background: var(--hover-bg); }
+@media (max-width: 640px), (pointer: coarse) {
+    .seg-option { min-height: 44px; padding: var(--sp-3) var(--sp-4); font-size: var(--fs-400); }
+}
+
+/* ---- Control pattern 3: Compact action (.action) -- rank-expand toggle ---- */
+.action {
+    border: 0; background: transparent; color: var(--green); font-family: var(--font-sans);
+    cursor: pointer; border-radius: var(--r-1); min-width: 28px; min-height: 28px;
+    font-size: 16px; line-height: 1;
+}
+.action::after { content: "+"; }
+.action[aria-expanded="true"]::after { content: "\2212"; }
+.action:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+@media (max-width: 640px), (pointer: coarse) {
+    .action { min-width: 44px; min-height: 44px; font-size: 20px; }
+}
+
+/* ---- Facts rail (champion / wooden spoon) ---- */
+.facts-rail { display: flex; gap: var(--sp-5); flex-wrap: wrap; margin: 0 0 var(--sp-5); }
+.fact { display: flex; flex-direction: column; gap: 2px; }
+.fact + .fact { padding-left: var(--sp-5); border-left: 1px solid var(--rule-color); }
+.fact-label { font-size: var(--fs-100); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-muted); font-weight: 600; }
+.fact-value { font-family: var(--font-serif); font-size: var(--fs-400); font-weight: 600; color: var(--ink); }
+.fact-value b { font-family: var(--font-sans); font-variant-numeric: tabular-nums; }
+
+/* ---- Standings table ---- */
+.standings-table { width: 100%; border-collapse: collapse; font-family: var(--font-sans); }
+.standings-table th {
+    font-size: var(--fs-100); text-transform: uppercase; letter-spacing: 0.04em;
+    font-weight: 700; color: var(--ink-muted); text-align: right;
+    border-bottom: 2px solid var(--ink); padding: var(--sp-3) var(--sp-2);
+    white-space: normal; overflow-wrap: break-word;
+}
+.standings-table th.col-player, .standings-table td.col-player { text-align: left; }
+.standings-table th.col-rank, .standings-table td.col-rank { text-align: center; width: 44px; }
+.standings-table td {
+    font-size: var(--fs-300); padding: var(--sp-3) var(--sp-2); text-align: right;
+    border-bottom: 1px solid var(--rule-color);
+}
+.standings-table td.col-total { font-size: 1.15em; font-weight: 700; }
+/* ---- Leader row: L2 (owner selected) -- two-step green tint, one shade
+   darker than --hover-bg so the leader row reads distinct from a hovered
+   ordinary row at rest. Replaces C1's --sand tint, which the owner rejected
+   as a new hue; also replaces the lead's own L1 recommendation, which the
+   owner passed over in favour of this tint look. The leader row gets its
+   own :hover rule with a deeper tint (--leader-tint-hover) so hovering it
+   intensifies rather than holding flat or losing to the lighter generic
+   row-hover colour -- the flaw the plain version of L2 shipped with during
+   comparison. See C1b-handoff.md L1/L2/L3 and mockups/c1b-leader-row.html. ---- */
+.standings-table tr.is-leader td { background: var(--leader-tint); }
+.standings-table tr.is-leader td.col-total { font-weight: 700; }
+.standings-table tr:hover td { background: var(--hover-bg); }
+.standings-table tr.is-leader:hover td { background: var(--leader-tint-hover); }
+.round-strip { display: none; font-size: var(--fs-100); color: var(--ink-muted); }
+.round-strip b { color: var(--ink); font-weight: 600; }
+
+.chart-block { margin-top: var(--sp-7); }
+.chart-placeholder {
+    height: 220px; display: flex; align-items: center; justify-content: center;
+    color: var(--ink-muted); font-size: var(--fs-300); border: 1px dashed var(--rule-color); border-radius: var(--r-1);
+}
+
+@media (max-width: 640px) {
+    .standings-table th.col-r1, .standings-table th.col-r2, .standings-table th.col-r3, .standings-table th.col-r4,
+    .standings-table td.col-r1, .standings-table td.col-r2, .standings-table td.col-r3, .standings-table td.col-r4 { display: none; }
+    .round-strip { display: block; margin-top: 2px; }
+    .facts-rail { gap: var(--sp-4); }
+    .fact + .fact { padding-left: var(--sp-4); }
+}
+@media (min-width: 641px) and (max-width: 900px) {
+    .standings-table td.col-total { font-size: 1.05em; }
+}
+
+footer.note {
+    max-width: 1000px; margin: var(--sp-7) auto var(--sp-5); padding: 0 var(--sp-5);
+    font-size: var(--fs-200); color: var(--ink-muted); border-top: 1px solid var(--rule-color); padding-top: var(--sp-3);
+}
+</style>
+</head>
+<body>
+<div class="panel">
+<div class="page-wrap">
+    <div class="page-title-area">
+        <span class="page-label">TEG History</span>
+        <h1 class="page-title">TEG 18 Results</h1>
+    </div>
+
+    <div class="content-card">
+
+    <nav class="section-nav" aria-label="Leaderboard sections">
+        <button class="tab-underline tab-underline--active" type="button">Leaderboard</button>
+        <button class="tab-underline" type="button">Scorecards</button>
+    </nav>
+
+    <div class="toggle-group">
+        <div class="segmented" role="group" aria-label="Leaderboard measure">
+            <button class="seg-option" type="button" aria-pressed="true">Net</button>
+            <button class="seg-option" type="button" aria-pressed="false">Gross</button>
+        </div>
+    </div>
+
+    <h2 class="section-title">Green Jacket Final Leaderboard</h2>
+
+    <div class="facts-rail">
+        <div class="fact">
+            <span class="fact-label">Champion</span>
+            <span class="fact-value">Gregg WILLIAMS <b>−14</b></span>
+        </div>
+        <div class="fact">
+            <span class="fact-label">Wooden spoon</span>
+            <span class="fact-value">Stuart NEUMANN <b>+31</b></span>
+        </div>
+    </div>
+
+    <div class="data-card">
+    <table class="standings-table">
+        <colgroup>
+            <col class="col-rank"><col class="col-player"><col class="col-r1"><col class="col-r2"><col class="col-r3"><col class="col-r4"><col class="col-total"><col style="width:36px">
+        </colgroup>
+        <thead>
+            <tr>
+                <th class="col-rank">#</th>
+                <th class="col-player">Player</th>
+                <th class="col-r1">R1</th>
+                <th class="col-r2">R2</th>
+                <th class="col-r3">R3</th>
+                <th class="col-r4">R4</th>
+                <th class="col-total">Total</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="is-leader">
+                <td class="col-rank">1</td>
+                <td class="col-player">Gregg WILLIAMS<span class="round-strip">R1 <b>−2</b> · R2 <b>−5</b> · R3 <b>−3</b> · R4 <b>−4</b></span></td>
+                <td class="col-r1">−2</td><td class="col-r2">−5</td><td class="col-r3">−3</td><td class="col-r4">−4</td>
+                <td class="col-total">−14</td>
+                <td><button class="action" type="button" aria-expanded="false" aria-label="Toggle round detail for Gregg Williams"></button></td>
+            </tr>
+            <tr>
+                <td class="col-rank">2</td>
+                <td class="col-player">David MULLIN<span class="round-strip">R1 <b>+1</b> · R2 <b>−3</b> · R3 <b>−2</b> · R4 <b>−1</b></span></td>
+                <td class="col-r1">+1</td><td class="col-r2">−3</td><td class="col-r3">−2</td><td class="col-r4">−1</td>
+                <td class="col-total">−5</td>
+                <td><button class="action" type="button" aria-expanded="false" aria-label="Toggle round detail for David Mullin"></button></td>
+            </tr>
+            <tr>
+                <td class="col-rank">3</td>
+                <td class="col-player">John PATTERSON<span class="round-strip">R1 <b>+3</b> · R2 <b>0</b> · R3 <b>+1</b> · R4 <b>−1</b></span></td>
+                <td class="col-r1">+3</td><td class="col-r2">0</td><td class="col-r3">+1</td><td class="col-r4">−1</td>
+                <td class="col-total">+3</td>
+                <td><button class="action" type="button" aria-expanded="false" aria-label="Toggle round detail for John Patterson"></button></td>
+            </tr>
+            <tr>
+                <td class="col-rank">4</td>
+                <td class="col-player">Jon BAKER<span class="round-strip">R1 <b>+2</b> · R2 <b>+4</b> · R3 <b>+3</b> · R4 <b>+3</b></span></td>
+                <td class="col-r1">+2</td><td class="col-r2">+4</td><td class="col-r3">+3</td><td class="col-r4">+3</td>
+                <td class="col-total">+12</td>
+                <td><button class="action" type="button" aria-expanded="false" aria-label="Toggle round detail for Jon Baker"></button></td>
+            </tr>
+            <tr>
+                <td class="col-rank">5</td>
+                <td class="col-player">Stuart NEUMANN<span class="round-strip">R1 <b>+8</b> · R2 <b>+7</b> · R3 <b>+9</b> · R4 <b>+7</b></span></td>
+                <td class="col-r1">+8</td><td class="col-r2">+7</td><td class="col-r3">+9</td><td class="col-r4">+7</td>
+                <td class="col-total">+31</td>
+                <td><button class="action" type="button" aria-expanded="false" aria-label="Toggle round detail for Stuart Neumann"></button></td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+
+    <div class="chart-block">
+        <h3 class="chart-title">Cumulative Net vs Par</h3>
+        <div class="data-card">
+            <div class="chart-placeholder">Plotly chart target — unchanged, not respecified by C1</div>
+        </div>
+        <div class="toggle-group" style="margin-top: var(--sp-4);">
+            <div class="segmented" role="group" aria-label="Chart type">
+                <button class="seg-option" type="button" aria-pressed="true">Cumulative</button>
+                <button class="seg-option" type="button" aria-pressed="false">By round</button>
+            </div>
+        </div>
+    </div>
+
+    </div>
+</div>
+</div>
+<footer class="note">
+    C1b mockup — revises C1's Clean Editorial Precision proposal (white content
+    card restored, L2 leader row, F3 ink focus ring). Representative TEG 18
+    data (5 players; no real 8-player fixture exists in this checkout, see
+    P0-handoff.md). Reproduce with
+    <code>?layout=page|layered&amp;mode=light|dark</code>. Base commit 809b97d.
+</footer>
+<script>
+(function () {
+    var params = new URLSearchParams(location.search);
+    var layout = params.get('layout');
+    var mode = params.get('mode');
+    if (layout === 'page' || layout === 'layered') document.documentElement.setAttribute('data-layout', layout);
+    if (mode === 'light' || mode === 'dark') document.documentElement.setAttribute('data-mode', mode);
+    document.querySelectorAll('.action').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            btn.setAttribute('aria-expanded', btn.getAttribute('aria-expanded') !== 'true');
+        });
+    });
+    document.querySelectorAll('.segmented').forEach(function (group) {
+        group.querySelectorAll('.seg-option').forEach(function (opt) {
+            opt.addEventListener('click', function () {
+                group.querySelectorAll('.seg-option').forEach(function (o) { o.setAttribute('aria-pressed', 'false'); });
+                opt.setAttribute('aria-pressed', 'true');
+            });
+        });
+    });
+})();
+</script>
+</body>
+</html>

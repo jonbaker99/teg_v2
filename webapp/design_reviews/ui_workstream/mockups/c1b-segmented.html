@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en" data-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C1b mockup — segmented control</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;600;700&display=swap');
+:root {
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Lora', Georgia, serif;
+    --fs-100: 11px; --fs-200: 12px; --fs-300: 14px; --fs-400: 16px;
+    --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 24px; --sp-6: 32px;
+    --r-1: 3px;
+    --rule-color: #e0e0e0;
+    --ink: #1a1a1a; --ink-2: #555555; --ink-muted: #6f6f6f;
+    --green: #228B22;
+    --focus: var(--ink);
+    --hover-bg: #F3F7F3;
+    --bg-outer: #f5f3f0; --bg-content: #ffffff; --bg-card: #ffffff;
+}
+html[data-mode="dark"] {
+    color-scheme: dark;
+    --ink: #ececea; --ink-2: #b6b4aa; --ink-muted: #9c9a8f;
+    --rule-color: #2e2e29; --green: #6cc77f; --focus: var(--ink);
+    --hover-bg: #1b2a1d;
+    --bg-outer: #16150f; --bg-content: #16150f; --bg-card: #1d1d1a;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg-outer); color: var(--ink); font-family: var(--font-sans); font-variant-numeric: tabular-nums lining-nums; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 1100px; margin: 0 auto; padding: var(--sp-5); }
+h1 { font-family: var(--font-serif); font-size: 22px; margin: 0 0 var(--sp-2); }
+.rule {
+    font-size: var(--fs-300); color: var(--ink-2); max-width: 800px; margin: 0 0 var(--sp-6);
+    padding: var(--sp-3) var(--sp-4); background: var(--bg-content); border-left: 3px solid var(--green); border-radius: 0 var(--r-1) var(--r-1) 0;
+}
+.rule b { color: var(--ink); }
+
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-6); align-items: start; margin-bottom: var(--sp-6); padding-bottom: var(--sp-5); border-bottom: 1px solid var(--rule-color); }
+.row:last-child { border-bottom: none; }
+@media (max-width: 760px) { .row { grid-template-columns: 1fr; } }
+.col-head { display: flex; align-items: center; gap: var(--sp-2); margin-bottom: var(--sp-3); }
+.col-head .tag { font-size: var(--fs-100); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px; border-radius: var(--r-1); background: var(--rule-color); color: var(--ink-2); }
+.col-head.after .tag { background: var(--green); color: #fff; }
+.usecase { font-size: var(--fs-400); font-weight: 600; margin: 0 0 var(--sp-4); font-family: var(--font-serif); }
+
+/* BEFORE: today's .scale-switch (binary toggle) and .pill-group used as a measure row */
+.scale-switch { display: inline-flex; align-items: center; gap: var(--sp-2); font-size: var(--fs-300); }
+.switch-track { position: relative; width: 40px; height: 22px; border-radius: 999px; background: var(--rule-color); cursor: pointer; }
+.switch-track.is-on { background: var(--green); }
+.switch-thumb { position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: left .15s; }
+.switch-track.is-on .switch-thumb { left: 20px; }
+.pill-group { display: inline-flex; gap: var(--sp-2); flex-wrap: wrap; }
+.pill { font-size: var(--fs-300); padding: 6px 14px; border-radius: 999px; border: 1px solid var(--rule-color); background: var(--bg-card); color: var(--ink-2); cursor: pointer; }
+.pill--active { background: var(--green); color: #fff; border-color: var(--green); }
+.before-note { font-size: var(--fs-200); color: var(--ink-muted); margin-top: var(--sp-3); }
+
+/* AFTER: .segmented */
+.segmented { display: inline-flex; border: 1px solid var(--rule-color); border-radius: var(--r-1); overflow: hidden; background: var(--bg-card); }
+.seg-option { appearance: none; border: none; background: transparent; cursor: pointer; font-family: var(--font-sans); font-size: var(--fs-300); font-weight: 500; color: var(--ink-2); padding: 7px var(--sp-4); border-right: 1px solid var(--rule-color); }
+.seg-option:last-child { border-right: none; }
+.seg-option:hover { background: var(--hover-bg); color: var(--ink); }
+.seg-option:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.seg-option[aria-pressed="true"] { color: var(--green); font-weight: 700; background: var(--hover-bg); }
+.after-note { font-size: var(--fs-200); color: var(--ink-muted); margin-top: var(--sp-3); }
+@media (max-width: 640px), (pointer: coarse) {
+    .seg-option { min-height: 44px; padding: var(--sp-3) var(--sp-4); font-size: var(--fs-400); }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+    <h1>Segmented control — before / after</h1>
+    <p class="rule">
+        A <b>segmented control</b> represents mutually exclusive <i>measures</i> — neither
+        option is "on" or "off," both are equally weighted until one is chosen. Today the
+        site uses a binary switch (implying on/off) or a rounded pill group for this same
+        job. <code>.segmented</code> replaces both, on real measures below.
+    </p>
+
+    <div class="row">
+        <div>
+            <div class="col-head"><span class="tag">Before</span></div>
+            <p class="usecase">Net / Gross (Leaderboard)</p>
+            <label class="scale-switch">
+                <span class="switch-track is-on" role="switch" aria-checked="true" tabindex="0"><span class="switch-thumb"></span></span>
+                Net
+            </label>
+            <p class="before-note"><code>.scale-switch</code> — geometry says binary on/off, but Net and Gross are two equally valid views, not a default and an override.</p>
+        </div>
+        <div>
+            <div class="col-head after"><span class="tag">After</span></div>
+            <p class="usecase">Net / Gross (Leaderboard)</p>
+            <div class="segmented" role="group" aria-label="Measure">
+                <button class="seg-option" type="button" aria-pressed="true">Net</button>
+                <button class="seg-option" type="button" aria-pressed="false">Gross</button>
+            </div>
+            <p class="after-note"><code>.segmented</code> — both options read as equal weight; the selected one is marked, not "switched on."</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div>
+            <div class="col-head"><span class="tag">Before</span></div>
+            <p class="usecase">Round view / TEG total (Scoring)</p>
+            <div class="pill-group">
+                <button class="pill pill--active" type="button">By round</button>
+                <button class="pill" type="button">TEG total</button>
+            </div>
+            <p class="before-note"><code>.pill-group</code> — rounded pill geometry is shared with round-number navigation and the player roster, so a measure control looks identical to a link to a different resource.</p>
+        </div>
+        <div>
+            <div class="col-head after"><span class="tag">After</span></div>
+            <p class="usecase">Round view / TEG total (Scoring)</p>
+            <div class="segmented" role="group" aria-label="Measure">
+                <button class="seg-option" type="button" aria-pressed="true">By round</button>
+                <button class="seg-option" type="button" aria-pressed="false">TEG total</button>
+            </div>
+            <p class="after-note">Squared geometry, hairline container — visually distinct from pill-shaped navigation.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div>
+            <div class="col-head"><span class="tag">Before</span></div>
+            <p class="usecase">Count / % (Scoring heatmap)</p>
+            <div class="pill-group">
+                <button class="pill pill--active" type="button">Count</button>
+                <button class="pill" type="button">%</button>
+            </div>
+            <p class="before-note">Hand-rolled active-state JS inline in <code>scoring_heatmap.html</code> — duplicated a third time, independent of the global tab handler.</p>
+        </div>
+        <div>
+            <div class="col-head after"><span class="tag">After</span></div>
+            <p class="usecase">Count / % (Scoring heatmap)</p>
+            <div class="segmented" role="group" aria-label="Measure">
+                <button class="seg-option" type="button" aria-pressed="true">Count</button>
+                <button class="seg-option" type="button" aria-pressed="false">%</button>
+            </div>
+            <p class="after-note">One shared handler (C4) replaces three independent hand-rolled implementations.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div>
+            <div class="col-head"><span class="tag">Before</span></div>
+            <p class="usecase">Metric row (Player Rankings)</p>
+            <div class="pill-group">
+                <button class="pill pill--active" type="button">Wins</button>
+                <button class="pill" type="button">Podiums</button>
+                <button class="pill" type="button">Avg finish</button>
+            </div>
+            <p class="before-note">Three or more options still read as a pill row, same shape as navigation pills elsewhere on the page.</p>
+        </div>
+        <div>
+            <div class="col-head after"><span class="tag">After</span></div>
+            <p class="usecase">Metric row (Player Rankings)</p>
+            <div class="segmented" role="group" aria-label="Metric">
+                <button class="seg-option" type="button" aria-pressed="true">Wins</button>
+                <button class="seg-option" type="button" aria-pressed="false">Podiums</button>
+                <button class="seg-option" type="button" aria-pressed="false">Avg finish</button>
+            </div>
+            <p class="after-note">Scales past two options without losing the "one shared container" read.</p>
+        </div>
+    </div>
+</div>
+<script>
+(function () {
+    var mode = new URLSearchParams(location.search).get('mode');
+    if (mode === 'light' || mode === 'dark') document.documentElement.setAttribute('data-mode', mode);
+    document.querySelectorAll('.segmented').forEach(function (group) {
+        group.querySelectorAll('.seg-option').forEach(function (opt) {
+            opt.addEventListener('click', function () {
+                group.querySelectorAll('.seg-option').forEach(function (o) { o.setAttribute('aria-pressed', 'false'); });
+                opt.setAttribute('aria-pressed', 'true');
+            });
+        });
+    });
+    document.querySelectorAll('.pill-group').forEach(function (group) {
+        group.querySelectorAll('.pill').forEach(function (opt) {
+            opt.addEventListener('click', function () {
+                group.querySelectorAll('.pill').forEach(function (o) { o.classList.remove('pill--active'); });
+                opt.classList.add('pill--active');
+            });
+        });
+    });
+    var track = document.querySelector('.switch-track');
+    if (track) {
+        track.addEventListener('click', function () {
+            var on = track.getAttribute('aria-checked') === 'true';
+            track.setAttribute('aria-checked', String(!on));
+            track.classList.toggle('is-on', !on);
+        });
+    }
+})();
+</script>
+</body>
+</html>
