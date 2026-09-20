@@ -16,6 +16,26 @@ This roadmap turns the agreed UI direction into small, independent chats. Each c
 
 ## How every implementation chat should run
 
+### Choose the starting model
+
+Select the model and reasoning setting shown under each chat before sending its starter prompt. These are task-specific recommendations agreed for this workstream, not permanent repository-wide model requirements or claims that another model cannot do the task.
+
+| Chats | Starting model and reasoning |
+|---|---|
+| P0; F1–F4 | Astra Medium |
+| F5; I1–I2 | Sol High |
+| C1; I3; E1; E5; T2 | Astra High |
+| C3–C5; I5; E3–E4; T3 | Astra Medium |
+| F6; C6; I6; T1 | Sol High; Claude may perform the designated independent visual reviews |
+| C2; I4; E2 | Claude, using the available strong reasoning model; Codex reasoning labels do not apply |
+| I7 maintenance | Astra Medium for fonts or lab isolation; Sol High for Plotly loading or the Tailwind build |
+
+The owner controls the lead model and reasoning setting. An agent must not claim to have switched its own model. Before implementation, it should flag a recommended change with a concrete reason: unresolved design choices, cross-route state behaviour, shared code risk, or repeated failed attempts. A recommendation alone is not a blocker; continue safe work unless the task is actually blocked or the owner asks to pause.
+
+For workers, explicitly choose a currently available lower-cost model: a fast model for inventories, mechanical edits, and checks; a balanced coding model for bounded implementation. Give each worker only the necessary context, exact files, and acceptance criteria. Keep design decisions, integration, and final review with the strong lead. Skip delegation for a trivial edit when coordination would cost more than the work.
+
+Each starter prompt repeats its starting recommendation and switch guidance so it works when copied into a fresh chat. The following operating rules also apply.
+
 1. Start from the latest accepted UI commit, not an older copy of `main`.
 2. Use a dedicated branch and worktree. Record both absolute paths in `.current_session.md` before editing.
 3. Read only the documents and source named in that chat, plus `CLAUDE.md` and `.current_session.md` as required by the repository.
@@ -85,12 +105,17 @@ The shortest useful path is `P0 → F1–F5 → F6 → C1–C6 → I1–I6 → E
 
 ### P0 — establish the shared baseline
 
+**Starting model:** Astra Medium.
+
 **Goal:** produce a compact route/file/test map and reproducible screenshot baseline without changing the application.
 
 **Starter prompt**
 
 ```text
 Prepare the implementation baseline for the TEG public UI workstream. Make no application changes; create only the named baseline handoff document.
+
+Starting recommendation: Astra Medium. Before implementation, flag whether this task needs higher reasoning or another lead model, and explain why. The owner controls that setting. Continue safe work while awaiting any optional switch; delegate cheaper work as instructed.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/gpt-ui-review.md
@@ -124,6 +149,8 @@ Use a fast lower-cost explorer for selector, route, and test inventory. The lead
 
 ### F1 — repair the two small visual defects
 
+**Starting model:** Astra Medium.
+
 **Prerequisite:** P0.
 
 **Goal:** make the desktop rank toggle discoverable on Latest Round and Latest TEG, and restore dark-mode page-title contrast, without redesigning either component.
@@ -134,6 +161,9 @@ Use a fast lower-cost explorer for selector, route, and test inventory. The lead
 
 ```text
 Implement only two confirmed public UI defects: the missing +/− rank-toggle glyph above 640px, and page-title variants that become too faint in dark mode.
+
+Starting recommendation: Astra Medium. Before implementation, flag whether this task needs higher reasoning or another lead model, and explain why. The owner controls that setting. Continue safe work while awaiting any optional switch; delegate cheaper work as instructed.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/ui-implementation-roadmap.md: F1
@@ -159,6 +189,8 @@ Rules:
 
 ### F2 — stop standalone Records overflow
 
+**Starting model:** Astra Medium.
+
 **Prerequisite:** P0.
 
 **Goal:** keep `/records` within a 320–430px viewport while preserving the record value, owner, and event context.
@@ -169,6 +201,9 @@ Rules:
 
 ```text
 Fix only the public /records narrow-screen overflow.
+
+Starting recommendation: Astra Medium. Before implementation, flag whether this task needs higher reasoning or another lead model, and explain why. The owner controls that setting. Continue safe work while awaiting any optional switch; delegate cheaper work as instructed.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/ui-implementation-roadmap.md: F2
@@ -193,6 +228,8 @@ Verify no page-level horizontal overflow, light/dark rendering, representative l
 
 ### F3 — finish Latest Round Scoring and Streaks on phones
 
+**Starting model:** Astra Medium.
+
 **Prerequisite:** P0.
 
 **Goal:** give both tabs an intentional phone layout rather than a squeezed desktop table.
@@ -203,6 +240,9 @@ Verify no page-level horizontal overflow, light/dark rendering, representative l
 
 ```text
 Finish only the public /latest-round Scoring and Streaks phone layouts.
+
+Starting recommendation: Astra Medium. Before implementation, flag whether this task needs higher reasoning or another lead model, and explain why. The owner controls that setting. Continue safe work while awaiting any optional switch; delegate cheaper work as instructed.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/ui-implementation-roadmap.md: F3
@@ -227,6 +267,8 @@ Verify light/dark, 320/375/430/768/1280px, no page-level overflow, variable play
 
 ### F4 — finish Latest Round Records and Scorecard on phones
 
+**Starting model:** Astra Medium.
+
 **Prerequisite:** F2 accepted.
 
 **Goal:** apply the repaired shared Records treatment inside Latest Round and remove the Scorecard tab’s excess phone inset.
@@ -237,6 +279,9 @@ Verify light/dark, 320/375/430/768/1280px, no page-level overflow, variable play
 
 ```text
 Finish only the public /latest-round Records and Scorecard phone layouts, building on the accepted standalone Records fix.
+
+Starting recommendation: Astra Medium. Before implementation, flag whether this task needs higher reasoning or another lead model, and explain why. The owner controls that setting. Continue safe work while awaiting any optional switch; delegate cheaper work as instructed.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/ui-implementation-roadmap.md: F4
@@ -262,6 +307,8 @@ Verify 320/375/430/768/1280px, light/dark, Scoreboard → Records → Scoreboard
 
 ### F5 — restore navigation on long pages
 
+**Starting model:** Sol High.
+
 **Prerequisite:** F1–F4 accepted.
 
 **Goal:** keep public navigation available on long pages without creating overlap or scroll jumps.
@@ -272,6 +319,9 @@ Verify 320/375/430/768/1280px, light/dark, Scoreboard → Records → Scoreboard
 
 ```text
 Fix only long-page public navigation persistence.
+
+Starting recommendation: Sol High. Before implementation, flag whether this task needs higher reasoning or another lead model, and explain why. The owner controls that setting. Continue safe work while awaiting any optional switch; delegate cheaper work as instructed.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/ui-implementation-roadmap.md: F5
@@ -295,6 +345,8 @@ Verify long /records, /latest-round, and /scoring pages at 390/768/1280px in lig
 
 ### F6 — Fix review gate
 
+**Starting model:** Sol High.
+
 **Prerequisite:** F1–F5 accepted on one integration base.
 
 **Goal:** decide whether Fix is complete. This is a read-only review chat.
@@ -303,6 +355,9 @@ Verify long /records, /latest-round, and /scoring pages at 390/768/1280px in lig
 
 ```text
 Independently review the combined TEG public UI Fix stage. Do not edit files.
+
+Starting recommendation: Sol High. Before implementation, flag whether this task needs higher reasoning or another lead model, and explain why. The owner controls that setting. Continue safe work while awaiting any optional switch; delegate cheaper work as instructed.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/gpt-ui-review.md
@@ -335,6 +390,8 @@ Codex resolves accepted findings in a small follow-up on the same Fix integratio
 
 ### C1 — specify Clean Editorial Precision
 
+**Starting model:** Astra High.
+
 **Prerequisite:** F6 ready verdict.
 
 **Goal:** produce a concrete system proposal and representative mockups; do not migrate the site yet.
@@ -343,6 +400,9 @@ Codex resolves accepted findings in a small follow-up on the same Fix integratio
 
 ```text
 Define the Clean Editorial Precision foundation for the TEG public site. This chat is specification and prototype only.
+
+Starting recommendation: Astra High. Before implementation, flag whether this task needs higher reasoning or another lead model, and explain why. The owner controls that setting. Continue safe work while awaiting any optional switch; delegate cheaper work as instructed.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/gpt-ui-review.md: Optimise the existing aesthetic
@@ -373,6 +433,8 @@ Deliver and commit `webapp/design_reviews/ui_workstream/C1-handoff.md` with the 
 
 ### C2 — Claude consistency critique
 
+**Starting model:** Claude with an available strong reasoning model (Codex reasoning labels do not apply).
+
 **Prerequisite:** C1 proposal and screenshots.
 
 **Goal:** challenge the proposed system before implementation. Read-only.
@@ -381,6 +443,9 @@ Deliver and commit `webapp/design_reviews/ui_workstream/C1-handoff.md` with the 
 
 ```text
 Critique the proposed Clean Editorial Precision system for the private eight-player TEG golf app. Do not edit code.
+
+Starting recommendation: Claude with an available strong reasoning model (Codex reasoning labels do not apply). Before reviewing, flag any model or reasoning limitation that affects this critique. The owner selects the lead model; do not claim to switch it yourself.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Inputs:
 - webapp/design_reviews/gpt-ui-review.md
@@ -408,6 +473,8 @@ Do not expand scope into admin, setup, score input, live operations, or data upd
 
 ### C3 — implement the shared foundation
 
+**Starting model:** Astra Medium.
+
 **Prerequisite:** C2 findings resolved by the owner/Codex lead.
 
 **Goal:** implement tokens, heading roles, and control primitives without migrating every page.
@@ -418,6 +485,9 @@ Do not expand scope into admin, setup, score input, live operations, or data upd
 
 ```text
 Implement the approved Clean Editorial Precision foundation only.
+
+Starting recommendation: Astra Medium. Before implementation, flag whether this task needs higher reasoning or another lead model, and explain why. The owner controls that setting. Continue safe work while awaiting any optional switch; delegate cheaper work as instructed.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/ui-implementation-roadmap.md: C3
@@ -442,6 +512,8 @@ Verify representative /leaderboard, /records, /latest-round, /scorecard, /player
 
 ### C4 — apply responsive and table contracts
 
+**Starting model:** Astra Medium.
+
 **Prerequisite:** C3.
 
 **Goal:** make public table behaviour intentional across phone, tablet portrait, and desktop without forcing one renderer or one breakpoint onto every page.
@@ -450,6 +522,9 @@ Verify representative /leaderboard, /records, /latest-round, /scorecard, /player
 
 ```text
 Apply the approved responsive and table contracts to public analysis pages.
+
+Starting recommendation: Astra Medium. Before implementation, flag whether this task needs higher reasoning or another lead model, and explain why. The owner controls that setting. Continue safe work while awaiting any optional switch; delegate cheaper work as instructed.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/ui-implementation-roadmap.md: C4
@@ -477,6 +552,8 @@ Verify leaderboard, results, records, player, scorecard, latest-round, and scori
 
 ### C5 — tighten leaderboard rhythm and controls
 
+**Starting model:** Astra Medium.
+
 **Prerequisite:** C4.
 
 **Goal:** reduce chrome and improve score scanning without changing the standings data architecture.
@@ -485,6 +562,9 @@ Verify leaderboard, results, records, player, scorecard, latest-round, and scori
 
 ```text
 Improve only public leaderboard/results rhythm and control grammar using the approved shared UI system.
+
+Starting recommendation: Astra Medium. Before implementation, flag whether this task needs higher reasoning or another lead model, and explain why. The owner controls that setting. Continue safe work while awaiting any optional switch; delegate cheaper work as instructed.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/ui-implementation-roadmap.md: C5
@@ -512,6 +592,8 @@ Verify five-player historical and eight-player views, Net/Gross, ties, empty sta
 
 ### C6 — Consistent UI review gate
 
+**Starting model:** Sol High.
+
 **Prerequisite:** C4–C5 accepted.
 
 **Goal:** confirm that the public site now reads as one system. Read-only.
@@ -520,6 +602,9 @@ Verify five-player historical and eight-player views, Net/Gross, ties, empty sta
 
 ```text
 Review the completed TEG Consistent UI stage without editing files.
+
+Starting recommendation: Sol High. Before implementation, flag whether this task needs higher reasoning or another lead model, and explain why. The owner controls that setting. Continue safe work while awaiting any optional switch; delegate cheaper work as instructed.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/gpt-ui-review.md
@@ -545,6 +630,8 @@ Report blockers, non-blocking follow-ups, exact evidence, and a ready/not-ready 
 
 ### I1 — unify the public standings renderer
 
+**Starting model:** Sol High.
+
 **Prerequisite:** C6 ready verdict.
 
 **Goal:** replace duplicate active/stale standings paths with one semantic responsive renderer.
@@ -553,6 +640,9 @@ Report blockers, non-blocking follow-ups, exact evidence, and a ready/not-ready 
 
 ```text
 Unify the public leaderboard/results standings renderer.
+
+Starting recommendation: Sol High. Before implementation, flag whether this task needs higher reasoning or another lead model, and explain why. The owner controls that setting. Continue safe work while awaiting any optional switch; delegate cheaper work as instructed.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/ui-implementation-roadmap.md: I1
@@ -580,6 +670,8 @@ Verify five-player and eight-player data, Gross/Net, ties, links, empty states, 
 
 ### I2 — standardise public interaction and URL state
 
+**Starting model:** Sol High.
+
 **Prerequisite:** C6; I1 recommended.
 
 **Goal:** make public tabs and filters honest, reload-safe, shareable, and predictable with Back.
@@ -588,6 +680,9 @@ Verify five-player and eight-player data, Gross/Net, ties, links, empty states, 
 
 ```text
 Standardise public tab, filter, loading, error, retry, and canonical URL behaviour.
+
+Starting recommendation: Sol High. Before implementation, flag whether this task needs higher reasoning or another lead model, and explain why. The owner controls that setting. Continue safe work while awaiting any optional switch; delegate cheaper work as instructed.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/ui-implementation-roadmap.md: I2
@@ -615,6 +710,8 @@ Verify direct links, reload, Back/forward, failed and successful HTMX responses,
 
 ### I3 — draft the Contents product contract
 
+**Starting model:** Astra High.
+
 **Prerequisite:** C6. I2 is helpful but not required.
 
 **Goal:** propose what `/contents` should communicate before implementation. Read-only/design chat.
@@ -623,6 +720,9 @@ Verify direct links, reload, Back/forward, failed and successful HTMX responses,
 
 ```text
 Design the product/content contract for turning public /contents into a current-TEG home. Do not edit code.
+
+Starting recommendation: Astra High. Before implementation, flag whether this task needs higher reasoning or another lead model, and explain why. The owner controls that setting. Continue safe work while awaiting any optional switch; delegate cheaper work as instructed.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/gpt-ui-review.md: Site functionality and Contents recommendation
@@ -651,6 +751,8 @@ Deliver and commit `webapp/design_reviews/ui_workstream/I3-handoff.md` with the 
 
 ### I4 — Claude Contents critique
 
+**Starting model:** Claude with an available strong reasoning model (Codex reasoning labels do not apply).
+
 **Prerequisite:** I3 proposal and mockups.
 
 **Goal:** independently challenge the information hierarchy before implementation. Read-only.
@@ -659,6 +761,9 @@ Deliver and commit `webapp/design_reviews/ui_workstream/I3-handoff.md` with the 
 
 ```text
 Critique the proposed TEG /contents current-tournament home. Do not edit code.
+
+Starting recommendation: Claude with an available strong reasoning model (Codex reasoning labels do not apply). Before reviewing, flag any model or reasoning limitation that affects this critique. The owner selects the lead model; do not claim to switch it yourself.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/gpt-ui-review.md: Contents recommendation
@@ -679,6 +784,8 @@ Return exact changes required, elements to keep, unresolved product decisions, a
 
 ### I5 — implement Contents as the current-TEG home
 
+**Starting model:** Astra Medium.
+
 **Prerequisite:** I4 findings resolved and contract approved; I2 recommended.
 
 **Goal:** implement the approved state-led Contents page without losing any public destination.
@@ -687,6 +794,9 @@ Return exact changes required, elements to keep, unresolved product decisions, a
 
 ```text
 Implement the approved /contents current-TEG home contract.
+
+Starting recommendation: Astra Medium. Before implementation, flag whether this task needs higher reasoning or another lead model, and explain why. The owner controls that setting. Continue safe work while awaiting any optional switch; delegate cheaper work as instructed.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/ui-implementation-roadmap.md: I5
@@ -707,6 +817,8 @@ Verify every link, all three states, 390/768/1280px, light/dark, reload/direct n
 
 ### I6 — Improve review gate
 
+**Starting model:** Sol High.
+
 **Prerequisite:** I1–I5 accepted.
 
 **Goal:** verify function and product clarity before any aesthetic experiment. Read-only.
@@ -715,6 +827,9 @@ Verify every link, all three states, 390/768/1280px, light/dark, reload/direct n
 
 ```text
 Review the completed TEG Improve stage without editing files.
+
+Starting recommendation: Sol High. Before implementation, flag whether this task needs higher reasoning or another lead model, and explain why. The owner controls that setting. Continue safe work while awaiting any optional switch; delegate cheaper work as instructed.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/gpt-ui-review.md
@@ -735,6 +850,8 @@ Report blockers, non-blocking follow-ups, exact evidence, and a ready/not-ready 
 
 ### I7 — optional performance/hygiene track
 
+**Starting model:** Astra Medium for fonts/lab isolation; Sol High for Plotly/Tailwind.
+
 **Prerequisite:** run after I1/I2, or defer until the core path is complete.
 
 Do not combine these into one risky chat. Open one chat per item: conditional Plotly loading, pinned Tailwind build, unused font removal, or development-only lab/debug isolation.
@@ -743,6 +860,9 @@ Do not combine these into one risky chat. Open one chat per item: conditional Pl
 
 ```text
 Implement exactly one TEG public UI maintenance item: [ONE ITEM]. Do not bundle adjacent cleanup.
+
+Starting recommendation: Astra Medium for fonts/lab isolation; Sol High for Plotly/Tailwind. Before implementation, flag whether this task needs higher reasoning or another lead model, and explain why. The owner controls that setting. Continue safe work while awaiting any optional switch; delegate cheaper work as instructed.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/gpt-ui-review.md: Do later
@@ -770,6 +890,8 @@ Run focused tests and browser/network checks. Update the exact TODO or documenta
 
 ### E1 — build reversible Editorial Golf variants
 
+**Starting model:** Astra High.
+
 **Prerequisite:** I6 ready verdict.
 
 **Goal:** produce two or three real-data variants on leaderboard/results without changing the default production direction.
@@ -778,6 +900,9 @@ Run focused tests and browser/network checks. Update the exact TODO or documenta
 
 ```text
 Build reversible Editorial Golf variants for the public leaderboard/results surface using current TEG data.
+
+Starting recommendation: Astra High. Before implementation, flag whether this task needs higher reasoning or another lead model, and explain why. The owner controls that setting. Continue safe work while awaiting any optional switch; delegate cheaper work as instructed.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/gpt-ui-review.md: Direction B and code prototype
@@ -806,6 +931,8 @@ Deliver and commit `webapp/design_reviews/ui_workstream/E1-handoff.md` with the 
 
 ### E2 — Claude experiment critique
 
+**Starting model:** Claude with an available strong reasoning model (Codex reasoning labels do not apply).
+
 **Prerequisite:** E1 variants and comparison pack.
 
 **Goal:** obtain an independent taste and usability critique. Read-only.
@@ -814,6 +941,9 @@ Deliver and commit `webapp/design_reviews/ui_workstream/E1-handoff.md` with the 
 
 ```text
 Critique the rendered TEG Editorial Golf variants. Do not edit code.
+
+Starting recommendation: Claude with an available strong reasoning model (Codex reasoning labels do not apply). Before reviewing, flag any model or reasoning limitation that affects this critique. The owner selects the lead model; do not claim to switch it yourself.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/gpt-ui-review.md
@@ -840,6 +970,8 @@ Do not expand scope or implement changes. The owner makes the selection; Codex r
 
 ### E3 — implement the selected leaderboard pilot
 
+**Starting model:** Astra Medium.
+
 **Prerequisite:** owner decision after E2.
 
 **Goal:** turn the selected composite into a production-quality but still reversible pilot on leaderboard/results.
@@ -848,6 +980,9 @@ Do not expand scope or implement changes. The owner makes the selection; Codex r
 
 ```text
 Implement only the owner-selected Editorial Golf pilot on public leaderboard/results.
+
+Starting recommendation: Astra Medium. Before implementation, flag whether this task needs higher reasoning or another lead model, and explain why. The owner controls that setting. Continue safe work while awaiting any optional switch; delegate cheaper work as instructed.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/ui-implementation-roadmap.md: E3
@@ -869,12 +1004,17 @@ Verify five/eight-player cases, phone/tablet/desktop, light/dark, both Clean-fam
 
 ### E4 — extend to reports, optional
 
+**Starting model:** Astra Medium.
+
 **Prerequisite:** E3 accepted and an explicit owner decision to test reports.
 
 **Starter prompt**
 
 ```text
 Extend only the accepted Editorial Golf language to the public /teg-reports surface.
+
+Starting recommendation: Astra Medium. Before implementation, flag whether this task needs higher reasoning or another lead model, and explain why. The owner controls that setting. Continue safe work while awaiting any optional switch; delegate cheaper work as instructed.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/gpt-ui-review.md: Direction B
@@ -900,12 +1040,17 @@ Use a lower-cost explorer for class and screenshot inventory. The lead owns any 
 
 ### E5 — compare Telemetry mechanics, optional
 
+**Starting model:** Astra High.
+
 **Prerequisite:** E3, or an explicit owner request for an alternative before E3.
 
 **Starter prompt**
 
 ```text
 Create a reversible Modern Telemetry comparison on the public leaderboard only.
+
+Starting recommendation: Astra High. Before implementation, flag whether this task needs higher reasoning or another lead model, and explain why. The owner controls that setting. Continue safe work while awaiting any optional switch; delegate cheaper work as instructed.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/gpt-ui-review.md: Direction C
@@ -931,6 +1076,8 @@ Deliver comparison screenshots and a keep/reject recommendation. Do not roll out
 
 ### T1 — technical visual QA
 
+**Starting model:** Sol High.
+
 **Prerequisite:** E3; include E4/E5 if produced.
 
 **Goal:** prove the candidate is technically stable before asking the group to judge it.
@@ -939,6 +1086,9 @@ Deliver comparison screenshots and a keep/reject recommendation. Do not roll out
 
 ```text
 Run technical visual QA on the candidate TEG public UI. Fix nothing in this chat.
+
+Starting recommendation: Sol High. Before implementation, flag whether this task needs higher reasoning or another lead model, and explain why. The owner controls that setting. Continue safe work while awaiting any optional switch; delegate cheaper work as instructed.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/ui-implementation-roadmap.md
@@ -960,6 +1110,8 @@ Use lower-cost agents for parallel read-only screenshot and route matrices with 
 
 ### T2 — run the eight-user comparison and choose
 
+**Starting model:** Astra High.
+
 **Prerequisite:** T1 blockers resolved in separate bounded chats.
 
 **Goal:** choose the default direction using task performance and preference, not design taste alone.
@@ -968,6 +1120,9 @@ Use lower-cost agents for parallel read-only screenshot and route matrices with 
 
 ```text
 Prepare and synthesise the final TEG public UI comparison with all eight tournament users. Do not implement changes.
+
+Starting recommendation: Astra High. Before implementation, flag whether this task needs higher reasoning or another lead model, and explain why. The owner controls that setting. Continue safe work while awaiting any optional switch; delegate cheaper work as instructed.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - webapp/design_reviews/gpt-ui-review.md
@@ -997,6 +1152,8 @@ All eight users must be represented. Do not infer missing feedback or keep perma
 
 ### T3 — record the decision and create the rollout backlog
 
+**Starting model:** Astra Medium.
+
 **Prerequisite:** T2 owner decision.
 
 **Goal:** close the experiment and turn only the chosen direction into later bounded work.
@@ -1005,6 +1162,9 @@ All eight users must be represented. Do not infer missing feedback or keep perma
 
 ```text
 Record the owner-approved TEG public UI decision and create the smallest rollout backlog. Make documentation changes only.
+
+Starting recommendation: Astra Medium. Before implementation, flag whether this task needs higher reasoning or another lead model, and explain why. The owner controls that setting. Continue safe work while awaiting any optional switch; delegate cheaper work as instructed.
+Read the model guidance and operating rules in webapp/design_reviews/ui-implementation-roadmap.md before starting.
 
 Read:
 - the T2 decision and evidence
