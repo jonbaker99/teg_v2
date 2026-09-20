@@ -2,7 +2,39 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-20 (Fix stage F1–F6 shipped; long-page nav delta guard and cross-route sweep completed)
+**Last updated:** 2026-09-20 (Consistent UI C3 foundation merged)
+
+## 2026-09-20 — UI implementation roadmap Consistent UI stage: C3 foundation merged
+
+Foundation implementation for the Clean Editorial Precision system (C1/C1b's approved spec),
+merged from `claude/ui-c3` onto `main`. Declares the type/spacing/radius/rule/shadow/colour
+token set (`--fs-*`, `--sp-*`, `--r-*`, `--rule-*`, `--shadow-card`, `--ink*`, `--green`,
+`--focus`, `--leader-tint*`, `--bg-content`) in `webapp/static/themes/clean.css`'s `:root`, with
+dark counterparts in `dark.css`, and applies it to the smallest representative components:
+
+- `.section-title`/`.card-header`/`.chart-title` — previously three byte-identical CSS blocks —
+  merged into one shared rule.
+- New `.segmented`/`.seg-option` control, wired into `/leaderboard`'s Net/Gross measure
+  (replacing the binary `.scale-switch`, whose "on/off" semantics didn't fit two equally-weighted
+  options). `.action` declared for a future disclosure/expand control pattern; no call site yet.
+- `/player/<code>`'s tab bar (`.pp-tab`) folded into the site's one canonical `.tab-underline`
+  pattern.
+- Leader-row tint/hover fix (previously identical to the hover colour) scoped to
+  `.leaderboard-table` — also benefits `/results`, which renders through the same table partial.
+- Twelve dead `ts-*` page-title-style CSS blocks deleted (superseded design-lab variants);
+  `.rank-toggle`'s duplicated glyph rule and a `dark.css` `#16150f` hard-code fixed in passing.
+- `webapp/design_principles.md` corrected: hit-area contract is two-tier (44px touch / 28–36px
+  fine-pointer), not a flat 44px floor — the previous wording didn't match the shipped desktop
+  `.rank-toggle`.
+
+Verified before merge (re-run independently, not taken from the branch's own report): merge-tree
+dry run clean against `main`; the branch's only `mobile.css` change (glyph-rule dedup) doesn't
+touch `.scale-switch`, so the already-merged Scoreboard-overflow width fix and F5's scroll-delta
+nav guard both survive in `base.html`/`mobile.css` post-merge; 75 focused tests pass; full suite
+run once at merge (shared theme CSS + `base.html` + two partials justify it).
+
+Full detail, decisions and screenshot matrix: `webapp/design_reviews/ui_workstream/C3-handoff.md`.
+Unresolved items assigned to C4/C5 or left open: `webapp/TODOS.md`.
 
 ## 2026-09-20 — UI implementation roadmap Fix stage (F1–F6) shipped
 
@@ -39,9 +71,9 @@ Full evidence trail (screenshots, browser verification matrices, per-stage root-
 gate found two evidence-integrity issues (a stale/mismatched F3 screenshot pair, an unrecorded
 P0 finding) before Consistent UI could proceed — both resolved in the F6a follow-up.
 
-**Next:** Consistent UI (C1–C6) — the roadmap's next stage, establishing a shared visual system
-on top of this base. One item from this stage remains open, not fixed: `/latest-round` Scoreboard
-has a 12px page-level overflow at 390px (`webapp/TODOS.md`), assigned to C4.
+**Next:** C4 — apply the responsive/table contracts on top of C3's foundation, plus the follow-ups
+assigned to it in `webapp/TODOS.md` (two 44px phone-default fixes, `.action` adoption, a
+before/after comparison of the content-card padding/radius). Then C5 (leaderboard rhythm).
 
 ## 2026-09-19 — New page: `/scoring/round-distribution`
 
