@@ -1215,13 +1215,6 @@
   .standings-page .leaderboard-table th { font: 700 11px/1.2 var(--font-table), sans-serif; letter-spacing: .04em; text-transform: uppercase; }
   .standings-page .leaderboard-table .col-rank { width: 10%; }
   .standings-page .leaderboard-table .col-player { width: 30%; overflow-wrap: anywhere; }
-  /* Net/Gross measure toggle -- same touch-target bump as the latest_round_tab.html
-     scale-switch's own mobile override (base-vars.css's .scale-switch baseline is
-     desktop-sized). */
-  .standings-page .measure-toggle { min-height: 44px; }
-  .standings-page .measure-toggle .switch-track { width: 40px; height: 22px; }
-  .standings-page .measure-toggle .switch-thumb { width: 18px; height: 18px; }
-  .standings-page .measure-toggle[aria-checked="true"] .switch-thumb { transform: translateX(18px); }
   /* Rank/player fixed above; every other column (one per round, plus Total)
      shares the remainder evenly via table-layout:fixed's own distribution --
      matches the approved prototype's .standings-table, which likewise only

@@ -581,7 +581,7 @@ wrappers](design_principles.md#spacing-is-centralised-on-the-section-wrappers).
 | **Page** | `.page-container` → `.page-title-outer` / `.page-panel` → `.content-wrapper` → `.main-content` | The shell in `base.html` (already consistent — don't hand-edit) |
 | **Section** | `.section-nav` | The in-page primary tab bar (a row of `.tab-underline` buttons). Owns `margin-bottom` + flex/gap |
 | | `.section-controls` | Selector / filter rows (dropdowns, number inputs). Owns `margin-bottom` + flex/gap |
-| | `.toggle-group` | Sub-toggle rows inside a panel (score-type, metric, chart-variant, direction/mode). Owns `margin-bottom`; `.data-card + .toggle-group` adds the gap above when it follows a data block |
+| | `.toggle-group` | Sub-toggle rows inside a panel (score-type, metric, chart-variant, direction/mode). Owns `margin-bottom`; `.data-card + .toggle-group` adds the gap above when it follows a data block; conversely `.section-nav + .section-panel > .toggle-group:first-child` pulls a measure control (e.g. Leaderboard/Results' Net-Gross `.segmented`) up against the tab bar above it, and `.toggle-group + .section-title` drops the section title's own top margin so the two don't stack (C5, one compact control zone) |
 | | `.section-panel` | Every HTMX swap-target / content container (the `id="…"` div that `hx-target` points at) |
 | **Data display** | `.card-header` | The single canonical section label (driven by the `ch-X` body class) |
 | | `.data-card` | Every table/chart wrapper — **all** tables and charts sit in one |
