@@ -92,6 +92,19 @@ html[data-mode="dark"] .data-card {
   border-color: #2e2e29;
 }
 
+/* Style E2 hard-codes a light title-band background with no dark override
+   of its own -- clean-page.css's .page-title-outer (Clean Page) and
+   clean-layered.css's .page-title-area (Clean Layered) both stay literal
+   light colours regardless of mode, so the pale --text-primary title (set
+   above) was sitting on a white/light band. Every other title style relies
+   on .page-title-area staying transparent over --bg-page, so this is the
+   only variant needing its own override; match it to .main-content's dark
+   value above instead of introducing a new surface colour. */
+html[data-mode="dark"] body.ts-e2 .page-title-outer,
+html[data-mode="dark"] body.ts-e2 .page-title-area {
+  background: #16150f;
+}
+
 /* (.nav-link.active no longer needs an override here (2026-09-13) — clean.css
    now points it at var(--accent) instead of a literal #1a1a1a, so it already
    resolves to this file's brightened accent under html[data-mode="dark"].)
