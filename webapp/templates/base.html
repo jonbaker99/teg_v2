@@ -215,14 +215,21 @@
         var navHeight = nav.offsetHeight;
         var threshold = 300;
         var lastY = window.scrollY;
+        var upwardDelta = 0;
+        var revealDelta = 8;
         nav.style.position = 'sticky';
         nav.style.top = '0';
         nav.style.transition = 'none';
         window.addEventListener('scroll', function() {
             var y = window.scrollY;
-            var scrollingUp = y < lastY;
+            var delta = y - lastY;
+            if (delta < 0) {
+                upwardDelta += -delta;
+            } else if (delta > 0) {
+                upwardDelta = 0;
+            }
             lastY = y;
-            if (y <= threshold || scrollingUp) {
+            if (y <= threshold || upwardDelta >= revealDelta) {
                 nav.style.top = '0';
             } else {
                 var offset = Math.min(y - threshold, navHeight);
