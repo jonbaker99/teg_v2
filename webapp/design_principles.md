@@ -182,6 +182,38 @@ cell values. Wider stat tables belong to a different tier from
 tables only). Don't force a wide table into this fixed-column layout; move it
 to sticky-scroll or card reflow instead.
 
+### Second mobile table reference: one row, two renderings (I1 standings)
+
+`/leaderboard` and `/results`' standings table (`partials/_standings_table.html`,
+fed by `_standings_rows` in `webapp/routes/history.py`) is the site's second
+proven mobile table treatment, and a different shape from the pattern above:
+the *number of data columns varies per TEG* (3–4 round columns depending on
+how many rounds were played), so a fixed-proportion `<colgroup>` per column
+doesn't fit. Instead, each `<tr>` emits its round values **twice** — once as
+ordinary `<td class="col-round">` cells, once as a `.standings-rounds` text
+strip inside the player cell — and CSS shows exactly one copy per viewport
+(`.col-round` hidden and `.standings-rounds` shown at ≤640px, and the reverse
+above it; `base-vars.css` + `mobile.css`). Only Rank, Player and Total keep
+fixed widths; round columns collapse entirely rather than shrinking.
+
+This trades a small amount of duplicated markup for a renderer that never
+needs to know the round count in advance, and — because both copies come
+from the same `r.rounds` loop in one Jinja partial — the two can't drift
+apart the way two separately-maintained partials (or a card partial fed by a
+second, separately-built context key) could. Reach for this shape when a
+table's column count is genuinely data-dependent; reach for the fixed
+`<colgroup>` pattern above when it's fixed and known.
+
+**Pitfall avoided here, worth remembering:** this table previously had a
+third rendering path — a phone-only card list (`.lb-cards`/`.lb-card`) fed by
+a *second* context key (`lb_cards`) built by duplicating the same row logic.
+It shipped for a full stage (R3.2) before anyone noticed a later CSS rule
+(`.standings-page .lb-cards { display: none }`) always won on specificity,
+making it dead at every viewport. Two independently-maintained renderings of
+the same data is exactly the shape that produces silent drift — the fix
+(I1) was to make one Jinja loop responsible for both visible states, not to
+better-coordinate two of them.
+
 ## Components
 
 - All inputs (dropdowns, buttons, tabs) follow the same styling language

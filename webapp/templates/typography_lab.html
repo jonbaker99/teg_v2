@@ -57,7 +57,7 @@
     <h2 class="section-title">Sample — TEG {{ selected_teg }} leaderboard</h2>
     {% if lb.callout %}<p class="result-callout">{{ lb.callout | safe }}</p>{% endif %}
     <div class="data-card">
-        <div class="table-wrapper">{{ lb.table_html | safe }}</div>
+        <div class="table-wrapper">{% with standings = lb.standings %}{% include "partials/_standings_table.html" %}{% endwith %}</div>
     </div>
 
     <p class="tl-prose">

@@ -1,0 +1,24 @@
+{#- Phone-only champion/wooden-spoon summary (MOBILE_PLAN M2.7), fed by
+    lb_hero from _results_context. Display:none above 640px (mobile.css); at
+    phone width it sits above the reflowed standings table (I1). The
+    per-player card list this partial used to also render (.lb-cards) was
+    deleted in I1: CSS specificity meant .standings-page .lb-cards always
+    won with display:none, so those cards were dead markup at every
+    viewport -- the unified table's own phone round-strip
+    (partials/_standings_table.html) is the real replacement. #}
+{% if lb_hero %}
+<div class="lb-hero">
+    <div class="lb-pod lb-pod--champ">
+        <div class="lb-pod-label"><span class="material-symbols-outlined">trophy</span>{{ lb_hero.label }}</div>
+        <div class="lb-pod-name">{{ lb_hero.champion }}</div>
+        <div class="lb-pod-sub">{{ lb_hero.champion_total }} &middot; {{ lb_hero.unit }}</div>
+    </div>
+    {% if lb_hero.spoon %}
+    <div class="lb-pod lb-pod--spoon">
+        <div class="lb-pod-label"><span class="material-symbols-outlined">restaurant</span>Wooden spoon</div>
+        <div class="lb-pod-name">{{ lb_hero.spoon }}</div>
+        <div class="lb-pod-sub">{{ lb_hero.spoon_total }} &middot; {{ lb_hero.unit }}</div>
+    </div>
+    {% endif %}
+</div>
+{% endif %}

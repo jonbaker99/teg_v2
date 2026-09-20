@@ -10,7 +10,6 @@
 /* Mobile-only markup, present in the DOM always; hidden until phone width. */
 .mobile-tabbar { display: none; }
 .lb-hero { display: none; }
-.lb-cards { display: none; }
 /* Records (/records): mobile tap-to-reveal list, dual-rendered alongside
    the unchanged desktop <table> -- see the @media block below. */
 .records-list { display: none; }
@@ -418,7 +417,7 @@
      unchanged desktop <table class="records-table"> and a sibling
      <div class="records-list"> of <details class="rec-row"> per row, one
      render, one HTML string -- same dual-markup + CSS-toggle mechanism as
-     .lb-table-card/.lb-cards below. The compact <summary> is Label (only on
+     .lb-table-card/.standings-rounds below. The compact <summary> is Label (only on
      a group's first row, matching the table's "blank repeated label" rule)
      + Value + identity (name, or an initials list when a record is shared
      by 3+ people); native <details> supplies the disclosure with no JS. */
@@ -491,11 +490,12 @@
     border-radius: 0 0 6px 6px;
   }
 
-  /* ── Leaderboard hero (M2.7): card-reflowed standings ──
-     Markup in partials/lb_cards.html, fed by _results_context (lb_cards /
-     lb_hero). On phones the cards replace the desktop table and the text
+  /* ── Leaderboard hero (M2.7) ──
+     Markup in partials/_standings_hero.html, fed by _results_context
+     (lb_hero). On phones the champion/spoon pods sit above the reflowed
+     standings table (I1, .standings-page block below) and replace the text
      callout; above 640px they are display:none (base rules at the top) and
-     the table renders exactly as before. */
+     the callout renders exactly as before. */
   .lb-table-card { display: none; }
   .lb-callout { display: none; }
 
@@ -533,72 +533,6 @@
     color: var(--text-muted, #8c8c86);
   }
 
-  .lb-cards { display: block; }
-  .lb-card {
-    display: grid;
-    grid-template-columns: 30px 1fr auto;
-    align-items: center;
-    gap: 12px;
-    background: var(--bg-card, #ffffff);
-    border: 1px solid var(--table-cell-border, #e0e0e0);
-    border-radius: 13px;
-    padding: 12px 14px;
-    margin-bottom: 8px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 4px 16px rgba(0, 0, 0, 0.04);
-    text-decoration: none;
-    color: inherit;
-    transition: transform 0.08s;
-  }
-  .lb-card:active { transform: scale(0.985); }
-  .lb-card--lead {
-    background: var(--table-toprank-bg, #F3F7F3);
-    border-color: color-mix(in srgb, var(--accent, forestgreen) 28%, var(--table-cell-border, #e0e0e0));
-  }
-  .lb-card-rank {
-    font-family: var(--font-table), sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    text-align: center;
-    color: var(--text-secondary, #555555);
-  }
-  .lb-card--lead .lb-card-rank { color: var(--accent, forestgreen); }
-  .lb-card-who { min-width: 0; }
-  .lb-card-name {
-    display: block;
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 1.15;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .lb-card-rounds {
-    display: block;
-    margin-top: 3px;
-    font-family: var(--font-table), sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.02em;
-    color: var(--text-muted, #8c8c86);
-  }
-  .lb-card-rounds b { color: var(--text-secondary, #555555); font-weight: 500; }
-  .lb-card-total { text-align: right; }
-  .lb-card-total .lb-card-v {
-    display: block;
-    font-family: var(--font-table), sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 1;
-  }
-  .lb-card--lead .lb-card-total .lb-card-v { color: var(--accent, forestgreen); }
-  .lb-card-total .lb-card-u {
-    display: block;
-    margin-top: 3px;
-    font-family: var(--font-table), sans-serif;
-    font-size: 9px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-muted, #8c8c86);
-  }
 
   /* Latest round vertical slice. Keep the scoreboard readable at 320px and
      let its chart use the full phone width. Latest TEG (#lt-content) shares
@@ -1192,19 +1126,18 @@
   .tp-value { font: 700 13px var(--font-table), sans-serif; }
   .tp-sub { font-size: 11px; color: var(--text-muted, #666); padding-left: 26px; }
 
-  /* ── Standings (Full Results + Latest Leaderboard, R3.2) ──
+  /* ── Standings (Full Results + Latest Leaderboard, R3.2 / I1) ──
      Shared by results.html and leaderboard.html -- both render the exact
-     same table_html/lb_cards/lb_hero markup from the same context builder
-     (_results_context, webapp/routes/history.py), so one hook covers both
-     pages rather than duplicating this block per page. */
+     same standings/lb_hero markup from the same context builder
+     (_results_context, webapp/routes/history.py, and the unified
+     partials/_standings_table.html), so one hook covers both pages rather
+     than duplicating this block per page. */
   .standings-page { padding-inline: 12px; }
   /* .lb-table-card is hidden by the generic M2.7 card-reflow rule above
-     (line ~215) in favour of .lb-cards; reveal the real table here instead
-     and hide the per-player cards, so a page never shows both. .lb-hero
-     (the champion/spoon pod) stays visible -- it's a compact summary, not a
-     second full standings list, so no override needed. */
+     (line ~493) in favour of .lb-hero; reveal the real table here instead.
+     .lb-hero (the champion/spoon pod) stays visible -- it's a compact
+     summary, not a second full standings list, so no override needed. */
   .standings-page .lb-table-card { display: block; }
-  .standings-page .lb-cards { display: none; }
   .standings-page .leaderboard-table { table-layout: fixed; font-size: 13px; }
   .standings-page .leaderboard-table th,
   .standings-page .leaderboard-table td {
@@ -1213,12 +1146,33 @@
     white-space: normal;
   }
   .standings-page .leaderboard-table th { font: 700 11px/1.2 var(--font-table), sans-serif; letter-spacing: .04em; text-transform: uppercase; }
-  .standings-page .leaderboard-table .col-rank { width: 10%; }
-  .standings-page .leaderboard-table .col-player { width: 30%; overflow-wrap: anywhere; }
-  /* Rank/player fixed above; every other column (one per round, plus Total)
-     shares the remainder evenly via table-layout:fixed's own distribution --
-     matches the approved prototype's .standings-table, which likewise only
-     pins the first two columns and lets round/total columns split the rest. */
+  /* I1 reflow: round columns collapse to a per-row strip at phone width
+     (below), so only Rank/Player/Total need fixed widths here -- Total
+     wider than before since it now carries visual primacy on its own,
+     matching the .lr-total-cell reference pattern (design_principles.md
+     -> Mobile table pattern). */
+  .standings-page .leaderboard-table .col-rank { width: 12%; }
+  .standings-page .leaderboard-table .col-player { width: 58%; overflow-wrap: anywhere; }
+  .standings-page .leaderboard-table .col-round { display: none; }
+  .standings-page .leaderboard-table .col-total,
+  .standings-page .leaderboard-table thead .col-total { width: 30%; }
+  .standings-page .leaderboard-table td.col-total {
+    font-size: 1.15em;
+    font-weight: 700;
+  }
+  .standings-page .leaderboard-table tr.top-rank td.col-total { color: var(--accent, forestgreen); }
+  /* Per-row round strip, replacing the hidden .col-round cells above --
+     reuses the deleted .lb-card-rounds' proven values (muted, small,
+     tabular, bold value). Hidden above 640px by base-vars.css. */
+  .standings-page .standings-rounds {
+    display: block;
+    margin-top: 3px;
+    font-family: var(--font-table), sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    color: var(--text-muted, #8c8c86);
+  }
+  .standings-page .standings-rounds b { color: var(--text-secondary, #555555); font-weight: 500; }
 
   /* ── Player rankings (/player-rankings, honest scroll cue) ──
      .player-ranking-table is 18 TEGs wide; forcing it to width:100% was

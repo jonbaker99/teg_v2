@@ -38,9 +38,18 @@ behind a `≤640px` breakpoint or an opt-in `data-mode`).
     `.table-wrapper--no-pin`); `overflow-x` restated so phones don't depend
     on the Tailwind CDN for the no-page-scroll rule.
   - **Leaderboard hero (M2.7):** `/leaderboard` and `/results` standings
-    reflow into champion/wooden-spoon pods + tappable card rows
-    (`partials/lb_cards.html`, fed by `lb_cards`/`lb_hero` from
-    `_results_context`); the desktop table + text callout hide at ≤640px.
+    show a champion/wooden-spoon pod pair (`partials/_standings_hero.html`,
+    fed by `lb_hero` from `_results_context`) above the standings table; the
+    text callout hides at ≤640px. **Superseded by I1** (2026-09-20): the
+    per-player card list this section originally described
+    (`partials/lb_cards.html`'s `.lb-cards`) was CSS-dead from the moment
+    R3.2 shipped — `.standings-page .lb-cards { display: none }` always won
+    on specificity, so no phone view ever showed it. I1 deleted it and
+    replaced the phone standings experience with the unified table's own
+    reflow: `partials/_standings_table.html` renders round values twice
+    (desktop `<td class="col-round">` cells, a per-row `.standings-rounds`
+    strip), and CSS shows exactly one copy per viewport — see
+    `design_principles.md` → Tables for the pattern.
   - **App bar (M1.4):** compacted nav height/padding + soft elevation.
 - ✅ **Core data layouts R2–R3.4** (in `main`) — compact interactive Latest Round with stable HTMX URL state, mobile History disclosure, equal-height standings rows, portrait scorecard refinements and responsive Best/Worstball field and contribution views. The Latest Round chart also proves the mobile chart pattern against the former HTMX blocker.
 - ✅ **R4.1 tournament race charts** (in `main`) — Results and Leaderboard gain a phone-only player readout and tap-to-focus interaction, including crowded six-player handling. Desktop, iPad and the separate `/charts` route retain their previous output.

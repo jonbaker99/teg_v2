@@ -1,0 +1,90 @@
+{#- Shared standings page body (I1) -- one partial behind /leaderboard and
+    /results, both of which render through the same _results_context() data
+    builder (webapp/routes/history.py). Element ids, the HTMX target/include
+    chain and the OOB title swap all key off `ns` ('lb' or 'results'), set
+    by the two-line wrapper templates (leaderboard_table.html /
+    results_table.html) that include this file -- so every id, URL and
+    swap target stays byte-identical to what each route already emits. #}
+{% if not full_page %}
+<span id="{{ ns }}-context-header" hx-swap-oob="true" class="page-label">{{ context_header }}</span>
+<h1 id="{{ ns }}-page-title" hx-swap-oob="true" class="page-title">TEG {{ selected_teg }} {{ "Results" if teg_complete else "Leaderboard" }}</h1>
+{% endif %}
+{% if error %}
+<p class="text-muted">Error: {{ error }}</p>
+{% elif is_leaderboard %}
+{# Net/Gross measure control -- .segmented (C3), replacing the .scale-switch
+   binary-switch control: neither Net nor Gross is an "on" state, so a
+   switch's semantics were wrong here (design_principles.md's own toggle-
+   switch decision rule; see C1-handoff.md §6). Lives inside the swapped
+   #{{ ns }}-content (not the static tab row above) so its aria-pressed/bold-
+   label state always matches the freshly rendered active_measure. Each
+   option's onclick mirrors the tab-underline buttons above it: set the
+   shared hidden tab input, then trigger the same htmx request via the TEG
+   select. Sits above the section title since it picks which competition's
+   leaderboard is about to be shown below it. #}
+<div class="toggle-group">
+    <div class="segmented" role="group" aria-label="Leaderboard measure">
+        <button type="button" class="seg-option" aria-pressed="{{ 'false' if active_measure == 'gross' else 'true' }}"
+                onclick="document.getElementById('{{ ns }}-tab-input').value='net';
+                         htmx.trigger(document.getElementById('{{ ns }}-teg-select'), 'change')">Net</button>
+        <button type="button" class="seg-option" aria-pressed="{{ 'true' if active_measure == 'gross' else 'false' }}"
+                onclick="document.getElementById('{{ ns }}-tab-input').value='gross';
+                         htmx.trigger(document.getElementById('{{ ns }}-teg-select'), 'change')">Gross</button>
+    </div>
+</div>
+<h2 class="section-title">{{ section_title }}</h2>
+{% if callout %}<p class="result-callout lb-callout">{{ callout | safe }}</p>{% endif %}
+{% include "partials/_standings_hero.html" %}
+<div class="data-card lb-table-card">
+    <div class="table-wrapper table-wrapper--no-pin">{% include "partials/_standings_table.html" %}</div>
+</div>
+
+<h3 class="chart-title">{{ chart_title }}</h3>
+<p class="chart-description">{{ chart_subtitle }}</p>
+{% if figure_json %}
+<div class="chart-block" data-crowded-threshold="{{ chart_crowded_threshold }}">
+<div class="data-card data-card--padded">
+    <div class="chart-container" data-figure="{{ figure_json }}" style="height:450px;"></div>
+</div>
+{% if chart_readout %}
+<div class="lr-readout" role="group" aria-label="Player values">
+    {% for item in chart_readout %}
+    <button type="button" class="lr-readout-entry" data-chart-focus="{{ item.code }}" aria-pressed="false" aria-label="Focus {{ item.name }}; value {{ item.value }}"><span class="lr-initials"{% if item.color %} style="color: {{ item.color }};"{% endif %}>{{ item.code }}</span><strong>{{ item.value }}</strong></button>
+    {% endfor %}
+</div>
+{% endif %}
+</div>
+{% endif %}
+
+<input type="hidden" id="{{ ns }}-chart-variant" name="chart_variant" value="{{ active_chart_variant }}">
+<p class="chart-controls-label">Choose chart type:</p>
+<div class="pill-group" role="group" aria-label="Chart type">
+    {% for cid, clabel in chart_types %}
+    <button class="pill{% if cid == active_chart_variant %} pill--active{% endif %}"
+            onclick="document.getElementById('{{ ns }}-chart-variant').value='{{ cid }}'"
+            hx-get="{{ route_base }}/table" hx-target="#{{ ns }}-content"
+            hx-include="#{{ ns }}-teg-select, #{{ ns }}-tab-input"
+            hx-vals='{"chart_variant": "{{ cid }}"}'>
+        {{ clabel }}
+    </button>
+    {% endfor %}
+</div>
+{% if chart_note %}<p class="chart-note text-muted text-sm">{{ chart_note }}</p>{% endif %}
+
+{% elif raw_table %}
+{# The Scorecards tab always sets raw_table=True (history.py:_results_context)
+   -- its per-round markup is already complete (build_round_comparison_
+   responsive), so it renders unwrapped rather than nested inside a second
+   .data-card, the F4 fix applied here (webapp/TODOS.md, Latest Round
+   Records/Scorecard double-wrap). scorecards_full_link is set only by
+   /leaderboard's _lb_context (webapp/routes/leaderboard.py) -- /results has
+   no equivalent, since /results IS the full page these link to. #}
+{% if scorecards_full_link %}<p class="mb-3"><a href="{{ scorecards_full_link }}" class="text-link">Open the full Scorecard page &rarr;</a></p>{% endif %}
+{% if result_title %}<div class="card-header">{{ result_title }}</div>{% endif %}
+{{ table_html | safe }}
+{% else %}
+{% if result_title %}<div class="card-header">{{ result_title }}</div>{% endif %}
+<div class="data-card">
+    <div class="table-wrapper">{{ table_html | safe }}</div>
+</div>
+{% endif %}

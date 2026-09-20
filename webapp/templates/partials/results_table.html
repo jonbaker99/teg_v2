@@ -1,69 +1,8 @@
-{% if not results_full_page %}
-<span id="results-context-header" hx-swap-oob="true" class="page-label">{{ context_header }}</span>
-<h1 id="results-page-title" hx-swap-oob="true" class="page-title">TEG {{ selected_teg }} {{ "Results" if teg_complete else "Leaderboard" }}</h1>
-{% endif %}
-{% if error %}
-<p class="text-muted">Error: {{ error }}</p>
-{% elif is_leaderboard %}
-{# Net/Gross measure control -- see partials/leaderboard_table.html for the
-   full .segmented rationale (shared markup pattern, id prefix swapped for
-   /results, C5). Sits above the section title since it picks which
-   competition's leaderboard is about to be shown below it. #}
-<div class="toggle-group">
-    <div class="segmented" role="group" aria-label="Leaderboard measure">
-        <button type="button" class="seg-option" aria-pressed="{{ 'false' if active_tab == 'gross' else 'true' }}"
-                onclick="document.getElementById('results-tab-input').value='net';
-                         htmx.trigger(document.getElementById('results-teg-select'), 'change')">Net</button>
-        <button type="button" class="seg-option" aria-pressed="{{ 'true' if active_tab == 'gross' else 'false' }}"
-                onclick="document.getElementById('results-tab-input').value='gross';
-                         htmx.trigger(document.getElementById('results-teg-select'), 'change')">Gross</button>
-    </div>
-</div>
-<h2 class="section-title">{{ section_title }}</h2>
-{% if callout %}<p class="result-callout lb-callout">{{ callout | safe }}</p>{% endif %}
-{% include "partials/lb_cards.html" %}
-<div class="data-card lb-table-card">
-    <div class="table-wrapper table-wrapper--no-pin">{{ table_html | safe }}</div>
-</div>
-
-<h3 class="chart-title">{{ chart_title }}</h3>
-<p class="chart-description">{{ chart_subtitle }}</p>
-{% if figure_json %}
-<div class="chart-block" data-crowded-threshold="{{ chart_crowded_threshold }}">
-<div class="data-card data-card--padded">
-    <div class="chart-container" data-figure="{{ figure_json }}" style="height:450px;"></div>
-</div>
-{% if chart_readout %}
-<div class="lr-readout" role="group" aria-label="Player values">
-    {% for item in chart_readout %}
-    <button type="button" class="lr-readout-entry" data-chart-focus="{{ item.code }}" aria-pressed="false" aria-label="Focus {{ item.name }}; value {{ item.value }}"><span class="lr-initials"{% if item.color %} style="color: {{ item.color }};"{% endif %}>{{ item.code }}</span><strong>{{ item.value }}</strong></button>
-    {% endfor %}
-</div>
-{% endif %}
-</div>
-{% endif %}
-
-<input type="hidden" id="results-chart-variant" name="chart_variant" value="{{ active_chart_variant }}">
-<p class="chart-controls-label">Choose chart type:</p>
-<div class="pill-group" role="group" aria-label="Chart type">
-    {% for cid, clabel in chart_types %}
-    <button class="pill{% if cid == active_chart_variant %} pill--active{% endif %}"
-            onclick="document.getElementById('results-chart-variant').value='{{ cid }}'"
-            hx-get="/results/table" hx-target="#results-content"
-            hx-include="#results-teg-select, #results-tab-input"
-            hx-vals='{"chart_variant": "{{ cid }}"}'>
-        {{ clabel }}
-    </button>
-    {% endfor %}
-</div>
-{% if chart_note %}<p class="chart-note text-muted text-sm">{{ chart_note }}</p>{% endif %}
-
-{% elif raw_table %}
-{% if result_title %}<div class="card-header">{{ result_title }}</div>{% endif %}
-{{ table_html | safe }}
-{% else %}
-{% if result_title %}<div class="card-header">{{ result_title }}</div>{% endif %}
-<div class="data-card">
-    <div class="table-wrapper">{{ table_html | safe }}</div>
-</div>
-{% endif %}
+{#- /results wrapper around the shared standings body (I1) -- see
+   partials/_standings_page.html for the real markup; this file only fixes
+   the id prefix, route and page-level context this route uses. #}
+{% set ns = 'results' %}
+{% set active_measure = active_tab %}
+{% set full_page = results_full_page %}
+{% set route_base = '/results' %}
+{% include "partials/_standings_page.html" %}
