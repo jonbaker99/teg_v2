@@ -758,7 +758,7 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                     'best_score_counts': counts['best_score_counts'],
                     'worst_score_counts': counts['worst_score_counts'],
                 }
-                sections.append({"title": None, "table_html": _render_records_summary(rd_dict, 'Round')})
+                sections.append({"title": None, "table_html": _render_records_summary(rd_dict, 'Round'), "raw": True})
             except Exception as e:
                 logger.exception("_latest_round_tab_context failed")
                 sections.append({"title": "Records & PBs", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
@@ -1106,7 +1106,7 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
                     'best_score_counts': counts['best_score_counts'],
                     'worst_score_counts': counts['worst_score_counts'],
                 }
-                sections.append({"title": None, "table_html": _render_records_summary(rd_dict, 'TEG')})
+                sections.append({"title": None, "table_html": _render_records_summary(rd_dict, 'TEG'), "raw": True})
             except Exception as e:
                 logger.exception("_latest_teg_tab_context failed")
                 sections.append({"title": "Records & PBs", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
