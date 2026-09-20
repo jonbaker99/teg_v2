@@ -915,7 +915,9 @@
      only the markup/visual structure changed -- see partials/
      latest_round_tab.html and the lr-scale-toggle class note there). */
   .latest-round-page #lr-content .scale-switch {
-    display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px;
+    display: flex; align-items: center; gap: 10px; min-height: 44px;
+    /* Reserve both gutters for the Scoreboard total and chart-scale switches. */
+    width: calc(100% - 2 * var(--lr-inset));
     margin: 0 var(--lr-inset) 8px; padding: 0; border: 0; background: transparent; color: inherit;
   }
   .latest-round-page #lr-content .scale-switch-label { font-size: 13px; color: var(--text-muted, #666); }
