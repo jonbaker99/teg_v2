@@ -1710,3 +1710,115 @@ def scoring_heatmap_content(
         "request": request,
         **ctx,
     })
+
+
+# --- /scoring/round-distribution ----------------------------------------------
+
+ROUND_DIST_BIN_WIDTH = 5
+ROUND_DIST_RANGES = [("all", "All TEGs"), ("last5", "Last 5 TEGs"), ("last10", "Last 10 TEGs")]
+
+
+def _round_distribution_chart(edges: list[int], counts: list[int], mean: float | None) -> str:
+    """Single-player round-score histogram: one consistent colour across every
+    panel (player identity already comes from the card heading, so a legend
+    or per-player hue would be redundant), fixed numeric x-axis so bars line
+    up across panels, and a dashed mean marker."""
+    import plotly.graph_objects as go
+    import plotly.express as px
+
+    width = edges[1] - edges[0]
+    x_mid = [(edges[i] + edges[i + 1]) / 2 for i in range(len(edges) - 1)]
+    customdata = [[edges[i], edges[i + 1]] for i in range(len(edges) - 1)]
+
+    fig = go.Figure(go.Bar(
+        x=x_mid,
+        y=counts,
+        width=width * 0.88,
+        marker=dict(color=px.colors.qualitative.Plotly[0]),
+        customdata=customdata,
+        hovertemplate='%{customdata[0]}–%{customdata[1]}: %{y} round(s)<extra></extra>',
+    ))
+    if mean is not None:
+        fig.add_vline(x=mean, line=dict(color="rgba(0,0,0,0.35)", width=1.5, dash="dash"))
+
+    fig.update_layout(
+        bargap=0.06,
+        showlegend=False,
+        margin=dict(r=8, t=6, b=22, l=26),
+        font=dict(family="monospace", size=10),
+    )
+    fig.update_xaxes(tickvals=edges, range=[edges[0], edges[-1]], fixedrange=True)
+    fig.update_yaxes(fixedrange=True, rangemode="tozero")
+    fig.update_layout(**get_chart_style('streamlit'))
+    return fig.to_json()
+
+
+def _round_distribution_context(range_key: str = "all") -> dict:
+    try:
+        rd = cached_round_data()
+        if range_key not in dict(ROUND_DIST_RANGES):
+            range_key = "all"
+
+        teg_nums = sorted(rd['TEGNum'].unique().tolist())
+        if range_key == "last5":
+            keep = set(teg_nums[-5:])
+        elif range_key == "last10":
+            keep = set(teg_nums[-10:])
+        else:
+            keep = set(teg_nums)
+        filtered = rd[rd['TEGNum'].isin(keep)]
+
+        # Bin edges are computed from the FULL history, not the filtered
+        # subset, so the x-axis never shifts when the TEG-range filter
+        # changes -- shapes stay comparable across players and across filters.
+        all_scores = rd['Sc'].dropna()
+        w = ROUND_DIST_BIN_WIDTH
+        lo = int(all_scores.min() // w * w)
+        hi = int((all_scores.max() // w + 1) * w)
+        edges = list(range(lo, hi + w, w))
+
+        # Most rounds played (all-time) first.
+        player_order = rd.groupby('Player')['Sc'].count().sort_values(ascending=False).index.tolist()
+
+        panels = []
+        for player in player_order:
+            p_scores = filtered.loc[filtered['Player'] == player, 'Sc'].dropna()
+            n = len(p_scores)
+            mean = round(float(p_scores.mean()), 1) if n else None
+            counts = pd.cut(p_scores, bins=edges, right=False).value_counts(sort=False).tolist()
+            panels.append({
+                "player": player,
+                "n": n,
+                "min": int(p_scores.min()) if n else None,
+                "max": int(p_scores.max()) if n else None,
+                "mean": mean,
+                "chart_json": _round_distribution_chart(edges, counts, mean) if n else None,
+            })
+
+        return {
+            "panels": panels,
+            "ranges": ROUND_DIST_RANGES,
+            "selected_range": range_key,
+        }
+    except Exception as e:
+        logger.exception("_round_distribution_context failed")
+        return {"error": str(e)}
+
+
+@router.get("/scoring/round-distribution")
+def scoring_round_distribution_page(request: Request, range: str = Query("all")):
+    ctx = _round_distribution_context(range)
+    return templates.TemplateResponse("scoring_round_distribution.html", {
+        "request": request,
+        "active_page": "scoring",
+        **ctx,
+    })
+
+
+@router.get("/scoring/round-distribution/content")
+def scoring_round_distribution_content(request: Request, range: str = Query("all")):
+    ctx = _round_distribution_context(range)
+    return templates.TemplateResponse("partials/scoring_round_distribution_content.html", {
+        "request": request,
+        **ctx,
+    })

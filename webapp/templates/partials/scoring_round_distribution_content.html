@@ -1,0 +1,35 @@
+{% if error %}
+<p class="text-muted">Error: {{ error }}</p>
+{% else %}
+<div class="section-controls">
+    <div class="pill-group" role="group" aria-label="TEG range">
+        {% for rid, rlabel in ranges %}
+        <button class="pill{% if rid == selected_range %} pill--active{% endif %}"
+                hx-get="/scoring/round-distribution/content" hx-target="#round-distribution" hx-swap="innerHTML"
+                hx-vals='{"range": "{{ rid }}"}'>
+            {{ rlabel }}
+        </button>
+        {% endfor %}
+    </div>
+</div>
+
+<p class="chart-description">Round totals (18 holes). Same score axis on every chart so shapes compare directly; dashed line marks each player's mean over the selected TEGs.</p>
+
+<div class="rd-grid">
+    {% for panel in panels %}
+    <div class="data-card data-card--padded rd-card">
+        <div class="rd-card-head">
+            <span class="rd-name">{{ panel.player }}</span>
+            {% if panel.n %}
+            <span class="rd-stats text-muted">n={{ panel.n }} &middot; {{ panel.min }}&ndash;{{ panel.max }} &middot; mean {{ panel.mean }}</span>
+            {% endif %}
+        </div>
+        {% if panel.chart_json %}
+        <div class="chart-container" data-figure="{{ panel.chart_json }}" style="height:200px;"></div>
+        {% else %}
+        <p class="text-muted rd-empty">No rounds in this range.</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}

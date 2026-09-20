@@ -1,0 +1,40 @@
+/* /scoring/round-distribution — small-multiples grid of per-player histograms. */
+
+.rd-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.rd-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 4px 8px;
+    margin-bottom: 2px;
+}
+
+.rd-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.rd-stats {
+    font-size: 0.72rem;
+    white-space: nowrap;
+}
+
+.rd-empty {
+    padding: 24px 0;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+    .rd-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+}

@@ -67,6 +67,7 @@ NAV_SECTIONS = [
             ("All rounds", "/scoring/all-rounds", "scoring", "strategy"),
             ("Score history", "/scoring/matrix", "scoring", "table_chart"),
             ("Scoring distributions", "/scoring/distributions", "scoring", "strategy"),
+            ("Round score distribution", "/scoring/round-distribution", "scoring", "bar_chart"),
             ("Changes vs previous round", "/scoring/changes", "scoring", "strategy"),
             ("Heatmap (WIP)", "/scoring/heatmap", "scoring", "strategy"),
             ("Final Round Comebacks", "/scoring/comebacks", "scoring", "trending_up"),

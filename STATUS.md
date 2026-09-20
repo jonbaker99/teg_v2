@@ -2,7 +2,22 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-19 (Report link moved under the title in the hero on all four pages)
+**Last updated:** 2026-09-19 (New page: Round Score Distribution)
+
+## 2026-09-19 — New page: `/scoring/round-distribution`
+
+New Scoring analysis page: a small-multiples grid of per-player round-score
+(18-hole total) histograms. All charts share one fixed x-axis (5-stroke bins,
+spanning the full historical score range) so shapes compare directly across
+players, and a dashed line marks each player's mean. A pill filter at the top
+(All TEGs / Last 5 TEGs / Last 10 TEGs) restricts which rounds feed the
+histograms without ever changing the axis. Backed by `cached_round_data()`
+(no new data plumbing); one Plotly bar chart per player, same
+`get_chart_style('streamlit')` theme as the rest of the site. New files:
+`webapp/templates/scoring_round_distribution.html`,
+`webapp/templates/partials/scoring_round_distribution_content.html`,
+`webapp/static/round-distribution.css`. Route/context logic added to the end
+of `webapp/routes/scoring.py`; nav entry added to `webapp/nav.py`.
 
 ## 2026-09-19 — Report link relocated under the page title
 
