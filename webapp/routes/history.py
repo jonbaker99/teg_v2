@@ -224,7 +224,7 @@ def _history_table_html(df: pd.DataFrame, round_metadata: dict | None = None) ->
         detail_id = f"history-{teg_num}-details"
         if rounds:
             teg_cell = (
-                f"<button type='button' class='teg-cell history-toggle' "
+                f"<button type='button' class='teg-cell history-toggle action' "
                 f"data-history-toggle aria-expanded='false' aria-controls='{detail_id}'>"
                 f"{teg_label}</button>"
             )

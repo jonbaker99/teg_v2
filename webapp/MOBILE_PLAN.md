@@ -60,10 +60,29 @@ behind a `≤640px` breakpoint or an opt-in `data-mode`).
   *is* the toggle's "TEG total" state, so there's nothing for a toggle to
   switch between here.
 
+- ✅ **C4 responsive/table contract pass** (2026-09-20) — `.pill`/`.section-controls
+  select` phone defaults raised 40px→44px (the M1.5 tap-target work above left
+  these two at 40px; `mobile.css:355-370`), closing the last flat-40px gap in
+  the M2.9 tap-target audit. Two page-level overflow bugs fixed:
+  `/scoring/heatmap`'s legend row at ≤390px (`webapp/static/heatmap.css`) and
+  `/scorecard`'s multi-section landscape wrapper at 768px in Clean Layered
+  (`.sc-landscape:not(.data-card)` needed `max-width: 100%` alongside its
+  existing `width: fit-content`, `webapp/static/scorecard.css`). A responsive
+  audit of every public table route (`webapp/design_reviews/ui_workstream/C4-handoff.md`)
+  found the rest already compliant with the phone/tablet/desktop contract —
+  no further table-pattern work outstanding from that pass. **Still open**
+  from the same audit: `bw-name-full`/`bw-name-short` (the player-name
+  shortening pattern below, §Tables in `design_principles.md`) is only wired
+  up for bestball/eclectic contribution bars; other player-name tables rely
+  on tier-1 sticky-scroll or tier-2 card reflow instead, which already
+  protects the identity column on phone but hasn't had the shortening pattern
+  applied — a candidate for a dedicated pass, not blocking.
+
 **▶ Pick up here (the remaining UI work):**
-- **Per-page pass** (M2.9) — finish spacing, tap targets, empty states, safe-area insets and the remaining route audit.
-- **Dark-mode page-title contrast** — `.page-title` is near-invisible on dark
-  phones (pre-existing; part of the deferred per-page dark QA).
+- **Per-page pass** (M2.9) — spacing and empty-state polish remain; tap
+  targets and the table-route audit are now covered by C4 above.
+- Dark-mode page-title contrast is **fixed** (F1, 2026-09-20, see
+  `webapp/TODOS.md`) — no longer part of the deferred per-page dark QA.
 
 Everything below §Status is the approach and remains the working reference.
 

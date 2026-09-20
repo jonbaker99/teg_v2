@@ -99,7 +99,7 @@
     .pp-highlight .pp-label { min-height: 3.2rem; }
     .pp-trend-chart { height: 260px; }
     .pp-rounds-chart { height: 260px; }
-    .pp-chart-controls .pill { min-height: 44px; }
+    /* .pill's 44px min-height is now the site-wide phone default (C4, 2026-09-20). */
     /* Active measure must read without colour: bold weight + underline, not
        just the accent colour swap (R4.2 gate: "obvious without relying on
        colour alone"). Phone-only -- desktop/iPad keep the pre-R4.2 look. */

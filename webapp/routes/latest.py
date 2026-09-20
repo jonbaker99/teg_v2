@@ -261,7 +261,7 @@ def _build_scoreboard_table(values: pd.DataFrame, mix_counts: pd.DataFrame | Non
                             if show_round_total else '')
         toggle_cell = (
             "<td class='lr-toggle-td'>"
-            f"<button type=\"button\" class=\"rank-toggle\" data-lr-rank-toggle "
+            f"<button type=\"button\" class=\"rank-toggle action\" data-lr-rank-toggle "
             f"aria-expanded=\"false\" aria-controls=\"{escape(detail_id)}\" "
             f"aria-label=\"Toggle details for {escape(str(row['Player']))}\"></button></td>"
             if show_detail else ''
