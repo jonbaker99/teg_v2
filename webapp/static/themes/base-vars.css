@@ -384,24 +384,30 @@ table.leaderboard td:nth-child(2) {
    its header comment), so the "+"/"-" ::after glyph and sizing it defines
    there never reached wider viewports -- the button rendered with no content
    and collapsed to 0x0. This is the desktop-scoped counterpart, same pattern
-   already used above for table.leaderboard's own mobile/desktop split. */
-.latest-round-page #lr-content .rank-toggle,
-.latest-teg-page #lt-content .rank-toggle {
-    min-width: 28px;
-    min-height: 28px;
-    padding: 4px 8px;
-    border: 0;
-    background: transparent;
-    color: var(--accent, #17683c);
-    font: inherit;
-    font-size: 16px;
-    line-height: 1;
-    cursor: pointer;
+   already used above for table.leaderboard's own mobile/desktop split. Explicitly
+   scoped to @media (min-width: 641px) -- unscoped, its min-width:28px floor
+   still applied at phone widths (nothing in mobile.css's own rule for this
+   selector overrides min-width), even though min-height/padding/font-size did
+   get overridden there by cascade order. */
+@media (min-width: 641px) {
+    .latest-round-page #lr-content .rank-toggle,
+    .latest-teg-page #lt-content .rank-toggle {
+        min-width: 28px;
+        min-height: 28px;
+        padding: 4px 8px;
+        border: 0;
+        background: transparent;
+        color: var(--accent, #17683c);
+        font: inherit;
+        font-size: 16px;
+        line-height: 1;
+        cursor: pointer;
+    }
+    .latest-round-page #lr-content .rank-toggle::after,
+    .latest-teg-page #lt-content .rank-toggle::after { content: "+"; }
+    .latest-round-page #lr-content .rank-toggle[aria-expanded="true"]::after,
+    .latest-teg-page #lt-content .rank-toggle[aria-expanded="true"]::after { content: "\2013"; }
 }
-.latest-round-page #lr-content .rank-toggle::after,
-.latest-teg-page #lt-content .rank-toggle::after { content: "+"; }
-.latest-round-page #lr-content .rank-toggle[aria-expanded="true"]::after,
-.latest-teg-page #lt-content .rank-toggle[aria-expanded="true"]::after { content: "\2013"; }
 
 /* ── Multi-round scorecards (Full Results → Scorecards tab) ──
    Each round is a .sc-round section holding a responsive scorecard block

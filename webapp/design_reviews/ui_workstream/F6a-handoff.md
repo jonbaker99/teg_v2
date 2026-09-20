@@ -71,6 +71,20 @@ Per the owner's routing decision, F6's remaining non-blocking follow-ups (beyond
 - F6's remaining non-blocking follow-ups (items 2–8 above) are recorded for routing only, per the owner's instruction; none were investigated or actioned here.
 - No new automated overflow/collision-regression test was added — this chat made no application changes, so there was nothing to add tests for; the general test-coverage gap flagged by P0/F1/F2/F3 for this class of visual check remains open.
 
+## C1 addendum — one CSS scoping fix
+
+C1 found F6a's own `.rank-toggle` fix (F1, tracked in `webapp/TODOS.md`) had one unverified phone-side claim: "390px phone sizing/behaviour unchanged" was checked for `min-height` only. The desktop-scoped `.rank-toggle` rule F1 added to `base-vars.css` was left unscoped (unlike its sibling `table.leaderboard` desktop rule, which relies on `mobile.css`'s later-loaded, equal-specificity rules to override every property it sets). `mobile.css`'s phone `.rank-toggle` rule doesn't set `min-width`, so the desktop rule's `min-width: 28px` floor leaked into phone widths too, even though `min-height`/`padding`/`font-size` were correctly overridden there by cascade order.
+
+**Fix:** wrapped the desktop `.rank-toggle` block (and its `::after` glyph rules) in `@media (min-width: 641px)` in `webapp/static/themes/base-vars.css`, matching the comment's own stated scope. No values changed; `mobile.css` untouched; the two rules were not consolidated (that's C3's job).
+
+**Verified** (Playwright, `/latest-round`, both Clean layouts — `clean-page` and `clean-layered`):
+- 390px: `.rank-toggle` computed `min-width: 0px` (no floor), `min-height: 44px`, `::after` content `"+"`.
+- 641px: `.rank-toggle` 28×28px, `::after` content `"+"`, click flips `aria-expanded` false→true.
+
+**Checks run:** `python -m pytest tests/test_webapp_pages.py -k 'latest_round or latest_teg' -v` — 17 passed, 0 failed.
+
+Updated `webapp/TODOS.md`'s F1 `.rank-toggle` entry to correct the "390px ... unchanged" claim and record this fix.
+
 ## Handoff
 
 This chat's resulting commit becomes C1's base. No push, merge, or deploy performed.
