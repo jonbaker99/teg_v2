@@ -1,5 +1,5 @@
 {% if error %}
-<p class="text-muted">Error: {{ error }}</p>
+{% include "partials/_public_response_error.html" %}
 {% else %}
 {% set inc = "#di-field, #di-player, #di-teg, #di-par, #di-mode, #di-tab" %}
 <div class="section-controls flex flex-wrap items-end gap-4">

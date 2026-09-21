@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block body_attrs %} data-public-state-keys="type,teg,round,player"{% endblock %}
 {% block title_suffix %} — Scorecard{% endblock %}
 
 {% block extra_head %}
@@ -15,6 +16,8 @@ function updateScorecardControls() {
     playerField.style.display = (view === 'one_round_all_players') ? 'none' : '';
 }
 document.addEventListener('DOMContentLoaded', updateScorecardControls);
+document.addEventListener('public-state:commit', updateScorecardControls);
+document.addEventListener('public-state:rollback', updateScorecardControls);
 // Re-apply after OOB swaps restore the round pills
 document.addEventListener('htmx:afterSettle', function() {
     if (document.getElementById('sc-type')) updateScorecardControls();
@@ -35,14 +38,13 @@ document.addEventListener('htmx:afterSettle', function() {
     <div class="section-controls flex flex-wrap items-end gap-4">
         <label class="flex flex-col text-sm gap-1"><span class="text-secondary font-medium">View</span>
             <select id="sc-type" name="type" class="teg-select"
-                    hx-get="/scorecard/content" hx-target="#scorecard-content" hx-include="{{ inc }}" hx-indicator="#loading"
-                    onchange="updateScorecardControls()">
+                    hx-get="/scorecard/content" hx-target="#scorecard-content" hx-include="{{ inc }}">
                 {% for tid, tlabel in all_types %}<option value="{{ tid }}" {% if tid == selected_type %}selected{% endif %}>{{ tlabel }}</option>{% endfor %}
             </select>
         </label>
         <label class="flex flex-col text-sm gap-1"><span class="text-secondary font-medium">TEG</span>
             <select id="sc-teg" name="teg" class="teg-select"
-                    hx-get="/scorecard/content" hx-target="#scorecard-content" hx-include="{{ inc }}" hx-indicator="#loading">
+                    hx-get="/scorecard/content" hx-target="#scorecard-content" hx-include="{{ inc }}">
                 {% for t in teg_numbers %}<option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>{% endfor %}
             </select>
         </label>
@@ -51,10 +53,10 @@ document.addEventListener('htmx:afterSettle', function() {
             <div id="sc-round-pills" class="pill-group">
                 {% for r in rounds %}
                 <button class="pill{% if r == selected_round %} pill--active{% endif %}"
+                        data-public-state-key="round" data-public-state-value="{{ r }}"
                         hx-get="/scorecard/content" hx-target="#scorecard-content"
                         hx-include="#sc-type, #sc-teg, #sc-player"
                         hx-vals='{"round": {{ r }}}'
-                        hx-indicator="#loading"
                         onclick="document.getElementById('sc-round').value='{{ r }}'">
                     R{{ r }}
                 </button>
@@ -64,16 +66,10 @@ document.addEventListener('htmx:afterSettle', function() {
         <input type="hidden" id="sc-round" name="round" value="{{ selected_round }}">
         <label id="sc-player-field" class="flex flex-col text-sm gap-1"><span class="text-secondary font-medium">Player</span>
             <select id="sc-player" name="player" class="teg-select"
-                    hx-get="/scorecard/content" hx-target="#scorecard-content" hx-include="{{ inc }}" hx-indicator="#loading">
+                    hx-get="/scorecard/content" hx-target="#scorecard-content" hx-include="{{ inc }}">
                 {% for code, name in player_list %}<option value="{{ code }}" {% if code == selected_player %}selected{% endif %}>{{ name }}</option>{% endfor %}
             </select>
         </label>
-        <span id="loading" class="htmx-indicator">
-            <svg class="animate-spin h-5 w-5 accent-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-            </svg>
-        </span>
     </div>
 
     <div id="scorecard-content" class="section-panel">

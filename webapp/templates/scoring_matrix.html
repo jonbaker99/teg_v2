@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block body_attrs %} data-public-state-keys="level,score_type"{% endblock %}
 
 {% block page_title %}
 <div class="page-title-area">
@@ -12,27 +13,29 @@
 <div class="section-nav">
     {% for lid, llabel in levels %}
     <button class="tab-underline sm-level-tab{% if lid == selected_level %} tab-underline--active{% endif %}"
+            data-public-state-key="level" data-public-state-value="{{ lid }}"
             hx-get="/scoring/matrix/content"
             hx-target="#sm-content"
             hx-include="#sm-type-hidden"
             hx-vals='{"level": "{{ lid }}"}'
             hx-swap="innerHTML"
-            onclick="document.getElementById('sm-level-hidden').value='{{ lid }}'; document.querySelectorAll('.sm-level-tab').forEach(b => b.classList.remove('tab-underline--active')); this.classList.add('tab-underline--active');">
+            onclick="document.getElementById('sm-level-hidden').value='{{ lid }}';">
         {{ llabel }}
     </button>
     {% endfor %}
 </div>
 
 <div class="section-controls">
-    <div class="pill-group" role="group" aria-label="Score type">
+    <div class="segmented" role="group" aria-label="Score type">
         {% for tid, tlabel in score_types %}
-        <button class="pill sm-type-pill{% if tid == selected_type %} pill--active{% endif %}"
+        <button class="seg-option sm-type-pill" aria-pressed="{{ 'true' if tid == selected_type else 'false' }}"
+                data-public-state-key="score_type" data-public-state-value="{{ tid }}"
                 hx-get="/scoring/matrix/content"
                 hx-target="#sm-content"
                 hx-include="#sm-level-hidden"
                 hx-vals='{"score_type": "{{ tid }}"}'
                 hx-swap="innerHTML"
-                onclick="document.getElementById('sm-type-hidden').value='{{ tid }}'; document.querySelectorAll('.sm-type-pill').forEach(b => b.classList.remove('pill--active')); this.classList.add('pill--active');">
+                onclick="document.getElementById('sm-type-hidden').value='{{ tid }}';">
             {{ tlabel }}
         </button>
         {% endfor %}

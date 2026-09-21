@@ -1,5 +1,5 @@
 {% if error %}
-<p class="text-muted">Error: {{ error }}</p>
+{% include "partials/_public_response_error.html" %}
 {% elif report_html is defined %}
   {% if report_html %}
   {% if report_caption %}<p class="text-muted text-sm mb-2">{{ report_caption }}</p>{% endif %}
@@ -10,22 +10,25 @@
 {% elif sections %}
   {% if scoring_fields %}
   <div class="section-controls">
-    <div class="pill-group" role="group" aria-label="Score type">
+    <div class="segmented" role="group" aria-label="Score type">
       {% for fid, flabel in scoring_fields %}
-      <button class="pill{% if fid == score_type %} pill--active{% endif %}"
+      <button class="seg-option" aria-pressed="{{ 'true' if fid == score_type else 'false' }}"
+              data-public-state-key="score_type" data-public-state-value="{{ fid }}"
               hx-get="/latest-teg/tab" hx-target="#lt-content" hx-swap="innerHTML"
               hx-vals='{"teg": "{{ teg }}", "tab": "scoring", "score_type": "{{ fid }}", "display_mode": "{{ display_mode }}"}'>
         {{ flabel }}
       </button>
       {% endfor %}
     </div>
-    <div class="pill-group" role="group" aria-label="Display mode" style="margin-left:1rem">
-      <button class="pill{% if display_mode != 'pct' %} pill--active{% endif %}"
+    <div class="segmented" role="group" aria-label="Display mode" style="margin-left:1rem">
+      <button class="seg-option" aria-pressed="{{ 'false' if display_mode == 'pct' else 'true' }}"
+              data-public-state-key="display_mode" data-public-state-value="count"
               hx-get="/latest-teg/tab" hx-target="#lt-content" hx-swap="innerHTML"
               hx-vals='{"teg": "{{ teg }}", "tab": "scoring", "score_type": "{{ score_type }}", "display_mode": "count"}'>
         Count
       </button>
-      <button class="pill{% if display_mode == 'pct' %} pill--active{% endif %}"
+      <button class="seg-option" aria-pressed="{{ 'true' if display_mode == 'pct' else 'false' }}"
+              data-public-state-key="display_mode" data-public-state-value="pct"
               hx-get="/latest-teg/tab" hx-target="#lt-content" hx-swap="innerHTML"
               hx-vals='{"teg": "{{ teg }}", "tab": "scoring", "score_type": "{{ score_type }}", "display_mode": "pct"}'>
         %
@@ -34,14 +37,13 @@
   </div>
   {% endif %}
   {% if metric_tabs %}
-  {# Desktop: plain .pill-group/.pill/.pill--active (unchanged). Phone: the
-     same .metric-grid/.metric-pill 2x2 reflow Latest Round uses for its
-     equivalent Metric selector (latest_round_tab.html) -- both class pairs
-     sit on the same button so neither breakpoint loses styling. #}
+  {# Metric is a mutually exclusive measure, so it uses the shared segmented
+     grammar rather than filter pills. #}
   <div class="section-controls">
-    <div class="metric-grid pill-group" role="group" aria-label="Metric">
+    <div class="segmented" role="group" aria-label="Metric">
       {% for mid, mlabel in metric_tabs %}
-      <button class="metric-pill pill{% if mid == active_metric %} is-active pill--active{% endif %}"
+      <button class="seg-option" aria-pressed="{{ 'true' if mid == active_metric else 'false' }}"
+              data-public-state-key="metric" data-public-state-value="{{ mid }}"
               hx-get="/latest-teg/tab" hx-target="#lt-content" hx-swap="innerHTML"
               hx-vals='{"teg": "{{ teg }}", "tab": "aggregate", "metric": "{{ mid }}"}'>
         {{ mlabel }}

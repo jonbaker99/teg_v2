@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block body_attrs %} data-public-state-keys="row_by,col_by,sort_by_score,show_col_totals,show_row_avg,palette,reverse,domain_min,domain_mid,domain_max"{% endblock %}
 
 {% block extra_head %}
 <link rel="stylesheet" href="/static/heatmap.css">
@@ -23,7 +24,6 @@
 <input type="hidden" id="hm-row-input" name="row_by"  value="{{ row_by }}">
 <input type="hidden" id="hm-col-input" name="col_by"  value="{{ col_by }}">
 <input type="hidden" id="hm-pal-input" name="palette" value="{{ palette }}">
-</form>
 
 {# ── Main controls (always visible) ── #}
 <div class="section-controls flex items-end gap-5 flex-wrap">
@@ -35,11 +35,12 @@
             {% for val, label in row_options %}
             <button type="button"
                     class="pill{% if val == row_by %} pill--active{% endif %}"
+                    data-public-state-key="row_by" data-public-state-value="{{ val }}"
                     hx-get="/scoring/heatmap/content"
                     hx-target="#hm-content"
                     hx-include="#hm-form"
                     hx-vals='{"row_by": "{{ val }}"}'
-                    onclick="this.closest('.pill-group').querySelectorAll('.pill').forEach(b=>b.classList.remove('pill--active')); this.classList.add('pill--active'); document.getElementById('hm-row-input').value='{{ val }}';">
+                    onclick="document.getElementById('hm-row-input').value='{{ val }}';">
                 {{ label }}
             </button>
             {% endfor %}
@@ -53,11 +54,12 @@
             {% for val, label in col_options %}
             <button type="button"
                     class="pill{% if val == col_by %} pill--active{% endif %}"
+                    data-public-state-key="col_by" data-public-state-value="{{ val }}"
                     hx-get="/scoring/heatmap/content"
                     hx-target="#hm-content"
                     hx-include="#hm-form"
                     hx-vals='{"col_by": "{{ val }}"}'
-                    onclick="this.closest('.pill-group').querySelectorAll('.pill').forEach(b=>b.classList.remove('pill--active')); this.classList.add('pill--active'); document.getElementById('hm-col-input').value='{{ val }}';">
+                    onclick="document.getElementById('hm-col-input').value='{{ val }}';">
                 {{ label }}
             </button>
             {% endfor %}
@@ -105,11 +107,12 @@
                 {% for val, label in palette_options %}
                 <button type="button"
                         class="pill{% if val == palette %} pill--active{% endif %}"
+                        data-public-state-key="palette" data-public-state-value="{{ val }}"
                         hx-get="/scoring/heatmap/content"
                         hx-target="#hm-content"
                         hx-include="#hm-form"
                         hx-vals='{"palette": "{{ val }}"}'
-                        onclick="this.closest('.pill-group').querySelectorAll('.pill').forEach(b=>b.classList.remove('pill--active')); this.classList.add('pill--active'); document.getElementById('hm-pal-input').value='{{ val }}';">
+                        onclick="document.getElementById('hm-pal-input').value='{{ val }}';">
                     {{ label }}
                 </button>
                 {% endfor %}
@@ -149,6 +152,7 @@
 
     </div>
 </details>
+</form>
 
 <div id="hm-content" class="section-panel">
     {% include "partials/scoring_heatmap_content.html" %}

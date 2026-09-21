@@ -87,16 +87,17 @@ def _chart_context(teg_num: int, chart_type: str, theme: str = "terminal") -> di
 
 
 @router.get("/charts")
-def charts_page(request: Request, type: str = "stableford"):
-    teg_num = get_default_teg_num()
+def charts_page(request: Request, teg: int | None = Query(None), type: str = Query("stableford")):
     teg_numbers = get_available_teg_numbers()
-    ctx = _chart_context(teg_num, type, theme=request.state.theme)
+    teg_num = teg if teg in teg_numbers else get_default_teg_num()
+    chart_type = type if type in dict(CHART_TYPES) else "stableford"
+    ctx = _chart_context(teg_num, chart_type, theme=request.state.theme)
     return templates.TemplateResponse("charts.html", {
         "request": request,
         "active_page": "charts",
         "teg_numbers": teg_numbers,
         "selected_teg": teg_num,
-        "selected_type": type,
+        "selected_type": chart_type,
         "chart_types": CHART_TYPES,
         **ctx,
     })

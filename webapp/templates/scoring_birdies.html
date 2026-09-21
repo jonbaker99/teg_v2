@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block body_attrs %} data-public-state-keys="tab,score_type"{% endblock %}
 
 {% block page_title %}
 <div class="page-title-area">
@@ -10,9 +11,10 @@
 {% block content %}
 
 <div class="section-controls flex items-center gap-4">
-    <div class="pill-group" role="group" aria-label="Score type">
+    <div class="segmented" role="group" aria-label="Score type">
         {% for st in score_types %}
-        <button class="pill{% if st == score_type %} pill--active{% endif %}"
+        <button class="seg-option" aria-pressed="{{ 'true' if st == score_type else 'false' }}"
+                data-public-state-key="score_type" data-public-state-value="{{ st }}"
                 hx-get="/scoring/birdies/tab"
                 hx-target="#sb-content"
                 hx-include="#sb-tab-input"
@@ -28,6 +30,7 @@
 <div class="section-nav">
     {% for tab_id, tab_label in tabs %}
     <button class="tab-underline sb-tab{% if tab_id == active_tab %} tab-underline--active{% endif %}"
+            data-public-state-key="tab" data-public-state-value="{{ tab_id }}"
             hx-get="/scoring/birdies/tab"
             hx-target="#sb-content"
             hx-include="#sb-score-type"

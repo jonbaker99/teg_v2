@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block body_attrs %} data-public-state-keys="tab"{% endblock %}
 
 {% block page_title %}
 <div class="page-title-area">
@@ -13,6 +14,7 @@
 <div class="section-nav">
     {% for tab_id, tab_label in tabs %}
     <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
+            data-public-state-key="tab" data-public-state-value="{{ tab_id }}"
             hx-get="/honours/tab/{{ tab_id }}"
             hx-target="#honours-content"
             hx-swap="innerHTML">

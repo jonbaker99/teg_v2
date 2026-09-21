@@ -10,13 +10,14 @@ completed_tegs.csv, an in-progress TEG never shows one.
 """
 
 from pathlib import Path
+from typing import Optional
 
 from fastapi import APIRouter, Request, Query
 from fastapi.templating import Jinja2Templates
 
 from teg_analysis.reporting.newspaper_edition import available_tegs
 from webapp.deps import get_default_teg_num, get_available_teg_numbers
-from webapp.routes.history import _results_context
+from webapp.routes.history import RESULTS_CHART_TYPES, _results_context
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
@@ -32,17 +33,25 @@ def _lb_context(teg_num: int, tab: str, chart_variant: str) -> dict:
 
 
 @router.get("/leaderboard")
-def leaderboard_page(request: Request):
-    teg_num = get_default_teg_num()
+def leaderboard_page(
+    request: Request,
+    teg: Optional[int] = Query(None),
+    tab: str = Query("net"),
+    chart_variant: str = Query("adjusted"),
+):
     teg_numbers = get_available_teg_numbers()
-    ctx = _lb_context(teg_num, "net", "adjusted")
+    teg_num = teg if teg in teg_numbers else get_default_teg_num()
+    tab = tab if tab in {"net", "gross", "scorecards"} else "net"
+    chart_variant = (chart_variant if chart_variant in {value for value, _label in RESULTS_CHART_TYPES}
+                     else "adjusted")
+    ctx = _lb_context(teg_num, tab, chart_variant)
     return templates.TemplateResponse("leaderboard.html", {
         "request": request,
         "active_page": "leaderboard",
         "teg_numbers": teg_numbers,
         "selected_teg": teg_num,
-        "active_lb_tab": "net",
-        "active_chart_variant": "adjusted",
+        "active_lb_tab": tab,
+        "active_chart_variant": chart_variant,
         "report_tegs": list(available_tegs()),
         **ctx,
     })

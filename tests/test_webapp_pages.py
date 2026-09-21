@@ -29,7 +29,7 @@ REAL_PLAYER_CODE = "DM"
 # The shared idiom every context-builder error path renders: either
 # `{"error": ...}` fed into a template's `{% if error %}Error: {{ error }}`
 # block, or the `error-box` class used by a few chart/table partials.
-ERROR_MARKERS = (">Error: ", "error-box")
+ERROR_MARKERS = (">Error: ", "error-box", "data-public-response-error")
 
 
 def _assert_ok_no_error(resp):
@@ -473,6 +473,105 @@ def test_latest_teg_page_renders(client):
 def test_latest_teg_tab_partials_render(client, tab):
     resp = client.get("/latest-teg/tab", params={"teg": 18, "tab": tab})
     _assert_ok_no_error(resp)
+
+
+# ---------------------------------------------------------------------------
+# Public interaction state (I2) -- full-page routes accept the same state as
+# their HTMX partials, and the shared shell opts those pages into one
+# success-commit / loading / failure / retry / canonical-history contract.
+# ---------------------------------------------------------------------------
+
+@pytest.mark.parametrize(("url", "markers"), [
+    ("/leaderboard?teg=7&tab=gross&chart_variant=ranking", (
+        'data-public-state-keys="teg,tab,chart_variant"',
+        'id="lb-tab-input" name="tab" value="gross"',
+        'id="lb-chart-variant" name="chart_variant" value="ranking"',
+    )),
+    ("/results?teg=7&tab=scorecards&chart_variant=standard", (
+        'id="results-tab-input" name="tab" value="scorecards"',
+    )),
+    ("/latest-teg?teg=7&tab=scoring&score_type=GrossVP&display_mode=pct", (
+        'id="lt-tab-input" name="tab" value="scoring"',
+        'data-public-state-value="GrossVP"',
+        'data-public-state-value="pct"',
+    )),
+    ("/records?tab=round", ('data-public-state-value="round"', 'tab-underline--active')),
+    ("/honours?tab=spoon", ('data-public-state-value="spoon"', 'tab-underline--active')),
+    ("/player-rankings?tab=jacket&row_dim=Player&col_dim=TEG", (
+        'id="pr-tab" name="tab" value="jacket"',
+        '<option value="Player" selected>',
+        '<option value="TEG" selected>',
+    )),
+    ("/eclectic?dimension=Course&teg=7", (
+        'id="eclectic-dimension" name="dimension" value="Course"',
+        '<option value="7" selected>TEG 7</option>',
+    )),
+    ("/eclectic-records?dimension=Course", ('data-public-state-value="Course"', 'tab-underline--active')),
+    ("/top-performances?tab=worst_round&measure=Stableford&n=5", (
+        'id="tp-tab-input" name="tab" value="worst_round"',
+        'id="tp-measure" name="measure" value="Stableford"',
+        'id="tp-n-select" name="n" value="5"',
+    )),
+    ("/personal-bests?tab=best_rounds&measure=Stableford&n=5&view=tegs", (
+        'id="pb-tab-input" name="tab" value="best_rounds"',
+        'id="pb-measure" name="measure" value="Stableford"',
+        'id="pb-n-select" name="n" value="5"',
+    )),
+    ("/bestball?mode=worstball&teg=7&sort_best=false&n=5", (
+        'id="bb-mode" name="mode" value="worstball"',
+        '<option value="false" selected>Worst First</option>',
+    )),
+    (f"/player/{REAL_PLAYER_CODE}?tab=records", (
+        'data-public-state-key="tab" data-public-state-value="records"',
+        'tab-underline--active',
+    )),
+    ("/charts?teg=7&type=gross", (
+        '<option value="7" selected>TEG 7</option>',
+        'id="chart-type-input" name="type" value="gross"',
+    )),
+    (f"/scorecard?teg=7&round=2&player={REAL_PLAYER_CODE}&type=one_round_one_player", (
+        '<option value="7" selected>TEG 7</option>',
+        'id="sc-round" name="round" value="2"',
+        'value="one_round_one_player" selected',
+    )),
+    ("/scoring/matrix?level=round&score_type=Stableford", (
+        'id="sm-level-hidden" name="level" value="round"',
+        'id="sm-type-hidden" name="score_type" value="Stableford"',
+    )),
+])
+def test_public_direct_links_restore_declared_state(client, url, markers):
+    resp = client.get(url)
+    _assert_ok_no_error(resp)
+    for marker in markers:
+        assert marker in resp.text
+
+
+def test_public_request_shell_exposes_one_retry_contract(client):
+    resp = client.get("/records?tab=round")
+    _assert_ok_no_error(resp)
+    assert 'data-request-message' in resp.text
+    assert 'data-request-retry' in resp.text
+    assert 'data-request-dismiss' in resp.text
+    assert 'data-public-state-keys="tab"' in resp.text
+
+    script = client.get("/static/ui-polish.js")
+    assert script.status_code == 200
+    assert "htmx:afterSwap" in script.text
+    assert "pushState" in script.text and "replaceState" in script.text
+    assert "public-state:commit" in script.text
+    assert "window.location.reload()" in script.text
+
+
+@pytest.mark.parametrize(("url", "fallback_marker"), [
+    ("/records?tab=not-a-tab", 'data-public-state-value="teg"'),
+    ("/leaderboard?teg=999&tab=bad&chart_variant=bad", 'id="lb-tab-input" name="tab" value="net"'),
+    ("/scoring/matrix?level=bad&score_type=bad", 'id="sm-level-hidden" name="level" value="teg"'),
+    ("/scorecard?teg=999&round=99&player=missing&type=bad", 'value="one_round_all_players" selected'),
+])
+def test_public_direct_links_normalise_invalid_state(client, url, fallback_marker):
+    resp = client.get(url)
+    _assert_ok_no_error(resp)
+    assert fallback_marker in resp.text
 
 
 # ---------------------------------------------------------------------------

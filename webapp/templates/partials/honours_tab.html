@@ -1,5 +1,5 @@
 {% if error %}
-<p class="text-muted">Error: {{ error }}</p>
+{% include "partials/_public_response_error.html" %}
 {% elif sections %}
   {% for section in sections %}
     <div class="data-card"><div class="table-wrapper">{{ section.table_html | safe }}</div></div>

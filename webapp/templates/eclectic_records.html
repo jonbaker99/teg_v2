@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block body_attrs %} data-public-state-keys="dimension"{% endblock %}
 
 {% block page_title %}
 <div class="page-title-area">
@@ -12,6 +13,7 @@
 <div class="section-nav">
     {% for tab_id, tab_label in tabs %}
     <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
+            data-public-state-key="dimension" data-public-state-value="{{ tab_id }}"
             hx-get="/eclectic-records/tab?dimension={{ tab_id }}"
             hx-target="#eclectic-records-content"
             hx-swap="innerHTML">

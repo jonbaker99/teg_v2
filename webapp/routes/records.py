@@ -4,7 +4,7 @@ import re
 from pathlib import Path
 
 import pandas as pd
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Query
 from fastapi.templating import Jinja2Templates
 
 from webapp.deps import (
@@ -276,13 +276,14 @@ def _tab_context(tab_name: str) -> dict:
 
 
 @router.get("/records")
-def records_page(request: Request):
-    ctx = _tab_context("teg")
+def records_page(request: Request, tab: str = Query("teg")):
+    tab = tab if tab in {tab_id for tab_id, _label in TABS} else "teg"
+    ctx = _tab_context(tab)
     return templates.TemplateResponse("records.html", {
         "request": request,
         "active_page": "records",
         "tabs": TABS,
-        "active_tab": "teg",
+        "active_tab": tab,
         **ctx,
     })
 

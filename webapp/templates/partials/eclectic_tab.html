@@ -1,5 +1,5 @@
 {% if error %}
-<p class="text-muted">Error: {{ error }}</p>
+{% include "partials/_public_response_error.html" %}
 {% else %}
 {% if total_rounds is defined and total_rounds is not none %}
 <p class="text-muted text-sm mb-2">Based on {{ total_rounds }} rounds from your selections</p>

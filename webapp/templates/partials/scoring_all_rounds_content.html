@@ -1,5 +1,5 @@
 {% if error %}
-<p class="text-muted">Error: {{ error }}</p>
+{% include "partials/_public_response_error.html" %}
 {% else %}
 {% set common = {"hx-get": "/scoring/all-rounds/content", "hx-target": "#all-rounds",
                  "hx-include": "#ar-area, #ar-course, #ar-player, #ar-measure, #ar-n", "hx-swap": "innerHTML"} %}

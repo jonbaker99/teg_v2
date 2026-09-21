@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block body_attrs %} data-public-state-keys="competition,n"{% endblock %}
 
 {% block page_title %}
 <div class="page-title-area">
@@ -13,6 +14,7 @@
     <div class="section-nav" style="margin-bottom: 0;">
         {% for cid, clabel in [('gross', 'Gross'), ('stableford', 'Stableford')] %}
         <button class="tab-underline{% if cid == competition %} tab-underline--active{% endif %}"
+                data-public-state-key="competition" data-public-state-value="{{ cid }}"
                 hx-get="/scoring/comebacks/content?competition={{ cid }}&n={{ n_records }}"
                 hx-target="#cb-content"
                 hx-swap="innerHTML">

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block body_attrs %} data-public-state-keys="tab"{% endblock %}
 {% block title_suffix %} — Records{% endblock %}
 
 {% block page_title %}
@@ -14,18 +15,13 @@
 <div class="section-nav records-tabs">
     {% for tab_id, tab_label in tabs %}
     <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
+            data-public-state-key="tab" data-public-state-value="{{ tab_id }}"
             hx-get="/records/tab/{{ tab_id }}"
             hx-target="#tab-content"
-            hx-indicator="#records-loading">
+            >
         {{ tab_label }}
     </button>
     {% endfor %}
-    <span id="records-loading" class="htmx-indicator ml-2 self-center">
-        <svg class="animate-spin h-5 w-5 accent-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-        </svg>
-    </span>
 </div>
 
 <div id="tab-content" class="section-panel">

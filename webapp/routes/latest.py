@@ -1144,10 +1144,21 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
 
 
 @router.get("/latest-teg")
-def latest_teg_page(request: Request):
-    teg_num = get_default_teg_num()
+def latest_teg_page(
+    request: Request,
+    teg: Optional[int] = Query(None),
+    tab: str = Query("aggregate"),
+    score_type: str = Query("GrossVP"),
+    metric: str = Query("Sc"),
+    display_mode: str = Query("count"),
+):
     teg_numbers = get_available_teg_numbers()
-    ctx = _latest_teg_tab_context(teg_num, "aggregate")
+    teg_num = teg if teg in teg_numbers else get_default_teg_num()
+    tab = tab if tab in {tab_id for tab_id, _label in LATEST_TEG_TABS} else "aggregate"
+    score_type = score_type if score_type in dict(SCORING_FIELDS) else "GrossVP"
+    metric = metric if metric in dict(METRIC_TABS) else "Sc"
+    display_mode = display_mode if display_mode in {"count", "pct"} else "count"
+    ctx = _latest_teg_tab_context(teg_num, tab, score_type, metric, display_mode)
     return templates.TemplateResponse("latest_teg.html", {
         "request": request,
         "active_page": "latest-teg",
@@ -1155,7 +1166,7 @@ def latest_teg_page(request: Request):
         "selected_teg": teg_num,
         "teg": teg_num,
         "tabs": LATEST_TEG_TABS,
-        "active_tab": "aggregate",
+        "active_tab": tab,
         "context_header": _teg_context_header(teg_num),
         # Drives the Report tab (a real link to /teg-reports, not an HTMX
         # swap) — same pattern as /results' report_tegs.

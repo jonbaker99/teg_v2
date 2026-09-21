@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block body_attrs %} data-public-state-keys="tab,measure,n"{% endblock %}
 
 {% block page_title %}
 <div class="page-title-area">
@@ -13,6 +14,7 @@
 <div class="section-nav">
     {% for tab_id, tab_label in tabs %}
     <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
+            data-public-state-key="tab" data-public-state-value="{{ tab_id }}"
             hx-get="/top-performances/tab"
             hx-target="#tp-content"
             hx-include="#tp-measure, #tp-n-select"
@@ -26,9 +28,10 @@
 
 {# --- Measure + N controls --- #}
 <div id="tp-controls" class="section-controls flex items-center gap-4">
-    <div class="pill-group" role="group" aria-label="Measure">
+    <div class="segmented" role="group" aria-label="Measure">
         {% for mid, mlabel in measures %}
-        <button class="pill{% if mid == selected_measure %} pill--active{% endif %}"
+        <button class="seg-option" aria-pressed="{{ 'true' if mid == selected_measure else 'false' }}"
+                data-public-state-key="measure" data-public-state-value="{{ mid }}"
                 hx-get="/top-performances/tab"
                 hx-target="#tp-content"
                 hx-include="#tp-tab-input, #tp-n-select"

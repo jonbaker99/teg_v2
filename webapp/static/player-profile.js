@@ -140,15 +140,9 @@
         initRoundsChart();
         var trigger = event.detail.requestConfig && event.detail.requestConfig.elt;
         if (!trigger || !trigger.matches('[data-profile-tab]') || !profile.contains(trigger)) return;
-        // .pp-tab folded into .tab-underline (C3): this still runs alongside
-        // base.html's global `.section-nav .tab-underline` click handler,
-        // which already sets `.tab-underline--active` optimistically on
-        // click since .pp-tabs already carries .section-nav. Both end up
-        // agreeing on the same active button after a successful swap, so
-        // this is confirmation, not a conflicting second source of truth --
-        // same pattern every other HTMX-driven .tab-underline bar on the
-        // site already accepts (checked, not just assumed: see
-        // C3-handoff.md's double-fire note).
+        // Commit profile-tab state only after the requested partial swaps.
+        // ui-polish.js follows the same successful-response contract and
+        // owns the canonical URL/history entry.
         profile.querySelectorAll('[data-profile-tab]').forEach(function (button) {
             button.classList.toggle('tab-underline--active', button === trigger);
             button.setAttribute('aria-pressed', String(button === trigger));

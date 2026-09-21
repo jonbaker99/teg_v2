@@ -1,5 +1,5 @@
 {% if error %}
-<p class="text-muted">Error: {{ error }}</p>
+{% include "partials/_public_response_error.html" %}
 {% elif detail %}
 <p class="text-muted text-sm mb-3">Select filters to analyse streaks within a specific window (TEG, Round, Player). Leave as "All" to see career-level data.</p>
 <div class="section-controls flex flex-wrap items-end gap-4">

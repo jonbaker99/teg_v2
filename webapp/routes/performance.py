@@ -4,7 +4,7 @@ import logging
 from pathlib import Path
 
 import pandas as pd
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Query
 from fastapi.templating import Jinja2Templates
 from markupsafe import escape
 
@@ -150,19 +150,24 @@ def _top_tab_context(tab: str, measure: str = "GrossVP", n: int = 3) -> dict:
 
 
 @router.get("/top-performances")
-def top_performances_page(request: Request):
-    default_tab = "best_teg"
-    default_measure = "GrossVP"
-    default_n = 3
-    ctx = _top_tab_context(default_tab, default_measure, default_n)
+def top_performances_page(
+    request: Request,
+    tab: str = Query("best_teg"),
+    measure: str = Query("GrossVP"),
+    n: int = Query(3),
+):
+    tab = tab if tab in {tab_id for tab_id, _label in TOP_TABS} else "best_teg"
+    measure = measure if measure in dict(TOP_MEASURES) else "GrossVP"
+    n = n if 1 <= n <= 100 else 3
+    ctx = _top_tab_context(tab, measure, n)
     return templates.TemplateResponse("top_performances.html", {
         "request": request,
         "active_page": "top-performances",
         "tabs": TOP_TABS,
-        "active_tab": default_tab,
+        "active_tab": tab,
         "measures": TOP_MEASURES,
-        "selected_measure": default_measure,
-        "n_records": default_n,
+        "selected_measure": measure,
+        "n_records": n,
         **ctx,
     })
 
@@ -442,27 +447,33 @@ def _pb_tab_context(tab: str, measure: str = "GrossVP", n: int = 3) -> dict:
 
 
 @router.get("/personal-bests")
-def personal_bests_page(request: Request):
-    default_tab = "pb_summary"
-    default_measure = "GrossVP"
-    default_n = 1
-    default_view = "rounds"
+def personal_bests_page(
+    request: Request,
+    tab: str = Query("pb_summary"),
+    measure: str = Query("GrossVP"),
+    n: int = Query(1),
+    view: str = Query("rounds"),
+):
+    tab = tab if tab in {tab_id for tab_id, _label in PB_TABS} else "pb_summary"
+    measure = measure if measure in dict(PB_MEASURES) else "GrossVP"
+    n = n if 1 <= n <= 100 else 1
+    view = view if view in {view_id for view_id, _label in PB_SUMMARY_VIEWS} else "rounds"
 
-    if default_tab == "pb_summary":
-        ctx = _pb_summary_context(default_view)
+    if tab == "pb_summary":
+        ctx = _pb_summary_context(view)
     else:
-        ctx = _pb_tab_context(default_tab, default_measure, default_n)
+        ctx = _pb_tab_context(tab, measure, n)
 
     return templates.TemplateResponse("personal_bests.html", {
         "request": request,
         "active_page": "personal-bests",
         "tabs": PB_TABS,
-        "active_tab": default_tab,
+        "active_tab": tab,
         "measures": PB_MEASURES,
-        "selected_measure": default_measure,
-        "n_records": default_n,
+        "selected_measure": measure,
+        "n_records": n,
         "summary_views": PB_SUMMARY_VIEWS,
-        "selected_view": default_view,
+        "selected_view": view,
         **ctx,
     })
 
