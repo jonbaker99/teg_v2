@@ -4,98 +4,259 @@
 
 {% block extra_head %}
 <style>
-    /* No page title / breadcrumb on Contents — just the site map. */
+    /* No default page title -- the state panel below carries its own H1. */
     .page-title-outer {
         display: none;
     }
 
-    /* Contents is a wide-layout page (matches Streamlit's layout="wide"):
-       widen the shared container for this page only. */
-    .content-wrapper {
-        max-width: min(95vw, 1600px);
+    /* --- State panel (no .data-card: it's an announcement, not data output,
+       per design_principles.md's data-card decision rule) --- */
+    .state-panel {
+        margin-bottom: var(--sp-6, 2rem);
+    }
+    .state-eyebrow {
+        font-family: var(--font-sans);
+        font-size: var(--fs-200, 12px);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin: 0 0 var(--sp-2, 8px) 0;
+    }
+    /* Live status is green (D2/I4 ruling: honours OR live status, never both
+       on one render). Between tournaments nothing is live, so the eyebrow
+       stays muted -- honours live on the winners' names instead. */
+    .state-eyebrow-live { color: var(--green); }
+    .state-eyebrow-muted { color: var(--text-muted); }
+
+    .state-headline {
+        font-family: var(--font-serif);
+        font-size: var(--fs-700, 36px);
+        font-weight: 700;
+        margin: 0 0 var(--sp-1, 4px) 0;
+        color: var(--text-primary);
+    }
+    .state-context {
+        font-family: var(--font-sans);
+        font-size: var(--fs-300, 14px);
+        color: var(--text-secondary);
+        margin: 0 0 var(--sp-5, 24px) 0;
     }
 
-    /* Each column is its own "page" card, so dissolve the single outer card the
-       theme draws on .main-content — the three column cards float on the grey background. */
-    .main-content {
-        background: transparent !important;
-        box-shadow: none !important;
-        padding: 0 !important;
-    }
-
-    /* Three fixed columns; each fills top-to-bottom. */
-    .contents-grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 1.5rem;
-        align-items: stretch;
-    }
-    /* Each column is one white card — uses theme variables so it matches whatever
-       card look the active theme defines. */
-    .contents-col {
+    .state-leaders {
         display: flex;
         flex-direction: column;
-        background: var(--bg-card);
-        border-radius: var(--card-radius);
-        box-shadow: var(--card-shadow);
-        padding: 2rem 2rem 2.25rem;
+        gap: var(--sp-2, 8px);
+        margin-bottom: var(--sp-5, 24px);
+        max-width: 42rem;
     }
-    /* Nav groups within a column separated by whitespace only. */
-    .contents-section + .contents-section {
-        margin-top: 2.5rem;
+    .state-leader-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: var(--sp-2, 8px);
+        font-family: var(--font-sans);
+        font-size: var(--fs-300, 14px);
     }
-    @media (max-width: 820px) {
-        .contents-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-    }
-
-    /* Group heading — uppercase/tracked, muted (echoes the tab bar's
-       treatment but on the section heading rather than the links). */
-    .contents-section-title {
-        font-size: 0.8125rem;
+    .state-leader-label {
+        min-width: 11rem;
+        color: var(--text-secondary);
         font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-        color: var(--text-secondary, #555555);
-        padding-bottom: 0.5rem;
-        margin-bottom: 0.25rem;
+    }
+    .state-leader-measure {
+        font-weight: 400;
+        color: var(--text-muted);
+    }
+    .state-leader-names {
+        flex: 1 1 auto;
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+    /* Honours: green on the winners' names only (State 2). State 1 leader
+       names stay ink -- provisional positions, not honours yet. */
+    .state-leader-names.state-honour { color: var(--green); }
+    .state-leader-total {
+        color: var(--text-secondary);
+        font-variant-numeric: tabular-nums;
+    }
+    .state-leader-row-muted .state-leader-names { color: var(--text-secondary); }
+
+    .state-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--sp-4, 16px);
+        margin-bottom: var(--sp-3, 12px);
+    }
+    .state-btn {
+        display: inline-flex;
+        align-items: center;
+        font-family: var(--font-sans);
+        font-size: var(--fs-300, 14px);
+        font-weight: 600;
+        text-decoration: none;
+        padding: 0.5rem 1.125rem;
+        border-radius: var(--r-1, 4px);
+        min-height: 44px;
+    }
+    .state-btn-primary {
+        background: var(--ink);
+        color: var(--bg-card);
+        border: 1px solid var(--ink);
+    }
+    .state-btn-secondary {
+        background: transparent;
+        color: var(--ink);
+        border: 1px solid var(--rule-color);
+    }
+    .state-btn:hover { opacity: 0.85; }
+    .state-link {
+        font-family: var(--font-sans);
+        font-size: var(--fs-300, 14px);
+        color: var(--text-secondary);
+        text-decoration: none;
+    }
+    .state-link:hover { color: var(--green); }
+
+    .state-next {
+        font-family: var(--font-sans);
+        font-size: var(--fs-200, 12px);
+        color: var(--text-muted);
+        margin-top: var(--sp-3, 12px);
     }
 
-    /* Page links — plain Inter, dark (Streamlit .custom-nav-link: black, hover green+bold). */
+    .state-empty {
+        font-family: var(--font-sans);
+        font-size: var(--fs-300, 14px);
+        color: var(--text-secondary);
+    }
+
+    .state-divider {
+        border: none;
+        border-top: 1px solid var(--rule-color);
+        margin: 0 0 var(--sp-6, 2rem) 0;
+    }
+
+    /* --- Sitemap: one bounded surface per NAV_SECTIONS group (I4 ruling on
+       surface treatment) -- not a bare hairline, and not the old three
+       arbitrary column cards that packed unrelated groups together. Uses
+       the theme's own card surface (1px border + --card-radius), no
+       stacked shadow, no !important. --- */
+    .contents-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+        gap: var(--sp-5, 24px);
+        align-items: start;
+    }
+    .contents-group {
+        background: var(--bg-card);
+        border: 1px solid var(--rule-color);
+        border-radius: var(--card-radius);
+        padding: var(--sp-5, 24px);
+    }
     .contents-links a {
-        display: block;
+        display: flex;
+        min-height: 44px;
+        align-items: center;
         padding: 0.35rem 0;
         font-family: var(--font-sans);
-        font-size: 0.875rem;
-        font-weight: 400;
-        color: var(--text-primary, #1a1a1a);
+        font-size: var(--fs-300, 14px);
+        color: var(--text-primary);
         text-decoration: none;
     }
     .contents-links a:hover {
-        color: forestgreen;
+        color: var(--green);
         font-weight: 700;
-        text-decoration: none;
     }
-    /* Icons read as dark as the link text here (not the muted nav-dropdown grey). */
     .contents-links .menu-icon {
         opacity: 1;
+    }
+
+    @media (max-width: 640px) {
+        .contents-grid { grid-template-columns: 1fr; }
+        .state-headline { font-size: var(--fs-600, 28px); }
+        .state-leader-label { min-width: 100%; }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="contents-grid">
-    {% for column in columns %}
-    <div class="contents-col">
-        {% for section in column %}
-        <div class="contents-section">
-            <div class="contents-section-title">{{ section.label }}</div>
-            <div class="contents-links">
-                {% for title, url, key, icon in section.pages %}
-                <a href="{{ url }}"><span class="menu-icon material-symbols-outlined">{{ icon }}</span>{{ title }}</a>
-                {% endfor %}
+<div class="state-panel">
+    {% if state.state == "in_progress" %}
+        <p class="state-eyebrow state-eyebrow-live">In progress</p>
+        <h1 class="state-headline">{{ state.teg_label }} — after Round {{ state.rounds_played }} of {{ state.rounds_expected }}</h1>
+        <p class="state-context">
+            {{ state.area }}{% if state.year %} · {{ state.year }}{% endif %}{% if state.last_round_date %} · Round {{ state.rounds_played }} played {{ state.last_round_date }}{% endif %}
+        </p>
+
+        {% if state.leaders_deferred %}
+        <div hx-get="/contents/leaders?teg={{ state.teg_num }}" hx-trigger="load" hx-swap="outerHTML">
+            <div class="state-leaders" aria-busy="true">
+                <div class="state-leader-row"><span class="state-leader-label">TEG Trophy <span class="state-leader-measure">(net)</span></span><span class="state-leader-names">Loading…</span></div>
             </div>
         </div>
-        {% endfor %}
+        {% else %}
+            {% with leaders = state %}{% include "partials/_contents_state1_leaders.html" %}{% endwith %}
+        {% endif %}
+
+        <div class="state-actions">
+            <a class="state-btn state-btn-primary" href="/leaderboard?teg={{ state.teg_num }}">Latest Leaderboard</a>
+            <a class="state-link" href="/latest-round">Latest Round in context</a>
+            <a class="state-link" href="/handicaps">Handicaps</a>
+        </div>
+
+    {% elif state.state == "complete" %}
+        <p class="state-eyebrow state-eyebrow-muted">Latest result</p>
+        <h1 class="state-headline">{{ state.teg_label }} — Final Results</h1>
+        <p class="state-context">
+            {{ state.area }}{% if state.year %} · {{ state.year }}{% endif %}{% if state.last_round_date %} · Last round {{ state.last_round_date }}{% endif %}
+        </p>
+
+        <div class="state-leaders">
+            <div class="state-leader-row">
+                <span class="state-leader-label">TEG Trophy <span class="state-leader-measure">(net)</span></span>
+                <span class="state-leader-names state-honour">{{ state.trophy or "–" }}</span>
+            </div>
+            <div class="state-leader-row">
+                <span class="state-leader-label">Green Jacket <span class="state-leader-measure">(gross)</span></span>
+                <span class="state-leader-names state-honour">{{ state.jacket or "–" }}</span>
+            </div>
+            <div class="state-leader-row state-leader-row-muted">
+                <span class="state-leader-label">Wooden spoon</span>
+                <span class="state-leader-names">{{ state.spoon or "–" }}</span>
+            </div>
+        </div>
+
+        <div class="state-actions">
+            {% if state.has_report %}
+                <a class="state-btn state-btn-primary" href="/teg-reports?teg={{ state.teg_num }}">Read the {{ state.teg_label }} Report</a>
+                <a class="state-btn state-btn-secondary" href="/results?teg={{ state.teg_num }}">Full Results</a>
+            {% else %}
+                <a class="state-btn state-btn-primary" href="/results?teg={{ state.teg_num }}">Full Results</a>
+            {% endif %}
+            <a class="state-link" href="/handicaps">Handicaps</a>
+        </div>
+
+        {% if state.next_teg %}
+        <p class="state-next">Next: {{ state.next_teg.label }} · {{ state.next_teg.area }} · {{ state.next_teg.year }}</p>
+        {% endif %}
+
+    {% else %}
+        <h1 class="state-headline">No tournament data</h1>
+        <p class="state-empty">No tournament data available. The pages below still work.</p>
+    {% endif %}
+</div>
+
+<hr class="state-divider">
+
+<div class="contents-grid">
+    {% for section in sections %}
+    <div class="contents-group">
+        <div class="section-title">{{ section.label }}</div>
+        <div class="contents-links">
+            {% for title, url, key, icon in section.pages %}
+            <a href="{{ url }}"><span class="menu-icon material-symbols-outlined">{{ icon }}</span>{{ title }}</a>
+            {% endfor %}
+        </div>
     </div>
     {% endfor %}
 </div>

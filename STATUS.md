@@ -2,7 +2,38 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-20 (I2: public interaction and canonical URL contract — worktree, not yet merged)
+**Last updated:** 2026-09-21 (I5: Contents implemented as the current-TEG home — worktree, not yet merged)
+
+## 2026-09-21 — UI implementation roadmap Improve stage: I5 Contents as the current-TEG home
+
+Branch `claude/ui-i5`, worktree, based on `6218c0c` (main tip, I1+I2 merged). Not yet merged.
+
+`/contents` (the site's de facto home via `/` → `/contents`) replaces its flat three-column link
+grid with a state-led panel — implementing the I3 product contract with I4's critique folded in,
+plus three owner decisions taken live: the TEG report is the primary action in the complete state
+(Full Results secondary, or primary itself when no report exists yet); a cold parquet-cache miss
+defers State 1's leader rows to an HTMX partial rather than blocking the page; the wooden spoon
+stays visible mid-tournament, matching existing `/history` precedent.
+
+`webapp.deps.get_tournament_state()` is the single source of truth for the three states —
+in-progress, latest-complete, no usable data — read from the two small status CSVs, never
+`get_default_teg_num()` (which silently falls back to a hardcoded TEG on unreadable data). The
+complete state costs no parquet load: winners come straight from `data/teg_winners.csv`. The five
+`NAV_SECTIONS` groups render unchanged below the panel, one per bounded surface (not the old
+`!important`-laden three-column layout), preserving all 28 public destinations byte-for-byte
+against `webapp/nav.py`.
+
+Verified: all three states, 320/390/768/1280px, light/dark, both Clean-family layouts, direct
+navigation and reload, warm- and cold-cache leader rendering, ties (no countback — every tied
+player named). 9 new focused tests (`tests/test_webapp_pages.py -k contents`); full suite of
+`test_webapp_pages.py` (110), `test_imports.py`/`test_no_streamlit_imports.py` (30) and
+`check_pandas_compat.py` (0 errors) all pass. `design_principles.md`'s accent-colour rule (line 29
++ checklist) updated to record green's actual jobs (honours, live status, active selection,
+top-rank emphasis) and that they never combine on one render. Full contract, rulings and
+verification: `webapp/design_reviews/ui_workstream/I3-handoff.md`, `I4-handoff.md`,
+`I5-handoff.md`.
+
+**Next:** owner review and merge decision, then I6 (Improve review gate).
 
 ## 2026-09-20 — UI implementation roadmap Improve stage: I2 public interaction and URL state
 

@@ -1,15 +1,18 @@
-"""Contents route — site map of all sections and pages.
+"""Contents route — current-TEG home page with the full site map below.
 
-Mirrors the Streamlit Contents page (streamlit/contents.py): lists every
-section and its pages as links, driven by the shared NAV_SECTIONS structure.
+State-led home (I3/I5): shows the in-progress TEG, the latest completed TEG,
+or an honest no-data message, chosen by `webapp.deps.get_tournament_state()`.
+The complete public site map (`webapp.nav.NAV_SECTIONS`, unchanged) always
+renders beneath it, so every destination stays reachable regardless of state.
 """
 
 from pathlib import Path
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Query
 from fastapi.templating import Jinja2Templates
 
 from webapp.nav import NAV_SECTIONS
+from webapp.deps import get_tournament_state, get_contents_state1_leaders
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
@@ -17,18 +20,23 @@ templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templa
 
 @router.get("/contents")
 def contents_page(request: Request):
-    # Contents-specific column arrangement (does not reorder NAV_SECTIONS, which
-    # drives the nav bar). Columns fill top-to-bottom:
-    #   1: TEG History / Records & PBs   2: Latest TEG / Scorecards   3: Scoring
-    by_label = {s["label"]: s for s in NAV_SECTIONS}
-    layout = [
-        ("TEG History", "Records & PBs"),
-        ("Latest TEG", "Scorecards"),
-        ("Scoring analysis",),
-    ]
-    columns = [[by_label[label] for label in col if label in by_label] for col in layout]
     return templates.TemplateResponse("contents.html", {
         "request": request,
         "active_page": "contents",
-        "columns": columns,
+        "sections": NAV_SECTIONS,
+        "state": get_tournament_state(),
+    })
+
+
+@router.get("/contents/leaders")
+def contents_state1_leaders(request: Request, teg: int = Query(...)):
+    # HTMX fallback for a cold State 1 render (I4 R10): the main page renders
+    # the headline/context/actions immediately from the two status CSVs, and
+    # this partial fills in the leader rows once cached_round_data() has
+    # loaded, instead of blocking the initial response on a cold parquet
+    # load. Reuses the same partial as the inline (warm-cache) render.
+    leaders = get_contents_state1_leaders(teg)
+    return templates.TemplateResponse("partials/_contents_state1_leaders.html", {
+        "request": request,
+        "leaders": leaders,
     })

@@ -813,3 +813,166 @@ def test_honours_page_renders(client):
 def test_honours_tab_renders(client):
     resp = client.get("/honours/tab/trophy")
     _assert_ok_no_error(resp)
+
+
+# ---------------------------------------------------------------------------
+# Contents (I5: current-TEG home) -- one test per state against a stubbed
+# get_tournament_state(), plus the honesty/link-preservation acceptance
+# criteria from webapp/design_reviews/ui_workstream/I3-handoff.md.
+# ---------------------------------------------------------------------------
+
+import webapp.routes.contents as contents_route
+
+
+def test_contents_all_nav_links_present(client):
+    # Acceptance criterion 2: every NAV_SECTIONS URL appears in /contents,
+    # asserted by test rather than inspection.
+    resp = client.get("/contents")
+    _assert_ok_no_error(resp)
+    urls = [url for section in NAV_SECTIONS for (_t, url, _k, _i) in section["pages"]]
+    for url in urls:
+        assert f'href="{url}"' in resp.text, f"missing sitemap link {url!r}"
+    # Player Profiles stay deliberately unlinked from nav (2026-09-18).
+    assert 'href="/player"' not in resp.text
+
+
+def test_contents_state_in_progress(client, monkeypatch):
+    monkeypatch.setattr(contents_route, "get_tournament_state", lambda: {
+        "state": "in_progress", "teg_num": 19, "teg_label": "TEG 19",
+        "area": "Algarve, Portugal", "year": "2026",
+        "rounds_played": 2, "rounds_expected": 4,
+        "last_round_date": "14 May 2026",
+        "leaders_deferred": False,
+        "net_leaders": ["Jon BAKER"], "net_leader_total": "38", "net_unit": "pts",
+        "net_last": ["Gregg WILLIAMS"], "net_last_total": "21",
+        "gross_leaders": ["Alex BAKER"], "gross_leader_total": "+14",
+    })
+    resp = client.get("/contents")
+    _assert_ok_no_error(resp)
+    assert "In progress" in resp.text
+    assert "TEG 19 — after Round 2 of 4" in resp.text
+    assert "Round 2 played 14 May 2026" in resp.text  # R3: dated context line
+    # R2: primary action pins the current TEG, never a bare route.
+    assert 'href="/leaderboard?teg=19"' in resp.text
+    assert "Jon BAKER" in resp.text and "Gregg WILLIAMS" in resp.text
+
+
+def test_contents_state_in_progress_cold_cache_defers_leaders(client, monkeypatch):
+    # I4 R10: a cold State 1 render ships the headline/context/actions
+    # immediately and defers leader rows to the HTMX partial instead of
+    # blocking on cached_round_data().
+    monkeypatch.setattr(contents_route, "get_tournament_state", lambda: {
+        "state": "in_progress", "teg_num": 19, "teg_label": "TEG 19",
+        "area": "Algarve, Portugal", "year": "2026",
+        "rounds_played": 2, "rounds_expected": 4,
+        "last_round_date": "14 May 2026",
+        "leaders_deferred": True,
+    })
+    resp = client.get("/contents")
+    _assert_ok_no_error(resp)
+    assert 'hx-get="/contents/leaders?teg=19"' in resp.text
+    assert 'hx-trigger="load"' in resp.text
+
+
+def test_contents_state_complete(client, monkeypatch):
+    monkeypatch.setattr(contents_route, "get_tournament_state", lambda: {
+        "state": "complete", "teg_num": 18, "teg_label": "TEG 18",
+        "area": "Catalonia, Spain", "year": "2025",
+        "last_round_date": "14 October 2025",
+        "net_measure": "Stableford",
+        "trophy": "Alex BAKER", "jacket": "Gregg WILLIAMS", "spoon": "Jon BAKER",
+        "has_report": True,
+        "next_teg": {"label": "TEG 19", "year": 2026, "area": "Algarve, Portugal"},
+    })
+    resp = client.get("/contents")
+    _assert_ok_no_error(resp)
+    assert "TEG 18 — Final Results" in resp.text
+    # Owner decision: Report is the primary action when one exists.
+    assert 'href="/teg-reports?teg=18"' in resp.text
+    assert 'href="/results?teg=18"' in resp.text
+    assert "Next: TEG 19 · Algarve, Portugal · 2026" in resp.text
+
+
+def test_contents_state_complete_no_report_falls_back_to_results_primary(client, monkeypatch):
+    monkeypatch.setattr(contents_route, "get_tournament_state", lambda: {
+        "state": "complete", "teg_num": 12, "teg_label": "TEG 12",
+        "area": "Algarve, Portugal", "year": "2019",
+        "last_round_date": "3 May 2019",
+        "net_measure": "NetVP",
+        "trophy": "David MULLIN", "jacket": "David MULLIN", "spoon": "Henry MELLER",
+        "has_report": False,
+        "next_teg": None,
+    })
+    resp = client.get("/contents")
+    _assert_ok_no_error(resp)
+    # E7: never a dead report link -- the *pinned* report action is absent
+    # (the sitemap's general, state-agnostic /teg-reports link still renders).
+    assert 'href="/teg-reports?teg=12"' not in resp.text
+    assert 'href="/results?teg=12"' in resp.text
+    assert "state-btn-primary" in resp.text
+
+
+def test_contents_state_no_data(client, monkeypatch):
+    monkeypatch.setattr(contents_route, "get_tournament_state", lambda: {"state": "no_data"})
+    resp = client.get("/contents")
+    _assert_ok_no_error(resp)
+    assert "No tournament data available." in resp.text
+    # R9: no invented cause, no retry theatre; no primary action.
+    assert "Scores haven" not in resp.text
+    assert "state-btn-primary\"" not in resp.text
+    # The full sitemap still renders beneath a no-data state.
+    assert 'href="/records"' in resp.text
+
+
+def test_contents_ties_name_every_player(client, monkeypatch):
+    # E2/R8: TEG has no countback -- every tied player is named,
+    # comma-separated, never collapsed to "and 1 other".
+    monkeypatch.setattr(contents_route, "get_tournament_state", lambda: {
+        "state": "in_progress", "teg_num": 19, "teg_label": "TEG 19",
+        "area": "Algarve, Portugal", "year": "2026",
+        "rounds_played": 2, "rounds_expected": 4,
+        "last_round_date": "14 May 2026",
+        "leaders_deferred": False,
+        "net_leaders": ["Jon BAKER", "Alex BAKER"], "net_leader_total": "38", "net_unit": "pts",
+        "net_last": ["Gregg WILLIAMS"], "net_last_total": "21",
+        "gross_leaders": ["David MULLIN"], "gross_leader_total": "+14",
+    })
+    resp = client.get("/contents")
+    _assert_ok_no_error(resp)
+    assert "Jon BAKER, Alex BAKER" in resp.text
+    assert "and 1 other" not in resp.text
+    assert "…" not in resp.text
+
+
+def test_contents_complete_state_costs_no_parquet_load(client):
+    # Acceptance criterion 3: State 2 (the ordinary between-tournaments
+    # state -- today's live truth) issues no parquet load. Winners come
+    # straight from teg_winners.csv, not create_leaderboard().
+    import webapp.deps as deps
+    misses_before = deps.cached_round_data.cache_info().misses
+    resp = client.get("/contents")
+    _assert_ok_no_error(resp)
+    assert deps.cached_round_data.cache_info().misses == misses_before
+
+
+def test_contents_panel_actions_are_all_in_the_sitemap(client, monkeypatch):
+    # I4 R11: the state panel adds zero new destinations -- every panel
+    # action already exists in the NAV_SECTIONS sitemap.
+    monkeypatch.setattr(contents_route, "get_tournament_state", lambda: {
+        "state": "in_progress", "teg_num": 19, "teg_label": "TEG 19",
+        "area": "Algarve, Portugal", "year": "2026",
+        "rounds_played": 2, "rounds_expected": 4,
+        "last_round_date": "14 May 2026",
+        "leaders_deferred": False,
+        "net_leaders": ["Jon BAKER"], "net_leader_total": "38", "net_unit": "pts",
+        "net_last": ["Gregg WILLIAMS"], "net_last_total": "21",
+        "gross_leaders": ["Alex BAKER"], "gross_leader_total": "+14",
+    })
+    resp = client.get("/contents")
+    _assert_ok_no_error(resp)
+    sitemap_bases = {url for section in NAV_SECTIONS for (_t, url, _k, _i) in section["pages"]}
+    panel_hrefs = re.findall(r'class="state-(?:btn|link)[^"]*"\s+href="([^"]+)"', resp.text)
+    assert panel_hrefs
+    for href in panel_hrefs:
+        base = href.split("?")[0]
+        assert base in sitemap_bases, f"panel action {href!r} is not in the sitemap"
