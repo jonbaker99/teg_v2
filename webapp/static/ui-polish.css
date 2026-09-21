@@ -7,7 +7,7 @@
 }
 .nav-hamburger { min-width: 44px; min-height: 44px; }
 :where(a, button, select, input):focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid var(--focus, var(--accent));
     outline-offset: 3px;
 }
 /* Match the default title's text edge to the content panel's text edge. */
