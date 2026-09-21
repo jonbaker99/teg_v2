@@ -380,6 +380,9 @@ def test_latest_round_mobile_scoreboard_contract(client):
     assert "rank-detail-row" in resp.text and "hidden" in resp.text
     assert ">Out<" in resp.text and ">In<" in resp.text
     assert "Score mix" in resp.text
+    assert "score-mix-row" in resp.text
+    assert "score-mix-fill--" in resp.text
+    assert 'style="width:' in resp.text
     assert "data-lr-page" in resp.text
     assert "data-lr-focus=" in resp.text
     assert 'data-lr-scale="adjusted"' in resp.text

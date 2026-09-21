@@ -851,10 +851,11 @@
   .latest-round-page #lr-content .rank-detail-row .detail-mix,
   .latest-teg-page #lt-content .rank-detail-row .detail-mix {
     margin: 0; padding: 0 10px 10px; font-size: 12px; line-height: 1.4;
-    color: var(--text-primary, #1b241f); white-space: normal; overflow-wrap: anywhere;
+    color: var(--text-primary, #1b241f);
   }
   .latest-round-page #lr-content .rank-detail-row .detail-mix-label,
   .latest-teg-page #lt-content .rank-detail-row .detail-mix-label {
+    display: block; margin-bottom: 6px;
     color: var(--text-muted, #666); text-transform: uppercase; font-size: 10px;
     letter-spacing: .04em; margin-right: 6px;
   }

@@ -414,6 +414,25 @@ table.leaderboard td:nth-child(2) {
     }
 }
 
+/* Score mix chart -- leaderboard/TEG detail-row per-hole score distribution,
+   a dependency-free CSS bar chart (grid rows + width-percentage fills, no
+   JS/SVG/library). Replaces the earlier plain-text "label: count, ..." list. */
+.score-mix { display: grid; gap: 4px; }
+.score-mix-row {
+    display: grid;
+    grid-template-columns: 2.2em 1fr auto;
+    align-items: center;
+    gap: 8px;
+    font: 13px/1 var(--font-table), sans-serif;
+}
+.score-mix-key   { color: var(--text-muted); text-align: right; }
+.score-mix-count { color: var(--text-primary); font-weight: 600; min-width: 1.4em; }
+.score-mix-track { background: var(--table-cell-border); border-radius: var(--r-1, 3px); height: 11px; }
+.score-mix-fill  { display: block; height: 100%; min-width: 3px; border-radius: var(--r-1, 3px); }
+.score-mix-fill--good { background: var(--success); }
+.score-mix-fill--par  { background: var(--text-muted); }
+.score-mix-fill--bad  { background: var(--failure); }
+
 /* ── Multi-round scorecards (Full Results → Scorecards tab) ──
    Each round is a .sc-round section holding a responsive scorecard block
    (landscape gross + stableford on desktop, portrait toggle on phone). Lives

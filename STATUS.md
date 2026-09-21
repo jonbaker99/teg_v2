@@ -4,6 +4,14 @@ Current state and next priorities. Instructions and architecture live in `CLAUDE
 
 **Last updated:** 2026-09-20 (I1: unified public standings renderer — worktree, not yet merged)
 
+## 2026-09-20 — Latest Round/TEG detail row: Score mix as a CSS bar chart
+
+Branch `claude/ui-score-mix-chart`, worktree, based on `2f0baef`. Not yet merged. Replaced the
+plain-text "label: count, ..." Score mix list in the leaderboard/TEG expandable detail row with a
+dependency-free CSS bar chart (`_score_mix_chart_html` in `webapp/routes/latest.py`; `.score-mix`
+rules in `webapp/static/themes/base-vars.css`) — grid rows with width-percentage fills, tokens
+only, no JS/SVG/library.
+
 ## 2026-09-20 — UI implementation roadmap Improve stage: I1 unified standings renderer
 
 Branch `claude/ui-i1`, worktree, based on `bb3f8df` (C6/C6a's accepted base). Not yet merged.
