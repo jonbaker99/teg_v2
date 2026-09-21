@@ -564,6 +564,7 @@ for you and still threadpools the handler).
 - **`stat-card`** — headline statistics
 - **`tab-underline`** / **`tab-underline--active`** — in-page tab & toggle buttons (underline style; `--active` is the single canonical active class)
 - **`badge`** — small inline labels
+- **`score-mix`** — the leaderboard/TEG detail row's per-hole score distribution: a dependency-free CSS bar chart (grid rows + width-percentage fills, tokens only, no JS/SVG/library)
 
 ### Structural class hierarchy
 

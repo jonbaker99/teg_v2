@@ -140,25 +140,50 @@ def _fmt_record_value(value, metric: str) -> str:
     return str(int(value))
 
 
-def _player_score_mix(counts: pd.DataFrame, player_code: str, field: str) -> str:
-    """Render one player's per-hole score distribution as 'label: count, ...'.
+def _score_mix_chart_html(counts: pd.DataFrame, player_code: str, field: str,
+                           scale_max: int) -> str:
+    """Render one player's per-hole score distribution as a dependency-free
+    CSS bar chart (a row per score level: label, proportional-width fill,
+    count).
 
     ``counts`` is a count_scores_by_player(round_data, field) matrix (score
     value -> row, player code -> column); this slices out one player's
     column and formats each score level the same way the Scoring tab does
     (_format_scoring_display / format_vs_par) rather than inventing a new
     formatting scheme: vs-par notation for GrossVP, plain point values for
-    Stableford.
+    Stableford. ``scale_max`` is the largest count across the whole table
+    (shared so bar widths are comparable player-to-player), and drives each
+    bar's width as a percentage; a CSS min-width on the fill keeps small
+    counts visible without clamping the percentage in Python.
     """
     if counts is None or counts.empty or player_code not in counts.columns:
         return ''
+    from html import escape
     col = counts[player_code]
     col = col[col > 0]
-    parts = []
+    rows = []
     for score_val, count in col.items():
-        label = format_vs_par(int(score_val)) if field == 'GrossVP' else str(int(score_val))
-        parts.append(f"{label}: {int(count)}")
-    return ', '.join(parts)
+        score_val = int(score_val)
+        count = int(count)
+        label = format_vs_par(score_val) if field == 'GrossVP' else str(score_val)
+        if field == 'GrossVP':
+            polarity = 'good' if score_val < 0 else ('par' if score_val == 0 else 'bad')
+        else:
+            polarity = 'good' if score_val > 2 else ('par' if score_val == 2 else 'bad')
+        width_pct = round(count / scale_max * 100, 1)
+        rows.append(
+            '<div class="score-mix-row">'
+            f'<span class="score-mix-key">{escape(label)}</span>'
+            '<span class="score-mix-track">'
+            f'<span class="score-mix-fill score-mix-fill--{polarity}" '
+            f'style="width:{width_pct}%"></span>'
+            '</span>'
+            f'<span class="score-mix-count">{count}</span>'
+            '</div>'
+        )
+    if not rows:
+        return ''
+    return '<div class="score-mix">' + ''.join(rows) + '</div>'
 
 
 def _build_scoreboard_table(values: pd.DataFrame, mix_counts: pd.DataFrame | None,
@@ -210,6 +235,7 @@ def _build_scoreboard_table(values: pd.DataFrame, mix_counts: pd.DataFrame | Non
     show_rank_context = 'Personal rank' in values.columns and 'All-time rank' in values.columns
     show_round_total = 'RoundTotal' in values.columns
     show_detail = mix_counts is not None and mix_field is not None
+    scale_max = (int(mix_counts.values.max()) or 1) if show_detail else 1
 
     def rank_cell(value) -> str:
         """Keep rank text accessible while de-emphasising its denominator."""
@@ -287,7 +313,7 @@ def _build_scoreboard_table(values: pd.DataFrame, mix_counts: pd.DataFrame | Non
         if not show_detail:
             continue
 
-        mix = _player_score_mix(mix_counts, code, mix_field)
+        mix_html = _score_mix_chart_html(mix_counts, code, mix_field, scale_max)
         detail_spans = ''.join(
             f"<span>{escape(label)}<b>{escape(str(row[col]))}</b></span>"
             for label, col in detail_cols
@@ -296,10 +322,10 @@ def _build_scoreboard_table(values: pd.DataFrame, mix_counts: pd.DataFrame | Non
             f"<tr class=\"rank-detail-row\" id=\"{escape(detail_id)}\" hidden>"
             f"<td colspan=\"{colspan}\">"
             f"<div class=\"detail-grid\">{detail_spans}</div>"
-            "<p class=\"detail-mix\">"
-            "<span class=\"detail-mix-label\">Score mix</span> "
-            f"{escape(mix) if mix else '—'}"
-            "</p>"
+            "<div class=\"detail-mix\">"
+            "<span class=\"detail-mix-label\">Score mix</span>"
+            f"{mix_html if mix_html else ' —'}"
+            "</div>"
             "</td></tr>"
         )
 
