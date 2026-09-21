@@ -37,8 +37,19 @@
    <table> -- only present when the default Player x Hole view is active,
    see _heatmap_context. .hm-desktop hides instead, below. */
 .hm-mobile { display: none; }
+/* Full / short player-name swap -- shared site-wide toggle for the
+   Initial.SURNAME pattern (_player_name_spans, teg_analysis/display/
+   scorecards.py; see design_principles.md -> Tables -> "Player names on
+   narrow screens"). Originally scoped to scorecard.css for the bestball/
+   worstball contribution table and field card only; promoted here so any
+   page can emit the same bw-name-full/bw-name-short span pair and get the
+   swap for free, without needing to load scorecard.css. Default (desktop)
+   state lives outside the media query so it also holds above 640px. */
+.bw-name-short { display: none; }
 
 @media (max-width: 640px) {
+  .bw-name-full { display: none; }
+  .bw-name-short { display: inline; }
   /* Leave room for the fixed bottom bar so content never hides behind it. */
   body { padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
 
@@ -955,24 +966,44 @@
      format_eclectic_records_table always emits Player, TEG/Course, Total,
      Rounds in that fixed order (teg_analysis/analysis/eclectic.py) and
      df_to_html renders them with no col_class, so there's no col-player hook
-     to target -- nth-child on the plain .teg-table is the only way in. At an
-     equal 25% split, long names ("Gregg Williams") overflow ~42px into the
-     TEG column while Total/Rounds (single- and double-digit numbers) sit on
-     width they never use, so the columns are weighted by actual content
-     instead: Player gets the space long names need, Total/Rounds shrink to
-     what a number needs, TEG/Course takes the remainder. */
-  .eclectic-records-page table.teg-table { table-layout: fixed; }
+     to target -- nth-child on the plain .teg-table is the only way in.
+     `.teg-table`'s base rule (base-vars.css) is `width: auto`, so
+     table-layout:fixed alone had no definite table width to divide the
+     nth-child percentages against -- the table sized to content instead and
+     bled off the right edge at 320-390px (confirmed: Total/Rounds columns
+     cut off past the viewport). Fixed with an explicit `width: 100%` here so
+     the percentages below are real. Player also now emits the
+     _player_name_spans() full/short pair (webapp/routes/eclectic.py's
+     shorten_players=True), so its column can shrink from the 44% a full
+     "Gregg Williams" needed down to what "G.WILLIAMS" needs, freeing width
+     for TEG/Total/Rounds instead of starving them. */
+  .eclectic-records-page table.teg-table { table-layout: fixed; width: 100%; }
+  .eclectic-records-page table.teg-table th,
+  .eclectic-records-page table.teg-table td {
+    /* Base .teg-table's 0.875rem body / th padding of 0.75rem (base-vars.css)
+       is sized for a content-width desktop table -- at a forced 100% width
+       split 4 ways on a 320-390px phone, it left no room for "G.WILLIAMS" +
+       "TEG 15" + "-4" + "4" to all fit without either wrapping or the
+       Rounds header clipping. Matches By Par's dense-grid sizing. */
+    font-size: 11px;
+    padding: 5px 4px;
+  }
   .eclectic-records-page table.teg-table th:nth-child(1),
   .eclectic-records-page table.teg-table td:nth-child(1) {
-    width: 44%;
+    width: 38%;
     overflow-wrap: anywhere;
+    /* Base .teg-table tbody td is white-space:nowrap (base-vars.css) --
+       overflow-wrap has no effect (no soft-wrap opportunity to use) until
+       wrapping itself is allowed. Without this, a name that doesn't fit
+       spills visibly over the TEG column instead of wrapping. */
+    white-space: normal;
   }
   .eclectic-records-page table.teg-table th:nth-child(2),
-  .eclectic-records-page table.teg-table td:nth-child(2) { width: 22%; }
+  .eclectic-records-page table.teg-table td:nth-child(2) { width: 23%; }
   .eclectic-records-page table.teg-table th:nth-child(3),
   .eclectic-records-page table.teg-table td:nth-child(3),
   .eclectic-records-page table.teg-table th:nth-child(4),
-  .eclectic-records-page table.teg-table td:nth-child(4) { width: 17%; }
+  .eclectic-records-page table.teg-table td:nth-child(4) { width: 19.5%; }
 
   /* ── Handicaps (/handicaps, vertical list) ──
      .hc-tiles' auto-fit grid packs several 2-up tiles per phone row, which
@@ -1140,6 +1171,42 @@
      read as the old "value (context)" string (see _pb_summary_html) -- once
      stacked into two lines here, they're noise. */
   .personal-bests-page .pb-sep { display: none; }
+  /* PB Summary table (Player + 4 two-line measure columns) had every measure
+     cell reworked above to stop it overflowing, but the Player column itself
+     was left a plain full name with no width rule at all -- `.teg-table`'s
+     base `width: auto` let the row size to content and the table scrolled
+     off-screen past ~2 columns at 320-390px. Fixed the same way as By Par
+     (design_principles.md -> Tables -> "Player names on narrow screens"):
+     table-layout:fixed + width:100%, Player narrower now it emits the
+     _player_name_spans() short form (webapp/routes/performance.py's
+     _pb_summary_html), the 4 measure columns splitting the rest evenly. */
+  .personal-bests-page table.teg-table:has(.pbv) {
+    table-layout: fixed;
+    width: 100%;
+  }
+  .personal-bests-page table.teg-table:has(.pbv) th,
+  .personal-bests-page table.teg-table:has(.pbv) td {
+    /* Base .teg-table's 0.875rem/0.75rem sizing (base-vars.css) is for a
+       content-width desktop table -- at a forced 100% width split 5 ways on
+       a phone it left no gap between adjacent headers ("Score"/"Gross")
+       and forced every player name onto 2-3 lines. Matches By Par/Eclectic
+       Records' dense-grid sizing. */
+    font-size: 11px;
+    padding: 5px 4px;
+  }
+  .personal-bests-page table.teg-table:has(.pbv) th:first-child,
+  .personal-bests-page table.teg-table:has(.pbv) td:first-child {
+    width: 30%;
+    overflow-wrap: anywhere;
+    /* Base .teg-table tbody td is white-space:nowrap (base-vars.css), which
+       silently disables overflow-wrap -- see the matching note on By Par /
+       Eclectic Records in mobile.css. */
+    white-space: normal;
+  }
+  .personal-bests-page table.teg-table:has(.pbv) th:not(:first-child),
+  .personal-bests-page table.teg-table:has(.pbv) td:not(:first-child) {
+    width: 17.5%;
+  }
 
   .tp-table { display: none; }
   .tp-list { display: block; }
@@ -1461,6 +1528,12 @@
     width: 34%;
     text-align: left;
     overflow-wrap: anywhere;
+    /* See the matching note in .eclectic-records-page below: base
+       .teg-table tbody td is white-space:nowrap, which silently disables
+       overflow-wrap. Names now shorten to Initial.SURNAME here (shorten_
+       players=True) so this rarely bites, but it's the correct fallback if
+       one still doesn't fit. */
+    white-space: normal;
   }
   .by-par-panel table.teg-table th:not(:first-child),
   .by-par-panel table.teg-table td:not(:first-child) {

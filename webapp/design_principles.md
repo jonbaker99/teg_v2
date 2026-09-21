@@ -132,11 +132,17 @@ Typography bullet above):
   `tr:hover` so the highlight isn't masked.
 - Aim for Datawrapper-like density: tight row spacing, thin borders, generous but not excessive cell padding
 - **Player names on narrow screens** — where a player-name column would squeeze the
-  data on mobile, emit both a full name and a short `Initial. SURNAME` form (e.g.
-  `J. BAKER`) and swap to the short form below the mobile breakpoint via CSS, rather
+  data on mobile, emit both a full name and a short `Initial.SURNAME` form (e.g.
+  `J.BAKER`) and swap to the short form below the mobile breakpoint via CSS, rather
   than letting names wrap or push data off-screen. Shared helper:
   `teg_analysis/display/scorecards.py:_player_name_spans` (classes `bw-name-full` /
-  `bw-name-short`). For wide tables that can't fit on mobile even when shortened,
+  `bw-name-short`; the display-toggle CSS itself lives in `webapp/static/mobile.css`,
+  loaded on every page, not just the scorecard bundle). Rolled out site-wide
+  2026-09-21 — see `webapp/TODOS.md`'s "Roll out mobile name shortening" entry for
+  the full list of pages and the one accepted remaining edge case. Generic
+  `df_to_html`-rendered tables opt in with `webapp/tables.py::df_to_html(...,
+  shorten_players=True)`; bespoke table renderers call `_player_name_spans`
+  directly. For wide tables that can't fit on mobile even when shortened,
   prefer splitting into separate tables that sit side by side and wrap to stacked
   when narrow (see the bestball/worstball Bestball and Worstball contribution tables).
 

@@ -16,6 +16,7 @@ from webapp.deps import (
     cached_9_data,
     get_filtered_teg_data,
 )
+from teg_analysis.display.scorecards import _player_name_spans
 from teg_analysis.display.formatters import (
     prepare_records_table,
     prepare_worst_records_table,
@@ -153,12 +154,25 @@ def _build_records_html(df: pd.DataFrame) -> str:
         label_html = row[cols[0]] if show_title else ""
         value_html = row[cols[value_col_idx]] if value_col_idx is not None else ""
         if identity_col_idx is not None:
-            id_val = row[cols[identity_col_idx]]
+            raw_id_val = row[cols[identity_col_idx]]
             det_val = row[cols[detail_col_idx]] if detail_col_idx is not None else ""
-            if detail_col_idx is not None and _is_placeholder_identity(id_val):
-                id_val, det_val = det_val, id_val
+            is_placeholder = detail_col_idx is not None and _is_placeholder_identity(raw_id_val)
+            if is_placeholder:
+                id_val, det_val = det_val, raw_id_val
+            else:
+                id_val = raw_id_val
+            # A genuine single-player identity (not a "(N times)"/"->"
+            # placeholder swapped for an initials list, see
+            # _is_placeholder_identity) is a real "First Last" name -- narrow
+            # enough at 320-390px that .rec-identity's nowrap+ellipsis
+            # (mobile.css) truncates it unreadably (e.g. "John PATTER...").
+            # Emit the full/short pair so CSS can swap to "J.PATTERSON"
+            # there instead of truncating. Swapped-in initials lists ("AB /
+            # HM") are already short -- left untouched.
+            id_html = _player_name_spans(id_val) if not is_placeholder and id_val not in (None, "") else id_val
         else:
             id_val, det_val = "", ""
+            id_html = ""
 
         if detail_col_idx is None:
             # No real detail to reveal (e.g. latest.py's single-record
@@ -169,7 +183,7 @@ def _build_records_html(df: pd.DataFrame) -> str:
                 "<div class='rec-summary rec-summary--flat'>"
                 f"<span class='rec-label'>{label_html}</span>"
                 f"<span class='rec-value'>{value_html}</span>"
-                f"<span class='rec-identity'>{id_val}</span>"
+                f"<span class='rec-identity'>{id_html}</span>"
                 "</div>"
                 "</div>"
             )
@@ -179,7 +193,7 @@ def _build_records_html(df: pd.DataFrame) -> str:
                 "<summary class='rec-summary'>"
                 f"<span class='rec-label'>{label_html}</span>"
                 f"<span class='rec-value'>{value_html}</span>"
-                f"<span class='rec-identity'>{id_val}</span>"
+                f"<span class='rec-identity'>{id_html}</span>"
                 "<span class='rec-chevron' aria-hidden='true'></span>"
                 "</summary>"
                 f"<div class='rec-detail'>{det_val}</div>"

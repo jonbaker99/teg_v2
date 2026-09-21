@@ -11,6 +11,7 @@ from markupsafe import escape
 from teg_analysis.analysis.rankings import get_ranked_teg_data, get_ranked_round_data
 from teg_analysis.analysis.records import identify_aggregate_records_and_pbs
 from teg_analysis.display.formatters import prepare_records_table
+from teg_analysis.display.scorecards import _player_name_spans
 from webapp.deps import (
     cached_ranked_teg_data,
     cached_ranked_round_data,
@@ -270,6 +271,14 @@ def _pb_summary_html(df: pd.DataFrame, cell_classes: dict) -> str:
                     f"<span class='pbc'>{escape(str(context_str))}</span>"
                     f"<span class='pb-sep'>)</span></td>"
                 )
+            elif col == "Player":
+                # Alongside the four two-line measure columns above, the
+                # Player column had no mobile treatment at all and the table
+                # scrolled off-screen at 320-390px (see
+                # .personal-bests-page table.teg-table:has(.pbv) in
+                # mobile.css). Emit the full/short pair so CSS can narrow
+                # this column to "Initial.SURNAME" there.
+                rows.append(f"<td{cls_attr}>{_player_name_spans(str(escape(str(val))))}</td>")
             else:
                 rows.append(f"<td{cls_attr}>{escape(str(val))}</td>")
         rows.append("</tr>")
