@@ -2,7 +2,13 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-20 (I2: public interaction and canonical URL contract — worktree, not yet merged)
+**Last updated:** 2026-09-21 (non-intrusive public loading state — worktree, not yet merged)
+
+## 2026-09-21 — Public HTMX loads no longer move or fade the page
+
+Branch `codex/nonintrusive-loading`, based on `1f96cc1`. Not yet merged.
+
+Routine public GET requests now keep the confirmed view visually unchanged while loading. The in-flow `Loading view…` banner and busy-panel opacity were removed; `aria-busy` and the progress cursor remain. Real failures still preserve the prior view and URL and show Retry/Dismiss. Retrying keeps that error stable in place and disables repeat clicks until success or failure.
 
 ## 2026-09-20 — UI implementation roadmap Improve stage: I2 public interaction and URL state
 

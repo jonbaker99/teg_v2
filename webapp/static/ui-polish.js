@@ -194,6 +194,7 @@
         feedback.setAttribute('role', state === 'error' ? 'alert' : 'status');
         message.textContent = text;
         retryButton.hidden = state !== 'error' || !failedRequest;
+        retryButton.disabled = false;
         feedback.hidden = false;
     }
 
@@ -288,7 +289,12 @@
             target.setAttribute('aria-busy', 'true');
         }
         pendingCount += 1;
-        showFeedback('loading', 'Loading view…');
+        // Routine reads keep the current view stable while the replacement is
+        // fetched. aria-busy exposes progress without inserting a banner that
+        // shifts the page; this region is reserved for actionable failures.
+        // A Retry keeps its existing error in place, but cannot be double-fired.
+        if (retrying) retryButton.disabled = true;
+        else hideFeedback();
     });
 
     document.addEventListener('htmx:beforeSwap', function (event) {

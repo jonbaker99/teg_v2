@@ -236,9 +236,9 @@ Public tabs represent views and use `.tab-underline`. Mutually exclusive measure
 
 Read-only HTMX pages opt into the shared contract by declaring their canonical query keys on `<body data-public-state-keys="…">`. Every full-page handler must accept and render the same state as its partial endpoint, with invalid values normalised safely, so a copied canonical URL reproduces the confirmed view.
 
-`static/ui-polish.js` treats the server-rendered DOM as confirmed state. A request may put its target into `aria-busy`, but selected controls and URL history change only after the main target swaps successfully. Discrete choices push one history entry; continuous text, number and range controls replace the current entry. Back and forward reload the canonical URL.
+`static/ui-polish.js` treats the server-rendered DOM as confirmed state. A request may put its target into `aria-busy`, but it must not insert an in-flow loading treatment or fade the confirmed view. Selected controls and URL history change only after the main target swaps successfully. Discrete choices push one history entry; continuous text, number and range controls replace the current entry. Back and forward reload the canonical URL.
 
-A failed transport or a partial marked `data-public-response-error` leaves the prior view and URL intact, restores confirmed control values, and exposes the shared Retry action. Retry replays the exact failed GET. Public partial error branches include `partials/_public_response_error.html`; write requests never enter this contract.
+A failed transport or a partial marked `data-public-response-error` leaves the prior view and URL intact, restores confirmed control values, and exposes the shared Retry action. Retry replays the exact failed GET, remains in place while that request is pending, and cannot be double-fired. Public partial error branches include `partials/_public_response_error.html`; write requests never enter this contract.
 
 Latest Round is the bounded exception. Its audited pending/confirmed controller remains authoritative; shared I2 work changes only its feedback styling unless that state machine is explicitly reopened and re-audited.
 

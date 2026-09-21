@@ -560,6 +560,14 @@ def test_public_request_shell_exposes_one_retry_contract(client):
     assert "pushState" in script.text and "replaceState" in script.text
     assert "public-state:commit" in script.text
     assert "window.location.reload()" in script.text
+    assert "Loading view" not in script.text
+    assert "if (retrying) retryButton.disabled = true" in script.text
+    assert "retryButton.disabled = false" in script.text
+
+    styles = client.get("/static/ui-polish.css")
+    assert styles.status_code == 200
+    assert '.section-panel[aria-busy="true"] { cursor: progress; }' in styles.text
+    assert '.section-panel[aria-busy="true"] { opacity:' not in styles.text
 
 
 @pytest.mark.parametrize(("url", "fallback_marker"), [

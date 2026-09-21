@@ -214,7 +214,8 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 - [ ] **Mobile table identity columns** — preserve table identity columns
   explicitly rather than always pinning column one. Navigation buttons, tablet
   breakpoint and shared mobile component insets shipped in the UI polish pass.
-- [x] **Shared interaction states (I2, 2026-09-20)** — public read-only HTMX pages now commit tab/filter selection and canonical URL history only after successful swaps. One shared loading/error/retry pattern preserves the prior view on failure. Direct links, reload, sharing, Back and forward retain declared public state. Latest Round keeps its separately audited pending/confirmed state machine and adopts only the shared feedback styling. [Handoff](design_reviews/ui_workstream/I2-handoff.md).
+- [x] **Shared interaction states (I2, 2026-09-20)** — public read-only HTMX pages now commit tab/filter selection and canonical URL history only after successful swaps. One shared busy/error/retry contract preserves the prior view on failure. Direct links, reload, sharing, Back and forward retain declared public state. Latest Round keeps its separately audited pending/confirmed state machine and adopts only the shared feedback styling. [Handoff](design_reviews/ui_workstream/I2-handoff.md).
+- [x] **Remove intrusive public loading treatment (2026-09-21).** Routine HTMX reads retain the confirmed view without inserting the `Loading view…` banner or fading the target. `aria-busy` remains for assistive technology; real failures still expose the stable Retry/Dismiss banner, and Retry is disabled while its exact GET is in flight.
 - [ ] **Live entry save feedback** — score-write and polling failures currently
   log to the console; show saved/pending/failed state and a recoverable retry path.
 - [ ] **UI development consistency** — replace Tailwind Play CDN with a pinned

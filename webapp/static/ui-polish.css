@@ -24,14 +24,13 @@ body.ts-a .page-title-area { padding-inline: 2.5rem; }
     color: var(--text-primary);
 }
 .request-feedback[hidden] { display: none; }
-.request-feedback[data-state="loading"] { border-color: var(--table-header-border); }
 .request-feedback[data-state="error"] {
     border-color: var(--error-border, #b45309);
     background: var(--error-bg, #fff7ed);
 }
 .request-feedback-actions { display: flex; align-items: center; gap: 0.5rem; }
 .request-feedback .action { min-height: 36px; }
-.section-panel[aria-busy="true"] { opacity: 0.65; cursor: progress; }
+.section-panel[aria-busy="true"] { cursor: progress; }
 @media (max-width: 900px) {
     .nav-links { max-height: calc(100dvh - 120px); overflow-y: auto; }
     .nav-dropdown-btn, .nav-dropdown-menu a { min-height: 44px; }

@@ -973,7 +973,7 @@ The default title aligns with panel text on desktop. On phones, shared controls
 and named text classes receive a 12px component inset; data surfaces retain
 full width. Tab rows retain a thin scrollbar to suggest sideways scrolling.
 
-Public read-only HTMX pages expose `aria-busy` while loading and commit selected controls plus canonical history only after a successful main-target swap. Transport failures and marked application errors keep the prior view and URL, restore confirmed controls, and show shared Retry and Dismiss actions. Retry replays the exact failed GET; writes are never retried. Latest Round retains its separately audited pending/confirmed controller.
+Public read-only HTMX pages expose `aria-busy` while loading and commit selected controls plus canonical history only after a successful main-target swap. Routine loads keep the existing view visually stable: they do not insert a loading banner or fade the target. Transport failures and marked application errors keep the prior view and URL, restore confirmed controls, and show shared Retry and Dismiss actions. Retry replays the exact failed GET; writes are never retried. Latest Round retains its separately audited pending/confirmed controller.
 
 Review `/leaderboard`, `/results`, `/latest-round`, `/records`, `/scorecard`,
 `/player`, and `/teg-reports` on desktop and phone widths. Also check 640–900px
