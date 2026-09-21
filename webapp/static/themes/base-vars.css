@@ -289,6 +289,39 @@ h1, h2, h3, h4, h5, h6 {
 .history-table td.history-toggle-td {
     display: none;
 }
+/* History disclosure "+"/"−" desktop affordance (C6, 2026-09-21) — closes
+   the C1b/C4-flagged gap: above 641px the toggle-indicator column stays
+   display:none (rule above) and the button had no visible cue that a row
+   is expandable, only cursor:pointer. Mirrors .rank-toggle's own ::after
+   glyph pattern below (same --accent colour, 16px glyph, 28x28px fine-
+   pointer hit area per design_principles.md → Hit areas) rather than
+   inventing a new treatment. Scoped to desktop widths only so it doesn't
+   duplicate mobile's separate .history-toggle-indicator column (mobile.css). */
+@media (min-width: 641px) {
+    .history-table button.teg-cell {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+    }
+    .history-table button.teg-cell .teg-text {
+        flex: 1 1 auto;
+    }
+    .history-table button.teg-cell::after {
+        content: "+";
+        flex: none;
+        min-width: 28px;
+        min-height: 28px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--accent, #17683c);
+        font-size: 16px;
+        line-height: 1;
+    }
+    .history-table button.teg-cell[aria-expanded="true"]::after {
+        content: "\2013";
+    }
+}
 /* Emphasise the main trophy winner (first name column) */
 .history-table tbody td:nth-child(2) {
     font-weight: 700;
