@@ -434,7 +434,10 @@
   .overflow-x-auto:not(.table-wrapper--no-pin) .records-table tbody td:first-child { z-index: 2; }
   .table-wrapper:not(.table-wrapper--no-pin) .teg-table tbody tr.top-rank td:first-child,
   .overflow-x-auto:not(.table-wrapper--no-pin) .teg-table tbody tr.top-rank td:first-child {
-    background-color: var(--table-toprank-bg, #F3F7F3);
+    /* Matches base-vars.css's .teg-table tbody tr.top-rank binding
+       (--leader-tint, not --table-toprank-bg) so the sticky pinned first
+       column doesn't seam against the row's retinted background. */
+    background-color: var(--leader-tint, #F3F7F3);
   }
 
   /* Records tab bar sits right under the page title with only the generic

@@ -130,7 +130,12 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 .teg-table tbody tr.top-rank {
-    background-color: var(--table-toprank-bg);
+    /* Uses --leader-tint (not --table-toprank-bg) so bare .teg-table tables
+       (Records, History, …) get the same green retint as .leaderboard-table
+       -- see the L2 comment below (~line 1615) for why they were split and
+       why a site-wide retint means changing this binding, not the token's
+       value. */
+    background-color: var(--leader-tint);
     color: var(--table-toprank-text, inherit);
     font-weight: 600;
 }
@@ -1615,14 +1620,16 @@ body.layout-wide .content-wrapper {
 /* ── Leader row — L2, the owner-selected fix (C3) ──
    The bug (C1-handoff.md §1): --table-hover-bg and --table-toprank-bg are
    both #F3F7F3, so the leader row and a hovered row are pixel-identical.
-   Scoped to .leaderboard-table only, not the bare .teg-table tr.top-rank
-   rule above -- .top-rank is used site-wide (Records, History, …) and this
-   chat migrates the smallest representative set, not every table; a global
-   retint is C5's job (C1-handoff.md §10). This also affects /results,
-   which renders through the same unified standings table (I1,
-   partials/_standings_table.html) and shares this exact bug -- an
-   intentional, flagged side effect, not scope creep: both pages show the
-   same table shape with the same broken leader/hover colour.
+   Originally scoped to .leaderboard-table only, not the bare .teg-table
+   tr.top-rank rule above -- .top-rank is used site-wide (Records, History,
+   …) and that chat migrated the smallest representative set, not every
+   table; a global retint was deferred to C5 (C1-handoff.md §10) and later
+   applied directly to the site-wide selector above, which now also reads
+   --leader-tint (webapp/TODOS.md, "Bare .teg-table tbody tr.top-rank").
+   This also affects /results, which renders through the same unified
+   standings table (I1, partials/_standings_table.html) and shares this
+   exact bug -- an intentional, flagged side effect, not scope creep: both
+   pages show the same table shape with the same broken leader/hover colour.
    Specificity note (load-bearing, see C1b-handoff.md §6): the :hover
    variant below (3 class-level selectors: leaderboard-table + top-rank +
    :hover) must stay higher-specificity than both the bare .top-rank rule
