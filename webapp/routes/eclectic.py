@@ -148,14 +148,17 @@ def _eclectic_records_context(dimension: str) -> dict:
         top = get_overall_top_eclectics(all_data, dimension, top_n=3)
         pb = get_personal_best_eclectics(all_data, dimension)
 
+        # Player column crowds TEG/Total/Rounds at 320-390px (see
+        # .eclectic-records-page in mobile.css) -- shorten to Initial.SURNAME
+        # there, matching mobile.css's now-narrower Player column width.
         sections = [
             {
                 "title": f"Top 3 {dim_label} Eclectics",
-                "table_html": _df_to_html(format_eclectic_records_table(top)),
+                "table_html": _df_to_html(format_eclectic_records_table(top), shorten_players=True),
             },
             {
                 "title": f"Personal Best {dim_label} Eclectics",
-                "table_html": _df_to_html(format_eclectic_records_table(pb)),
+                "table_html": _df_to_html(format_eclectic_records_table(pb), shorten_players=True),
             },
         ]
         return {"sections": sections}

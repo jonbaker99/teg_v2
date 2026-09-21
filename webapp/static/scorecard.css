@@ -659,12 +659,11 @@ html[data-mode="dark"] .bw-rank-num { background-color: #2a2a26; }
 .bw-impact--best { color: #1f7a2a; }
 .bw-impact--worst { color: #555; }
 .bw-impact--zero { color: #b3b3b3; font-weight: 400; }
-/* Full / short player-name swap (shared with the field card): full name
-   normally, 'Initial.SURNAME' on narrow screens. */
-.bw-name-short { display: none; }
+/* Full / short player-name swap (shared with the field card): the
+   bw-name-full/bw-name-short display toggle itself now lives in mobile.css
+   (loaded on every page, not just scorecard-bundle pages) -- only this
+   table's own narrower player column remains page-specific here. */
 @media (max-width: 640px) {
-  .bw-name-full { display: none; }
-  .bw-name-short { display: inline; }
   .bw-bars-table col.bw-bars-player { width: 84px; }
 }
 .bw-bars-table tbody td { height: 30px; vertical-align: middle; }

@@ -12,6 +12,7 @@ import pandas as pd
 from markupsafe import escape
 
 from teg_analysis.core.players import get_name_to_code
+from teg_analysis.display.scorecards import _player_name_spans
 
 DEFAULT_TABLE_CLASS = "teg-table"
 EMPTY_TABLE_HTML = "<p class='text-muted text-sm'>No data available.</p>"
@@ -25,6 +26,7 @@ def df_to_html(
     link_players: bool = False,
     highlight_col: Optional[str] = None,
     highlight_val=None,
+    shorten_players: bool = False,
 ) -> str:
     """Render a DataFrame as an escaped HTML table.
 
@@ -34,6 +36,14 @@ def df_to_html(
       cell, overriding ``col_class`` for that cell.
     - ``link_players``: wrap the ``Player`` column's value in a link to its
       profile (``/player/{code}``) when the name resolves to a known code.
+    - ``shorten_players``: emit the ``Player`` column's value as a
+      full-name/``Initial.SURNAME`` span pair via
+      ``teg_analysis.display.scorecards._player_name_spans`` (see
+      design_principles.md -> Tables -> "Player names on narrow screens"),
+      so CSS can swap to the short form when the column would otherwise
+      squeeze sibling data columns on a narrow screen. Composable with
+      ``link_players`` -- the short/full pair is wrapped in the profile link
+      when both are set.
     - ``highlight_col``/``highlight_val``: rows where
       ``str(row[highlight_col]) == str(highlight_val)`` get a ``top-rank``
       row class.
@@ -68,10 +78,14 @@ def df_to_html(
             val = row[col]
             if pd.api.types.is_scalar(val) and pd.isna(val):
                 cell_html = "-"
-            elif link_players and col == "Player":
-                code = name_to_code.get(str(val))
+            elif col == "Player" and (link_players or shorten_players):
                 text = escape(str(val))
-                cell_html = f"<a href='/player/{code}'>{text}</a>" if code else text
+                inner = _player_name_spans(str(text)) if shorten_players else str(text)
+                if link_players:
+                    code = name_to_code.get(str(val))
+                    cell_html = f"<a href='/player/{code}'>{inner}</a>" if code else inner
+                else:
+                    cell_html = inner
             else:
                 cell_html = escape(str(val))
             rows.append(f"<td{_class_attr(cls)}>{cell_html}</td>")

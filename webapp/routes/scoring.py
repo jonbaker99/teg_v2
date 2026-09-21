@@ -289,7 +289,9 @@ def _by_par_context(teg: int = 0) -> dict:
             all_data = all_data[all_data['TEGNum'] == teg]
         matrix = calculate_par_performance_matrix(all_data)
         formatted = format_par_performance_table(matrix)
-        return {"table_html": _df_to_html(formatted)}
+        # Player column crowds the four numeric columns at 320-390px (see
+        # .by-par-panel in mobile.css) -- shorten to Initial.SURNAME there.
+        return {"table_html": _df_to_html(formatted, shorten_players=True)}
     except Exception as e:
         logger.exception("_by_par_context failed")
         return {"error": str(e)}

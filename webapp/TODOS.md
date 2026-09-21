@@ -233,12 +233,52 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
   contribution bars (`build_bestball_contribution_bars`) use lightweight CSS bars
   that read better inline than the equivalent Plotly panels. Roll the same approach
   out to other small bar charts where Plotly is overkill.
-- [ ] **Roll out mobile name shortening where width is tight** — the
-  `Initial. SURNAME` swap (`_player_name_spans`, classes `bw-name-full` /
-  `bw-name-short`) is used by the bestball/worstball contribution table and field
-  card. Audit other tables where a player-name column compromises data display on
-  narrow screens and apply the same helper (and, for wide tables, split into
-  side-by-side tables that wrap). See `webapp/design_principles.md` → Tables.
+- [X] **Roll out mobile name shortening where width is tight (2026-09-21).** Audited
+  every `.teg-table`-style table with a player-name column at 320-430px. The
+  `bw-name-full`/`bw-name-short` CSS toggle (previously scoped to `scorecard.css`,
+  only loaded on scorecard/bestball/eclectic pages) is now promoted to `mobile.css`
+  (loaded on every page) so any table can use the pattern. `webapp/tables.py::df_to_html`
+  gained a `shorten_players` opt-in (reuses `_player_name_spans`, doesn't reimplement
+  it; composable with the existing `link_players`). Fixed, all with before/after
+  screenshots at 320/390/430px, both Clean layouts, light/dark:
+  - **`/scoring/by-par`** — Player collided directly into the Par 3 column at 320px
+    (no gap at all). `shorten_players=True` + `white-space: normal` added to the
+    existing fixed-width column rule (the `overflow-wrap: anywhere` already there
+    was silently inert against base `.teg-table`'s `white-space: nowrap`).
+  - **`/eclectic-records`** (Top 3 + Personal Best tables, both TEG/Course tabs) —
+    a real bug, not just tight: `table-layout: fixed` was set with no `width: 100%`,
+    so the percentage column widths had no definite table width to divide against
+    and the table sized to content, bleeding Total/Rounds off the right edge at
+    320-390px. Fixed with `width: 100%`, `shorten_players=True`, and rebalanced
+    column widths/font-size now that Player needs less room.
+  - **`/records`, and `/latest-round`+`/latest-teg`'s Records & PBs tab** (same
+    shared `_build_records_html`) — the mobile disclosure summary's `.rec-identity`
+    (nowrap + ellipsis) truncated names like "John PATTERSON" to "John PATTER...".
+    Now emits the full/short pair, skipping the 3+-holder placeholder-swap case
+    (initials list like "AB / HM", already short). Known remaining edge case: the
+    two longest surnames ("G.WILLIAMS", "S.NEUMANN") still truncate by 1-2
+    characters at 320px in the "Worst TEGs"-style box specifically, a smaller
+    version of the same `.rec-label`/`.rec-identity` flex-basis tightness — not
+    fixed, to avoid touching shared flex CSS with a matching risk unassessed
+    across all 5 tabs.
+  - **`/personal-bests` PB Summary table** — Player had no mobile treatment at all
+    (only the 4 measure columns had been split into two-line cells); the table
+    scrolled off-screen past ~2 columns at 320-390px. Added the same
+    `table-layout: fixed; width: 100%` + `shorten_players=True` treatment.
+  Considered and left unchanged (not squeeze cases, or already an accepted
+  design): Honours (3 cols, comfortable), Eclectic Records's own TEGs/Courses
+  filter tables (comfortable), `/player-rankings` (an 18-TEG-wide matrix —
+  mobile.css already documents this as a genuine horizontal scroller, "tried and
+  rejected in design review" to force-fit), Course Records Gross/Net and Top
+  Performances/PB tab lists (plain horizontal scroll or byline-list patterns,
+  same as the rest of the site's wide tables — not the squeeze pattern this
+  helper targets). `/scorecard` and bestball/worstball/field card were already
+  the reference implementation, untouched.
+  Tests: `python -m pytest tests/test_webapp_pages.py tests/test_tables.py
+  tests/test_eclectic.py tests/test_scorecards_portrait.py -q` (all pass), plus
+  full suite `python -m pytest tests/ -q` (754 passed, 23 skipped, 1 pre-existing
+  unrelated failure — `test_reporting_provider.py`, missing `anthropic` SDK in
+  this environment, nothing to do with this change).
 - [ ] **Report page — revisit non-core-text formatting** — Jon liked the look of
   the "Herron Drafts" artefact built 2026-08-13 to read the TEG 17/12 voice
   trials on mobile (title block, at-a-glance results pane, per-round standings
