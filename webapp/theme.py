@@ -30,28 +30,22 @@ def get_mode(request) -> str:
 
 
 # Title style options — controls page-title-area CSS via body class ts-X
+# Styles: a, e2 are the only live desktop options with distinct CSS. Mobile-only
+# options (m1–m3) control phone title styling independently (see mobile.css).
+# C3 deleted CSS for former variants b/c/d/e/c1/c3/f1–f5 (superseded
+# design-lab experiments); the design-lab selector lists only these live options.
 TITLE_STYLES = [
     ("a",  "Title: A — Mono label"),
-    ("b",  "Title: B — All caps"),
-    ("c",  "Title: C — Breadcrumb"),
-    ("e",  "Title: E — Underline"),
     ("e2", "Title: E2 — Underline on page"),
-    ("c1", "Title: C1 — Green block"),
-    ("c3", "Title: C3 — Grey block"),
-    ("f1", "Title: F1 — Card green"),
-    ("f3", "Title: F3 — Card grey"),
-    ("f4", "Title: F4 — Card inline"),
-    ("f5", "Title: F5 — Card green inline white"),
     # Mobile-only options (2026-09-17): on phones "The El Golfo" (nav-brand)
     # and the page title sit close together in the same bold serif, reading as
     # near-duplicates -- desktop has enough surrounding page chrome that the
     # same pairing doesn't clash. Jon picked M2 (brand recedes); that rule now
     # ships unconditionally in mobile.css rather than gated behind ts-m2, so
-    # it applies regardless of which desktop title style (a/b/c/...) is
-    # chosen here -- the two concerns are independent. M1/M3 remain
-    # selectable for reference against the band-style alternatives that were
-    # passed over. All three are no-ops above 640px, so picking one here
-    # never changes desktop/iPad output.
+    # it applies regardless of which desktop title style (a/e2) is chosen here
+    # -- the two concerns are independent. M1/M3 remain selectable for reference
+    # against the band-style alternatives that were passed over. All three are
+    # no-ops above 640px, so picking one here never changes desktop/iPad output.
     ("m1", "Title: M1 — Mobile: green band (alternative, not picked)"),
     ("m2", "Title: M2 — Mobile: brand recedes (shipped default)"),
     ("m3", "Title: M3 — Mobile: grey band + brand recedes (alternative, not picked)"),
