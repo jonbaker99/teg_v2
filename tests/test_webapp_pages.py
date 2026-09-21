@@ -470,6 +470,20 @@ def test_latest_round_tab_partials_render(client, tab):
     _assert_ok_no_error(resp)
 
 
+def test_latest_streak_labels_show_inclusive_score_thresholds():
+    from teg_analysis.analysis.streaks import pivot_window_streaks
+
+    window = pd.DataFrame([
+        {"Streak Type": "Birdies", "Player": "Player One", "Max Streak": 2},
+        {"Streak Type": "Pars or Better", "Player": "Player One", "Max Streak": 3},
+        {"Streak Type": "No +2s", "Player": "Player One", "Max Streak": 4},
+    ])
+
+    pivot = pivot_window_streaks(window)
+
+    assert pivot["Streak Type"].tolist() == ["⩽Birdie", "⩽Par", "⩽Bogey"]
+
+
 def test_latest_teg_page_renders(client):
     resp = client.get("/latest-teg")
     _assert_ok_no_error(resp)

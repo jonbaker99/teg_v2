@@ -2,7 +2,13 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-22 (mobile control convergence + collapsible scorecards — branch, not yet merged)
+**Last updated:** 2026-09-22 (Latest Round/TEG streak-label clarity)
+
+## 2026-09-22 — Latest Round/TEG streak labels show inclusive thresholds
+
+The Streaks tabs on `/latest-round` and `/latest-teg` now label their inclusive score rows `⩽Birdie`, `⩽Par`, and `⩽Bogey`. This makes clear that better scores count in each streak.
+
+Verified with the focused pivot-label test and both Streaks-tab route tests.
 
 ## 2026-09-22 — Mobile pass: control convergence, Records/Scoring columns, collapsible scorecards
 

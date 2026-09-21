@@ -425,13 +425,13 @@ def prepare_record_worst_streaks_data(all_data):
 # Streak-type display order and rename map for the window-streak pivot
 _STREAK_PIVOT_MAP = {
     'Eagles': 'Eagles',
-    'Birdies': 'Birdies',
-    'Pars or Better': 'Pars',
-    'No +2s': 'Bogeys',
+    'Birdies': '⩽Birdie',
+    'Pars or Better': '⩽Par',
+    'No +2s': '⩽Bogey',
     'Over Par': 'Over par',
     'TBPs': 'TBPs',
 }
-_STREAK_PIVOT_ORDER = ['Eagles', 'Birdies', 'Pars', 'Bogeys', 'Over par', 'TBPs']
+_STREAK_PIVOT_ORDER = ['Eagles', '⩽Birdie', '⩽Par', '⩽Bogey', 'Over par', 'TBPs']
 
 
 def pivot_window_streaks(window_streaks):
@@ -439,8 +439,8 @@ def pivot_window_streaks(window_streaks):
 
     Takes the output of ``get_player_window_streaks`` (columns Streak Type,
     Player, Max Streak, Location) and returns a wide table with one row per
-    streak type (renamed/ordered Eagles, Birdies, Pars, Bogeys, Over par, TBPs)
-    and one column per player holding the max streak. The Eagles/Birdies rows
+    streak type (renamed/ordered Eagles, ⩽Birdie, ⩽Par, ⩽Bogey, Over par, TBPs)
+    and one column per player holding the max streak. The Eagles/⩽Birdie rows
     are dropped when no player achieved one.
 
     Returns an empty DataFrame if there is no input data.
@@ -461,7 +461,7 @@ def pivot_window_streaks(window_streaks):
     pivot = pivot.sort_values('_order').drop(columns='_order')
 
     player_cols = [c for c in pivot.columns if c != 'Streak Type']
-    for label in ('Eagles', 'Birdies'):
+    for label in ('Eagles', '⩽Birdie'):
         if label in pivot['Streak Type'].values:
             row_max = pivot.loc[pivot['Streak Type'] == label, player_cols].max(axis=1).iloc[0]
             if row_max == 0:
