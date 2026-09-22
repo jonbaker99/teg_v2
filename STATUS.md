@@ -2,7 +2,32 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-21 (I5: Contents implemented as the current-TEG home — worktree, not yet merged)
+**Last updated:** 2026-09-22 (I5 revision: Contents gets real standings + a report-led headline — worktree, not yet merged)
+
+## 2026-09-22 — I5 revision: real standings + report-led headline on Contents
+
+Same branch/worktree as the 2026-09-21 entry below (`claude/ui-i5`). The owner reviewed the
+shipped page and found it "too thin" — leader names only, no real content. Compared against
+Codex's independent, never-merged `codex/contents-home-proposals` plan, adopted selectively via
+an approved interactive prototype (`https://claude.ai/artifact/UD49p88BHCfBTTNH4GRstz`).
+
+In-progress now shows a real net-competition standings table (every player, ties as genuine
+duplicate rows) plus a compact gross-competition line, two-column (≥900px) next to a round-report
+teaser when one exists — reusing I1's `_standings_rows()`/`_standings_table.html` directly rather
+than a second renderer. Complete state: when a tournament report exists, its own headline becomes
+the page's h1 (linked to the report), with a `TEG N results | Area | Month Year` dateline; falls
+back to the original "TEG N — Final Results" treatment, unchanged, when no report exists.
+
+New `get_edition_summary()` (`teg_analysis/reporting/newspaper_edition.py`, `@lru_cache`) makes
+this affordable — full artefact-parse cost once per process, free after. In-progress rich content
+now always defers to `GET /contents/panel` (dropped the old cache-warmth branching); the complete
+state's report resolves synchronously, since its headline determines the page's own h1 and
+deferring it would flash.
+
+Verified against real data throughout (TEG 18's actual report headline renders correctly), full
+`pytest tests/ -v` (766 passed), 24-combination browser matrix (320–1280px × both Clean layouts ×
+light/dark), zero overflow. Full detail, three bugs caught and fixed pre-commit, and the prototype
+iteration history: `webapp/design_reviews/ui_workstream/I5-handoff.md` → Revision.
 
 ## 2026-09-21 — UI implementation roadmap Improve stage: I5 Contents as the current-TEG home
 

@@ -127,6 +127,104 @@ shared browser profile):**
   names. Caught immediately by a TestClient smoke check (not by review), fixed by refactoring the
   partial to take a single `leaders` mapping used consistently by both call sites, and re-verified.
 
+## Revision (2026-09-22) — owner review: "too thin"
+
+The owner reviewed the shipped page (screenshots sent) and said it didn't land: the in-progress
+and complete states showed only leader *names*, no real standings, and no report content beyond a
+bare button. Separately, Codex had independently written its own I3-equivalent plan on
+`codex/contents-home-proposals` (branched `2026-09-20`, one day before Claude's I3, never
+reconciled, never merged) proposing a two-column layout with a real standings table and a featured
+report teaser. Comparing the two proposals (full comparison table in the session transcript)
+surfaced ideas worth adopting selectively, plus one real bug Codex found — `finalize_live_round()`
+doesn't require every rostered player to be present before committing a round, so the status
+file's round count can overstate completion — which the owner confirmed doesn't apply to their
+actual workflow (rounds are always entered for all players at once), so it's logged as a TODO only
+(see `webapp/TODOS.md`), not fixed here.
+
+**Design process.** Rather than iterate blind, an interactive HTML prototype
+(`https://claude.ai/artifact/UD49p88BHCfBTTNH4GRstz`) was built and published, showing the
+in-progress panel's two-column-vs-stacked layout at three widths and both themes with real-looking
+content. The owner reviewed it live and iterated it three times in conversation before approving:
+(1) two-column confirmed for in-progress; (2) the complete state redesigned entirely — instead of a
+boxed report teaser sitting beside a "Final Results" headline, the report's own headline **becomes
+the page's h1** (linked to the report), with a `TEG N results | Area | Month Year` dateline
+replacing the old muted eyebrow; (3) an encoding bug in the prototype itself (em dash/middot/arrow
+rendering as mojibake, from HTML entities being set via `element.textContent` instead of
+`innerHTML`) was found and fixed before final approval — confirmed as an artifact-pipeline-only
+issue, not present in the real webapp's UTF-8 `HTMLResponse`.
+
+**What changed from the original I5 plan:**
+- **In-progress**: the leader-names-only block is replaced by a real net-competition standings
+  table (every player, `Rank`/`Player`/`Total`, ties as genuine duplicate rows — ties no longer
+  need the old comma-joined-names/`"and 1 other"` logic, since a real table shows them naturally)
+  plus a compact gross-competition summary line, laid out two-column (≥900px, stacking below) next
+  to a round-report teaser (kicker/headline/standfirst/link) when one exists. Reuses I1's
+  `_standings_rows()` + `partials/_standings_table.html` directly rather than building a second
+  renderer — feeding it a `create_leaderboard()` frame with the round columns already dropped
+  (not just the top-level `round_labels` key blanked after the fact — that doesn't affect each
+  row's own `rounds` list, a real bug caught and fixed this session, see below).
+- **Complete**: when a tournament report exists, its headline/standfirst/link now lead the page
+  directly; winners (unchanged: Trophy/Jacket green, spoon ink) and a single `Full Results`
+  secondary action follow below. Falls back to the original "TEG N — Final Results" treatment,
+  unchanged, when no report exists — never invents a headline.
+- **Cost model simplified**: the old "defer leader rows only if `cached_round_data()` happens to be
+  cold" branching (I4 R10's literal reading) is gone. In-progress rich content now *always* defers
+  to `GET /contents/panel` — simpler, and honest regardless of process warmth. The complete state's
+  report resolution moved from "would have been deferred" to **synchronous**, because its headline
+  text now determines the page's own h1; deferring it would mean a visible flash from the fallback
+  headline to the real one, which the site's I2 public-interaction contract exists to prevent.
+  `get_edition_summary()` — new, `teg_analysis/reporting/newspaper_edition.py`, `@lru_cache`,
+  wrapping `build_edition()` (not itself cached, can hit GitHub on a cold Railway volume read) — is
+  the entire reason this stays cheap: full cost once per process, free after. It was placed in
+  `teg_analysis`, not `webapp/routes/contents.py` as first sketched, specifically so
+  `webapp/deps.py`'s `get_tournament_state()` could call it directly without `deps.py` importing a
+  route module (an established rule — see `_format_date_dmy`'s docstring).
+
+**Bugs caught and fixed this session, all via smoke-testing before commit, none by review:**
+1. Blanking `standings["round_labels"] = []` after calling `_standings_rows()` left every row's own
+   per-row `rounds` list (built earlier, from the DataFrame's actual columns) still populated — the
+   table partial's `<tbody>` loop reads that per-row list, not the top-level key, so round columns
+   kept rendering despite the header row correctly losing them. Fixed by dropping the round columns
+   from the DataFrame *before* calling `_standings_rows()`, so both are naturally empty together.
+2. `get_contents_standings()`-equivalent logic was first drafted inside `webapp/deps.py`, requiring
+   a local (function-body) import of `webapp.routes.history` to reach `_standings_rows()` — technically
+   safe (breaks the import cycle the same way `_results_context()`'s own local imports do) but a
+   needless deviation from the approved plan, which placed this logic in `webapp/routes/contents.py`
+   (a route file, free to import from another route file at module level, matching
+   `webapp/routes/leaderboard.py`'s existing import of `_results_context` from `history.py`). Moved
+   before commit.
+3. The two-column CSS grid rendered a dead empty second column when no round report existed for the
+   in-progress state (a single grid child still only fills the first track). Fixed: the `two-col`
+   modifier class is now applied conditionally on `panel.report_summary` being present, so the
+   standings surface takes the full row width when there's nothing to put beside it.
+
+**Verification (this revision):**
+- `python -m pytest tests/ -v` — 766 passed, 23 skipped, 0 failed (the full suite, correcting the
+  original I5 session's under-scoped focused-subset run — `webapp/deps.py` and
+  `teg_analysis/reporting/newspaper_edition.py` are both shared/core modules per CLAUDE.md's
+  Definition of Done).
+- `check_pandas_compat.py` — 0 errors; `check_python_compat.py` — clean under pinned 3.12.
+- Browser matrix: 320/390/430/768/900/1280px × both Clean layouts × light/dark = 24 combinations,
+  zero horizontal overflow in every one, via an isolated headless Playwright instance (did not
+  touch another active session's shared browser profile).
+- Real-data verification against the live dataset throughout, not just stubs: TEG 18's actual
+  report ("Alex Baker Wins It in Round One") rendered correctly as the complete-state h1 with no
+  extra setup; a temporarily-forced in-progress override against TEG 18's real round data produced
+  a correct 5-row standings table, gross-competition line, and round-report teaser, screenshotted
+  at 1280px and 390px, then reverted before commit (confirmed via `grep TEMP-VERIFY` + a full
+  `test_webapp_pages.py` re-run).
+- The complete-state **no-report fallback** could not be exercised against real data this
+  session — every TEG in `data/completed_tegs.csv` (2 through 18) now has a generated report, so
+  there's no real gap to render against. Covered by
+  `test_contents_state_complete_no_report_falls_back_to_results_primary` (stubbed) instead; the
+  code path is real and tested, just not currently reachable via live data.
+
+**Docs updated:** this file; `STATUS.md`; `webapp/TODOS.md` (Contents entry + a new partial-roster
+finalization TODO, scoped out of this chat per the owner's explicit call).
+
+Handoff: this worktree's next commit SHA (see final response) supersedes `93c6a12` as I5's result.
+Still not merged, pushed, or deployed.
+
 ## Handoff
 
 Base `6218c0caf0ec5088bdbadcd0b39ae70154cc1e9e`. This worktree's HEAD commit (see final response for

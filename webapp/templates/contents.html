@@ -176,6 +176,88 @@
         .state-headline { font-size: var(--fs-600, 28px); }
         .state-leader-label { min-width: 100%; }
     }
+
+    /* --- Report-led complete state (I5 revision) --- */
+    /* Dateline replaces the eyebrow slot when a report exists. Not
+       small-caps/uppercase like the eyebrow -- it carries place names and
+       "results" in normal case, so forcing it upper would read oddly. */
+    .dateline {
+        font-family: var(--font-sans);
+        font-size: var(--fs-200, 12px);
+        font-weight: 600;
+        color: var(--text-muted);
+        margin: 0 0 var(--sp-2, 8px) 0;
+    }
+    .headline-link { color: inherit; text-decoration: none; }
+    .headline-link:hover { color: var(--green); }
+    .report-standfirst { max-width: 60ch; }
+
+    /* --- In-progress rich content: standings + round-report teaser --- */
+    .panel-grid {
+        display: grid;
+        gap: var(--sp-5, 24px);
+        grid-template-columns: 1fr;
+        margin-bottom: var(--sp-5, 24px);
+    }
+    .panel-grid.two-col {
+        grid-template-columns: 1.3fr 1fr;
+    }
+    @media (max-width: 899px) {
+        .panel-grid.two-col { grid-template-columns: 1fr; }
+    }
+    .surface {
+        background: var(--bg-card);
+        border: 1px solid var(--rule-color);
+        border-radius: var(--card-radius);
+        padding: var(--sp-5, 24px);
+    }
+    .standings-heading {
+        font-family: var(--font-serif);
+        font-size: var(--fs-300, 14px);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--green);
+        margin: 0 0 var(--sp-1, 4px) 0;
+    }
+    .gross-line {
+        font-family: var(--font-sans);
+        font-size: var(--fs-200, 12px);
+        color: var(--text-secondary);
+        margin: 0 0 var(--sp-3, 12px) 0;
+    }
+    .gross-line b { color: var(--text-primary); }
+    .kicker {
+        font-family: var(--font-serif);
+        font-size: var(--fs-200, 12px);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--green);
+        margin: 0 0 var(--sp-2, 8px) 0;
+    }
+    .teaser-headline {
+        font-family: var(--font-serif);
+        font-size: var(--fs-500, 20px);
+        font-weight: 700;
+        margin: 0 0 var(--sp-2, 8px) 0;
+    }
+    .teaser-standfirst {
+        font-family: var(--font-sans);
+        font-size: var(--fs-300, 14px);
+        color: var(--text-secondary);
+        line-height: 1.5;
+        margin: 0 0 var(--sp-3, 12px) 0;
+        max-width: 42ch;
+    }
+    .teaser-link {
+        font-family: var(--font-sans);
+        font-size: var(--fs-300, 14px);
+        font-weight: 600;
+        color: var(--text-primary);
+        text-decoration: none;
+    }
+    .teaser-link:hover { color: var(--green); }
 </style>
 {% endblock %}
 
@@ -188,15 +270,14 @@
             {{ state.area }}{% if state.year %} · {{ state.year }}{% endif %}{% if state.last_round_date %} · Round {{ state.rounds_played }} played {{ state.last_round_date }}{% endif %}
         </p>
 
-        {% if state.leaders_deferred %}
-        <div hx-get="/contents/leaders?teg={{ state.teg_num }}" hx-trigger="load" hx-swap="outerHTML">
-            <div class="state-leaders" aria-busy="true">
-                <div class="state-leader-row"><span class="state-leader-label">TEG Trophy <span class="state-leader-measure">(net)</span></span><span class="state-leader-names">Loading…</span></div>
+        <div hx-get="/contents/panel?teg={{ state.teg_num }}&rounds={{ state.rounds_played }}" hx-trigger="load" hx-swap="outerHTML">
+            <div class="panel-grid two-col" id="contents-panel" aria-busy="true">
+                <div class="surface">
+                    <p class="standings-heading">Standings after Round {{ state.rounds_played }}</p>
+                    <p class="gross-line">Loading…</p>
+                </div>
             </div>
         </div>
-        {% else %}
-            {% with leaders = state %}{% include "partials/_contents_state1_leaders.html" %}{% endwith %}
-        {% endif %}
 
         <div class="state-actions">
             <a class="state-btn state-btn-primary" href="/leaderboard?teg={{ state.teg_num }}">Latest Leaderboard</a>
@@ -205,11 +286,20 @@
         </div>
 
     {% elif state.state == "complete" %}
-        <p class="state-eyebrow state-eyebrow-muted">Latest result</p>
-        <h1 class="state-headline">{{ state.teg_label }} — Final Results</h1>
-        <p class="state-context">
-            {{ state.area }}{% if state.year %} · {{ state.year }}{% endif %}{% if state.last_round_date %} · Last round {{ state.last_round_date }}{% endif %}
-        </p>
+        {% if state.report_summary %}
+            <p class="dateline">{{ state.teg_label }} results | {{ state.area }} | {{ state.dateline_month_year }}</p>
+            <h1 class="state-headline"><a class="headline-link" href="{{ state.report_summary.link }}">{{ state.report_summary.headline }}</a></h1>
+            {% if state.report_summary.standfirst %}
+            <p class="state-context report-standfirst">{{ state.report_summary.standfirst }}</p>
+            {% endif %}
+            <a class="teaser-link" href="{{ state.report_summary.link }}" style="display:inline-block; margin-bottom: var(--sp-5, 24px);">Read the {{ state.teg_label }} report →</a>
+        {% else %}
+            <p class="state-eyebrow state-eyebrow-muted">Latest result</p>
+            <h1 class="state-headline">{{ state.teg_label }} — Final Results</h1>
+            <p class="state-context">
+                {{ state.area }}{% if state.year %} · {{ state.year }}{% endif %}{% if state.last_round_date %} · Last round {{ state.last_round_date }}{% endif %}
+            </p>
+        {% endif %}
 
         <div class="state-leaders">
             <div class="state-leader-row">
@@ -227,8 +317,7 @@
         </div>
 
         <div class="state-actions">
-            {% if state.has_report %}
-                <a class="state-btn state-btn-primary" href="/teg-reports?teg={{ state.teg_num }}">Read the {{ state.teg_label }} Report</a>
+            {% if state.report_summary %}
                 <a class="state-btn state-btn-secondary" href="/results?teg={{ state.teg_num }}">Full Results</a>
             {% else %}
                 <a class="state-btn state-btn-primary" href="/results?teg={{ state.teg_num }}">Full Results</a>

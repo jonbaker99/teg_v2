@@ -842,10 +842,6 @@ def test_contents_state_in_progress(client, monkeypatch):
         "area": "Algarve, Portugal", "year": "2026",
         "rounds_played": 2, "rounds_expected": 4,
         "last_round_date": "14 May 2026",
-        "leaders_deferred": False,
-        "net_leaders": ["Jon BAKER"], "net_leader_total": "38", "net_unit": "pts",
-        "net_last": ["Gregg WILLIAMS"], "net_last_total": "21",
-        "gross_leaders": ["Alex BAKER"], "gross_leader_total": "+14",
     })
     resp = client.get("/contents")
     _assert_ok_no_error(resp)
@@ -854,41 +850,88 @@ def test_contents_state_in_progress(client, monkeypatch):
     assert "Round 2 played 14 May 2026" in resp.text  # R3: dated context line
     # R2: primary action pins the current TEG, never a bare route.
     assert 'href="/leaderboard?teg=19"' in resp.text
-    assert "Jon BAKER" in resp.text and "Gregg WILLIAMS" in resp.text
 
 
-def test_contents_state_in_progress_cold_cache_defers_leaders(client, monkeypatch):
-    # I4 R10: a cold State 1 render ships the headline/context/actions
-    # immediately and defers leader rows to the HTMX partial instead of
-    # blocking on cached_round_data().
+def test_contents_state_in_progress_always_defers_rich_content(client, monkeypatch):
+    # In-progress rich content (standings + report teaser) always defers to
+    # /contents/panel regardless of cache warmth -- its cost driver
+    # (cached_round_data(), a real parquet load) never belongs on the
+    # initial-paint path.
     monkeypatch.setattr(contents_route, "get_tournament_state", lambda: {
         "state": "in_progress", "teg_num": 19, "teg_label": "TEG 19",
         "area": "Algarve, Portugal", "year": "2026",
         "rounds_played": 2, "rounds_expected": 4,
         "last_round_date": "14 May 2026",
-        "leaders_deferred": True,
     })
     resp = client.get("/contents")
     _assert_ok_no_error(resp)
-    assert 'hx-get="/contents/leaders?teg=19"' in resp.text
+    assert 'hx-get="/contents/panel?teg=19&rounds=2"' in resp.text
     assert 'hx-trigger="load"' in resp.text
 
 
-def test_contents_state_complete(client, monkeypatch):
+def test_contents_panel_route_real_data(client):
+    # /contents/panel against real TEG 18 data: a compact Rank/Player/Total
+    # standings table (no round-by-round columns) and a gross-competition
+    # summary line.
+    resp = client.get("/contents/panel", params={"teg": 18, "rounds": 4})
+    _assert_ok_no_error(resp)
+    assert "Standings after Round 4" in resp.text
+    assert "col-round" not in resp.text  # round columns dropped -- Total only
+    assert "Green Jacket (gross)" in resp.text
+
+
+def test_contents_panel_ties_name_every_player(client, monkeypatch):
+    # E2/R8: TEG has no countback -- every tied player is a genuine separate
+    # row in the real standings table, never collapsed to "and 1 other".
+    import pandas as pd
+    fake_rd = pd.DataFrame({
+        "TEGNum": [19, 19, 19, 19],
+        "Round": [1, 1, 1, 1],
+        "Player": ["Jon BAKER", "Alex BAKER", "Gregg WILLIAMS", "David MULLIN"],
+        "Stableford": [38, 38, 33, 30],
+        "GrossVP": [2, 3, 1, 4],
+    })
+    monkeypatch.setattr(contents_route, "cached_round_data", lambda: fake_rd)
+    resp = client.get("/contents/panel", params={"teg": 19, "rounds": 1})
+    _assert_ok_no_error(resp)
+    assert resp.text.count("Jon") == 1 and resp.text.count("Alex") == 1
+    assert "1=" in resp.text  # tie notation, both rows present
+    assert "and 1 other" not in resp.text
+    assert "…" not in resp.text
+
+
+def test_contents_panel_report_teaser_omitted_cleanly_with_no_round_report(client, monkeypatch):
+    # E7 extended to round reports: never a dead link. When no round report
+    # exists, the standings surface takes the full width instead of leaving
+    # an empty second grid column.
+    monkeypatch.setattr(contents_route, "available_rounds", lambda teg: ())
+    resp = client.get("/contents/panel", params={"teg": 18, "rounds": 1})
+    _assert_ok_no_error(resp)
+    assert "teaser-headline" not in resp.text
+    assert 'class="panel-grid"' in resp.text  # no "two-col" -- single column
+
+
+def test_contents_state_complete_with_report_leads_with_headline(client, monkeypatch):
     monkeypatch.setattr(contents_route, "get_tournament_state", lambda: {
         "state": "complete", "teg_num": 18, "teg_label": "TEG 18",
         "area": "Catalonia, Spain", "year": "2025",
-        "last_round_date": "14 October 2025",
-        "net_measure": "Stableford",
+        "last_round_date": "14 October 2025", "dateline_month_year": "October 2025",
         "trophy": "Alex BAKER", "jacket": "Gregg WILLIAMS", "spoon": "Jon BAKER",
-        "has_report": True,
+        "report_summary": {
+            "headline": "Alex Baker Wins It in Round One",
+            "standfirst": "Twelve points clear after a 46, he never quite ran out.",
+            "link": "/teg-reports?teg=18",
+        },
         "next_teg": {"label": "TEG 19", "year": 2026, "area": "Algarve, Portugal"},
     })
     resp = client.get("/contents")
     _assert_ok_no_error(resp)
-    assert "TEG 18 — Final Results" in resp.text
-    # Owner decision: Report is the primary action when one exists.
-    assert 'href="/teg-reports?teg=18"' in resp.text
+    # The report headline IS the page's h1, linked to the report.
+    assert '<h1 class="state-headline"><a class="headline-link" href="/teg-reports?teg=18">Alex Baker Wins It in Round One</a></h1>' in resp.text
+    assert "TEG 18 results | Catalonia, Spain | October 2025" in resp.text
+    assert "Twelve points clear" in resp.text
+    assert "TEG 18 — Final Results" not in resp.text  # fallback headline must not also render
+    # Owner decision: Full Results is secondary once the report leads.
     assert 'href="/results?teg=18"' in resp.text
     assert "Next: TEG 19 · Algarve, Portugal · 2026" in resp.text
 
@@ -897,16 +940,19 @@ def test_contents_state_complete_no_report_falls_back_to_results_primary(client,
     monkeypatch.setattr(contents_route, "get_tournament_state", lambda: {
         "state": "complete", "teg_num": 12, "teg_label": "TEG 12",
         "area": "Algarve, Portugal", "year": "2019",
-        "last_round_date": "3 May 2019",
-        "net_measure": "NetVP",
+        "last_round_date": "3 May 2019", "dateline_month_year": "May 2019",
         "trophy": "David MULLIN", "jacket": "David MULLIN", "spoon": "Henry MELLER",
-        "has_report": False,
+        "report_summary": None,
         "next_teg": None,
     })
     resp = client.get("/contents")
     _assert_ok_no_error(resp)
-    # E7: never a dead report link -- the *pinned* report action is absent
-    # (the sitemap's general, state-agnostic /teg-reports link still renders).
+    # Never invents a headline for a report that doesn't exist.
+    assert "TEG 12 — Final Results" in resp.text
+    assert 'class="headline-link"' not in resp.text
+    assert 'class="dateline"' not in resp.text
+    # E7: never a dead report link -- the sitemap's general, state-agnostic
+    # /teg-reports link still renders; only the pinned report action is absent.
     assert 'href="/teg-reports?teg=12"' not in resp.text
     assert 'href="/results?teg=12"' in resp.text
     assert "state-btn-primary" in resp.text
@@ -924,30 +970,11 @@ def test_contents_state_no_data(client, monkeypatch):
     assert 'href="/records"' in resp.text
 
 
-def test_contents_ties_name_every_player(client, monkeypatch):
-    # E2/R8: TEG has no countback -- every tied player is named,
-    # comma-separated, never collapsed to "and 1 other".
-    monkeypatch.setattr(contents_route, "get_tournament_state", lambda: {
-        "state": "in_progress", "teg_num": 19, "teg_label": "TEG 19",
-        "area": "Algarve, Portugal", "year": "2026",
-        "rounds_played": 2, "rounds_expected": 4,
-        "last_round_date": "14 May 2026",
-        "leaders_deferred": False,
-        "net_leaders": ["Jon BAKER", "Alex BAKER"], "net_leader_total": "38", "net_unit": "pts",
-        "net_last": ["Gregg WILLIAMS"], "net_last_total": "21",
-        "gross_leaders": ["David MULLIN"], "gross_leader_total": "+14",
-    })
-    resp = client.get("/contents")
-    _assert_ok_no_error(resp)
-    assert "Jon BAKER, Alex BAKER" in resp.text
-    assert "and 1 other" not in resp.text
-    assert "…" not in resp.text
-
-
 def test_contents_complete_state_costs_no_parquet_load(client):
-    # Acceptance criterion 3: State 2 (the ordinary between-tournaments
-    # state -- today's live truth) issues no parquet load. Winners come
-    # straight from teg_winners.csv, not create_leaderboard().
+    # State 2 (the ordinary between-tournaments state -- today's live truth)
+    # issues no parquet load. Winners come straight from teg_winners.csv,
+    # and the report summary is a separate, cached artefact-parsing cost,
+    # not create_leaderboard()/cached_round_data().
     import webapp.deps as deps
     misses_before = deps.cached_round_data.cache_info().misses
     resp = client.get("/contents")
@@ -963,10 +990,6 @@ def test_contents_panel_actions_are_all_in_the_sitemap(client, monkeypatch):
         "area": "Algarve, Portugal", "year": "2026",
         "rounds_played": 2, "rounds_expected": 4,
         "last_round_date": "14 May 2026",
-        "leaders_deferred": False,
-        "net_leaders": ["Jon BAKER"], "net_leader_total": "38", "net_unit": "pts",
-        "net_last": ["Gregg WILLIAMS"], "net_last_total": "21",
-        "gross_leaders": ["Alex BAKER"], "gross_leader_total": "+14",
     })
     resp = client.get("/contents")
     _assert_ok_no_error(resp)

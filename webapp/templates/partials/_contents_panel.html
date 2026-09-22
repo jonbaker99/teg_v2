@@ -1,0 +1,25 @@
+{# In-progress rich content (I5 revision) -- rendered via GET /contents/panel,
+   always deferred behind hx-trigger="load" (cached_round_data() is a real
+   parquet load). Two-column grid: standings left, round-report teaser right;
+   stacks below 900px (.panel-grid rules in contents.html). #}
+<div class="panel-grid{% if panel.report_summary %} two-col{% endif %}" id="contents-panel">
+    <div class="surface">
+        <p class="standings-heading">Standings after Round {{ rounds_played }}</p>
+        {% if panel.gross_leader %}
+        <p class="gross-line">Green Jacket (gross) — <b>{{ panel.gross_leader.names | join(", ") }}</b> {{ panel.gross_leader.total }}</p>
+        {% endif %}
+        {% with standings = panel.standings %}
+            {% include "partials/_standings_table.html" %}
+        {% endwith %}
+    </div>
+    {% if panel.report_summary %}
+    <div class="surface">
+        <p class="kicker">Round {{ panel.report_summary.round }} report</p>
+        <p class="teaser-headline">{{ panel.report_summary.headline }}</p>
+        {% if panel.report_summary.standfirst %}
+        <p class="teaser-standfirst">{{ panel.report_summary.standfirst }}</p>
+        {% endif %}
+        <a class="teaser-link" href="{{ panel.report_summary.link }}">Read the Round {{ panel.report_summary.round }} report →</a>
+    </div>
+    {% endif %}
+</div>

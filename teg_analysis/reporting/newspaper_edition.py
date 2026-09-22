@@ -267,12 +267,43 @@ def _report_teg_candidates(path: str) -> set[int]:
     return candidates
 
 
+@lru_cache(maxsize=32)
+def get_edition_summary(teg: int, round_num: int | None = None) -> dict[str, Any] | None:
+    """A small, cheap-after-first-call summary of one edition's lead story —
+    for a teaser (the Contents home page) that must not pay the full
+    `build_edition()` parse cost, or risk a broken link, on every hit.
+
+    `build_edition` itself is not memoised and can hit GitHub on a cold
+    Railway volume read; this wrapper is, so the cost is "once per process,
+    free after." Returns None on any failure (missing artefact, parse error,
+    no lead article) rather than raising, so callers can omit the teaser
+    cleanly instead of showing a dead link.
+    """
+    try:
+        edition = build_edition(teg, round_num)
+        lead = next(a for a in edition["articles"] if a["is_lead"])
+    except Exception:          # noqa: BLE001 - missing artefact, malformed content, no lead
+        return None
+    link = (f"/teg-reports?teg={teg}" if round_num is None
+            else f"/teg-reports?teg={teg}&round={round_num}")
+    return {
+        "teg": teg,
+        "round": round_num,
+        "title": edition.get("title"),
+        "kicker": lead.get("kicker"),
+        "headline": lead.get("headline"),
+        "standfirst": lead.get("standfirst"),
+        "link": link,
+    }
+
+
 def clear_edition_caches() -> None:
     """Drop memoised artefact discovery, so newly generated reports are seen."""
     has_edition.cache_clear()
     available_tegs.cache_clear()
     available_rounds.cache_clear()
     available_report_tegs.cache_clear()
+    get_edition_summary.cache_clear()
 
 # Priority order for combining kickers on a merged (" / "-joined) heading.
 _KICKER_PRIORITY = ["TROPHY", "GREEN JACKET", "WOODEN SPOON", "SIDEBAR"]
