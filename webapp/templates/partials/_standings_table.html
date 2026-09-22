@@ -8,7 +8,8 @@
     /results (same _results_context() data builder). An optional
     `standings.total_label` overrides the "Total" header text (e.g.
     Contents' unit-aware "Points"/"vs Par") without affecting callers that
-    don't set it. -#}
+    don't set it. Contents also opts into an optional GrossVP column via
+    `standings.show_gross`; other shared callers retain their existing shape. -#}
 {% if not standings.rows %}
 <p class="text-muted text-sm">No data available.</p>
 {% else %}
@@ -21,6 +22,7 @@
       <th class="col-num col-round">{{ label }}</th>
       {% endfor %}
       <th class="col-num col-total total">{{ standings.total_label or "Total" }}</th>
+      {% if standings.show_gross %}<th class="col-gross col-num">Gross</th>{% endif %}
     </tr>
   </thead>
   <tbody>
@@ -28,9 +30,12 @@
     <tr{% if r.lead %} class="top-rank"{% endif %}>
       <td class="col-rank">{{ r.rank }}</td>
       <td class="col-player">
+        {% if r.honours %}<span class="player-with-honours">{% endif %}
         {% if r.code %}<a href="/player/{{ r.code }}">{% endif %}
         <span class="player-name"><span class="first">{{ r.first }}</span> <span class="last">{{ r.last }}</span></span>
         {% if r.code %}</a>{% endif %}
+        {% with honours = r.honours | default(()) %}{% include "partials/_honour_icons.html" %}{% endwith %}
+        {% if r.honours %}</span>{% endif %}
         {# Phone-only round strip: same values as the .col-round cells
            below, hidden above 640px (base-vars.css) and revealed in place
            of the round columns at 640px and under (mobile.css). #}
@@ -40,6 +45,7 @@
       <td class="col-num col-round">{{ val }}</td>
       {% endfor %}
       <td class="col-num total col-total">{{ r.total }}</td>
+      {% if standings.show_gross %}<td class="col-gross col-num">{{ r.gross }}</td>{% endif %}
     </tr>
     {% endfor %}
   </tbody>

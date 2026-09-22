@@ -120,7 +120,7 @@
     .state-next {
         font-family: var(--font-sans);
         font-size: var(--fs-200, 12px);
-        color: var(--text-muted);
+        color: var(--text-primary);
         margin-top: var(--sp-3, 12px);
     }
 
@@ -226,6 +226,65 @@
            track (and the page) wider than the viewport. */
         min-width: 0;
     }
+    #contents-panel .standings-table .col-gross {
+        font-weight: 400;
+    }
+    @media (max-width: 640px) {
+        #contents-panel .standings-table {
+            width: 100%;
+            font-size: 12px;
+        }
+        #contents-panel .standings-table th,
+        #contents-panel .standings-table td {
+            padding-left: 2px;
+            padding-right: 2px;
+        }
+        #contents-panel .standings-table .col-num {
+            min-width: 0;
+            width: 1%;
+            padding-left: 6px;
+            padding-right: 6px;
+            white-space: nowrap;
+        }
+        #contents-panel .standings-table .col-player {
+            white-space: normal;
+        }
+        #contents-panel .honour-icon {
+            width: 15px;
+            height: 15px;
+        }
+    }
+    .player-with-honours {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+    }
+    .honour-icons {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+
+    }
+    .honour-icon {
+        width: 18px;
+        height: 18px;
+        flex: none;
+    }
+    .honour-icon-trophy { color: #ae8420; }
+    .honour-icon-jacket { color: #3d7055; }
+    .honour-icon-spoon { color: #8b603d; }
+    html[data-mode="dark"] .honour-icon-trophy { color: #e0bd64; }
+    html[data-mode="dark"] .honour-icon-jacket { color: #83b994; }
+    html[data-mode="dark"] .honour-icon-spoon { color: #cba47b; }
+    .surface-complete {
+        display: flex;
+        flex-direction: column;
+    }
+    .surface-complete .panel-footer-link {
+        margin-top: auto;
+        padding-top: var(--sp-4, 16px);
+        align-self: flex-start;
+    }
     /* Panel headings match the page-level .kicker-eyebrow treatment exactly
        (sans-serif, not the small-caps Lora used by .section-title) so
        "FINAL STANDINGS"/"ALSO IN THIS REPORT" read as one system with
@@ -269,6 +328,7 @@
         text-decoration: none;
     }
     .teaser-link:hover { color: var(--green); }
+    .teaser-handicaps { color: var(--text-secondary); }
 
     /* --- Compact honours line (complete state): Champion/Green Jacket/
        Wooden spoon as one wrapped line, not stacked label/name rows --
@@ -382,14 +442,14 @@
         <div class="state-actions">
             <a class="state-btn state-btn-primary" href="/leaderboard?teg={{ state.teg_num }}">Latest Leaderboard</a>
             <a class="state-link" href="/latest-round">Latest Round in context</a>
-            <a class="state-link" href="/handicaps">Handicaps</a>
+            <a class="state-link" href="/handicaps">{{ state.teg_label }} Handicaps</a>
         </div>
 
     {% elif state.state == "complete" %}
         {% if state.report_summary %}
             <p class="dateline">{{ state.teg_label }} results | {{ state.area }} | {{ state.dateline_month_year }}</p>
             <h1 class="state-headline"><a class="headline-link" href="{{ state.report_summary.link }}">{{ state.report_summary.headline }}</a></h1>
-            <a class="teaser-link" href="{{ state.report_summary.link }}" style="display:inline-block; margin-bottom: var(--sp-5, 20px);">Read the {{ state.teg_label }} report →</a>
+            <a class="teaser-link" href="{{ state.report_summary.link }}" style="display:inline-block; margin-bottom: var(--sp-5, 20px);">Read the {{ state.teg_label }} report ↗</a>
 
             <div class="honours-line" style="margin-bottom: var(--sp-5, 20px);">
                 <span><span class="honour-label">Champion</span> <span class="honour-name honour">{{ state.trophy or "–" }}</span></span>
@@ -411,7 +471,7 @@
             {% if state.next_teg %}
             <p class="state-next" style="margin-top: var(--sp-5, 20px);">Next: {{ state.next_teg.label }} | {{ state.next_teg.area }} | {{ state.next_teg.year }}</p>
             {% endif %}
-            <a class="teaser-link" href="/handicaps" style="display:inline-block; margin-top: var(--sp-2, 8px);">{{ state.teg_label }} Handicaps →</a>
+            <a class="teaser-link teaser-handicaps" href="/handicaps" style="display:inline-block; margin-top: var(--sp-2, 8px);">TEG {{ state.teg_num + 1 }} Handicaps ↗</a>
         {% else %}
             <p class="state-eyebrow state-eyebrow-muted">Latest result</p>
             <h1 class="state-headline">{{ state.teg_label }} — Final Results</h1>
@@ -436,7 +496,7 @@
 
             <div class="state-actions">
                 <a class="state-btn state-btn-primary" href="/results?teg={{ state.teg_num }}">Full Results</a>
-                <a class="state-link" href="/handicaps">Handicaps</a>
+                <a class="state-link" href="/handicaps">TEG {{ state.teg_num + 1 }} Handicaps</a>
             </div>
 
             {% if state.next_teg %}

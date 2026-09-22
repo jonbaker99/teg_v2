@@ -946,6 +946,8 @@ def test_contents_state_in_progress(client, monkeypatch):
     _assert_ok_no_error(resp)
     assert "In progress" in resp.text
     assert "TEG 19 — after Round 2 of 4" in resp.text
+    assert "TEG 19 Handicaps" in resp.text
+    assert "TEG 20 Handicaps" not in resp.text
     assert "Round 2 played 14 May 2026" in resp.text  # R3: dated context line
     # R2: primary action pins the current TEG, never a bare route.
     assert 'href="/leaderboard?teg=19"' in resp.text
@@ -969,15 +971,52 @@ def test_contents_state_in_progress_always_defers_rich_content(client, monkeypat
 
 
 def test_contents_panel_route_real_data(client):
-    # /contents/panel against real TEG 18 data: a compact Rank/Player/Points
-    # standings table (no round-by-round columns, Stableford-era unit label)
-    # and a gross-competition summary line.
+    # /contents/panel against real TEG 18 data: a compact Rank/Player/Points/
+    # Gross standings table (no round-by-round columns, Stableford-era unit
+    # label) and a gross-competition summary line.
     resp = client.get("/contents/panel", params={"teg": 18, "state": "in_progress", "rounds": 4})
     _assert_ok_no_error(resp)
     assert "Standings after Round 4" in resp.text
     assert "col-round" not in resp.text  # round columns dropped -- Total only
     assert "Green Jacket (gross)" in resp.text
     assert ">Points</th>" in resp.text  # unit-aware header, Stableford era
+    assert ">Gross</th>" in resp.text
+
+
+@pytest.mark.parametrize("state", ["in_progress", "complete"])
+def test_contents_standings_show_player_keyed_aggregated_gross(client, monkeypatch, state):
+    # Gross and net standings have deliberately different orders. The Gross
+    # cell must follow its player, and aggregate both rounds with explicit
+    # signs, including +0.
+    fake_rd = pd.DataFrame({
+        "TEGNum": [19] * 6,
+        "Round": [1, 2, 1, 2, 1, 2],
+        "Player": ["Alex BAKER", "Alex BAKER", "Jon BAKER", "Jon BAKER", "David MULLIN", "David MULLIN"],
+        "Stableford": [38, 35, 40, 40, 36, 36],
+        "GrossVP": [3, -1, -2, -2, 0, 0],
+    })
+    monkeypatch.setattr(contents_route, "cached_round_data", lambda: fake_rd)
+    if state == "in_progress":
+        monkeypatch.setattr(contents_route, "available_rounds", lambda teg: ())
+        params = {"teg": 19, "state": state, "rounds": 2}
+    else:
+        monkeypatch.setattr(contents_route, "cached_winners", lambda: pd.DataFrame({"TEG": []}))
+        monkeypatch.setattr(contents_route, "get_edition_summary", lambda teg: None)
+        params = {"teg": 19, "state": state}
+
+    resp = client.get("/contents/panel", params=params)
+    _assert_ok_no_error(resp)
+    assert resp.text.count('<th class="col-gross col-num">Gross</th>') == 1
+    body = resp.text.split("<tbody>", 1)[1].split("</tbody>", 1)[0]
+    for player, gross in (("Jon", "-4"), ("Alex", "+2"), ("David", "+0")):
+        row = body[body.index(player):body.index("</tr>", body.index(player))]
+        assert f'<td class="col-gross col-num">{gross}</td>' in row
+
+
+def test_shared_standings_table_callers_do_not_show_contents_gross(client):
+    resp = client.get("/results/table", params={"teg": 18, "tab": "net"})
+    _assert_ok_no_error(resp)
+    assert 'class="col-gross col-num"' not in _standings_table_html(resp.text)
 
 
 def test_contents_panel_unit_label_pre_teg8_is_vs_par(client, monkeypatch):
@@ -1014,6 +1053,53 @@ def test_contents_panel_ties_name_every_player(client, monkeypatch):
     assert "1=" in resp.text  # tie notation, both rows present
     assert "and 1 other" not in resp.text
     assert "…" not in resp.text
+
+
+def test_contents_complete_panel_marks_recorded_honours_only(client, monkeypatch):
+    # Completed standings use the canonical winners cache, rather than
+    # inferring honours from a tied position in the table. Alex and Jon tie
+    # for the Trophy competition, but the recorded winner is Alex; Alex also
+    # wins the Jacket, so both marks belong on one row.
+    import pandas as pd
+    fake_rd = pd.DataFrame({
+        "TEGNum": [19, 19, 19, 19], "Round": [1, 1, 1, 1],
+        "Player": ["Alex BAKER", "Jon BAKER", "Gregg WILLIAMS", "David MULLIN"],
+        "Stableford": [38, 38, 33, 30], "GrossVP": [1, 2, 3, 4],
+    })
+    fake_winners = pd.DataFrame({
+        "TEG": ["TEG 19"],
+        "TEG Trophy": ["Alex BAKER"],
+        "Green Jacket": ["Alex BAKER"],
+        "HMM Wooden Spoon": ["David MULLIN"],
+    })
+    monkeypatch.setattr(contents_route, "cached_round_data", lambda: fake_rd)
+    monkeypatch.setattr(contents_route, "cached_winners", lambda: fake_winners)
+    monkeypatch.setattr(contents_route, "get_edition_summary", lambda teg: None)
+
+    resp = client.get("/contents/panel", params={"teg": 19, "state": "complete"})
+    _assert_ok_no_error(resp)
+    assert resp.text.count('aria-label="Trophy"') == 1
+    assert resp.text.count('aria-label="Green Jacket"') == 1
+    assert resp.text.count('aria-label="Wooden Spoon"') == 1
+    alex_row = resp.text[resp.text.index("Alex"):resp.text.index("</tr>", resp.text.index("Alex"))]
+    jon_row = resp.text[resp.text.index("Jon"):resp.text.index("</tr>", resp.text.index("Jon"))]
+    assert 'aria-label="Trophy"' in alex_row and 'aria-label="Green Jacket"' in alex_row
+    assert 'aria-label="Trophy"' not in jon_row
+
+
+def test_contents_in_progress_panel_has_no_honour_icons(client, monkeypatch):
+    import pandas as pd
+    fake_rd = pd.DataFrame({
+        "TEGNum": [19, 19], "Round": [1, 1],
+        "Player": ["Alex BAKER", "Jon BAKER"],
+        "Stableford": [38, 30], "GrossVP": [1, 2],
+    })
+    monkeypatch.setattr(contents_route, "cached_round_data", lambda: fake_rd)
+    monkeypatch.setattr(contents_route, "available_rounds", lambda teg: ())
+
+    resp = client.get("/contents/panel", params={"teg": 19, "state": "in_progress", "rounds": 1})
+    _assert_ok_no_error(resp)
+    assert 'class="honour-icon' not in resp.text
 
 
 def test_contents_panel_report_teaser_omitted_cleanly_with_no_round_report(client, monkeypatch):
@@ -1072,7 +1158,8 @@ def test_contents_state_complete_with_report_leads_with_headline(client, monkeyp
     # Owner decision: Full Results only appears inside the deferred panel
     # now (moved below the standings table), not as a page-level action.
     assert "Next: TEG 19 | Algarve, Portugal | 2026" in resp.text
-    assert "TEG 18 Handicaps" in resp.text
+    assert "TEG 19 Handicaps" in resp.text
+    assert "TEG 18 Handicaps" not in resp.text
 
 
 def test_contents_state_complete_no_report_falls_back_to_results_primary(client, monkeypatch):
@@ -1088,6 +1175,8 @@ def test_contents_state_complete_no_report_falls_back_to_results_primary(client,
     _assert_ok_no_error(resp)
     # Never invents a headline for a report that doesn't exist.
     assert "TEG 12 — Final Results" in resp.text
+    assert "TEG 13 Handicaps" in resp.text
+    assert "TEG 12 Handicaps" not in resp.text
     assert 'class="headline-link"' not in resp.text
     assert 'class="dateline"' not in resp.text
     # E7: never a dead report link -- the sitemap's general, state-agnostic

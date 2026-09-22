@@ -722,7 +722,7 @@ Records / Top TEGs and Rounds / Personal Bests, Latest Leaderboard / Latest
 Round / Latest TEG / Handicaps, the 11 Scoring-analysis views, and Scorecard /
 Best-Worstball / Eclectic Scores / Eclectic Records.
 
-`/` now lands on **Contents** (the site map), matching Streamlit.
+`/` lands on **Contents**, with a tournament-state summary and expandable site map. Completed standings show trophy, green star (Green Jacket) and wood-brown spoon SVGs beside the winners; the shared standings partial renders these only when row honours are supplied. The Contents standings add a regular-weight Gross column after the primary net metric, showing total gross versus par with an explicit sign, including +0. The shared table only adds this column when `standings.show_gross` is supplied. Completed panel footer links align to the bottom left, using the card’s existing padding.
 
 ### Look-and-feel roadmap
 

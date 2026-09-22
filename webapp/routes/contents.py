@@ -16,6 +16,7 @@ from webapp.nav import NAV_SECTIONS
 from webapp.deps import (
     PLAYER_COLUMN,
     cached_round_data,
+    cached_winners,
     create_leaderboard,
     format_value,
     get_net_competition_measure,
@@ -43,7 +44,42 @@ def contents_page(request: Request):
     })
 
 
-def _standings_table_context(teg_num: int) -> dict:
+_HONOUR_COLUMNS = (
+    ("TEG Trophy", "trophy"),
+    ("Green Jacket", "jacket"),
+    ("HMM Wooden Spoon", "spoon"),
+)
+
+
+def _format_gross_total(value: object) -> str:
+    """Format a GrossVP aggregate with an explicit sign, including zero."""
+    number = float(value)
+    display = str(int(number)) if number.is_integer() else str(number)
+    return f"+{display}" if number >= 0 else display
+
+
+def _honours_by_player(teg_num: int) -> dict[str, tuple[str, ...]]:
+    """Map completed-TEG winners to their displayed honour icons.
+
+    ``cached_winners()`` is the canonical, override-aware result source. A
+    player can receive more than one honour. Asterisks from historical
+    overrides remain display annotations rather than identity.
+    """
+    winners = cached_winners()
+    winner_row = winners[winners["TEG"] == f"TEG {teg_num}"]
+    if winner_row.empty:
+        return {}
+
+    honours: dict[str, list[str]] = {}
+    row = winner_row.iloc[0]
+    for column, honour in _HONOUR_COLUMNS:
+        name = row.get(column)
+        if isinstance(name, str) and (name := name.replace("*", "").strip()):
+            honours.setdefault(name, []).append(honour)
+    return {name: tuple(awards) for name, awards in honours.items()}
+
+
+def _standings_table_context(teg_num: int, honours_by_player: dict[str, tuple[str, ...]] | None = None) -> dict:
     """The real net-competition standings table (every player, ties as
     genuine duplicate rows -- TEG has no countback, so no synthetic "and 1
     other" collapsing) plus a unit-aware column header. Shared by both
@@ -63,13 +99,27 @@ def _standings_table_context(teg_num: int) -> dict:
     # builds each row's own `rounds` list, not just the top-level
     # `round_labels` key -- the two are independent, and the table partial's
     # tbody loop reads the per-row list (_standings_table.html has no
-    # responsive reflow outside the .standings-page wrapper, but 3 columns
-    # need none).
+    # responsive reflow outside the .standings-page wrapper; its compact net
+    # and gross metrics need none).
     net_lb = net_lb[['Rank', PLAYER_COLUMN, 'Total']]
     standings = _standings_rows(net_lb, link_players=False)
+    # Gross is a separate leaderboard: its rank order can differ from the
+    # net competition's. Associate the aggregate by player name, never row
+    # position, then retain the net standings order for this compact table.
+    gross_lb = create_leaderboard(teg_rd, 'GrossVP', ascending=True)
+    gross_by_player = {
+        str(row[PLAYER_COLUMN]): _format_gross_total(row['Total'])
+        for _, row in gross_lb.iterrows()
+    }
+    for row in standings["rows"]:
+        row["gross"] = gross_by_player.get(row["player"], "—")
+    if honours_by_player:
+        for row in standings["rows"]:
+            row["honours"] = honours_by_player.get(row["player"], ())
     # _standings_table.html's optional override for the "Total" header --
     # real TEGs before TEG 8 are vs-par, not Stableford points.
     standings["total_label"] = "Points" if net_measure == "Stableford" else "vs Par"
+    standings["show_gross"] = True
 
     return {"standings": standings}
 
@@ -110,7 +160,7 @@ def _complete_panel(teg_num: int) -> dict:
         "state": "complete",
         "teg_num": teg_num,
         "report_summary": get_edition_summary(teg_num),
-        **_standings_table_context(teg_num),
+        **_standings_table_context(teg_num, _honours_by_player(teg_num)),
     }
 
 

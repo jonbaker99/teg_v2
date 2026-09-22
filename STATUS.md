@@ -2,7 +2,19 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-22 (Report "Sidebar" badges replaced with real topics)
+**Last updated:** 2026-09-22 (Landing-page standings, honours and links)
+
+## 2026-09-22 — Gross comparison on the landing page
+
+The main standings table adds Gross as the final metric column after Points (net vs par before TEG 8). Gross totals are versus par, signed including +0, and regular weight so the net competition remains primary. Mobile names stay on one line when they fit; the shared name-wrapping fallback applies only when space requires it.
+
+## 2026-09-22 — Completed landing-page honours and panel links
+
+Completed standings show matte gold trophy, green star and wood-brown spoon icons beside their winners. The Full Results and View full report links sit at the bottom left of their cards, aligned with the content. Landing-page link arrows use ↗. Honour icons sit close to the names, vertically centred, and use lighter shades in dark mode for visibility.
+
+## 2026-09-22 — Landing page handicap links follow tournament state
+
+The landing page names the current TEG in its handicap link while play is in progress, and the next TEG once complete. This also works without a report or future tournament metadata. The “Next:” line uses primary text (black in light mode); the handicap link uses secondary grey.
 
 ## 2026-09-22 — Report "Sidebar" badges replaced with real topics
 
