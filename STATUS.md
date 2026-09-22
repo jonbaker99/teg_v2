@@ -6,7 +6,7 @@ Current state and next priorities. Instructions and architecture live in `CLAUDE
 
 ## 2026-09-22 — Tighter home headline and quieter honours
 
-The landing headline uses a tighter 1.1 line-height. Champion and its winner use primary text; Green Jacket and Wooden Spoon labels and winners use secondary grey, with theme-aware dark-mode colours.
+The landing headline uses a tighter 1.2 line-height. Champion and its winner use primary text; Green Jacket and Wooden Spoon labels and winners use secondary grey, with theme-aware dark-mode colours.
 
 ## 2026-09-22 — Gross comparison on the landing page
 
