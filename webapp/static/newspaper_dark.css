@@ -1,0 +1,21 @@
+/* Dark-mode palette for the on-screen newspaper. Kept separate from the
+   preview/PDF stylesheet so printed reports retain their warm cream paper. */
+@media screen {
+  html[data-mode="dark"] .np-page,
+  html[data-mode="dark"] .np-page.pal-a {
+    --paper:#25231F;
+    --ink:#F2EBDD;
+    --ink-soft:#C8BEAA;
+    --ink-contrast:#D3CDBF;
+    --accent:#78C98A;
+    --accent2:#78C98A;
+    --rule:#5C5548;
+    --tint:#302D27;
+    color:var(--ink);
+  }
+
+  html[data-mode="dark"] .np-page .np-paper {
+    border-color:#514B40;
+    box-shadow:0 1px 2px rgba(0,0,0,0.24), 0 18px 40px -20px rgba(0,0,0,0.68);
+  }
+}

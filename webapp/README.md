@@ -890,6 +890,7 @@ HTML builders).
   TEG select once `available_rounds(teg)` is non-empty. Start at
   `report_layout_prototypes/README.md` for the chosen elements and
   composition rule.
+  - **Dark report palette.** `static/newspaper_dark.css` loads after the newspaper layout on `/teg-reports`. It scopes warm charcoal surfaces, cream headlines, beige secondary text and green accents to `html[data-mode="dark"] .np-page`, covering the phone index/reader and desktop editions. This browser-only stylesheet is excluded from the PDF build; the shared light newspaper stylesheet remains unchanged.
   - **Download PDF (2026-09-15).** `/teg-reports` shows a Download PDF button
     next to a report whenever one has been pre-rendered — `GET
     /teg-reports/pdf?teg=&round=` streams the bytes as an `application/pdf`

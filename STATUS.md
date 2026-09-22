@@ -4,6 +4,10 @@ Current state and next priorities. Instructions and architecture live in `CLAUDE
 
 **Last updated:** 2026-09-22 (I5 revision 2: full leaderboard on Contents' complete state + collapsible sitemap — merged to main)
 
+## 2026-09-22 — Readable dark newspaper reports
+
+`/teg-reports` now has a warm dark palette: cream headlines, readable secondary text, brighter green accents and quieter rules. It covers the mobile front page and article reader, plus desktop and round editions. Light styling and PDF build inputs are unchanged.
+
 ## 2026-09-22 — Plain Contents expander label
 
 The landing page sitemap expander now reads “Full site contents (click to expand)”, replacing the promotional wording and page-count blurb.
