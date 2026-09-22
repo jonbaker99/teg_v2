@@ -104,8 +104,9 @@ When a to-do surfaces mid-conversation, add it to the right area's `TODOS.md` be
 
 ## Isolate agent work in task worktrees
 
-- Every agent task that changes repository files must use a dedicated branch and Git worktree, including small code or documentation changes. Read-only work may inspect the existing checkout.
-- Reserve the primary checkout for the user's manual work. Never edit files or switch branches there unless the user explicitly requests that exception.
+- Default to a dedicated feature branch and Git worktree for repository changes. Read-only work may inspect the existing checkout.
+- If I explicitly request working directly on `main` or in the primary checkout, follow that instruction for the current task. Preserve unrelated changes.
+- Permission to edit or commit on `main` does not authorize pushing it or deploying to production.
 - Before editing, establish the task's worktree, verify its absolute path and branch, and report both briefly. Run all edits, tests and Git commands from that worktree.
 - Continue an existing task in its existing worktree. Start unrelated work in a new worktree. Switching between Claude Code and Codex does not create a new task.
 - One lead agent owns each task worktree. Subagents receive its absolute path, branch and non-overlapping file assignments. They must verify their location before editing.
@@ -114,6 +115,62 @@ When a to-do surfaces mid-conversation, add it to the right area's `TODOS.md` be
 - If relevant starting changes are uncommitted, preserve them and clarify which belong in the task. A new worktree does not automatically include them.
 
 Worktree recovery setup and limitations: `README.md` → *Shared CLI recovery*.
+
+## Preview and deployment workflow
+
+### Production boundary
+
+- `main` deploys to production on Railway.
+- Follow the worktree rules above, including explicit permission to work directly on `main`.
+- Never push `main`, merge into it, or deploy to production without my explicit instruction for the current task.
+- Completing work or approving a preview does not authorize production deployment.
+- Never deploy to production merely to provide a preview.
+
+### Choose the preview automatically
+
+- Inspect the execution environment and available browser access; do not rely on the operating system alone.
+- On my local Mac, prefer local preview. An accessible forwarded port also permits local preview.
+- When running remotely without accessible local preview, use a GitHub PR and Railway PR environment.
+- Ask only when available evidence cannot establish a usable preview method.
+- Start a preview only when useful for review; documentation-only changes normally need none.
+
+### Local preview
+
+- Run from the task's checkout using the project's Python environment.
+- Use `python -m uvicorn webapp.app:app --reload --host 127.0.0.1 --port 8000`; choose another free port if needed.
+- Verify the affected page responds, then provide its exact URL.
+- Keep the server running during review where supported; disclose if it cannot persist.
+- Iterate locally. Do not create a Railway environment solely for local review.
+- For feature-branch work, once I approve proceeding to a PR, commit, push the branch, and open or update its PR.
+- For explicitly authorized work on `main`, a PR is optional; wait for explicit permission before pushing.
+- Local checkpoint commits are fine before review.
+
+### Remote preview
+
+- Run relevant checks, commit, push the feature branch, and open or update its PR against `main`.
+- These preview steps are authorized without separate confirmation.
+- If the task started on `main`, isolate this task's changes on a feature branch before creating the preview. Preserve unrelated work and never reset or clean the primary checkout.
+- Verify Railway PR environments are enabled and the deployment matches the current PR commit.
+- Check deployment status and the affected page before describing the preview as ready.
+- Provide the PR link, verified preview URL, concise change summary, checks run, and specific review points.
+- After feedback, update the same branch and PR, then verify the refreshed deployment.
+- If preview deployment fails or access is unavailable, report the blocker. Never fall back to production.
+
+### Preview data and services
+
+- Worktrees and PR environments do not automatically isolate external data or credentials.
+- Check storage paths, GitHub write targets, and external integrations before running a preview.
+- Use isolated preview data and configuration. Preview activity must not write to production data or its GitHub sync branch.
+- Keep reusable preview setup instructions in `webapp/README.md`.
+
+### Pull requests and release
+
+- When using a PR, target `main`, keep it focused, and include concise testing notes.
+- Reuse an existing PR for the task. Do not close an unmerged PR unless I ask.
+- Do not bypass checks, branch protection, or review requirements.
+- Follow the scope of my release instruction: permission to push a feature branch does not authorize merging it.
+- An explicit instruction to merge or deploy to production authorizes the applicable release path for the current task.
+- After release, distinguish “pushed/merged” from “deployment verified.”
 
 ## Active Context Tracking
 
