@@ -397,7 +397,13 @@ def test_latest_round_invalid_state_defaults_without_failure(client):
     assert all(f">{heading}<" in resp.text for heading in ("#", "Player", "Personal rank", "All-time rank", "Round"))
     assert "Round leaderboard" in resp.text and "Score" in resp.text
     assert ">Out<" in resp.text and ">In<" in resp.text
-    assert 'aria-pressed="true"' not in resp.text
+    # The metric row is a .segmented control now (it used .pill/.pill--active
+    # when this test was written, which is why it used to assert that nothing
+    # on the page was aria-pressed at all). Exactly one option may be marked
+    # selected, and it must be the metric we fell back to.
+    assert resp.text.count('aria-pressed="true"') == 1
+    pressed = re.search(r'aria-pressed="true"[^>]*>\s*([^<]+)', resp.text)
+    assert pressed and pressed.group(1).strip() == "Score"
 
 
 def test_round_chart_rewind_keeps_endpoint_and_faint_future():

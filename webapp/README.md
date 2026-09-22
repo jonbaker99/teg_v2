@@ -566,6 +566,9 @@ for you and still threadpools the handler).
 - **`tab-underline`** / **`tab-underline--active`** — in-page tab & toggle buttons (underline style; `--active` is the single canonical active class)
 - **`badge`** — small inline labels
 - **`score-mix`** — the leaderboard/TEG detail row's per-hole score distribution: a dependency-free CSS bar chart (grid rows + width-percentage fills, tokens only, no JS/SVG/library)
+- **`segmented`** / **`seg-option`** — the canonical mutually-exclusive measure control. Add **`segmented--grid`** for a row of three or more options: below 640px it reflows the joined bar into an even two-column grid, and does nothing above. Latest Round and Latest TEG's metric rows both use it; the older `metric-grid`/`metric-pill` pair is retired
+- **`sc-metric-toggle--page`** — one page-level Gross/Stableford selector driving every scorecard on `/results` and `/leaderboard` (pure CSS, no JS). It deliberately does **not** carry `sc-portrait`: the wrapper holds every round block, and `sc-portrait` is `display: none` above 640px, so that would blank the whole tab on desktop. The control is made phone-only by hiding its `sc-mseg` above 640px instead. Its pane rules select through the round wrapper with `~ *`, so each round must stay a direct child of the wrapper
+- **`sc-round-summary`** — the `<summary>` of each collapsible round on those same tabs. Styled to match `section-title` exactly above 640px (no chevron, no pointer cursor), so desktop is unchanged; the disclosure affordance is phone-only
 
 ### Structural class hierarchy
 

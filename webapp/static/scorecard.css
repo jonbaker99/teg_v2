@@ -727,12 +727,61 @@ html[data-mode="dark"] .bw-impact--worst { color: #c9c9c9; }
 @media (max-width: 640px) {
   .sc-landscape { display: none; }
   .sc-portrait { display: block; }
+
+  /* Phone-only disclosure affordance for .sc-round-summary (collapsible
+     rounds, webapp/routes/history.py). Above this breakpoint the base rule
+     above renders it identically to the <h2 class="section-title"> it
+     replaced, with no chevron and no pointer cursor. */
+  .sc-round-summary {
+    cursor: pointer;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .sc-round-summary::after {
+    content: "+";
+    font-family: var(--font-sans);
+    text-transform: none;
+    letter-spacing: normal;
+    font-size: 18px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  details[open] > .sc-round-summary::after {
+    content: "\2212"; /* minus sign */
+  }
 }
 
 /* The .sc-landscape wrapper makes the first section title a first-child, which
    would lose the global "* + .section-title" top margin — restore it so the
    desktop layout is byte-for-byte unchanged. */
 .sc-landscape > .section-title:first-child { margin-top: 1.75rem; }
+
+/* Round summary (webapp/routes/history.py's Scorecards tab: each round is now
+   a <details class="sc-round"><summary class="sc-round-summary">Round N
+   </summary>...) — matches .section-title exactly (same typography/tokens,
+   see base-vars.css ~L1306-1316) so it looks identical to the <h2
+   class="section-title"> it replaced. Marker hidden and cursor kept as
+   default (not a pointer) at this, the base/desktop rule -- the disclosure
+   affordance and pointer cursor are added ONLY inside the 640px media query
+   below, so above 640px this reads with no sign it is a <details> at all. */
+.sc-round-summary {
+  display: block;
+  font-family: var(--font-serif), serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--green, var(--accent, #17683c));
+  line-height: 1.3;
+  margin: 0 0 var(--sp-4, 1rem) 0;
+  list-style: none;
+  cursor: default;
+}
+.sc-round-summary::-webkit-details-marker { display: none; }
+.sc-round-summary::marker { content: ""; }
 
 .scorecard-table-portrait {
   border-collapse: separate;
@@ -847,39 +896,74 @@ html[data-mode="dark"] .bw-impact--worst { color: #c9c9c9; }
 /* Horizontal-scroll wrapper for the wide (whole-TEG / field) portrait tables */
 .sc-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
-/* Gross / Stableford metric toggle (portrait multi-table views) — pure CSS */
+/* Gross / Stableford metric toggle (portrait multi-table views) — pure CSS.
+   Restyled onto the site's own design tokens (--rule-color/--bg-card/
+   --hover-bg/--green/--font-sans) to read as the standard segmented control
+   (.segmented/.seg-option, webapp/static/themes/base-vars.css ~L1406-1446)
+   instead of its own component — same geometry, 44px min touch target. */
 .sc-metric-toggle > input { display: none; }
 .sc-mseg {
   display: flex;
-  gap: 4px;
-  margin: 0 0 12px;
-  padding: 3px;
-  background: var(--color-background);
-  border-radius: 8px;
+  border: 1px solid var(--rule-color);
+  border-radius: var(--r-1, 6px);
+  overflow: hidden;
+  background: var(--bg-card, var(--color-background));
 }
 .sc-mseg label {
   flex: 1;
   text-align: center;
-  padding: 8px 0;
-  border-radius: 6px;
+  padding: var(--sp-3, 10px) var(--sp-4, 14px);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid var(--rule-color);
   cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-text-secondary);
+  font-family: var(--font-sans);
+  font-size: var(--fs-300, 13px);
+  font-weight: 500;
+  color: var(--ink-2, var(--color-text-secondary));
   -webkit-user-select: none;
   user-select: none;
 }
+.sc-mseg label.lbl-pts { border-right: none; }
 /* Class-based selectors (not #ids) so multiple toggles can coexist on a page —
-   e.g. one card per round on Full Results. */
+   e.g. one card per round on Full Results, plus the page-level toggle above
+   them (.sc-metric-toggle--page below). */
 .sc-metric-toggle > input.scm-gross:checked ~ .sc-mseg label.lbl-gross,
 .sc-metric-toggle > input.scm-pts:checked ~ .sc-mseg label.lbl-pts {
-  background: white;
-  color: var(--color-text);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  background: var(--hover-bg, var(--color-hover));
+  color: var(--green, var(--color-text));
+  font-weight: 700;
 }
 .sc-pane-pts { display: none; }
 .sc-metric-toggle > input.scm-pts:checked ~ .sc-pane-gross { display: none; }
 .sc-metric-toggle > input.scm-pts:checked ~ .sc-pane-pts { display: block; }
+
+/* Page-level Gross/Stableford selector (Full Results / Leaderboard's
+   Scorecards tab, webapp/routes/history.py) — one toggle drives every
+   round's panes instead of a toggle per round. The rules below MUST reach
+   panes nested one level inside each round block (`.sc-round > .sc-portrait
+   .sc-pane-*`), and must beat the base `.sc-pane-pts { display: none }`
+   above, so they use `~ *` to select through the intervening round wrapper.
+   DEPENDS on every round block being a DIRECT following sibling of the
+   page-level radios — nest the rounds one level deeper (e.g. inside another
+   wrapper div) and this selector silently stops matching, with no error and
+   no visual sign beyond the toggle doing nothing. The .sc-mseg label-
+   highlight rules just above already cover the page-level control: its
+   `.sc-mseg` is also a direct sibling of these same radios. */
+.sc-metric-toggle--page > input.scm-pts:checked ~ * .sc-pane-gross { display: none; }
+.sc-metric-toggle--page > input.scm-pts:checked ~ * .sc-pane-pts { display: block; }
+/* The page-level wrapper deliberately does NOT carry .sc-portrait -- it holds
+   every round block, and .sc-portrait is display:none above 640px, which would
+   blank the entire Scorecards tab on desktop and iPad. So the control itself is
+   made phone-only here instead: its radios are already hidden by
+   .sc-metric-toggle > input, and its visible .sc-mseg is hidden above the phone
+   breakpoint, where .sc-landscape shows Gross and Stableford stacked and there
+   is nothing to switch. */
+@media (min-width: 641px) {
+  .sc-metric-toggle--page > .sc-mseg { display: none; }
+}
 
 /* ===== DARK-MODE TOKENS =====
    Inert until html[data-mode="dark"] is set by the (separate) app-wide

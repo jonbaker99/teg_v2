@@ -2,7 +2,49 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-21 (non-intrusive public loading state — worktree, not yet merged)
+**Last updated:** 2026-09-22 (mobile control convergence + collapsible scorecards — branch, not yet merged)
+
+## 2026-09-22 — Mobile pass: control convergence, Records/Scoring columns, collapsible scorecards
+
+Branch `claude/loving-goodall-ge1foo`. Not yet merged. Phone-width fixes across
+`/latest-teg`, `/latest-round`, `/leaderboard` and `/results`.
+
+Latest TEG's metric row was styled by nothing — the template had migrated to
+`.segmented` while `mobile.css` still targeted the old `.metric-grid`/
+`.metric-pill` classes, so four long labels wrapped inside a content-sized bar.
+Both pages' metric rows now share `.segmented` plus a new `.segmented--grid`
+phone modifier (even two-column grid below 640px, inert above), and Latest
+Round's scoring pills moved to the same segmented grammar. `.metric-grid`/
+`.metric-pill` is retired as a control.
+
+Records & PBs no longer renders `G.Par`/`N.Par`: `_build_records_html` was
+running the player-name abbreviator over a column that holds metric names in
+the Personal Bests and Personal Worsts sections. Gated behind a new
+`identity_is_player` flag that defaults to the old behaviour, so `/records` is
+unchanged. First column gained a left margin and the final column is now
+left-aligned.
+
+The Scoring table's first column showed the raw pandas index name (`GrossVP`/
+`Stableford`); it now reads `Score` in both views at every width, and gained a
+left inset on phones. Latest TEG's aggregate expander fits all round tiles on
+one row; Latest Round's Out/In pair stays two-up. Latest TEG alone now defaults
+to Stableford, ordered Stableford / Gross vs Par / Score / Net vs Par — Latest
+Round keeps its order and `Sc` default.
+
+`/leaderboard` and `/results` Scorecards now have one page-level
+Gross/Stableford selector instead of one per round, and each round sits in a
+collapsible container (Round 1 open, the rest collapsed) — both phone-only.
+Rounds render `open` server-side, so desktop and the no-JS path are unchanged.
+
+Two changes are deliberately visible at all widths: the `Score` header, and
+Latest Round's metric and scoring controls becoming segmented.
+
+Verified: full suite 754 passed, 23 skipped; the one failure
+(`test_agent_handoff.py`, `FileNotFoundError: 'zsh'`) is a container
+limitation, unrelated. `check_css_comments.py` and `check_pandas_compat.py`
+clean.
+
+**Next:** owner review on a phone, then merge decision.
 
 ## 2026-09-21 — Public HTMX loads no longer move or fade the page
 
