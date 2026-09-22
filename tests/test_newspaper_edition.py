@@ -473,6 +473,69 @@ def test_parse_articles_prefers_explicit_descriptor_over_the_fallback():
     assert by_headline["Mullin Wins Again"]["descriptor"] == "TROPHY"
 
 
+def test_parse_articles_ignores_a_literal_sidebar_descriptor_on_a_named_kicker():
+    """A pre-descriptor-era plan can carry a mandatory race/round story whose
+    `descriptor` was literally written as `"SIDEBAR"` -- the machine slot
+    name, not a real theme. That slot already has a proper kicker ("THE
+    RACES"), so the badge must fall through to it rather than print the
+    machine name. See newspaper_edition._parse_articles."""
+    from teg_analysis.reporting.newspaper_edition import _parse_articles
+
+    plan = {
+        "is_final_round": False,
+        "round_story": {"subject": "r", "chosen_headline": "", "standfirst": "",
+                        "compelling_score": 1, "humour_score": 1},
+        "race_story": {
+            "subject": "The state of all three races",
+            "chosen_headline": "Jacket Shared, Spoon Already Anchored",
+            "standfirst": "", "compelling_score": 6, "humour_score": 5,
+            "descriptor": "SIDEBAR",
+        },
+        "discovered_storylines": [],
+    }
+    sections = [
+        ("The state of all three races",
+         "<!-- storyline: race -->\nBody text."),
+    ]
+    articles = _parse_articles(
+        sections, plan, lead_kicker="ROUND OF THE DAY",
+        kicker_priority=["ROUND OF THE DAY", "THE RACES", "SIDEBAR"],
+    )
+    assert articles[0]["kicker"] == "THE RACES"
+    assert articles[0]["descriptor"] == "THE RACES"
+
+
+def test_get_edition_summary_uses_descriptor_not_bare_kicker(monkeypatch):
+    """The Contents-page teaser must show the same badge as the report page
+    itself -- reading `kicker` instead of `descriptor` reintroduces "Sidebar"
+    on the teaser even when the report page shows a proper theme."""
+    from teg_analysis.reporting import newspaper_edition as ne
+
+    def fake_build_edition(teg, round_num=None):
+        return {
+            "title": "Whatever",
+            "articles": [
+                {"is_lead": True, "kicker": "TROPHY", "descriptor": "TROPHY",
+                 "headline": "Lead Story", "standfirst": ""},
+                {"is_lead": False, "kicker": "SIDEBAR", "descriptor": "BLOW-UP HOLES",
+                 "headline": "Eleven, Eleven and a Ten", "standfirst": ""},
+            ],
+        }
+
+    monkeypatch.setattr(ne, "build_edition", fake_build_edition)
+    # get_edition_summary is lru_cache'd; a fake teg number and an explicit
+    # cache_clear (not just monkeypatch's auto-revert of build_edition) keep
+    # this synthetic result from being served to a later real-data test.
+    ne.get_edition_summary.cache_clear()
+    try:
+        summary = ne.get_edition_summary(999999)
+        assert summary["other_articles"] == [
+            {"kicker": "BLOW-UP HOLES", "headline": "Eleven, Eleven and a Ten"}
+        ]
+    finally:
+        ne.get_edition_summary.cache_clear()
+
+
 # ---------------------------------------------------------------------------
 # Round editions — generalised from the tournament-only functions above.
 # Synthetic plan/markdown only; the real end-to-end path (assemble ->
