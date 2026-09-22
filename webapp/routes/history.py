@@ -660,22 +660,116 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
     try:
         if tab == "scorecards":
             rounds = get_rounds_for_teg(teg_num)
-            parts = ['<link rel="stylesheet" href="/static/scorecard.css?v=20">']
+            parts = ['<link rel="stylesheet" href="/static/scorecard.css?v=21">']
             all_data = cached_load_all_data()
+            # Page-level Gross/Stableford selector driving every round's
+            # panes at once. The wrapper must NOT carry .sc-portrait: it
+            # contains every round block, and .sc-portrait is display:none
+            # above 640px, which would blank the whole tab on desktop. Its
+            # radios are hidden by .sc-metric-toggle > input, and scorecard.css
+            # hides the page-level .sc-mseg above 640px, so the control itself
+            # stays phone-only while the rounds inside render at every width. Each round is built with
+            # show_metric_toggle=False so it contributes bare .sc-pane divs
+            # instead of its own radio pair; the page-level radios must stay
+            # the DIRECT parent of every round block for the CSS sibling
+            # selectors in scorecard.css to reach them (see comment there).
+            gross_id, pts_id = f"scm-gross-page{teg_num}", f"scm-pts-page{teg_num}"
+            wrap_id = f"sc-metric-page-wrap{teg_num}"
+            parts.append(f'<div id="{wrap_id}" class="sc-metric-toggle sc-metric-toggle--page">')
+            parts.append(f'<input type="radio" class="scm-gross" name="sc-metric-page{teg_num}" '
+                          f'id="{gross_id}" checked>')
+            parts.append(f'<input type="radio" class="scm-pts" name="sc-metric-page{teg_num}" id="{pts_id}">')
+            parts.append('<div class="sc-mseg">'
+                          f'<label class="lbl-gross" for="{gross_id}">Gross</label>'
+                          f'<label class="lbl-pts" for="{pts_id}">Stableford</label>'
+                          '</div>')
+            any_round = False
             for r in rounds:
                 try:
                     rd = get_scorecard_data(teg_num, r, data=all_data)
                     if rd is None or rd.empty:
                         continue
-                    # Responsive block: landscape on desktop/iPad, portrait on phone.
-                    block = build_round_comparison_responsive(rd, uid=f"res{teg_num}r{r}")
-                    parts.append("<section class='sc-round'>")
-                    parts.append(f"<h2 class='section-title'>Round {r}</h2>")
+                    # Responsive block: landscape on desktop/iPad, portrait on
+                    # phone. show_metric_toggle=False: the page-level toggle
+                    # above drives every round's panes instead.
+                    block = build_round_comparison_responsive(
+                        rd, uid=f"res{teg_num}r{r}", show_metric_toggle=False)
+                    # Collapsible on phone only -- `open` is always emitted
+                    # server-side so desktop/no-JS renders exactly as before;
+                    # the inline script below collapses rounds 2+ at phone
+                    # width only.
+                    parts.append("<details class='sc-round' open>")
+                    parts.append("<summary class='sc-round-summary'>"
+                                  f"Round {r}</summary>")
                     parts.append(block)
-                    parts.append("</section>")
+                    parts.append("</details>")
+                    any_round = True
                 except Exception:
                     continue
-            table_html = "".join(parts) if len(parts) > 1 else "<p class='text-muted'>No rounds found.</p>"
+            parts.append('</div>')  # .sc-metric-toggle--page
+            if any_round:
+                # Collapse rounds 2..n at phone width only, and keep them in
+                # sync with orientation changes; scoped to this script's own
+                # previousElementSibling (the .sc-metric-toggle--page wrapper
+                # built above) so it can never touch a <details> elsewhere on
+                # the page. Runs on every full page load AND every htmx swap
+                # of this fragment: htmx re-executes <script> tags in
+                # swapped content by default (no htmx.config.allowScriptTags
+                # override in this app), so a plain inline <script> here
+                # needs no htmx:afterSwap listener the way some other pages
+                # use.
+                parts.append("""
+<script>
+(function () {
+  try {
+    var wrap = document.getElementById('__SC_WRAP_ID__');
+    if (!wrap) return;
+    var rounds = wrap.querySelectorAll(':scope > details.sc-round');
+    if (rounds.length < 2) return;
+    var mq = window.matchMedia('(max-width: 640px)');
+    var userOpened = new Set();
+    var programmatic = false;
+    for (var i = 1; i < rounds.length; i++) {
+      (function (idx) {
+        rounds[idx].addEventListener('toggle', function () {
+          try {
+            if (programmatic) return;
+            if (rounds[idx].open) { userOpened.add(idx); } else { userOpened.delete(idx); }
+          } catch (e) {}
+        });
+      })(i);
+    }
+    var apply = function () {
+      try {
+        programmatic = true;
+        for (var i = 1; i < rounds.length; i++) {
+          rounds[i].open = mq.matches ? userOpened.has(i) : true;
+        }
+      } catch (e) {
+      } finally {
+        programmatic = false;
+      }
+    };
+    var onChange = function () {
+      // A later htmx swap replaces this fragment; drop the stale listener
+      // rather than operating on detached nodes.
+      if (!wrap.isConnected) {
+        if (mq.removeEventListener) { mq.removeEventListener('change', onChange); }
+        else if (mq.removeListener) { mq.removeListener(onChange); }
+        return;
+      }
+      apply();
+    };
+    apply();
+    if (mq.addEventListener) {
+      mq.addEventListener('change', onChange);
+    } else if (mq.addListener) {
+      mq.addListener(onChange);
+    }
+  } catch (e) {}
+})();
+</script>""".replace("__SC_WRAP_ID__", wrap_id))
+            table_html = "".join(parts) if any_round else "<p class='text-muted'>No rounds found.</p>"
             return {"result_title": "Scorecards", "table_html": table_html, "raw_table": True,
                     "teg_complete": complete, "context_header": context_header}
 

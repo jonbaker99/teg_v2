@@ -234,6 +234,8 @@ better-coordinate two of them.
 
 Public tabs represent views and use `.tab-underline`. Mutually exclusive measures use `.segmented > .seg-option`. Compact buttons such as Retry represent actions and use `.action`; pills remain appropriate for dense filter values rather than view or measure semantics.
 
+A measure row with three or more options adds `.segmented--grid`. Below 640px that reflows the joined bar into an even two-column grid of separately bordered options, because four labels as long as "Gross vs Par" wrap and leave the bar ragged and too tall on a phone. Above 640px the modifier does nothing. Latest Round's and Latest TEG's metric rows both use it; the older `.metric-grid`/`.metric-pill` pair they used to share is retired.
+
 Read-only HTMX pages opt into the shared contract by declaring their canonical query keys on `<body data-public-state-keys="…">`. Every full-page handler must accept and render the same state as its partial endpoint, with invalid values normalised safely, so a copied canonical URL reproduces the confirmed view.
 
 `static/ui-polish.js` treats the server-rendered DOM as confirmed state. A request may put its target into `aria-busy`, but it must not insert an in-flow loading treatment or fade the confirmed view. Selected controls and URL history change only after the main target swaps successfully. Discrete choices push one history entry; continuous text, number and range controls replace the current entry. Back and forward reload the canonical URL.

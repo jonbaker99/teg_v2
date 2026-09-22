@@ -1444,6 +1444,31 @@ body.layout-wide .content-wrapper {
         font-size: var(--fs-400);
     }
 }
+/* .segmented--grid modifier: phone form of a 3-or-more-option measure row,
+   reflowing the joined inline-flex bar into a 2-column grid for readability.
+   Above 640px the modifier does nothing, keeping .segmented as the canonical
+   joined bar. */
+@media (max-width: 640px) {
+    .segmented--grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+        border: none;
+        background: transparent;
+        overflow: visible;
+    }
+    .segmented--grid .seg-option {
+        border: 1px solid var(--rule-color);
+        border-radius: var(--r-1);
+        min-height: 44px;
+        width: 100%;
+        min-width: 0;
+        border-right: 1px solid var(--rule-color);
+    }
+    .segmented--grid .seg-option:last-child {
+        border-right: none;
+    }
+}
 
 /* ── Compact action (C3) — .action ──
    Control pattern 3 of 3 (see C1-handoff.md §6). For real actions (expand/

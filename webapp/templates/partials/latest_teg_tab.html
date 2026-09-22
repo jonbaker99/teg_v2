@@ -20,7 +20,7 @@
       </button>
       {% endfor %}
     </div>
-    <div class="segmented" role="group" aria-label="Display mode" style="margin-left:1rem">
+    <div class="segmented" role="group" aria-label="Display mode">
       <button class="seg-option" aria-pressed="{{ 'false' if display_mode == 'pct' else 'true' }}"
               data-public-state-key="display_mode" data-public-state-value="count"
               hx-get="/latest-teg/tab" hx-target="#lt-content" hx-swap="innerHTML"
@@ -40,7 +40,7 @@
   {# Metric is a mutually exclusive measure, so it uses the shared segmented
      grammar rather than filter pills. #}
   <div class="section-controls">
-    <div class="segmented" role="group" aria-label="Metric">
+    <div class="segmented segmented--grid" role="group" aria-label="Metric">
       {% for mid, mlabel in metric_tabs %}
       <button class="seg-option" aria-pressed="{{ 'true' if mid == active_metric else 'false' }}"
               data-public-state-key="metric" data-public-state-value="{{ mid }}"

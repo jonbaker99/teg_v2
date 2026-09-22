@@ -479,10 +479,12 @@
     align-items: center;
     gap: 8px;
     min-height: 44px;
-    padding: 10px 4px;
+    padding: 10px 4px 10px 12px;
     list-style: none;
     cursor: pointer;
   }
+  /* This padding applies to both tap-to-reveal records on /latest-round and
+     /latest-teg, and the standalone /records page -- consistent formatting. */
   .records-page .rec-summary::-webkit-details-marker { display: none; }
   .records-page .rec-summary::marker { content: ""; }
   /* Flat variant: rows with nothing to reveal (e.g. latest.py's single-
@@ -510,7 +512,7 @@
   .records-page .rec-identity {
     flex: 1 1 34%;
     min-width: 0;
-    text-align: right;
+    text-align: left;
     font-size: 13px;
     color: var(--text-secondary, #555555);
     overflow: hidden;
@@ -613,7 +615,17 @@
     max-width: none;
   }
   .latest-round-page #lr-content .section-controls,
-  .latest-teg-page #lt-content .section-controls { gap: 6px; margin-bottom: 12px; }
+  .latest-teg-page #lt-content .section-controls { gap: 6px; margin-bottom: 12px; flex-wrap: nowrap; align-items: center; }
+  .latest-round-page #lr-content .section-controls .segmented:first-of-type,
+  .latest-teg-page #lt-content .section-controls .segmented:first-of-type { flex: 1 1 auto; min-width: 0; }
+  .latest-round-page #lr-content .section-controls .segmented:last-of-type,
+  .latest-teg-page #lt-content .section-controls .segmented:last-of-type { flex: 0 0 auto; }
+  /* A controls row holding a SINGLE .segmented -- the metric grid -- matches
+     both rules above, and the last-of-type one would otherwise win and shrink
+     the grid to its content width. Restore full-width fill. This must stay
+     after that pair: equal specificity, so source order decides. */
+  .latest-round-page #lr-content .section-controls .segmented:only-of-type,
+  .latest-teg-page #lt-content .section-controls .segmented:only-of-type { flex: 1 1 100%; min-width: 0; }
   .latest-round-page #lr-content .pill,
   .latest-teg-page #lt-content .pill { padding-inline: 11px; }
   .latest-round-page #lr-content .data-card,
@@ -639,41 +651,12 @@
     width: 32%;
   }
 
-  /* Scoring tab: the pivot's index column header is the raw field name
-     ("GrossVP"/"Stableford", 7-10 chars) -- too long for an equal
-     fixed-layout column's default nowrap header, so it overflows into the
-     next column instead of expanding (table-layout:fixed doesn't grow to
-     fit content). Same fix already used by scoring-matrix-page/
-     scoring-byteg-page's .teg-table thead th below: let it wrap instead. */
-  .latest-round-page #lr-content table.scoring-table th,
-  .latest-teg-page #lt-content table.scoring-table th {
-    white-space: normal;
-    overflow-wrap: anywhere;
-    line-height: 1.15;
-  }
-
-  /* Metric selector: 2x2 button grid, not a pill row -- ported from the
-     approved prototype's .metric-grid/.metric-pills (report_layout_prototypes/
-     mobile_data.css), values re-themed onto this repo's own custom
-     properties (--table-cell-border/--bg-card/--text-muted/--accent/
-     --table-toprank-bg in place of the prototype's --line/--surface/
-     --muted/--accent/--chip). Latest TEG's Aggregate-tab Metric selector
-     (partials/latest_teg_tab.html) now carries the same .metric-grid/
-     .metric-pill classes as Latest Round's, so it gets the same reflow. */
-  .latest-round-page #lr-content .metric-grid,
-  .latest-teg-page #lt-content .metric-grid {
-    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; overflow: visible; width: 100%;
-  }
-  .latest-round-page #lr-content .metric-pill,
-  .latest-teg-page #lt-content .metric-pill {
-    width: 100%; min-width: 0; min-height: 44px; padding: .45rem .7rem;
-    border: 1px solid var(--table-cell-border, #d5ddd7); border-radius: .35rem;
-    color: var(--text-muted, #666); background: var(--bg-card, #fff); font-size: 16px;
-  }
-  .latest-round-page #lr-content .metric-pill.is-active,
-  .latest-teg-page #lt-content .metric-pill.is-active {
-    border-color: var(--accent, #17683c); background: var(--table-toprank-bg, #edf5ee);
-    color: var(--text-primary, #1b241f); font-weight: 700;
+  /* Scoring tab: first column left inset. */
+  .latest-round-page #lr-content table.scoring-table th:first-child,
+  .latest-round-page #lr-content table.scoring-table td:first-child,
+  .latest-teg-page #lt-content table.scoring-table th:first-child,
+  .latest-teg-page #lt-content table.scoring-table td:first-child {
+    padding-left: 12px;
   }
 
   /* "Round leaderboard" + currently-selected metric name, replacing a plain
@@ -846,9 +829,14 @@
   }
   .latest-round-page #lr-content .rank-detail-row td,
   .latest-teg-page #lt-content .rank-detail-row td { padding: 0 !important; background: var(--btn-inactive-bg, #f5f4f0); }
-  .latest-round-page #lr-content .rank-detail-row .detail-grid,
-  .latest-teg-page #lt-content .rank-detail-row .detail-grid {
+  /* Latest Round: 2x2 grid for Out / In tiles. */
+  .latest-round-page #lr-content .rank-detail-row .detail-grid {
     display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px; padding: 10px 10px 6px;
+  }
+  /* Latest TEG: all round tiles on one row. */
+  .latest-teg-page #lt-content .rank-detail-row .detail-grid {
+    display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr);
     gap: 6px; padding: 10px 10px 6px;
   }
   .latest-round-page #lr-content .rank-detail-row .detail-grid span,
@@ -861,6 +849,14 @@
   .latest-teg-page #lt-content .rank-detail-row .detail-grid span b {
     display: block; margin-top: 3px; color: var(--text-primary, #1b241f);
     font: 600 14px var(--font-table), sans-serif; text-transform: none; letter-spacing: normal;
+  }
+  /* Latest TEG: smaller tile label and padding, plus smaller value font,
+     so four tiles fit at 320px. */
+  .latest-teg-page #lt-content .rank-detail-row .detail-grid span {
+    padding: 6px; font-size: 10px;
+  }
+  .latest-teg-page #lt-content .rank-detail-row .detail-grid span b {
+    margin-top: 2px; font-size: 13px;
   }
   .latest-round-page #lr-content .rank-detail-row .detail-mix,
   .latest-teg-page #lt-content .rank-detail-row .detail-mix {

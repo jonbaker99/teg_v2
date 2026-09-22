@@ -85,11 +85,19 @@ def _pick_detail_col_idx(df: pd.DataFrame, cols: list, candidates: list) -> int:
     return b if avg_len_b >= avg_len_a else a
 
 
-def _build_records_html(df: pd.DataFrame) -> str:
+def _build_records_html(df: pd.DataFrame, identity_is_player: bool = True) -> str:
     """Convert a records DataFrame to a styled HTML table (desktop/iPad,
     unchanged) plus a mobile-only tap-to-reveal list of the same rows.
     mobile.css shows exactly one of the two per breakpoint (same
-    dual-markup + CSS-toggle mechanism as .lb-table-card/.lb-cards)."""
+    dual-markup + CSS-toggle mechanism as .lb-table-card/.lb-cards).
+
+    identity_is_player: whether the identity column holds a player name
+    (the default, and true for every /records section, which is why the
+    full/short-name-span treatment applies there). Callers whose identity
+    column holds something else -- e.g. latest.py's Personal Bests/Worsts
+    sections, where it's a metric's friendly name -- pass False so that
+    value is rendered as-is instead of being run through _player_name_spans
+    (which would otherwise abbreviate it, e.g. "Gross vs Par" -> "G.Par")."""
     if df is None or df.empty:
         return "<p class='text-muted text-sm'>No data available.</p>"
 
@@ -169,7 +177,11 @@ def _build_records_html(df: pd.DataFrame) -> str:
             # Emit the full/short pair so CSS can swap to "J.PATTERSON"
             # there instead of truncating. Swapped-in initials lists ("AB /
             # HM") are already short -- left untouched.
-            id_html = _player_name_spans(id_val) if not is_placeholder and id_val not in (None, "") else id_val
+            id_html = (
+                _player_name_spans(id_val)
+                if identity_is_player and not is_placeholder and id_val not in (None, "")
+                else id_val
+            )
         else:
             id_val, det_val = "", ""
             id_html = ""
@@ -222,11 +234,11 @@ def _looks_numeric(df: pd.DataFrame, col: str) -> bool:
         return False
 
 
-def _section(title: str, df) -> dict:
+def _section(title: str, df, identity_is_player: bool = True) -> dict:
     """Build a section dict with title, HTML table and record count."""
     return {
         "title": title,
-        "table_html": _build_records_html(df),
+        "table_html": _build_records_html(df, identity_is_player=identity_is_player),
         "record_count": len(df) if df is not None and not df.empty else 0,
     }
 

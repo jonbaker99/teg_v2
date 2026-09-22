@@ -571,31 +571,50 @@ def build_round_comparison_stableford_portrait(round_data: pd.DataFrame) -> str:
 # block's radio group unique.
 # ---------------------------------------------------------------------------
 
-def build_round_comparison_responsive(round_data: pd.DataFrame, uid: str) -> str:
+def build_round_comparison_responsive(round_data: pd.DataFrame, uid: str,
+                                       show_metric_toggle: bool = True) -> str:
     """Build a responsive field scorecard (gross + stableford) for one round.
 
     Args:
         round_data: DataFrame for all players in a round (Pl, Player, Hole, PAR,
             Sc, GrossVP, Stableford, SI, Net cols).
         uid: unique suffix for the portrait toggle's radio group on this page.
+        show_metric_toggle: when True (default), the ``.sc-portrait`` block
+            carries its own Gross/Stableford radio pair + ``.sc-mseg`` toggle.
+            Pass False to omit them and emit just the two ``.sc-pane`` divs --
+            for pages that drive the Gross/Stableford choice from a single
+            page-level toggle instead of one per round (see
+            webapp/routes/history.py's scorecards tab). The ``.sc-landscape``
+            block is unchanged either way.
 
     Returns:
         HTML string with a ``.sc-landscape`` block (gross then stableford,
-        stacked) and a ``.sc-portrait`` block (CSS Gross/Stableford toggle).
+        stacked) and a ``.sc-portrait`` block (CSS Gross/Stableford toggle,
+        or bare panes when ``show_metric_toggle`` is False).
     """
     gross_l = build_round_comparison_gross_table(round_data)
     stbl_l = build_round_comparison_stableford_table(round_data)
     gross_p = build_round_comparison_gross_portrait(round_data)
     stbl_p = build_round_comparison_stableford_portrait(round_data)
 
-    gross_id, pts_id = f'scm-gross-{uid}', f'scm-pts-{uid}'
-    return (
+    landscape = (
         '<div class="sc-landscape">'
         '<div class="card-header">Gross</div>'
         f'<div class="data-card"><div class="table-wrapper">{gross_l}</div></div>'
         '<div class="card-header">Stableford</div>'
         f'<div class="data-card"><div class="table-wrapper">{stbl_l}</div></div>'
         '</div>'
+    )
+    panes = (
+        f'<div class="sc-pane sc-pane-gross data-card"><div class="sc-scroll">{gross_p}</div></div>'
+        f'<div class="sc-pane sc-pane-pts data-card"><div class="sc-scroll">{stbl_p}</div></div>'
+    )
+
+    if not show_metric_toggle:
+        return landscape + f'<div class="sc-portrait">{panes}</div>'
+
+    gross_id, pts_id = f'scm-gross-{uid}', f'scm-pts-{uid}'
+    return landscape + (
         '<div class="sc-portrait sc-metric-toggle">'
         f'<input type="radio" class="scm-gross" name="sc-metric-{uid}" id="{gross_id}" checked>'
         f'<input type="radio" class="scm-pts" name="sc-metric-{uid}" id="{pts_id}">'
@@ -603,8 +622,7 @@ def build_round_comparison_responsive(round_data: pd.DataFrame, uid: str) -> str
         f'<label class="lbl-gross" for="{gross_id}">Gross</label>'
         f'<label class="lbl-pts" for="{pts_id}">Stableford</label>'
         '</div>'
-        f'<div class="sc-pane sc-pane-gross data-card"><div class="sc-scroll">{gross_p}</div></div>'
-        f'<div class="sc-pane sc-pane-pts data-card"><div class="sc-scroll">{stbl_p}</div></div>'
+        f'{panes}'
         '</div>'
     )
 
