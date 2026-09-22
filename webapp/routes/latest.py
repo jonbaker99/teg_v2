@@ -367,6 +367,12 @@ def _format_scoring_display(counts: pd.DataFrame, field: str, mode: str) -> tupl
     else:
         display_df[idx_col] = display_df[idx_col].apply(lambda v: str(int(v)))
 
+    # The pandas index name is the raw internal field id (e.g. "GrossVP" /
+    # "Stableford") -- rename to the user-facing "Score" label after the
+    # values have been formatted into strings (named-column rename; no
+    # positional setitem, no string-into-numeric-column assignment).
+    display_df = display_df.rename(columns={idx_col: "Score"})
+
     if mode == "pct":
         for col in display_df.columns[1:]:
             display_df[col] = display_df[col].apply(lambda v: "-" if int(v) == 0 else f"{int(v)}%")
@@ -454,7 +460,7 @@ def _render_records_summary(rd: dict, page_type: str = 'TEG') -> str:
     for r in rd.get('best_score_counts', []):
         bests.append((f"Most {r['score_type']}", str(r['count']), r['player']))
     if bests:
-        sections.append(("All-Time Records (Bests)", _records_df(bests)))
+        sections.append(("All-Time Records (Bests)", _records_df(bests), True))
 
     # --- All-time records (worsts) ---
     worsts = []
@@ -463,7 +469,7 @@ def _render_records_summary(rd: dict, page_type: str = 'TEG') -> str:
     for r in rd.get('worst_score_counts', []):
         worsts.append((f"Most {r['score_type']}", str(r['count']), r['player']))
     if worsts:
-        sections.append(("All-Time Records (Worsts)", _records_df(worsts)))
+        sections.append(("All-Time Records (Worsts)", _records_df(worsts), True))
 
     # --- Personal bests (grouped by player -- player is the title column,
     # so consecutive entries for the same player collapse to one label,
@@ -475,7 +481,7 @@ def _render_records_summary(rd: dict, page_type: str = 'TEG') -> str:
         pbs.append((pb['player'], _fmt_record_value(pb['value'], pb['metric']), f"{pb['segment']} 9 - {pb['friendly_name']}"))
     pbs.sort(key=lambda row: row[0])
     if pbs:
-        sections.append(("Personal Bests", _records_df(pbs)))
+        sections.append(("Personal Bests", _records_df(pbs), False))
 
     # --- Personal worsts (grouped by player) ---
     worsts_pb = []
@@ -483,15 +489,16 @@ def _render_records_summary(rd: dict, page_type: str = 'TEG') -> str:
         worsts_pb.append((w['player'], _fmt_record_value(w['value'], w['metric']), w['friendly_name']))
     worsts_pb.sort(key=lambda row: row[0])
     if worsts_pb:
-        sections.append(("Personal Worsts", _records_df(worsts_pb)))
+        sections.append(("Personal Worsts", _records_df(worsts_pb), False))
 
     out = ["<div class='records-page'>"]
-    for i, (title, df) in enumerate(sections):
+    for i, (title, df, identity_is_player) in enumerate(sections):
         if i > 0:
             out.append("<hr class='divider--dotted'>")
         out.append(
             f"<div><h2 class='section-title'>{title}</h2>"
-            f"<div class='data-card'><div class='overflow-x-auto'>{_build_records_html(df)}</div></div></div>"
+            f"<div class='data-card'><div class='overflow-x-auto'>"
+            f"{_build_records_html(df, identity_is_player=identity_is_player)}</div></div></div>"
         )
     out.append("</div>")
     return "".join(out)
@@ -511,8 +518,13 @@ LATEST_ROUND_TABS = [
 # Scoring-tab score-type toggle (Gross vs Par / Stableford)
 SCORING_FIELDS = [("GrossVP", "Gross vs Par"), ("Stableford", "Stableford")]
 
-# Metric sub-tabs for the Scoreboards (round) / Aggregate (TEG) tabs
+# Metric sub-tabs for the Scoreboards (round) / Aggregate (TEG) tabs.
+# /latest-round deliberately keeps this original order and its "Sc" default.
 METRIC_TABS = [("Sc", "Score"), ("Stableford", "Stableford"), ("GrossVP", "Gross vs Par"), ("NetVP", "Net vs Par")]
+
+# Metric sub-tabs for the Aggregate (TEG) tab only -- Stableford-first order,
+# with Stableford as the default metric (see latest_teg_page / latest_teg_tab).
+LATEST_TEG_METRIC_TABS = [("Stableford", "Stableford"), ("GrossVP", "Gross vs Par"), ("Sc", "Score"), ("NetVP", "Net vs Par")]
 
 
 def _echo_chart_state(ctx: dict, metric: str, scale: str, player: str, rewind, total: str = "round") -> dict:
@@ -930,15 +942,15 @@ LATEST_TEG_TABS = [
 ]
 
 
-def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP", metric: str = "Sc",
+def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP", metric: str = "Stableford",
                             display_mode: str = "count") -> dict:
     """Build template context for a latest-teg tab."""
     try:
         sections = []
 
         if tab == "aggregate":
-            metric = metric if metric in dict(METRIC_TABS) else "Sc"
-            friendly = dict(METRIC_TABS)[metric]
+            metric = metric if metric in dict(LATEST_TEG_METRIC_TABS) else "Stableford"
+            friendly = dict(LATEST_TEG_METRIC_TABS)[metric]
             teg_str = f"TEG {teg_num}"
             try:
                 # Same ranked-table look as the round Scoreboards tab
@@ -995,7 +1007,7 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
                 logger.exception("_latest_teg_tab_context: aggregate table build failed")
                 table_html = "<p class='text-muted text-sm'>No aggregate data available.</p>"
             return {"sections": [{"title": "TEG leaderboard", "table_html": table_html}],
-                    "metric_tabs": METRIC_TABS, "active_metric": metric}
+                    "metric_tabs": LATEST_TEG_METRIC_TABS, "active_metric": metric}
 
         elif tab == "scoring":
             field = score_type if score_type in ("GrossVP", "Stableford") else "GrossVP"
@@ -1149,14 +1161,14 @@ def latest_teg_page(
     teg: Optional[int] = Query(None),
     tab: str = Query("aggregate"),
     score_type: str = Query("GrossVP"),
-    metric: str = Query("Sc"),
+    metric: str = Query("Stableford"),
     display_mode: str = Query("count"),
 ):
     teg_numbers = get_available_teg_numbers()
     teg_num = teg if teg in teg_numbers else get_default_teg_num()
     tab = tab if tab in {tab_id for tab_id, _label in LATEST_TEG_TABS} else "aggregate"
     score_type = score_type if score_type in dict(SCORING_FIELDS) else "GrossVP"
-    metric = metric if metric in dict(METRIC_TABS) else "Sc"
+    metric = metric if metric in dict(LATEST_TEG_METRIC_TABS) else "Stableford"
     display_mode = display_mode if display_mode in {"count", "pct"} else "count"
     ctx = _latest_teg_tab_context(teg_num, tab, score_type, metric, display_mode)
     return templates.TemplateResponse("latest_teg.html", {
@@ -1177,7 +1189,7 @@ def latest_teg_page(
 
 @router.get("/latest-teg/tab")
 def latest_teg_tab(request: Request, teg: int = Query(...), tab: str = Query("aggregate"),
-                         score_type: str = Query("GrossVP"), metric: str = Query("Sc"),
+                         score_type: str = Query("GrossVP"), metric: str = Query("Stableford"),
                          display_mode: str = Query("count")):
     ctx = _latest_teg_tab_context(teg, tab, score_type, metric, display_mode)
     return templates.TemplateResponse("partials/latest_teg_tab.html", {

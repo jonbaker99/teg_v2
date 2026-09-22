@@ -9,22 +9,22 @@
 {% elif sections %}
   {% if scoring_fields %}
   <div class="section-controls">
-    <div class="pill-group" role="group" aria-label="Score type">
+    <div class="segmented" role="group" aria-label="Score type">
       {% for fid, flabel in scoring_fields %}
-      <button class="pill{% if fid == score_type %} pill--active{% endif %}"
+      <button class="seg-option" aria-pressed="{{ 'true' if fid == score_type else 'false' }}"
               hx-get="/latest-round/tab" hx-target="#lr-content" hx-swap="innerHTML"
               hx-vals='{"teg": "{{ teg }}", "round": "{{ round }}", "tab": "scoring", "score_type": "{{ fid }}", "display_mode": "{{ display_mode }}"}'>
         {{ flabel }}
       </button>
       {% endfor %}
     </div>
-    <div class="pill-group" role="group" aria-label="Display mode" style="margin-left:1rem">
-      <button class="pill{% if display_mode != 'pct' %} pill--active{% endif %}"
+    <div class="segmented" role="group" aria-label="Display mode">
+      <button class="seg-option" aria-pressed="{{ 'false' if display_mode == 'pct' else 'true' }}"
               hx-get="/latest-round/tab" hx-target="#lr-content" hx-swap="innerHTML"
               hx-vals='{"teg": "{{ teg }}", "round": "{{ round }}", "tab": "scoring", "score_type": "{{ score_type }}", "display_mode": "count"}'>
         Count
       </button>
-      <button class="pill{% if display_mode == 'pct' %} pill--active{% endif %}"
+      <button class="seg-option" aria-pressed="{{ 'true' if display_mode == 'pct' else 'false' }}"
               hx-get="/latest-round/tab" hx-target="#lr-content" hx-swap="innerHTML"
               hx-vals='{"teg": "{{ teg }}", "round": "{{ round }}", "tab": "scoring", "score_type": "{{ score_type }}", "display_mode": "pct"}'>
         %
@@ -33,17 +33,11 @@
   </div>
   {% endif %}
   {% if metric_tabs %}
-  {# Desktop: existing .pill-group/.pill/.pill--active classes (already
-     styled in base-vars.css, matching the Score type/Display mode controls
-     above) give these a visible selected state above 640px. Phone: the
-     approved prototype's .metric-grid/.metric-pills (report_layout_prototypes/
-     mobile_data.css) reflow the same buttons into a 2x2 grid instead of a
-     pill row -- mobile.css overrides .metric-pill/.is-active there; both
-     class pairs sit on the same button so neither breakpoint loses styling. #}
+  {# Metric row now uses the shared .segmented/.segmented--grid control. #}
   <div class="section-controls">
-    <div class="metric-grid pill-group" role="group" aria-label="Metric">
+    <div class="segmented segmented--grid" role="group" aria-label="Metric">
       {% for mid, mlabel in metric_tabs %}
-      <button class="metric-pill pill{% if mid == active_metric %} is-active pill--active{% endif %}"
+      <button class="seg-option" aria-pressed="{{ 'true' if mid == active_metric else 'false' }}"
               hx-get="/latest-round/tab" hx-target="#lr-content" hx-swap="innerHTML"
               data-lr-query="metric" value="{{ mid }}"
               hx-vals='{"teg": "{{ teg }}", "round": "{{ round }}", "tab": "scoreboard", "metric": "{{ mid }}", "scale": "{{ chart_scale|default("adjusted") }}", "rewind": "{{ chart_rewind|default(18) }}", "total": "{{ chart_total|default("round") }}"}'>
