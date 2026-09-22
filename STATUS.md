@@ -4,6 +4,10 @@ Current state and next priorities. Instructions and architecture live in `CLAUDE
 
 **Last updated:** 2026-09-22 (Landing-page standings, honours and links)
 
+## 2026-09-22 — Tighter home headline and quieter honours
+
+The landing headline uses a tighter 1.1 line-height. Champion and its winner use primary text; Green Jacket and Wooden Spoon labels and winners use secondary grey, with theme-aware dark-mode colours.
+
 ## 2026-09-22 — Gross comparison on the landing page
 
 The main standings table adds Gross as the final metric column after Points (net vs par before TEG 8). Gross totals are versus par, signed including +0, and regular weight so the net competition remains primary. Mobile names stay on one line when they fit; the shared name-wrapping fallback applies only when space requires it.

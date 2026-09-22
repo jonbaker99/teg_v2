@@ -31,6 +31,7 @@
     .state-headline {
         font-family: var(--font-serif);
         font-size: var(--fs-700, 36px);
+        line-height: 1.1;
         font-weight: 700;
         margin: 0 0 var(--sp-1, 4px) 0;
         color: var(--text-primary);
@@ -342,9 +343,10 @@
         font-family: var(--font-sans);
         font-size: var(--fs-300, 14px);
     }
-    .honour-label { color: var(--text-secondary); }
-    .honour-name { font-weight: 700; color: var(--text-primary); }
-    .honour-name.honour { color: var(--green); }
+    .honours-line > span:not(.honour-sep) { color: var(--text-secondary); }
+    .honours-line > span.honour-champion { color: var(--text-primary); }
+    .honour-label, .honour-name { color: inherit; }
+    .honour-name { font-weight: 700; }
     .honour-sep { color: var(--rule-color); }
     .honours-divider {
         border: none;
@@ -452,9 +454,9 @@
             <a class="teaser-link" href="{{ state.report_summary.link }}" style="display:inline-block; margin-bottom: var(--sp-5, 20px);">Read the {{ state.teg_label }} report ↗</a>
 
             <div class="honours-line" style="margin-bottom: var(--sp-5, 20px);">
-                <span><span class="honour-label">Champion</span> <span class="honour-name honour">{{ state.trophy or "–" }}</span></span>
+                <span class="honour-champion"><span class="honour-label">Champion</span> <span class="honour-name">{{ state.trophy or "–" }}</span></span>
                 <span class="honour-sep">|</span>
-                <span><span class="honour-label">Green Jacket</span> <span class="honour-name honour">{{ state.jacket or "–" }}</span></span>
+                <span><span class="honour-label">Green Jacket</span> <span class="honour-name">{{ state.jacket or "–" }}</span></span>
                 <span class="honour-sep">|</span>
                 <span><span class="honour-label">Wooden spoon</span> <span class="honour-name">{{ state.spoon or "–" }}</span></span>
             </div>
