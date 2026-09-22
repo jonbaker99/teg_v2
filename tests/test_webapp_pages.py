@@ -222,7 +222,7 @@ def test_teg_reports_keeps_requested_in_progress_round_edition(client, monkeypat
     monkeypatch.setattr(reports, "available_rounds", lambda teg: (1,) if teg == in_progress_teg else ())
     monkeypatch.setattr(reports, "has_edition", lambda *_: False)
     monkeypatch.setattr(reports, "build_edition", fake_build_edition)
-    monkeypatch.setattr(reports, "render_desktop_html", lambda edition, rail: "")
+    monkeypatch.setattr(reports, "render_desktop_html", lambda edition, rail, story_anchors=False: "")
     monkeypatch.setattr(reports, "for_page", lambda edition: edition)
     monkeypatch.setattr(reports, "has_pdf", lambda *_: False)
 
@@ -1245,3 +1245,19 @@ def test_contents_sitemap_is_collapsible_and_closed_by_default(client):
     urls = [url for section in NAV_SECTIONS for (_t, url, _k, _i) in section["pages"]]
     for url in urls:
         assert f'href="{url}"' in resp.text
+
+
+def test_contents_article_links_target_stories(client):
+    summary = contents_route.get_edition_summary(18)
+    page = client.get("/contents")
+    _assert_ok_no_error(page)
+    assert f'href="{summary["lead_link"]}"' in page.text
+    panel = client.get("/contents/panel", params={"teg": 18, "state": "complete"})
+    _assert_ok_no_error(panel)
+    for article in summary["other_articles"]:
+        assert f'href="{article["link"]}"' in panel.text
+    assert f'href="{summary["link"]}">View full report' in panel.text
+    report = client.get("/teg-reports", params={"teg": 18})
+    _assert_ok_no_error(report)
+    for link in [summary["lead_link"], *[a["link"] for a in summary["other_articles"]]]:
+        assert f'id="{link.split("#")[1]}"' in report.text

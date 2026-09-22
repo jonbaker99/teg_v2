@@ -18,7 +18,7 @@
         {% if panel.report_summary.standfirst %}
         <p class="teaser-standfirst">{{ panel.report_summary.standfirst }}</p>
         {% endif %}
-        <a class="teaser-link" href="{{ panel.report_summary.link }}">Read the Round {{ panel.report_summary.round }} report ↗</a>
+        <a class="teaser-link" href="{{ panel.report_summary.lead_link | default(panel.report_summary.link) }}">Read the Round {{ panel.report_summary.round }} report ↗</a>
     </div>
     {% endif %}
 </div>
@@ -34,7 +34,7 @@
         {% if panel.report_summary and panel.report_summary.other_articles %}
         <ul class="headline-list">
             {% for a in panel.report_summary.other_articles %}
-            <li><a href="{{ panel.report_summary.link }}"><span class="hl-kicker">{{ a.kicker }}</span><span class="hl-headline">{{ a.headline }}</span></a></li>
+            <li><a href="{{ a.link }}"><span class="hl-kicker">{{ a.kicker }}</span><span class="hl-headline">{{ a.headline }}</span></a></li>
             {% endfor %}
         </ul>
         {% endif %}

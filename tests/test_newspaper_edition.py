@@ -530,8 +530,83 @@ def test_get_edition_summary_uses_descriptor_not_bare_kicker(monkeypatch):
     try:
         summary = ne.get_edition_summary(999999)
         assert summary["other_articles"] == [
-            {"kicker": "BLOW-UP HOLES", "headline": "Eleven, Eleven and a Ten"}
+            {"kicker": "BLOW-UP HOLES", "headline": "Eleven, Eleven and a Ten",
+             "link": "/teg-reports?teg=999999#story/1"}
         ]
+        assert summary["link"] == "/teg-reports?teg=999999"
+        assert summary["lead_link"] == "/teg-reports?teg=999999#story/0"
+    finally:
+        ne.get_edition_summary.cache_clear()
+
+
+def _render_article(headline: str, *, is_lead: bool = False, words: int = 10,
+                    kicker: str = "SIDEBAR") -> dict:
+    return {
+        "is_lead": is_lead, "headline": headline, "standfirst": "Standfirst",
+        "paragraphs": ["Body."], "words": words, "kicker": kicker,
+        "compelling": 5, "humour": 5,
+    }
+
+
+def _render_edition(articles: list[dict]) -> dict:
+    return {
+        "dateline": {"teg": "TEG 99", "round": None, "venue": "Somewhere", "year": "2026"},
+        "articles": articles, "results": [],
+        "standings": [{"trophy": "A 1", "jacket": "A 1"}], "records": [],
+    }
+
+
+def test_desktop_story_targets_follow_source_order_despite_row_reordering():
+    from teg_analysis.reporting.newspaper_edition import render_desktop_html
+
+    # The Green Jacket sub is promoted into the first row, ahead of the older
+    # sidebar, but its target remains second after the lead in source order.
+    edition = _render_edition([
+        _render_article("Earlier sidebar", words=10),
+        _render_article("Lead", is_lead=True),
+        _render_article("Promoted jacket", words=20, kicker="GREEN JACKET"),
+        _render_article("Later sidebar", words=30),
+    ])
+    html = render_desktop_html(edition, story_anchors=True)
+
+    assert '<div class="lead-head" id="story/0" tabindex="-1">' in html
+    assert 'id="story/1"' in html
+    assert 'id="story/2"' in html
+    assert 'id="story/3"' in html
+    assert html.index('id="story/2"') < html.index('id="story/1"')
+
+
+def test_desktop_story_targets_do_not_mutate_edition_articles():
+    from teg_analysis.reporting.newspaper_edition import render_desktop_html
+
+    articles = [_render_article("Lead", is_lead=True), _render_article("Sub")]
+    edition = _render_edition(articles)
+    render_desktop_html(edition, story_anchors=True)
+
+    assert articles == [_render_article("Lead", is_lead=True), _render_article("Sub")]
+
+
+def test_desktop_story_targets_are_opt_in():
+    from teg_analysis.reporting.newspaper_edition import render_desktop_html
+
+    edition = _render_edition([_render_article("Lead", is_lead=True), _render_article("Sub")])
+    assert 'id="story/' not in render_desktop_html(edition)
+    assert 'id="story/0"' in render_desktop_html(edition, story_anchors=True)
+
+
+def test_edition_summary_story_links_include_round_url(monkeypatch):
+    from teg_analysis.reporting import newspaper_edition as ne
+
+    monkeypatch.setattr(ne, "build_edition", lambda teg, round_num: {
+        "title": "Round report",
+        "articles": [_render_article("Lead", is_lead=True), _render_article("Sub")],
+    })
+    ne.get_edition_summary.cache_clear()
+    try:
+        summary = ne.get_edition_summary(18, 2)
+        assert summary["link"] == "/teg-reports?teg=18&round=2"
+        assert summary["lead_link"] == "/teg-reports?teg=18&round=2#story/0"
+        assert summary["other_articles"][0]["link"] == "/teg-reports?teg=18&round=2#story/1"
     finally:
         ne.get_edition_summary.cache_clear()
 

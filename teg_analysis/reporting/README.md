@@ -647,6 +647,8 @@ doesn't discard the ones already paid for. `--no-voice` is a deprecated alias fo
 
 #### From styled markdown to a finished report — the presentation stage
 
+`get_edition_summary()` exposes a base report `link`, a `lead_link` ending in `#story/0`, and a story-specific `link` for each secondary headline. Story numbers follow lead-first edition order. Browser callers opt into `render_desktop_html(..., story_anchors=True)` for matching targets; the default stays unanchored so PDF markup and fingerprints remain unchanged.
+
 The three stages above end at a markdown file. They are not the end of the pipeline: the report a
 reader sees is a **newspaper edition**, and two more hops build it. Both are deterministic — **no LLM
 call, no cost.**

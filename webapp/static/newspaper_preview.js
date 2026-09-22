@@ -27,6 +27,7 @@
   var subs = edition.articles.filter(function (a) { return !a.is_lead; });
   var all = [lead].concat(subs);
 
+  var desktopLayout = window.matchMedia("(min-width: 701px)");
   var state = { view: null, apxOpen: false };
   var indexScroll = 0;
   var historyAvailable = true;
@@ -169,10 +170,13 @@
     writeHistory(h, replace);
     render();
   }
-  window.addEventListener("popstate", function () {
+  function navigateFromHash() {
     fromHash();
     render();
-  });
+  }
+  window.addEventListener("popstate", navigateFromHash);
+  window.addEventListener("hashchange", navigateFromHash);
+  desktopLayout.addEventListener("change", function () { render(); });
 
   function scrollHost() {
     var s = document.getElementById("scroller");
@@ -180,6 +184,16 @@
     return document.scrollingElement || document.documentElement;
   }
   function restoreScroll() {
+    if (desktopLayout.matches) {
+      if (state.view !== null) {
+        var target = document.getElementById("story/" + state.view);
+        if (target) {
+          target.scrollIntoView({ block: "start" });
+          target.focus({ preventScroll: true });
+        }
+      }
+      return;
+    }
     var host = scrollHost();
     if (state.view === null) {
       host.scrollTop = indexScroll;
@@ -216,11 +230,15 @@
 
   function render() {
     mount.innerHTML = state.view === null ? renderIndex() : renderArticle(state.view);
-    document.body.classList.toggle("np-reading", state.view !== null);
+    document.body.classList.toggle("np-reading", !desktopLayout.matches && state.view !== null);
     bindScreen();
     restoreScroll();
   }
 
   fromHash();
   render();
+  // Web fonts can change desktop article positions after the initial jump.
+  if (document.fonts) document.fonts.ready.then(function () {
+    if (desktopLayout.matches && state.view !== null) restoreScroll();
+  });
 })();

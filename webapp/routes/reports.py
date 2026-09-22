@@ -199,7 +199,7 @@ def teg_reports(request: Request, teg: Optional[int] = None, round: Optional[int
     edition_json = None
     caption = None
     if edition is not None:
-        desktop_html = render_desktop_html(edition, rail="s2")
+        desktop_html = render_desktop_html(edition, rail="s2", story_anchors=True)
         edition_json = json.dumps(for_page(edition))
         if selected_teg < 8:
             caption = _PRE_TEG8_CAPTION

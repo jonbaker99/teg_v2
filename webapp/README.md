@@ -890,6 +890,7 @@ HTML builders).
   TEG select once `available_rounds(teg)` is non-empty. Start at
   `report_layout_prototypes/README.md` for the chosen elements and
   composition rule.
+  - **Article links.** Landing-page headlines use `/teg-reports?teg=N#story/I` (plus `round=R` for round editions), with the lead at zero and other stories in edition order. Desktop targets retain these indices when layout packing reorders stories; mobile opens the matching reader screen. Changing the hash or crossing the report breakpoint keeps the targeted story selected. “View full report” opens the front page. Browser rendering opts into `story_anchors=True`; PDF rendering stays unchanged.
   - **Dark report palette.** `static/newspaper_dark.css` loads after the newspaper layout on `/teg-reports`. It scopes warm charcoal surfaces, cream headlines, beige secondary text and green accents to `html[data-mode="dark"] .np-page`, covering the phone index/reader and desktop editions. This browser-only stylesheet is excluded from the PDF build; the shared light newspaper stylesheet remains unchanged.
   - **Download PDF (2026-09-15).** `/teg-reports` shows a Download PDF button
     next to a report whenever one has been pre-rendered — `GET

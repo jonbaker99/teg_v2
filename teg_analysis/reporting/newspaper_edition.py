@@ -287,14 +287,20 @@ def get_edition_summary(teg: int, round_num: int | None = None) -> dict[str, Any
     link = (f"/teg-reports?teg={teg}" if round_num is None
             else f"/teg-reports?teg={teg}&round={round_num}")
     # Secondary headlines for a compact "Also in this report" teaser list.
-    # No per-article anchors exist in render_desktop_html(), so these share
-    # the lead's own link rather than pointing at a specific section.
+    # Story targets are numbered with the lead first, followed by the
+    # non-lead articles in their source-edition order. The desktop layout may
+    # rearrange those articles to balance rows, but its anchors keep this
+    # stable mobile-routing order.
     # Capped at 4 -- a report can carry several sidebars (TEG 18 has 5 non-
     # lead articles); the teaser is a pointer into the report, not a full
     # table of contents.
     other_articles = [
-        {"kicker": a.get("descriptor") or a.get("kicker"), "headline": a.get("headline")}
-        for a in edition["articles"] if not a["is_lead"]
+        {
+            "kicker": a.get("descriptor") or a.get("kicker"),
+            "headline": a.get("headline"),
+            "link": f"{link}#story/{story_index}",
+        }
+        for story_index, a in enumerate((a for a in edition["articles"] if not a["is_lead"]), start=1)
     ][:4]
     return {
         "teg": teg,
@@ -304,6 +310,7 @@ def get_edition_summary(teg: int, round_num: int | None = None) -> dict[str, Any
         "headline": lead.get("headline"),
         "standfirst": lead.get("standfirst"),
         "link": link,
+        "lead_link": f"{link}#story/0",
         "other_articles": other_articles,
     }
 
@@ -1144,8 +1151,10 @@ def _results_strip_html(edition: dict[str, Any]) -> str:
 
 def _sub_card_html(a: dict[str, Any]) -> str:
     standfirst = f'<p class="sub-standfirst">{_esc(a["standfirst"])}</p>' if a["standfirst"] else ""
+    story_index = a.get("_story_index")
+    story_id = f' id="story/{story_index}" tabindex="-1"' if story_index is not None else ""
     return (
-        '<article class="sub-card">'
+        f'<article class="sub-card"{story_id}>'
         f'<p class="kicker">{_esc(a.get("descriptor") or a["kicker"])}</p>'
         f'<h2 class="sub-headline">{_esc(a["headline"])}</h2>'
         f"{standfirst}"
@@ -1273,12 +1282,14 @@ def _subs_rows_html(rows: list[list[dict[str, Any]]]) -> str:
     return "".join(parts)
 
 
-def _main_html(edition: dict[str, Any], lead: dict[str, Any], rail: str) -> str:
+def _main_html(edition: dict[str, Any], lead: dict[str, Any], rail: str,
+               story_index: int | None = None) -> str:
     """`.lead-head` plus the results/lead-body block, which differs by rail:
     S2 puts the results (and final standings) in an `<aside>` beside the lead
     body; S1 drops the aside and renders the results as a full-width strip
     above a full-width, 3-column lead body instead."""
-    head = f'<div class="lead-head">{_lead_head_html(lead)}</div>'
+    story_id = f' id="story/{story_index}" tabindex="-1"' if story_index is not None else ""
+    head = f'<div class="lead-head"{story_id}>{_lead_head_html(lead)}</div>'
     if rail == "s1":
         return (
             head
@@ -1288,20 +1299,35 @@ def _main_html(edition: dict[str, Any], lead: dict[str, Any], rail: str) -> str:
     return head + f'<div class="main-split">{_lead_body_html(lead)}{_rail_html(edition)}</div>'
 
 
-def render_desktop_html(edition: dict[str, Any], rail: str = "s2") -> str:
+def render_desktop_html(edition: dict[str, Any], rail: str = "s2", *,
+                        story_anchors: bool = False) -> str:
     """Render the `.paper` inner HTML for the desktop layout.
 
     `rail` is "s2" (default — results + final standings beside the lead) or
     "s1" (no rail — results as a full-width strip, standings only in the
     appendix); see `webapp/report_layout_prototypes/elements.html`'s
-    `railVariants()`.
+    `railVariants()`. Set `story_anchors` for `id="story/N"` targets used by
+    in-page report links. It defaults to false so PDF source HTML is stable.
     """
-    lead = next(a for a in edition["articles"] if a["is_lead"])
-    subs = [a for a in edition["articles"] if not a["is_lead"]]
+    lead_source = next(a for a in edition["articles"] if a["is_lead"])
+    subs_source = [a for a in edition["articles"] if not a["is_lead"]]
+    if story_anchors:
+        # The logical story order powers mobile deep links: lead first, then
+        # non-lead articles in source-edition order. Copy before adding the
+        # renderer-only indexes, so callers can reuse their edition dict.
+        lead = {**lead_source, "_story_index": 0}
+        subs = [
+            {**article, "_story_index": story_index}
+            for story_index, article in enumerate(subs_source, start=1)
+        ]
+    else:
+        lead = lead_source
+        subs = subs_source
     rows = plan_rows(subs, preferred_kicker=edition.get("preferred_kicker", "GREEN JACKET"))
     return (
         _masthead_html(edition)
-        + _main_html(edition, lead, rail)
+        + _main_html(edition, lead, rail,
+                     story_index=lead.get("_story_index"))
         + '<div class="deck-rule"></div>'
         + _subs_rows_html(rows)
         + _appendix_html(edition)

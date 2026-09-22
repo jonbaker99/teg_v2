@@ -4,6 +4,10 @@ Current state and next priorities. Instructions and architecture live in `CLAUDE
 
 **Last updated:** 2026-09-22 (Landing-page standings, honours and links)
 
+## 2026-09-22 — Landing-page links open individual report stories
+
+Landing-page lead and secondary headlines link directly to their report stories. Desktop scrolls to the selected article; mobile opens it in the reader. Full-report links still open the report front page. The same story remains selected when switching between desktop and mobile layouts.
+
 ## 2026-09-22 — Tighter home headline and quieter honours
 
 The landing headline uses a tighter 1.2 line-height. Champion and its winner use primary text; Green Jacket and Wooden Spoon labels and winners use secondary grey, with theme-aware dark-mode colours.
