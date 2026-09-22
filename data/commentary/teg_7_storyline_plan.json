@@ -128,7 +128,8 @@
       "chosen_headline": "The Record Book Lasted One Day",
       "standfirst": "Henry Meller's -13 at Praia D'El Rey was the lowest round TEG had recorded — until Bom Sucesso, where he and two rivals produced the best scoring in the tournament's history.",
       "compelling_score": 8,
-      "humour_score": 5
+      "humour_score": 5,
+      "descriptor": "THE RECORD BOOK"
     },
     {
       "subject": "Jon Baker sets the best gross round in TEG history in the opening round and then gives it all back with a 10, a 7 and a sextuple-bogey 11",
@@ -178,7 +179,8 @@
       "chosen_headline": "Williams Finishes Fastest, Seven Too Late",
       "standfirst": "Gregg Williams, twice the reigning Trophy champion, was 20 adrift at one stage and answered with the best round of his TEG career on the final day at Praia D'El Rey.",
       "compelling_score": 7,
-      "humour_score": 5
+      "humour_score": 5,
+      "descriptor": "GREGG WILLIAMS"
     }
   ],
   "body_fallback": "none",

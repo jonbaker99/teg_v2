@@ -1245,7 +1245,7 @@ Both render via the `markdown` library with the `extra`/`sane_lists`/`smarty`/`t
 - **Economy**: 11 construction rules in `WRITER_SYSTEM` (no subject-burying preambles; two equal facts = two sentences; punchline isolation; one dominant idea per paragraph). Length must be earned by facts or images.
 - **Claim selection** (settled 2026-09-10, in `prompts.RANKING_RULE`): **a rank is only cited if it is top 3** — top 3 all-time, top 3 in that player's own career, or top 3 at that course. Everything else ("the 16th-highest Trophy total recorded") is a mid-table fact wearing an ordinal, and the rule covers every phrasing of it ("Nth-best", "one of the top ten", "the Nth time"), in both directions. Firsts and lasts — records, personal bests, course bests/worsts, a first win, last place — are rank 1 and always qualify. Carried by both writers **and both editors**, because the editor is who puts the stat in the plan.
 - **Naming** (settled 2026-09-10, in `prompts.NAMING_RULE`): full name on a player's first appearance; a bare surname thereafter **only if no one else in the field shares it** (with two Bakers, it is "Jon Baker"/"Alex Baker" then "Jon"/"Alex", never "Baker"). Each competition carries its edition on first mention in the body — "the TEG 16 Trophy" or "the 2023 TEG Trophy" — and the short form ("the Trophy", "the Jacket", "the Spoon") every time after.
-- **Story descriptor badges** (settled 2026-09-11, in `prompts.DESCRIPTOR_RULE`, editor-only): the printed badge above each story's headline names who or what the story is actually about — a player's full name, two full names pipe-separated for a head-to-head, a course name for a genuine course story — instead of always showing the generic competition kicker (TROPHY/GREEN JACKET/WOODEN SPOON/SIDEBAR). Trophy always stays `TROPHY`; Jacket/Spoon drop the player only when the story's own headline already names them unambiguously. Lives on the plan as `DraftedStoryline.descriptor`, a pure print field — the machine `kicker` used for filtering and layout never changes. The 17 reports written before this field existed get a deterministic fallback at render time (`newspaper_edition.derive_descriptor`) rather than an LLM pass — see "Retrofitting a new rule" below.
+- **Story descriptor badges** (settled 2026-09-11, tightened 2026-09-22, in `prompts.DESCRIPTOR_RULE`, editor-only): the printed badge above each story's headline names who or what the story is actually about — a player's full name, two full names pipe-separated for a head-to-head, a course name or short theme phrase for a mixed-subject story — instead of always showing the generic competition kicker (TROPHY/GREEN JACKET/WOODEN SPOON/SIDEBAR). Trophy always stays `TROPHY`; Jacket/Spoon drop the player only when the story's own headline already names them unambiguously. The literal word `SIDEBAR` must never be written as a descriptor — it is `newspaper_edition`'s internal machine slot name, not a printable badge; the rule now requires a real theme instead. Lives on the plan as `DraftedStoryline.descriptor`, a pure print field — the machine `kicker` used for filtering and layout never changes. Reports written before this field existed get a deterministic fallback at render time (`newspaper_edition.derive_descriptor`) rather than an LLM pass; a handful of plans that predate the 2026-09-22 tightening wrote the machine slot name `SIDEBAR` directly into `descriptor` on a mandatory Trophy/Jacket/Spoon/race story — `newspaper_edition._parse_articles` now ignores that value and falls through to the storyline's own named kicker instead. See "Retrofitting a new rule" below.
 - **The double** (settled 2026-09-11, in `prompts.DOUBLE_RULE`, both writer- and editor-facing): when the same player wins the Trophy and the Green Jacket in one TEG, the Trophy story's opening paragraph must say so, and any rarity claim ("the Nth double") must come only from `history_context.build_double_context`'s real prior-double count — never invented. Deliberately not wired into either round-level prompt (`round_report.ROUND_PLAN_SYSTEM`/`ROUND_WRITER_SYSTEM`): the round bundle carries no `double` figures, even for a final round.
 - **Faithfulness rules** (enforced in scoring AND in prompts):
   - Use only supplied data; never invent.
@@ -1319,11 +1319,18 @@ already holds that text.
 **The descriptor badge is retrofitted differently.** It is a plan-JSON field
 (`DraftedStoryline.descriptor`) read directly by `newspaper_edition.py` at render time, not prose
 text a corrections pass would edit. `newspaper_edition.derive_descriptor` computes it
-deterministically — no LLM call — whenever the plan's `descriptor` is empty, which is true for all
-17 reports written before the field existed. It matches storyline text against the real player
-field; it does **not** attempt course-name matching (a discovered story genuinely about a course,
-e.g. TEG 6's Stadium Course story, falls back to `SIDEBAR` rather than risk a wrong guess) — a
-known, accepted gap.
+deterministically — no LLM call — whenever the plan's `descriptor` is empty, which is true for
+reports written before the field existed. It matches storyline text against the real player
+field; it does **not** attempt course-name or theme matching (too unreliable without an LLM
+judgement call), so a discovered story genuinely about a course or a mixed-subject catalogue
+falls back to the bare kicker rather than risk a wrong guess. The 7 cases this produced as of
+2026-09-22 (e.g. TEG 6's Stadium Course story, TEG 7's Record Book story) were hand-backfilled
+with a real `descriptor` directly on the plan JSON — see `data/commentary/teg_{3,4,6,7,8,18}_
+storyline_plan.json` — rather than extending the heuristic, since seven checked values were
+simpler and safer than a matcher that could regress the storylines already resolving correctly.
+Any future case like this should get the same hand-backfill treatment, or a full LLM
+`apply_report_rules` retrofit once `DESCRIPTOR_RULE`'s tightened wording (2026-09-22, no more
+`SIDEBAR` fallback) is worth re-running against old plans.
 
 **This is deliberately not `restyle_voice`.** That function's contract holds facts and structure
 literally constant, which is what makes it a one-variable voice A/B; a pass that deletes a claim

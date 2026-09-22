@@ -437,6 +437,14 @@ Every later mention in the same report uses the short form: "the Trophy", "the J
 # headlines learned nothing beyond "which competition slot", which is the
 # least interesting fact about a discovered story.
 #
+# Tightened 2026-09-22: the escape hatch for "nothing distinct enough to
+# name" used to be the literal machine slot name `SIDEBAR`, which just
+# re-introduced the same problem it was meant to fix. `SIDEBAR` is a machine
+# kicker value (see `newspaper_edition._KICKER_PRIORITY`) and must never be
+# written into `descriptor` -- every discovered story has *some* subject
+# (the plan's own `subject`/`theme` field names it), so the rule now asks
+# for a short theme phrase instead of a fallback label.
+#
 # Editor-only: this sets the plan's `descriptor` field, which is a print
 # concern. The machine `kicker` itself must never change — it is what
 # `filter_articles`/`is_competition_article`/`_choose_second_story` match on.
@@ -458,15 +466,22 @@ sufficiently identifying.
 `WOODEN SPOON`) if the winning/losing player is ALREADY unambiguously named in the story's \
 own chosen headline; otherwise the competition name plus the player, pipe-separated: \
 `WOODEN SPOON | HENRY MELLER`.
-- Anything that fits none of the above — genuinely mixed-subject, or nothing distinct \
-enough to name — -> `SIDEBAR`.
+- Anything genuinely mixed-subject or multi-player (a catalogue of blow-up holes, the \
+state of all three races) -> name the THEME itself in two or three words, capitals, drawn \
+from the story's own subject — e.g. `THE PAR THREES`, `THE RECORD BOOK`, `BLOW-UP HOLES`, \
+`BOAVISTA'S 17TH`. Every story has a real subject; find it rather than reaching for a \
+placeholder.
+- Never write the literal word `SIDEBAR` (or any other machine kicker name) as a \
+descriptor — it is the render layer's internal slot name, not a printable badge.
 - Every name obeys NAMING_RULE.
 Worked examples from a real TEG 6 report: a discovered story about one player -> \
 `JON BAKER`; a discovered story about the course -> `STADIUM COURSE`; the Wooden Spoon \
 story where the loser (Henry Meller) is NOT named in its headline ("Two Tens at El Prat \
 Settle It") -> `WOODEN SPOON | HENRY MELLER`; the Green Jacket story where the winner IS \
 named in its headline ("Mullin Reclaims the Jacket at the Ninth") -> stays `GREEN JACKET`, \
-no player appended, since the headline already names him."""
+no player appended, since the headline already names him. A mixed-subject discovered story \
+cataloguing several players' blow-up holes ("Eleven, Eleven and a Ten") -> `BLOW-UP HOLES`, \
+not `SIDEBAR`."""
 
 
 # ---------------------------------------------------------------------------

@@ -2,7 +2,20 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-22 (I5 revision 2: full leaderboard on Contents' complete state + collapsible sitemap — merged to main)
+**Last updated:** 2026-09-22 (Report "Sidebar" badges replaced with real topics)
+
+## 2026-09-22 — Report "Sidebar" badges replaced with real topics
+
+The newspaper-style report badge above a story's headline (`JON BAKER`, `GREEN JACKET`,
+`STADIUM COURSE`) is meant to name the story's actual subject. 17 report-page badges and every
+Contents-page "Also in this report" teaser still showed the machine slot name `SIDEBAR`. Fixed:
+the Contents teaser now reads the same `descriptor` field the report page shows (it was reading
+the bare `kicker`); a literal `descriptor: "SIDEBAR"` on a mandatory Trophy/Jacket/Spoon/race
+story now falls through to that story's real kicker instead of printing the machine name; and 7
+genuinely mixed-subject or course stories that predated the `descriptor` field were hand-given a
+real theme (`STADIUM COURSE`, `THE RECORD BOOK`, `BLOW-UP HOLES`, etc.). Future reports can no
+longer produce `SIDEBAR` as a badge — see `teg_analysis/reporting/README.md` → "Story descriptor
+badges". PDFs for the 15 affected editions rebuilt.
 
 ## 2026-09-22 — Readable dark newspaper reports
 

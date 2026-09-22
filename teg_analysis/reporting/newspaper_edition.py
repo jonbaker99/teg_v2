@@ -293,14 +293,14 @@ def get_edition_summary(teg: int, round_num: int | None = None) -> dict[str, Any
     # lead articles); the teaser is a pointer into the report, not a full
     # table of contents.
     other_articles = [
-        {"kicker": a.get("kicker"), "headline": a.get("headline")}
+        {"kicker": a.get("descriptor") or a.get("kicker"), "headline": a.get("headline")}
         for a in edition["articles"] if not a["is_lead"]
     ][:4]
     return {
         "teg": teg,
         "round": round_num,
         "title": edition.get("title"),
-        "kicker": lead.get("kicker"),
+        "kicker": lead.get("descriptor") or lead.get("kicker"),
         "headline": lead.get("headline"),
         "standfirst": lead.get("standfirst"),
         "link": link,
@@ -753,9 +753,18 @@ def _parse_articles(
         # fall back to the deterministic approximation for plans written before
         # the field existed. Joined the same way `kickers` are, deduplicating
         # when a merged section's storylines resolve to the identical descriptor.
+        #
+        # A literal "SIDEBAR" descriptor on a non-SIDEBAR kicker (a Trophy,
+        # Jacket, Spoon or race story an old plan mislabelled) is worse than
+        # no descriptor at all -- the slot already has a real, named kicker
+        # ("THE RACES"), so treat it the same as a missing descriptor rather
+        # than printing the machine fallback name.
         descriptors = []
         for k, s in matches:
-            d = s.get("descriptor") or derive_descriptor(s, k)
+            d = s.get("descriptor") or ""
+            if d == "SIDEBAR" and k != "SIDEBAR":
+                d = ""
+            d = d or derive_descriptor(s, k)
             if d not in descriptors:
                 descriptors.append(d)
         descriptor = " & ".join(descriptors)

@@ -14,6 +14,19 @@
 
 ## START HERE — picking this up in a new chat (2026-09-08)
 
+**"Sidebar" badges replaced with real topics (2026-09-22).** The printed badge above a story's
+headline should always name its actual subject (`JON BAKER`, `STADIUM COURSE`); 17 report-page
+badges and every Contents-page "Also in this report" teaser still showed the machine slot name
+`SIDEBAR`. Two causes, both fixed: (1) `get_edition_summary()` (Contents teaser) was reading
+`kicker` instead of `descriptor` — fixed in `newspaper_edition.py`; (2) 10 old plans had literally
+written `descriptor: "SIDEBAR"` onto a mandatory Trophy/Jacket/Spoon/race story that already had a
+proper kicker — `_parse_articles` now ignores a `SIDEBAR` descriptor there and falls through to
+the kicker; 7 genuinely mixed-subject/course discovered stories (predating the `descriptor` field,
+with no player name for `derive_descriptor` to find) were hand-backfilled with a real theme
+directly on their plan JSON. `prompts.DESCRIPTOR_RULE` tightened so future plans can't reach for
+`SIDEBAR` as an escape hatch. PDFs for the 15 affected editions rebuilt. See
+`reporting/README.md`'s "Story descriptor badges" and "Retrofitting a new rule" sections.
+
 **Notable Achievements + At A Glance rebuilt (2026-09-12).** Both deterministic (no-LLM) report
 blocks were audited across all 17 TEGs and rebuilt to reuse the same analysis functions the webapp
 Records page uses, rather than a parallel hand-rolled implementation:
