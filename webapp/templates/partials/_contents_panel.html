@@ -1,16 +1,15 @@
-{# In-progress rich content (I5 revision) -- rendered via GET /contents/panel,
-   always deferred behind hx-trigger="load" (cached_round_data() is a real
-   parquet load). Two-column grid: standings left, round-report teaser right;
-   stacks below 900px (.panel-grid rules in contents.html). #}
+{# Rich content for both states (I5 revision), rendered via GET
+   /contents/panel, always deferred behind hx-trigger="load"
+   (cached_round_data() is a real parquet load in both states). Two-column
+   grid; stacks below 900px (.panel-grid rules in contents.html). #}
+{% if panel.state == "in_progress" %}
 <div class="panel-grid{% if panel.report_summary %} two-col{% endif %}" id="contents-panel">
     <div class="surface">
         <p class="standings-heading">Standings after Round {{ rounds_played }}</p>
         {% if panel.gross_leader %}
         <p class="gross-line">Green Jacket (gross) — <b>{{ panel.gross_leader.names | join(", ") }}</b> {{ panel.gross_leader.total }}</p>
         {% endif %}
-        {% with standings = panel.standings %}
-            {% include "partials/_standings_table.html" %}
-        {% endwith %}
+        <div style="overflow-x:auto;">{% with standings = panel.standings %}{% include "partials/_standings_table.html" %}{% endwith %}</div>
     </div>
     {% if panel.report_summary %}
     <div class="surface">
@@ -23,3 +22,25 @@
     </div>
     {% endif %}
 </div>
+{% else %}
+<div class="panel-grid two-col equal-col" id="contents-panel">
+    <div class="surface">
+        <p class="standings-heading">Final Standings</p>
+        <div style="overflow-x:auto;">{% with standings = panel.standings %}{% include "partials/_standings_table.html" %}{% endwith %}</div>
+        <a class="teaser-link" href="/results?teg={{ panel.teg_num }}" style="display:inline-block; margin-top:12px;">Full Results →</a>
+    </div>
+    <div class="surface">
+        <p class="kicker">Also in this report</p>
+        {% if panel.report_summary and panel.report_summary.other_articles %}
+        <ul class="headline-list">
+            {% for a in panel.report_summary.other_articles %}
+            <li><a href="{{ panel.report_summary.link }}"><span class="hl-kicker">{{ a.kicker | title }}</span><span class="hl-headline">{{ a.headline }}</span></a></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% if panel.report_summary %}
+        <a class="teaser-link" href="{{ panel.report_summary.link }}" style="display:inline-block; margin-top:12px;">View full report →</a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}

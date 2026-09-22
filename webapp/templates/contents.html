@@ -202,23 +202,43 @@
     .panel-grid.two-col {
         grid-template-columns: 1.3fr 1fr;
     }
+    /* Complete state: standings and "Also in this report" are equally
+       important, not a primary/secondary pair -- equal-width columns. */
+    .panel-grid.two-col.equal-col {
+        grid-template-columns: 1fr 1fr;
+    }
     @media (max-width: 899px) {
-        .panel-grid.two-col { grid-template-columns: 1fr; }
+        /* .equal-col has higher specificity (3 classes) than the bare
+           .two-col rule above (2 classes) -- match it explicitly here too,
+           or the narrow-width collapse silently loses to the wider rule. */
+        .panel-grid.two-col,
+        .panel-grid.two-col.equal-col {
+            grid-template-columns: 1fr;
+        }
     }
     .surface {
         background: var(--bg-card);
         border: 1px solid var(--rule-color);
         border-radius: var(--card-radius);
         padding: var(--sp-5, 24px);
+        /* Grid items don't shrink below their content's natural width by
+           default -- a wide table or long headline text can force the
+           track (and the page) wider than the viewport. */
+        min-width: 0;
     }
-    .standings-heading {
-        font-family: var(--font-serif);
-        font-size: var(--fs-300, 14px);
+    /* Panel headings match the page-level .kicker-eyebrow treatment exactly
+       (sans-serif, not the small-caps Lora used by .section-title) so
+       "FINAL STANDINGS"/"ALSO IN THIS REPORT" read as one system with
+       "TEG N RESULTS" above them. */
+    .standings-heading,
+    .kicker {
+        font-family: var(--font-sans);
+        font-size: var(--fs-200, 12px);
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.06em;
+        letter-spacing: 0.08em;
         color: var(--green);
-        margin: 0 0 var(--sp-1, 4px) 0;
+        margin: 0 0 var(--sp-4, 14px) 0;
     }
     .gross-line {
         font-family: var(--font-sans);
@@ -227,15 +247,6 @@
         margin: 0 0 var(--sp-3, 12px) 0;
     }
     .gross-line b { color: var(--text-primary); }
-    .kicker {
-        font-family: var(--font-serif);
-        font-size: var(--fs-200, 12px);
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: var(--green);
-        margin: 0 0 var(--sp-2, 8px) 0;
-    }
     .teaser-headline {
         font-family: var(--font-serif);
         font-size: var(--fs-500, 20px);
@@ -258,6 +269,95 @@
         text-decoration: none;
     }
     .teaser-link:hover { color: var(--green); }
+
+    /* --- Compact honours line (complete state): Champion/Green Jacket/
+       Wooden spoon as one wrapped line, not stacked label/name rows --
+       stacked rows directly above a Rank/Player/Points table read as two
+       misaligned grids. One line + a rule reads as a byline instead. --- */
+    .honours-line {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: var(--sp-2, 8px);
+        font-family: var(--font-sans);
+        font-size: var(--fs-300, 14px);
+    }
+    .honour-label { color: var(--text-secondary); }
+    .honour-name { font-weight: 700; color: var(--text-primary); }
+    .honour-name.honour { color: var(--green); }
+    .honour-sep { color: var(--rule-color); }
+    .honours-divider {
+        border: none;
+        border-top: 1px solid var(--rule-color);
+        margin: var(--sp-4, 14px) 0;
+    }
+
+    /* --- "Also in this report" secondary-headline list --- */
+    .headline-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: var(--sp-3, 12px);
+    }
+    .headline-list li + li {
+        padding-top: var(--sp-3, 12px);
+        border-top: 1px solid var(--rule-color);
+    }
+    .headline-list a {
+        display: block;
+        text-decoration: none;
+        color: var(--text-primary);
+    }
+    .headline-list a:hover .hl-headline { color: var(--green); }
+    .hl-kicker {
+        display: block;
+        font-family: var(--font-sans);
+        font-size: var(--fs-100, 11px);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--text-muted);
+        margin-bottom: 2px;
+    }
+    .hl-headline {
+        font-family: var(--font-serif);
+        font-size: var(--fs-400, 16px);
+        font-weight: 700;
+        line-height: 1.3;
+    }
+
+    /* --- Collapsible sitemap signpost (I5 revision: reopens the "always
+       visible" decision at the owner's request). Native <details> -- zero
+       JS, accessible, closed by default. --- */
+    .sitemap-summary {
+        list-style: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: var(--sp-3, 10px);
+        padding: var(--sp-4, 14px) var(--sp-5, 20px);
+        background: var(--bg-card);
+        border: 1px solid var(--rule-color);
+        border-radius: var(--card-radius);
+        font-family: var(--font-sans);
+        font-size: var(--fs-300, 14px);
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+    .sitemap-summary::-webkit-details-marker { display: none; }
+    .sitemap-summary .chev {
+        font-family: var(--font-sans);
+        color: var(--text-muted);
+        transition: transform 150ms ease;
+    }
+    .sitemap-disclosure[open] .sitemap-summary .chev { transform: rotate(180deg); }
+    .sitemap-summary .count {
+        font-weight: 400;
+        color: var(--text-secondary);
+    }
+    .sitemap-disclosure .contents-grid { margin-top: var(--sp-5, 24px); }
 </style>
 {% endblock %}
 
@@ -270,7 +370,7 @@
             {{ state.area }}{% if state.year %} · {{ state.year }}{% endif %}{% if state.last_round_date %} · Round {{ state.rounds_played }} played {{ state.last_round_date }}{% endif %}
         </p>
 
-        <div hx-get="/contents/panel?teg={{ state.teg_num }}&rounds={{ state.rounds_played }}" hx-trigger="load" hx-swap="outerHTML">
+        <div hx-get="/contents/panel?teg={{ state.teg_num }}&state=in_progress&rounds={{ state.rounds_played }}" hx-trigger="load" hx-swap="outerHTML">
             <div class="panel-grid two-col" id="contents-panel" aria-busy="true">
                 <div class="surface">
                     <p class="standings-heading">Standings after Round {{ state.rounds_played }}</p>
@@ -289,44 +389,59 @@
         {% if state.report_summary %}
             <p class="dateline">{{ state.teg_label }} results | {{ state.area }} | {{ state.dateline_month_year }}</p>
             <h1 class="state-headline"><a class="headline-link" href="{{ state.report_summary.link }}">{{ state.report_summary.headline }}</a></h1>
-            {% if state.report_summary.standfirst %}
-            <p class="state-context report-standfirst">{{ state.report_summary.standfirst }}</p>
+            <a class="teaser-link" href="{{ state.report_summary.link }}" style="display:inline-block; margin-bottom: var(--sp-5, 20px);">Read the {{ state.teg_label }} report →</a>
+
+            <div class="honours-line" style="margin-bottom: var(--sp-5, 20px);">
+                <span><span class="honour-label">Champion</span> <span class="honour-name honour">{{ state.trophy or "–" }}</span></span>
+                <span class="honour-sep">|</span>
+                <span><span class="honour-label">Green Jacket</span> <span class="honour-name honour">{{ state.jacket or "–" }}</span></span>
+                <span class="honour-sep">|</span>
+                <span><span class="honour-label">Wooden spoon</span> <span class="honour-name">{{ state.spoon or "–" }}</span></span>
+            </div>
+
+            <div hx-get="/contents/panel?teg={{ state.teg_num }}&state=complete" hx-trigger="load" hx-swap="outerHTML">
+                <div class="panel-grid two-col equal-col" id="contents-panel" aria-busy="true">
+                    <div class="surface">
+                        <p class="standings-heading">Final Standings</p>
+                        <p class="gross-line">Loading…</p>
+                    </div>
+                </div>
+            </div>
+
+            {% if state.next_teg %}
+            <p class="state-next" style="margin-top: var(--sp-5, 20px);">Next: {{ state.next_teg.label }} | {{ state.next_teg.area }} | {{ state.next_teg.year }}</p>
             {% endif %}
-            <a class="teaser-link" href="{{ state.report_summary.link }}" style="display:inline-block; margin-bottom: var(--sp-5, 24px);">Read the {{ state.teg_label }} report →</a>
+            <a class="teaser-link" href="/handicaps" style="display:inline-block; margin-top: var(--sp-2, 8px);">{{ state.teg_label }} Handicaps →</a>
         {% else %}
             <p class="state-eyebrow state-eyebrow-muted">Latest result</p>
             <h1 class="state-headline">{{ state.teg_label }} — Final Results</h1>
             <p class="state-context">
                 {{ state.area }}{% if state.year %} · {{ state.year }}{% endif %}{% if state.last_round_date %} · Last round {{ state.last_round_date }}{% endif %}
             </p>
-        {% endif %}
 
-        <div class="state-leaders">
-            <div class="state-leader-row">
-                <span class="state-leader-label">TEG Trophy <span class="state-leader-measure">(net)</span></span>
-                <span class="state-leader-names state-honour">{{ state.trophy or "–" }}</span>
+            <div class="state-leaders">
+                <div class="state-leader-row">
+                    <span class="state-leader-label">TEG Trophy <span class="state-leader-measure">(net)</span></span>
+                    <span class="state-leader-names state-honour">{{ state.trophy or "–" }}</span>
+                </div>
+                <div class="state-leader-row">
+                    <span class="state-leader-label">Green Jacket <span class="state-leader-measure">(gross)</span></span>
+                    <span class="state-leader-names state-honour">{{ state.jacket or "–" }}</span>
+                </div>
+                <div class="state-leader-row state-leader-row-muted">
+                    <span class="state-leader-label">Wooden spoon</span>
+                    <span class="state-leader-names">{{ state.spoon or "–" }}</span>
+                </div>
             </div>
-            <div class="state-leader-row">
-                <span class="state-leader-label">Green Jacket <span class="state-leader-measure">(gross)</span></span>
-                <span class="state-leader-names state-honour">{{ state.jacket or "–" }}</span>
-            </div>
-            <div class="state-leader-row state-leader-row-muted">
-                <span class="state-leader-label">Wooden spoon</span>
-                <span class="state-leader-names">{{ state.spoon or "–" }}</span>
-            </div>
-        </div>
 
-        <div class="state-actions">
-            {% if state.report_summary %}
-                <a class="state-btn state-btn-secondary" href="/results?teg={{ state.teg_num }}">Full Results</a>
-            {% else %}
+            <div class="state-actions">
                 <a class="state-btn state-btn-primary" href="/results?teg={{ state.teg_num }}">Full Results</a>
-            {% endif %}
-            <a class="state-link" href="/handicaps">Handicaps</a>
-        </div>
+                <a class="state-link" href="/handicaps">Handicaps</a>
+            </div>
 
-        {% if state.next_teg %}
-        <p class="state-next">Next: {{ state.next_teg.label }} · {{ state.next_teg.area }} · {{ state.next_teg.year }}</p>
+            {% if state.next_teg %}
+            <p class="state-next">Next: {{ state.next_teg.label }} · {{ state.next_teg.area }} · {{ state.next_teg.year }}</p>
+            {% endif %}
         {% endif %}
 
     {% else %}
@@ -337,16 +452,22 @@
 
 <hr class="state-divider">
 
-<div class="contents-grid">
-    {% for section in sections %}
-    <div class="contents-group">
-        <div class="section-title">{{ section.label }}</div>
-        <div class="contents-links">
-            {% for title, url, key, icon in section.pages %}
-            <a href="{{ url }}"><span class="menu-icon material-symbols-outlined">{{ icon }}</span>{{ title }}</a>
-            {% endfor %}
+<details class="sitemap-disclosure" id="sitemap-disclosure">
+    <summary class="sitemap-summary">
+        <span class="chev">▾</span>
+        Explore the full site <span class="count">— {{ sitemap_page_count }} pages: {{ sitemap_group_labels }}</span>
+    </summary>
+    <div class="contents-grid">
+        {% for section in sections %}
+        <div class="contents-group">
+            <div class="section-title">{{ section.label }}</div>
+            <div class="contents-links">
+                {% for title, url, key, icon in section.pages %}
+                <a href="{{ url }}"><span class="menu-icon material-symbols-outlined">{{ icon }}</span>{{ title }}</a>
+                {% endfor %}
+            </div>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-</div>
+</details>
 {% endblock %}

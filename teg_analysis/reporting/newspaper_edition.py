@@ -286,6 +286,16 @@ def get_edition_summary(teg: int, round_num: int | None = None) -> dict[str, Any
         return None
     link = (f"/teg-reports?teg={teg}" if round_num is None
             else f"/teg-reports?teg={teg}&round={round_num}")
+    # Secondary headlines for a compact "Also in this report" teaser list.
+    # No per-article anchors exist in render_desktop_html(), so these share
+    # the lead's own link rather than pointing at a specific section.
+    # Capped at 4 -- a report can carry several sidebars (TEG 18 has 5 non-
+    # lead articles); the teaser is a pointer into the report, not a full
+    # table of contents.
+    other_articles = [
+        {"kicker": a.get("kicker"), "headline": a.get("headline")}
+        for a in edition["articles"] if not a["is_lead"]
+    ][:4]
     return {
         "teg": teg,
         "round": round_num,
@@ -294,6 +304,7 @@ def get_edition_summary(teg: int, round_num: int | None = None) -> dict[str, Any
         "headline": lead.get("headline"),
         "standfirst": lead.get("standfirst"),
         "link": link,
+        "other_articles": other_articles,
     }
 
 

@@ -27,6 +27,9 @@ from teg_analysis.reporting.newspaper_edition import available_rounds, get_editi
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
+SITEMAP_PAGE_COUNT = sum(len(s["pages"]) for s in NAV_SECTIONS)
+SITEMAP_GROUP_LABELS = ", ".join(s["label"] for s in NAV_SECTIONS)
+
 
 @router.get("/contents")
 def contents_page(request: Request):
@@ -35,14 +38,16 @@ def contents_page(request: Request):
         "active_page": "contents",
         "sections": NAV_SECTIONS,
         "state": get_tournament_state(),
+        "sitemap_page_count": SITEMAP_PAGE_COUNT,
+        "sitemap_group_labels": SITEMAP_GROUP_LABELS,
     })
 
 
-def _in_progress_panel(teg_num: int) -> dict:
-    """In-progress rich content: the real net-competition standings table
-    (every player, ties as genuine duplicate rows -- TEG has no countback,
-    so no synthetic "and 1 other" collapsing), a compact gross-competition
-    line, and a round-report teaser when one exists.
+def _standings_table_context(teg_num: int) -> dict:
+    """The real net-competition standings table (every player, ties as
+    genuine duplicate rows -- TEG has no countback, so no synthetic "and 1
+    other" collapsing) plus a unit-aware column header. Shared by both
+    in-progress and complete panels.
 
     Reads `cached_round_data()` directly, bypassing `_results_context()`
     (which also builds chart JSON/readout this page doesn't need).
@@ -62,6 +67,18 @@ def _in_progress_panel(teg_num: int) -> dict:
     # need none).
     net_lb = net_lb[['Rank', PLAYER_COLUMN, 'Total']]
     standings = _standings_rows(net_lb, link_players=False)
+    # _standings_table.html's optional override for the "Total" header --
+    # real TEGs before TEG 8 are vs-par, not Stableford points.
+    standings["total_label"] = "Points" if net_measure == "Stableford" else "vs Par"
+
+    return {"standings": standings}
+
+
+def _in_progress_panel(teg_num: int) -> dict:
+    """In-progress rich content: standings + a compact gross-competition
+    line + a round-report teaser when one exists."""
+    rd = cached_round_data()
+    teg_rd = rd[rd['TEGNum'] == teg_num]
 
     gross_lb = create_leaderboard(teg_rd, 'GrossVP', ascending=True)
     gross_leader = None
@@ -76,25 +93,40 @@ def _in_progress_panel(teg_num: int) -> dict:
         report_summary = get_edition_summary(teg_num, rounds[-1])
 
     return {
-        "standings": standings,
+        "state": "in_progress",
+        "teg_num": teg_num,
         "gross_leader": gross_leader,
-        "net_unit": "pts" if net_measure == "Stableford" else "vs par",
         "report_summary": report_summary,
+        **_standings_table_context(teg_num),
+    }
+
+
+def _complete_panel(teg_num: int) -> dict:
+    """Complete-state rich content: final standings (left) + "Also in this
+    report" secondary headlines (right). Winners (Trophy/Jacket/spoon)
+    already render synchronously in the instant honours line above this
+    panel, so they're not repeated here."""
+    return {
+        "state": "complete",
+        "teg_num": teg_num,
+        "report_summary": get_edition_summary(teg_num),
+        **_standings_table_context(teg_num),
     }
 
 
 @router.get("/contents/panel")
-def contents_panel(request: Request, teg: int = Query(...), rounds: int = Query(...)):
-    # HTMX fallback for the in-progress state (I4 R10, revised): the main
-    # page renders the headline/context/actions immediately from the two
-    # status CSVs, and this partial fills in the standings + report teaser
-    # once cached_round_data() has loaded, instead of blocking the initial
-    # response on a cold parquet load. Complete-state content is resolved
-    # synchronously in get_tournament_state() instead -- its headline
-    # depends on report availability, so it can't defer without a flash.
-    # `rounds` (state.rounds_played) is passed through only for the
+def contents_panel(request: Request, teg: int = Query(...), state: str = Query(...),
+                    rounds: int = Query(None)):
+    # HTMX fallback for both states: the main page renders the instant
+    # headline/context/actions immediately from the two status CSVs (plus,
+    # for complete, the report headline -- resolved synchronously in
+    # get_tournament_state() since its *text* depends on report
+    # availability and can't defer without a flash), and this partial fills
+    # in the standings table once cached_round_data() has loaded, instead of
+    # blocking the initial response on a cold parquet load.
+    # `rounds` (state.rounds_played) is in-progress only, for the
     # "Standings after Round N" heading -- not re-derived here.
-    panel = _in_progress_panel(teg)
+    panel = _in_progress_panel(teg) if state == "in_progress" else _complete_panel(teg)
     return templates.TemplateResponse("partials/_contents_panel.html", {
         "request": request,
         "panel": panel,

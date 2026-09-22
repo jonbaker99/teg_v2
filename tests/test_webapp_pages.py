@@ -865,19 +865,36 @@ def test_contents_state_in_progress_always_defers_rich_content(client, monkeypat
     })
     resp = client.get("/contents")
     _assert_ok_no_error(resp)
-    assert 'hx-get="/contents/panel?teg=19&rounds=2"' in resp.text
+    assert 'hx-get="/contents/panel?teg=19&state=in_progress&rounds=2"' in resp.text
     assert 'hx-trigger="load"' in resp.text
 
 
 def test_contents_panel_route_real_data(client):
-    # /contents/panel against real TEG 18 data: a compact Rank/Player/Total
-    # standings table (no round-by-round columns) and a gross-competition
-    # summary line.
-    resp = client.get("/contents/panel", params={"teg": 18, "rounds": 4})
+    # /contents/panel against real TEG 18 data: a compact Rank/Player/Points
+    # standings table (no round-by-round columns, Stableford-era unit label)
+    # and a gross-competition summary line.
+    resp = client.get("/contents/panel", params={"teg": 18, "state": "in_progress", "rounds": 4})
     _assert_ok_no_error(resp)
     assert "Standings after Round 4" in resp.text
     assert "col-round" not in resp.text  # round columns dropped -- Total only
     assert "Green Jacket (gross)" in resp.text
+    assert ">Points</th>" in resp.text  # unit-aware header, Stableford era
+
+
+def test_contents_panel_unit_label_pre_teg8_is_vs_par(client, monkeypatch):
+    # TEGs <=7 are NetVP (vs-par), not Stableford points -- the standings
+    # header must not always say "Points".
+    import pandas as pd
+    fake_rd = pd.DataFrame({
+        "TEGNum": [5, 5], "Round": [1, 1],
+        "Player": ["Jon BAKER", "Alex BAKER"],
+        "NetVP": [-2, 3], "GrossVP": [2, 3],
+    })
+    monkeypatch.setattr(contents_route, "cached_round_data", lambda: fake_rd)
+    resp = client.get("/contents/panel", params={"teg": 5, "state": "in_progress", "rounds": 1})
+    _assert_ok_no_error(resp)
+    assert ">vs Par</th>" in resp.text
+    assert ">Points</th>" not in resp.text
 
 
 def test_contents_panel_ties_name_every_player(client, monkeypatch):
@@ -892,7 +909,7 @@ def test_contents_panel_ties_name_every_player(client, monkeypatch):
         "GrossVP": [2, 3, 1, 4],
     })
     monkeypatch.setattr(contents_route, "cached_round_data", lambda: fake_rd)
-    resp = client.get("/contents/panel", params={"teg": 19, "rounds": 1})
+    resp = client.get("/contents/panel", params={"teg": 19, "state": "in_progress", "rounds": 1})
     _assert_ok_no_error(resp)
     assert resp.text.count("Jon") == 1 and resp.text.count("Alex") == 1
     assert "1=" in resp.text  # tie notation, both rows present
@@ -905,10 +922,26 @@ def test_contents_panel_report_teaser_omitted_cleanly_with_no_round_report(clien
     # exists, the standings surface takes the full width instead of leaving
     # an empty second grid column.
     monkeypatch.setattr(contents_route, "available_rounds", lambda teg: ())
-    resp = client.get("/contents/panel", params={"teg": 18, "rounds": 1})
+    resp = client.get("/contents/panel", params={"teg": 18, "state": "in_progress", "rounds": 1})
     _assert_ok_no_error(resp)
     assert "teaser-headline" not in resp.text
     assert 'class="panel-grid"' in resp.text  # no "two-col" -- single column
+
+
+def test_contents_panel_complete_state_real_data(client):
+    # /contents/panel?state=complete against real TEG 18 data: final
+    # standings (no gross-line -- covered by the instant honours line
+    # instead), "Also in this report" secondary headlines capped at 4, and
+    # a "View full report" link.
+    resp = client.get("/contents/panel", params={"teg": 18, "state": "complete"})
+    _assert_ok_no_error(resp)
+    assert "Final Standings" in resp.text
+    assert "Green Jacket (gross)" not in resp.text  # not repeated -- honours line owns this
+    assert "Also in this report" in resp.text
+    assert resp.text.count("<li>") == 4  # capped, TEG 18 has 5 non-lead articles
+    assert 'href="/results?teg=18"' in resp.text
+    assert "View full report" in resp.text
+    assert 'class="panel-grid two-col equal-col"' in resp.text
 
 
 def test_contents_state_complete_with_report_leads_with_headline(client, monkeypatch):
@@ -929,11 +962,18 @@ def test_contents_state_complete_with_report_leads_with_headline(client, monkeyp
     # The report headline IS the page's h1, linked to the report.
     assert '<h1 class="state-headline"><a class="headline-link" href="/teg-reports?teg=18">Alex Baker Wins It in Round One</a></h1>' in resp.text
     assert "TEG 18 results | Catalonia, Spain | October 2025" in resp.text
-    assert "Twelve points clear" in resp.text
     assert "TEG 18 — Final Results" not in resp.text  # fallback headline must not also render
-    # Owner decision: Full Results is secondary once the report leads.
-    assert 'href="/results?teg=18"' in resp.text
-    assert "Next: TEG 19 · Algarve, Portugal · 2026" in resp.text
+    # Compact honours line, not stacked label/name rows.
+    assert "Champion" in resp.text and "Alex BAKER" in resp.text
+    assert "Green Jacket" in resp.text and "Gregg WILLIAMS" in resp.text
+    assert "Wooden spoon" in resp.text and "Jon BAKER" in resp.text
+    assert 'class="honours-line"' in resp.text
+    # Standings/headlines defer to the panel fetch, same as in-progress.
+    assert 'hx-get="/contents/panel?teg=18&state=complete"' in resp.text
+    # Owner decision: Full Results only appears inside the deferred panel
+    # now (moved below the standings table), not as a page-level action.
+    assert "Next: TEG 19 | Algarve, Portugal | 2026" in resp.text
+    assert "TEG 18 Handicaps" in resp.text
 
 
 def test_contents_state_complete_no_report_falls_back_to_results_primary(client, monkeypatch):
@@ -999,3 +1039,23 @@ def test_contents_panel_actions_are_all_in_the_sitemap(client, monkeypatch):
     for href in panel_hrefs:
         base = href.split("?")[0]
         assert base in sitemap_bases, f"panel action {href!r} is not in the sitemap"
+
+
+def test_contents_sitemap_is_collapsible_and_closed_by_default(client):
+    # Reopens the "always visible" decision at the owner's request: the
+    # sitemap is now a native <details>, closed by default, with a signpost
+    # naming the real page count and group labels -- not hardcoded.
+    resp = client.get("/contents")
+    _assert_ok_no_error(resp)
+    i = resp.text.index('<details class="sitemap-disclosure"')
+    tag = resp.text[i:resp.text.index('>', i) + 1]
+    assert " open" not in tag and tag.strip() != "<details class=\"sitemap-disclosure\" open>"
+    assert f"— {contents_route.SITEMAP_PAGE_COUNT} pages:" in resp.text
+    import html
+    for section in NAV_SECTIONS:
+        assert html.escape(section["label"]) in resp.text
+    # Closed-by-default doesn't mean absent from the DOM -- every link must
+    # still be present for the all-nav-links acceptance criterion to hold.
+    urls = [url for section in NAV_SECTIONS for (_t, url, _k, _i) in section["pages"]]
+    for url in urls:
+        assert f'href="{url}"' in resp.text

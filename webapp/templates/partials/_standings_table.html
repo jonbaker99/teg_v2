@@ -5,7 +5,10 @@
     via display:none rather than swapping templates -- so the two can never
     disagree. Fed by _standings_rows() (webapp/routes/history.py), shared
     verbatim by partials/_standings_page.html for both /leaderboard and
-    /results (same _results_context() data builder). -#}
+    /results (same _results_context() data builder). An optional
+    `standings.total_label` overrides the "Total" header text (e.g.
+    Contents' unit-aware "Points"/"vs Par") without affecting callers that
+    don't set it. -#}
 {% if not standings.rows %}
 <p class="text-muted text-sm">No data available.</p>
 {% else %}
@@ -17,7 +20,7 @@
       {% for label in standings.round_labels %}
       <th class="col-num col-round">{{ label }}</th>
       {% endfor %}
-      <th class="col-num col-total total">Total</th>
+      <th class="col-num col-total total">{{ standings.total_label or "Total" }}</th>
     </tr>
   </thead>
   <tbody>

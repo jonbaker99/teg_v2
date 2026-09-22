@@ -222,8 +222,72 @@ issue, not present in the real webapp's UTF-8 `HTMLResponse`.
 **Docs updated:** this file; `STATUS.md`; `webapp/TODOS.md` (Contents entry + a new partial-roster
 finalization TODO, scoped out of this chat per the owner's explicit call).
 
-Handoff: this worktree's next commit SHA (see final response) supersedes `93c6a12` as I5's result.
-Still not merged, pushed, or deployed.
+## Revision 2 (2026-09-22) — full leaderboard on complete state + collapsible sitemap
+
+Two further owner requests, worked out through five more live rounds of the same prototype
+(now v11, `https://claude.ai/artifact/UD49p88BHCfBTTNH4GRstz`):
+
+1. **Sitemap becomes collapsible** — reopens Revision 1's "always visible" decision (itself a
+   reopening of I3/I4's original ruling). Native `<details>`, closed by default, with a signpost
+   bar naming the real page count and group labels, computed from `NAV_SECTIONS` in the route
+   (`SITEMAP_PAGE_COUNT`/`SITEMAP_GROUP_LABELS` module constants in `contents.py`), never
+   hardcoded.
+2. **Complete state gets the same two-panel richness as in-progress** — this explicitly reopens
+   Revision 1's "no full final-standings table" decision. Final approved shape ("Variant E"):
+   headline + "Read the report" link, then a compact **honours line**
+   (`Champion X | Green Jacket Y | Wooden spoon Z`, one wrapped line with a hairline rule before
+   the table — replacing an earlier stacked label/name block that read as a second, misaligned
+   grid sitting directly above the table), then a two-panel grid — **left: the real final
+   standings table** (reusing the same `_standings_table_context()` helper now shared with
+   in-progress), **right: "Also in this report"**, up to 4 of the report's other article
+   headlines, with a "View full report →" link.
+
+**Architectural changes beyond Revision 1:**
+- Complete state's standings now defer to `GET /contents/panel?state=complete` exactly like
+  in-progress's do — only the headline (whose *text* depends on report availability) stays
+  synchronous. `/contents/panel` gained a `state` query param and now dispatches to
+  `_in_progress_panel()` or `_complete_panel()`, both built from a shared
+  `_standings_table_context(teg_num)` extracted from the old single-purpose in-progress builder.
+- `get_edition_summary()` (`teg_analysis/reporting/newspaper_edition.py`) gained `other_articles`
+  — every non-lead article's kicker+headline, capped at 4, from the same `build_edition()` call
+  already made (no new cost). No per-article anchors exist in `render_desktop_html()` (checked),
+  so secondary headlines share the lead's own report link.
+- Standings column header became unit-aware (`"Points"` for Stableford-era TEGs, `"vs Par"`
+  before TEG 8) via a new optional `standings.total_label` override in the shared
+  `partials/_standings_table.html` (defaults to `"Total"` — zero effect on `/leaderboard`/
+  `/results`, the component's other two callers).
+
+**Three real bugs caught and fixed via browser verification, not by review:**
+1. **CSS specificity, not media-query order, decided the cascade.** `.panel-grid.two-col.equal-col`
+   (3 classes) has higher specificity than the narrow-width override `.panel-grid.two-col { … }`
+   (2 classes) inside `@media (max-width: 899px)` — so the equal-width columns kept winning on
+   phones even though the override looked correct on paper. Fixed by matching the 3-class selector
+   explicitly inside the media query too. Caught by an automated 24-combination overflow sweep
+   (12/24 failing with a suspiciously consistent effective width — the tell that it was one
+   structural bug, not many unrelated ones).
+2. **CSS Grid items don't shrink below their content's natural width by default.** Even after
+   fix 1, a 4-29px overflow remained at 320px in Clean Layered specifically (less available
+   width from its extra nested padding) — the `.surface` grid item wasn't shrinking to its track,
+   so its padding pushed the whole page wider. Fixed with `min-width: 0` on `.surface`, the
+   standard fix for this well-known Grid behaviour.
+3. **The standings table itself was still ~4px too wide** at 320px after both fixes above — the
+   table's natural (unwrapped) width at 3 columns narrowly exceeds the available track on the
+   narrowest real device width. Wrapped both standings-table includes in
+   `partials/_contents_panel.html` with `<div style="overflow-x:auto;">`, matching the site's
+   existing convention for wide tables at narrow widths rather than fighting the table's own
+   sizing.
+
+**Verification (this revision):** `pytest tests/test_webapp_pages.py` — 117 passed (14 Contents,
+including new tests for the complete-state panel real-data shape, the unit-aware header at both
+Stableford and pre-TEG-8 NetVP, and the sitemap disclosure's closed-by-default state with real
+page-count/group-label assertions). Full `pytest tests/ -v` — 769 passed, 23 skipped, 0 failed.
+`check_pandas_compat.py`/`check_python_compat.py` clean. Full 24-combination browser overflow
+matrix (320/390/430/768/900/1280px × both Clean layouts × light/dark) — zero overflow after the
+three fixes above; screenshots confirm the shipped page matches the approved prototype exactly,
+including the sitemap's closed→open click interaction in a real headless browser.
+
+Handoff: this worktree's next commit SHA (see final response) supersedes the Revision 1 commit
+(`a8cba3e`) as I5's result. Still not merged, pushed, or deployed.
 
 ## Handoff
 

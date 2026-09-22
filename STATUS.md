@@ -2,7 +2,28 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-22 (I5 revision: Contents gets real standings + a report-led headline — worktree, not yet merged)
+**Last updated:** 2026-09-22 (I5 revision 2: full leaderboard on Contents' complete state + collapsible sitemap — worktree, not yet merged)
+
+## 2026-09-22 — I5 revision 2: full leaderboard on complete state + collapsible sitemap
+
+Same branch/worktree (`claude/ui-i5`). Two further owner requests via five more prototype rounds
+(`https://claude.ai/artifact/UD49p88BHCfBTTNH4GRstz`, now v11): the sitemap is now a native
+`<details>` disclosure, closed by default with a signpost naming the real page count/groups
+(reopens the "always visible" decision); and the complete state gets the same two-panel richness
+as in-progress — a compact honours line, then real final standings (left) next to "Also in this
+report" secondary headlines (right), reopening the "no full standings on complete" decision.
+
+Both states' standings now share one `_standings_table_context()` helper and defer to
+`GET /contents/panel` (only the complete-state headline, whose text depends on report
+availability, stays synchronous). `get_edition_summary()` gained `other_articles`; the shared
+standings-table partial gained an optional unit-aware header (`"Points"`/`"vs Par"`).
+
+Caught and fixed three real CSS bugs via an automated 24-combination overflow sweep before
+shipping: a specificity mismatch that let equal-width columns beat the phone-width single-column
+override; a classic CSS Grid non-shrinking-item overflow; and a table narrowly too wide at 320px,
+fixed with the site's standard `overflow-x:auto` wrapper. Zero overflow across the full matrix
+after fixes. `pytest tests/ -v` — 769 passed. Full detail:
+`webapp/design_reviews/ui_workstream/I5-handoff.md` → Revision 2.
 
 ## 2026-09-22 — I5 revision: real standings + report-led headline on Contents
 
