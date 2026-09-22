@@ -2,7 +2,7 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-22 (mobile Explore navigation)
+**Last updated:** 2026-09-22 (I5 revision 2: full leaderboard on Contents' complete state + collapsible sitemap — merged to main)
 
 ## 2026-09-22 — Phone Explore navigation
 
@@ -63,6 +63,84 @@ clean.
 Branch `codex/nonintrusive-loading`, based on `1f96cc1`. Not yet merged.
 
 Routine public GET requests now keep the confirmed view visually unchanged while loading. The in-flow `Loading view…` banner and busy-panel opacity were removed; `aria-busy` and the progress cursor remain. Real failures still preserve the prior view and URL and show Retry/Dismiss. Retrying keeps that error stable in place and disables repeat clicks until success or failure.
+
+## 2026-09-22 — I5 revision 2: full leaderboard on complete state + collapsible sitemap
+
+Merged to `main` and pushed. Two further owner requests via five more prototype rounds
+(`https://claude.ai/artifact/UD49p88BHCfBTTNH4GRstz`, now v11): the sitemap is now a native
+`<details>` disclosure, closed by default with a signpost naming the real page count/groups
+(reopens the "always visible" decision); and the complete state gets the same two-panel richness
+as in-progress — a compact honours line, then real final standings (left) next to "Also in this
+report" secondary headlines (right), reopening the "no full standings on complete" decision.
+
+Both states' standings now share one `_standings_table_context()` helper and defer to
+`GET /contents/panel` (only the complete-state headline, whose text depends on report
+availability, stays synchronous). `get_edition_summary()` gained `other_articles`; the shared
+standings-table partial gained an optional unit-aware header (`"Points"`/`"vs Par"`).
+
+Caught and fixed three real CSS bugs via an automated 24-combination overflow sweep before
+shipping: a specificity mismatch that let equal-width columns beat the phone-width single-column
+override; a classic CSS Grid non-shrinking-item overflow; and a table narrowly too wide at 320px,
+fixed with the site's standard `overflow-x:auto` wrapper. Zero overflow across the full matrix
+after fixes. `pytest tests/ -v` — 769 passed. Full detail:
+`webapp/design_reviews/ui_workstream/I5-handoff.md` → Revision 2.
+
+## 2026-09-22 — I5 revision: real standings + report-led headline on Contents
+
+Same branch/worktree as the 2026-09-21 entry below (`claude/ui-i5`). The owner reviewed the
+shipped page and found it "too thin" — leader names only, no real content. Compared against
+Codex's independent, never-merged `codex/contents-home-proposals` plan, adopted selectively via
+an approved interactive prototype (`https://claude.ai/artifact/UD49p88BHCfBTTNH4GRstz`).
+
+In-progress now shows a real net-competition standings table (every player, ties as genuine
+duplicate rows) plus a compact gross-competition line, two-column (≥900px) next to a round-report
+teaser when one exists — reusing I1's `_standings_rows()`/`_standings_table.html` directly rather
+than a second renderer. Complete state: when a tournament report exists, its own headline becomes
+the page's h1 (linked to the report), with a `TEG N results | Area | Month Year` dateline; falls
+back to the original "TEG N — Final Results" treatment, unchanged, when no report exists.
+
+New `get_edition_summary()` (`teg_analysis/reporting/newspaper_edition.py`, `@lru_cache`) makes
+this affordable — full artefact-parse cost once per process, free after. In-progress rich content
+now always defers to `GET /contents/panel` (dropped the old cache-warmth branching); the complete
+state's report resolves synchronously, since its headline determines the page's own h1 and
+deferring it would flash.
+
+Verified against real data throughout (TEG 18's actual report headline renders correctly), full
+`pytest tests/ -v` (766 passed), 24-combination browser matrix (320–1280px × both Clean layouts ×
+light/dark), zero overflow. Full detail, three bugs caught and fixed pre-commit, and the prototype
+iteration history: `webapp/design_reviews/ui_workstream/I5-handoff.md` → Revision.
+
+## 2026-09-21 — UI implementation roadmap Improve stage: I5 Contents as the current-TEG home
+
+Originally branch `claude/ui-i5`, based on `6218c0c` (main tip, I1+I2 merged); merged to `main`
+2026-09-22 after two further revision rounds (see above).
+
+`/contents` (the site's de facto home via `/` → `/contents`) replaces its flat three-column link
+grid with a state-led panel — implementing the I3 product contract with I4's critique folded in,
+plus three owner decisions taken live: the TEG report is the primary action in the complete state
+(Full Results secondary, or primary itself when no report exists yet); a cold parquet-cache miss
+defers State 1's leader rows to an HTMX partial rather than blocking the page; the wooden spoon
+stays visible mid-tournament, matching existing `/history` precedent.
+
+`webapp.deps.get_tournament_state()` is the single source of truth for the three states —
+in-progress, latest-complete, no usable data — read from the two small status CSVs, never
+`get_default_teg_num()` (which silently falls back to a hardcoded TEG on unreadable data). The
+complete state costs no parquet load: winners come straight from `data/teg_winners.csv`. The five
+`NAV_SECTIONS` groups render unchanged below the panel, one per bounded surface (not the old
+`!important`-laden three-column layout), preserving all 28 public destinations byte-for-byte
+against `webapp/nav.py`.
+
+Verified: all three states, 320/390/768/1280px, light/dark, both Clean-family layouts, direct
+navigation and reload, warm- and cold-cache leader rendering, ties (no countback — every tied
+player named). 9 new focused tests (`tests/test_webapp_pages.py -k contents`); full suite of
+`test_webapp_pages.py` (110), `test_imports.py`/`test_no_streamlit_imports.py` (30) and
+`check_pandas_compat.py` (0 errors) all pass. `design_principles.md`'s accent-colour rule (line 29
++ checklist) updated to record green's actual jobs (honours, live status, active selection,
+top-rank emphasis) and that they never combine on one render. Full contract, rulings and
+verification: `webapp/design_reviews/ui_workstream/I3-handoff.md`, `I4-handoff.md`,
+`I5-handoff.md`.
+
+**Next:** I6 (Improve review gate).
 
 ## 2026-09-20 — UI implementation roadmap Improve stage: I2 public interaction and URL state
 

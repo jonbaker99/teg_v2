@@ -187,24 +187,52 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 - [ ] **CSS cache-buster gotcha (process note, 2026-09-20 C4).** `mobile.css`, `scorecard.css` and `player-profile.css` are all served with a `?v=N` query param on their `<link>` tag; editing the file without bumping `N` left a live/test browser serving the stale cached version, which produced a false 12-failure overflow report mid-session. Not a code bug — a reminder for future CSS-editing sessions: bump the relevant `?v=N` in `base.html` or the owning template whenever one of these files changes, the way C3 already did for the theme CSS files.
 - [ ] **Aesthetics/UI path agreed (2026-09-19) — implementation not started.** `webapp/design_reviews/claude-ui-review.md` is the original source inventory and direction paper; `webapp/design_reviews/gpt-ui-review.md` is the checked decision document; `webapp/design_reviews/ui-implementation-roadmap.md` provides dependency-ordered, copy-ready starter prompts for each chat. The agreed path is **Fix → Consistent UI → Improve → Experiment → Test and decide**, scoped to the public analysis/navigation experience. Gap-to-leader is not required. Admin, setup, score input, live-round operations, and data-update processes are deferred, with recommendations recorded for their future workstream. The selective **Editorial Golf** pilot follows consistency and product improvements. **Next action:** run the evidence-only P0 baseline chat, then the first bounded Fix chats. The final visual direction stays open until Experiment/Test. No application code was changed by the review or planning work.
 - [X] **Long-page public navigation persistence (F5 + follow-ups, 2026-09-20).** Fixed: `webapp/templates/base.html`'s sticky-nav scroll handler computed hide offset from absolute `scrollY` past the 300px threshold, not from scroll direction, so on a long page it stayed hidden on the way back up until `scrollY` dropped below `threshold + navHeight`. F5 added direction tracking; its follow-up now requires 8px of uninterrupted upward movement before revealing the nav, so 1px momentum/trackpad reversals stay hidden while genuine upward scrolling still reveals immediately after the guard. The F6 cross-route follow-up is closed by a 384-state sweep: 32 public route states at 390/768/1280px, light/dark, Clean Page/Clean Layered; 164 states were long enough to exercise hide → jitter → reveal, with no nav failure, content jump, bottom-tab overlap, or browser error. Seven excluded operational GET routes were also checked safely across 84 states; the six protected URLs redirected to `/admin/login`, while `/admin/login` rendered directly, and no protected workflow was entered. `python -m pytest tests/test_webapp_pages.py -k nav_page_renders -v` — 28 passed. Evidence: `webapp/design_reviews/ui_workstream/F5-followups-handoff.md`; original screenshots: `webapp/design_reviews/ui_workstream/screenshots/F5/`.
-- [ ] **OPTION, not decided — Contents (`/`) page redesign (2026-09-19).**
-  Mockup only, not implemented: [Contents Page Redesign
-  canvas](https://claude.ai/artifact/8bBeoXbR62qiGA2KezQcAU) (desktop +
-  mobile, both a TEG-in-progress and a no-TEG-in-progress state). Proposal:
-  replace the flat three-column link grid (which mostly re-lists the top nav's
-  own section groupings) with (1) a hero strip above the columns showing live
-  status when a TEG is in progress (`_teg_is_complete()` in
-  `routes/history.py` / `routes/admin_reports.py` already has this check) —
-  "TEG N — Round R in progress" + a primary link to the leaderboard — or,
-  when no TEG is in progress, "TEG N — Final Results" + a primary link to
-  `/results` and an equally-weighted link to that TEG's report
-  (`/teg-reports`); and (2) regrouping the three columns by visitor intent
-  (History / Records+PBs+Scorecards / Scoring analysis) instead of mirroring
-  `webapp/nav.py`'s `NAV_SECTIONS` structure 1:1. This needs a proper design
-  review (does the intent-based grouping actually help, is folding Scorecards
-  into Records right, copy/wording) before any implementation — flag this
-  explicitly to whoever reviews aesthetics/UI/options next; see also
-  `webapp/README.md` → Phase 2 (better UI).
+- [X] **Contents (`/`) page redesign — implemented as the current-TEG home, then revised twice
+  after owner review (I3/I4/I5, 2026-09-21, revised 2026-09-22 x2).**
+  `/contents` (the site's de facto home via `/` → `/contents`) now leads with
+  a state panel — in-progress, latest-complete, or honest no-data — built by
+  `webapp.deps.get_tournament_state()` from the two small status CSVs, never
+  `get_default_teg_num()`. **In progress:** eyebrow + headline + dated context
+  line, then a real net-competition standings table (every player, ties as
+  genuine duplicate rows, unit-aware "Points"/"vs Par" header) + a compact
+  gross-competition line, two-column (≥900px) next to a round-report teaser
+  when one exists. **Complete:** when a tournament report exists, its own
+  headline becomes the page's h1 (linked to the report) with a
+  `TEG N results | Area | Month Year` dateline, a compact honours line
+  (Champion/Green Jacket/Wooden spoon on one line above a hairline rule, not
+  stacked rows), then the same two-panel treatment — real final standings
+  (left) next to up to 4 of the report's other headlines under "Also in this
+  report" (right); falls back to the original "TEG N — Final Results"
+  treatment when no report exists. Both states' rich content shares one
+  `_standings_table_context()` helper and always defers to
+  `GET /contents/panel` via HTMX (only the complete-state headline, whose
+  text depends on report availability, resolves synchronously) — reusing I1's
+  `_standings_rows()`/`_standings_table.html` rather than a second renderer.
+  The five `NAV_SECTIONS` groups (all 28 destinations, `/player` still
+  unlinked) now sit inside a collapsible `<details>` disclosure below the
+  state panel, closed by default with a signpost naming the real page count
+  and group labels — reopening I3/I4's original "always visible" ruling at
+  the owner's explicit request. Reports' `get_edition_summary()` gained
+  `other_articles` (kicker+headline for every non-lead story). Went through
+  three rounds of an approved interactive prototype
+  (`https://claude.ai/artifact/UD49p88BHCfBTTNH4GRstz`) compared against
+  Codex's independent `codex/contents-home-proposals` plan. Tests:
+  `tests/test_webapp_pages.py` (14, `-k contents`). Full contract, rulings
+  and rationale: `webapp/design_reviews/ui_workstream/I3-handoff.md`,
+  `I4-handoff.md`, `I5-handoff.md`.
+- [ ] **Live-round finalization can commit a partial roster (found during Codex's
+  parallel Contents planning, 2026-09-20; logged 2026-09-22).**
+  `finalize_live_round()` (`teg_analysis/analysis/live_round.py`) requires at
+  least one complete 18-hole player-round before committing, but does not
+  require every confirmed playing-roster member to have 18 holes.
+  `analyze_teg_completion()` then records `Rounds` as the maximum *observed*
+  round, so downstream status (`data/in_progress_tegs.csv`,
+  `data/completed_tegs.csv`) could overstate the last fully completed round
+  if a round were ever committed with some players still mid-round. Owner
+  confirmed this isn't a live risk given the actual data-entry workflow
+  (rounds are always entered for all players at once), so this is scoped out
+  as a defensive fix only — pick up when next touching
+  `data_update.py`/live-round finalization, not as part of any UI work.
 - [ ] **Newspaper report — "standings movement" idea (2026-09-13).** While
   reviewing forest-green accent options for `/teg-reports` (`newspaper_preview.css`),
   Jon liked the simple `rail-standings`/`.sb-lab` block ("Standings movement:

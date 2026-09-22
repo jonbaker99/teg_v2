@@ -258,3 +258,120 @@ def get_filtered_teg_data():
     """Get complete TEG data excluding TEG 2 (only 3 rounds)."""
     df = cached_complete_teg_data()
     return df[df['TEGNum'] != 2]
+
+
+# --- Contents / tournament-state helpers (I5) --------------------------------
+
+def _format_date_dmy(date_str) -> str:
+    """Parse DD/MM/YYYY and return '17 March 2026' style. Mirrors
+    webapp/routes/scorecard.py's `_format_date`; kept local rather than
+    imported since deps.py must not depend on route modules."""
+    from datetime import datetime
+    if not date_str:
+        return ""
+    try:
+        dt = datetime.strptime(str(date_str).strip(), "%d/%m/%Y")
+        return dt.strftime("%-d %B %Y")
+    except (ValueError, TypeError):
+        return str(date_str)
+
+
+def _format_month_year_dmy(date_str) -> str:
+    """Parse DD/MM/YYYY and return 'March 2026' style -- for the complete
+    state's report-led dateline, which doesn't need the day."""
+    from datetime import datetime
+    if not date_str:
+        return ""
+    try:
+        dt = datetime.strptime(str(date_str).strip(), "%d/%m/%Y")
+        return dt.strftime("%B %Y")
+    except (ValueError, TypeError):
+        return str(date_str)
+
+
+def get_tournament_state() -> dict:
+    """Single source of truth for Contents' three states (in progress /
+    latest complete / no usable data), chosen from the two small status
+    CSVs -- never from `get_default_teg_num()`, which silently falls back
+    to `FALLBACK_TEG_NUM` on unreadable data and would misreport State 3
+    as a real TEG.
+
+    In-progress rich content (standings, round report) is never built here
+    -- it always defers to `GET /contents/panel`, since its cost driver
+    (`cached_round_data()`) is a real parquet load. The complete state's
+    report summary IS built here, synchronously: since the report's own
+    headline becomes the page's h1 when one exists, resolving it lazily
+    would mean a visible flash from the fallback headline to the real one.
+    `get_edition_summary()` is `lru_cache`d, so this only costs a full
+    artefact parse on the first hit per process.
+    """
+    from teg_analysis.io.file_operations import read_file
+    from teg_analysis.core.metadata import get_teg_metadata
+    from teg_analysis.core.data_loader import get_tegnum_rounds
+    from teg_analysis.analysis.history import get_future_tegs
+    from teg_analysis.reporting.newspaper_edition import has_edition, get_edition_summary
+
+    in_teg, rounds_played = get_current_in_progress_teg_fast()
+    if in_teg:
+        meta = get_teg_metadata(in_teg)
+        round_meta = get_teg_metadata(in_teg, rounds_played) if rounds_played else {}
+        year = meta.get('Year')
+        return {
+            "state": "in_progress",
+            "teg_num": in_teg,
+            "teg_label": f"TEG {in_teg}",
+            "area": meta.get('Area', ''),
+            "year": str(int(year)) if year and str(year).strip() else '',
+            "rounds_played": rounds_played,
+            "rounds_expected": get_tegnum_rounds(in_teg),
+            "last_round_date": _format_date_dmy(round_meta.get('Date', '')),
+        }
+
+    last_teg, _rounds = get_last_completed_teg_fast()
+    if last_teg:
+        meta = get_teg_metadata(last_teg)
+        rounds_expected = get_tegnum_rounds(last_teg)
+        round_meta = get_teg_metadata(last_teg, rounds_expected)
+        year = meta.get('Year')
+        raw_date = round_meta.get('Date', '')
+
+        winners = {}
+        try:
+            winners_df = read_file('data/teg_winners.csv')
+            row = winners_df[winners_df['TEG'] == f"TEG {last_teg}"]
+            if not row.empty:
+                winners = row.iloc[0].to_dict()
+        except Exception:
+            winners = {}
+
+        next_teg = None
+        try:
+            future = get_future_tegs()
+            if not future.empty:
+                next_row = future.iloc[0]
+                next_teg = {
+                    "label": next_row['TEG'],
+                    "year": int(next_row['Year']),
+                    "area": next_row['Area'],
+                }
+        except Exception:
+            next_teg = None
+
+        report_summary = get_edition_summary(last_teg) if has_edition(last_teg) else None
+
+        return {
+            "state": "complete",
+            "teg_num": last_teg,
+            "teg_label": f"TEG {last_teg}",
+            "area": meta.get('Area', ''),
+            "year": str(int(year)) if year and str(year).strip() else '',
+            "last_round_date": _format_date_dmy(raw_date),
+            "dateline_month_year": _format_month_year_dmy(raw_date),
+            "trophy": winners.get('TEG Trophy', ''),
+            "jacket": winners.get('Green Jacket', ''),
+            "spoon": winners.get('HMM Wooden Spoon', ''),
+            "report_summary": report_summary,
+            "next_teg": next_teg,
+        }
+
+    return {"state": "no_data"}

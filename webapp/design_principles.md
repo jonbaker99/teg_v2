@@ -26,7 +26,7 @@ Paste-ready brief for converting a page (or judging a new one). The gut check:
 - **No decorative identity chrome** — no avatars, monogram circles, initials-in-bubbles, or filler icons added just to fill space.
 - **No redundant affordances** — if the whole card is a link, don't also add a "View profile →" CTA. Let the element be the affordance.
 - **Cut the sell.** No "dive into your career", no four-item em-dash lists, no adjectives doing marketing. Copy is short, factual, faintly wry.
-- **One accent colour, one job.** Green means *honours/silverware* — don't also spend it on borders, CTAs, icons and hover text at once. When an accent means something, keep it meaningful.
+- **One accent colour, one job per render.** Green has four sanctioned jobs on the shipped site — *honours/silverware*, *live tournament status* (Contents' `IN PROGRESS` eyebrow, I5), *active selection* (`.tab-underline`'s active-tab underline, and the small-caps `.section-title`/`.card-header`/`.chart-title` heading colour, a named exception kept as-is), and *top-rank emphasis* (the leaderboard/records top-rank row tint) — but never two of them on the same render: a page in progress marks the eyebrow green and keeps leader names ink (they're provisional positions, not honours yet); a complete page marks the winners' names green and keeps the eyebrow muted. Don't spend green on borders, CTAs, or hover text beyond these roles. The three foundation controls (`.tab-underline`, `.segmented .seg-option`, `.action`) use `--focus` (= `--ink`), not green, for their keyboard focus ring — an identical-to-"selected" ring on a green-selected segment is a real bug (see Components → Hit areas).
 
 **Surfaces & layout**
 - **Cards float directly on the page background** as their own surfaces — avoid nesting cards inside a big panel-within-a-panel. This means dissolving the *outer* panel, not removing card/section surfaces altogether: each group of content still needs a bounded surface (a card, or a clearly-divided section) to read as a distinct unit. A page where everything sits directly on the background with no grouping reads as an undifferentiated data dump, not a clean overview — that's the opposite of the goal. (Seen in practice: `/player/{code}`'s first conversion attempt over-applied this and lost all definition — see `webapp/TODOS.md` → Player Profiles.)
@@ -44,7 +44,7 @@ Paste-ready brief for converting a page (or judging a new one). The gut check:
 - [ ] No avatars / monograms / filler icons
 - [ ] No CTA duplicating an already-clickable element
 - [ ] Copy trimmed — factual, short, no marketing cadence
-- [ ] Accent colour has exactly one meaning on the page
+- [ ] Accent colour carries only one of its sanctioned jobs (honours, live status, active selection, top-rank emphasis) per render — never two at once
 - [ ] Cards/sections on the background (not boxed inside another panel) — but each still has a bounded surface; nothing floats with zero definition
 - [ ] Elements align to a shared column/rhythm — no unplanned horizontal spacing
 - [ ] Thin rules over heavy frames/dotted strips
