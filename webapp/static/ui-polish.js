@@ -1,6 +1,6 @@
 /* Native navigation plus the shared public read-request state contract. */
 (function () {
-    var hamburger = document.querySelector('.nav-hamburger');
+    var hamburger = document.querySelector('.nav-hamburger--tablet');
     var links = document.querySelector('.nav-links');
     var menus = Array.from(document.querySelectorAll('.nav-dropdown'));
     function closeMenus() {
@@ -43,6 +43,47 @@
             button.setAttribute('aria-expanded', String(open));
         });
     });
+
+    var exploreSheet = document.getElementById('mobile-explore-sheet');
+    var exploreTriggers = Array.from(document.querySelectorAll('[data-explore-trigger]'));
+    var exploreClose = exploreSheet && exploreSheet.querySelector('[data-explore-close]');
+    var exploreInvoker = null;
+    var phoneViewport = window.matchMedia('(max-width: 640px)');
+    function setExploreExpanded(open) {
+        exploreTriggers.forEach(function (trigger) {
+            trigger.setAttribute('aria-expanded', String(open));
+        });
+    }
+    function openExplore(trigger) {
+        if (!exploreSheet || !phoneViewport.matches || exploreSheet.open) return;
+        exploreInvoker = trigger;
+        exploreSheet.showModal();
+        document.body.classList.add('mobile-explore-open');
+        setExploreExpanded(true);
+        if (exploreClose) exploreClose.focus({ preventScroll: true });
+    }
+    function closeExplore() {
+        if (exploreSheet && exploreSheet.open) exploreSheet.close();
+    }
+    exploreTriggers.forEach(function (trigger) {
+        trigger.addEventListener('click', function () { openExplore(trigger); });
+    });
+    if (exploreClose) exploreClose.addEventListener('click', closeExplore);
+    if (exploreSheet) {
+        exploreSheet.addEventListener('click', function (event) {
+            if (event.target === exploreSheet) closeExplore();
+        });
+        exploreSheet.addEventListener('close', function () {
+            document.body.classList.remove('mobile-explore-open');
+            setExploreExpanded(false);
+            if (exploreInvoker) exploreInvoker.focus({ preventScroll: true });
+            exploreInvoker = null;
+        });
+    }
+    function closeExploreAbovePhone() {
+        if (!phoneViewport.matches) closeExplore();
+    }
+    phoneViewport.addEventListener('change', closeExploreAbovePhone);
 
     var root = document.body;
     if (!root || !root.hasAttribute('data-public-state-keys')) return;

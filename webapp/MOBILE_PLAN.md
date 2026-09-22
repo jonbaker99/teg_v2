@@ -18,9 +18,11 @@ behind a `≤640px` breakpoint or an opt-in `data-mode`).
 - ✅ **Portrait scorecard** (in `main`) — the first real vertical slice of the app
   pattern (holes-as-rows, pinned columns, pure-CSS Gross/Stableford toggle).
   Builders in `teg_analysis`, wired into the webapp. See [SCORECARD_PORT.md](SCORECARD_PORT.md).
-- ✅ **App shell — bottom tab bar** (PR 1) — `static/mobile.css` scaffold + a
-  fixed bottom tab bar in `base.html` (one tab per nav section, driven by
-  `nav.py`'s new `tab` key), shown only `≤640px`, plus a compacted top bar.
+- ✅ **App shell — bottom tab bar + Explore** — `static/mobile.css` and
+  `base.html` provide four fixed shortcuts (Latest, History, Records and Cards)
+  plus Explore at `≤640px`. Explore and the phone hamburger open the same
+  native sheet, which lists every `NAV_SECTIONS` page as a direct link. The
+  641–900px hamburger disclosure navigation stays unchanged.
   Preview: `mobile_mockups/mobile_shell_preview.html`.
 - ✅ **Mockups** for Direction A in `webapp/mobile_mockups/` (served at `/mockups/`).
 - ✅ **M1.4–M1.6 sweep + M2.7 leaderboard hero** — all in `static/mobile.css`
@@ -213,10 +215,11 @@ override set**, not a re-skin. Built as:
 
 ### 4.3 Navigation (the app shell)
 
-- **Bottom tab bar** (phone only): 5 destinations mapped to the `NAV_SECTIONS`
-  groups — e.g. *Latest · History · Records · Scoring · More*. "More" opens a
-  full-screen sheet listing the rest (driven by the same `webapp/nav.py` source
-  of truth — no second nav definition).
+- **Bottom tab bar** (phone only): four direct shortcuts — *Latest · History ·
+  Records · Cards* — plus *Explore*. Explore and the phone hamburger open the
+  same full-screen sheet, which lists every `NAV_SECTIONS` page as a direct
+  link. `MOBILE_SHORTCUTS` owns only the shortcuts; `NAV_SECTIONS` remains the
+  public-page source of truth.
 - **Sticky top app bar:** page kicker + title + the TEG/context selector as a
   pill. Collapses on scroll (we already have a sticky-nav scroll handler to
   adapt).
@@ -266,8 +269,9 @@ Three tiers, cheapest first:
 2. ✅ **Done** — dark-mode variable layer (`static/themes/dark.css`) +
    `data-mode` cookie/toggle + dark Plotly theme helper. Default light, so
    laptop/iPad unchanged.
-3. ✅ **Done** — bottom-tab-bar markup in `base.html` (driven by `nav.py` `tab`
-   keys), `display:none` >640px.
+3. ✅ **Done** — four-shortcut bottom bar plus native Explore dialog in
+   `base.html`, `display:none` >640px. The phone hamburger opens that same
+   dialog; the tablet disclosure navigation remains separate.
 
 > ✅ **Vertical slice already done:** the **portrait scorecard** implements the
 > M1 table + control patterns (segmented Gross/Stableford toggle, pinned-column

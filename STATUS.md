@@ -2,7 +2,13 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-22 (Latest Round/TEG streak-label clarity)
+**Last updated:** 2026-09-22 (mobile Explore navigation)
+
+## 2026-09-22 — Phone Explore navigation
+
+Phone bottom navigation now has **Latest · History · Records · Cards · Explore**. The phone hamburger and Explore open the same native all-pages dialog, driven by `NAV_SECTIONS`; tablet and desktop navigation keep their existing behaviour.
+
+Verified with focused server-render tests and Playwright checks at phone, tablet and desktop widths.
 
 ## 2026-09-22 — Latest Round/TEG streak labels show inclusive thresholds
 

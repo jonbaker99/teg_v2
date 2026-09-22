@@ -9,6 +9,7 @@
 
 /* Mobile-only markup, present in the DOM always; hidden until phone width. */
 .mobile-tabbar { display: none; }
+.mobile-explore-sheet { display: none; }
 .lb-hero { display: none; }
 /* Records (/records): mobile tap-to-reveal list, dual-rendered alongside
    the unchanged desktop <table> -- see the @media block below. */
@@ -53,7 +54,7 @@
   /* Leave room for the fixed bottom bar so content never hides behind it. */
   body { padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
 
-  /* ── Bottom tab bar (one tab per nav section) ── */
+  /* ── Bottom tab bar (four shortcuts plus complete Explore) ── */
   .mobile-tabbar {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -84,6 +85,96 @@
   .mtab .material-symbols-outlined { font-size: 22px; }
   .mtab-label { white-space: nowrap; }
   .mtab--active { color: var(--accent, forestgreen); }
+  .mtab--explore {
+    border: 0;
+    background: transparent;
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  /* The native dialog supplies modal semantics. It becomes a full-height
+     phone sheet, with explicit scrolling so its footer remains reachable. */
+  .nav-hamburger.nav-hamburger--phone { display: block; }
+  .nav .nav-links { display: none; }
+  .mobile-explore-sheet[open] {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: max(16px, env(safe-area-inset-top, 0px)) 16px max(16px, env(safe-area-inset-bottom, 0px));
+    border: 0;
+    background: var(--bg-card, #ffffff);
+    color: var(--text-primary, #1f2937);
+  }
+  .mobile-explore-sheet::backdrop { background: rgba(0, 0, 0, 0.35); }
+  .mobile-explore-sheet__header,
+  .mobile-explore-sheet__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 0 0 auto;
+  }
+  .mobile-explore-sheet__header {
+    min-height: 44px;
+    border-bottom: 1px solid var(--table-cell-border, #e0e0e0);
+  }
+  .mobile-explore-sheet__header h2,
+  .mobile-explore-group h3 { margin: 0; }
+  .mobile-explore-sheet__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 0.25rem;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+  .mobile-explore-sheet__body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 12px 0;
+  }
+  .mobile-explore-group + .mobile-explore-group { margin-top: 20px; }
+  .mobile-explore-group h3 {
+    color: var(--nav-text-muted, var(--text-secondary, #555555));
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .mobile-explore-group ul { margin: 6px 0 0; padding: 0; list-style: none; }
+  .mobile-explore-group a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 8px 4px;
+    color: var(--nav-text, var(--text-primary, #1f2937));
+    text-decoration: none;
+  }
+  .mobile-explore-group a[aria-current="page"] {
+    color: var(--accent, forestgreen);
+    font-weight: 700;
+  }
+  .mobile-explore-sheet__footer {
+    min-height: 52px;
+    padding-top: 8px;
+    border-top: 1px solid var(--table-cell-border, #e0e0e0);
+  }
+  .mobile-explore-sheet__footer .mode-toggle {
+    min-height: 44px;
+    gap: 8px;
+    padding-inline: 12px;
+  }
+  body.mobile-explore-open { overflow: hidden; }
 
   /* ── Top app bar (M1.4): compact, decluttered, subtly elevated ── */
   .nav-brand { font-size: 1.25rem; }

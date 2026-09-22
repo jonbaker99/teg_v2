@@ -7,6 +7,7 @@ error-context marker" check, not a content assertion: these exist to catch a
 column rename or refactor breaking a page outright, not to pin exact output.
 """
 
+import html
 import re
 
 import pytest
@@ -58,6 +59,76 @@ _NAV_URLS = [
 def test_nav_page_renders(client, url):
     resp = client.get(url)
     _assert_ok_no_error(resp)
+
+
+def test_phone_explore_navigation_is_complete_and_current(client):
+    resp = client.get("/records")
+    _assert_ok_no_error(resp)
+
+    tabbar = re.search(r'<nav class="mobile-tabbar".*?</nav>', resp.text, re.DOTALL)
+    assert tabbar
+    assert len(re.findall(r'<(?:a|button)[^>]*class="mtab(?: |")', tabbar.group(0))) == 5
+    for label, url in (
+        ("Latest", "/leaderboard"),
+        ("History", "/history"),
+        ("Records", "/records"),
+        ("Cards", "/scorecard"),
+    ):
+        assert f'href="{url}"' in tabbar.group(0)
+        assert f'>{label}</span>' in tabbar.group(0)
+    assert '>Explore</span>' in tabbar.group(0)
+    assert '>Scoring</span>' not in tabbar.group(0)
+    assert 'href="/records"' in tabbar.group(0)
+    assert 'aria-current="page"' in tabbar.group(0)
+
+    honours = client.get("/honours")
+    _assert_ok_no_error(honours)
+    honours_tabbar = re.search(r'<nav class="mobile-tabbar".*?</nav>', honours.text, re.DOTALL)
+    assert honours_tabbar
+    assert re.search(r'href="/history"\s+class="mtab mtab--active"', honours_tabbar.group(0))
+    assert 'aria-current="page"' not in honours_tabbar.group(0)
+
+    sheet = re.search(
+        r'<dialog id="mobile-explore-sheet".*?</dialog>', resp.text, re.DOTALL,
+    )
+    assert sheet
+    sheet_html = sheet.group(0)
+    for section in NAV_SECTIONS:
+        assert html.escape(section["label"]) in sheet_html
+        for _title, url, _key, _icon in section["pages"]:
+            assert sheet_html.count(f'href="{url}"') == 1
+    assert '<a href="/records" aria-current="page">' in sheet_html
+    assert 'data-explore-close' in sheet_html
+    assert 'Toggle light or dark mode' in sheet_html
+
+    assert 'nav-hamburger--phone' in resp.text
+    assert 'nav-hamburger--tablet' in resp.text
+    assert resp.text.count('aria-controls="mobile-explore-sheet"') == 2
+    assert '/static/mobile.css?v=41' in resp.text
+    assert '/static/ui-polish.js?v=4' in resp.text
+
+
+def test_phone_explore_static_hooks(client):
+    script = client.get("/static/ui-polish.js")
+    assert script.status_code == 200
+    for hook in (
+        "showModal",
+        "mobile-explore-open",
+        "setExploreExpanded",
+        "closeExploreAbovePhone",
+    ):
+        assert hook in script.text
+
+    styles = client.get("/static/mobile.css")
+    assert styles.status_code == 200
+    for hook in (
+        ".mobile-explore-sheet[open]",
+        ".nav-hamburger.nav-hamburger--phone",
+        ".nav .nav-links { display: none; }",
+        "safe-area-inset-top",
+        "min-height: 44px",
+    ):
+        assert hook in styles.text
 
 
 def test_history_page_has_round_disclosure(client):

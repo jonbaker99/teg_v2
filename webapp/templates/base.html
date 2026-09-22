@@ -36,7 +36,7 @@
     <!-- Flag icons — CSS SVG flags via .fi.fi-{code} -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
     <link rel="stylesheet" href="/static/ui-polish.css?v=4">
-    <script defer src="/static/ui-polish.js?v=3"></script>
+    <script defer src="/static/ui-polish.js?v=4"></script>
     {% block extra_head %}{% endblock %}
     <style>
         /* Material Symbols base (Google's css2 endpoint ships only @font-face). */
@@ -115,11 +115,11 @@
         }
         .mode-toggle .material-symbols-outlined { font-size: 1.05rem; }
         .mode-toggle:focus { outline: none; box-shadow: 0 0 0 2px var(--select-focus-ring, var(--accent)); }
-        /* Mobile hamburger */
+        /* Tablet/mobile hamburger */
         .nav-hamburger { display: none; cursor: pointer; font-size: 1.3rem; padding: 0.25rem; }
         .nav-links { display: flex; align-items: center; gap: 0.15rem; flex-wrap: nowrap; }
-        @media (max-width: 900px) {
-            .nav-hamburger { display: block; }
+        @media (min-width: 641px) and (max-width: 900px) {
+            .nav-hamburger--tablet { display: block; }
             .nav-links {
                 display: none;
                 position: absolute;
@@ -150,9 +150,10 @@
         <div class="px-6">
             <div class="flex items-center justify-between h-14" style="position: relative;">
                 <a href="/" class="nav-brand" style="white-space: nowrap">The El Golfo</a>
-                <button type="button" class="nav-hamburger" aria-label="Open navigation" aria-controls="site-navigation" aria-expanded="false">☰</button>
+                <button type="button" class="nav-hamburger nav-hamburger--tablet" aria-label="Open navigation" aria-controls="site-navigation" aria-expanded="false">☰</button>
+                <button type="button" class="nav-hamburger nav-hamburger--phone" aria-label="Explore all pages" aria-controls="mobile-explore-sheet" aria-expanded="false" data-explore-trigger>☰</button>
                 <div class="nav-links" id="site-navigation">
-                    <!-- Sections (mirror Streamlit page_config order/labels) -->
+                    <!-- Public navigation sections from webapp/nav.py -->
                     {% for section in request.state.nav_sections %}
                     <div class="nav-dropdown">
                         <button type="button" class="nav-link nav-dropdown-btn {% if active_page in section.active %}active{% endif %}" aria-expanded="false" aria-controls="nav-section-{{ loop.index }}">{{ section.label }}</button>
@@ -200,19 +201,51 @@
         </div>
     </div>
 
-    <!-- Mobile bottom tab bar (Phase M1) — visible only ≤640px, inert above it.
-         One tab per nav section; single source of truth is webapp/nav.py. -->
+    <!-- Phone quick access — visible only ≤640px. Explore uses NAV_SECTIONS. -->
     <nav class="mobile-tabbar" aria-label="Primary sections">
-        {% for section in request.state.nav_sections %}
-        {% if section.tab %}
-        <a href="{{ section.tab.url }}"
-           class="mtab {% if active_page in section.active %}mtab--active{% endif %}" {% if active_page in section.active %}aria-current="true"{% endif %}>
-            <span class="material-symbols-outlined">{{ section.tab.icon }}</span>
-            <span class="mtab-label">{{ section.tab.label }}</span>
+        {% for shortcut in request.state.mobile_shortcuts %}
+        <a href="{{ shortcut.url }}"
+           class="mtab {% if active_page in shortcut.active %}mtab--active{% endif %}" {% if request.url.path == shortcut.url %}aria-current="page"{% endif %}>
+            <span class="material-symbols-outlined">{{ shortcut.icon }}</span>
+            <span class="mtab-label">{{ shortcut.label }}</span>
         </a>
-        {% endif %}
         {% endfor %}
+        <button type="button" class="mtab mtab--explore" aria-controls="mobile-explore-sheet" aria-expanded="false" data-explore-trigger>
+            <span class="material-symbols-outlined">apps</span>
+            <span class="mtab-label">Explore</span>
+        </button>
     </nav>
+
+    <!-- One phone-only all-pages surface. The top hamburger and bottom Explore
+         button share this native dialog; NAV_SECTIONS remains the page source. -->
+    <dialog id="mobile-explore-sheet" class="mobile-explore-sheet" aria-labelledby="mobile-explore-title">
+        <div class="mobile-explore-sheet__header">
+            <h2 id="mobile-explore-title">Explore</h2>
+            <button type="button" class="mobile-explore-sheet__close" aria-label="Close Explore" data-explore-close>
+                <span class="material-symbols-outlined" aria-hidden="true">close</span>
+            </button>
+        </div>
+        <div class="mobile-explore-sheet__body">
+            {% for section in request.state.nav_sections %}
+            <section class="mobile-explore-group" aria-labelledby="mobile-explore-section-{{ loop.index }}">
+                <h3 id="mobile-explore-section-{{ loop.index }}">{{ section.label }}</h3>
+                <ul>
+                    {% for title, url, key, icon in section.pages %}
+                    <li><a href="{{ url }}" {% if request.url.path == url %}aria-current="page"{% endif %}>
+                        <span class="menu-icon material-symbols-outlined" aria-hidden="true">{{ icon }}</span>{{ title }}
+                    </a></li>
+                    {% endfor %}
+                </ul>
+            </section>
+            {% endfor %}
+        </div>
+        <div class="mobile-explore-sheet__footer">
+            <button type="button" class="mode-toggle" title="Toggle light / dark" aria-label="Toggle light or dark mode"
+                    onclick="var m=document.documentElement.getAttribute('data-mode')==='dark'?'light':'dark';document.cookie='mode='+m+';path=/;max-age=31536000';location.reload()">
+                <span class="material-symbols-outlined">contrast</span><span>Light / dark</span>
+            </button>
+        </div>
+    </dialog>
 
     <script>
     // Sticky nav that slides off screen after scrolling past threshold

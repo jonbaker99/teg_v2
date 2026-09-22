@@ -662,17 +662,17 @@ See [page_title_switcher.md](page_title_switcher.md) — page title and card hea
 
 ### Navigation (single source of truth)
 
-The top nav and the **Contents** site map are both driven by `webapp/nav.py`
-(`NAV_SECTIONS`). This mirrors the Streamlit app's section grouping, page
-titles and ordering (see `streamlit/page_config.py`), excluding the Data-admin
-section. `NAV_SECTIONS` is injected into every template via
-`request.state.nav_sections` (set in `app.py`'s `theme_middleware`), and
-`base.html` renders the nav dropdowns by looping over it. To add/rename/reorder
-a nav entry, edit `NAV_SECTIONS` only — do not hand-edit the nav markup in
-`base.html`.
+The desktop nav, tablet disclosure menu, phone Explore sheet and **Contents**
+site map are driven by `webapp/nav.py` (`NAV_SECTIONS`). It is injected into
+every template via `request.state.nav_sections` in `app.py`'s
+`theme_middleware`. To add, rename or reorder a public page, edit
+`NAV_SECTIONS` only — do not hand-edit its grouped links in `base.html`.
 
-Each section entry has `label`, `active` (set of `active_page` values that
-highlight the section) and `pages` (list of `(title, url, active_key)`).
+Each section entry has `label`, `active` (the `active_page` values that
+highlight it) and `pages` (a list of `(title, url, active_key, icon)`).
+`MOBILE_SHORTCUTS` names only the four phone quick links: Latest, History,
+Records and Cards. The fifth phone control, Explore, presents every
+`NAV_SECTIONS` link in one native dialog.
 
 ### Adding a new page
 1. Create route in `routes/my_page.py` (define `router = APIRouter()` and your handler).
@@ -708,15 +708,15 @@ highlight the section) and `pages` (list of `(title, url, active_key)`).
   ```
 - `content` — the actual page body
 
-**Nav highlighting** — the `active_page` context value (e.g. `"teg-reports"`, `"history"`, `"results"`) is matched against the lists hardcoded in `base.html`'s nav dropdowns. If yours isn't one of the listed keys, the parent dropdown won't show as active — either reuse an existing key or add yours to the relevant list in `base.html`.
+**Nav highlighting** — the `active_page` context value (e.g. `"teg-reports"`, `"history"`, `"results"`) is matched against `NAV_SECTIONS` in `webapp/nav.py`. Add its key to the relevant section there so the desktop, tablet and phone navigation agree.
 
 ## Current status
 
 **Full Streamlit page set replicated**, including data-admin (add a round, edit
 metadata CSVs, delete rounds/TEGs, volume browser, GitHub sync, backups, file
 guide — see [Admin / data management](#admin--data-management) above); report
-generation remains out of scope. The nav mirrors Streamlit's structure exactly
-(sections, page titles, ordering) via `webapp/nav.py`. Pages: Contents,
+generation remains out of scope. Public navigation is defined independently in
+`webapp/nav.py` and shared by desktop, tablet, phone Explore and Contents. Pages: Contents,
 TEG History / Honours / Full Results / Player Rankings / TEG Reports, TEG
 Records / Top TEGs and Rounds / Personal Bests, Latest Leaderboard / Latest
 Round / Latest TEG / Handicaps, the 11 Scoring-analysis views, and Scorecard /
@@ -968,9 +968,11 @@ HTML builders).
 ## Shared UI behaviour
 
 `static/ui-polish.css` and `static/ui-polish.js` load through `base.html` after
-the themes and mobile stylesheet. Navigation uses button disclosures (click,
-Enter or Space; Escape and outside-click close them). The hamburger applies
-at ≤900px, while the bottom phone tab bar remains at ≤640px.
+the themes and mobile stylesheet. At 641–900px, the hamburger retains its
+button disclosures (click, Enter or Space; Escape and outside-click close
+those menus). At ≤640px, the top hamburger and bottom Explore control open the
+same native all-pages dialog; Escape, the close button, a backdrop click and a
+resize above phone width close it. The bottom bar keeps four direct shortcuts.
 
 The default title aligns with panel text on desktop. On phones, shared controls
 and named text classes receive a 12px component inset; data surfaces retain

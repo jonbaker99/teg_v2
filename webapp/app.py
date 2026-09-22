@@ -17,7 +17,7 @@ from webapp.routes import (
     admin, admin_round_setup, admin_teg_setup, admin_live_round, live_round,
     admin_new_round, admin_reports, design_lab, font_lab,
 )
-from webapp.nav import NAV_SECTIONS
+from webapp.nav import MOBILE_SHORTCUTS, NAV_SECTIONS
 from webapp.theme import (
     get_theme, THEMES,
     get_mode,
@@ -65,6 +65,7 @@ async def theme_middleware(request: Request, call_next):
     request.state.font_pairings = FONT_PAIRINGS
     request.state.font_pairing_override = get_font_pairing_override(request.state.font_pairing)
     request.state.nav_sections = NAV_SECTIONS
+    request.state.mobile_shortcuts = MOBILE_SHORTCUTS
     return await call_next(request)
 
 

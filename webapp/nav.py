@@ -1,27 +1,22 @@
-"""Navigation structure — single source of truth for the webapp nav and the
-Contents site map.
+"""Navigation structure — single source of truth for public webapp links.
 
-Mirrors the Streamlit app's section grouping, page titles, ordering and icons
-(see streamlit/page_config.py), excluding the Data-admin section.
+``NAV_SECTIONS`` drives the desktop dropdowns, tablet disclosure menu, Contents
+site map, and phone Explore sheet. It intentionally has no dependency on the
+frozen Streamlit application.
 
 Each section has:
-  - label:   dropdown / heading text (matches Streamlit's section display name)
+  - label:   dropdown / heading text
   - active:  set of ``active_page`` values that should highlight this section
   - pages:   list of (title, url, active_key, icon) tuples in display order
-  - tab:     {label, icon, url} for the mobile bottom tab bar (short label +
-             icon + the section's primary page). Rendered only at ≤640px in
-             base.html; one tab per section, in this same order.
 
 ``icon`` is a Google Material Symbols name (the bare ligature, e.g. "trophy"),
-matching the ``:material/<name>:`` icons defined in Streamlit's page_config.py.
-Define it once here; base.html and contents.html render it via the Material
-Symbols web font. Keep it in sync with page_config.py when icons change there.
+defined once here. ``base.html`` and ``contents.html`` render it with the
+Material Symbols web font.
 """
 
 NAV_SECTIONS = [
     {
         "label": "TEG History",
-        "tab": {"label": "History", "icon": "lists", "url": "/history"},
         "active": {"history", "honours", "results", "player-rankings", "teg-reports"},
         "pages": [
             ("TEG History", "/history", "history", "lists"),
@@ -35,7 +30,6 @@ NAV_SECTIONS = [
     },
     {
         "label": "Latest TEG",
-        "tab": {"label": "Latest", "icon": "leaderboard", "url": "/leaderboard"},
         "active": {"leaderboard", "latest-round", "latest-teg", "handicaps"},
         "pages": [
             ("Latest Leaderboard", "/leaderboard", "leaderboard", "leaderboard"),
@@ -46,7 +40,6 @@ NAV_SECTIONS = [
     },
     {
         "label": "Records & PBs",
-        "tab": {"label": "Records", "icon": "military_tech", "url": "/records"},
         "active": {"records", "top-performances", "personal-bests"},
         "pages": [
             ("TEG Records", "/records", "records", "military_tech"),
@@ -56,7 +49,6 @@ NAV_SECTIONS = [
     },
     {
         "label": "Scoring analysis",
-        "tab": {"label": "Scoring", "icon": "strategy", "url": "/scoring/birdies"},
         "active": {"scoring"},
         "pages": [
             ("Eagles / Birdies / Pars", "/scoring/birdies", "scoring", "strategy"),
@@ -75,7 +67,6 @@ NAV_SECTIONS = [
     },
     {
         "label": "Scorecards",
-        "tab": {"label": "Cards", "icon": "sports_golf", "url": "/scorecard"},
         "active": {"scorecards", "scorecard"},
         "pages": [
             ("Scorecard", "/scorecard", "scorecard", "leaderboard"),
@@ -83,5 +74,37 @@ NAV_SECTIONS = [
             ("Eclectic Scores", "/eclectic", "scorecards", "golf_course"),
             ("Eclectic Records", "/eclectic-records", "scorecards", "emoji_events"),
         ],
+    },
+]
+
+
+# Phone quick access deliberately covers four common destinations. Explore is
+# the fifth bottom-bar control and exposes every page in ``NAV_SECTIONS``.
+# These are shortcuts, not a second public-page registry: all complete link
+# grouping and page inventory remains above.
+MOBILE_SHORTCUTS = [
+    {
+        "label": "Latest",
+        "icon": "leaderboard",
+        "url": "/leaderboard",
+        "active": NAV_SECTIONS[1]["active"],
+    },
+    {
+        "label": "History",
+        "icon": "lists",
+        "url": "/history",
+        "active": NAV_SECTIONS[0]["active"],
+    },
+    {
+        "label": "Records",
+        "icon": "military_tech",
+        "url": "/records",
+        "active": NAV_SECTIONS[2]["active"],
+    },
+    {
+        "label": "Cards",
+        "icon": "sports_golf",
+        "url": "/scorecard",
+        "active": NAV_SECTIONS[4]["active"],
     },
 ]
