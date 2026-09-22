@@ -1141,15 +1141,13 @@ def test_contents_panel_actions_are_all_in_the_sitemap(client, monkeypatch):
 
 
 def test_contents_sitemap_is_collapsible_and_closed_by_default(client):
-    # Reopens the "always visible" decision at the owner's request: the
-    # sitemap is now a native <details>, closed by default, with a signpost
-    # naming the real page count and group labels -- not hardcoded.
+    # The sitemap uses a native <details>, closed by default, with a plain label.
     resp = client.get("/contents")
     _assert_ok_no_error(resp)
     i = resp.text.index('<details class="sitemap-disclosure"')
     tag = resp.text[i:resp.text.index('>', i) + 1]
     assert " open" not in tag and tag.strip() != "<details class=\"sitemap-disclosure\" open>"
-    assert f"— {contents_route.SITEMAP_PAGE_COUNT} pages:" in resp.text
+    assert 'Full site contents <span class="count">(click to expand)</span>' in resp.text
     import html
     for section in NAV_SECTIONS:
         assert html.escape(section["label"]) in resp.text

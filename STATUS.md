@@ -4,6 +4,10 @@ Current state and next priorities. Instructions and architecture live in `CLAUDE
 
 **Last updated:** 2026-09-22 (I5 revision 2: full leaderboard on Contents' complete state + collapsible sitemap — merged to main)
 
+## 2026-09-22 — Plain Contents expander label
+
+The landing page sitemap expander now reads “Full site contents (click to expand)”, replacing the promotional wording and page-count blurb.
+
 ## 2026-09-22 — Phone Explore navigation
 
 Phone bottom navigation now has **Latest · History · Records · Cards · Explore**. The phone hamburger and Explore open the same native all-pages dialog, driven by `NAV_SECTIONS`; tablet and desktop navigation keep their existing behaviour.
