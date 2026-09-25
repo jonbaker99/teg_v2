@@ -40,6 +40,15 @@ ALL_TYPES = [
     (TYPE_ONE_PLAYER_ALL_ROUNDS, "One player / all rounds"),
     (TYPE_ONE_ROUND_ALL_PLAYERS, "All players / one round"),
 ]
+EMBEDDED_TYPES = [ALL_TYPES[2], ALL_TYPES[1]]
+
+
+def parse_scorecard_round(value: str | int | None) -> int | None:
+    """Treat an empty or malformed saved round as an unset selection."""
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
 
 # Player list: sorted by display name for the selector. A function, not a
 # module-level snapshot, so a newly added player appears without a restart.
@@ -177,18 +186,48 @@ def _normalise_scorecard_state(
     round_num: int | None,
     player: str | None,
     view_type: str,
+    embedded: bool = False,
 ) -> tuple[int, int, str, str, list[int], list[tuple[str, str]], list[int]]:
     """Return canonical state and selector options for either scorecard route."""
     teg_numbers = get_available_teg_numbers()
     teg_num = teg if teg in teg_numbers else get_default_teg_num()
     rounds = get_rounds_for_teg(teg_num)
     selected_round = round_num if round_num in rounds else (rounds[-1] if rounds else 1)
-    player_list = _player_list()
+    all_players = _player_list()
+    data = cached_load_all_data()
+    roster_codes = set(data.loc[data['TEGNum'] == teg_num, 'Pl'].dropna().astype(str))
+    player_list = [(code, name) for code, name in all_players if code in roster_codes] or all_players
     player_codes = {code for code, _name in player_list}
     selected_player = player if player in player_codes else player_list[0][0]
-    type_ids = {type_id for type_id, _label in ALL_TYPES}
+    type_ids = {type_id for type_id, _label in (EMBEDDED_TYPES if embedded else ALL_TYPES)}
     selected_type = view_type if view_type in type_ids else TYPE_ONE_ROUND_ALL_PLAYERS
     return teg_num, selected_round, selected_player, selected_type, rounds, player_list, teg_numbers
+
+
+def scorecard_view_context(
+    teg: int | None,
+    round_num: int | None,
+    player: str | None,
+    view_type: str,
+    embedded: bool = False,
+) -> dict:
+    """Common selector and card context for standalone and embedded scorecards."""
+    teg_num, selected_round, selected_player, selected_type, rounds, player_list, teg_numbers = (
+        _normalise_scorecard_state(teg, round_num, player, view_type, embedded)
+    )
+    return {
+        "teg_numbers": teg_numbers,
+        "selected_teg": teg_num,
+        "selected_round": selected_round,
+        "selected_player": selected_player,
+        "selected_type": selected_type,
+        "selected_type_label": dict(ALL_TYPES)[selected_type],
+        "selected_player_name": dict(player_list)[selected_player],
+        "player_list": player_list,
+        "all_types": EMBEDDED_TYPES if embedded else ALL_TYPES,
+        "rounds": rounds,
+        **_build_scorecard_context(selected_type, teg_num, selected_round, selected_player),
+    }
 
 
 @router.get("/scorecard")
@@ -199,23 +238,15 @@ def scorecard_page(
     player: str = None,
     type: str = TYPE_ONE_ROUND_ALL_PLAYERS,
 ):
-    teg_num, round_num, player_code, type, rounds, player_list, teg_numbers = _normalise_scorecard_state(
-        teg, round, player, type,
-    )
-
-    ctx = _build_scorecard_context(type, teg_num, round_num, player_code)
+    ctx = scorecard_view_context(teg, round, player, type)
 
     return templates.TemplateResponse("scorecard.html", {
         "request": request,
         "active_page": "scorecard",
-        "teg_numbers": teg_numbers,
-        "selected_teg": teg_num,
-        "selected_round": round_num,
-        "selected_player": player_code,
-        "selected_type": type,
-        "player_list": player_list,
-        "all_types": ALL_TYPES,
-        "rounds": rounds,
+        "sc_route": "/scorecard/content",
+        "sc_target": "#scorecard-content",
+        "sc_include": "#sc-type, #sc-teg, #sc-round, #sc-player",
+        "sc_show_teg": True,
         **ctx,
     })
 
@@ -228,19 +259,13 @@ def scorecard_content(
     player: str = Query(None),
     type: str = Query(TYPE_ONE_ROUND_ALL_PLAYERS),
 ):
-    teg, round_num, player_code, type, rounds, _player_list_value, _teg_numbers = _normalise_scorecard_state(
-        teg, round, player, type,
-    )
+    ctx = scorecard_view_context(teg, round, player, type)
 
-    ctx = _build_scorecard_context(type, teg, round_num, player_code)
-
-    return templates.TemplateResponse("partials/scorecard_content.html", {
+    return templates.TemplateResponse("partials/_scorecard_view.html", {
         "request": request,
-        "selected_teg": teg,
-        "selected_round": round_num,
-        "selected_player": player_code,
-        "selected_type": type,
-        "rounds": rounds,
-        "oob": True,  # render the OOB round-pill swap (HTMX response only)
+        "sc_route": "/scorecard/content",
+        "sc_target": "#scorecard-content",
+        "sc_include": "#sc-type, #sc-teg, #sc-round, #sc-player",
+        "sc_show_teg": True,
         **ctx,
     })

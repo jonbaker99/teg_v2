@@ -1,0 +1,45 @@
+{% if sc_collapsible | default(true) %}
+<details class="sc-options">
+    <summary>
+        <span>Scorecard options</span>
+        <span class="sc-options-summary">
+            {% if sc_show_teg %}TEG {{ selected_teg }} / {% endif %}{{ selected_type_label }}{% if selected_type != 'one_player_all_rounds' %} / R{{ selected_round }}{% endif %}{% if selected_type != 'one_round_all_players' %} / {{ selected_player_name }}{% endif %}
+        </span>
+    </summary>
+{% endif %}
+    <div class="sc-options-body section-controls flex flex-wrap items-end gap-4">
+        <label class="sc-view-field flex flex-col text-sm gap-1"><span class="text-secondary font-medium">View</span>
+            <select id="sc-type" name="type" class="teg-select"
+                    hx-get="{{ sc_route }}" hx-target="{{ sc_target }}" hx-include="{{ sc_include }}">
+                {% for tid, tlabel in all_types %}<option value="{{ tid }}" {% if tid == selected_type %}selected{% endif %}>{{ tlabel }}</option>{% endfor %}
+            </select>
+        </label>
+        {% if sc_show_teg %}
+        <label class="flex flex-col text-sm gap-1"><span class="text-secondary font-medium">TEG</span>
+            <select id="sc-teg" name="teg" class="teg-select"
+                    hx-get="{{ sc_route }}" hx-target="{{ sc_target }}" hx-include="{{ sc_include }}">
+                {% for t in teg_numbers %}<option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>{% endfor %}
+            </select>
+        </label>
+        {% endif %}
+        <div id="sc-round-field" class="flex flex-col text-sm gap-1"{% if selected_type == 'one_player_all_rounds' %} style="display:none"{% endif %}>
+            <span class="text-secondary font-medium">Round</span>
+            <div id="sc-round-pills" class="pill-group">
+                {% for r in rounds %}
+                <button type="button" class="pill{% if r == selected_round %} pill--active{% endif %}"
+                        data-public-state-key="round" data-public-state-value="{{ r }}"
+                        hx-get="{{ sc_route }}" hx-target="{{ sc_target }}"
+                        hx-include="{{ sc_include }}" hx-vals='{"round": {{ r }}}'
+                        onclick="document.getElementById('sc-round').value='{{ r }}'">R{{ r }}</button>
+                {% endfor %}
+            </div>
+        </div>
+        <input type="hidden" id="sc-round" name="round" value="{{ selected_round }}">
+        <label id="sc-player-field" class="flex flex-col text-sm gap-1"{% if selected_type == 'one_round_all_players' %} style="display:none"{% endif %}><span class="text-secondary font-medium">Player</span>
+            <select id="sc-player" name="player" class="teg-select"
+                    hx-get="{{ sc_route }}" hx-target="{{ sc_target }}" hx-include="{{ sc_include }}">
+                {% for code, name in player_list %}<option value="{{ code }}" {% if code == selected_player %}selected{% endif %}>{{ name }}</option>{% endfor %}
+            </select>
+        </label>
+    </div>
+{% if sc_collapsible | default(true) %}</details>{% endif %}

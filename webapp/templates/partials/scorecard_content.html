@@ -47,21 +47,3 @@
     {% endif %}
 </div>
 {% endif %}
-{# OOB block — only for HTMX partial responses (oob=True). On the initial
-   full-page render the controls already hold #sc-round / #sc-round-pills, so
-   rendering this inline would duplicate the round pills at the foot of the page. #}
-{% if oob %}
-<input id="sc-round" name="round" type="hidden" value="{{ selected_round }}" hx-swap-oob="true">
-<div id="sc-round-pills" hx-swap-oob="true">
-    {% for r in rounds %}
-    <button class="pill{% if r == selected_round %} pill--active{% endif %}"
-            data-public-state-key="round" data-public-state-value="{{ r }}"
-            hx-get="/scorecard/content" hx-target="#scorecard-content"
-            hx-include="#sc-type, #sc-teg, #sc-player"
-            hx-vals='{"round": {{ r }}}'
-            onclick="document.getElementById('sc-round').value='{{ r }}'">
-        R{{ r }}
-    </button>
-    {% endfor %}
-</div>
-{% endif %}

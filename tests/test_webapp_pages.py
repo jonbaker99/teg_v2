@@ -574,7 +574,7 @@ def test_latest_teg_tab_partials_render(client, tab):
 
 @pytest.mark.parametrize(("url", "markers"), [
     ("/leaderboard?teg=7&tab=gross&chart_variant=ranking", (
-        'data-public-state-keys="teg,tab,chart_variant"',
+        'data-public-state-keys="teg,tab,chart_variant,type,round,player"',
         'id="lb-tab-input" name="tab" value="gross"',
         'id="lb-chart-variant" name="chart_variant" value="ranking"',
     )),
@@ -635,6 +635,51 @@ def test_public_direct_links_restore_declared_state(client, url, markers):
     _assert_ok_no_error(resp)
     for marker in markers:
         assert marker in resp.text
+
+
+@pytest.mark.parametrize("page", ["results", "leaderboard"])
+@pytest.mark.parametrize("view_type", ["one_round_all_players", "one_player_all_rounds"])
+def test_embedded_scorecard_uses_shared_options_and_state(client, page, view_type):
+    params = {"teg": 7, "tab": "scorecards", "type": view_type, "round": 2, "player": REAL_PLAYER_CODE}
+    for path in (f"/{page}", f"/{page}/table"):
+        resp = client.get(path, params=params)
+        _assert_ok_no_error(resp)
+        assert '<details class="sc-options">' not in resp.text
+        assert 'class="sc-options-body section-controls' in resp.text
+        assert f'value="{view_type}" selected' in resp.text
+        assert 'value="one_round_one_player"' not in resp.text
+        assert 'scorecard-table-portrait' in resp.text
+        assert 'id="sc-teg"' not in resp.text
+        assert f'hx-get="/{page}/table"' in resp.text
+        assert f'hx-target="#{"results" if page == "results" else "lb"}-content"' in resp.text
+
+
+@pytest.mark.parametrize("page", ["results", "leaderboard"])
+def test_embedded_scorecard_normalises_bad_view_round_and_roster(client, page):
+    resp = client.get(f"/{page}", params={
+        "teg": 2, "tab": "scorecards", "type": "one_round_one_player",
+        "round": "bad", "player": "AB",
+    })
+    _assert_ok_no_error(resp)
+    assert 'value="one_round_all_players" selected' in resp.text
+    assert 'name="round" value="' in resp.text
+    assert 'id="sc-player"' in resp.text
+    assert '<option value="AB"' not in resp.text
+
+
+@pytest.mark.parametrize("page", ["results", "leaderboard"])
+def test_embedded_scorecard_keeps_inactive_state_controls(client, page):
+    resp = client.get(f"/{page}", params={"teg": 7, "tab": "net"})
+    _assert_ok_no_error(resp)
+    prefix = "results" if page == "results" else "lb"
+    assert f'id="{prefix}-sc-type" name="type"' in resp.text
+    assert f'id="{prefix}-sc-round" name="round"' in resp.text
+    assert f'id="{prefix}-sc-player" name="player"' in resp.text
+    assert f'id="{prefix}-chart-variant" name="chart_variant"' in resp.text
+    partial = client.get(f"/{page}/table", params={
+        "teg": 7, "tab": "net", "round": "", "type": "one_round_all_players",
+    })
+    _assert_ok_no_error(partial)
 
 
 def test_public_request_shell_exposes_one_retry_contract(client):

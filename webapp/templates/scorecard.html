@@ -3,26 +3,8 @@
 {% block title_suffix %} — Scorecard{% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="/static/scorecard.css?v=30">
-<script>
-function updateScorecardControls() {
-    var view = (document.getElementById('sc-type') || {}).value;
-    if (!view) return;
-    var roundField  = document.getElementById('sc-round-field');
-    var playerField = document.getElementById('sc-player-field');
-    // 'one_player_all_rounds' needs no round selection
-    roundField.style.display  = (view === 'one_player_all_rounds') ? 'none' : '';
-    // 'one_round_all_players' needs no player selection
-    playerField.style.display = (view === 'one_round_all_players') ? 'none' : '';
-}
-document.addEventListener('DOMContentLoaded', updateScorecardControls);
-document.addEventListener('public-state:commit', updateScorecardControls);
-document.addEventListener('public-state:rollback', updateScorecardControls);
-// Re-apply after OOB swaps restore the round pills
-document.addEventListener('htmx:afterSettle', function() {
-    if (document.getElementById('sc-type')) updateScorecardControls();
-});
-</script>
+<link rel="stylesheet" href="/static/scorecard.css?v=32">
+<script defer src="/static/scorecard-controls.js?v=2"></script>
 {% endblock %}
 
 {% block page_title %}
@@ -34,46 +16,8 @@ document.addEventListener('htmx:afterSettle', function() {
 
 {% block content %}
 <div class="scorecard-wrapper">
-    {% set inc = "#sc-type, #sc-teg, #sc-round, #sc-player" %}
-    <div class="section-controls flex flex-wrap items-end gap-4">
-        <label class="sc-view-field flex flex-col text-sm gap-1"><span class="text-secondary font-medium">View</span>
-            <select id="sc-type" name="type" class="teg-select"
-                    hx-get="/scorecard/content" hx-target="#scorecard-content" hx-include="{{ inc }}">
-                {% for tid, tlabel in all_types %}<option value="{{ tid }}" {% if tid == selected_type %}selected{% endif %}>{{ tlabel }}</option>{% endfor %}
-            </select>
-        </label>
-        <label class="flex flex-col text-sm gap-1"><span class="text-secondary font-medium">TEG</span>
-            <select id="sc-teg" name="teg" class="teg-select"
-                    hx-get="/scorecard/content" hx-target="#scorecard-content" hx-include="{{ inc }}">
-                {% for t in teg_numbers %}<option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>{% endfor %}
-            </select>
-        </label>
-        <div id="sc-round-field" class="flex flex-col text-sm gap-1">
-            <span class="text-secondary font-medium">Round</span>
-            <div id="sc-round-pills" class="pill-group">
-                {% for r in rounds %}
-                <button class="pill{% if r == selected_round %} pill--active{% endif %}"
-                        data-public-state-key="round" data-public-state-value="{{ r }}"
-                        hx-get="/scorecard/content" hx-target="#scorecard-content"
-                        hx-include="#sc-type, #sc-teg, #sc-player"
-                        hx-vals='{"round": {{ r }}}'
-                        onclick="document.getElementById('sc-round').value='{{ r }}'">
-                    R{{ r }}
-                </button>
-                {% endfor %}
-            </div>
-        </div>
-        <input type="hidden" id="sc-round" name="round" value="{{ selected_round }}">
-        <label id="sc-player-field" class="flex flex-col text-sm gap-1"><span class="text-secondary font-medium">Player</span>
-            <select id="sc-player" name="player" class="teg-select"
-                    hx-get="/scorecard/content" hx-target="#scorecard-content" hx-include="{{ inc }}">
-                {% for code, name in player_list %}<option value="{{ code }}" {% if code == selected_player %}selected{% endif %}>{{ name }}</option>{% endfor %}
-            </select>
-        </label>
-    </div>
-
     <div id="scorecard-content" class="section-panel">
-        {% include "partials/scorecard_content.html" %}
+        {% include "partials/_scorecard_view.html" %}
     </div>
 </div>
 {% endblock %}

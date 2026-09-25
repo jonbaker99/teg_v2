@@ -4,9 +4,13 @@ Current state and next priorities. Instructions and architecture live in `CLAUDE
 
 **Last updated:** 2026-09-25 (Mobile scorecard sizing)
 
+## 2026-09-25 — Shared scorecard options
+
+Standalone Scorecard filters are grouped in a collapsible “Scorecard options” box; Results and Leaderboard show their filters directly on the page. Gross/Stableford stays beside the card. Results and Leaderboard replace stacked rounds with the same controls for one round/all players or all rounds/one player. Small breaks after the header, OUT and IN make portrait cards easier to scan. Header and OUT rules are removed; spacing separates those sections.
+
 ## 2026-09-25 — Mobile scorecards use available width
 
-Scorecards on Results, Leaderboard, Latest Round and Scorecard now scale their square score marks and text within bounded sizes. Equal row/column gaps keep the grid regular; sparse cards stop growing and dense cards retain horizontal scrolling with pinned Hole/Par columns. Existing score colours and symbols remain. Gross/Stableford selectors have consistent spacing before the card. Mobile View has its own row with clearer labels, dropdowns use consistent sizing, and the header rule is thin and muted. Clean Layered is mothballed; Clean Page is the active layout for routine UI verification.
+Scorecards on Results, Leaderboard, Latest Round and Scorecard now scale their square score marks and text within bounded sizes. Equal row/column gaps keep the grid regular; sparse cards stop growing and dense cards retain horizontal scrolling with pinned Hole/Par columns. Existing score colours and symbols remain. Gross/Stableford selectors have consistent spacing before the card. Mobile View has its own row with clearer labels, dropdowns use consistent sizing, and section spacing replaces the header and OUT rules. Clean Layered is mothballed; Clean Page is the active layout for routine UI verification.
 
 ## 2026-09-22 — Landing-page links open individual report stories
 

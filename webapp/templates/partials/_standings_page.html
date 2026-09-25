@@ -73,7 +73,6 @@
    mobile browsers that shows as the page jumping to the top. The TEG
    select never leaves the DOM, so it never loses focus/scroll this way -
    same reasoning as the tab-underline buttons above it. #}
-<input type="hidden" id="{{ ns }}-chart-variant" name="chart_variant" value="{{ active_chart_variant }}">
 <p class="chart-controls-label">Choose chart type:</p>
 <div class="toggle-group">
     <div class="segmented" role="group" aria-label="Chart type">
@@ -89,17 +88,16 @@
 </div>
 {% if chart_note %}<p class="chart-note text-muted text-sm">{{ chart_note }}</p>{% endif %}
 
-{% elif raw_table %}
-{# The Scorecards tab always sets raw_table=True (history.py:_results_context)
-   -- its per-round markup is already complete (build_round_comparison_
-   responsive), so it renders unwrapped rather than nested inside a second
-   .data-card, the F4 fix applied here (webapp/TODOS.md, Latest Round
-   Records/Scorecard double-wrap). scorecards_full_link is set only by
-   /leaderboard's _lb_context (webapp/routes/leaderboard.py) -- /results has
-   no equivalent, since /results IS the full page these link to. #}
+{% elif scorecard_view %}
 {% if scorecards_full_link %}<p class="mb-3"><a href="{{ scorecards_full_link }}" class="text-link">Open the full Scorecard page &rarr;</a></p>{% endif %}
-{% if result_title %}<div class="card-header">{{ result_title }}</div>{% endif %}
-{{ table_html | safe }}
+{% set sc_route = route_base ~ '/table' %}
+{% set sc_target = '#' ~ ns ~ '-content' %}
+{% set sc_include = '#' ~ ns ~ '-teg-select, #' ~ ns ~ '-tab-input, #' ~ ns ~ '-chart-variant, #sc-type, #sc-round, #sc-player' %}
+{% set sc_show_teg = false %}
+{% set sc_collapsible = false %}
+<div class="scorecard-wrapper">
+    {% include "partials/_scorecard_view.html" %}
+</div>
 {% else %}
 {% if result_title %}<div class="card-header">{{ result_title }}</div>{% endif %}
 <div class="data-card">
