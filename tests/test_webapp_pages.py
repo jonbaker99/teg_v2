@@ -1167,6 +1167,8 @@ def test_contents_panel_complete_state_real_data(client):
     _assert_ok_no_error(resp)
     assert "Final Standings" in resp.text
     assert "Green Jacket (gross)" not in resp.text  # not repeated -- honours line owns this
+    assert "TEG 18 report" in resp.text
+    assert 'class="lead-teaser" href="/teg-reports?teg=18#story/0"' in resp.text
     assert "Also in this report" in resp.text
     assert resp.text.count("<li>") == 4  # capped, TEG 18 has 5 non-lead articles
     assert 'href="/results?teg=18"' in resp.text
@@ -1189,9 +1191,11 @@ def test_contents_state_complete_with_report_leads_with_headline(client, monkeyp
     })
     resp = client.get("/contents")
     _assert_ok_no_error(resp)
-    # The report headline IS the page's h1, linked to the report.
-    assert '<h1 class="state-headline"><a class="headline-link" href="/teg-reports?teg=18">Alex Baker Wins It in Round One</a></h1>' in resp.text
-    assert "TEG 18 results | Catalonia, Spain | October 2025" in resp.text
+    # Title is plain "TEG N results"; the lead headline lives in the
+    # deferred report box with the other headlines, not the page h1.
+    assert '<h1 class="state-headline">TEG 18 results</h1>' in resp.text
+    assert "Catalonia, Spain | October 2025" in resp.text
+    assert "Alex Baker Wins It in Round One" not in resp.text
     assert "TEG 18 — Final Results" not in resp.text  # fallback headline must not also render
     # Compact honours line, not stacked label/name rows.
     assert "Champion" in resp.text and "Alex BAKER" in resp.text
@@ -1294,11 +1298,9 @@ def test_contents_sitemap_is_collapsible_and_closed_by_default(client):
 
 def test_contents_article_links_target_stories(client):
     summary = contents_route.get_edition_summary(18)
-    page = client.get("/contents")
-    _assert_ok_no_error(page)
-    assert f'href="{summary["lead_link"]}"' in page.text
     panel = client.get("/contents/panel", params={"teg": 18, "state": "complete"})
     _assert_ok_no_error(panel)
+    assert f'href="{summary["lead_link"]}"' in panel.text
     for article in summary["other_articles"]:
         assert f'href="{article["link"]}"' in panel.text
     assert f'href="{summary["link"]}">View full report' in panel.text
