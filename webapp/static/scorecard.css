@@ -728,6 +728,32 @@ html[data-mode="dark"] .bw-impact--worst { color: #c9c9c9; }
   .sc-landscape { display: none; }
   .sc-portrait { display: block; }
 
+  .scorecard-wrapper > .section-controls {
+    column-gap: 12px;
+    row-gap: 12px;
+    margin-bottom: 16px;
+  }
+  .scorecard-wrapper .sc-view-field { flex: 0 0 100%; min-width: 0; }
+  .scorecard-wrapper #sc-player-field { flex: 1 1 150px; min-width: 0; }
+  .scorecard-wrapper .section-controls .teg-select {
+    box-sizing: border-box;
+    height: 44px;
+    min-height: 44px;
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 0 34px 0 12px;
+    background-color: var(--select-bg, #fff);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='m1 1 5 5 5-5' fill='none' stroke='%23555' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px 8px;
+  }
+  .scorecard-wrapper .sc-view-field .teg-select,
+  .scorecard-wrapper #sc-player-field .teg-select { width: 100%; }
+  html[data-mode="dark"] .scorecard-wrapper .section-controls .teg-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='m1 1 5 5 5-5' fill='none' stroke='%23b6b4aa' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+
   /* Phone-only disclosure affordance for .sc-round-summary (collapsible
      rounds, webapp/routes/history.py). Above this breakpoint the base rule
      above renders it identically to the <h2 class="section-title"> it
@@ -786,30 +812,47 @@ html[data-mode="dark"] .bw-impact--worst { color: #c9c9c9; }
 .scorecard-table-portrait {
   border-collapse: separate;
   border-spacing: 0;
-  /* Fixed layout + no table-level width: column widths come from the
-     explicit widths below (hole/par pinned columns + score columns capped
-     just past the shape size) instead of stretching to fill the viewport.
-     A table narrower than its .sc-scroll wrapper centers via margin auto;
-     a wider one (many rounds/players) still scrolls exactly as before. */
   table-layout: fixed;
   margin: 0 auto;
   font-family: var(--font-table), sans-serif;
   font-size: var(--font-size-base);
 }
+.scorecard-table-portrait:not(.bw-scorecard-portrait) {
+  /* The scroll container supplies its own width through cqw. Count is emitted
+     by the portrait builder; tracks stop growing at 44px and scroll at 28px. */
+  --sc-size-min: 28px;
+  --sc-size-max: 44px;
+  --sc-gap-min: 4px;
+  --sc-gap-max: 8px;
+  --sc-gap: clamp(var(--sc-gap-min), 1.5cqw, var(--sc-gap-max));
+  --sc-score-size: clamp(var(--sc-size-min), calc((100cqw - 92px) / var(--sc-score-cols) - var(--sc-gap)), var(--sc-size-max));
+  --sc-score-track: calc(var(--sc-score-size) + var(--sc-gap));
+  --sc-cell-padding: 0px;
+  --sc-header-font: clamp(12px, calc(var(--sc-score-size) * 0.38), 16px);
+  --shape-size: var(--sc-score-size);
+  --sc-score-font: clamp(14px, calc(var(--sc-score-size) * 0.45), 20px);
+  width: calc(92px + var(--sc-score-track) * var(--sc-score-cols));
+  font-size: var(--sc-score-font);
+}
 .scorecard-table-portrait th,
 .scorecard-table-portrait td {
-  padding: var(--spacing-cell);
+  box-sizing: border-box;
+  padding: var(--sc-cell-padding, var(--spacing-cell));
   text-align: center;
-  height: var(--cell-height);
+  height: var(--sc-score-track, var(--cell-height));
   vertical-align: middle;
   position: relative;
   background-color: white;
 }
+.scorecard-table-portrait .score-cell::before { box-sizing: border-box; }
 .scorecard-table-portrait thead th {
   background-color: var(--color-background);
   font-weight: bold;
   font-size: var(--font-size-small);
   border-bottom: 2px solid var(--color-border-strong);
+}
+.scorecard-table-portrait:not(.bw-scorecard-portrait) thead th {
+  border-bottom: 1px solid var(--rule-color, var(--color-border));
 }
 /* Hole/PAR headers stay small, muted and letter-spaced (label-like); the
    player/round column headers are the thing you actually scan down a long
@@ -823,7 +866,7 @@ html[data-mode="dark"] .bw-impact--worst { color: #c9c9c9; }
   color: var(--color-text-secondary);
 }
 .scorecard-table-portrait .col-header {
-  font-size: var(--font-size-base);
+  font-size: var(--sc-header-font, var(--font-size-base));
   letter-spacing: normal;
   text-transform: none;
   color: var(--color-text);
@@ -832,8 +875,8 @@ html[data-mode="dark"] .bw-impact--worst { color: #c9c9c9; }
 .scorecard-table-portrait .hole-header,
 .scorecard-table-portrait .hole-label {
   text-align: left;
-  padding-left: 10px;
-  width: 44px;
+  padding-left: 6px;
+  width: 52px;
   position: sticky;
   left: 0;
   z-index: 2;
@@ -846,22 +889,22 @@ html[data-mode="dark"] .bw-impact--worst { color: #c9c9c9; }
   color: var(--color-text-secondary);
   font-weight: normal;
   position: sticky;
-  left: 44px;
+  left: 52px;
   z-index: 2;
   background-color: white;
 }
 .scorecard-table-portrait thead .par-header { background-color: var(--color-background); }
 .scorecard-table-portrait .hole-label { font-weight: bold; color: var(--color-text); }
-/* Score columns (Gross/Stableford, or one per round/player): capped to just
-   past the score shape's own size (~15% wider) so they sit snugly around the
-   circle/square instead of stretching to fill leftover table width. Width is
-   set on the header cell — table-layout:fixed takes column widths from the
-   first row — and mirrored onto the body cells for robustness. */
+.scorecard-table-portrait:not(.bw-scorecard-portrait) .hole-label {
+  font-size: clamp(12px, calc(var(--sc-score-size) * 0.32), 14px);
+}
+/* Every score track adds the same gap to its square horizontally and vertically.
+   Totals retain the track width even for three-digit scores. */
 .scorecard-table-portrait .col-header,
 .scorecard-table-portrait td.score-cell,
 .scorecard-table-portrait td.totals:not(.par-cell) {
-  width: calc(var(--shape-size) * 1.15);
-  max-width: calc(var(--shape-size) * 1.15);
+  width: var(--sc-score-track);
+  max-width: var(--sc-score-track);
 }
 /* Subtotal rows (OUT / IN / TOTAL) — thin rules only, no background fill, to
    match the approved prototype's plain-card totals treatment rather than
@@ -870,22 +913,14 @@ html[data-mode="dark"] .bw-impact--worst { color: #c9c9c9; }
 .scorecard-table-portrait .totals { font-weight: bold; }
 .scorecard-table-portrait .totals-row.front-back-divider td { border-bottom: 1px solid var(--color-border); }
 .scorecard-table-portrait .grand-total td { border-top: 2px solid var(--color-border-strong); }
-/* .sc-combined: the single-round Gross+Stableford card has only two data
-   columns labelled with words ("Gross"/"Stableford"), not player/round
-   codes, so it needs more than the shape-sized minimum or the header text
-   clips. table-layout:fixed still bounds it to the viewport. */
-.scorecard-table-portrait.sc-combined .col-header,
-.scorecard-table-portrait.sc-combined td.score-cell,
-.scorecard-table-portrait.sc-combined td.totals:not(.par-cell) {
-  width: auto;
-  max-width: none;
-}
-/* .bw-scorecard-portrait: same problem as .sc-combined above -- more score
-   columns (Bes/Wor + one per player) than the shape-size minimum leaves room
-   for, so the shape-size-capped columns leave the table narrower than its
-   .sc-scroll wrapper and margin:0 auto centers that narrow table into the
-   middle of the phone screen with big side gutters. */
+.scorecard-table-portrait.sc-combined abbr { text-decoration: none; }
+/* Best/Worstball has its own full-width portrait layout and stays outside the
+   score-track sizing above. */
 .bw-scorecard-portrait { margin: 0; width: 100%; }
+.bw-scorecard-portrait .hole-header,
+.bw-scorecard-portrait .hole-label { width: 44px; padding-left: 10px; }
+.bw-scorecard-portrait .par-header,
+.bw-scorecard-portrait .par-cell { left: 44px; }
 .bw-scorecard-portrait .col-header,
 .bw-scorecard-portrait td.score-cell,
 .bw-scorecard-portrait td.totals:not(.par-cell) {
@@ -894,7 +929,7 @@ html[data-mode="dark"] .bw-impact--worst { color: #c9c9c9; }
 }
 
 /* Horizontal-scroll wrapper for the wide (whole-TEG / field) portrait tables */
-.sc-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.sc-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; container-type: inline-size; }
 
 /* Gross / Stableford metric toggle (portrait multi-table views) — pure CSS.
    Restyled onto the site's own design tokens (--rule-color/--bg-card/
@@ -927,6 +962,10 @@ html[data-mode="dark"] .bw-impact--worst { color: #c9c9c9; }
   user-select: none;
 }
 .sc-mseg label.lbl-pts { border-right: none; }
+@media (max-width: 640px) {
+  .sc-metric-toggle > .sc-mseg { margin-bottom: 12px; }
+  .sc-portrait > .sc-pane.data-card { margin-top: 0; }
+}
 /* Class-based selectors (not #ids) so multiple toggles can coexist on a page —
    e.g. one card per round on Full Results, plus the page-level toggle above
    them (.sc-metric-toggle--page below). */

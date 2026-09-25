@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-22 (Landing-page standings, honours and links)
+**Last updated:** 2026-09-25 (Mobile scorecard sizing)
+
+## 2026-09-25 — Mobile scorecards use available width
+
+Scorecards on Results, Leaderboard, Latest Round and Scorecard now scale their square score marks and text within bounded sizes. Equal row/column gaps keep the grid regular; sparse cards stop growing and dense cards retain horizontal scrolling with pinned Hole/Par columns. Existing score colours and symbols remain. Gross/Stableford selectors have consistent spacing before the card. Mobile View has its own row with clearer labels, dropdowns use consistent sizing, and the header rule is thin and muted. Clean Layered is mothballed; Clean Page is the active layout for routine UI verification.
 
 ## 2026-09-22 — Landing-page links open individual report stories
 

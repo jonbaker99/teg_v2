@@ -6,6 +6,8 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 ## IN PROGRESS
 
+- [x] **Scorecard controls follow-up (2026-09-25).** View occupies its own mobile row with parallel labels; the remaining selectors wrap below with consistent 44px dropdown sizing and a white light-mode surface. Header rules are thin and muted. Browser interaction checks cover dependent selectors.
+
 - [ ] **Wire PDF build into report generation (2026-09-15).** `/teg-reports`'s Download PDF button
   reads pre-rendered PDFs (`data/commentary/pdfs/`) built by a separate, manual
   `scripts/build_report_pdfs.py` run — generating a report (via `backfill.py` or

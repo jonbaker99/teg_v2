@@ -61,6 +61,7 @@ These instructions do not change the lead task's selected model.
 - **Sentences under 20 words**. Short words over long ones.
 - **One idea per paragraph**, max three lines.
 - **Bullets for parallel items, prose for connected reasoning.** Don't bullet everything.
+- Avoid inline bullet or middle-dot separators in prose and UI labels unless explicitly requested. Prefer slashes for compact paired labels.
 - Bold only conclusions or labels, never whole sentences.
 - **Headings state the point**, not the category.
 - A closing summary is welcome when it adds a decision or next step. Not when it just repeats.

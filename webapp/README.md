@@ -9,7 +9,7 @@ A FastAPI + HTMX + Jinja2 + Tailwind frontend for TEG analysis. **Deployed on Ra
 uvicorn webapp.app:app --reload
 ```
 
-Visit `http://localhost:8000` in your browser. Use the theme switcher in the nav bar to compare visual designs.
+Visit `http://localhost:8000` in your browser. Use Clean Page for current UI work; its light/dark switch is in the nav bar.
 
 ### Local environment
 
@@ -431,12 +431,12 @@ every other data page.
 
 ## Theme system
 
-One Clean theme family uses the shared variables and rules in `base-vars.css` and `clean.css`. `theme.py` registers two selectable layouts. Default: **Clean Page**.
+One Clean theme family uses the shared variables and rules in `base-vars.css` and `clean.css`. **Clean Page** is the active layout. `theme.py` still registers Clean Layered, but it is mothballed. Routine verification scope is defined in [Design principles — Themes and layouts](design_principles.md#themes-and-layouts).
 
 | Registered layout | Description |
 |---|---|
 | **Clean Page** (default) | Flat single white content card on a warm grey background |
-| **Clean Layered** | 3-layer hierarchy: stone background → taupe panel → white data cards |
+| **Clean Layered** (mothballed) | Retained 3-layer hierarchy: stone background → taupe panel → white data cards |
 
 **Typography (both layouts, set in `clean.css`).** Two families, each with
 one job (2026-09-19 direction, see decision history below):
@@ -923,6 +923,7 @@ HTML builders).
       go. The toggle's CSS is now **class-based** (`.scm-gross`/`.scm-pts` +
       `.lbl-gross`/`.lbl-pts`), so multiple cards can coexist on a page (one
       per round on Full Results); `uid` keeps each radio group unique.
+    - **Mobile scorecard sizing:** `/scorecard`, `/results`, `/leaderboard` and `/latest-round` share container-aware portrait sizing in `static/scorecard.css`. Builders emit the score-column count; square shapes grow within 28–44px, with equal row/column gaps bounded at 4–8px and proportional 14–20px score text. Sparse cards stop at the maximum; dense cards scroll horizontally with Hole/Par pinned. The combined card labels Stableford as “Pts”, with its full accessible name. Desktop layout and Bestball/Worstball sizing are separate. The mobile View dropdown occupies a full row; the other controls wrap below, with 44px themed dropdowns and explicit player/round scope in each view label. The portrait header uses a thin muted rule. Mobile metric selectors have 12px bottom spacing; portrait panes suppress generic card top margins so Gross and Stableford keep the same spacing in both themes.
     - **Scorecard cells have hover tooltips** (native `title`:
       Hole/SI/Par/Score/Net/Stableford) on every page — built in the
       `teg_analysis` builders so they apply wherever a scorecard renders.

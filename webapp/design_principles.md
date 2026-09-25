@@ -289,12 +289,9 @@ control. Two fixes, pick based on the semantics:
 
 ## Themes and layouts
 
-Optimise primarily for the **Clean** theme. After any template or CSS change, verify both layouts still work:
+Design and verify routine UI changes against **Clean Page**, in light and dark modes. **Clean Layered is mothballed**: do not include it in routine browser checks or expand implementation scope to support it unless the user explicitly requests work on that layout.
 
-- **Layout 1** (flat): Clean, Clean Page — single surface, no depth
-- **Layout 2** (layered): Clean Layered — 3-layer visual hierarchy
-
-The `.data-card` class is a **no-op in Layout 1**. Templates that wrap data output in `.data-card` work correctly in both layouts. Preserve this invariant when editing templates or CSS.
+The `.data-card` class remains a no-op in Clean Page. Retain semantic wrappers where useful; the old layered styles remain available as historical code, not an active design target.
 
 ### CSS: `!important`
 

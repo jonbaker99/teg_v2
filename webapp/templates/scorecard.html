@@ -3,7 +3,7 @@
 {% block title_suffix %} — Scorecard{% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="/static/scorecard.css?v=27">
+<link rel="stylesheet" href="/static/scorecard.css?v=30">
 <script>
 function updateScorecardControls() {
     var view = (document.getElementById('sc-type') || {}).value;
@@ -36,7 +36,7 @@ document.addEventListener('htmx:afterSettle', function() {
 <div class="scorecard-wrapper">
     {% set inc = "#sc-type, #sc-teg, #sc-round, #sc-player" %}
     <div class="section-controls flex flex-wrap items-end gap-4">
-        <label class="flex flex-col text-sm gap-1"><span class="text-secondary font-medium">View</span>
+        <label class="sc-view-field flex flex-col text-sm gap-1"><span class="text-secondary font-medium">View</span>
             <select id="sc-type" name="type" class="teg-select"
                     hx-get="/scorecard/content" hx-target="#scorecard-content" hx-include="{{ inc }}">
                 {% for tid, tlabel in all_types %}<option value="{{ tid }}" {% if tid == selected_type %}selected{% endif %}>{{ tlabel }}</option>{% endfor %}

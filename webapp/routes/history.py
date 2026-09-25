@@ -660,7 +660,7 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
     try:
         if tab == "scorecards":
             rounds = get_rounds_for_teg(teg_num)
-            parts = ['<link rel="stylesheet" href="/static/scorecard.css?v=21">']
+            parts = ['<link rel="stylesheet" href="/static/scorecard.css?v=30">']
             all_data = cached_load_all_data()
             # Page-level Gross/Stableford selector driving every round's
             # panes at once. The wrapper must NOT carry .sc-portrait: it

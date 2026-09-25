@@ -36,9 +36,9 @@ TYPE_ONE_PLAYER_ALL_ROUNDS = "one_player_all_rounds"
 TYPE_ONE_ROUND_ALL_PLAYERS = "one_round_all_players"
 
 ALL_TYPES = [
-    (TYPE_ONE_ROUND_ONE_PLAYER, "1 Round / 1 Player"),
-    (TYPE_ONE_PLAYER_ALL_ROUNDS, "1 Player / All Rounds"),
-    (TYPE_ONE_ROUND_ALL_PLAYERS, "1 Round / All Players"),
+    (TYPE_ONE_ROUND_ONE_PLAYER, "One player / one round"),
+    (TYPE_ONE_PLAYER_ALL_ROUNDS, "One player / all rounds"),
+    (TYPE_ONE_ROUND_ALL_PLAYERS, "All players / one round"),
 ]
 
 # Player list: sorted by display name for the selector. A function, not a
