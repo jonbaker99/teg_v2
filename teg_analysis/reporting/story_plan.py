@@ -1361,12 +1361,16 @@ def assemble_bundle(teg_num: int, mode: str = "balanced", tone: str = "house",
             "id": beat_id,
             "total": 10.0,            # max salience — these are mandatory
             "scope": "round",
-            "type": ev["type"],       # 'course_record_low' or 'course_record_high'
+            # 'course_record_low' | 'course_record_high' | 'course_record_equalled'
+            # | 'course_record_high_equalled' — see course_history.detect_course_records
+            "type": ev["type"],
             "round": ev["round"],
             "course": ev["course"],
             "headline": ev["summary_fact"],
             "players": [ev["player"]],
-            "scores": {"importance": 10.0, "rarity": 10.0, "entertainment": 7.0},
+            # entertainment 8.0 to match round_storyline.py's equivalent beat —
+            # these two call sites previously disagreed (7.0 vs 8.0) for no reason.
+            "scores": {"importance": 10.0, "rarity": 10.0, "entertainment": 8.0},
             "mandatory": True,
             "holes": [],
             "context": {

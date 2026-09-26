@@ -1,0 +1,149 @@
+{
+  "teg": 14,
+  "round": 3,
+  "label": "storylinefirst",
+  "errors": 0,
+  "warnings": 1,
+  "findings": [
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "39 points and a gross 86",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It was also a personal best on the course, three strokes better than his previous visit there.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "His second round at Littlestone had come back as a 27.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "The window shut at the par-5 12th, where a triple bogey arrived without warning and ended the streak.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "At the par-5 8th he ran up a quadruple-bogey 9 and returned nothing for it.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "He ended the day leading both the Trophy and the Green Jacket.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "He ended the day leading both the Trophy and the Green Jacket.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "The Trophy lead was trimmed slightly to eight points.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "The Jacket advantage held at 12.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It was also his second visit to Prince's, matching his prior best gross of 92.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Double bogeys at each of the first three holes.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_comparison",
+      "severity": "warning",
+      "detail": "'better player' claim between Alex Baker and Gregg Williams is unqualified, but they lead different competitions (['Trophy (Stableford)', 'Green Jacket (Gross)']) \u2014 Stableford and Gross measure different things, not the same axis",
+      "excerpt": "That left him one point off the day's best score of 39 in a four-man field.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_comparison",
+      "severity": "unchecked",
+      "detail": "comparison claim missing both players",
+      "excerpt": "The finish was still eight shots worse than his prior visit to the course, a detail he is under no obligation to mention again.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "David Mullin held both the Trophy and the Green Jacket, with the Trophy gap narrowed slightly to eight.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "David Mullin held both the Trophy and the Green Jacket, with the Trophy gap narrowed slightly to eight.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Jon Baker's Prince's Shore/Dunes round returned 28 points, the worst Trophy score of the day.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "The run to the 16th was then snapped by a triple bogey at the 17th, which felt less like a setback than a scheduled appointment.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "The margin between Baker and the next-worst player went from two points to thirteen.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "He remains clear in the Trophy, his advantage narrowed slightly to eight points, and in the Green Jacket, where the twelve-point cushion was not touched at all.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "He remains clear in the Trophy, his advantage narrowed slightly to eight points, and in the Green Jacket, where the twelve-point cushion was not touched at all.",
+      "source": "claim"
+    }
+  ]
+}

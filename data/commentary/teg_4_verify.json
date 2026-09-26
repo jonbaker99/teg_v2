@@ -1,0 +1,310 @@
+{
+  "teg": 4,
+  "round": null,
+  "label": "storylinefirst",
+  "errors": 2,
+  "warnings": 1,
+  "findings": [
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "*Gregg Williams takes the TEG 4 Wooden Spoon \u2014 and a record that will be hard to shift**  G",
+      "source": "mechanical"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "David Mullin won the TEG 4 Trophy at +9 net against par, eight clear of Jon Baker.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It is the lowest Trophy total recorded in TEG history, and his own best.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "rounds of 91, 94, 88 and 91 at Ashdown, Lingfield, Crowborough and Bletchingley",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "rounds of 91, 94, 88 and 91 at Ashdown, Lingfield, Crowborough and Bletchingley",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "rounds of 91, 94, 88 and 91 at Ashdown, Lingfield, Crowborough and Bletchingley",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "rounds of 91, 94, 88 and 91 at Ashdown, Lingfield, Crowborough and Bletchingley",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "the only eagle struck by anyone in TEG 4",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Baker played 9 through 16 in 27 shots over par",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Both of those are the worst he has made on a par 3 and a par 5.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "error",
+      "detail": "Jon Baker's Trophy (Net VP) total is 17 gross, claim says 9",
+      "excerpt": "The round finished at +9 net, a 12-shot swing from his -3 at Crowborough the day before.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His gross total of +113 was still a personal best",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It stands as the worst score relative to par that Meller has recorded on any hole, and the worst any player managed relative to par in TEG 4.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "the heaviest hole of Baker's career to that point",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Henry Meller left East Sussex in 2011 with the best gross aggregate of his career, +107 across the four rounds of the TEG 4 Green Jacket.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "the par-three 11th cost him a 12, nine over on a single hole, the worst score against par of his career and the worst by anyone in TEG 4",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "He recovered to sign for 100 there, then produced his lowest round of the trip at Lingfield, 92",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "He recovered to sign for 100 there, then produced his lowest round of the trip at Lingfield, 92",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "From two over net in round two he slipped to 13 over net in round three, dropping five shots to his handicap across the 13th, 14th and 15th alone, and posting 102.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "From two over net in round two he slipped to 13 over net in round three, dropping five shots to his handicap across the 13th, 14th and 15th alone, and posting 102.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "delivered both his lowest gross of the trip, 96, and its most damaging passage",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "error",
+      "detail": "Henry Meller was rank 5 in Wooden Spoon at R4 H11, claim says 4",
+      "excerpt": "The quintuple bogey at the 11th also pushed him from fourth to last in the TEG 4 Wooden Spoon standings.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "David Mullin won the TEG 4 Green Jacket with a gross total of +81, the lowest gross aggregate recorded in TEG to that point and the best of his own career.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "The margin was 19 strokes over Stuart Neumann.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Mullin's card read 91 at Ashdown, 94 at Lingfield, 88 at Crowborough and 91 at Bletchingley.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Mullin's card read 91 at Ashdown, 94 at Lingfield, 88 at Crowborough and 91 at Bletchingley.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Mullin's card read 91 at Ashdown, 94 at Lingfield, 88 at Crowborough and 91 at Bletchingley.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Mullin's card read 91 at Ashdown, 94 at Lingfield, 88 at Crowborough and 91 at Bletchingley.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Mullin's 88 there came in at +17 against par, the second-best gross round in TEG history at the time, and it was his only sub-90 score of the trip.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His +100 gross total was a personal best, built on rounds of 96, 99, 94 and 94, improving in each of the last three rounds.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "Here it was second place by nineteen, comfortably clear of the rest, and never once within hailing distance of the Jacket.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "no final totals for 'Wooden Spoon'",
+      "excerpt": "Gregg Williams finished the 2011 trip to East Sussex and Surrey at +40 net against par, which was enough to hand him the TEG 4 Wooden Spoon.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The number that will outlast the result is 28. That is how many triple bogeys or worse he assembled across four rounds. It is an all-time TEG record, and it is not a close one.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "At Royal Ashdown Forest in round one he bled 22 shots over the closing nine holes, with four triple bogeys among them.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "At Crowborough he lost 18 shots in the first six holes, including quadruple bogeys at the 2nd, 4th and 5th",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "by the time he walked to the 7th tee he was eighteen over for the day and had played six holes",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "a triple, a quad and a nine at the par-five 6th cost 13 shots in four holes",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "the closing stretch from the 13th leaked another 16",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "no final totals for 'Wooden Spoon'",
+      "excerpt": "The round came in at +15 net and +43 gross, both the worst of his career to date.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The round came in at +15 net and +43 gross, both the worst of his career to date.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "Williams dropped to last at the 6th in the final round, and Henry Meller relieved him of the position at the 11th with a ten at the par five.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "no final totals for 'Wooden Spoon'",
+      "excerpt": "his gross aggregate of +152 was, at that point, the best he had recorded",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "his gross aggregate of +152 was, at that point, the best he had recorded",
+      "source": "claim"
+    }
+  ]
+}

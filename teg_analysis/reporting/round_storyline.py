@@ -299,6 +299,7 @@ def assemble_round_storyline_bundle(teg_num: int, round_num: int, *,
         build_player_course_history, detect_course_records,
     )
     from teg_analysis.reporting.history_context import build_player_cross_teg_history
+    from teg_analysis.reporting.settled_facts import build_settled_facts
 
     all_events = events_cache if events_cache is not None else build_notable_events(teg_num, mode=mode)
     round_events = [e for e in all_events if e.round == round_num]
@@ -361,6 +362,7 @@ def assemble_round_storyline_bundle(teg_num: int, round_num: int, *,
             p: h for p, h in build_player_cross_teg_history(teg_num).items()
             if p in {pl for e in round_events for pl in e.players}
         },
+        "settled_facts": build_settled_facts(teg_num, through_round=round_num),
         "beats": beats,
     }
 
@@ -514,11 +516,20 @@ Restate the claim only as far as `round_by_round_status` actually supports: if i
 say "the best or tied-best in every round", never a clean sweep; if you cannot check it at all, \
 drop the specific round-count and describe only what `evidence` for THIS round shows.
 
+`context.settled_facts` is the SOURCE OF TRUTH for anything cross-round or \
+cross-competition, bounded to rounds up to and including this one: `round_days` \
+(which round fell on which weekday), `lead_timeline` (every OUTRIGHT change of \
+leader per competition, tie-aware), `final_totals` (each competition's actual \
+total so far, plus `decisive_metric`), and `rank_snapshots` (tie-aware standings \
+at the holes in `lead_timeline`). Check it, do not guess.
+
 WHAT IS WORTH SAYING, and how to name it:
 """ + prompts.RANKING_RULE + """
 """ + prompts.NAMING_RULE + """
 """ + prompts.STROKE_INDEX_RULE + """
 """ + prompts.SCORING_REDUNDANCY_RULE + """
+""" + prompts.SHARED_FAITHFULNESS + """
+""" + prompts.WEEKDAY_RULE + """
 {DOUBLE_RULE}"""
 
 ROUND_DRAFT_WRITER_SYSTEM_PROMPT = round_draft_writer_system(False)
@@ -798,6 +809,11 @@ def _context_for(storyline_players: set, bundle: dict) -> dict:
                   if p in storyline_players}
             for comp in ("trophy", "gross")
         },
+        # Code-derived, leak-safe through this round: round→day map, lead
+        # timeline, final totals so far, tie-aware rank snapshots. Not scoped
+        # to this storyline's players — a lead timeline with players missing
+        # is meaningless. See settled_facts.py.
+        "settled_facts": bundle.get("settled_facts"),
     }
     if bundle.get("is_final_round"):
         ctx["double"] = bundle.get("double")

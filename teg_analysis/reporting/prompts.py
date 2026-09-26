@@ -344,8 +344,8 @@ holes, specific numbers, a clear arc per player.
 """
 
 # ---------------------------------------------------------------------------
-# Faithfulness rules common to both pipelines. Pipeline-specific rules (weekday
-# handling, beat-id field names, final-round declarations) stay at the call site.
+# Faithfulness rules common to both pipelines. Pipeline-specific rules (beat-id
+# field names, final-round declarations) stay at the call site.
 #
 # Several of these are ALSO checked mechanically by `verify.py` (D3). Do not
 # delete one because D3 covers it: prevention and detection are cheap together,
@@ -380,6 +380,22 @@ holes, the figure must equal the precise sum of per-hole over-par (bogey = +1, d
 draft, check it against the per-hole evidence first. Wrong arithmetic is the most \
 obvious fabrication the players will catch.
 """
+
+# Extracted from the tournament writer's faithfulness block (2026-09-26) so the
+# storyline-first DRAFT writers — which never carried it — can reference it
+# too, without retyping. Import this constant; never copy the text out (the
+# no-duplicate-block test in test_reporting_prompts.py fails a block that
+# appears twice in one prompt).
+WEEKDAY_RULE = """- **DAYS AND WEEKS — strict rules.** A TEG is a tournament of 4 rounds played on 4 \
+consecutive days. **Do NOT call it "a week"** — use "the tournament", "the trip", \
+"the four days", "the visit", or the area name. Weekday names (Thursday, Sunday, etc.) \
+appear in the bundle as `venue.rounds[i].weekday` and are VERIFIED — use them ONLY in \
+the opener of the relevant round section (e.g. "The Sunday round at Boavista…"), and \
+ONLY taken verbatim from `weekday`. **Anywhere else — callbacks, lookforwards, \
+references across rounds — use the round number ("R2", "Round 2", "the second round", \
+"two rounds later"), NOT a weekday.** Inventing weekday names (e.g. calling R1 \
+"Tuesday" when the bundle says "Saturday") is a faithfulness failure the players will \
+spot."""
 
 # ---------------------------------------------------------------------------
 # What a claim has to be worth to appear at all. Added 2026-09-10 after a content

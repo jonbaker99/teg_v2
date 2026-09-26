@@ -606,16 +606,7 @@ _WRITER_FAITHFULNESS_TOURNAMENT = """- **NEVER include beat IDs in the prose.** 
 are internal identifiers for your tracking; they must NOT appear in the finished report. \
 The reader sees only prose. If you find yourself tempted to write "(b07)" as a citation, \
 delete it — the sentence should stand on its own factual content.
-- **DAYS AND WEEKS — strict rules.** A TEG is a tournament of 4 rounds played on 4 \
-consecutive days. **Do NOT call it "a week"** — use "the tournament", "the trip", \
-"the four days", "the visit", or the area name. Weekday names (Thursday, Sunday, etc.) \
-appear in the bundle as `venue.rounds[i].weekday` and are VERIFIED — use them ONLY in \
-the opener of the relevant round section (e.g. "The Sunday round at Boavista…"), and \
-ONLY taken verbatim from `weekday`. **Anywhere else — callbacks, lookforwards, \
-references across rounds — use the round number ("R2", "Round 2", "the second round", \
-"two rounds later"), NOT a weekday.** Inventing weekday names (e.g. calling R1 \
-"Tuesday" when the bundle says "Saturday") is a faithfulness failure the players will \
-spot.
+""" + prompts.WEEKDAY_RULE + """
 - **PLAYERS WHO PLAYED THIS TEG ONLY.** Only players who actually appear in the bundle's \
 `competition_arcs`, `beats`, or `player_history` for THIS TEG are participants. The bundle \
 may include cross-TEG career context but the player list for THIS tournament is fixed. \
@@ -1103,7 +1094,7 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
     """
     import os
 
-    from teg_analysis.reporting.verify import verify_report
+    from teg_analysis.reporting.verify import verify_report, write_findings
 
     label = _variant_label(label)
     stem = f"teg_{teg_num}_round_{round_num}" if round_num is not None else f"teg_{teg_num}"
@@ -1206,6 +1197,10 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
                   f"{len(new_findings)} NEW fault(s) introduced by this pass:")
             for s in new_findings:
                 print(f"  {s}")
+        # Persist findings next to the report — previously stdout-only, so a
+        # clean run left no trace and the next session had nothing to compare
+        # against.
+        write_findings(teg_num, found, round_num=round_num, label=label)
     return {"teg": teg_num, "label": label, "source_path": source_path,
             "output_path": output_path, "styled_path": styled_path,
             "usage": usage, "findings": findings, "new_findings": new_findings}
@@ -1301,7 +1296,7 @@ def apply_corrections(teg_num: int, *, source_label: str = "storylinefirst",
     import os
     import shutil
 
-    from teg_analysis.reporting.verify import verify_report
+    from teg_analysis.reporting.verify import verify_report, write_findings
 
     out_label = _variant_label(label or source_label)
     stem = f"teg_{teg_num}_round_{round_num}" if round_num is not None else f"teg_{teg_num}"
@@ -1401,6 +1396,7 @@ def apply_corrections(teg_num: int, *, source_label: str = "storylinefirst",
                   f"{len(new_findings)} NEW fault(s) introduced by this pass:")
             for line in new_findings:
                 print(f"  {line}")
+        write_findings(teg_num, found, round_num=round_num, label=out_label)
     return {"teg": teg_num, "label": out_label, "source_path": source_path,
             "backup_path": backup_path, "output_path": output_path,
             "styled_path": styled_path, "usage": usage, "findings": findings,

@@ -1,0 +1,317 @@
+{
+  "teg": 9,
+  "round": null,
+  "label": "storylinefirst",
+  "errors": 0,
+  "warnings": 0,
+  "findings": [
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "John Patterson won the TEG 9 Trophy with 168 points, six clear of Alex Baker",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "and no one in the history of the TEG has signed for more",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It was also a personal best on gross, at +88",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "He then went out the following day at Praia D'El Rey and returned 49 points, the second-highest round ever recorded in the TEG.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "The heart of it was five holes, the 9th to the 13th: bogey, par, par, birdie, par, worth 17 points on its own.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "He posted 34 points, a fall of 15 on the previous day",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "Patterson answered with 47 in the final round back at Praia D'El Rey, a swing of 13 in the other direction.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Over holes 14 to 17 he went double bogey, quadruple bogey, triple bogey, double bogey.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Eleven shots dropped in four holes.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "He had drawn level with four to play and then dismantled that position with real thoroughness.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Alex Baker's TEG 9 began with the worst round Royal \u00d3bidos has ever witnessed.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His 115 gross on the Friday beat a previous course-worst of 108, a mark that had stood through six prior visits",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "and it was also the worst gross round of his own career at +43",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "the latter the worst he has ever scored relative to par on a par four",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "At Praia D'El Rey on the Saturday he posted 44 points and +27 gross, both personal bests",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "At Praia D'El Rey on the Saturday he posted 44 points and +27 gross, both personal bests",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "he then reproduced both figures exactly in Monday's final round",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "The Monday 44 came despite quadruple bogeys at the 6th and the 15th",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "that four-hole stretch from the 14th to the 17th that cost him eleven shots to par",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His 100 at Praia D'El Rey improved on a previous best of 109 there and was nine strokes better than his last visit.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His 102 at Royal \u00d3bidos, in the third round, bettered the 108 he had managed on his only previous trip.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "David Mullin contributed a quintuple-bogey nine at the 10th at \u00d3bidos in round three, his own worst hole relative to par.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "his 97 at Royal \u00d3bidos was a course best, three strokes better than his previous visit there",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His opening 89 was a course personal best, nine strokes better than his previous visit to the Seve Ballesteros parkland layout in TEG 7, where his best had been 98.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Baker took 16 points from the opening five holes, a run built on four pars and a birdie at the second",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "He finished with 34 points, 22 over gross.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Eight shots dropped in a row and three consecutive holes without a net par.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "David Mullin won the TEG 9 Green Jacket, his seventh, with a gross total of +67, ten clear of Jon Baker.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "David Mullin won the TEG 9 Green Jacket, his seventh, with a gross total of +67, ten clear of Jon Baker.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It is the lowest gross total recorded in TEG history and Mullin's own career best.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The tone was set on the opening day at Royal \u00d3bidos, where Mullin shot 87 to set a course record.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The previous mark, across six prior visits by the field, was 90, which was also the best Mullin had managed there himself.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Three strokes better than his last visit, it was a course personal best as well as a record.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "his own course best of 89 at Royal \u00d3bidos, nine strokes better than his previous visit there",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "no final totals for 'Wooden Spoon'",
+      "excerpt": "Stuart Neumann took the TEG 9 Wooden Spoon for the second tournament running, finishing in Portugal on 127 Stableford points, bottom of the field after all four rounds and 16 adrift.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "finishing in Portugal on 127 Stableford points, bottom of the field after all four rounds and 16 adrift",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "finishing in Portugal on 127 Stableford points, bottom of the field after all four rounds and 16 adrift",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "The pattern was set in the opening round at Royal \u00d3bidos, where he managed 23 points and distributed them with no sense of fairness whatsoever.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Seventeen on the front nine. Six on the back.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "In the third round, back at Royal \u00d3bidos, he picked up nine points across holes 6 to 8, three points on each, and then 12 more in a four-hole run from the 10th, holding a point a hole through two bogeys and two pars.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "and then 12 more in a four-hole run from the 10th, holding a point a hole through two bogeys and two pars",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "That round produced a gross 98, one stroke better than the 99 he had posted on his only previous visit to the course in TEG 7, and his best score at Royal \u00d3bidos.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "His strongest stretch came on the final day at Praia D'El Rey, where holes 11 to 15 yielded 16 points, the run built on four holes without dropping a shot to par and a birdie at the 13th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "though that was some way off his form on the same course in TEG 7, when he had gone round in 84, 14 strokes fewer than his last visit",
+      "source": "claim"
+    }
+  ]
+}

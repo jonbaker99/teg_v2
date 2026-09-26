@@ -31,6 +31,10 @@ Real incident, 2026-09-12: Railway was deploying on Python 3.11 while local dev 
 
 **Fix in place**: the repo root pins `.python-version` (3.12 as of this writing), and Railway's mise-based build reads it — confirmed against the deploy log after the pin was added. This narrows the gap but doesn't close it: local dev environments can still run newer than the pin (3.13/3.14), so newer-than-pin syntax is still a live risk, just for a smaller feature set. **Keep the local interpreter in sync with `.python-version`** — don't let this drift into "the file says 3.12 but nobody's venv actually is." Check before pushing: `python scripts/check_python_compat.py` (reads `.python-version` itself, so it always checks against whatever's actually pinned; needs a matching interpreter on PATH — `brew install python@3.12`, or whatever version the file names, if missing). If the pin ever changes, re-verify it actually took effect on Railway (the deploy log names the `mise`-installed version) rather than assuming the file alone is sufficient.
 
+## Streak table display
+
+On `/scoring/streaks`, Streaks by Player and Streak detail display zero streak lengths as dashes and single-hole lengths in the same muted grey as Latest Round. Player-table value columns have equal widths, centred headers and values, and two-line multiword headers across Good/Bad and All-time Max/Current selections. Desktop value columns stay compact; mobile shows full player names with tight line spacing, following the [shared table name-wrapping rule](design_principles.md#tables). Record-streak markers remain attached to their values.
+
 ## Admin / data management
 
 The webapp includes a password-gated admin area, all in `webapp/routes/admin.py`

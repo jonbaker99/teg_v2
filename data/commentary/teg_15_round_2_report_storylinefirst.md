@@ -5,7 +5,7 @@
 
 Gregg Williams had never laid eyes on West Cliffs before. He went round it in 40 points and a gross 88, the best round of TEG 15's second day. The margin was four points and six shots. Familiarity, on this evidence, is overrated.
 
-The score was built in the middle of the card. Four straight pars from the 4th through the 7th brought him 12 points. Two more pars at the 9th and 10th extended the run to six holes without a gross shot dropped. It was the golf of a man who had read the course notes and believed them.
+The score was built in the middle of the card. Four straight pars from the 4th through the 7th brought him 12 points. A bogey at the 8th was the only shot he dropped in that spell. Two more pars at the 9th and 10th made it six pars in seven holes. It was the golf of a man who had read the course notes and believed them.
 
 Then came the 15th. A par 5, stroke index 16, one of the gentler propositions on the property. He took a 10. There is no charitable reading of a 10 at a stroke index 16 hole, and none is offered here. He simply gathered himself and carried on to the best score of the day by four points and the best gross by six shots, which is an entirely reasonable way to respond to a disaster.
 
