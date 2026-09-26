@@ -158,6 +158,7 @@ Plan usage: $0 cash, ~170–250 mailbox prompts. That is feasible but mind the w
 | 2 | 133 | "Last"/"bottom" language made the extractor emit `value=1` (a regression from the spoon fix's wording) — tightened to leave `value` null rather than guess; `total` tightened further to explicitly exclude round/partial scores |
 | 3 | 65 | Sign-tolerance fix ("18 under" vs stored `-18`); one outdated test assumption fixed (`test_item5_shared_rank_is_warning` was keyed to the old inverted Spoon column) |
 | 4 (free re-check of cached claims) | 60 → 52 | 60 = sweep 3's 65 less TEG 18's repaired errors. Net-vs-gross axis + negation in `_check_run`; `rank_change` value=1 with last-place/Spoon language → unchecked. 8 false errors cleared, 0 new |
+| 5 (free re-check) | 52 → 26 | `rank_change` "from X to Y" checks both holes; `lead_event` tie-aware (ranks unioned with the outright timeline, "drew level" now checked); `total` recognises round scores and margins. 6 real errors had also been repaired in between |
 
 **How to re-check for free:** the cached `{stem}_claims.json` files hold every report's extracted claims. Load them, build `build_fact_base(teg, round_num=...)`, and call `check_claim_list` — no LLM call unless the report text changes.
 
@@ -169,11 +170,36 @@ Plan usage: $0 cash, ~170–250 mailbox prompts. That is feasible but mind the w
 
 Tests: `tests/test_reporting_verify.py` (six fixtures against real data, no LLM).
 
+### Checker fixes made in sweep 5
+
+1. **`rank_change` "from X to Y"** (`_FROM_TO_RE`, `_check_from_to`): the extractor reports the FROM rank as `value`. Now X is checked on the hole before and Y (last, the lead, or an ordinal) on the claimed hole.
+2. **Tie-aware `lead_event`**: took/lost/drew level checked against hole-by-hole ranks (outright vs shared first), unioned with the outright-only timeline. A lead retaken after a tie now passes; "drew level" is now checked, and caught a real error (TEG 10).
+3. **`total`**: a value equal to the report's own round score passes; another round's score or a margin to another player is unchecked, not an error.
+
+### Sweep 5 triage: 26 errors — 17 noise, 9 real (all repaired 2026-09-26)
+
+Noise: the wrong round attached (TEG 5 ×5, TEG 10, TEG 17 hole scores; TEG 5 and TEG 16 R2 runs), state-not-event lead claims (TEG 4, 5, 6, 7, 13 R3), aggregates or loose wording read as runs (TEG 7 R2, TEG 7 R4, TEG 9 R2, TEG 15), and a round total read as a hole score (TEG 2).
+
+Real, repaired (Opus via the `agent` provider, each checked by hand against the parquet, approved before writing):
+
+| Report | Was | Now |
+|---|---|---|
+| TEG 5 | par-five 3rd "played in five for a net two. Not a mistake." | seven, a double bogey (a net bogey) |
+| TEG 17 | 35 holes "across three rounds"; "took six… double bogey… a single Stableford point" | two rounds; seven, a triple bogey, no points |
+| TEG 17 R3 | Mullin led 35 holes; Jacket "handed back to Jon Baker"; "changed twice more" | Jon Baker led 35 holes; his triple handed it to Mullin; full sequence (level at the 2nd, Baker the 5th, Mullin the 6th, level at the 7th, Baker the 8th) |
+| TEG 17 R1 | "gross-shot clean from the 12th through the 16th" | double bogey at the 14th between two clean spells |
+| TEG 10 | Baker's par "drew him level"; "led after round three… never behind again" | a point clear; Williams led at the 13th-14th; level on 133 after R3; clear from R4 H1 |
+| TEG 10 (headline) | "never handing it back" | "going clear for good at the 1st hole of the final round" |
+| TEG 10 R3 | quad "left him level with Baker on points" | 122 points, 11 behind Baker and Williams |
+| TEG 3 R3 | triple "dropped him to third" in the Spoon race | to the foot; climbed off at the 2nd; back at the 3rd |
+| TEG 14 R4 | "Three consecutive pars followed" the 13th-15th | the pars were the 13th-15th |
+
+The TEG 10 headline also survives in `teg_10_report_storylinedraft.md` and `teg_10_storyline_plan.json` (upstream artefacts the site does not serve) — left unchanged.
+
 ### Remaining noise (not fixed)
 
-- **Before/after value confusion in `rank_change`** — "from fourth to last" extracted with `value=4` (the BEFORE rank), checked against the AFTER state. At least 5 of the remaining 9 `rank_change` errors (TEG 4, 5, 13 R3, 15, 9 R1). Cheapest fix: treat "from <ordinal> to …" as unchecked, or add `before`/`after` fields to the extractor.
 - **Round misattribution** — the extractor attaches the wrong round to a sentence whose paragraph names it earlier. Both "confirmed" TEG 5 and TEG 16 R2 errors below turned out to be this. No code fix; the rule stays: verify against the paragraph before repairing.
-- Residual round-vs-tournament `total` confusion (~11) and span/basis slips in `run` — likely an acceptable floor.
+- Span/basis slips in `run` and state-vs-event `lead_event` claims — likely an acceptable floor. The 17 noise errors above are the current residue.
 
 ### Repairs — sweep-3 candidates re-verified against paragraph context + parquet
 

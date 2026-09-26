@@ -69,7 +69,7 @@ The third day was the opposite extreme: +12 net of par, +27 gross, the worst rou
 
 David Mullin led the TEG 5 Trophy on net-versus-par from the 18th hole of the opening round, and held it for 21 holes across three rounds. He set a course best at Boavista along the way: his 82 in Round 2 beat the 85 that had stood as his best there through seven previous visits. He was leading the Trophy, walking towards the Green Jacket and holding a course record. There was nowhere left to go but down, and he went with commitment.
 
-The lead went at the third hole of Round 3, a par five he played in five for a net two. Not a mistake. Simply not enough, as Gregg Williams moved ahead. Round 3 then became Mullin's worst round to date, +12 net and +27 gross, including a nine at the 13th, a par five, for a quadruple bogey.
+The lead went at the third hole of Round 3, a par five he played in seven for a double bogey, a net bogey. Enough, as Gregg Williams moved ahead. Round 3 then became Mullin's worst round to date, +12 net and +27 gross, including a nine at the 13th, a par five, for a quadruple bogey.
 
 At Palmares, a course none of the field had played before, he took another nine at the par-five 6th. That one hole dropped him from fourth to last in the TEG 5 Wooden Spoon race, and he stayed there, unbothered and unassisted. He finished the Trophy fifth, having been first after Round 1, and collected the Spoon at +12 net.
 
