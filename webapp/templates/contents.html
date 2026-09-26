@@ -270,6 +270,22 @@
        report" links; the arrow marks them as links on touch screens. */
     .heading-link { color: inherit; text-decoration: none; }
     .heading-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+    /* Headlines card: title + a quiet "click a headline" hint on one row,
+       so the hint adds no height (wraps under the title when narrow). */
+    .card-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        column-gap: var(--sp-3, 12px);
+        margin-bottom: var(--sp-4, 14px);
+    }
+    .card-head .kicker { margin: 0; }
+    .card-hint {
+        font-family: var(--font-sans);
+        font-size: var(--fs-100, 11px);
+        color: var(--text-muted);
+    }
     /* Panel headings match the page-level .kicker-eyebrow treatment exactly
        (sans-serif, not the small-caps Lora used by .section-title) so
        "FINAL STANDINGS"/"ALSO IN THIS REPORT" read as one system with
@@ -355,7 +371,6 @@
         font-weight: 700;
         line-height: 1.3;
     }
-    .lead-teaser:hover .teaser-headline { color: var(--green); }
 
     /* --- Secondary-headline list: a rule separates it from the lead story
        above; below that, space instead of rules between each story in the
@@ -374,7 +389,12 @@
         text-decoration: none;
         color: var(--text-primary);
     }
-    .headline-list a:hover .hl-headline { color: var(--green); }
+    .headline-list a:hover .hl-headline,
+    .lead-teaser:hover .teaser-headline {
+        color: var(--green);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
     .hl-kicker {
         display: block;
         font-family: var(--font-sans);

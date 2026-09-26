@@ -1167,7 +1167,8 @@ def test_contents_panel_complete_state_real_data(client):
     _assert_ok_no_error(resp)
     assert "Final Standings" in resp.text
     assert "Green Jacket (gross)" not in resp.text  # not repeated -- honours line owns this
-    assert "TEG 18 report" in resp.text
+    assert "TEG 18 headlines" in resp.text
+    assert "Click a headline for the full story" in resp.text
     assert 'class="lead-teaser" href="/teg-reports?teg=18#story/0"' in resp.text
     assert "Also in this report" not in resp.text
     assert "The Champion" in resp.text  # lead story kicker
@@ -1306,7 +1307,7 @@ def test_contents_article_links_target_stories(client):
     assert f'href="{summary["lead_link"]}"' in panel.text
     for article in summary["other_articles"]:
         assert f'href="{article["link"]}"' in panel.text
-    assert f'href="{summary["link"]}">TEG 18 report ↗' in panel.text
+    assert f'href="{summary["link"]}">TEG 18 headlines ↗' in panel.text
     report = client.get("/teg-reports", params={"teg": 18})
     _assert_ok_no_error(report)
     for link in [summary["lead_link"], *[a["link"] for a in summary["other_articles"]]]:
