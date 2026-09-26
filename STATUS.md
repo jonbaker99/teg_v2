@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-26 (Records stacked list; honours board restyle)
+**Last updated:** 2026-09-26 (Past results navigation label)
+
+## 2026-09-26 — Past results navigation label
+
+Renamed the shared navigation entry from “Full Results” to “Past results” across desktop, tablet, phone Explore and Contents. The destination remains `/results`.
 
 ## 2026-09-26 — Mobile records show full names
 

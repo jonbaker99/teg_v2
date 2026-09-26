@@ -717,7 +717,7 @@ metadata CSVs, delete rounds/TEGs, volume browser, GitHub sync, backups, file
 guide — see [Admin / data management](#admin--data-management) above); report
 generation remains out of scope. Public navigation is defined independently in
 `webapp/nav.py` and shared by desktop, tablet, phone Explore and Contents. Pages: Contents,
-TEG History / Honours / Full Results / Player Rankings / TEG Reports, TEG
+TEG History / Honours / Past results / Player Rankings / TEG Reports, TEG
 Records / Top TEGs and Rounds / Personal Bests, Latest Leaderboard / Latest
 Round / Latest TEG / Handicaps, the 11 Scoring-analysis views, and Scorecard /
 Best-Worstball / Eclectic Scores / Eclectic Records.
