@@ -2,9 +2,8 @@
 
 State-led home (I3/I5, revised): shows the in-progress TEG, the latest
 completed TEG, or an honest no-data message, chosen by
-`webapp.deps.get_tournament_state()`. The complete public site map
-(`webapp.nav.NAV_SECTIONS`, unchanged) always renders beneath it, so every
-destination stays reachable regardless of state.
+`webapp.deps.get_tournament_state()`. The request's public site map renders
+beneath it, with labels and links suited to the current tournament state.
 """
 
 from pathlib import Path
@@ -12,7 +11,6 @@ from pathlib import Path
 from fastapi import APIRouter, Request, Query
 from fastapi.templating import Jinja2Templates
 
-from webapp.nav import NAV_SECTIONS
 from webapp.deps import (
     PLAYER_COLUMN,
     cached_round_data,
@@ -28,18 +26,16 @@ from teg_analysis.reporting.newspaper_edition import available_rounds, get_editi
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
-SITEMAP_PAGE_COUNT = sum(len(s["pages"]) for s in NAV_SECTIONS)
-
-
 @router.get("/contents")
 def contents_page(request: Request):
+    sections = request.state.nav_sections
     return templates.TemplateResponse("contents.html", {
         "request": request,
         "active_page": "contents",
-        "sections": request.state.nav_sections,
+        "sections": sections,
         "state": get_tournament_state(),
-        "sitemap_page_count": SITEMAP_PAGE_COUNT,
-        "sitemap_group_labels": ", ".join(s["label"] for s in request.state.nav_sections),
+        "sitemap_page_count": sum(len(s["pages"]) for s in sections),
+        "sitemap_group_labels": ", ".join(s["label"] for s in sections),
     })
 
 

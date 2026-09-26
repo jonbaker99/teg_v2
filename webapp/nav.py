@@ -110,20 +110,32 @@ MOBILE_SHORTCUTS = [
 ]
 
 
-def navigation_for_teg(teg_num: int) -> tuple[list[dict], list[dict]]:
+def navigation_for_teg(teg_num: int, *, in_progress: bool = False) -> tuple[list[dict], list[dict]]:
     """Build request-local navigation labels for the current TEG.
 
-    Keep URLs, active keys, and the shared navigation registry unchanged.
+    Keep the shared registry unchanged. Hide the TEG context shortcut while
+    play is under way; its direct route remains available.
     """
     teg_label = f"TEG {teg_num}"
+
+    def page_title(title: str, key: str) -> str:
+        if key == "leaderboard":
+            return "Latest Leaderboard" if in_progress else "Final leaderboard"
+        if key == "latest-teg":
+            return f"{teg_label} in context"
+        if key == "handicaps":
+            return f"TEG {teg_num if in_progress else teg_num + 1} handicaps"
+        return title
+
     sections = list(NAV_SECTIONS)
     latest = NAV_SECTIONS[1]
     sections[1] = {
         **latest,
         "label": teg_label,
         "pages": [
-            (f"{teg_label} in context" if key == "latest-teg" else title, url, key, icon)
+            (page_title(title, key), url, key, icon)
             for title, url, key, icon in latest["pages"]
+            if not (in_progress and key == "latest-teg")
         ],
     }
     shortcuts = list(MOBILE_SHORTCUTS)

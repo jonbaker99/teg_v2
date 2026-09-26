@@ -16,7 +16,6 @@ import pandas as pd
 from starlette.testclient import TestClient
 
 from webapp.app import app
-from webapp.deps import get_default_teg_num
 from webapp.nav import MOBILE_SHORTCUTS, NAV_SECTIONS, navigation_for_teg
 from webapp.chart_utils import (
     create_round_graph,
@@ -66,7 +65,8 @@ def test_nav_page_renders(client, url):
 def test_phone_explore_navigation_is_complete_and_current(client):
     resp = client.get("/records")
     _assert_ok_no_error(resp)
-    teg_label = f"TEG {get_default_teg_num()}"
+    sections = resp.context["request"].state.nav_sections
+    teg_label = sections[1]["label"]
 
     tabbar = re.search(r'<nav class="mobile-tabbar".*?</nav>', resp.text, re.DOTALL)
     assert tabbar
@@ -96,9 +96,8 @@ def test_phone_explore_navigation_is_complete_and_current(client):
     )
     assert sheet
     sheet_html = sheet.group(0)
-    for section in NAV_SECTIONS:
-        label = teg_label if section["label"] == "Latest TEG" else section["label"]
-        assert html.escape(label) in sheet_html
+    for section in sections:
+        assert html.escape(section["label"]) in sheet_html
         for _title, url, _key, _icon in section["pages"]:
             assert sheet_html.count(f'href="{url}"') == 1
     assert '<a href="/records" aria-current="page">' in sheet_html
@@ -123,16 +122,24 @@ def test_navigation_tracks_default_teg_without_changing_links_or_active_state(cl
         resp = client.get(path)
         _assert_ok_no_error(resp)
         assert f"{label}</button>" in resp.text
-        assert f"{label} in context</a>" in resp.text
-        assert 'href="/latest-teg"' in resp.text
         assert 'href="/leaderboard"' in resp.text
         assert "Latest TEG in context" not in resp.text
         assert re.search(rf'href="/leaderboard"\s+class="mtab.*?<span class="mtab-label">{label}</span>', resp.text, re.DOTALL)
+        dropdown = re.search(r'id="nav-section-2".*?</div>', resp.text, re.DOTALL).group(0)
+        sheet = re.search(r'<dialog id="mobile-explore-sheet".*?</dialog>', resp.text, re.DOTALL).group(0)
+        assert ("Latest Leaderboard" if in_progress else "Final leaderboard") in dropdown
+        assert f"TEG {teg_num if in_progress else teg_num + 1} handicaps" in dropdown
+        assert ('href="/latest-teg"' in dropdown) == (not in_progress)
+        assert ('href="/latest-teg"' in sheet) == (not in_progress)
+        assert (f"{label} in context" in dropdown) == (not in_progress)
         if path == "/latest-teg":
             assert re.search(rf'nav-dropdown-btn active[^>]*>{label}</button>', resp.text)
-            assert 'href="/latest-teg" aria-current="page"' in resp.text
+            assert resp.status_code == 200  # Direct route remains available when its nav link is hidden.
         if path == "/contents":
             assert f'<div class="section-title">{label}</div>' in resp.text
+            sections = resp.context["sections"]
+            assert resp.context["sitemap_page_count"] == sum(len(section["pages"]) for section in sections)
+            assert ('href="/latest-teg"' in resp.text) == (not in_progress)
 
     assert NAV_SECTIONS[1]["label"] == "Latest TEG"
     assert NAV_SECTIONS[1]["pages"][2][0] == "Latest TEG in context"
@@ -141,18 +148,21 @@ def test_navigation_tracks_default_teg_without_changing_links_or_active_state(cl
 
 def test_navigation_copies_are_request_local():
     earlier, earlier_shortcuts = navigation_for_teg(18)
-    later, later_shortcuts = navigation_for_teg(19)
+    later, later_shortcuts = navigation_for_teg(19, in_progress=True)
     assert earlier[1]["label"] == earlier_shortcuts[0]["label"] == "TEG 18"
     assert later[1]["label"] == later_shortcuts[0]["label"] == "TEG 19"
     assert earlier[1]["pages"][2][0] == "TEG 18 in context"
-    assert later[1]["pages"][2][0] == "TEG 19 in context"
+    assert [page[2] for page in later[1]["pages"]] == ["leaderboard", "latest-round", "handicaps"]
+    assert earlier[1]["pages"][0][0] == "Final leaderboard"
+    assert later[1]["pages"][0][0] == "Latest Leaderboard"
+    assert earlier[1]["pages"][-1][0] == later[1]["pages"][-1][0] == "TEG 19 handicaps"
     assert [page[1:] for page in earlier[1]["pages"]] == [page[1:] for page in NAV_SECTIONS[1]["pages"]]
     assert earlier[1]["active"] == later[1]["active"] == NAV_SECTIONS[1]["active"]
 
 
 def test_handicaps_eyebrow_uses_current_navigation_label(client, monkeypatch):
-    app_module = importlib.import_module("webapp.app")
-    monkeypatch.setattr(app_module, "get_default_teg_num", lambda: 19)
+    deps_module = importlib.import_module("webapp.deps")
+    monkeypatch.setattr(deps_module, "get_current_in_progress_teg_fast", lambda: (19, None))
     resp = client.get("/handicaps")
     _assert_ok_no_error(resp)
     assert '<span class="page-label">TEG 19</span>' in resp.text
@@ -164,7 +174,7 @@ def test_static_requests_skip_tournament_lookup(client, monkeypatch):
     def unexpected_lookup():
         raise AssertionError("static requests should not read tournament state")
 
-    monkeypatch.setattr(app_module, "get_default_teg_num", unexpected_lookup)
+    monkeypatch.setattr(app_module, "_navigation_status", unexpected_lookup)
     resp = client.get("/static/ui-polish.js")
     assert resp.status_code == 200
 
@@ -985,11 +995,10 @@ import webapp.routes.contents as contents_route
 
 
 def test_contents_all_nav_links_present(client):
-    # Acceptance criterion 2: every NAV_SECTIONS URL appears in /contents,
-    # asserted by test rather than inspection.
+    # Every link in the request's public navigation appears in /contents.
     resp = client.get("/contents")
     _assert_ok_no_error(resp)
-    urls = [url for section in NAV_SECTIONS for (_t, url, _k, _i) in section["pages"]]
+    urls = [url for section in resp.context["sections"] for (_t, url, _k, _i) in section["pages"]]
     for url in urls:
         assert f'href="{url}"' in resp.text, f"missing sitemap link {url!r}"
     # Player Profiles stay deliberately unlinked from nav (2026-09-18).
@@ -1299,13 +1308,12 @@ def test_contents_sitemap_is_collapsible_and_closed_by_default(client):
     assert " open" not in tag and tag.strip() != "<details class=\"sitemap-disclosure\" open>"
     assert 'Full site contents <span class="count">(click to expand)</span>' in resp.text
     import html
-    teg_label = f"TEG {get_default_teg_num()}"
-    for section in NAV_SECTIONS:
-        label = teg_label if section["label"] == "Latest TEG" else section["label"]
-        assert html.escape(label) in resp.text
+    sections = resp.context["sections"]
+    for section in sections:
+        assert html.escape(section["label"]) in resp.text
     # Closed-by-default doesn't mean absent from the DOM -- every link must
     # still be present for the all-nav-links acceptance criterion to hold.
-    urls = [url for section in NAV_SECTIONS for (_t, url, _k, _i) in section["pages"]]
+    urls = [url for section in sections for (_t, url, _k, _i) in section["pages"]]
     for url in urls:
         assert f'href="{url}"' in resp.text
 
