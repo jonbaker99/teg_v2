@@ -17,7 +17,7 @@
 
 John Patterson opened round one of TEG 9 at Praia D'El Rey in the worst fashion available to him. Quadruple bogeys at the 1st and the 6th. An 8 on the card twice inside six holes. Two disasters that early would sink most rounds. Patterson steadied himself instead, and by the turn he was building something worthwhile.
 
-The recovery began at the 12th. A birdie there broke a run of bogeys that had taken hold over a shaky 10th and 11th. From that point he barely put a foot wrong. He strung pars together and stayed gross-shot clean from the 12th through the 16th, a stretch containing two separate two-hole spells without a shot dropped. The par at the 16th took him to the outright lead in the Trophy standings.
+The recovery began at the 12th. A birdie there broke a run of bogeys that had taken hold over a shaky 10th and 11th. From that point he mostly held firm. He parred the 13th, ran up a double bogey at the par-three 14th, then parred the 15th and 16th. That made two separate two-hole spells without a shot dropped, either side of the double at the 14th. The par at the 16th took him to the outright lead in the Trophy standings.
 
 The finished round was 39 Stableford points, the best score of the day. The field's worst return was 32. Patterson had spent his opening six holes auditioning for that figure, then declined the part.
 
