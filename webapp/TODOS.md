@@ -400,7 +400,7 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
     layout structure.
 
 ## Mobile & dark mode
-- [ ] **Records Streaks tab: full names on mobile** — TEG, Round, 9-Hole and Score Counts dropped the `Initial.SURNAME` swap on 2026-09-26 (compact three-column or stacked layout, `webapp/routes/records.py`). Streaks still uses it and its 3+-holder rows still show an initials list. Pick compact or stacked; stacked needs per-holder streak data like `score_count_record_holders`.
+- [X] **Records Streaks tab: full names on mobile** — done 2026-09-26: stacked layout shared with Score Counts (`_build_stacked_records_list`, `webapp/routes/records.py`).
 - [ ] **`_player_name_spans` omits the space after the initial** — the docstring promises `Initial. SURNAME`; the code emits `J.BAKER` (`teg_analysis/display/scorecards.py`). Fix or align the docstring wherever short names remain.
 
 - [X] **Phase M1 — app shell on phones** — bottom tab bar, app bar, segmented controls, sticky-column tables. Done (see `MOBILE_PLAN.md` → Status).

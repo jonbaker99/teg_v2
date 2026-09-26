@@ -251,17 +251,26 @@ def _build_records_html(
 _STACKED_MIN_VALUE = 2
 
 
+def _stacked_value_threshold(value: str) -> int:
+    """Parse the leading digits of a stacked-list value for the
+    _STACKED_MIN_VALUE comparison. Streak Record values can carry a
+    trailing '*' ("and counting", e.g. "1206*"), so a plain int() would
+    crash; no leading digits means 0."""
+    match = re.match(r'\d+', str(value))
+    return int(match.group()) if match else 0
+
+
 def _build_stacked_records_list(holders: list) -> str:
-    """Mobile-only stacked list for Score Counts: one group per record
-    (label + value on top), then one row per holder -- full player name
-    with the occasion(s) beside it in muted text. ui-polish.js drops every
-    occasion onto its own line under the name, list-wide, as soon as any
-    one row would not fit beside its name (.is-wrapped).
+    """Mobile-only stacked list for Score Counts and Streaks: one group per
+    record (label + value on top), then one row per holder -- full player
+    name with the occasion(s) beside it in muted text. ui-polish.js drops
+    every occasion onto its own line under the name, list-wide, as soon as
+    any one row would not fit beside its name (.is-wrapped).
     Holdings arrive one per occasion (score_count_record_holders); a player
     holding a record more than once gets one row listing each occasion.
     Records below _STACKED_MIN_VALUE are left out."""
     names = get_player_dict()
-    holders = [h for h in holders if int(h['value']) >= _STACKED_MIN_VALUE]
+    holders = [h for h in holders if _stacked_value_threshold(h['value']) >= _STACKED_MIN_VALUE]
     if not holders:
         return "<div class='records-list'><p class='text-muted text-sm'>No records.</p></div>"
     parts = ["<div class='records-list records-list--stacked'>"]
@@ -356,11 +365,25 @@ def _tab_context(tab_name: str) -> dict:
 
             best_streaks = prepare_record_best_streaks_data(all_data)
             best_table = prepare_streak_records_table(best_streaks, "Best Streaks:")
-            sections.append(_section("Best Streaks", best_table))
+            best_holders = [
+                {'label': r['Streak Type'], 'value': str(r['Record']), 'player': r['Player'], 'when': r['When']}
+                for _, r in best_streaks.iterrows()
+            ]
+            sections.append(_section(
+                "Best Streaks", best_table,
+                mobile_list_html=_build_stacked_records_list(best_holders),
+            ))
 
             worst_streaks = prepare_record_worst_streaks_data(all_data)
             worst_table = prepare_streak_records_table(worst_streaks, "Worst Streaks:")
-            sections.append(_section("Worst Streaks", worst_table))
+            worst_holders = [
+                {'label': r['Streak Type'], 'value': str(r['Record']), 'player': r['Player'], 'when': r['When']}
+                for _, r in worst_streaks.iterrows()
+            ]
+            sections.append(_section(
+                "Worst Streaks", worst_table,
+                mobile_list_html=_build_stacked_records_list(worst_holders),
+            ))
             caption = "* and counting..."
 
         elif tab_name == "score_counts":
