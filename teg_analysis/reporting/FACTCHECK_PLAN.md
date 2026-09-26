@@ -148,68 +148,50 @@ Plan usage: $0 cash, ~170–250 mailbox prompts. That is feasible but mind the w
 - **False-alarm sweep:** all 85 reports (not just tournament, not a sample) — **run three times**, see below.
 - **Repair model:** Opus — used for TEG 18's 3 repairs; not yet run at scale for WP5.
 
-## Full-corpus sweep (2026-09-26, not finished)
+## Full-corpus sweep (2026-09-26)
 
-`python -m teg_analysis.reporting.verify --all --rounds --claims` run three times against all 85
-reports, fixing real systemic bugs the previous round's output surfaced each time:
+`python -m teg_analysis.reporting.verify --all --rounds --claims` run three times against all 85 reports, fixing real systemic bugs the previous round's output surfaced each time. A fourth pass re-checked the cached claims for free after two more checker fixes:
 
 | Sweep | Errors | Fix applied after |
 |---|---|---|
 | 1 | 230 | Spoon rank direction (`_rank_source_for` used the inverted `_SpoonRank` column — 19 false errors); margin/lead-gap claims misclassified as `total` (~150 false errors); `run` claims invented from aggregate point totals; `hole_score` hallucinated from qualitative descriptors; Jacket total unit mismatch |
 | 2 | 133 | "Last"/"bottom" language made the extractor emit `value=1` (a regression from the spoon fix's wording) — tightened to leave `value` null rather than guess; `total` tightened further to explicitly exclude round/partial scores |
 | 3 | 65 | Sign-tolerance fix ("18 under" vs stored `-18`); one outdated test assumption fixed (`test_item5_shared_rank_is_warning` was keyed to the old inverted Spoon column) |
+| 4 (free re-check of cached claims) | 60 → 52 | 60 = sweep 3's 65 less TEG 18's repaired errors. Net-vs-gross axis + negation in `_check_run`; `rank_change` value=1 with last-place/Spoon language → unchecked. 8 false errors cleared, 0 new |
 
-**Sweep 3's 65 errors, triaged by hand against real parquet data** (not another sweep — the cached
-`{stem}_claims.json` files already hold the extracted claims; re-run `check_claim_list` against them
-for free after a checker fix, no new LLM call needed unless the report text itself changes):
+**How to re-check for free:** the cached `{stem}_claims.json` files hold every report's extracted claims. Load them, build `build_fact_base(teg, round_num=...)`, and call `check_claim_list` — no LLM call unless the report text changes.
 
-**Confirmed noise — two more fixes identified but NOT yet made:**
-1. **Net-vs-gross axis in `run` claims** (~3+ of 16). "went four straight without a **net** par" is
-   checked against raw `GrossVP`, which is always the GROSS axis. Fix: when the claim's `basis` or
-   quote says "net" (vs "gross" explicitly), check `Stableford >= 2` for "net par or better" (and
-   similarly scale the other basis levels) instead of `GrossVP`. Verified false positives: TEG 2 R2
-   Henry Meller (holes 13-16) and David Mullin (holes 16-18) — both genuinely true on the net axis.
-2. **`rank_change` "last"/"bottom" still defaults to `value=1`** (~7 of 13), despite the sweep-2
-   prompt fix telling the extractor to leave it null. This is a persistent model behaviour, not
-   prompt-fixable — the code should treat `value == 1` alongside `last`/`bottom`/`foot of the field`
-   language in the quote as ambiguous (unchecked), not a literal check against 1. Verified: five
-   separate TEG 5 R1 claims ("last place was his", "the foot of the field", "reclaimed the
-   position", etc.) all false-error against the real rank-5 (of 5) standing.
-3. **Before/after value confusion in `rank_change`** (~3-4 of 13) — for "from third into the lead",
-   the extractor sometimes reports the BEFORE number (3) where the checker validates the AFTER
-   state at that hole. Verified: TEG 9 R1 H5 John Patterson — real rank at that hole is 1, matching
-   the claim's own narrative; only the extracted number (3) was wrong. No fix designed yet; needs
-   either an extractor instruction to always report the AFTER value, or a `before`/`after` field pair.
-4. Residual round-vs-tournament total confusion despite an explicit prompt rule (~11 of 13
-   `claim_total`) and span/basis extraction slips in `run` (~5 of 16) — the model doesn't follow the
-   prompt 100% of the time; likely an acceptable floor, not chased further this session.
+### Checker fixes made in sweep 4
 
-**Confirmed genuine, new report errors — verified against real parquet data, ready to repair:**
+1. **Net-vs-gross axis in `_check_run`.** `_run_axis` picks `NetVP` when the quote attaches a per-hole result to the net axis ("without a net par", "pars-or-better against his handicap"), else `GrossVP`; both → unchecked. NetVP is equivalent to Stableford ≥ 2 for "net par or better" and scales the other basis levels. Aggregate net language ("gained five shots on net par", "three shots to par against his handicap") does NOT switch the axis — both were regressions in a first draft.
+2. **Dropped negation.** The extractor often turns "without a net par" into basis `par`. `_NEGATED_PAR_RE` flips `par`/`par or better` to `bogey or worse` for "without/never (a) (net) par". Kept tight: "without dropping a shot to par" means the opposite and is not flipped.
+3. **`rank_change` value=1 with "last"/"bottom"/"foot of the field" in the quote, or any Wooden Spoon claim** → unchecked. The Spoon condition matters: three of the five TEG 5 R1 false errors ("Meller briefly reclaimed the position") carry no "last" word in the quote itself.
 
-| Report | Claim (paraphrased) | Real data |
+Tests: `tests/test_reporting_verify.py` (six fixtures against real data, no LLM).
+
+### Remaining noise (not fixed)
+
+- **Before/after value confusion in `rank_change`** — "from fourth to last" extracted with `value=4` (the BEFORE rank), checked against the AFTER state. At least 5 of the remaining 9 `rank_change` errors (TEG 4, 5, 13 R3, 15, 9 R1). Cheapest fix: treat "from <ordinal> to …" as unchecked, or add `before`/`after` fields to the extractor.
+- **Round misattribution** — the extractor attaches the wrong round to a sentence whose paragraph names it earlier. Both "confirmed" TEG 5 and TEG 16 R2 errors below turned out to be this. No code fix; the rule stays: verify against the paragraph before repairing.
+- Residual round-vs-tournament `total` confusion (~11) and span/basis slips in `run` — likely an acceptable floor.
+
+### Repairs — sweep-3 candidates re-verified against paragraph context + parquet
+
+**Not errors (extractor misattribution) — left unchanged:**
+- TEG 5 tournament: "16th, 17th and 18th in level par gross" (Neumann). The paragraph opens "Wednesday's move to Palmares" — that is R4 (0, 0, 0 gross; round of 96), not R3.
+- TEG 16 R2: "three holes running without a single net par" (Alex Baker). True in round 2 (net +2, +1, +1 at 13-15); the extractor attached round 1.
+
+**Real errors — six repairs drafted, NOT yet written (awaiting approval)** via `claims.repair_report()` on the `agent` provider (Opus, fresh subagent per prompt), mechanical re-verify clean, each new sentence hand-checked against the parquet:
+
+| Report | Was | Now |
 |---|---|---|
-| TEG 5 R3 (tournament report) | "played 16th–18th in level par gross" (Stuart Neumann) | Actual: +2, +3, +5 |
-| TEG 15 R3 (round report) | "ran holes 3–7 without dropping a gross shot" (John Patterson) | Hole 4 was a bogey (+1) |
-| TEG 15 (tournament report) | "ran four holes without managing better than a bogey", holes 2-5 (Alex Baker) | Hole 5 was a birdie (-1) |
-| TEG 15 (tournament report) | "bogey-par-bogey" stretch, holes 16-18 (Stuart Neumann) | Hole 17 was a double bogey (+2), not a par |
-| TEG 16 R2 (round report) | "three holes running without a single net par", holes 13-15 (Alex Baker) | Holes 13 and 15 both had a net par or better (Stableford 4 and 2) |
+| TEG 15 R3 | "ran holes 3 to 7 without dropping a gross shot" (Patterson; bogey at the 4th) | "…for just one dropped gross shot, a bogey at the 4th" |
+| TEG 15 R3 | "then ran four holes without managing better than a bogey" (Alex Baker; the 5th was a birdie) | "three holes" |
+| TEG 15 R3 | "9 points from the closing three holes … bogey-par-bogey" (Neumann; that was 14-16, the closing three scored 5) | "the next three holes" |
+| TEG 15 R2 | "extended the run to six holes without a gross shot dropped" (Williams; bogey at the 8th) | bogey at the 8th named; "six pars in seven holes" |
+| TEG 13 tournament | "arrived at the tee fourth from bottom" (Mullin; he was 4th of 5) | "second from bottom" |
+| TEG 18 R1 | bogey at the 5th moved him "into outright second place" in the Jacket (Jon Baker; it took him into the outright lead) | "into the outright lead" |
 
-Use `claims.repair_report()` (built this session, in `claims.py`) exactly as done for TEG 18: locate
-each paragraph, send it + the correct fact to an Opus repair call, re-verify (mechanical + claims)
-against the actual configured pipeline before writing, show the diff, write only on approval.
+The plan's earlier table placed the two TEG 15 Baker/Neumann errors in the tournament report; both are in the R3 round report.
 
-**Uncertain — need a closer read of surrounding paragraph context before classifying either way:**
-- TEG 13 (tournament report): "fourth from bottom" (David Mullin) — the arithmetic doesn't match
-  either the hole immediately before or after the claimed point; might be a real error or a
-  hole-misattribution.
-- TEG 18 R1 (round report): "outright second place" in the Green Jacket (Jon Baker) — real data
-  shows he was actually LEADING (rank 1) at that hole, not 2nd. Note TEG 18's tournament report was
-  already repaired this session; this is a DIFFERENT (round-level) report making a related claim.
-- TEG 15 R2 (round report): "six holes without a gross shot dropped" (Gregg Williams) — hole 8 in
-  the implied span was a bogey; depends on whether the paragraph's own framing excludes it.
-
-**To resume:** the 65-error raw sweep output is NOT preserved anywhere durable (it was in `/tmp`,
-session-local) — but every report's extracted claims ARE preserved in `data/commentary/*_claims.json`
-in this worktree, so re-running the two fixes above and then `check_claims(teg_num, round_num=...)`
-per report re-checks for free (no new LLM call) unless you also want to re-extract with the improved
-prompt (optional, ~$4-6 for all 85).
+**Known gap in the re-verify:** re-extracting a single repaired paragraph loses the round context, so most re-extracted claims come back `unchecked`. The hand check against the parquet is what actually verified these six.

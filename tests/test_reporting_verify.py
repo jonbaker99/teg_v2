@@ -310,7 +310,9 @@ class TestClaimChecks:
         teg_df, rank_col = tl["teg_df"], tl["cols"]["rank_hole"]
         tied = None
         for (rnd, hole), g in teg_df.groupby(["Round", "Hole"]):
-            dupes = g[g[rank_col].duplicated(keep=False)]
+            # rank > 1: a Spoon claim at value 1 is deliberately unchecked
+            # (the extractor's "last place" = 1 habit, sweep 3).
+            dupes = g[g[rank_col].duplicated(keep=False) & (g[rank_col] > 1)]
             if not dupes.empty:
                 row = dupes.iloc[0]
                 tied = (int(rnd), int(hole), row["Player"], int(row[rank_col]))
@@ -344,3 +346,76 @@ class TestClaimChecks:
         findings = check_claim_list(fb, claims)
         assert len(findings) == 1
         assert findings[0].severity == "unchecked"
+
+
+# ---------------------------------------------------------------------------
+# Sweep-3 checker fixes (2026-09-26): real false positives from the 85-report
+# sweep, re-created as fixtures against real data. No LLM call.
+# ---------------------------------------------------------------------------
+def _check_one(teg_num, round_num, **claim_kw):
+    from teg_analysis.reporting.claims import Claim, build_fact_base, check_claim_list
+    return check_claim_list(build_fact_base(teg_num, round_num=round_num),
+                            [Claim(**claim_kw)])
+
+
+def test_run_net_claim_checked_on_net_axis_with_negation():
+    # TEG 2 R2: true on the net axis (never a net par); the extractor emitted
+    # basis "par", dropping the "without". Was a false error against GrossVP.
+    findings = _check_one(
+        2, 2, type="run", player="Henry Meller", round=2, span_start_hole=13,
+        span_end_hole=16, basis="par",
+        quote="Across holes 13 to 16 he went four straight without a net par "
+              "and shipped 11 gross shots.")
+    assert findings == []
+
+
+def test_run_net_claim_still_catches_a_real_net_error():
+    # A net-axis run claim that is false on the data must still be flagged.
+    # Round 1: Alex Baker had a net par or better at the 13th and 15th. (In the
+    # real TEG 16 R2 report this sentence is about ROUND 2, where it is true —
+    # the sweep's "error" was the extractor attaching round 1.)
+    findings = _check_one(
+        16, 2, type="run", player="Alex Baker", round=1, span_start_hole=13,
+        span_end_hole=15, basis="bogey or worse",
+        quote="Three holes running without a single net par, the 15th among "
+              "the hardest on the course.")
+    assert len(findings) == 1 and findings[0].severity == "error"
+    assert "net vs par" in findings[0].detail
+
+
+def test_run_aggregate_net_language_does_not_switch_axis():
+    # "three shots to par against his handicap" is an aggregate, not a
+    # per-hole result — the pars are gross (TEG 6 R4, all three real pars).
+    findings = _check_one(
+        6, None, type="run", player="David Mullin", round=4, span_start_hole=8,
+        span_end_hole=10, basis="par",
+        quote="Then he steadied with three straight pars from the 8th, worth "
+              "three shots to par against his handicap.")
+    assert findings == []
+
+
+def test_run_without_dropping_a_shot_is_not_negated():
+    from teg_analysis.reporting.claims import _NEGATED_PAR_RE
+    assert not _NEGATED_PAR_RE.search("three holes without dropping a shot to par")
+    assert _NEGATED_PAR_RE.search("three holes without a single net par")
+
+
+def test_rank_change_value_one_with_last_place_language_is_unchecked():
+    # TEG 5 R1: the extractor's persistent value=1 for "last place was his".
+    findings = _check_one(
+        5, 1, type="rank_change", player="Stuart Neumann", round=1, hole=16,
+        competition="Wooden Spoon", value=1,
+        quote="A triple bogey on the 18th was followed by another on the "
+              "16th, and last place was his.")
+    assert len(findings) == 1 and findings[0].severity == "unchecked"
+
+
+def test_rank_change_value_one_in_the_trophy_is_still_checked():
+    # TEG 9 R1 H5: Patterson really was rank 1 in the Trophy — a plain
+    # "into the lead" claim must still be checked (and pass).
+    findings = _check_one(
+        9, 1, type="rank_change", player="John Patterson", round=1, hole=5,
+        competition="Trophy", value=1,
+        quote="lifted him from third into the outright lead of the 2016 TEG Trophy")
+    assert all(f.severity != "unchecked" for f in findings)
+    assert all(f.severity != "error" for f in findings)

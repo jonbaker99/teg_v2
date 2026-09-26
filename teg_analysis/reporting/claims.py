@@ -371,9 +371,25 @@ def _rank_source_for(fb: FactBase, competition: str) -> Optional[tuple]:
     return fb.teg_df, cols["rank_hole"]
 
 
+_LAST_PLACE_RE = re.compile(r"\b(last|bottom|foot of the field)\b", re.IGNORECASE)
+
+
 def _check_rank_change(fb: FactBase, c: Claim) -> list[Finding]:
     if not (c.player and c.round and c.hole and c.competition and c.value is not None):
         return _unchecked(c, "rank_change claim missing player/round/hole/competition/value")
+    # The extractor keeps emitting value=1 for "last place" / "the foot of the
+    # field" / "took the Spoon position" despite the prompt telling it to leave
+    # value null — a persistent model behaviour, not prompt-fixable (sweep 3,
+    # 2026-09-26: ~7 of 13 rank_change errors, e.g. five TEG 5 R1 claims all
+    # false-erroring against the real rank 5 of 5). value=1 read literally as
+    # "leading the Trophy" is never what a Spoon-race or last-place sentence
+    # means, so it's ambiguous — unchecked, not a check against 1. The quote
+    # alone doesn't always carry the "last" word ("Meller briefly reclaimed
+    # the position"), hence the Spoon condition too.
+    if c.value == 1 and (_LAST_PLACE_RE.search(c.quote)
+                         or "spoon" in (c.competition or "").lower()):
+        return _unchecked(c, "rank_change value=1 alongside last-place/Spoon language is "
+                             "ambiguous (likely 'last', not rank 1) — not checked")
     source = _rank_source_for(fb, c.competition)
     if source is None:
         return _unchecked(c, f"unrecognised competition {c.competition!r} for rank_change")
@@ -482,25 +498,70 @@ _RUN_BASIS_PRED = {
 }
 
 
+# Per-hole RESULT phrases on each axis. "net" alone is not enough: "gained
+# five shots on net par" and "three shots to par against his handicap" are
+# aggregates across the span, and say nothing about which axis the per-hole
+# run ("four consecutive pars") is on.
+_NET_RESULT_RE = re.compile(
+    r"(?<!\bto )(?<!\bon )(?<!\bagainst )\bnet\s+(pars?|birdies?|bogeys?|doubles?|eagles?)\b"
+    r"|(?<!\bto )\b(pars?|birdies?|bogeys?)(-or-(better|worse))?\s+against\s+(his|their|the)\s+"
+    r"handicaps?",
+    re.IGNORECASE)
+_GROSS_RESULT_RE = re.compile(
+    r"\bgross\s+(pars?|birdies?|bogeys?|doubles?|eagles?|shot)\b|\bpar\s+gross\b",
+    re.IGNORECASE)
+# "without a net par", "never found a par" — the extractor often drops the
+# negation and emits basis "par" (TEG 2 R2, sweep 3). The literal meaning of
+# "no par (or better) on any hole" is "bogey or worse" on every hole. Kept
+# tight: "without dropping a shot to par" means the OPPOSITE.
+_NEGATED_PAR_RE = re.compile(
+    r"\b(without|never)\s+((making|finding|found|made|managing|carding|recording)\s+)?"
+    r"((a|an|one|any)\s+)?(single\s+)?((net|gross)\s+)?pars?\b",
+    re.IGNORECASE)
+
+
+def _run_axis(c: Claim) -> Optional[str]:
+    """'GrossVP' or 'NetVP' — which axis a run claim is on, or None if the
+    quote attaches per-hole results to both.
+
+    Checking against NetVP is the same as Stableford >= 2 for "net par or
+    better" (Stableford = max(0, 2 - NetVP)), and scales every other basis
+    level the same way. Gross is the default: unqualified "pars" in golf
+    prose means gross.
+    """
+    text = f"{c.basis or ''} {c.quote}"
+    net_result, gross_result = _NET_RESULT_RE.search(text), _GROSS_RESULT_RE.search(text)
+    if net_result and gross_result:
+        return None
+    return "NetVP" if net_result else "GrossVP"
+
+
 def _check_run(fb: FactBase, c: Claim) -> list[Finding]:
     if not (c.player and c.round and c.span_start_hole and c.span_end_hole and c.basis):
         return _unchecked(c, "run claim missing player/round/span/basis")
-    pred = _RUN_BASIS_PRED.get((c.basis or "").strip().lower())
+    basis = re.sub(r"\b(net|gross)\s+", "", c.basis.strip().lower())
+    if basis in ("par", "par or better") and _NEGATED_PAR_RE.search(c.quote):
+        basis = "bogey or worse"
+    pred = _RUN_BASIS_PRED.get(basis)
     if pred is None:
         return _unchecked(c, f"run basis {c.basis!r} not recognised")
+    axis = _run_axis(c)
+    if axis is None:
+        return _unchecked(c, "run claim names both net and gross — axis ambiguous")
     span = fb.teg_df[(fb.teg_df["Round"] == c.round) & (fb.teg_df["Player"] == c.player)
                      & (fb.teg_df["Hole"].between(c.span_start_hole, c.span_end_hole))]
     n_expected = c.span_end_hole - c.span_start_hole + 1
     if len(span) != n_expected:
         return _unchecked(c, f"expected {n_expected} holes for the span, found {len(span)}")
-    bad = span[~span["GrossVP"].apply(pred)]
+    bad = span[~span[axis].apply(pred)]
     if not bad.empty:
         hole = int(bad.iloc[0]["Hole"])
-        vp = int(bad.iloc[0]["GrossVP"])
+        vp = int(bad.iloc[0][axis])
+        label = "net" if axis == "NetVP" else "gross"
         return [_finding("claim_run", "error",
-                         f"{c.player} R{c.round} H{hole} ({vp:+d} vs par) does not satisfy "
-                         f"{c.basis!r} — claimed span H{c.span_start_hole}-{c.span_end_hole}",
-                         c.quote)]
+                         f"{c.player} R{c.round} H{hole} ({vp:+d} {label} vs par) does not "
+                         f"satisfy {basis!r} — claimed span H{c.span_start_hole}-"
+                         f"{c.span_end_hole}", c.quote)]
     return []
 
 
