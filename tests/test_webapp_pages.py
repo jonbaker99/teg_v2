@@ -145,6 +145,11 @@ def test_history_page_has_round_disclosure(client):
     assert "PGA Catalunya" in detail_html
     # Preserved verbatim, not disturbed by the disclosure markup change.
     assert "Green Jacket awarded in TEG 5" in resp.text
+    # Headings: blank TEG heading plus 1/2/3-line variants for the others.
+    assert "<thead><tr><th></th>" in resp.text
+    assert "head-label--1'>The TEG Trophy<" in resp.text
+    assert "head-label--2'>The<br>Green Jacket<" in resp.text
+    assert "head-label--3'>HMM<br>Wooden<br>Spoon<" in resp.text
 
 
 # ---------------------------------------------------------------------------
