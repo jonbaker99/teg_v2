@@ -169,8 +169,10 @@ def _history_table_html(df: pd.DataFrame, round_metadata: dict | None = None) ->
 
     rows = ["<table class='teg-table history-table' data-head-lines='3'>", "<thead><tr>"]
     for col in headers:
-        if col:
-            words = [escape(w) for w in header_labels[col].split()]
+        words = [str(escape(w)) for w in header_labels.get(col, "").split()]
+        if col and not words:
+            rows.append("<th></th>")  # deliberately blank TEG heading
+        elif col:
             variants = (
                 " ".join(words),
                 words[0] + "<br>" + " ".join(words[1:]),
