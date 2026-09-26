@@ -8,6 +8,7 @@ column rename or refactor breaking a page outright, not to pin exact output.
 """
 
 import html
+import importlib
 import re
 
 import pytest
@@ -15,7 +16,8 @@ import pandas as pd
 from starlette.testclient import TestClient
 
 from webapp.app import app
-from webapp.nav import NAV_SECTIONS
+from webapp.deps import get_default_teg_num
+from webapp.nav import MOBILE_SHORTCUTS, NAV_SECTIONS, navigation_for_teg
 from webapp.chart_utils import (
     create_round_graph,
     get_round_player_color_map,
@@ -64,12 +66,13 @@ def test_nav_page_renders(client, url):
 def test_phone_explore_navigation_is_complete_and_current(client):
     resp = client.get("/records")
     _assert_ok_no_error(resp)
+    teg_label = f"TEG {get_default_teg_num()}"
 
     tabbar = re.search(r'<nav class="mobile-tabbar".*?</nav>', resp.text, re.DOTALL)
     assert tabbar
     assert len(re.findall(r'<(?:a|button)[^>]*class="mtab(?: |")', tabbar.group(0))) == 5
     for label, url in (
-        ("Latest", "/leaderboard"),
+        (teg_label, "/leaderboard"),
         ("History", "/history"),
         ("Records", "/records"),
         ("Cards", "/scorecard"),
@@ -94,7 +97,8 @@ def test_phone_explore_navigation_is_complete_and_current(client):
     assert sheet
     sheet_html = sheet.group(0)
     for section in NAV_SECTIONS:
-        assert html.escape(section["label"]) in sheet_html
+        label = teg_label if section["label"] == "Latest TEG" else section["label"]
+        assert html.escape(label) in sheet_html
         for _title, url, _key, _icon in section["pages"]:
             assert sheet_html.count(f'href="{url}"') == 1
     assert '<a href="/records" aria-current="page">' in sheet_html
@@ -106,6 +110,63 @@ def test_phone_explore_navigation_is_complete_and_current(client):
     assert resp.text.count('aria-controls="mobile-explore-sheet"') == 2
     assert '/static/mobile.css?v=41' in resp.text
     assert '/static/ui-polish.js?v=4' in resp.text
+
+
+@pytest.mark.parametrize("in_progress, teg_num", [(None, 18), (19, 19)])
+def test_navigation_tracks_default_teg_without_changing_links_or_active_state(client, monkeypatch, in_progress, teg_num):
+    deps_module = importlib.import_module("webapp.deps")
+    monkeypatch.setattr(deps_module, "get_current_in_progress_teg_fast", lambda: (in_progress, None))
+    monkeypatch.setattr(deps_module, "get_last_completed_teg_fast", lambda: (18, None))
+    label = f"TEG {teg_num}"
+
+    for path in ("/records", "/contents", "/latest-teg"):
+        resp = client.get(path)
+        _assert_ok_no_error(resp)
+        assert f"{label}</button>" in resp.text
+        assert f"{label} in context</a>" in resp.text
+        assert 'href="/latest-teg"' in resp.text
+        assert 'href="/leaderboard"' in resp.text
+        assert "Latest TEG in context" not in resp.text
+        assert re.search(rf'href="/leaderboard"\s+class="mtab.*?<span class="mtab-label">{label}</span>', resp.text, re.DOTALL)
+        if path == "/latest-teg":
+            assert re.search(rf'nav-dropdown-btn active[^>]*>{label}</button>', resp.text)
+            assert 'href="/latest-teg" aria-current="page"' in resp.text
+        if path == "/contents":
+            assert f'<div class="section-title">{label}</div>' in resp.text
+
+    assert NAV_SECTIONS[1]["label"] == "Latest TEG"
+    assert NAV_SECTIONS[1]["pages"][2][0] == "Latest TEG in context"
+    assert MOBILE_SHORTCUTS[0]["label"] == "Latest"
+
+
+def test_navigation_copies_are_request_local():
+    earlier, earlier_shortcuts = navigation_for_teg(18)
+    later, later_shortcuts = navigation_for_teg(19)
+    assert earlier[1]["label"] == earlier_shortcuts[0]["label"] == "TEG 18"
+    assert later[1]["label"] == later_shortcuts[0]["label"] == "TEG 19"
+    assert earlier[1]["pages"][2][0] == "TEG 18 in context"
+    assert later[1]["pages"][2][0] == "TEG 19 in context"
+    assert [page[1:] for page in earlier[1]["pages"]] == [page[1:] for page in NAV_SECTIONS[1]["pages"]]
+    assert earlier[1]["active"] == later[1]["active"] == NAV_SECTIONS[1]["active"]
+
+
+def test_handicaps_eyebrow_uses_current_navigation_label(client, monkeypatch):
+    app_module = importlib.import_module("webapp.app")
+    monkeypatch.setattr(app_module, "get_default_teg_num", lambda: 19)
+    resp = client.get("/handicaps")
+    _assert_ok_no_error(resp)
+    assert '<span class="page-label">TEG 19</span>' in resp.text
+
+
+def test_static_requests_skip_tournament_lookup(client, monkeypatch):
+    app_module = importlib.import_module("webapp.app")
+
+    def unexpected_lookup():
+        raise AssertionError("static requests should not read tournament state")
+
+    monkeypatch.setattr(app_module, "get_default_teg_num", unexpected_lookup)
+    resp = client.get("/static/ui-polish.js")
+    assert resp.status_code == 200
 
 
 def test_phone_explore_static_hooks(client):
@@ -1238,8 +1299,10 @@ def test_contents_sitemap_is_collapsible_and_closed_by_default(client):
     assert " open" not in tag and tag.strip() != "<details class=\"sitemap-disclosure\" open>"
     assert 'Full site contents <span class="count">(click to expand)</span>' in resp.text
     import html
+    teg_label = f"TEG {get_default_teg_num()}"
     for section in NAV_SECTIONS:
-        assert html.escape(section["label"]) in resp.text
+        label = teg_label if section["label"] == "Latest TEG" else section["label"]
+        assert html.escape(label) in resp.text
     # Closed-by-default doesn't mean absent from the DOM -- every link must
     # still be present for the all-nav-links acceptance criterion to hold.
     urls = [url for section in NAV_SECTIONS for (_t, url, _k, _i) in section["pages"]]

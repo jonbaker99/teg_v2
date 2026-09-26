@@ -108,3 +108,24 @@ MOBILE_SHORTCUTS = [
         "active": NAV_SECTIONS[4]["active"],
     },
 ]
+
+
+def navigation_for_teg(teg_num: int) -> tuple[list[dict], list[dict]]:
+    """Build request-local navigation labels for the current TEG.
+
+    Keep URLs, active keys, and the shared navigation registry unchanged.
+    """
+    teg_label = f"TEG {teg_num}"
+    sections = list(NAV_SECTIONS)
+    latest = NAV_SECTIONS[1]
+    sections[1] = {
+        **latest,
+        "label": teg_label,
+        "pages": [
+            (f"{teg_label} in context" if key == "latest-teg" else title, url, key, icon)
+            for title, url, key, icon in latest["pages"]
+        ],
+    }
+    shortcuts = list(MOBILE_SHORTCUTS)
+    shortcuts[0] = {**MOBILE_SHORTCUTS[0], "label": teg_label}
+    return sections, shortcuts

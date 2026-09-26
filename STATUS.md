@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-22 (Landing-page standings, honours and links)
+**Last updated:** 2026-09-26 (Tournament navigation naming)
+
+## 2026-09-26 — Navigation names the current tournament
+
+The Latest TEG navigation section now shows the in-progress tournament name, or the latest completed tournament when none is underway (currently TEG 18). Desktop, tablet, phone Explore, the phone shortcut and Contents share the label. Tournament-context link text follows the same name; existing URLs and active-page keys are unchanged.
 
 ## 2026-09-22 — Landing-page links open individual report stories
 

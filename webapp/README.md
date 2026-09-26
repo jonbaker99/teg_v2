@@ -663,15 +663,12 @@ See [page_title_switcher.md](page_title_switcher.md) — page title and card hea
 ### Navigation (single source of truth)
 
 The desktop nav, tablet disclosure menu, phone Explore sheet and **Contents**
-site map are driven by `webapp/nav.py` (`NAV_SECTIONS`). It is injected into
-every template via `request.state.nav_sections` in `app.py`'s
-`theme_middleware`. To add, rename or reorder a public page, edit
+site map are driven by `webapp/nav.py` (`NAV_SECTIONS`). Request-local navigation is injected into every template via `request.state.nav_sections` in `app.py`'s `theme_middleware`. The current tournament section, its tournament-context link, and the first phone shortcut show `TEG N`: the in-progress tournament, otherwise the latest completed tournament, using the same default selection as the destination pages. Public URLs and active-page keys stay stable when the name changes; the Contents site map uses the same request-local labels. To add, rename or reorder a public page, edit
 `NAV_SECTIONS` only — do not hand-edit its grouped links in `base.html`.
 
 Each section entry has `label`, `active` (the `active_page` values that
 highlight it) and `pages` (a list of `(title, url, active_key, icon)`).
-`MOBILE_SHORTCUTS` names only the four phone quick links: Latest, History,
-Records and Cards. The fifth phone control, Explore, presents every
+`MOBILE_SHORTCUTS` defines the four phone quick links: the current TEG, History, Records and Cards. The fifth phone control, Explore, presents every
 `NAV_SECTIONS` link in one native dialog.
 
 ### Adding a new page

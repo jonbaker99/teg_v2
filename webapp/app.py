@@ -9,6 +9,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from starlette.concurrency import run_in_threadpool
 
 from webapp.routes import (
     leaderboard, charts, records, player, scorecard,
@@ -17,7 +18,8 @@ from webapp.routes import (
     admin, admin_round_setup, admin_teg_setup, admin_live_round, live_round,
     admin_new_round, admin_reports, design_lab, font_lab,
 )
-from webapp.nav import MOBILE_SHORTCUTS, NAV_SECTIONS
+from webapp.deps import get_default_teg_num
+from webapp.nav import MOBILE_SHORTCUTS, NAV_SECTIONS, navigation_for_teg
 from webapp.theme import (
     get_theme, THEMES,
     get_mode,
@@ -64,8 +66,13 @@ async def theme_middleware(request: Request, call_next):
     request.state.font_pairing = get_font_pairing(request)
     request.state.font_pairings = FONT_PAIRINGS
     request.state.font_pairing_override = get_font_pairing_override(request.state.font_pairing)
-    request.state.nav_sections = NAV_SECTIONS
-    request.state.mobile_shortcuts = MOBILE_SHORTCUTS
+    if request.url.path.startswith(("/static/", "/mockups/", "/report-layouts/")):
+        request.state.nav_sections = NAV_SECTIONS
+        request.state.mobile_shortcuts = MOBILE_SHORTCUTS
+    else:
+        teg_num = await run_in_threadpool(get_default_teg_num)
+        request.state.nav_teg_label = f"TEG {teg_num}"
+        request.state.nav_sections, request.state.mobile_shortcuts = navigation_for_teg(teg_num)
     return await call_next(request)
 
 

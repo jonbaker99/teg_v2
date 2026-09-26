@@ -29,7 +29,6 @@ router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
 SITEMAP_PAGE_COUNT = sum(len(s["pages"]) for s in NAV_SECTIONS)
-SITEMAP_GROUP_LABELS = ", ".join(s["label"] for s in NAV_SECTIONS)
 
 
 @router.get("/contents")
@@ -37,10 +36,10 @@ def contents_page(request: Request):
     return templates.TemplateResponse("contents.html", {
         "request": request,
         "active_page": "contents",
-        "sections": NAV_SECTIONS,
+        "sections": request.state.nav_sections,
         "state": get_tournament_state(),
         "sitemap_page_count": SITEMAP_PAGE_COUNT,
-        "sitemap_group_labels": SITEMAP_GROUP_LABELS,
+        "sitemap_group_labels": ", ".join(s["label"] for s in request.state.nav_sections),
     })
 
 
