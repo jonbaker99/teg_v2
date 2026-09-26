@@ -356,19 +356,15 @@
     }
     .lead-teaser:hover .teaser-headline { color: var(--green); }
 
-    /* --- Secondary-headline list, ruled off from the lead story. --- */
+    /* --- Secondary-headline list: space instead of rules, both between
+       the lead story and the list and between each story in the list. --- */
     .headline-list {
         list-style: none;
-        margin: var(--sp-4, 14px) 0 0 0;
-        padding: var(--sp-3, 12px) 0 0 0;
-        border-top: 1px solid var(--rule-color);
+        margin: var(--sp-4, 16px) 0 0 0;
+        padding: 0;
         display: flex;
         flex-direction: column;
-        gap: var(--sp-3, 12px);
-    }
-    .headline-list li + li {
-        padding-top: var(--sp-3, 12px);
-        border-top: 1px solid var(--rule-color);
+        gap: var(--sp-4, 16px);
     }
     .headline-list a {
         display: block;
@@ -379,12 +375,12 @@
     .hl-kicker {
         display: block;
         font-family: var(--font-sans);
-        font-size: var(--fs-100, 11px);
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
+        font-size: var(--fs-200, 12px);
+        font-weight: 500;
+        text-transform: none;
+        letter-spacing: 0;
         color: var(--text-muted);
-        margin-bottom: 2px;
+        margin-bottom: 1px;
     }
     .hl-headline {
         font-family: var(--font-serif);
