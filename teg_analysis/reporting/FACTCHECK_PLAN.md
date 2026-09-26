@@ -2,6 +2,10 @@
 
 **Temporary working doc.** Delete it, or fold it into `STATUS.md` / `ARTEFACTS.md`, once the work ships.
 
+> **Implementing agent: before any code, ask Jon the three questions under
+> [Decisions still open](#decisions-still-open-confirm-at-kick-off)** and record his answers in that section.
+> Don't assume the defaults.
+
 **Goal:** no factual error or ambiguous claim in a report can ship silently. Code decides what is true; a model only lists the claims and rewrites flagged sentences.
 
 **Chosen path: "A".** Build the checker, fix the causes upstream, then check and repair the 85 existing storyline-first reports **in place** (17 tournament, 68 round). Nothing is regenerated, so the approved stories and headlines are kept.

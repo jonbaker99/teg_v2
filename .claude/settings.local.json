@@ -81,7 +81,8 @@
       "Bash(git fetch *)",
       "Bash(gh pr *)",
       "Bash(python3 -)",
-      "Bash(uvicorn webapp.app:app *)"
+      "Bash(uvicorn webapp.app:app *)",
+      "Bash(git commit -qam 'Tell the implementing agent to confirm open decisions first *)"
     ],
     "deny": [],
     "ask": [
