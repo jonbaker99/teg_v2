@@ -103,7 +103,7 @@ the audience is the players themselves, who spot any factual error.
 |---|---|---|---|---|---|---|
 | D1 | **Preventive rules** — instructions telling the writer not to fabricate | prompt → constrained prose | **`prompts.SHARED_FAITHFULNESS`** (shared with the round writer since 2026-08-15) + `WRITER_FAITHFULNESS` (tournament-only rules) | frozen dry draft + plan | ~$0.17 | **Built.** Still carries the 6 rules D3 now also checks — deliberate belt-and-braces; trim only once D3 has run on fresh generations |
 | D2 | **Deterministic guarantees** — facts code emits so prose can't get them wrong | data → injected blocks | `render.py` standings / records / at-a-glance | `_report_final.md` | **free** | **Works well.** The strongest assurance mechanism in the pipeline |
-| D3 | **Programmatic verification** — checking claims against the data after the fact | prose + data → findings | `verify.py` (8 checks), auto-run by `backfill.py` | `_report_final.md` | **free** | **Built 2026-08-11.** Independently re-found the TEG 10 R3 error and 41 reader-visible beat IDs in TEG 5 |
+| D3 | **Programmatic verification** — checking claims against the data after the fact | prose + data → findings | `verify.py` (9 checks), auto-run by `backfill.py` | `_report_final.md` | **free** | **Built 2026-08-11.** Independently re-found the TEG 10 R3 error and 41 reader-visible beat IDs in TEG 5 |
 
 > **The determinism boundary is a policy, not a component.** For each class of fact, it decides
 > whether code emits it (D2), the writer is trusted with it (D1), or the writer produces it and code
@@ -195,9 +195,9 @@ separately because that's what they are.
 
 Assessed against the actual prompt: roughly **half of `WRITER_SYSTEM`'s 11 faithfulness absolutes are
 mechanically checkable**. D3 now checks six of them, but the prompt still carries all eleven —
-deliberate belt-and-braces, not an oversight. (The other two of D3's eight checks aren't on this list:
-`swing_claims` is arithmetic-adjacent, and `no_em_dashes` enforces a voice rule rather than a
-faithfulness one.)
+deliberate belt-and-braces, not an oversight. (Of D3's other three checks, `swing_claims` is arithmetic-adjacent, `no_em_dashes` enforces a voice
+rule rather than a faithfulness one, and `no_sibling_order` covers one slice of the relationships
+rule below.)
 
 | Rule | Checkable? | How |
 |---|---|---|
@@ -210,7 +210,7 @@ faithfulness one.)
 | `must_include_beat_ids` all covered | partially | needs semantic matching |
 | Same hole number ≠ same hole across rounds | no | semantic |
 | Stableford vs Gross is not a paradox | no | semantic |
-| Relationships only from `player_relationships` | partially | relationship vocabulary near name pairs |
+| Relationships only from `player_relationships` | partially | invented age order ("older brother") checked by `no_sibling_order` since 2026-09-26; other invented ties need relationship vocabulary near name pairs |
 | Early lead changes aren't "chaos" | no | semantic — but **A3 is the real fix**, not a rule |
 
 The six mechanical rules are the ones that trace to real incidents, and they're exactly the ones a
@@ -1359,7 +1359,7 @@ would break that property for every future voice comparison.
 | `authoring.apply_corrections` | **Retrofit pass** — applies `RANKING_RULE`/`NAMING_RULE`/`DOUBLE_RULE` to a finished report in one call, three permitted edits only |
 | `round_report.py` | The per-round pipeline and its prompts |
 | `render.py` | Stage 5 — CSS hooks, standings, records block |
-| `verify.py` | **D3** — mechanical verification of a finished report against the data (8 checks, incl. the em-dash ban) |
+| `verify.py` | **D3** — mechanical verification of a finished report against the data (9 checks, incl. the em-dash ban) |
 | `backfill.py` | Batch orchestration across TEGs, plus the `--tegs` CLI |
 | `llm.py` | **The provider switch** — API (key resolution + prompt caching) or plan usage |
 | `mailbox.py` | The file hand-off that makes plan usage work, plus its CLI |

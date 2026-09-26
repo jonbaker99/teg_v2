@@ -14,7 +14,7 @@
 
 ## START HERE — picking this up in a new chat (2026-09-08)
 
-**Jev assessed (2026-09-26).** TypeSafe's Jev returns typed decisions, not text, so it cannot speed up or cheapen any generation stage. Best fit: semantic faithfulness checks in `verify.py` that code cannot do today. Spike harness and 47-paragraph labelled set built (`scripts/jev_spike/`); the Jev run is blocked on network access and an API key. Labelling found invented older/younger-brother claims in archived round reports. **To-do:** add a free `older|younger|elder brother` check to `verify.py`, whatever Jev scores. Detail: [JEV_ASSESSMENT.md](JEV_ASSESSMENT.md).
+**Jev assessed (2026-09-26).** TypeSafe's Jev returns typed decisions, not text, so it cannot speed up or cheapen any generation stage. Best fit: semantic faithfulness checks in `verify.py` that code cannot do today. Spike harness and 47-paragraph labelled set built (`scripts/jev_spike/`); the Jev run is blocked on network access and an API key. Labelling found invented older/younger-brother claims in archived round reports. Now caught by the new `verify.py` check `no_sibling_order` (2026-09-26): 34 hits, all in archived files, none served. Detail: [JEV_ASSESSMENT.md](JEV_ASSESSMENT.md).
 
 **"Sidebar" badges replaced with real topics (2026-09-22).** The printed badge above a story's
 headline should always name its actual subject (`JON BAKER`, `STADIUM COURSE`); 17 report-page
@@ -1240,7 +1240,7 @@ Severity is *impact if left alone*, not effort:
 
 | ID | Issue | Sev | Effort | Blocks regen? | Status |
 |---|---|---|---|---|---|
-| 10 | **No programmatic verification (D3) exists** | **P1** | L | — | ✅ **FIXED 2026-08-11** — `verify.py`, now 8 checks, auto-run by `backfill.py` |
+| 10 | **No programmatic verification (D3) exists** | **P1** | L | — | ✅ **FIXED 2026-08-11** — `verify.py`, now 9 checks, auto-run by `backfill.py` |
 | 8 | **Editor↔writer vocabulary defined twice, unenforced** | **P1** | S–M | yes | ✅ **FIXED** — single source of truth + `Literal` enums; collision is now a validation error |
 | 1 | **Pre-TEG-8 era leak** | **P1** | S | yes | ✅ **FIXED** — `hole_evidence` is era-aware; pre-8 beats carry `netvp`, never `stableford` |
 | 3 | **Round pipeline a generation behind** | P2 | M | round regen | ✅ **FIXED** — `RoundStoryPlan` has vehicles, payoffs and the shared enums |

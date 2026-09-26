@@ -11,7 +11,8 @@ The pipeline had two assurance mechanisms and needed three:
   data, after the fact.
 
 Scope is deliberately narrow: only rules that are **mechanically decidable**. Six
-of `WRITER_SYSTEM`'s eleven faithfulness absolutes qualify; the rest
+of `WRITER_SYSTEM`'s eleven faithfulness absolutes qualify, plus one slice of a
+seventh (invented sibling age order, from the relationships rule); the rest
 ("Stableford vs Gross is not a paradox") need semantic judgement and stay in D1.
 A check that needs a model to adjudicate does not belong here — it would trade a
 false sense of coverage for real complexity.
@@ -56,6 +57,16 @@ _WEEK_PATTERNS = [
 
 _WEEKDAYS = ("Monday", "Tuesday", "Wednesday", "Thursday",
              "Friday", "Saturday", "Sunday")
+
+# Age order between siblings: "younger brother", "the elder Baker",
+# "older of the two brothers". The relationship data never records it.
+_SIBLING_ORDER_RE = re.compile(
+    r"\b(?:older|younger|elder|eldest|youngest|big|little|kid|baby)\s+"
+    r"(?:(?:Baker|Patterson)\s+)?(?:brother|sibling)s?\b"
+    r"|\bthe\s+(?:older|younger|elder)\s+(?:Baker|Patterson)\b"
+    r"|\b(?:older|younger|elder|eldest|youngest)\s+of\s+the\s+(?:two\s+)?"
+    r"(?:brothers|siblings|Bakers|Pattersons)\b",
+    re.IGNORECASE)
 
 # Internal beat identifiers that must never reach prose.
 _BEAT_ID_RE = re.compile(r"\b(?:b\d{2,3}|cr\d{2})\b")
@@ -228,6 +239,25 @@ def check_only_participants(ctx: ReportContext) -> list[Finding]:
     return out
 
 
+def check_no_sibling_order(ctx: ReportContext) -> list[Finding]:
+    """No claim about which brother is older.
+
+    `constants.PLAYER_RELATIONSHIPS` records that two players are brothers and
+    nothing more, so any age order is invented. Observed failure: archived round
+    reports called Alex Baker the older brother in some TEGs and the younger in
+    others. If age order is ever added to the relationship data, this check
+    must start reading it.
+    """
+    body = _strip_code_and_tables(ctx.text)
+    out = []
+    for m in _SIBLING_ORDER_RE.finditer(body):
+        out.append(Finding(
+            "no_sibling_order", "error",
+            f"{m.group(0)!r} — the data records brothers, not which is older",
+            _excerpt(body, m.start(), m.end())))
+    return out
+
+
 def check_weekdays(ctx: ReportContext) -> list[Finding]:
     """Weekday names must match `venue.rounds[i].weekday` for this TEG.
 
@@ -353,6 +383,7 @@ CHECKS = (
     check_no_invented_mechanisms,
     check_not_a_week,
     check_only_participants,
+    check_no_sibling_order,
     check_weekdays,
     check_arithmetic_claims,
     check_swing_claims,

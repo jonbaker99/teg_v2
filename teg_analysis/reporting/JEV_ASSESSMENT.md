@@ -31,7 +31,7 @@ The live pipeline is **storyline-first** (`/teg-reports`). Legacy five-stage row
 | 4 | **Storyline plan** (`build_storyline_plan`) | Opus picks the 3 mandatory storylines, 0–3 discovered ones, titles, `why_it_matters`, self-scored `compelling_score` / `humour_score` | Yes, 1 call | **No for the plan itself** — it is open-ended writing. **Maybe** an independent re-score of candidate storylines to rank the lead, replacing the editor's self-score. Low priority. |
 | 5 | **Structural draft** (`build_storyline_draft`) | One plain-prose section per storyline, fact-isolated to its own beats | Yes, ~5 calls | **No.** Pure generation. |
 | 6 | **Voice pass** (`restyle_voice`) | Rewrites the draft in the house voice | Yes, 1 call | **No.** Pure generation. |
-| 7 | **Verification** (`verify.py`, D3) | 8 mechanical checks: beat IDs, em-dashes, invented mechanisms, "a week", roster, weekdays, arithmetic, swings | No, free | **Yes — best fit.** See below. |
+| 7 | **Verification** (`verify.py`, D3) | 9 mechanical checks: beat IDs, em-dashes, invented mechanisms, "a week", roster, sibling age order, weekdays, arithmetic, swings | No, free | **Yes — best fit.** See below. |
 | 8 | **Styling + edition + PDF** (`render`, `newspaper_edition`, `report_pdf`) | Injects deterministic blocks; parses into a newspaper edition; renders PDFs | No, free | **No.** Deterministic. Descriptor badges could be a Choice question, but the rule-based fix (2026-09-22) already works. |
 | — | **Legacy repetition lint** | Haiku replaces overused words | Yes | **No.** Needs rewritten text. |
 | — | **A/B experiment judging** (`scripts/storyline_*_experiment.py`) | One blind Opus call scores arms on compellingness, grounding, richness, reads-as-story, with notes | Yes | **Partly.** See below. |
@@ -105,7 +105,7 @@ It prints the metrics table, latency, input-token cost and every miss or false a
 
 **Pass criteria, set before seeing Jev's answers.** Adopt Jev as an optional D3 check only if, on at least 3 of the 4 rules, AUROC is 0.85 or higher and it beats the regex on both precision and recall at the 0.5 threshold. Otherwise drop it.
 
-**Found while labelling: a real fault class nobody had flagged.** Archived round reports disagree about which Baker brother is older. TEG 10 R1 and TEG 11 R4 say Alex is older; TEG 11 R2, TEG 13 R4 and TEG 18 R1 say he is younger. The data records only that they are brothers, so every one of these claims is invented. None appears in a currently served report: all 10 files are in `data/commentary/archive 2026 v4/round_reports/`. The rule in `authoring.py` already forbids it. The grep for `older|younger|elder brother` is free, so it belongs in `verify.py` whatever Jev scores.
+**Found while labelling: a real fault class nobody had flagged.** Archived round reports disagree about which Baker brother is older. TEG 10 R1 and TEG 11 R4 say Alex is older; TEG 11 R2, TEG 13 R4 and TEG 18 R1 say he is younger. The data records only that they are brothers, so every one of these claims is invented. None appears in a currently served report: all 10 files are in `data/commentary/archive 2026 v4/round_reports/`. The rule in `authoring.py` already forbids it. **Now caught by `verify.py`'s `no_sibling_order` check (2026-09-26)**: 34 hits across the archived files, none in served reports.
 
 **To finish:** allow `api.typesafe.ai` in the environment's network settings and add `TYPESAFE_API_KEY`, or run it locally. Then record the verdict here, fold it into `STATUS.md` and delete `scripts/jev_spike/` and this file.
 

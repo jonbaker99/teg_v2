@@ -43,7 +43,7 @@ Read in this order; stop when you have enough for the task:
 *(Verified 2026-08-17. Update this section when phases complete or known issues are fixed —
 the detail lives in STATUS.md, this is just the headline.)*
 
-- **All stages built**, including D3 verification (`verify.py`, 8 checks, auto-run by `backfill.py`) and
+- **All stages built**, including D3 verification (`verify.py`, 9 checks, auto-run by `backfill.py`) and
   a provider switch that runs the same prompts on claude.ai plan usage instead of the API.
 - **Tournament coverage complete and now one vintage** — TEGs 2–18 all published, all regenerated on
   2026-08-13, all with a complete artefact chain (plan, dry draft, final, styled). Five (4, 8, 12, 14, 18)
