@@ -178,21 +178,6 @@
         .state-leader-label { min-width: 100%; }
     }
 
-    /* --- Report-led complete state (I5 revision) --- */
-    /* Dateline replaces the eyebrow slot when a report exists. Not
-       small-caps/uppercase like the eyebrow -- it carries place names and
-       "results" in normal case, so forcing it upper would read oddly. */
-    .dateline {
-        font-family: var(--font-sans);
-        font-size: var(--fs-200, 12px);
-        font-weight: 600;
-        color: var(--text-muted);
-        margin: 0 0 var(--sp-2, 8px) 0;
-    }
-    .headline-link { color: inherit; text-decoration: none; }
-    .headline-link:hover { color: var(--green); }
-    .report-standfirst { max-width: 60ch; }
-
     /* --- In-progress rich content: standings + round-report teaser --- */
     .panel-grid {
         display: grid;
@@ -281,11 +266,10 @@
         display: flex;
         flex-direction: column;
     }
-    .surface-complete .panel-footer-link {
-        margin-top: auto;
-        padding-top: var(--sp-4, 16px);
-        align-self: flex-start;
-    }
+    /* Complete-state card titles double as the "full results"/"full
+       report" links; the arrow marks them as links on touch screens. */
+    .heading-link { color: inherit; text-decoration: none; }
+    .heading-link:hover { text-decoration: underline; text-underline-offset: 3px; }
     /* Panel headings match the page-level .kicker-eyebrow treatment exactly
        (sans-serif, not the small-caps Lora used by .section-title) so
        "FINAL STANDINGS"/"ALSO IN THIS REPORT" read as one system with
@@ -354,17 +338,34 @@
         margin: var(--sp-4, 14px) 0;
     }
 
-    /* --- "Also in this report" secondary-headline list --- */
+    /* --- Complete state report box: lead story on top, then the
+       secondary headlines. The lead used to be the page h1; it now sits
+       with the other headlines so the title is just "TEG N results". --- */
+    .lead-teaser {
+        display: block;
+        text-decoration: none;
+        color: var(--text-primary);
+        border-top: 1px solid var(--rule-color);
+        padding-top: var(--sp-3, 12px);
+    }
+    .lead-teaser .teaser-headline {
+        display: block;
+        margin: 0;
+        font-size: var(--fs-400, 16px);
+        font-weight: 700;
+        line-height: 1.3;
+    }
+
+    /* --- Secondary-headline list: a rule separates it from the lead story
+       above; below that, space instead of rules between each story in the
+       list. --- */
     .headline-list {
         list-style: none;
-        margin: 0;
-        padding: 0;
+        margin: var(--sp-3, 12px) 0 0 0;
+        padding: var(--sp-3, 12px) 0 0 0;
         display: flex;
         flex-direction: column;
-        gap: var(--sp-3, 12px);
-    }
-    .headline-list li + li {
-        padding-top: var(--sp-3, 12px);
+        gap: var(--sp-4, 16px);
         border-top: 1px solid var(--rule-color);
     }
     .headline-list a {
@@ -372,12 +373,17 @@
         text-decoration: none;
         color: var(--text-primary);
     }
-    .headline-list a:hover .hl-headline { color: var(--green); }
+    .headline-list a:hover .hl-headline,
+    .lead-teaser:hover .teaser-headline {
+        color: var(--green);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
     .hl-kicker {
         display: block;
         font-family: var(--font-sans);
         font-size: var(--fs-100, 11px);
-        font-weight: 700;
+        font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.06em;
         color: var(--text-muted);
@@ -449,9 +455,8 @@
 
     {% elif state.state == "complete" %}
         {% if state.report_summary %}
-            <p class="dateline">{{ state.teg_label }} results | {{ state.area }} | {{ state.dateline_month_year }}</p>
-            <h1 class="state-headline"><a class="headline-link" href="{{ state.report_summary.lead_link | default(state.report_summary.link) }}">{{ state.report_summary.headline }}</a></h1>
-            <a class="teaser-link" href="{{ state.report_summary.lead_link | default(state.report_summary.link) }}" style="display:inline-block; margin-bottom: var(--sp-5, 20px);">Read the {{ state.teg_label }} report ↗</a>
+            <h1 class="state-headline">{{ state.teg_label }} results</h1>
+            <p class="state-context">{{ state.area }} | {{ state.dateline_month_year }}</p>
 
             <div class="honours-line" style="margin-bottom: var(--sp-5, 20px);">
                 <span class="honour-champion"><span class="honour-label">Champion</span> <span class="honour-name">{{ state.trophy or "–" }}</span></span>

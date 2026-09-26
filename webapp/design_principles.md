@@ -139,7 +139,9 @@ Typography bullet above):
   `bw-name-short`; the display-toggle CSS itself lives in `webapp/static/mobile.css`,
   loaded on every page, not just the scorecard bundle). Rolled out site-wide
   2026-09-21 — see `webapp/TODOS.md`'s "Roll out mobile name shortening" entry for
-  the full list of pages and the one accepted remaining edge case. Generic
+  the full list of pages and the one accepted remaining edge case.
+  Prefer freeing room over shortening: every `/records` tab stacks full names under
+  the record label instead, at every width (`_build_stacked_records_list`, `webapp/routes/records.py`). Generic
   `df_to_html`-rendered tables opt in with `webapp/tables.py::df_to_html(...,
   shorten_players=True)`; bespoke table renderers call `_player_name_spans`
   directly. For wide tables that can't fit on mobile even when shortened,
@@ -187,6 +189,17 @@ cell values. Wider stat tables belong to a different tier from
 (tier 1, the site-wide default for `.teg-table`) or card reflow (tier 2, hero
 tables only). Don't force a wide table into this fixed-column layout; move it
 to sticky-scroll or card reflow instead.
+
+**Third example: `/honours` winner tabs.** Trophy/Jacket/Spoon/Doubles
+(`_honours_wins_table` in `webapp/routes/history.py`, class `teg-table
+honours-table`) apply this pattern's fixed-`<colgroup>`/tracked-header/
+bold-primary-number recipe (no leader shading) to a genuinely small, fixed-shape
+table (Player + count, +TEGs for the three single-winner tabs) — full-bleed
+on mobile via a `.honours-page` wrapper (same `:has()` gutter-zeroing shape
+as `.latest-round-page`) and `table-wrapper--no-pin`, capped at `30rem` on
+desktop rather than stretched full width. Eagles/HIO are short lists, so
+they drop the table entirely: `_honours_feats_list` renders a bold name
+over two muted detail lines (`.honours-feats`).
 
 ### Second mobile table reference: one row, two renderings (I1 standings)
 
@@ -289,12 +302,9 @@ control. Two fixes, pick based on the semantics:
 
 ## Themes and layouts
 
-Optimise primarily for the **Clean** theme. After any template or CSS change, verify both layouts still work:
+Design and verify routine UI changes against **Clean Page**, in light and dark modes. **Clean Layered is mothballed**: do not include it in routine browser checks or expand implementation scope to support it unless the user explicitly requests work on that layout.
 
-- **Layout 1** (flat): Clean, Clean Page — single surface, no depth
-- **Layout 2** (layered): Clean Layered — 3-layer visual hierarchy
-
-The `.data-card` class is a **no-op in Layout 1**. Templates that wrap data output in `.data-card` work correctly in both layouts. Preserve this invariant when editing templates or CSS.
+The `.data-card` class remains a no-op in Clean Page. Retain semantic wrappers where useful; the old layered styles remain available as historical code, not an active design target.
 
 ### CSS: `!important`
 

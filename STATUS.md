@@ -8,6 +8,26 @@ Current state and next priorities. Instructions and architecture live in `CLAUDE
 
 The Latest TEG navigation section now shows the in-progress tournament name, or the latest completed tournament when none is underway (currently TEG 18). Desktop, tablet, phone Explore, the phone shortcut and Contents share the label. Completed tournaments show “Final leaderboard”, their context link, and the next TEG’s numbered handicap link. In-progress tournaments show “Latest Leaderboard” and their own numbered handicap link, with the context link omitted. Existing URLs and active-page keys are unchanged. Tiny dropdown arrows have been removed.
 
+## 2026-09-26 — Past results navigation label
+
+Renamed the shared navigation entry from “Full Results” to “Past results” across desktop, tablet, phone Explore and Contents. The destination remains `/results`.
+
+## 2026-09-26 — Mobile records show full names
+
+Every `/records` tab, on phones and desktop, now uses one stacked layout (the desktop table is gone): record label and value on top, then each holder's full name with their occasion(s) in muted text. Details sit beside the name when every row fits; otherwise all drop below their names. TEG, Round and 9-Hole labels drop "Best"/"Worst", since the section heading says it. Score Counts and Streaks hide records below 2. Holders of one record share a group with no rules between them. Streak locations read in plain words, e.g. "TEG 7, R1 H8 to R2 H12", or "to date" for a live streak; this also shows wherever record streaks appear (Scoring, player pages).
+
+## 2026-09-26 — Honours board restyle and aligned mobile tab rows
+
+Each `/honours` tab has a section heading, such as "TEG Trophy wins". Trophy, Green Jacket, Wooden Spoon and Doubles use full-width fixed-column tables on mobile with bold win counts and wrapping TEG lists. They have no leader shading, zebra striping or shortened names. Eagles and Holes in One are a plain list: bold name, then date and course, then TEG, round and hole. Across the site on mobile, tab rows now line up with the page title: the hidden scroll arrow no longer takes up space, and the first tab's underline starts at its text. Dark mode is unchecked.
+
+## 2026-09-25 — Shared scorecard options
+
+Standalone Scorecard filters are grouped in a collapsible “Scorecard options” box; Results and Leaderboard show their filters directly on the page. Gross/Stableford stays beside the card. Results and Leaderboard replace stacked rounds with the same controls for one round/all players or all rounds/one player. Small breaks after the header, OUT and IN make portrait cards easier to scan. Header and OUT rules are removed; spacing separates those sections.
+
+## 2026-09-25 — Mobile scorecards use available width
+
+Scorecards on Results, Leaderboard, Latest Round and Scorecard now scale their square score marks and text within bounded sizes. Equal row/column gaps keep the grid regular; sparse cards stop growing and dense cards retain horizontal scrolling with pinned Hole/Par columns. Existing score colours and symbols remain. Gross/Stableford selectors have consistent spacing before the card. Mobile View has its own row with clearer labels, dropdowns use consistent sizing, and section spacing replaces the header and OUT rules. Clean Layered is mothballed; Clean Page is the active layout for routine UI verification.
+
 ## 2026-09-22 — Landing-page links open individual report stories
 
 Landing-page lead and secondary headlines link directly to their report stories. Desktop scrolls to the selected article; mobile opens it in the reader. Full-report links still open the report front page. The same story remains selected when switching between desktop and mobile layouts.

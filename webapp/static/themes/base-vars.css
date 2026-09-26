@@ -259,9 +259,20 @@ h1, h2, h3, h4, h5, h6 {
 /* Mobile's flag+year line (second copy of the flag, shown only in
    .history-page); desktop keeps the region-row flag instead. */
 .history-table .teg-mobile-meta { display: none; }
-/* Full column names ("HMM Wooden Spoon") for desktop; mobile.css swaps to
-   the approved prototype's short Trophy/Jacket/Spoon heading instead. */
-.history-table .th-short { display: none; }
+/* Headings: centred, body-text colour. Specificity beats mobile.css's muted
+   .history-page th rule. Each th holds 1/2/3-line variants (history.py);
+   data-head-lines on the table (set by data_table.html) shows one, so all
+   headings wrap to the same number of lines. */
+.history-page .history-table thead th {
+    color: inherit;
+    text-align: center;
+    white-space: nowrap;
+    line-height: 1.2;
+}
+.history-table .head-label { display: none; }
+.history-table[data-head-lines="1"] .head-label--1,
+.history-table[data-head-lines="2"] .head-label--2,
+.history-table[data-head-lines="3"] .head-label--3 { display: inline-block; }
 .history-table .teg-cell {
     display: block;
 }
@@ -287,43 +298,29 @@ h1, h2, h3, h4, h5, h6 {
 .history-table .teg-text {
     min-width: 0;
 }
-/* Trailing disclosure-indicator column: mobile-only (.history-page,
-   mobile.css puts the +/- here instead of overlaying the TEG cell). Desktop
-   keeps the TEG cell itself as the click target and shows no column for it. */
+/* Trailing disclosure-indicator column: hidden by default and shown on
+   .history-page at all widths (mobile.css shows it below 641px; base-vars.css
+   now shows it on desktop too, so the +/- sits at the row's right edge). */
 .history-table th.history-toggle-th,
 .history-table td.history-toggle-td {
     display: none;
 }
-/* History disclosure "+"/"−" desktop affordance (C6, 2026-09-21) — closes
-   the C1b/C4-flagged gap: above 641px the toggle-indicator column stays
-   display:none (rule above) and the button had no visible cue that a row
-   is expandable, only cursor:pointer. Mirrors .rank-toggle's own ::after
-   glyph pattern below (same --accent colour, 16px glyph, 28x28px fine-
-   pointer hit area per design_principles.md → Hit areas) rather than
-   inventing a new treatment. Scoped to desktop widths only so it doesn't
-   duplicate mobile's separate .history-toggle-indicator column (mobile.css). */
+/* Desktop now uses the same trailing +/- column as mobile (mobile.css)
+   so the indicator sits at the row's right edge. */
 @media (min-width: 641px) {
-    .history-table button.teg-cell {
-        display: flex;
-        align-items: center;
-        gap: 0.5em;
+    .history-page .history-table th.history-toggle-th,
+    .history-page .history-table td.history-toggle-td {
+        display: table-cell;
+        width: 28px;
+        text-align: center;
     }
-    .history-table button.teg-cell .teg-text {
-        flex: 1 1 auto;
-    }
-    .history-table button.teg-cell::after {
+    .history-page .history-table .history-toggle-indicator::before {
         content: "+";
-        flex: none;
-        min-width: 28px;
-        min-height: 28px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
         color: var(--accent, #17683c);
         font-size: 16px;
         line-height: 1;
     }
-    .history-table button.teg-cell[aria-expanded="true"]::after {
+    .history-page .history-table tr:has(button.teg-cell[aria-expanded="true"]) .history-toggle-indicator::before {
         content: "\2013";
     }
 }
@@ -417,6 +414,60 @@ table.leaderboard td:nth-child(2) {
     text-align: left;
 }
 
+/* ── Honours winners table (Trophy/Jacket/Spoon/Doubles tabs) ──
+   Bespoke table built by _honours_wins_table (webapp/routes/history.py),
+   styled per the /latest-round mobile table reference (design_principles.md
+   -> Tables -> "Mobile table pattern"): fixed proportional colgroup, tracked
+   uppercase headers matching cell alignment, the win/double count as the
+   primary bold tabular-nums number, and a TEGs column that wraps instead of
+   truncating. Constrained to a sensible desktop width (judgement call --
+   4 columns of short values looked sparse stretched to the full data-card)
+   rather than left at .teg-table's default content-sized auto width, since
+   this table also needs `table-layout: fixed` for the colgroup percentages
+   to hold. No leader-row shading: an honours list, not a leaderboard. */
+.teg-table.honours-table {
+    table-layout: fixed;
+    width: 100%;
+    max-width: 30rem;
+}
+.teg-table.honours-table thead th {
+    font: 700 11px/1.2 var(--font-table), sans-serif;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+.teg-table.honours-table th.honours-count-col,
+.teg-table.honours-table td.honours-count-cell {
+    text-align: center;
+}
+.teg-table.honours-table td.honours-player-cell,
+.teg-table.honours-table td.honours-tegs-cell {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+.teg-table.honours-table td.honours-count-cell {
+    font-family: var(--font-table), sans-serif;
+    font-variant-numeric: tabular-nums;
+    font-size: 1.15em;
+    font-weight: 700;
+}
+/* Eagles / Holes in One: a plain list, not a table (_honours_feats_list).
+   Detail halves are blocks, so every entry breaks between course and TEG. */
+.honours-feats { list-style: none; margin: 0; padding: 0; }
+.honours-feat + .honours-feat { margin-top: 0.9rem; }
+.honours-feat-player { display: block; font-weight: 700; }
+.honours-feat-detail { display: block; font-size: 0.875rem; color: var(--text-muted); }
+.honours-feat-detail > span { display: block; }
+
+/* No zebra striping anywhere on /honours -- winner tables above and the
+   plain .teg-table Eagles/HIO tabs both opt out, scoped to the page so the
+   global .teg-table default (site-wide) is untouched. */
+.honours-page .teg-table tbody tr:nth-child(even) {
+    background-color: transparent;
+}
+
 /* Rank-toggle "+"/"−" glyph — declared once, unscoped, since the glyph
    itself doesn't vary by width (only its size/position does). Previously
    duplicated verbatim in both this file's desktop rule and mobile.css's
@@ -481,6 +532,73 @@ table.leaderboard td:nth-child(2) {
     margin-top: 3rem;
     padding-top: 3rem;
     border-top: 1px solid var(--table-cell-border, #e0e0e0);
+}
+
+/* /records stacked list -- every tab, every width (webapp/routes/records.py
+   _build_stacked_records_list). One .rec-group per record: label + value on
+   a head line, then one .rec-holder row per player -- full name with the
+   occasion(s) in muted text beside it. .is-wrapped (set by ui-polish.js when
+   any row overflows) drops every occasion under its name, page-wide, so rows
+   never mix the two forms. Rules separate records, not holders. Selectors carry
+   .records-page so they outrank mobile.css's generic .records-page .rec-*
+   rules (loaded later) and its `.records-list { display: none; }`. */
+.records-page .records-list--stacked { display: block; max-width: 52rem; }
+.records-page .records-list--stacked .rec-group {
+    border-bottom: 1px solid var(--table-cell-border, #e0e0e0);
+    padding: 10px 0 8px;
+}
+.records-page .records-list--stacked .rec-group:first-child {
+    border-top: 1px solid var(--table-cell-border, #e0e0e0);
+}
+.records-page .records-list--stacked .rec-group-head {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 0 12px 4px;
+}
+.records-page .records-list--stacked .rec-label {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary, #1b241f);
+}
+.records-page .records-list--stacked .rec-value {
+    flex: 0 0 auto;
+    text-align: right;
+    font-weight: 700;
+    font-family: var(--font-table), sans-serif;
+    color: var(--text-primary, #1b241f);
+}
+.records-page .records-list--stacked .rec-holder {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 4px 12px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.records-page .records-list--stacked .rec-identity {
+    flex: 0 0 auto;
+    min-width: auto;
+    overflow: visible;
+    white-space: inherit;
+    font-size: 13px;
+    color: var(--text-secondary, #555555);
+}
+.records-page .records-list--stacked .rec-whens {
+    font-size: 12px;
+    color: var(--text-muted, #666);
+}
+.records-page .records-list--stacked .rec-when + .rec-when::before { content: "; "; }
+.records-page .records-list--stacked.is-wrapped .rec-holder { display: block; white-space: normal; }
+.records-page .records-list--stacked.is-wrapped .rec-when { display: block; line-height: 1.35; }
+.records-page .records-list--stacked.is-wrapped .rec-when + .rec-when::before { content: none; }
+@media (min-width: 641px) {
+    .records-page .records-list--stacked .rec-label,
+    .records-page .records-list--stacked .rec-identity { font-size: 0.9375rem; }
+    .records-page .records-list--stacked .rec-value { font-size: 1.0625rem; }
+    .records-page .records-list--stacked .rec-whens { font-size: 0.8125rem; }
 }
 
 .records-table {

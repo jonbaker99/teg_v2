@@ -64,8 +64,9 @@ SCORES_A = [4, 5, 5, 3, 4, 6, 5, 2, 4, 4, 5, 3, 5, 4, 4, 4, 6, 3]  # gross 76 (+
 def test_single_round_portrait_structure():
     html = build_single_round_combined_portrait(_single_round_df(SCORES_A))
     assert 'scorecard-table-portrait' in html
+    assert '--sc-score-cols: 2' in html
     assert html.count('<tr') == 1 + 18 + 3  # header + 18 holes + OUT/IN/TOTAL
-    assert '>Gross<' in html and '>Stableford<' in html
+    assert '>Gross<' in html and 'aria-label="Stableford points">Pts<' in html
 
 
 def test_single_round_portrait_parity_with_landscape():
@@ -100,6 +101,7 @@ def test_tournament_portrait_columns_and_parity():
     data = _tournament_df()
     gross = build_tournament_gross_portrait(data)
     assert '>R1<' in gross and '>R2<' in gross
+    assert '--sc-score-cols: 2' in gross
     # header Hole|PAR|R1|R2 → 4 columns
     header = re.search(r'<thead>(.*?)</thead>', gross).group(1)
     assert header.count('<th') == 4
@@ -142,6 +144,7 @@ def _field_df():
 
 def test_field_portrait_columns_sorted_by_gross():
     gross = build_round_comparison_gross_portrait(_field_df())
+    assert '--sc-score-cols: 3' in gross
     header = re.search(r'<thead>(.*?)</thead>', gross).group(1)
     codes = re.findall(r'<th class="col-header">(\w+)</th>', header)
     assert codes == ['DM', 'JB', 'GP']  # ascending gross total

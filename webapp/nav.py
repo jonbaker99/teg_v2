@@ -21,7 +21,7 @@ NAV_SECTIONS = [
         "pages": [
             ("TEG History", "/history", "history", "lists"),
             ("TEG Honours Board", "/honours", "honours", "trophy"),
-            ("Full Results", "/results", "results", "sports_score"),
+            ("Past results", "/results", "results", "sports_score"),
             ("Player Rankings", "/player-rankings", "player-rankings", "123"),
             ("TEG Reports", "/teg-reports", "teg-reports", "description"),
             # Player Profiles hidden from nav 2026-09-18: pages need more work
