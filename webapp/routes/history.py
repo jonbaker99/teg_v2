@@ -155,8 +155,11 @@ def _history_table_html(df: pd.DataFrame, round_metadata: dict | None = None) ->
     # indicator, shown at all widths (base-vars.css + mobile.css) so it sits
     # at the row's right edge.
     headers = ["TEG"] + name_cols + [""]
-    # Display labels, one word per line at every width. The TEG heading is
-    # deliberately blank. Keys stay the dataframe column names.
+    # Display labels. The TEG heading is deliberately blank. Keys stay the
+    # dataframe column names. Each heading carries 1-, 2- and 3-line variants;
+    # data_table.html's script picks the fewest lines at which *every*
+    # heading fits (data-head-lines on the table), so they always wrap alike.
+    # Server default is 3 lines, the narrowest, so no-JS still fits.
     header_labels = {
         "TEG": "",
         "TEG Trophy": "The TEG Trophy",
@@ -164,11 +167,19 @@ def _history_table_html(df: pd.DataFrame, round_metadata: dict | None = None) ->
         "HMM Wooden Spoon": "HMM Wooden Spoon",
     }
 
-    rows = ["<table class='teg-table history-table'>", "<thead><tr>"]
+    rows = ["<table class='teg-table history-table' data-head-lines='3'>", "<thead><tr>"]
     for col in headers:
         if col:
-            label = "<br>".join(escape(w) for w in header_labels[col].split())
-            rows.append(f"<th>{label}</th>")
+            words = [escape(w) for w in header_labels[col].split()]
+            variants = (
+                " ".join(words),
+                words[0] + "<br>" + " ".join(words[1:]),
+                "<br>".join(words),
+            )
+            rows.append("<th>" + "".join(
+                f"<span class='head-label head-label--{n}'>{v}</span>"
+                for n, v in enumerate(variants, start=1)
+            ) + "</th>")
         else:
             rows.append("<th class='history-toggle-th'></th>")
     rows.append("</tr></thead><tbody>")

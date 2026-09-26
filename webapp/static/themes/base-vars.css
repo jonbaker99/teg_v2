@@ -259,14 +259,20 @@ h1, h2, h3, h4, h5, h6 {
 /* Mobile's flag+year line (second copy of the flag, shown only in
    .history-page); desktop keeps the region-row flag instead. */
 .history-table .teg-mobile-meta { display: none; }
-/* Headings: one word per line (<br> in history.py), centred, body-text
-   colour. Specificity beats mobile.css's muted .history-page th rule. */
+/* Headings: centred, body-text colour. Specificity beats mobile.css's muted
+   .history-page th rule. Each th holds 1/2/3-line variants (history.py);
+   data-head-lines on the table (set by data_table.html) shows one, so all
+   headings wrap to the same number of lines. */
 .history-page .history-table thead th {
     color: inherit;
     text-align: center;
-    white-space: normal;
+    white-space: nowrap;
     line-height: 1.2;
 }
+.history-table .head-label { display: none; }
+.history-table[data-head-lines="1"] .head-label--1,
+.history-table[data-head-lines="2"] .head-label--2,
+.history-table[data-head-lines="3"] .head-label--3 { display: inline-block; }
 .history-table .teg-cell {
     display: block;
 }

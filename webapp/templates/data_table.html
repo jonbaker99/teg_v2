@@ -31,6 +31,42 @@
         if (!toggle) return;
         toggleHistoryDetail(toggle);
     });
+
+    // History headings: use the fewest lines (1, 2, then 3) at which every
+    // heading fits its column and the table fits its wrapper, so all
+    // headings wrap alike. Variants and CSS: history.py / base-vars.css.
+    function historyHeadsFit(table) {
+        if (table.scrollWidth > table.parentElement.clientWidth + 1) return false;
+        var labels = table.querySelectorAll('thead .head-label');
+        for (var i = 0; i < labels.length; i++) {
+            var label = labels[i];
+            if (label.offsetWidth === 0) continue;
+            var th = label.parentElement, cs = getComputedStyle(th);
+            var room = th.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+            if (label.offsetWidth > room + 1) return false;
+        }
+        return true;
+    }
+
+    function fitHistoryHeads() {
+        var table = document.querySelector('.history-table[data-head-lines]');
+        if (!table) return;
+        for (var n = 1; n <= 2; n++) {
+            table.setAttribute('data-head-lines', n);
+            if (historyHeadsFit(table)) return;
+        }
+        table.setAttribute('data-head-lines', 3);
+    }
+
+    var fitPending = false;
+    function scheduleFit() {
+        if (fitPending) return;
+        fitPending = true;
+        requestAnimationFrame(function () { fitPending = false; fitHistoryHeads(); });
+    }
+    document.addEventListener('DOMContentLoaded', fitHistoryHeads);
+    window.addEventListener('resize', scheduleFit);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(scheduleFit);
 })();
 </script>
 {% endblock %}
