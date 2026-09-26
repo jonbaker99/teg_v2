@@ -1174,7 +1174,8 @@ def test_contents_panel_complete_state_real_data(client):
     assert "teaser-standfirst" not in resp.text  # no lead synopsis
     assert resp.text.count("<li>") == 4  # capped, TEG 18 has 5 non-lead articles
     assert 'href="/results?teg=18"' in resp.text
-    assert "View full report" in resp.text
+    assert "View full report" not in resp.text  # card titles carry the links now
+    assert 'href="/results?teg=18">Final Standings ↗' in resp.text
     assert 'class="panel-grid two-col equal-col"' in resp.text
 
 
@@ -1305,7 +1306,7 @@ def test_contents_article_links_target_stories(client):
     assert f'href="{summary["lead_link"]}"' in panel.text
     for article in summary["other_articles"]:
         assert f'href="{article["link"]}"' in panel.text
-    assert f'href="{summary["link"]}">View full report' in panel.text
+    assert f'href="{summary["link"]}">TEG 18 report ↗' in panel.text
     report = client.get("/teg-reports", params={"teg": 18})
     _assert_ok_no_error(report)
     for link in [summary["lead_link"], *[a["link"] for a in summary["other_articles"]]]:
