@@ -1,0 +1,212 @@
+{
+  "teg": 16,
+  "round": 2,
+  "label": "storylinefirst",
+  "errors": 1,
+  "warnings": 1,
+  "findings": [
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "## Stuart Neumann's rollercoaster 35 points \u2014 the best round of the day, salvaged from two",
+      "source": "mechanical"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "A triple at the 4th, and another at the 8th",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "The bleeding finally stopped with a birdie at the 10th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Neumann took 11 points from three holes, adding a par at the 11th and another at the 12th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Then the 13th arrived and he took a triple bogey",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Further down the course he added a quadruple bogey at the 16th",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_comparison",
+      "severity": "unchecked",
+      "detail": "comparison claim missing both players",
+      "excerpt": "It was the best score of the day in the field of five.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "It kept him on top of the 2023 TEG Trophy standings, though his lead widened only from 5 to 7.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "though his lead widened only from 5 to 7",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Gregg Williams took a three-stroke lead into the second round of the 2023 TEG Green Jacket at Troia Golf Championship Course.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "The last of those came on the easiest hole on the course.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "drew_level claims are not checked against the outright-only lead timeline",
+      "excerpt": "He drew level for the Green Jacket gross lead with a bogey at the 11th",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "drew_level claims are not checked against the outright-only lead timeline",
+      "excerpt": "then drew level again with a par at the 14th, right in the teeth of the meltdown",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "By the close he had somehow stretched his Green Jacket lead to four shots.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "The trouble began at the 4th with a triple bogey",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "which opened a stretch that shed 13 shots over six holes through to the 9th",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Baker halted the run with a birdie at the 10th, one of only two net gains he made all round.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "From the 13th to the 17th another 13 shots leaked away.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Triple bogeys at the 13th, 14th and 15th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "error",
+      "detail": "Alex Baker R1 H13 (+0 vs par) does not satisfy 'bogey or worse' \u2014 claimed span H13-15",
+      "excerpt": "Three holes running without a single net par, the 15th among the hardest on the course.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "The triple at the 13th also dropped him to the bottom of the TEG 16 Wooden Spoon race, which is the sort of thing a man notices.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "The margin to the next-worst player in the Spoon race shrank from four shots to three.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "The margin to the next-worst player in the Spoon race shrank from four shots to three.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The round stands as his only Troia score to date.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "David Mullin moved past Gregg Williams into outright second",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Neumann's lead at the top widened from five shots to seven.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Williams, meanwhile, was defending a Green Jacket lead that grew from three to four, and doing so through the middle of a genuinely miserable round.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_comparison",
+      "severity": "unchecked",
+      "detail": "comparison claim missing both players",
+      "excerpt": "None of it loosened his grip on the Jacket.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_comparison",
+      "severity": "unchecked",
+      "detail": "comparison with an explicit metric/competition is not numerically checked yet",
+      "excerpt": "It was, however, enough for Mullin to go past him in the Trophy.",
+      "source": "claim"
+    }
+  ]
+}

@@ -270,6 +270,35 @@ def _ranklast_counts(teg_df: pd.DataFrame, rank_col: str) -> dict:
     return {(int(r), int(h)): int(n) for (r, h), n in counts.items()}
 
 
+def _others_sharing_rank(teg_df: pd.DataFrame, rank_col: str, rnd: int, hole: int,
+                         value, exclude_pl) -> list:
+    """Player names (excluding `exclude_pl`) sharing `rank_col == value` at this hole."""
+    sub = teg_df[(teg_df["Round"] == rnd) & (teg_df["Hole"] == hole)
+                & (teg_df[rank_col] == value)]
+    return sorted(p for pl2, p in zip(sub["Pl"], sub["Player"]) if pl2 != exclude_pl)
+
+
+def _spoon_position_label(spoon_rank: Optional[int], n_players: Optional[int],
+                          tie_size: int, metric: str = "stableford") -> Optional[str]:
+    """'T2 of 5, 1 pt above last' — a direction-safe Spoon-race position.
+
+    `spoon_rank` is 1 = worst (last), rising towards `n_players` = best — the
+    OPPOSITE direction from the Trophy rank, which is why this exists rather
+    than reusing `rank_before`/`rank_after`: those are Trophy-direction ranks
+    and read backwards for the Spoon (real error — TEG 18's "second to the
+    bottom" was a Trophy rank misread as a Spoon position).
+    """
+    if spoon_rank is None or n_players is None:
+        return None
+    prefix = "T" if tie_size and tie_size > 1 else ""
+    label = f"{prefix}{spoon_rank} of {n_players}"
+    gap = spoon_rank - 1
+    if gap > 0:
+        unit = "pt" if metric != "net_vs_par" else "stroke"
+        label += f", {gap} {unit}{'s' if gap != 1 else ''} above last"
+    return label
+
+
 def _turning_points(events_log: pd.DataFrame, teg_df: pd.DataFrame, sw: dict,
                     metric: str = "stableford") -> list:
     """Lead changes (top) and spoon changes (bottom) as discrete turning-point beats.
@@ -285,6 +314,21 @@ def _turning_points(events_log: pd.DataFrame, teg_df: pd.DataFrame, sw: dict,
     }
     trophy_counts = _rank1_counts(teg_df, cols["rank_hole"])
     gr_counts = _rank1_counts(teg_df, "Rank_GrossVP_TEG")
+
+    # Spoon "rank 1" (worst) as the mirror of the Trophy rank this era uses.
+    # `teg_df` doesn't carry a precomputed Spoon rank column (that only exists
+    # inside commentary.create_round_events's internal frame), so build it
+    # locally with the same construction — the events_log row itself DOES
+    # carry the precomputed Rank_Spoon_Before/After (or the NetVP-era
+    # equivalent), used below for direction-safe reporting.
+    spoon_rank_col = cols["rank_hole"]
+    spoon_df = teg_df.assign(
+        _SpoonRank=(teg_df.groupby(["Round", "Hole"])[spoon_rank_col].transform("max")
+                   + 1 - teg_df[spoon_rank_col]))
+    spoon_counts = _rank1_counts(spoon_df, "_SpoonRank")
+    spoon_before_col = "Rank_SpoonNetVP_Before" if metric == "net_vs_par" else "Rank_Spoon_Before"
+    spoon_after_col = "Rank_SpoonNetVP_After" if metric == "net_vs_par" else "Rank_Spoon_After"
+
     wanted = {
         cols["took_lead_event"]: (trophy_label, "lead_change"),
         "Took Lead (Gross)": (JACKET, "lead_change"),
@@ -303,10 +347,16 @@ def _turning_points(events_log: pd.DataFrame, teg_df: pd.DataFrame, sw: dict,
         late = rnd >= teg_df["Round"].max()
         w = sw.get(pl, 0.4)
         lead_type = None
+        tie_size = 1
+        tied_with: list = []
         if etype == "lead_change":
+            rank_col = spoon_rank_col if comp == trophy_label else "Rank_GrossVP_TEG"
             counts = trophy_counts if comp == trophy_label else gr_counts
-            outright = counts.get((rnd, hole), 1) <= 1
+            tie_size = counts.get((rnd, hole), 1)
+            outright = tie_size <= 1
             lead_type = "outright" if outright else "level"
+            if tie_size > 1:
+                tied_with = _others_sharing_rank(teg_df, rank_col, rnd, hole, 1, pl)
             # Importance scales hard with how late/decisive the change is: opening-round
             # jockeying while the field is bunched is routine, not drama; a draw-level is
             # less than an outright take. Late, outright changes are the noteworthy ones.
@@ -323,16 +373,38 @@ def _turning_points(events_log: pd.DataFrame, teg_df: pd.DataFrame, sw: dict,
             else:
                 head = f"{player} draws level for the {comp} lead (R{rnd} H{hole})"
         else:  # spoon
+            tie_size = spoon_counts.get((rnd, hole), 1)
+            if tie_size > 1:
+                tied_with = _others_sharing_rank(spoon_df, "_SpoonRank", rnd, hole, 1, pl)
             imp = scoring.cap(3 + 0.8 * (rnd - 1))
             ent = scoring.cap(5 + 0.8 * (rnd - 1))
             rar = 2.0
             head = f"{player} drops to the bottom of the {comp} race (R{rnd} H{hole})"
-        # Use the era-appropriate rank columns from the events_log
-        ctx = {"competition": comp,
-               "rank_before": _safe_int(e.get(cols["rank_before"])),
-               "rank_after": _safe_int(e.get(cols["rank_after"]))}
-        if lead_type:
+        ctx = {"competition": comp, "tie_size": tie_size}
+        if tied_with:
+            ctx["tied_with"] = tied_with
+        if etype == "lead_change":
+            # 1 = best, but from the RIGHT competition's columns: the Jacket is
+            # Gross-based, not the Trophy metric `cols` is keyed on. Reusing
+            # `cols["rank_before"]/["rank_after"]` unconditionally (as this did
+            # until now) reported the Trophy's Stableford/NetVP rank on a
+            # Jacket lead_change beat — same defect class as the Spoon bug
+            # above, just not one of the six diagnosed TEG 18 items.
+            rank_before_col = "Rank_Gross_Before" if comp == JACKET else cols["rank_before"]
+            rank_after_col = "Rank_Gross_After" if comp == JACKET else cols["rank_after"]
+            ctx["rank_before"] = _safe_int(e.get(rank_before_col))
+            ctx["rank_after"] = _safe_int(e.get(rank_after_col))
             ctx["lead_type"] = lead_type
+        else:
+            # Spoon-direction ranks (1 = worst) — NOT the Trophy rank_before/
+            # after columns, which read backwards for the Spoon race.
+            spoon_rank_after = _safe_int(e.get(spoon_after_col))
+            n_players = int(teg_df[(teg_df["Round"] == rnd)
+                                   & (teg_df["Hole"] == hole)].shape[0])
+            ctx["spoon_rank_before"] = _safe_int(e.get(spoon_before_col))
+            ctx["spoon_rank_after"] = spoon_rank_after
+            ctx["position_label"] = _spoon_position_label(
+                spoon_rank_after, n_players, tie_size, metric)
         out.append(NotableEvent(
             teg_num=int(e["TEGNum"]), scope="hole", type=etype, round=rnd,
             headline=head, players=[player], holes=ev,
@@ -340,6 +412,31 @@ def _turning_points(events_log: pd.DataFrame, teg_df: pd.DataFrame, sw: dict,
             context=ctx,
         ))
     return out
+
+
+def leader_timeline(teg_df: pd.DataFrame, rank_col: str) -> dict:
+    """The hole-by-hole outright-leader sequence for one rank column.
+
+    Extracted from `_lead_tenure_losses` (which used to compute this inline)
+    so `settled_facts.py`'s lead timeline can reuse the exact same tie-aware
+    walk rather than re-deriving it: a tied hole (more than one player sharing
+    rank 1) records no outright leader, matching how a tie doesn't break a
+    `long_lead_lost` tenure spell either.
+
+    Returns {"ordered": [(round, hole), ...], "idx_of": {(round, hole): i},
+    "leader_at": {(round, hole): Pl}} — `leader_at` omits any hole where the
+    lead was tied.
+    """
+    ordered = sorted(teg_df[["Round", "Hole"]].drop_duplicates()
+                     .itertuples(index=False, name=None))
+    idx_of = {key: i for i, key in enumerate(ordered)}
+    leaders = teg_df[teg_df[rank_col] == 1]
+    leader_at = {}
+    for (rnd, hole), g in leaders.groupby(["Round", "Hole"]):
+        if len(g) == 1:
+            leader_at[(int(rnd), int(hole))] = g.iloc[0]["Pl"]
+        # ties (len > 1) record no outright leader for this snapshot
+    return {"ordered": ordered, "idx_of": idx_of, "leader_at": leader_at}
 
 
 def _lead_tenure_losses(teg_df: pd.DataFrame, rank_col: str, comp_label: str,
@@ -359,15 +456,8 @@ def _lead_tenure_losses(teg_df: pd.DataFrame, rank_col: str, comp_label: str,
     someone else are reported, so this stays a rare, high-value beat rather
     than duplicating every `lead_change`.
     """
-    ordered = sorted(teg_df[["Round", "Hole"]].drop_duplicates()
-                     .itertuples(index=False, name=None))
-    idx_of = {key: i for i, key in enumerate(ordered)}
-    leaders = teg_df[teg_df[rank_col] == 1]
-    leader_at = {}
-    for (rnd, hole), g in leaders.groupby(["Round", "Hole"]):
-        if len(g) == 1:
-            leader_at[(int(rnd), int(hole))] = g.iloc[0]["Pl"]
-        # ties (len > 1) record no outright leader for this snapshot
+    timeline = leader_timeline(teg_df, rank_col)
+    ordered, idx_of, leader_at = timeline["ordered"], timeline["idx_of"], timeline["leader_at"]
 
     last_round = int(teg_df["Round"].max())
     lookup = {(int(r.Round), r.Pl, int(r.Hole)): r for r in teg_df.itertuples(index=False)}
@@ -396,8 +486,23 @@ def _lead_tenure_losses(teg_df: pd.DataFrame, rank_col: str, comp_label: str,
                 base_imp = 3.0 + 0.12 * tenure_holes + 2.0 * (rounds_spanned - 1) + 1.5 * late + 1.0 * w
                 base_ent = 3.0 + 0.10 * tenure_holes + 1.5 * (rounds_spanned - 1)
                 rar = 3.0 + 0.08 * tenure_holes + 1.0 * (rounds_spanned - 1)
-                ev_key = (end_rnd, leader, end_hole)
-                ev = [hole_evidence(lookup[ev_key]._asdict(), metric)] if ev_key in lookup else []
+                # Both players' hole evidence at the change, each labelled with
+                # its player — previously only the NEW leader's row was
+                # attached, so the writer had no evidence for what the
+                # DISPLACED leader actually did at that hole (real error: the
+                # TEG 18 Jacket report attributed the wrong player's score to
+                # the hole that ended the spell).
+                ev = []
+                new_key = (end_rnd, leader, end_hole)
+                if new_key in lookup:
+                    e_new = hole_evidence(lookup[new_key]._asdict(), metric)
+                    e_new["player"] = new_player
+                    ev.append(e_new)
+                prev_key = (end_rnd, current, end_hole)
+                if prev_key in lookup:
+                    e_prev = hole_evidence(lookup[prev_key]._asdict(), metric)
+                    e_prev["player"] = prev_player
+                    ev.append(e_prev)
                 out.append(NotableEvent(
                     teg_num=int(teg_df["TEGNum"].iloc[0]), scope="hole",
                     type="long_lead_lost", round=end_rnd,
@@ -411,7 +516,11 @@ def _lead_tenure_losses(teg_df: pd.DataFrame, rank_col: str, comp_label: str,
                              "new_leader": new_player, "tenure_holes": tenure_holes,
                              "rounds_spanned": rounds_spanned,
                              "held_since": {"round": start_rnd, "hole": start_hole},
-                             "lost_at": {"round": end_rnd, "hole": end_hole}},
+                             "lost_at": {"round": end_rnd, "hole": end_hole},
+                             # Flat ints alongside the nested dicts above, so the
+                             # hole is readable without digging into either —
+                             # the lead is taken and lost at the same hole.
+                             "taken_at_hole": end_hole, "lost_at_hole": end_hole},
                 ))
             current, since_idx, since_key = leader, idx_of[key], key
     return out

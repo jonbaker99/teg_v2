@@ -25,7 +25,9 @@ happened three times.
     print(format_findings(findings))
 
 CLI:  python -m teg_analysis.reporting.verify 14
-      python -m teg_analysis.reporting.verify --all
+      python -m teg_analysis.reporting.verify --all --rounds
+      python -m teg_analysis.reporting.verify --all --label final   # legacy chain
+      python -m teg_analysis.reporting.verify 14 --claims           # + LLM claim check
 """
 
 from __future__ import annotations
@@ -81,9 +83,10 @@ _NUM = rf"\d+|(?:{_NUM_WORD})(?:[\s-](?:{_NUM_WORD}))?"
 class Finding:
     """One verification failure. `rule` is stable; `detail` is human-facing."""
     rule: str
-    severity: str                 # 'error' | 'warning'
+    severity: str                 # 'error' | 'warning' | 'unchecked'
     detail: str
     excerpt: str = ""
+    source: str = "mechanical"    # 'mechanical' (this module) | 'claim' (WP4)
 
     def __str__(self) -> str:
         tail = f"  …{self.excerpt}…" if self.excerpt else ""
@@ -362,16 +365,27 @@ CHECKS = (
 # ---------------------------------------------------------------------------
 # Entry points
 # ---------------------------------------------------------------------------
+def report_path(teg_num: int, round_num: Optional[int] = None,
+                label: str = "storylinefirst") -> str:
+    """The on-disk path for one report artefact, canonical directory.
+
+    `label` names which chain: `"storylinefirst"` (default; the current live
+    pipeline) or `"final"` (the legacy chain, still written by `backfill.py`).
+    """
+    infix = f"round_{round_num}_" if round_num else ""
+    return f"{output_dir()}/teg_{teg_num}_{infix}report_{label}.md"
+
+
 def load_context(teg_num: int, text: Optional[str] = None,
-                 round_num: Optional[int] = None) -> ReportContext:
+                 round_num: Optional[int] = None,
+                 label: str = "storylinefirst") -> ReportContext:
     """Assemble the data each check needs. `text` overrides reading from disk."""
     from teg_analysis.io import read_text_file
     from teg_analysis.core.data_loader import load_all_data
     from teg_analysis.reporting.venue import build_venue_context
 
     if text is None:
-        infix = f"round_{round_num}_" if round_num else ""
-        path = f"{output_dir()}/teg_{teg_num}_{infix}report_final.md"
+        path = report_path(teg_num, round_num=round_num, label=label)
         try:
             text = read_text_file(path)
         except Exception:
@@ -394,9 +408,10 @@ def load_context(teg_num: int, text: Optional[str] = None,
 
 
 def verify_report(teg_num: int, text: Optional[str] = None,
-                  round_num: Optional[int] = None) -> list[Finding]:
+                  round_num: Optional[int] = None,
+                  label: str = "storylinefirst") -> list[Finding]:
     """Run every mechanical check. Returns findings, errors first."""
-    ctx = load_context(teg_num, text=text, round_num=round_num)
+    ctx = load_context(teg_num, text=text, round_num=round_num, label=label)
     findings: list[Finding] = []
     for check in CHECKS:
         findings.extend(check(ctx))
@@ -404,13 +419,51 @@ def verify_report(teg_num: int, text: Optional[str] = None,
     return findings
 
 
+def write_findings(teg_num: int, findings: list[Finding], *,
+                   round_num: Optional[int] = None,
+                   label: str = "storylinefirst") -> str:
+    """Persist findings next to the report as `{stem}_verify.json`.
+
+    Written on every `verify` CLI run and by `restyle_voice`, so results survive
+    the run instead of only ever reaching stdout.
+    """
+    import json
+
+    infix = f"round_{round_num}_" if round_num else ""
+    path = f"{output_dir()}/teg_{teg_num}_{infix}verify.json"
+    payload = {
+        "teg": teg_num,
+        "round": round_num,
+        "label": label,
+        "errors": sum(1 for f in findings if f.severity == "error"),
+        "warnings": sum(1 for f in findings if f.severity == "warning"),
+        "findings": [
+            {"rule": f.rule, "severity": f.severity, "detail": f.detail,
+             "excerpt": f.excerpt, "source": f.source}
+            for f in findings
+        ],
+    }
+    with open(path, "w") as fh:
+        json.dump(payload, fh, indent=2)
+    return path
+
+
 def format_findings(findings: list[Finding], teg_num: Optional[int] = None) -> str:
     label = f"TEG {teg_num}" if teg_num is not None else "report"
+    errors = sum(1 for f in findings if f.severity == "error")
+    warnings = sum(1 for f in findings if f.severity == "warning")
+    unchecked = sum(1 for f in findings if f.severity == "unchecked")
     if not findings:
         return f"✓ {label}: all {len(CHECKS)} mechanical checks passed"
-    errors = sum(1 for f in findings if f.severity == "error")
-    warnings = len(findings) - errors
-    head = f"✗ {label}: {errors} error(s), {warnings} warning(s)"
+    if not errors and not warnings:
+        # Only unchecked claims: not a pass, but not a failure either — say so
+        # plainly rather than folding it into "passed".
+        head = f"– {label}: 0 error(s), 0 warning(s), {unchecked} unchecked claim(s)"
+    else:
+        parts = [f"{errors} error(s)", f"{warnings} warning(s)"]
+        if unchecked:
+            parts.append(f"{unchecked} unchecked claim(s)")
+        head = f"✗ {label}: {', '.join(parts)}"
     return "\n".join([head] + [f"  {f}" for f in findings])
 
 
@@ -420,21 +473,27 @@ def main(argv: Optional[list] = None) -> int:
     ap.add_argument("tegs", nargs="*", type=int, help="TEG numbers (default: --all)")
     ap.add_argument("--all", action="store_true", help="verify every published report")
     ap.add_argument("--rounds", action="store_true", help="also verify round reports")
+    ap.add_argument("--label", default="storylinefirst",
+                    help="artefact chain to check: 'storylinefirst' (default, "
+                         "the live pipeline) or 'final' (the legacy chain)")
+    ap.add_argument("--claims", action="store_true",
+                    help="also run the LLM claim extractor (paid; off by default)")
     args = ap.parse_args(argv)
 
     import glob
     import os
 
+    label_re = re.escape(args.label)
     targets: list[tuple] = []
     if args.all or not args.tegs:
-        for path in sorted(glob.glob(f"{output_dir()}/teg_*_report_final.md")):
+        for path in sorted(glob.glob(f"{output_dir()}/teg_*_report_{args.label}.md")):
             base = os.path.basename(path)
-            m = re.match(r"teg_(\d+)_report_final\.md$", base)
+            m = re.match(rf"teg_(\d+)_report_{label_re}\.md$", base)
             if m:
                 targets.append((int(m.group(1)), None))
         if args.rounds:
-            for path in sorted(glob.glob(f"{output_dir()}/teg_*_round_*_report_final.md")):
-                m = re.match(r"teg_(\d+)_round_(\d+)_report_final\.md$",
+            for path in sorted(glob.glob(f"{output_dir()}/teg_*_round_*_report_{args.label}.md")):
+                m = re.match(rf"teg_(\d+)_round_(\d+)_report_{label_re}\.md$",
                              os.path.basename(path))
                 if m:
                     targets.append((int(m.group(1)), int(m.group(2))))
@@ -445,13 +504,17 @@ def main(argv: Optional[list] = None) -> int:
     for teg_num, round_num in sorted(targets, key=lambda t: (t[0], t[1] or 0)):
         label = f"TEG {teg_num}" + (f" R{round_num}" if round_num else "")
         try:
-            findings = verify_report(teg_num, round_num=round_num)
+            findings = verify_report(teg_num, round_num=round_num, label=args.label)
         except FileNotFoundError:
-            print(f"– {label}: no report_final.md")
+            print(f"– {label}: no report_{args.label}.md")
             continue
+        if args.claims:
+            from teg_analysis.reporting.claims import check_claims
+            findings = findings + check_claims(teg_num, round_num=round_num, label=args.label)
         total_errors += sum(1 for f in findings if f.severity == "error")
+        write_findings(teg_num, findings, round_num=round_num, label=args.label)
         print(format_findings(findings, teg_num=None).replace("report:", f"{label}:")
-              .replace("✓ report", f"✓ {label}"))
+              .replace("✓ report", f"✓ {label}").replace("– report", f"– {label}"))
     return 1 if total_errors else 0
 
 

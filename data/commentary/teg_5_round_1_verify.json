@@ -1,0 +1,296 @@
+{
+  "teg": 5,
+  "round": 1,
+  "label": "storylinefirst",
+  "errors": 5,
+  "warnings": 2,
+  "findings": [
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "Tone  ## David Mullin's 83 gross at Boavista \u2014 a new course record and the best gross round",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "# Gregg Williams's round unravels twice over \u2014 nine shots lost in his first four holes and",
+      "source": "mechanical"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It was a new course record and the best gross round recorded in TEG history to date.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It arrived on his eighth visit to the venue, which is to say he had spent seven previous attempts learning where the trouble was.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The old course mark of 85 had survived 35 prior visits by the field.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "He also beat his own best gross there by eight strokes, a margin that suggests the earlier efforts were not close.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "He bogeyed the 1st and then the 2nd, the opening of a man about to shoot 91.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "He bogeyed the 1st and then the 2nd, the opening of a man about to shoot 91.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Instead he stopped the slide with a birdie at the par-5 3rd, a hole he would return to at the top of his card.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "A late bogey at the 18th did nothing to spoil it.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "He finished Round 1 top of the Trophy leaderboard.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "He lost nine shots in the first four holes.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "It began with a triple bogey at the 1st, and was reinforced by double bogeys at the 2nd, the 3rd and the 4th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "By the second hole he was already bottom of the TEG 1 Wooden Spoon race.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "A double bogey at the 16th set the tone.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "The 18th then yielded a triple bogey, because it would have been inconsistent to stop.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Ten shots gone across three holes, neatly answering the nine lost in his first four.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The round finished well outside his best figures at the course.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Eight visits to Boavista have not yet produced the pace he needed here.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "At Boavista in round one of the 2012 TEG, the bottom of the Wooden Spoon table changed hands three times.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Henry Meller got there first, with a quadruple bogey on the par-5 13th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "error",
+      "detail": "Henry Meller was rank 5 in Wooden Spoon at R1 H13, claim says 1",
+      "excerpt": "Henry Meller got there first, with a quadruple bogey on the par-5 13th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "A triple bogey on the 18th was followed by another on the 16th, and last place was his.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "A triple bogey on the 18th was followed by another on the 16th, and last place was his.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "error",
+      "detail": "Stuart Neumann was rank 5 in Wooden Spoon at R1 H16, claim says 1",
+      "excerpt": "A triple bogey on the 18th was followed by another on the 16th, and last place was his.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "error",
+      "detail": "Stuart Neumann was rank 5 in Wooden Spoon at R1 H5, claim says 3",
+      "excerpt": "A third triple bogey, at the 5th, dropped him from third all the way to the foot of the field.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "A third triple bogey, at the 5th, dropped him from third all the way to the foot of the field.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "A double bogey at the 7th kept him there, in case anyone had doubts.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Meller briefly reclaimed the position with a double bogey at the 9th, an act of genuine generosity.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "error",
+      "detail": "Henry Meller was rank 5 in Wooden Spoon at R1 H9, claim says 1",
+      "excerpt": "Meller briefly reclaimed the position with a double bogey at the 9th, an act of genuine generosity.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Neumann repaid it with a bogey at the 10th and took the place back for good.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "error",
+      "detail": "Stuart Neumann was rank 5 in Wooden Spoon at R1 H10, claim says 1",
+      "excerpt": "Neumann repaid it with a bogey at the 10th and took the place back for good.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "He closed the round in last, three points clear of the trouble above him.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "At Boavista in the opening round of TEG 5, Mullin and Jon Baker traded the Trophy lead all day.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Baker drew level with a bogey at the 4th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "drew_level claims are not checked against the outright-only lead timeline",
+      "excerpt": "Baker drew level with a bogey at the 4th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "He drew level again with a birdie at the 16th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "drew_level claims are not checked against the outright-only lead timeline",
+      "excerpt": "He drew level again with a birdie at the 16th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Mullin settled it at the last, where a bogey at the 18th was still enough to retake the Trophy lead outright.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "He finished the round holding it by a gap of zero on net-versus-par.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Mullin's 83 was a course personal best.",
+      "source": "claim"
+    }
+  ]
+}

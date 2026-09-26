@@ -9,7 +9,7 @@ A FastAPI + HTMX + Jinja2 + Tailwind frontend for TEG analysis. **Deployed on Ra
 uvicorn webapp.app:app --reload
 ```
 
-Visit `http://localhost:8000` in your browser. Use the theme switcher in the nav bar to compare visual designs.
+Visit `http://localhost:8000` in your browser. Use Clean Page for current UI work; its light/dark switch is in the nav bar.
 
 ### Local environment
 
@@ -435,12 +435,12 @@ every other data page.
 
 ## Theme system
 
-One Clean theme family uses the shared variables and rules in `base-vars.css` and `clean.css`. `theme.py` registers two selectable layouts. Default: **Clean Page**.
+One Clean theme family uses the shared variables and rules in `base-vars.css` and `clean.css`. **Clean Page** is the active layout. `theme.py` still registers Clean Layered, but it is mothballed. Routine verification scope is defined in [Design principles — Themes and layouts](design_principles.md#themes-and-layouts).
 
 | Registered layout | Description |
 |---|---|
 | **Clean Page** (default) | Flat single white content card on a warm grey background |
-| **Clean Layered** | 3-layer hierarchy: stone background → taupe panel → white data cards |
+| **Clean Layered** (mothballed) | Retained 3-layer hierarchy: stone background → taupe panel → white data cards |
 
 **Typography (both layouts, set in `clean.css`).** Two families, each with
 one job (2026-09-19 direction, see decision history below):
@@ -571,8 +571,8 @@ for you and still threadpools the handler).
 - **`badge`** — small inline labels
 - **`score-mix`** — the leaderboard/TEG detail row's per-hole score distribution: a dependency-free CSS bar chart (grid rows + width-percentage fills, tokens only, no JS/SVG/library)
 - **`segmented`** / **`seg-option`** — the canonical mutually-exclusive measure control. Add **`segmented--grid`** for a row of three or more options: below 640px it reflows the joined bar into an even two-column grid, and does nothing above. Latest Round and Latest TEG's metric rows both use it; the older `metric-grid`/`metric-pill` pair is retired
-- **`sc-metric-toggle--page`** — one page-level Gross/Stableford selector driving every scorecard on `/results` and `/leaderboard` (pure CSS, no JS). It deliberately does **not** carry `sc-portrait`: the wrapper holds every round block, and `sc-portrait` is `display: none` above 640px, so that would blank the whole tab on desktop. The control is made phone-only by hiding its `sc-mseg` above 640px instead. Its pane rules select through the round wrapper with `~ *`, so each round must stay a direct child of the wrapper
-- **`sc-round-summary`** — the `<summary>` of each collapsible round on those same tabs. Styled to match `section-title` exactly above 640px (no chevron, no pointer cursor), so desktop is unchanged; the disclosure affordance is phone-only
+- **`sc-options`** — native “Scorecard options” disclosure on `/scorecard`. It starts closed with the current selection in its summary; opening reveals View/TEG/Round/Player controls. The Scorecards tabs on `/results` and `/leaderboard` use the same controls directly on the page, without the disclosure box. Gross/Stableford stays outside for quick switching.
+- **Shared scorecard view** — `routes/scorecard.py:scorecard_view_context` normalises the tournament/round/player/view and builds one responsive card. The standalone page supports three views; Results/Leaderboard support all players in one round or one player across all rounds, replacing the old round stack. `_scorecard_view.html` and `_scorecard_controls.html` share markup. `scorecard-controls.js` preserves disclosure and metric state across swaps; public query state owns View/Round/Player history.
 
 ### Structural class hierarchy
 
@@ -667,15 +667,12 @@ See [page_title_switcher.md](page_title_switcher.md) — page title and card hea
 ### Navigation (single source of truth)
 
 The desktop nav, tablet disclosure menu, phone Explore sheet and **Contents**
-site map are driven by `webapp/nav.py` (`NAV_SECTIONS`). It is injected into
-every template via `request.state.nav_sections` in `app.py`'s
-`theme_middleware`. To add, rename or reorder a public page, edit
+site map are driven by `webapp/nav.py` (`NAV_SECTIONS`). Request-local navigation is injected into every template via `request.state.nav_sections` in `app.py`'s `theme_middleware`. The current tournament section, its tournament-context link, and the first phone shortcut show `TEG N`: the in-progress tournament, otherwise the latest completed tournament, using the same default selection as the destination pages. Public URLs and active-page keys stay stable when the name changes; the Contents site map uses the same request-local labels. When complete, this menu shows “Final leaderboard”, “TEG N in context” and “TEG N+1 handicaps”. During a tournament it shows “Latest Leaderboard” and “TEG N handicaps”, and omits the tournament-context link. Its direct URL remains available. Contents derives its page count from the visible navigation. Dropdown headings use plain text without decorative down arrows; button behaviour and accessibility state remain unchanged. To add, rename or reorder a public page, edit
 `NAV_SECTIONS` only — do not hand-edit its grouped links in `base.html`.
 
 Each section entry has `label`, `active` (the `active_page` values that
 highlight it) and `pages` (a list of `(title, url, active_key, icon)`).
-`MOBILE_SHORTCUTS` names only the four phone quick links: Latest, History,
-Records and Cards. The fifth phone control, Explore, presents every
+`MOBILE_SHORTCUTS` defines the four phone quick links: the current TEG, History, Records and Cards. The fifth phone control, Explore, presents every
 `NAV_SECTIONS` link in one native dialog.
 
 ### Adding a new page
@@ -721,7 +718,7 @@ metadata CSVs, delete rounds/TEGs, volume browser, GitHub sync, backups, file
 guide — see [Admin / data management](#admin--data-management) above); report
 generation remains out of scope. Public navigation is defined independently in
 `webapp/nav.py` and shared by desktop, tablet, phone Explore and Contents. Pages: Contents,
-TEG History / Honours / Full Results / Player Rankings / TEG Reports, TEG
+TEG History / Honours / Past results / Player Rankings / TEG Reports, TEG
 Records / Top TEGs and Rounds / Personal Bests, Latest Leaderboard / Latest
 Round / Latest TEG / Handicaps, the 11 Scoring-analysis views, and Scorecard /
 Best-Worstball / Eclectic Scores / Eclectic Records.
@@ -927,6 +924,7 @@ HTML builders).
       go. The toggle's CSS is now **class-based** (`.scm-gross`/`.scm-pts` +
       `.lbl-gross`/`.lbl-pts`), so multiple cards can coexist on a page (one
       per round on Full Results); `uid` keeps each radio group unique.
+    - **Mobile scorecard sizing:** `/scorecard`, `/results`, `/leaderboard` and `/latest-round` share container-aware portrait sizing in `static/scorecard.css`. Builders emit the score-column count; square shapes grow within 28–44px, with equal row/column gaps bounded at 4–8px and proportional 14–20px score text. Sparse cards stop at the maximum; dense cards scroll horizontally with Hole/Par pinned. The combined card labels Stableford as “Pts”, with its full accessible name. Desktop layout and Bestball/Worstball sizing are separate. The mobile View dropdown occupies a full row; the other controls wrap below, with 44px themed dropdowns and explicit player/round scope in each view label. Portrait headers and OUT totals have no horizontal rule; section spacing provides separation. The card adds 6px section breaks after the header, OUT and IN. Mobile metric selectors have 12px bottom spacing; portrait panes suppress generic card top margins so Gross and Stableford keep the same spacing in both themes.
     - **Scorecard cells have hover tooltips** (native `title`:
       Hole/SI/Par/Score/Net/Stableford) on every page — built in the
       `teg_analysis` builders so they apply wherever a scorecard renders.

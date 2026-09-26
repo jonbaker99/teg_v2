@@ -101,7 +101,7 @@ def backfill_teg(teg_num: int, *, force: bool = False, scope: Scope = "both",
             # D3 — verify the finished prose against the data. Findings are
             # reported, never raised: a report that trips a check is still
             # written, but it can no longer ship unnoticed.
-            findings = verify_report(teg_num)
+            findings = verify_report(teg_num, label="final")
             if findings:
                 print(format_findings(findings, teg_num=teg_num))
             out["tournament"] = {
@@ -118,7 +118,7 @@ def backfill_teg(teg_num: int, *, force: bool = False, scope: Scope = "both",
             if force or not _round_exists(teg_num, r):
                 ts = time.time()
                 rout = generate_round_report(teg_num, r, events_cache=events, venue_cache=venue)
-                rfindings = verify_report(teg_num, round_num=r)
+                rfindings = verify_report(teg_num, round_num=r, label="final")
                 if rfindings:
                     print(format_findings(rfindings, teg_num=teg_num))
                 out["rounds"].append({

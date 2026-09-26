@@ -1,5 +1,9 @@
 {% extends "base.html" %}
-{% block body_attrs %} data-public-state-keys="teg,tab,chart_variant"{% endblock %}
+{% block body_attrs %} data-public-state-keys="teg,tab,chart_variant,type,round,player"{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="/static/scorecard.css?v=32">
+<script defer src="/static/scorecard-controls.js?v=2"></script>
+{% endblock %}
 
 {% block page_title %}
 <div class="page-title-area res-title-area">
@@ -7,7 +11,7 @@
         <select id="results-teg-select" class="theme-select"
                 hx-get="/results/table"
                 hx-target="#results-content"
-                hx-include="#results-tab-input, #results-chart-variant"
+                hx-include="#results-tab-input, #results-chart-variant, #results-sc-type, #results-sc-round, #results-sc-player"
                 name="teg">
             {% for t in teg_numbers %}
             <option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>
@@ -15,6 +19,10 @@
         </select>
 
         <input type="hidden" id="results-tab-input" name="tab" value="{{ active_tab }}">
+        <input type="hidden" id="results-chart-variant" name="chart_variant" value="{{ active_chart_variant }}">
+        <input type="hidden" id="results-sc-type" name="type" value="{{ sc_saved_type }}">
+        <input type="hidden" id="results-sc-round" name="round" value="{{ sc_saved_round or '' }}">
+        <input type="hidden" id="results-sc-player" name="player" value="{{ sc_saved_player or '' }}">
     </div>
     <span id="results-context-header" class="page-label">{{ context_header }}</span>
     <h1 id="results-page-title" class="page-title">TEG {{ selected_teg }} {{ "Results" if teg_complete else "Leaderboard" }}</h1>

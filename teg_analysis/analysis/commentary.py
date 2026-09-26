@@ -503,10 +503,17 @@ def create_round_events(all_data_df=None):
     df['TEG_Hole'] = (df['Round'] - 1) * 18 + df['Hole']
 
     # Derive Wooden Spoon rank (inverse of Stableford rank within each hole)
-    # Last place in Stableford = 1st place in Spoon competition
+    # Last place in Stableford = 1st place in Spoon competition. Built as a
+    # direct transform of Rank_Stableford_TEG rather than a fresh rank() call,
+    # so a tie at the bottom of the Stableford board (both share the same
+    # non-maximal rank under method='min') carries straight through as a tie
+    # at the top of the Spoon board — no separate tie-handling needed here.
     df = df.sort_values(['TEGNum', 'Round', 'Hole'])
     df['MaxRank_ThisHole'] = df.groupby(['TEGNum', 'Round', 'Hole'])['Rank_Stableford_TEG'].transform('max')
     df['Rank_Spoon_TEG'] = df['MaxRank_ThisHole'] + 1 - df['Rank_Stableford_TEG']
+    # Same construction for the pre-TEG-8 NetVP-based Spoon (era before Stableford).
+    df['MaxRank_NetVP_ThisHole'] = df.groupby(['TEGNum', 'Round', 'Hole'])['Rank_NetVP_TEG'].transform('max')
+    df['Rank_SpoonNetVP_TEG'] = df['MaxRank_NetVP_ThisHole'] + 1 - df['Rank_NetVP_TEG']
 
     # ========================================
     # 3. CALCULATE RANK "BEFORE" FIELDS
@@ -529,6 +536,30 @@ def create_round_events(all_data_df=None):
     df['Rank_Spoon_After'] = df['Rank_Spoon_TEG']
     df['Rank_Spoon_Before'] = df.groupby(['TEGNum', 'Pl'])['Rank_Spoon_TEG'].shift(1)
 
+    df['Rank_SpoonNetVP_After'] = df['Rank_SpoonNetVP_TEG']
+    df['Rank_SpoonNetVP_Before'] = df.groupby(['TEGNum', 'Pl'])['Rank_SpoonNetVP_TEG'].shift(1)
+
+    # "Outright" = sole occupant of rank 1 (or, for the Spoon columns, rank 1
+    # meaning sole occupant of last place) — as opposed to sharing it in a tie.
+    # Needed below so 'Took Lead' / 'Hit Bottom' can fire on a TIED holder
+    # regaining the position outright, a transition the plain Before/After
+    # rank comparison cannot see (Before == 1 either way, tied or outright).
+    def _outright_after(frame, rank_col):
+        count1 = frame.groupby(['TEGNum', 'Round', 'Hole'])[rank_col].transform(
+            lambda s: (s == 1).sum())
+        return (frame[rank_col] == 1) & (count1 == 1)
+
+    for _rank_col, _outright_col in (
+        ('Rank_GrossVP_TEG', 'Outright_Gross'),
+        ('Rank_Stableford_TEG', 'Outright_Stableford'),
+        ('Rank_NetVP_TEG', 'Outright_NetVP'),
+        ('Rank_Spoon_TEG', 'Outright_Spoon'),
+        ('Rank_SpoonNetVP_TEG', 'Outright_SpoonNetVP'),
+    ):
+        df[f'{_outright_col}_After'] = _outright_after(df, _rank_col)
+        df[f'{_outright_col}_Before'] = df.groupby(['TEGNum', 'Pl'])[
+            f'{_outright_col}_After'].shift(1)
+
     # ========================================
     # 4. DETECT POSITION EVENTS (VECTORIZED)
     # ========================================
@@ -536,56 +567,84 @@ def create_round_events(all_data_df=None):
 
     position_events_frames = []
 
+    # Fires when a player enters rank 1 (or, for Spoon, Rank_Spoon rank 1 —
+    # last place) from anywhere OTHER than already being the sole occupant of
+    # it. That includes drawing level for the first time (Before > 1 or NaN)
+    # AND regaining it outright after being tied there (Before == 1 but not
+    # outright, After outright) — the second case is the fix: a player tied at
+    # 1 who pulls clear again used to fire nothing, because Before == 1 either
+    # way (tied or outright) looked identical to the plain rank comparison.
+    # Real case: TEG 18 R2, the Jacket lead was tied between two players
+    # across holes 6/10/11/13, each retaking it outright at 7/12/14 — none of
+    # which fired under the old condition.
+    def _took_lead(after_col, before_col, outright_after_col, outright_before_col):
+        # `shift(1)` on a boolean column introduces NaN for each group's first
+        # row, which forces the column to object dtype — `~` on an object-dtype
+        # Series applies Python's bitwise `~` per element (`~True == -2`,
+        # `~False == -1`), both truthy, not logical negation. `.astype(bool)`
+        # after `fillna` forces a real boolean dtype so `~` inverts correctly.
+        outright_before = df[outright_before_col].fillna(False).astype(bool)
+        return (
+            (df[after_col] == 1) &
+            (
+                df[before_col].isna() | (df[before_col] > 1) |
+                (
+                    (df[before_col] == 1)
+                    & ~outright_before
+                    & df[outright_after_col]
+                )
+            )
+        )
+
     # Define position events for each competition
     position_event_specs = {
         # Gross competition (Green Jacket)
-        'Took Lead (Gross)': (
-            (df['Rank_Gross_After'] == 1) &
-            ((df['Rank_Gross_Before'] > 1) | df['Rank_Gross_Before'].isna())
-        ),
+        'Took Lead (Gross)': _took_lead(
+            'Rank_Gross_After', 'Rank_Gross_Before', 'Outright_Gross_After', 'Outright_Gross_Before'),
         'Lost Lead (Gross)': (
             (df['Rank_Gross_Before'] == 1) &
             (df['Rank_Gross_After'] > 1)
         ),
 
         # Stableford competition (Trophy for TEG 8+)
-        'Took Lead (Stableford)': (
-            (df['Rank_Stableford_After'] == 1) &
-            ((df['Rank_Stableford_Before'] > 1) | df['Rank_Stableford_Before'].isna())
-        ),
+        'Took Lead (Stableford)': _took_lead(
+            'Rank_Stableford_After', 'Rank_Stableford_Before',
+            'Outright_Stableford_After', 'Outright_Stableford_Before'),
         'Lost Lead (Stableford)': (
             (df['Rank_Stableford_Before'] == 1) &
             (df['Rank_Stableford_After'] > 1)
         ),
 
         # NetVP competition (Trophy for TEGs 1-7)
-        'Took Lead (NetVP)': (
-            (df['Rank_NetVP_After'] == 1) &
-            ((df['Rank_NetVP_Before'] > 1) | df['Rank_NetVP_Before'].isna())
-        ),
+        'Took Lead (NetVP)': _took_lead(
+            'Rank_NetVP_After', 'Rank_NetVP_Before', 'Outright_NetVP_After', 'Outright_NetVP_Before'),
         'Lost Lead (NetVP)': (
             (df['Rank_NetVP_Before'] == 1) &
             (df['Rank_NetVP_After'] > 1)
         ),
 
-        # Wooden Spoon competition (Stableford-based, last place) — Trophy metric for TEG 8+
-        'Hit Bottom (Spoon)': (
-            (df['Rank_Stableford_After'] == df['NPlayers']) &
-            ((df['Rank_Stableford_Before'] < df['NPlayers']) | df['Rank_Stableford_Before'].isna())
-        ),
+        # Wooden Spoon competition (Stableford-based, last place) — Trophy
+        # metric for TEG 8+. Rank_Spoon_TEG (1 = worst) replaces the previous
+        # `Rank_Stableford_After == NPlayers` test, which missed a tied last
+        # place outright: under method='min', two players tied for last in a
+        # 4-player field both rank 3, not 4, so `== NPlayers` never matched.
+        # Rank_Spoon_TEG is a direct transform of Rank_Stableford_TEG, so the
+        # same tie carries through as a shared rank 1 on the Spoon side.
+        'Hit Bottom (Spoon)': _took_lead(
+            'Rank_Spoon_After', 'Rank_Spoon_Before', 'Outright_Spoon_After', 'Outright_Spoon_Before'),
         'Left Bottom (Spoon)': (
-            (df['Rank_Stableford_Before'] == df['NPlayers']) &
-            (df['Rank_Stableford_After'] < df['NPlayers'])
+            (df['Rank_Spoon_Before'] == 1) &
+            (df['Rank_Spoon_After'] > 1)
         ),
 
-        # Wooden Spoon competition (NetVP-based, last place) — Trophy metric for TEGs 1-7
-        'Hit Bottom (Spoon NetVP)': (
-            (df['Rank_NetVP_After'] == df['NPlayers']) &
-            ((df['Rank_NetVP_Before'] < df['NPlayers']) | df['Rank_NetVP_Before'].isna())
-        ),
+        # Wooden Spoon competition (NetVP-based, last place) — Trophy metric
+        # for TEGs 1-7. Same fix as the Stableford Spoon above.
+        'Hit Bottom (Spoon NetVP)': _took_lead(
+            'Rank_SpoonNetVP_After', 'Rank_SpoonNetVP_Before',
+            'Outright_SpoonNetVP_After', 'Outright_SpoonNetVP_Before'),
         'Left Bottom (Spoon NetVP)': (
-            (df['Rank_NetVP_Before'] == df['NPlayers']) &
-            (df['Rank_NetVP_After'] < df['NPlayers'])
+            (df['Rank_SpoonNetVP_Before'] == 1) &
+            (df['Rank_SpoonNetVP_After'] > 1)
         ),
     }
 
@@ -596,7 +655,13 @@ def create_round_events(all_data_df=None):
     base_cols = ['TEGNum', 'TEG', 'Round', 'Hole', 'Pl', 'Player', 'Sc', 'PAR', 'GrossVP', 'NetVP', 'Stableford',
                  'Rank_Gross_Before', 'Rank_Gross_After',
                  'Rank_Stableford_Before', 'Rank_Stableford_After',
-                 'Rank_NetVP_Before', 'Rank_NetVP_After', 'NPlayers']
+                 'Rank_NetVP_Before', 'Rank_NetVP_After',
+                 # Spoon-direction ranks (1 = worst), so a spoon_change beat can
+                 # report the player's actual position in the Spoon race
+                 # instead of reusing the Trophy rank_before/after columns,
+                 # which read backwards for the Spoon (was: real error).
+                 'Rank_Spoon_Before', 'Rank_Spoon_After',
+                 'Rank_SpoonNetVP_Before', 'Rank_SpoonNetVP_After', 'NPlayers']
 
     # Reshape to tidy format: one row per event occurrence
     position_events = (
@@ -630,10 +695,7 @@ def create_round_events(all_data_df=None):
     outcome_flags = pd.DataFrame(outcome_event_specs)
 
     # Reshape to tidy format
-    _outcome_id_vars = ['TEGNum', 'TEG', 'Round', 'Hole', 'Pl', 'Player', 'Sc', 'PAR', 'GrossVP', 'NetVP', 'Stableford',
-                        'Rank_Gross_Before', 'Rank_Gross_After',
-                        'Rank_Stableford_Before', 'Rank_Stableford_After',
-                        'Rank_NetVP_Before', 'Rank_NetVP_After', 'NPlayers']
+    _outcome_id_vars = base_cols
     outcome_events = (
         pd.concat([
             df_outcomes[_outcome_id_vars].reset_index(drop=True),
@@ -703,7 +765,9 @@ def create_round_events(all_data_df=None):
         'Final_Hole_Flag', 'Event', 'Metric',
         'Rank_Gross_Before', 'Rank_Gross_After',
         'Rank_Stableford_Before', 'Rank_Stableford_After',
-        'Rank_NetVP_Before', 'Rank_NetVP_After'
+        'Rank_NetVP_Before', 'Rank_NetVP_After',
+        'Rank_Spoon_Before', 'Rank_Spoon_After',
+        'Rank_SpoonNetVP_Before', 'Rank_SpoonNetVP_After',
     ]
 
     # Rename PAR to Par for consistency

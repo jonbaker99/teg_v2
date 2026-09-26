@@ -22,12 +22,8 @@ from teg_analysis.analysis.player_rankings import (
     create_net_competition_ranking_table,
     create_combined_position_summary,
 )
-from teg_analysis.core.metadata import get_scorecard_data
 from teg_analysis.io.file_operations import read_file
 from teg_analysis.constants import ROUND_INFO_CSV
-from teg_analysis.display.scorecards import (
-    build_round_comparison_responsive,
-)
 from teg_analysis.reporting.newspaper_edition import available_tegs
 from webapp.deps import (
     cached_load_all_data,
@@ -40,7 +36,6 @@ from webapp.deps import (
     get_available_teg_numbers,
     get_default_teg_num,
     get_net_competition_measure,
-    get_rounds_for_teg,
 )
 from webapp.chart_utils import (
     create_cumulative_graph,
@@ -49,7 +44,7 @@ from webapp.chart_utils import (
     get_teg_chart_readout,
     CROWDED_FIELD_THRESHOLD,
 )
-from webapp.tables import df_to_html as _df_to_html
+from webapp.tables import df_to_html as _df_to_html, EMPTY_TABLE_HTML
 
 logger = logging.getLogger(__name__)
 
@@ -157,24 +152,36 @@ def _history_table_html(df: pd.DataFrame, round_metadata: dict | None = None) ->
     round_metadata = round_metadata or {}
     name_cols = ["TEG Trophy", "Green Jacket", "HMM Wooden Spoon"]
     # Trailing unlabelled column: the round/course/date disclosure "+/-"
-    # indicator. Desktop keeps the TEG cell itself as the full-width click
-    # target (unchanged) and never shows this column (display:none,
-    # base-vars.css); mobile hides the indicator that used to overlay the TEG
-    # cell and shows it here instead, in a narrow final column.
+    # indicator, shown at all widths (base-vars.css + mobile.css) so it sits
+    # at the row's right edge.
     headers = ["TEG"] + name_cols + [""]
-    # Mobile columns are too narrow for "HMM Wooden Spoon" etc. on one line;
-    # desktop keeps the full name (default-visible .th-full), mobile swaps to
-    # the approved prototype's short Trophy/Jacket/Spoon heading (.th-short,
-    # hidden by default in base-vars.css, shown only in .history-page).
-    short_headers = {"TEG Trophy": "Trophy", "Green Jacket": "Jacket", "HMM Wooden Spoon": "Spoon"}
+    # Display labels. The TEG heading is deliberately blank. Keys stay the
+    # dataframe column names. Each heading carries 1-, 2- and 3-line variants;
+    # data_table.html's script picks the fewest lines at which *every*
+    # heading fits (data-head-lines on the table), so they always wrap alike.
+    # Server default is 3 lines, the narrowest, so no-JS still fits.
+    header_labels = {
+        "TEG": "",
+        "TEG Trophy": "The TEG Trophy",
+        "Green Jacket": "The Green Jacket",
+        "HMM Wooden Spoon": "HMM Wooden Spoon",
+    }
 
-    rows = ["<table class='teg-table history-table'>", "<thead><tr>"]
+    rows = ["<table class='teg-table history-table' data-head-lines='3'>", "<thead><tr>"]
     for col in headers:
-        short = short_headers.get(col)
-        if short:
-            rows.append(f"<th><span class='th-full'>{escape(col)}</span><span class='th-short'>{escape(short)}</span></th>")
+        words = [str(escape(w)) for w in header_labels.get(col, "").split()]
+        if col and not words:
+            rows.append("<th></th>")  # deliberately blank TEG heading
         elif col:
-            rows.append(f"<th>{escape(col)}</th>")
+            variants = (
+                " ".join(words),
+                words[0] + "<br>" + " ".join(words[1:]),
+                "<br>".join(words),
+            )
+            rows.append("<th>" + "".join(
+                f"<span class='head-label head-label--{n}'>{v}</span>"
+                for n, v in enumerate(variants, start=1)
+            ) + "</th>")
         else:
             rows.append("<th class='history-toggle-th'></th>")
     rows.append("</tr></thead><tbody>")
@@ -256,11 +263,10 @@ def _history_table_html(df: pd.DataFrame, round_metadata: dict | None = None) ->
                 for r in rounds
             )
             # colspan matches the visible column count (TEG + 3 name columns),
-            # not len(headers): the trailing toggle column is display:none on
-            # desktop, and a colspan that overshoots the table's real column
-            # count throws off table-layout:fixed's width math for every
-            # column once this row is revealed. A matching empty cell keeps
-            # the column count consistent with every other row.
+            # not len(headers): the trailing toggle column gets its own empty
+            # cell instead, so a revealed detail row keeps the same column
+            # count as every other row and table-layout:fixed's width math
+            # stays stable.
             rows.append(
                 f"<tr class='history-detail-row' id='{detail_id}' hidden>"
                 f"<td colspan='{len(headers) - 1}'>"
@@ -362,6 +368,15 @@ HONOURS_TABS = [
     ("hio", "Holes in One"),
 ]
 
+HONOURS_TITLES = {
+    "trophy": "TEG Trophy wins",
+    "jacket": "Green Jacket wins",
+    "spoon": "Wooden Spoons",
+    "doubles": "Trophy / Jacket doubles",
+    "eagles": "TEG Eagles",
+    "hio": "TEG Holes in One",
+}
+
 
 def _compress_ranges(nums):
     """Compress consecutive integers into range strings. Only collapse runs of 3+."""
@@ -388,6 +403,71 @@ def _compress_ranges(nums):
     return ", ".join(parts)
 
 
+def _honours_wins_table(df: pd.DataFrame, count_col: str) -> str:
+    """Bespoke winners table for the /honours Trophy/Jacket/Spoon/Doubles tabs,
+    styled per the /latest-round mobile table reference
+    (design_principles.md -> Tables -> "Mobile table pattern"): a fixed
+    <colgroup> (Player/count/TEGs, or Player/count for Doubles' 2-column
+    shape), uppercase tracked headers matching cell alignment, the win/double
+    count as the primary bold tabular-nums number, a TEGs column that's
+    allowed to wrap instead of truncating or forcing scroll. No leader-row
+    shading -- it's an honours list, not a leaderboard. Player
+    names are never shortened -- no Initial.SURNAME form -- and are allowed
+    to wrap onto a second line rather than being truncated."""
+    if df is None or df.empty:
+        return EMPTY_TABLE_HTML
+
+    has_tegs = 'TEGs' in df.columns
+
+    colgroup = (
+        "<col style='width:40%'><col style='width:15%'><col style='width:45%'>"
+        if has_tegs else
+        "<col style='width:70%'><col style='width:30%'>"
+    )
+
+    rows = [
+        "<table class='teg-table honours-table'><colgroup>", colgroup, "</colgroup>",
+        "<thead><tr>",
+        "<th scope='col'>Player</th>",
+        f"<th scope='col' class='honours-count-col'>{escape(str(count_col))}</th>",
+    ]
+    if has_tegs:
+        rows.append("<th scope='col'>TEGs</th>")
+    rows.append("</tr></thead><tbody>")
+
+    for _, row in df.iterrows():
+        rows.append("<tr>")
+        rows.append(f"<td class='honours-player-cell'>{_wrap_player_name(row.get('Player'))}</td>")
+        rows.append(f"<td class='honours-count-cell'>{escape(str(row[count_col]))}</td>")
+        if has_tegs:
+            rows.append(f"<td class='honours-tegs-cell'>{escape(str(row.get('TEGs', '')))}</td>")
+        rows.append("</tr>")
+    rows.append("</tbody></table>")
+    return "".join(rows)
+
+
+def _honours_feats_list(df: pd.DataFrame) -> str:
+    """Eagles / Holes in One as a plain list, not a table: bold player name,
+    then a muted line "September 2011, Bletchingley. TEG 4, Round 4, Hole 8."
+    The two halves are separate blocks, so every entry breaks between course
+    and TEG/round/hole (consistent across rows, whatever the width).
+    Expects get_eagles_data's shape (Hole = "TEG 4 | Rd 4 | Hole 8")."""
+    items = []
+    for _, row in df.iterrows():
+        date = pd.to_datetime(row.get('Date'), dayfirst=True, errors='coerce')
+        when = date.strftime('%B %Y') if not pd.isna(date) else str(row.get('Date', ''))
+        where = str(row.get('Hole', '')).replace(' | ', ', ').replace('Rd ', 'Round ')
+        items.append(
+            "<li class='honours-feat'>"
+            f"<span class='honours-feat-player'>{escape(str(row.get('Player', '')))}</span>"
+            "<span class='honours-feat-detail'>"
+            f"<span>{escape(when)}, {escape(str(row.get('Course', '')))}.</span> "
+            f"<span>{escape(where)}.</span>"
+            "</span></li>"
+        )
+    return f"<ul class='honours-feats'>{''.join(items)}</ul>"
+
+
 def _summarise_wins(winners_df: pd.DataFrame, col: str) -> str:
     """Build a summary table: Player, Wins, TEGs with compressed ranges."""
     # Extract TEG number from 'TEG' column (e.g. "TEG 5" -> 5)
@@ -400,7 +480,7 @@ def _summarise_wins(winners_df: pd.DataFrame, col: str) -> str:
     grouped = grouped.drop(columns=['_nums'])
     grouped = grouped.sort_values('Wins', ascending=False).reset_index(drop=True)
 
-    return _df_to_html(grouped, link_players=False)  # profiles hidden 2026-09-18
+    return _honours_wins_table(grouped, 'Wins')
 
 
 def _honours_tab_context(tab: str) -> dict:
@@ -409,43 +489,47 @@ def _honours_tab_context(tab: str) -> dict:
         all_data = cached_load_all_data()
         winners_df = cached_winners()
 
-        # The selected tab already names the section, so no per-section heading
-        # is rendered (see partials/honours_tab.html). Tabs that carry extra
-        # context (the Doubles count) surface it as a caption instead.
+        # Each tab gets a section heading (HONOURS_TITLES) above its content;
+        # extra context (the Doubles count, Jacket footnote) is a caption.
         sections = []
 
         if tab == "trophy":
-            sections.append({"table_html": _summarise_wins(winners_df, "TEG Trophy")})
+            sections.append({"table_html": _summarise_wins(winners_df, "TEG Trophy"), "no_pin": True})
 
         elif tab == "jacket":
             jacket_html = _summarise_wins(winners_df, "Green Jacket")
-            jacket_html += ("<p class='text-muted text-sm mt-3'>*Green Jacket awarded in TEG 5 for "
+            jacket_html += ("<p class='caption'>*Green Jacket awarded in TEG 5 for "
                             "best stableford round; DM had best gross score.</p>")
-            sections.append({"table_html": jacket_html})
+            sections.append({"table_html": jacket_html, "no_pin": True})
 
         elif tab == "spoon":
-            sections.append({"table_html": _summarise_wins(winners_df, "HMM Wooden Spoon")})
+            sections.append({"table_html": _summarise_wins(winners_df, "HMM Wooden Spoon"), "no_pin": True})
 
         elif tab == "doubles":
             doubles_df, count = calculate_trophy_jacket_doubles(winners_df)
             if doubles_df is not None and not doubles_df.empty:
-                html = (f"<p class='text-muted text-sm mb-2'>There have been {count} "
-                        f"trophy / jacket doubles.</p>") + _df_to_html(doubles_df)
+                html = (f"<p class='caption'>There have been {count} "
+                        f"trophy / jacket doubles.</p>") + _honours_wins_table(doubles_df, "Doubles")
             else:
                 html = "<p class='text-muted text-sm'>No doubles recorded.</p>"
-            sections.append({"table_html": html})
+            sections.append({"table_html": html, "no_pin": True})
 
         elif tab == "eagles":
             eagles = get_eagles_data(all_data)
-            sections.append({"table_html": _df_to_html(eagles, link_players=False)})  # profiles hidden 2026-09-18
+            if eagles is not None and not eagles.empty:
+                sections.append({"table_html": _honours_feats_list(eagles)})
+            else:
+                sections.append({"table_html": "<p class='text-muted text-sm'>No eagles have yet been scored on a TEG</p>"})
 
         elif tab == "hio":
             hio = get_holes_in_one_data(all_data)
             if hio is not None and not hio.empty:
-                sections.append({"table_html": _df_to_html(hio, link_players=False)})  # profiles hidden 2026-09-18
+                sections.append({"table_html": _honours_feats_list(hio)})
             else:
                 sections.append({"table_html": "<p class='text-muted text-sm'>No holes in one have yet been scored on a TEG</p>"})
 
+        if sections:
+            sections[0]["title"] = HONOURS_TITLES.get(tab)
         return {"sections": sections}
     except Exception as e:
         logger.exception("_honours_tab_context failed")
@@ -642,7 +726,9 @@ def _build_race_chart_readout(tab: str, variant: str, net_measure: str, teg_name
 
 
 def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjusted",
-                      link_players: bool = False) -> dict:
+                      link_players: bool = False, scorecard_type: str = "one_round_all_players",
+                      scorecard_round: int | None = None,
+                      scorecard_player: str | None = None) -> dict:
     """Build context for full results page.
 
     ``link_players=False`` (default -- player profiles hidden 2026-09-18, not
@@ -659,119 +745,16 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
     context_header = _teg_context_header(teg_num)
     try:
         if tab == "scorecards":
-            rounds = get_rounds_for_teg(teg_num)
-            parts = ['<link rel="stylesheet" href="/static/scorecard.css?v=21">']
-            all_data = cached_load_all_data()
-            # Page-level Gross/Stableford selector driving every round's
-            # panes at once. The wrapper must NOT carry .sc-portrait: it
-            # contains every round block, and .sc-portrait is display:none
-            # above 640px, which would blank the whole tab on desktop. Its
-            # radios are hidden by .sc-metric-toggle > input, and scorecard.css
-            # hides the page-level .sc-mseg above 640px, so the control itself
-            # stays phone-only while the rounds inside render at every width. Each round is built with
-            # show_metric_toggle=False so it contributes bare .sc-pane divs
-            # instead of its own radio pair; the page-level radios must stay
-            # the DIRECT parent of every round block for the CSS sibling
-            # selectors in scorecard.css to reach them (see comment there).
-            gross_id, pts_id = f"scm-gross-page{teg_num}", f"scm-pts-page{teg_num}"
-            wrap_id = f"sc-metric-page-wrap{teg_num}"
-            parts.append(f'<div id="{wrap_id}" class="sc-metric-toggle sc-metric-toggle--page">')
-            parts.append(f'<input type="radio" class="scm-gross" name="sc-metric-page{teg_num}" '
-                          f'id="{gross_id}" checked>')
-            parts.append(f'<input type="radio" class="scm-pts" name="sc-metric-page{teg_num}" id="{pts_id}">')
-            parts.append('<div class="sc-mseg">'
-                          f'<label class="lbl-gross" for="{gross_id}">Gross</label>'
-                          f'<label class="lbl-pts" for="{pts_id}">Stableford</label>'
-                          '</div>')
-            any_round = False
-            for r in rounds:
-                try:
-                    rd = get_scorecard_data(teg_num, r, data=all_data)
-                    if rd is None or rd.empty:
-                        continue
-                    # Responsive block: landscape on desktop/iPad, portrait on
-                    # phone. show_metric_toggle=False: the page-level toggle
-                    # above drives every round's panes instead.
-                    block = build_round_comparison_responsive(
-                        rd, uid=f"res{teg_num}r{r}", show_metric_toggle=False)
-                    # Collapsible on phone only -- `open` is always emitted
-                    # server-side so desktop/no-JS renders exactly as before;
-                    # the inline script below collapses rounds 2+ at phone
-                    # width only.
-                    parts.append("<details class='sc-round' open>")
-                    parts.append("<summary class='sc-round-summary'>"
-                                  f"Round {r}</summary>")
-                    parts.append(block)
-                    parts.append("</details>")
-                    any_round = True
-                except Exception:
-                    continue
-            parts.append('</div>')  # .sc-metric-toggle--page
-            if any_round:
-                # Collapse rounds 2..n at phone width only, and keep them in
-                # sync with orientation changes; scoped to this script's own
-                # previousElementSibling (the .sc-metric-toggle--page wrapper
-                # built above) so it can never touch a <details> elsewhere on
-                # the page. Runs on every full page load AND every htmx swap
-                # of this fragment: htmx re-executes <script> tags in
-                # swapped content by default (no htmx.config.allowScriptTags
-                # override in this app), so a plain inline <script> here
-                # needs no htmx:afterSwap listener the way some other pages
-                # use.
-                parts.append("""
-<script>
-(function () {
-  try {
-    var wrap = document.getElementById('__SC_WRAP_ID__');
-    if (!wrap) return;
-    var rounds = wrap.querySelectorAll(':scope > details.sc-round');
-    if (rounds.length < 2) return;
-    var mq = window.matchMedia('(max-width: 640px)');
-    var userOpened = new Set();
-    var programmatic = false;
-    for (var i = 1; i < rounds.length; i++) {
-      (function (idx) {
-        rounds[idx].addEventListener('toggle', function () {
-          try {
-            if (programmatic) return;
-            if (rounds[idx].open) { userOpened.add(idx); } else { userOpened.delete(idx); }
-          } catch (e) {}
-        });
-      })(i);
-    }
-    var apply = function () {
-      try {
-        programmatic = true;
-        for (var i = 1; i < rounds.length; i++) {
-          rounds[i].open = mq.matches ? userOpened.has(i) : true;
-        }
-      } catch (e) {
-      } finally {
-        programmatic = false;
-      }
-    };
-    var onChange = function () {
-      // A later htmx swap replaces this fragment; drop the stale listener
-      // rather than operating on detached nodes.
-      if (!wrap.isConnected) {
-        if (mq.removeEventListener) { mq.removeEventListener('change', onChange); }
-        else if (mq.removeListener) { mq.removeListener(onChange); }
-        return;
-      }
-      apply();
-    };
-    apply();
-    if (mq.addEventListener) {
-      mq.addEventListener('change', onChange);
-    } else if (mq.addListener) {
-      mq.addListener(onChange);
-    }
-  } catch (e) {}
-})();
-</script>""".replace("__SC_WRAP_ID__", wrap_id))
-            table_html = "".join(parts) if any_round else "<p class='text-muted'>No rounds found.</p>"
-            return {"result_title": "Scorecards", "table_html": table_html, "raw_table": True,
-                    "teg_complete": complete, "context_header": context_header}
+            from webapp.routes.scorecard import scorecard_view_context
+
+            scorecard = scorecard_view_context(
+                teg_num, scorecard_round, scorecard_player, scorecard_type, embedded=True,
+            )
+            if "error" in scorecard:
+                return {"error": scorecard["error"], "teg_complete": complete,
+                        "context_header": context_header}
+            return {"scorecard_view": True, "teg_complete": complete,
+                    "context_header": context_header, **scorecard}
 
         # (No `report` tab here: /results' Report tab is a link to /teg-reports,
         # which renders the newspaper edition. The old markdown-blob render of
@@ -858,6 +841,9 @@ def results_page(
     teg: Optional[int] = Query(None),
     tab: str = Query("net"),
     chart_variant: str = Query("adjusted"),
+    type: str = Query("one_round_all_players"),
+    round: str | None = Query(None),
+    player: str | None = Query(None),
 ):
     teg_numbers = get_available_teg_numbers()
     # Deep-link support (e.g. from /teg-reports' "Back to Results" link) — an
@@ -869,13 +855,20 @@ def results_page(
                      else "adjusted")
     # /results has no player-profile click-through (unlike /leaderboard, which
     # reuses this same context builder via the default).
-    ctx = _results_context(teg_num, tab, chart_variant, link_players=False)
+    from webapp.routes.scorecard import parse_scorecard_round
+    selected_round = parse_scorecard_round(round)
+    ctx = _results_context(teg_num, tab, chart_variant, link_players=False,
+                           scorecard_type=type, scorecard_round=selected_round, scorecard_player=player)
     return templates.TemplateResponse("results.html", {
         "request": request,
         "active_page": "results",
         "teg_numbers": teg_numbers,
         "selected_teg": teg_num,
         "active_tab": tab,
+        "sc_saved_type": ctx.get("selected_type", type),
+        "sc_saved_round": ctx.get("selected_round", selected_round),
+        "sc_saved_player": ctx.get("selected_player", player),
+        "active_chart_variant": chart_variant,
         # TEGs with a newspaper edition — drives whether the Report tab (a real
         # link to /teg-reports, not an HTMX swap) is shown. lru_cached in
         # newspaper_edition and cleared via deps.register_cache_clearer, so this
@@ -887,8 +880,13 @@ def results_page(
 
 @router.get("/results/table")
 def results_table(request: Request, teg: int = Query(...), tab: str = Query("net"),
-                        chart_variant: str = Query("adjusted")):
-    ctx = _results_context(teg, tab, chart_variant, link_players=False)
+                        chart_variant: str = Query("adjusted"),
+                        type: str = Query("one_round_all_players"),
+                        round: str | None = Query(None), player: str | None = Query(None)):
+    from webapp.routes.scorecard import parse_scorecard_round
+    ctx = _results_context(teg, tab, chart_variant, link_players=False,
+                           scorecard_type=type, scorecard_round=parse_scorecard_round(round),
+                           scorecard_player=player)
     return templates.TemplateResponse("partials/results_table.html", {
         "request": request,
         "selected_teg": teg,

@@ -8,6 +8,7 @@ column rename or refactor breaking a page outright, not to pin exact output.
 """
 
 import html
+import importlib
 import re
 
 import pytest
@@ -15,7 +16,7 @@ import pandas as pd
 from starlette.testclient import TestClient
 
 from webapp.app import app
-from webapp.nav import NAV_SECTIONS
+from webapp.nav import MOBILE_SHORTCUTS, NAV_SECTIONS, navigation_for_teg
 from webapp.chart_utils import (
     create_round_graph,
     get_round_player_color_map,
@@ -64,12 +65,14 @@ def test_nav_page_renders(client, url):
 def test_phone_explore_navigation_is_complete_and_current(client):
     resp = client.get("/records")
     _assert_ok_no_error(resp)
+    sections = resp.context["request"].state.nav_sections
+    teg_label = sections[1]["label"]
 
     tabbar = re.search(r'<nav class="mobile-tabbar".*?</nav>', resp.text, re.DOTALL)
     assert tabbar
     assert len(re.findall(r'<(?:a|button)[^>]*class="mtab(?: |")', tabbar.group(0))) == 5
     for label, url in (
-        ("Latest", "/leaderboard"),
+        (teg_label, "/leaderboard"),
         ("History", "/history"),
         ("Records", "/records"),
         ("Cards", "/scorecard"),
@@ -93,7 +96,7 @@ def test_phone_explore_navigation_is_complete_and_current(client):
     )
     assert sheet
     sheet_html = sheet.group(0)
-    for section in NAV_SECTIONS:
+    for section in sections:
         assert html.escape(section["label"]) in sheet_html
         for _title, url, _key, _icon in section["pages"]:
             assert sheet_html.count(f'href="{url}"') == 1
@@ -104,8 +107,76 @@ def test_phone_explore_navigation_is_complete_and_current(client):
     assert 'nav-hamburger--phone' in resp.text
     assert 'nav-hamburger--tablet' in resp.text
     assert resp.text.count('aria-controls="mobile-explore-sheet"') == 2
-    assert '/static/mobile.css?v=41' in resp.text
-    assert '/static/ui-polish.js?v=4' in resp.text
+    assert re.search(r'/static/mobile\.css\?v=\d+', resp.text)
+    assert '/static/ui-polish.js?v=5' in resp.text
+
+
+@pytest.mark.parametrize("in_progress, teg_num", [(None, 18), (19, 19)])
+def test_navigation_tracks_default_teg_without_changing_links_or_active_state(client, monkeypatch, in_progress, teg_num):
+    deps_module = importlib.import_module("webapp.deps")
+    monkeypatch.setattr(deps_module, "get_current_in_progress_teg_fast", lambda: (in_progress, None))
+    monkeypatch.setattr(deps_module, "get_last_completed_teg_fast", lambda: (18, None))
+    label = f"TEG {teg_num}"
+
+    for path in ("/records", "/contents", "/latest-teg"):
+        resp = client.get(path)
+        _assert_ok_no_error(resp)
+        assert f"{label}</button>" in resp.text
+        assert 'href="/leaderboard"' in resp.text
+        assert "Latest TEG in context" not in resp.text
+        assert re.search(rf'href="/leaderboard"\s+class="mtab.*?<span class="mtab-label">{label}</span>', resp.text, re.DOTALL)
+        dropdown = re.search(r'id="nav-section-2".*?</div>', resp.text, re.DOTALL).group(0)
+        sheet = re.search(r'<dialog id="mobile-explore-sheet".*?</dialog>', resp.text, re.DOTALL).group(0)
+        assert ("Latest Leaderboard" if in_progress else "Final leaderboard") in dropdown
+        assert f"TEG {teg_num if in_progress else teg_num + 1} handicaps" in dropdown
+        assert ('href="/latest-teg"' in dropdown) == (not in_progress)
+        assert ('href="/latest-teg"' in sheet) == (not in_progress)
+        assert (f"{label} in context" in dropdown) == (not in_progress)
+        if path == "/latest-teg":
+            assert re.search(rf'nav-dropdown-btn active[^>]*>{label}</button>', resp.text)
+            assert resp.status_code == 200  # Direct route remains available when its nav link is hidden.
+        if path == "/contents":
+            assert f'<div class="section-title">{label}</div>' in resp.text
+            sections = resp.context["sections"]
+            assert resp.context["sitemap_page_count"] == sum(len(section["pages"]) for section in sections)
+            assert ('href="/latest-teg"' in resp.text) == (not in_progress)
+
+    assert NAV_SECTIONS[1]["label"] == "Latest TEG"
+    assert NAV_SECTIONS[1]["pages"][2][0] == "Latest TEG in context"
+    assert MOBILE_SHORTCUTS[0]["label"] == "Latest"
+
+
+def test_navigation_copies_are_request_local():
+    earlier, earlier_shortcuts = navigation_for_teg(18)
+    later, later_shortcuts = navigation_for_teg(19, in_progress=True)
+    assert earlier[1]["label"] == earlier_shortcuts[0]["label"] == "TEG 18"
+    assert later[1]["label"] == later_shortcuts[0]["label"] == "TEG 19"
+    assert earlier[1]["pages"][2][0] == "TEG 18 in context"
+    assert [page[2] for page in later[1]["pages"]] == ["leaderboard", "latest-round", "handicaps"]
+    assert earlier[1]["pages"][0][0] == "Final leaderboard"
+    assert later[1]["pages"][0][0] == "Latest Leaderboard"
+    assert earlier[1]["pages"][-1][0] == later[1]["pages"][-1][0] == "TEG 19 handicaps"
+    assert [page[1:] for page in earlier[1]["pages"]] == [page[1:] for page in NAV_SECTIONS[1]["pages"]]
+    assert earlier[1]["active"] == later[1]["active"] == NAV_SECTIONS[1]["active"]
+
+
+def test_handicaps_eyebrow_uses_current_navigation_label(client, monkeypatch):
+    deps_module = importlib.import_module("webapp.deps")
+    monkeypatch.setattr(deps_module, "get_current_in_progress_teg_fast", lambda: (19, None))
+    resp = client.get("/handicaps")
+    _assert_ok_no_error(resp)
+    assert '<span class="page-label">TEG 19</span>' in resp.text
+
+
+def test_static_requests_skip_tournament_lookup(client, monkeypatch):
+    app_module = importlib.import_module("webapp.app")
+
+    def unexpected_lookup():
+        raise AssertionError("static requests should not read tournament state")
+
+    monkeypatch.setattr(app_module, "_navigation_status", unexpected_lookup)
+    resp = client.get("/static/ui-polish.js")
+    assert resp.status_code == 200
 
 
 def test_phone_explore_static_hooks(client):
@@ -145,6 +216,11 @@ def test_history_page_has_round_disclosure(client):
     assert "PGA Catalunya" in detail_html
     # Preserved verbatim, not disturbed by the disclosure markup change.
     assert "Green Jacket awarded in TEG 5" in resp.text
+    # Headings: blank TEG heading plus 1/2/3-line variants for the others.
+    assert "<thead><tr><th></th>" in resp.text
+    assert "head-label--1'>The TEG Trophy<" in resp.text
+    assert "head-label--2'>The<br>Green Jacket<" in resp.text
+    assert "head-label--3'>HMM<br>Wooden<br>Spoon<" in resp.text
 
 
 # ---------------------------------------------------------------------------
@@ -574,7 +650,7 @@ def test_latest_teg_tab_partials_render(client, tab):
 
 @pytest.mark.parametrize(("url", "markers"), [
     ("/leaderboard?teg=7&tab=gross&chart_variant=ranking", (
-        'data-public-state-keys="teg,tab,chart_variant"',
+        'data-public-state-keys="teg,tab,chart_variant,type,round,player"',
         'id="lb-tab-input" name="tab" value="gross"',
         'id="lb-chart-variant" name="chart_variant" value="ranking"',
     )),
@@ -635,6 +711,88 @@ def test_public_direct_links_restore_declared_state(client, url, markers):
     _assert_ok_no_error(resp)
     for marker in markers:
         assert marker in resp.text
+
+
+@pytest.mark.parametrize("page", ["results", "leaderboard"])
+@pytest.mark.parametrize("view_type", ["one_round_all_players", "one_player_all_rounds"])
+def test_embedded_scorecard_uses_shared_options_and_state(client, page, view_type):
+    params = {"teg": 7, "tab": "scorecards", "type": view_type, "round": 2, "player": REAL_PLAYER_CODE}
+    for path in (f"/{page}", f"/{page}/table"):
+        resp = client.get(path, params=params)
+        _assert_ok_no_error(resp)
+        assert '<details class="sc-options">' not in resp.text
+        assert 'class="sc-options-body section-controls' in resp.text
+        assert f'value="{view_type}" selected' in resp.text
+        assert 'value="one_round_one_player"' not in resp.text
+        assert 'scorecard-table-portrait' in resp.text
+        assert 'id="sc-teg"' not in resp.text
+        assert f'hx-get="/{page}/table"' in resp.text
+        assert f'hx-target="#{"results" if page == "results" else "lb"}-content"' in resp.text
+
+
+@pytest.mark.parametrize("page", ["results", "leaderboard"])
+def test_embedded_scorecard_normalises_bad_view_round_and_roster(client, page):
+    resp = client.get(f"/{page}", params={
+        "teg": 2, "tab": "scorecards", "type": "one_round_one_player",
+        "round": "bad", "player": "AB",
+    })
+    _assert_ok_no_error(resp)
+    assert 'value="one_round_all_players" selected' in resp.text
+    assert 'name="round" value="' in resp.text
+    assert 'id="sc-player"' in resp.text
+    assert '<option value="AB"' not in resp.text
+
+
+@pytest.mark.parametrize("page", ["results", "leaderboard"])
+def test_embedded_scorecard_keeps_inactive_state_controls(client, page):
+    resp = client.get(f"/{page}", params={"teg": 7, "tab": "net"})
+    _assert_ok_no_error(resp)
+    prefix = "results" if page == "results" else "lb"
+    assert f'id="{prefix}-sc-type" name="type"' in resp.text
+    assert f'id="{prefix}-sc-round" name="round"' in resp.text
+    assert f'id="{prefix}-sc-player" name="player"' in resp.text
+    assert f'id="{prefix}-chart-variant" name="chart_variant"' in resp.text
+    partial = client.get(f"/{page}/table", params={
+        "teg": 7, "tab": "net", "round": "", "type": "one_round_all_players",
+    })
+    _assert_ok_no_error(partial)
+
+
+@pytest.mark.parametrize("tab", ["teg", "round", "9hole"])
+def test_records_score_tabs_mobile_list_is_stacked(client, tab):
+    resp = client.get(f"/records/tab/{tab}")
+    _assert_ok_no_error(resp)
+    mobile = resp.text.split("records-list--stacked", 1)[1].split("<table", 1)[0]
+    assert "bw-name-short" not in mobile
+    assert "<span class='rec-label'>Gross</span>" in mobile
+    assert "Best Gross" not in mobile
+    assert "rec-holder" in mobile
+
+
+def test_records_score_counts_mobile_list_is_stacked_by_holder(client):
+    resp = client.get("/records/tab/score_counts")
+    _assert_ok_no_error(resp)
+    # First section's mobile list only; the next section's desktop table
+    # (which keeps the collapsed "→" / initials rows) follows it.
+    mobile = resp.text.split("records-list--stacked", 1)[1].split("<table", 1)[0]
+    assert "rec-group-head" in mobile
+    assert "rec-holder" in mobile
+    identities = re.findall(r"<span class='rec-identity'>([^<]*)</span>", mobile)
+    assert identities and all(" " in name and "/" not in name for name in identities)
+    assert "→" not in mobile
+
+
+def test_records_streaks_mobile_list_is_stacked_by_holder(client):
+    resp = client.get("/records/tab/streaks")
+    _assert_ok_no_error(resp)
+    # First section's mobile list only; the next section's desktop table
+    # (which keeps the "(N times)" placeholder text) follows it.
+    mobile = resp.text.split("records-list--stacked", 1)[1].split("<table", 1)[0]
+    assert "rec-group-head" in mobile
+    assert "rec-holder" in mobile
+    identities = re.findall(r"<span class='rec-identity'>([^<]*)</span>", mobile)
+    assert identities and all(" " in name and "/" not in name for name in identities)
+    assert "times)" not in mobile
 
 
 def test_public_request_shell_exposes_one_retry_contract(client):
@@ -914,6 +1072,28 @@ def test_honours_tab_renders(client):
     _assert_ok_no_error(resp)
 
 
+def test_honours_trophy_tab_uses_mobile_table_pattern(client):
+    # The Trophy/Jacket/Spoon/Doubles winner tables use the bespoke
+    # honours-table markup (fixed colgroup, no leader-row shading) rather than
+    # the generic df_to_html table -- see _honours_wins_table.
+    resp = client.get("/honours/tab/trophy")
+    _assert_ok_no_error(resp)
+    assert "teg-table honours-table" in resp.text
+    assert "<colgroup>" in resp.text
+    assert "top-rank" not in resp.text
+    assert '<h2 class="section-title">TEG Trophy wins</h2>' in resp.text
+    assert "table-wrapper--no-pin" in resp.text
+
+
+def test_honours_eagles_tab_is_a_list(client):
+    # Eagles render as a plain list (name, then date/course and TEG/round/hole),
+    # not a table -- see _honours_feats_list.
+    resp = client.get("/honours/tab/eagles")
+    _assert_ok_no_error(resp)
+    assert "honours-feats" in resp.text
+    assert "<table" not in resp.text
+
+
 # ---------------------------------------------------------------------------
 # Contents (I5: current-TEG home) -- one test per state against a stubbed
 # get_tournament_state(), plus the honesty/link-preservation acceptance
@@ -924,11 +1104,10 @@ import webapp.routes.contents as contents_route
 
 
 def test_contents_all_nav_links_present(client):
-    # Acceptance criterion 2: every NAV_SECTIONS URL appears in /contents,
-    # asserted by test rather than inspection.
+    # Every link in the request's public navigation appears in /contents.
     resp = client.get("/contents")
     _assert_ok_no_error(resp)
-    urls = [url for section in NAV_SECTIONS for (_t, url, _k, _i) in section["pages"]]
+    urls = [url for section in resp.context["sections"] for (_t, url, _k, _i) in section["pages"]]
     for url in urls:
         assert f'href="{url}"' in resp.text, f"missing sitemap link {url!r}"
     # Player Profiles stay deliberately unlinked from nav (2026-09-18).
@@ -1116,16 +1295,21 @@ def test_contents_panel_report_teaser_omitted_cleanly_with_no_round_report(clien
 def test_contents_panel_complete_state_real_data(client):
     # /contents/panel?state=complete against real TEG 18 data: final
     # standings (no gross-line -- covered by the instant honours line
-    # instead), "Also in this report" secondary headlines capped at 4, and
+    # instead), secondary headlines (no "Also in this report" label) capped at 4, and
     # a "View full report" link.
     resp = client.get("/contents/panel", params={"teg": 18, "state": "complete"})
     _assert_ok_no_error(resp)
     assert "Final Standings" in resp.text
     assert "Green Jacket (gross)" not in resp.text  # not repeated -- honours line owns this
-    assert "Also in this report" in resp.text
+    assert "TEG 18 headlines" in resp.text
+    assert 'class="lead-teaser" href="/teg-reports?teg=18#story/0"' in resp.text
+    assert "Also in this report" not in resp.text
+    assert "The Champion" in resp.text  # lead story kicker
+    assert "teaser-standfirst" not in resp.text  # no lead synopsis
     assert resp.text.count("<li>") == 4  # capped, TEG 18 has 5 non-lead articles
     assert 'href="/results?teg=18"' in resp.text
-    assert "View full report" in resp.text
+    assert "View full report" not in resp.text  # card titles carry the links now
+    assert 'href="/results?teg=18">Final Standings ↗' in resp.text
     assert 'class="panel-grid two-col equal-col"' in resp.text
 
 
@@ -1144,9 +1328,11 @@ def test_contents_state_complete_with_report_leads_with_headline(client, monkeyp
     })
     resp = client.get("/contents")
     _assert_ok_no_error(resp)
-    # The report headline IS the page's h1, linked to the report.
-    assert '<h1 class="state-headline"><a class="headline-link" href="/teg-reports?teg=18">Alex Baker Wins It in Round One</a></h1>' in resp.text
-    assert "TEG 18 results | Catalonia, Spain | October 2025" in resp.text
+    # Title is plain "TEG N results"; the lead headline lives in the
+    # deferred report box with the other headlines, not the page h1.
+    assert '<h1 class="state-headline">TEG 18 results</h1>' in resp.text
+    assert "Catalonia, Spain | October 2025" in resp.text
+    assert "Alex Baker Wins It in Round One" not in resp.text
     assert "TEG 18 — Final Results" not in resp.text  # fallback headline must not also render
     # Compact honours line, not stacked label/name rows.
     assert "Champion" in resp.text and "Alex BAKER" in resp.text
@@ -1238,25 +1424,24 @@ def test_contents_sitemap_is_collapsible_and_closed_by_default(client):
     assert " open" not in tag and tag.strip() != "<details class=\"sitemap-disclosure\" open>"
     assert 'Full site contents <span class="count">(click to expand)</span>' in resp.text
     import html
-    for section in NAV_SECTIONS:
+    sections = resp.context["sections"]
+    for section in sections:
         assert html.escape(section["label"]) in resp.text
     # Closed-by-default doesn't mean absent from the DOM -- every link must
     # still be present for the all-nav-links acceptance criterion to hold.
-    urls = [url for section in NAV_SECTIONS for (_t, url, _k, _i) in section["pages"]]
+    urls = [url for section in sections for (_t, url, _k, _i) in section["pages"]]
     for url in urls:
         assert f'href="{url}"' in resp.text
 
 
 def test_contents_article_links_target_stories(client):
     summary = contents_route.get_edition_summary(18)
-    page = client.get("/contents")
-    _assert_ok_no_error(page)
-    assert f'href="{summary["lead_link"]}"' in page.text
     panel = client.get("/contents/panel", params={"teg": 18, "state": "complete"})
     _assert_ok_no_error(panel)
+    assert f'href="{summary["lead_link"]}"' in panel.text
     for article in summary["other_articles"]:
         assert f'href="{article["link"]}"' in panel.text
-    assert f'href="{summary["link"]}">View full report' in panel.text
+    assert f'href="{summary["link"]}">TEG 18 headlines ↗' in panel.text
     report = client.get("/teg-reports", params={"teg": 18})
     _assert_ok_no_error(report)
     for link in [summary["lead_link"], *[a["link"] for a in summary["other_articles"]]]:

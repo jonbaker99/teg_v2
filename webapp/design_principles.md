@@ -132,6 +132,7 @@ Typography bullet above):
   `tr:hover` so the highlight isn't masked.
 - Aim for Datawrapper-like density: tight row spacing, thin borders, generous but not excessive cell padding
 - **Player names wrap together** — preserve full names. If any player name in a table needs to wrap between first name and surname, every player name in that table must use the same two-line layout, with tight line spacing. Never mix one-line and two-line names in the same table. When all names fit again, return all names to one line. Recheck on initial load, viewport resize and HTMX content changes. Use the shared `.player-name` first/last spans and `.names-break` behaviour in `base.html`; keep the wrapper inside the table cell. Do not introduce initials or abbreviated names unless explicitly requested. Some existing tables still use `_player_name_spans` / `shorten_players=True`; that legacy behaviour is not the default for new or revised tables.
+- **Free room before abbreviating** — `/records` uses stacked full-name holder lists at every width (`_build_stacked_records_list`, `webapp/routes/records.py`). For wide data sets, consider separate tables that stack on narrow screens.
 
 ### Mobile table pattern — the reference implementation
 
@@ -174,6 +175,17 @@ cell values. Wider stat tables belong to a different tier from
 (tier 1, the site-wide default for `.teg-table`) or card reflow (tier 2, hero
 tables only). Don't force a wide table into this fixed-column layout; move it
 to sticky-scroll or card reflow instead.
+
+**Third example: `/honours` winner tabs.** Trophy/Jacket/Spoon/Doubles
+(`_honours_wins_table` in `webapp/routes/history.py`, class `teg-table
+honours-table`) apply this pattern's fixed-`<colgroup>`/tracked-header/
+bold-primary-number recipe (no leader shading) to a genuinely small, fixed-shape
+table (Player + count, +TEGs for the three single-winner tabs) — full-bleed
+on mobile via a `.honours-page` wrapper (same `:has()` gutter-zeroing shape
+as `.latest-round-page`) and `table-wrapper--no-pin`, capped at `30rem` on
+desktop rather than stretched full width. Eagles/HIO are short lists, so
+they drop the table entirely: `_honours_feats_list` renders a bold name
+over two muted detail lines (`.honours-feats`).
 
 ### Second mobile table reference: one row, two renderings (I1 standings)
 
@@ -276,12 +288,9 @@ control. Two fixes, pick based on the semantics:
 
 ## Themes and layouts
 
-Optimise primarily for the **Clean** theme. After any template or CSS change, verify both layouts still work:
+Design and verify routine UI changes against **Clean Page**, in light and dark modes. **Clean Layered is mothballed**: do not include it in routine browser checks or expand implementation scope to support it unless the user explicitly requests work on that layout.
 
-- **Layout 1** (flat): Clean, Clean Page — single surface, no depth
-- **Layout 2** (layered): Clean Layered — 3-layer visual hierarchy
-
-The `.data-card` class is a **no-op in Layout 1**. Templates that wrap data output in `.data-card` work correctly in both layouts. Preserve this invariant when editing templates or CSS.
+The `.data-card` class remains a no-op in Clean Page. Retain semantic wrappers where useful; the old layered styles remain available as historical code, not an active design target.
 
 ### CSS: `!important`
 

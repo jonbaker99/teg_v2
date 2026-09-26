@@ -1,0 +1,310 @@
+{
+  "teg": 10,
+  "round": null,
+  "label": "storylinefirst",
+  "errors": 2,
+  "warnings": 2,
+  "findings": [
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "ritten down. In between, the 1st at Palmares \u2014 Praia / Alvor took a 10 off him in round two",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "ff him in round two, and the 8th at Palmares \u2014 Alvor / Lagos another 10 in round three.  Th",
+      "source": "mechanical"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "11 clear of Gregg Williams",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It is the highest Trophy total in the history of the competition, and comfortably his own best.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "he posted a personal best of 45 points on the Praia/Alvor loop",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "with a personal-best gross of +23",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "47 points, +22 gross, both personal bests again",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "error",
+      "detail": "Alex Baker scored 6 at R4 H13, claim says 10",
+      "excerpt": "He achieved that while taking a 10 at the par-five 13th",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "error",
+      "detail": "no record of David Mullin losing the Trophy (Stableford) lead at R1 H12",
+      "excerpt": "David Mullin had held it for 30 holes, from the 12th of round one, and surrendered it at the sixth at Palmares, where Baker's par drew him level.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "drew_level claims are not checked against the outright-only lead timeline",
+      "excerpt": "where Baker's par drew him level",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "Baker led after round three on points and was never behind again.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Baker scored 51 points, the best round anyone has posted in TEG to date",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "off a gross +17 that was another personal best",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "21 points across holes five to ten, four pars and two bogeys measured against the strokes he was receiving",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His gross total of +90 was also a personal best",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "ten prior visits and a best gross of 82 from TEG 5",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "par, bogey, par, par from the 9th to the 12th, 14 Stableford points in four holes",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "It closed at 105.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "His best of the trip, a 98, waited politely until the return to Boavista in round four.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His gross total of +76 is the lowest he has ever recorded at a TEG.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Williams signed for 48 points, a personal best",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "a gross of +14 that was also the finest round of his career by that measure",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "pars at the 8th, 9th and 11th, a birdie at the 10th, which carries stroke index 4, and a bogey at the 12th",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Williams had played the course ten times before this TEG, with a previous best gross of 97.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "In the final round he went round in 93, a course best and ten strokes better than his last visit.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "12 clear of Jon Baker",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It is the lowest gross total ever returned in a TEG, and his own best.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "At Boavista, on his eleventh visit, Mullin went round in 75 gross, +4.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It is the best gross round in TEG history and a new course record, beating the previous mark of 82 set across 50 prior visits.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It was also 23 strokes better than his last outing there.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The same round yielded 49 Stableford points, the second-best round TEG has seen.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Across the four days he recorded 6 birdies or better and 34 pars or better, both all-time records.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "Having taken 42 points in round two at Palmares - Praia / Alvor",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "he managed 31 on the Alvor / Lagos loop the next day, a drop of 11",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His +10 gross at Palmares - Praia / Alvor in round two is the third-best gross round in TEG history.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Baker also posted a personal-best gross total of +63",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "a Boavista personal best of 86 in round four, improving on his previous 90",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "no final totals for 'Wooden Spoon'",
+      "excerpt": "John Patterson collected the TEG 10 Wooden Spoon, finishing on 112 points after four rounds in the Algarve.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "From the 11th to the 15th he went triple bogey, quintuple bogey, triple bogey, quadruple bogey, quadruple bogey.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "finishing on 21 points and 40 over gross",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Both are the worst figures of his career, as a round and in gross terms.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "His best gross of the four days was the 102 in round one at Boavista",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "on what was his first visit to a course the group has now played twelve times",
+      "source": "claim"
+    }
+  ]
+}

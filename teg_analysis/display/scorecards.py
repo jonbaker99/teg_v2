@@ -366,6 +366,12 @@ def _portrait_header(col_labels: list) -> str:
     return ''.join(parts)
 
 
+def _portrait_table_start(column_count: int, extra_class: str = '') -> str:
+    """Set the score-column count for CSS sizing inside the scroll container."""
+    classes = f'scorecard-table-portrait {extra_class}'.strip()
+    return f'<table class="{classes}" style="--sc-score-cols: {column_count}">'
+
+
 def _build_portrait_single_metric(
     col_keys: list,
     col_labels: list,
@@ -386,7 +392,7 @@ def _build_portrait_single_metric(
         metric: 'gross' or 'stableford'.
         title_by_col_hole: {col_key: {hole: tooltip}} for the hover title; optional.
     """
-    parts = ['<table class="scorecard-table-portrait">', _portrait_header(col_labels), '<tbody>']
+    parts = [_portrait_table_start(len(col_keys)), _portrait_header(col_labels), '<tbody>']
 
     def data_rows(holes):
         for hole in holes:
@@ -435,11 +441,10 @@ def build_single_round_combined_portrait(df: pd.DataFrame) -> str:
     sf = {int(r['Hole']): int(r['Stableford']) for _, r in df.iterrows()}
     title = {int(r['Hole']): _cell_title(r) for _, r in df.iterrows()}
 
-    # Only two data columns here ("Gross"/"Stableford" -- words, not the
-    # player/round codes the other portrait tables use), so the shared narrow
-    # score-column width would clip the headers; sc-combined widens them.
-    parts = ['<table class="scorecard-table-portrait sc-combined">',
-             _portrait_header(['Gross', 'Stableford']), '<tbody>']
+    # Keep the score tracks equal by shortening the long metric heading.
+    parts = [_portrait_table_start(2, 'sc-combined'),
+             _portrait_header(['Gross', '<abbr title="Stableford points" aria-label="Stableford points">Pts</abbr>']),
+             '<tbody>']
 
     def data_rows(holes):
         for hole in holes:
