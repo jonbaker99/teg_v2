@@ -25,30 +25,23 @@
 {% else %}
 <div class="panel-grid two-col equal-col" id="contents-panel">
     <div class="surface surface-complete">
-        <p class="standings-heading">Final Standings</p>
+        <p class="standings-heading"><a class="heading-link" href="/results?teg={{ panel.teg_num }}">Final Standings ↗</a></p>
         <div style="overflow-x:auto;">{% with standings = panel.standings %}{% include "partials/_standings_table.html" %}{% endwith %}</div>
-        <a class="teaser-link panel-footer-link" href="/results?teg={{ panel.teg_num }}">Full Results ↗</a>
     </div>
     <div class="surface surface-complete">
         {% if panel.report_summary %}
-        <p class="kicker">TEG {{ panel.teg_num }} report</p>
+        <p class="kicker"><a class="heading-link" href="{{ panel.report_summary.link }}">TEG {{ panel.teg_num }} headlines ↗</a></p>
         <a class="lead-teaser" href="{{ panel.report_summary.lead_link | default(panel.report_summary.link) }}">
+            <span class="hl-kicker">The Champion</span>
             <span class="teaser-headline">{{ panel.report_summary.headline }}</span>
-            {% if panel.report_summary.standfirst %}
-            <span class="teaser-standfirst">{{ panel.report_summary.standfirst }}</span>
-            {% endif %}
         </a>
         {% endif %}
         {% if panel.report_summary and panel.report_summary.other_articles %}
-        <p class="also-kicker">Also in this report</p>
         <ul class="headline-list">
             {% for a in panel.report_summary.other_articles %}
             <li><a href="{{ a.link }}"><span class="hl-kicker">{{ a.kicker }}</span><span class="hl-headline">{{ a.headline }}</span></a></li>
             {% endfor %}
         </ul>
-        {% endif %}
-        {% if panel.report_summary %}
-        <a class="teaser-link panel-footer-link" href="{{ panel.report_summary.link }}">View full report ↗</a>
         {% endif %}
     </div>
 </div>
