@@ -347,37 +347,8 @@
         text-decoration: none;
         color: var(--text-primary);
     }
-    .lead-teaser .teaser-headline { display: block; }
+    .lead-teaser .teaser-headline { display: block; margin: 0; }
     .lead-teaser:hover .teaser-headline { color: var(--green); }
-    /* Lead standfirst: clamped to 2 lines, expandable via the "more"
-       toggle (shown only when the clamp actually hides text). */
-    .lead-standfirst .teaser-standfirst {
-        font-size: var(--fs-200, 13px);
-        margin: 0;
-        max-width: none;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
-        line-clamp: 2;
-        overflow: hidden;
-    }
-    .lead-standfirst.expanded .teaser-standfirst {
-        display: block;
-        -webkit-line-clamp: unset;
-        line-clamp: none;
-    }
-    .standfirst-toggle {
-        background: none;
-        border: none;
-        padding: 0;
-        margin-top: 2px;
-        font-family: var(--font-sans);
-        font-size: var(--fs-200, 13px);
-        font-weight: 600;
-        color: var(--text-primary);
-        cursor: pointer;
-    }
-    .standfirst-toggle:hover { color: var(--green); }
 
     /* --- Secondary-headline list, ruled off from the lead story. --- */
     .headline-list {
