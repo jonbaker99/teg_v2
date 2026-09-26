@@ -493,7 +493,9 @@
      the edge and still cover scrolled content), and the first tab drops its
      left padding. Full-bleed pages whose tab row sits at the zeroed
      main-content edge (see the :has() list near the top of this file) have
-     their title/table text 12px in from the row's edge, so they keep it.
+     their title/table text 12px in from the row's edge, so the first tab
+     is inset by margin, not padding, so its active underline starts at the
+     text rather than 12px left of it.
      .standings-page is left out: it pads itself, so its row already aligns. */
   body.nc-arrows .nav-cue-start { margin-right: -26px; }
   body.nc-arrows .nav-cue-end { margin-left: -26px; }
@@ -505,7 +507,7 @@
   }
   .main-content.px-6:is(:has(> .latest-round-page), :has(> .latest-teg-page), :has(> .honours-page)) .section-nav > .tab-underline:first-child,
   .main-content.px-6:is(:has(> .latest-round-page), :has(> .latest-teg-page), :has(> .honours-page)) .section-nav > .nav-cue-start + .tab-underline {
-    padding-left: 12px;
+    margin-left: 12px;
   }
 
   /* Pills: bigger tap targets. 44px is the touch-floor minimum
@@ -1177,10 +1179,6 @@
   }
   .honours-page #honours-content .data-card:has(table.honours-table) .table-wrapper {
     overflow: visible;
-  }
-  .honours-page #honours-content .data-card:has(table.honours-table) .caption {
-    margin-left: 12px;
-    margin-right: 12px;
   }
   .honours-page #honours-content table.honours-table {
     width: 100%;

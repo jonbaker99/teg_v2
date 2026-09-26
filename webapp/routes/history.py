@@ -357,6 +357,15 @@ HONOURS_TABS = [
     ("hio", "Holes in One"),
 ]
 
+HONOURS_TITLES = {
+    "trophy": "TEG Trophy wins",
+    "jacket": "Green Jacket wins",
+    "spoon": "Wooden Spoons",
+    "doubles": "Trophy / Jacket doubles",
+    "eagles": "TEG Eagles",
+    "hio": "TEG Holes in One",
+}
+
 
 def _compress_ranges(nums):
     """Compress consecutive integers into range strings. Only collapse runs of 3+."""
@@ -469,9 +478,8 @@ def _honours_tab_context(tab: str) -> dict:
         all_data = cached_load_all_data()
         winners_df = cached_winners()
 
-        # The selected tab already names the section, so no per-section heading
-        # is rendered (see partials/honours_tab.html). Tabs that carry extra
-        # context (the Doubles count) surface it as a caption instead.
+        # Each tab gets a section heading (HONOURS_TITLES) above its content;
+        # extra context (the Doubles count, Jacket footnote) is a caption.
         sections = []
 
         if tab == "trophy":
@@ -509,6 +517,8 @@ def _honours_tab_context(tab: str) -> dict:
             else:
                 sections.append({"table_html": "<p class='text-muted text-sm'>No holes in one have yet been scored on a TEG</p>"})
 
+        if sections:
+            sections[0]["title"] = HONOURS_TITLES.get(tab)
         return {"sections": sections}
     except Exception as e:
         logger.exception("_honours_tab_context failed")

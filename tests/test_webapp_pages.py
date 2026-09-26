@@ -740,6 +740,7 @@ def test_standings_page_has_mobile_table_hook(client):
     _assert_ok_no_error(resp)
     assert "standings-page" in resp.text
     assert "table-wrapper--no-pin" in resp.text
+    assert '<h2 class="section-title">TEG Trophy wins</h2>' in resp.text
     assert "leaderboard-table" in resp.text
 
 
