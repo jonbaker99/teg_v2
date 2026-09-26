@@ -259,9 +259,20 @@ h1, h2, h3, h4, h5, h6 {
 /* Mobile's flag+year line (second copy of the flag, shown only in
    .history-page); desktop keeps the region-row flag instead. */
 .history-table .teg-mobile-meta { display: none; }
-/* Full column names ("HMM Wooden Spoon") for desktop; mobile.css swaps to
-   the approved prototype's short Trophy/Jacket/Spoon heading instead. */
-.history-table .th-short { display: none; }
+/* Headings: centred, body-text colour. Specificity beats mobile.css's muted
+   .history-page th rule. Each th holds 1/2/3-line variants (history.py);
+   data-head-lines on the table (set by data_table.html) shows one, so all
+   headings wrap to the same number of lines. */
+.history-page .history-table thead th {
+    color: inherit;
+    text-align: center;
+    white-space: nowrap;
+    line-height: 1.2;
+}
+.history-table .head-label { display: none; }
+.history-table[data-head-lines="1"] .head-label--1,
+.history-table[data-head-lines="2"] .head-label--2,
+.history-table[data-head-lines="3"] .head-label--3 { display: inline-block; }
 .history-table .teg-cell {
     display: block;
 }
@@ -287,43 +298,29 @@ h1, h2, h3, h4, h5, h6 {
 .history-table .teg-text {
     min-width: 0;
 }
-/* Trailing disclosure-indicator column: mobile-only (.history-page,
-   mobile.css puts the +/- here instead of overlaying the TEG cell). Desktop
-   keeps the TEG cell itself as the click target and shows no column for it. */
+/* Trailing disclosure-indicator column: hidden by default and shown on
+   .history-page at all widths (mobile.css shows it below 641px; base-vars.css
+   now shows it on desktop too, so the +/- sits at the row's right edge). */
 .history-table th.history-toggle-th,
 .history-table td.history-toggle-td {
     display: none;
 }
-/* History disclosure "+"/"−" desktop affordance (C6, 2026-09-21) — closes
-   the C1b/C4-flagged gap: above 641px the toggle-indicator column stays
-   display:none (rule above) and the button had no visible cue that a row
-   is expandable, only cursor:pointer. Mirrors .rank-toggle's own ::after
-   glyph pattern below (same --accent colour, 16px glyph, 28x28px fine-
-   pointer hit area per design_principles.md → Hit areas) rather than
-   inventing a new treatment. Scoped to desktop widths only so it doesn't
-   duplicate mobile's separate .history-toggle-indicator column (mobile.css). */
+/* Desktop now uses the same trailing +/- column as mobile (mobile.css)
+   so the indicator sits at the row's right edge. */
 @media (min-width: 641px) {
-    .history-table button.teg-cell {
-        display: flex;
-        align-items: center;
-        gap: 0.5em;
+    .history-page .history-table th.history-toggle-th,
+    .history-page .history-table td.history-toggle-td {
+        display: table-cell;
+        width: 28px;
+        text-align: center;
     }
-    .history-table button.teg-cell .teg-text {
-        flex: 1 1 auto;
-    }
-    .history-table button.teg-cell::after {
+    .history-page .history-table .history-toggle-indicator::before {
         content: "+";
-        flex: none;
-        min-width: 28px;
-        min-height: 28px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
         color: var(--accent, #17683c);
         font-size: 16px;
         line-height: 1;
     }
-    .history-table button.teg-cell[aria-expanded="true"]::after {
+    .history-page .history-table tr:has(button.teg-cell[aria-expanded="true"]) .history-toggle-indicator::before {
         content: "\2013";
     }
 }

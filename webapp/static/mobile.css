@@ -1256,10 +1256,6 @@
     width: 0.95em;
     align-self: auto;
   }
-  /* Full column names don't fit these columns on one line; the approved
-     prototype's short Trophy/Jacket/Spoon heading does. */
-  .history-page .history-table .th-full { display: none; }
-  .history-page .history-table .th-short { display: inline; }
   .history-page .history-table th:not(:first-child),
   .history-page .history-table td:not(:first-child) { text-align: center; }
   .history-page .history-table .teg-cell { min-height: 44px; }
