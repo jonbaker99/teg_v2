@@ -1161,7 +1161,7 @@ def test_contents_panel_report_teaser_omitted_cleanly_with_no_round_report(clien
 def test_contents_panel_complete_state_real_data(client):
     # /contents/panel?state=complete against real TEG 18 data: final
     # standings (no gross-line -- covered by the instant honours line
-    # instead), "Also in this report" secondary headlines capped at 4, and
+    # instead), secondary headlines (no "Also in this report" label) capped at 4, and
     # a "View full report" link.
     resp = client.get("/contents/panel", params={"teg": 18, "state": "complete"})
     _assert_ok_no_error(resp)
@@ -1169,7 +1169,7 @@ def test_contents_panel_complete_state_real_data(client):
     assert "Green Jacket (gross)" not in resp.text  # not repeated -- honours line owns this
     assert "TEG 18 report" in resp.text
     assert 'class="lead-teaser" href="/teg-reports?teg=18#story/0"' in resp.text
-    assert "Also in this report" in resp.text
+    assert "Also in this report" not in resp.text
     assert resp.text.count("<li>") == 4  # capped, TEG 18 has 5 non-lead articles
     assert 'href="/results?teg=18"' in resp.text
     assert "View full report" in resp.text
