@@ -2,7 +2,7 @@
 {% include "partials/_public_response_error.html" %}
 {% elif sections %}
   {% for section in sections %}
-    <div class="data-card"><div class="table-wrapper">{{ section.table_html | safe }}</div></div>
+    <div class="data-card"><div class="table-wrapper{% if section.no_pin %} table-wrapper--no-pin{% endif %}">{{ section.table_html | safe }}</div></div>
   {% endfor %}
 {% else %}
 <p class="text-muted text-sm">No data available.</p>

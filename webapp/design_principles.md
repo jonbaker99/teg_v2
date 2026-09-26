@@ -188,6 +188,16 @@ cell values. Wider stat tables belong to a different tier from
 tables only). Don't force a wide table into this fixed-column layout; move it
 to sticky-scroll or card reflow instead.
 
+**Third example: `/honours` winner tabs.** Trophy/Jacket/Spoon/Doubles
+(`_honours_wins_table` in `webapp/routes/history.py`, class `teg-table
+honours-table`) apply this pattern's fixed-`<colgroup>`/tracked-header/
+bold-primary-number/leader-shading recipe to a genuinely small, fixed-shape
+table (Player + count, +TEGs for the three single-winner tabs) — full-bleed
+on mobile via a `.honours-page` wrapper (same `:has()` gutter-zeroing shape
+as `.latest-round-page`) and `table-wrapper--no-pin`, capped at `30rem` on
+desktop rather than stretched full width. Eagles/HIO keep their existing
+plain `.teg-table` structure and the site-wide sticky-scroll default.
+
 ### Second mobile table reference: one row, two renderings (I1 standings)
 
 `/leaderboard` and `/results`' standings table (`partials/_standings_table.html`,

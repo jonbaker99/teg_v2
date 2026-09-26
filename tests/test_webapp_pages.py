@@ -959,6 +959,18 @@ def test_honours_tab_renders(client):
     _assert_ok_no_error(resp)
 
 
+def test_honours_trophy_tab_uses_mobile_table_pattern(client):
+    # The Trophy/Jacket/Spoon/Doubles winner tables use the bespoke
+    # honours-table markup (fixed colgroup, leader-row shading) rather than
+    # the generic df_to_html table -- see _honours_wins_table.
+    resp = client.get("/honours/tab/trophy")
+    _assert_ok_no_error(resp)
+    assert "teg-table honours-table" in resp.text
+    assert "<colgroup>" in resp.text
+    assert "class='top-rank'" in resp.text
+    assert "table-wrapper--no-pin" in resp.text
+
+
 # ---------------------------------------------------------------------------
 # Contents (I5: current-TEG home) -- one test per state against a stubbed
 # get_tournament_state(), plus the honesty/link-preservation acceptance

@@ -44,7 +44,7 @@ from webapp.chart_utils import (
     get_teg_chart_readout,
     CROWDED_FIELD_THRESHOLD,
 )
-from webapp.tables import df_to_html as _df_to_html
+from webapp.tables import df_to_html as _df_to_html, EMPTY_TABLE_HTML
 
 logger = logging.getLogger(__name__)
 
@@ -383,6 +383,51 @@ def _compress_ranges(nums):
     return ", ".join(parts)
 
 
+def _honours_wins_table(df: pd.DataFrame, count_col: str) -> str:
+    """Bespoke winners table for the /honours Trophy/Jacket/Spoon/Doubles tabs,
+    styled per the /latest-round mobile table reference
+    (design_principles.md -> Tables -> "Mobile table pattern"): a fixed
+    <colgroup> (Player/count/TEGs, or Player/count for Doubles' 2-column
+    shape), uppercase tracked headers matching cell alignment, the win/double
+    count as the primary bold tabular-nums number, a TEGs column that's
+    allowed to wrap instead of truncating or forcing scroll, and the max-count
+    row(s) shaded like the leaderboard's leader row (ties included). Player
+    names are never shortened -- no Initial.SURNAME form -- and are allowed
+    to wrap onto a second line rather than being truncated."""
+    if df is None or df.empty:
+        return EMPTY_TABLE_HTML
+
+    has_tegs = 'TEGs' in df.columns
+    max_count = df[count_col].max()
+
+    colgroup = (
+        "<col style='width:40%'><col style='width:15%'><col style='width:45%'>"
+        if has_tegs else
+        "<col style='width:70%'><col style='width:30%'>"
+    )
+
+    rows = [
+        "<table class='teg-table honours-table'><colgroup>", colgroup, "</colgroup>",
+        "<thead><tr>",
+        "<th scope='col'>Player</th>",
+        f"<th scope='col' class='honours-count-col'>{escape(str(count_col))}</th>",
+    ]
+    if has_tegs:
+        rows.append("<th scope='col'>TEGs</th>")
+    rows.append("</tr></thead><tbody>")
+
+    for _, row in df.iterrows():
+        row_cls = " class='top-rank'" if row[count_col] == max_count else ""
+        rows.append(f"<tr{row_cls}>")
+        rows.append(f"<td class='honours-player-cell'>{_wrap_player_name(row.get('Player'))}</td>")
+        rows.append(f"<td class='honours-count-cell'>{escape(str(row[count_col]))}</td>")
+        if has_tegs:
+            rows.append(f"<td class='honours-tegs-cell'>{escape(str(row.get('TEGs', '')))}</td>")
+        rows.append("</tr>")
+    rows.append("</tbody></table>")
+    return "".join(rows)
+
+
 def _summarise_wins(winners_df: pd.DataFrame, col: str) -> str:
     """Build a summary table: Player, Wins, TEGs with compressed ranges."""
     # Extract TEG number from 'TEG' column (e.g. "TEG 5" -> 5)
@@ -395,7 +440,7 @@ def _summarise_wins(winners_df: pd.DataFrame, col: str) -> str:
     grouped = grouped.drop(columns=['_nums'])
     grouped = grouped.sort_values('Wins', ascending=False).reset_index(drop=True)
 
-    return _df_to_html(grouped, link_players=False)  # profiles hidden 2026-09-18
+    return _honours_wins_table(grouped, 'Wins')
 
 
 def _honours_tab_context(tab: str) -> dict:
@@ -410,25 +455,25 @@ def _honours_tab_context(tab: str) -> dict:
         sections = []
 
         if tab == "trophy":
-            sections.append({"table_html": _summarise_wins(winners_df, "TEG Trophy")})
+            sections.append({"table_html": _summarise_wins(winners_df, "TEG Trophy"), "no_pin": True})
 
         elif tab == "jacket":
             jacket_html = _summarise_wins(winners_df, "Green Jacket")
-            jacket_html += ("<p class='text-muted text-sm mt-3'>*Green Jacket awarded in TEG 5 for "
+            jacket_html += ("<p class='caption'>*Green Jacket awarded in TEG 5 for "
                             "best stableford round; DM had best gross score.</p>")
-            sections.append({"table_html": jacket_html})
+            sections.append({"table_html": jacket_html, "no_pin": True})
 
         elif tab == "spoon":
-            sections.append({"table_html": _summarise_wins(winners_df, "HMM Wooden Spoon")})
+            sections.append({"table_html": _summarise_wins(winners_df, "HMM Wooden Spoon"), "no_pin": True})
 
         elif tab == "doubles":
             doubles_df, count = calculate_trophy_jacket_doubles(winners_df)
             if doubles_df is not None and not doubles_df.empty:
-                html = (f"<p class='text-muted text-sm mb-2'>There have been {count} "
-                        f"trophy / jacket doubles.</p>") + _df_to_html(doubles_df)
+                html = (f"<p class='caption'>There have been {count} "
+                        f"trophy / jacket doubles.</p>") + _honours_wins_table(doubles_df, "Doubles")
             else:
                 html = "<p class='text-muted text-sm'>No doubles recorded.</p>"
-            sections.append({"table_html": html})
+            sections.append({"table_html": html, "no_pin": True})
 
         elif tab == "eagles":
             eagles = get_eagles_data(all_data)
