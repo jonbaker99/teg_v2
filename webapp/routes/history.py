@@ -44,7 +44,7 @@ from webapp.chart_utils import (
     get_teg_chart_readout,
     CROWDED_FIELD_THRESHOLD,
 )
-from webapp.tables import df_to_html as _df_to_html
+from webapp.tables import df_to_html as _df_to_html, EMPTY_TABLE_HTML
 
 logger = logging.getLogger(__name__)
 
@@ -357,6 +357,15 @@ HONOURS_TABS = [
     ("hio", "Holes in One"),
 ]
 
+HONOURS_TITLES = {
+    "trophy": "TEG Trophy wins",
+    "jacket": "Green Jacket wins",
+    "spoon": "Wooden Spoons",
+    "doubles": "Trophy / Jacket doubles",
+    "eagles": "TEG Eagles",
+    "hio": "TEG Holes in One",
+}
+
 
 def _compress_ranges(nums):
     """Compress consecutive integers into range strings. Only collapse runs of 3+."""
@@ -383,6 +392,71 @@ def _compress_ranges(nums):
     return ", ".join(parts)
 
 
+def _honours_wins_table(df: pd.DataFrame, count_col: str) -> str:
+    """Bespoke winners table for the /honours Trophy/Jacket/Spoon/Doubles tabs,
+    styled per the /latest-round mobile table reference
+    (design_principles.md -> Tables -> "Mobile table pattern"): a fixed
+    <colgroup> (Player/count/TEGs, or Player/count for Doubles' 2-column
+    shape), uppercase tracked headers matching cell alignment, the win/double
+    count as the primary bold tabular-nums number, a TEGs column that's
+    allowed to wrap instead of truncating or forcing scroll. No leader-row
+    shading -- it's an honours list, not a leaderboard. Player
+    names are never shortened -- no Initial.SURNAME form -- and are allowed
+    to wrap onto a second line rather than being truncated."""
+    if df is None or df.empty:
+        return EMPTY_TABLE_HTML
+
+    has_tegs = 'TEGs' in df.columns
+
+    colgroup = (
+        "<col style='width:40%'><col style='width:15%'><col style='width:45%'>"
+        if has_tegs else
+        "<col style='width:70%'><col style='width:30%'>"
+    )
+
+    rows = [
+        "<table class='teg-table honours-table'><colgroup>", colgroup, "</colgroup>",
+        "<thead><tr>",
+        "<th scope='col'>Player</th>",
+        f"<th scope='col' class='honours-count-col'>{escape(str(count_col))}</th>",
+    ]
+    if has_tegs:
+        rows.append("<th scope='col'>TEGs</th>")
+    rows.append("</tr></thead><tbody>")
+
+    for _, row in df.iterrows():
+        rows.append("<tr>")
+        rows.append(f"<td class='honours-player-cell'>{_wrap_player_name(row.get('Player'))}</td>")
+        rows.append(f"<td class='honours-count-cell'>{escape(str(row[count_col]))}</td>")
+        if has_tegs:
+            rows.append(f"<td class='honours-tegs-cell'>{escape(str(row.get('TEGs', '')))}</td>")
+        rows.append("</tr>")
+    rows.append("</tbody></table>")
+    return "".join(rows)
+
+
+def _honours_feats_list(df: pd.DataFrame) -> str:
+    """Eagles / Holes in One as a plain list, not a table: bold player name,
+    then a muted line "September 2011, Bletchingley. TEG 4, Round 4, Hole 8."
+    The two halves are separate blocks, so every entry breaks between course
+    and TEG/round/hole (consistent across rows, whatever the width).
+    Expects get_eagles_data's shape (Hole = "TEG 4 | Rd 4 | Hole 8")."""
+    items = []
+    for _, row in df.iterrows():
+        date = pd.to_datetime(row.get('Date'), dayfirst=True, errors='coerce')
+        when = date.strftime('%B %Y') if not pd.isna(date) else str(row.get('Date', ''))
+        where = str(row.get('Hole', '')).replace(' | ', ', ').replace('Rd ', 'Round ')
+        items.append(
+            "<li class='honours-feat'>"
+            f"<span class='honours-feat-player'>{escape(str(row.get('Player', '')))}</span>"
+            "<span class='honours-feat-detail'>"
+            f"<span>{escape(when)}, {escape(str(row.get('Course', '')))}.</span> "
+            f"<span>{escape(where)}.</span>"
+            "</span></li>"
+        )
+    return f"<ul class='honours-feats'>{''.join(items)}</ul>"
+
+
 def _summarise_wins(winners_df: pd.DataFrame, col: str) -> str:
     """Build a summary table: Player, Wins, TEGs with compressed ranges."""
     # Extract TEG number from 'TEG' column (e.g. "TEG 5" -> 5)
@@ -395,7 +469,7 @@ def _summarise_wins(winners_df: pd.DataFrame, col: str) -> str:
     grouped = grouped.drop(columns=['_nums'])
     grouped = grouped.sort_values('Wins', ascending=False).reset_index(drop=True)
 
-    return _df_to_html(grouped, link_players=False)  # profiles hidden 2026-09-18
+    return _honours_wins_table(grouped, 'Wins')
 
 
 def _honours_tab_context(tab: str) -> dict:
@@ -404,43 +478,47 @@ def _honours_tab_context(tab: str) -> dict:
         all_data = cached_load_all_data()
         winners_df = cached_winners()
 
-        # The selected tab already names the section, so no per-section heading
-        # is rendered (see partials/honours_tab.html). Tabs that carry extra
-        # context (the Doubles count) surface it as a caption instead.
+        # Each tab gets a section heading (HONOURS_TITLES) above its content;
+        # extra context (the Doubles count, Jacket footnote) is a caption.
         sections = []
 
         if tab == "trophy":
-            sections.append({"table_html": _summarise_wins(winners_df, "TEG Trophy")})
+            sections.append({"table_html": _summarise_wins(winners_df, "TEG Trophy"), "no_pin": True})
 
         elif tab == "jacket":
             jacket_html = _summarise_wins(winners_df, "Green Jacket")
-            jacket_html += ("<p class='text-muted text-sm mt-3'>*Green Jacket awarded in TEG 5 for "
+            jacket_html += ("<p class='caption'>*Green Jacket awarded in TEG 5 for "
                             "best stableford round; DM had best gross score.</p>")
-            sections.append({"table_html": jacket_html})
+            sections.append({"table_html": jacket_html, "no_pin": True})
 
         elif tab == "spoon":
-            sections.append({"table_html": _summarise_wins(winners_df, "HMM Wooden Spoon")})
+            sections.append({"table_html": _summarise_wins(winners_df, "HMM Wooden Spoon"), "no_pin": True})
 
         elif tab == "doubles":
             doubles_df, count = calculate_trophy_jacket_doubles(winners_df)
             if doubles_df is not None and not doubles_df.empty:
-                html = (f"<p class='text-muted text-sm mb-2'>There have been {count} "
-                        f"trophy / jacket doubles.</p>") + _df_to_html(doubles_df)
+                html = (f"<p class='caption'>There have been {count} "
+                        f"trophy / jacket doubles.</p>") + _honours_wins_table(doubles_df, "Doubles")
             else:
                 html = "<p class='text-muted text-sm'>No doubles recorded.</p>"
-            sections.append({"table_html": html})
+            sections.append({"table_html": html, "no_pin": True})
 
         elif tab == "eagles":
             eagles = get_eagles_data(all_data)
-            sections.append({"table_html": _df_to_html(eagles, link_players=False)})  # profiles hidden 2026-09-18
+            if eagles is not None and not eagles.empty:
+                sections.append({"table_html": _honours_feats_list(eagles)})
+            else:
+                sections.append({"table_html": "<p class='text-muted text-sm'>No eagles have yet been scored on a TEG</p>"})
 
         elif tab == "hio":
             hio = get_holes_in_one_data(all_data)
             if hio is not None and not hio.empty:
-                sections.append({"table_html": _df_to_html(hio, link_players=False)})  # profiles hidden 2026-09-18
+                sections.append({"table_html": _honours_feats_list(hio)})
             else:
                 sections.append({"table_html": "<p class='text-muted text-sm'>No holes in one have yet been scored on a TEG</p>"})
 
+        if sections:
+            sections[0]["title"] = HONOURS_TITLES.get(tab)
         return {"sections": sections}
     except Exception as e:
         logger.exception("_honours_tab_context failed")

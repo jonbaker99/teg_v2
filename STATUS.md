@@ -2,11 +2,15 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-26 (Mobile records full names)
+**Last updated:** 2026-09-26 (Records stacked list; honours board restyle)
 
 ## 2026-09-26 — Mobile records show full names
 
 Every `/records` tab, on phones and desktop, now uses one stacked layout (the desktop table is gone): record label and value on top, then each holder's full name with their occasion(s) in muted text. Details sit beside the name when every row fits; otherwise all drop below their names. TEG, Round and 9-Hole labels drop "Best"/"Worst", since the section heading says it. Score Counts and Streaks hide records below 2. Holders of one record share a group with no rules between them. Streak locations read in plain words, e.g. "TEG 7, R1 H8 to R2 H12", or "to date" for a live streak; this also shows wherever record streaks appear (Scoring, player pages).
+
+## 2026-09-26 — Honours board restyle and aligned mobile tab rows
+
+Each `/honours` tab has a section heading, such as "TEG Trophy wins". Trophy, Green Jacket, Wooden Spoon and Doubles use full-width fixed-column tables on mobile with bold win counts and wrapping TEG lists. They have no leader shading, zebra striping or shortened names. Eagles and Holes in One are a plain list: bold name, then date and course, then TEG, round and hole. Across the site on mobile, tab rows now line up with the page title: the hidden scroll arrow no longer takes up space, and the first tab's underline starts at its text. Dark mode is unchecked.
 
 ## 2026-09-25 — Shared scorecard options
 

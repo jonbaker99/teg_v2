@@ -417,6 +417,60 @@ table.leaderboard td:nth-child(2) {
     text-align: left;
 }
 
+/* ── Honours winners table (Trophy/Jacket/Spoon/Doubles tabs) ──
+   Bespoke table built by _honours_wins_table (webapp/routes/history.py),
+   styled per the /latest-round mobile table reference (design_principles.md
+   -> Tables -> "Mobile table pattern"): fixed proportional colgroup, tracked
+   uppercase headers matching cell alignment, the win/double count as the
+   primary bold tabular-nums number, and a TEGs column that wraps instead of
+   truncating. Constrained to a sensible desktop width (judgement call --
+   4 columns of short values looked sparse stretched to the full data-card)
+   rather than left at .teg-table's default content-sized auto width, since
+   this table also needs `table-layout: fixed` for the colgroup percentages
+   to hold. No leader-row shading: an honours list, not a leaderboard. */
+.teg-table.honours-table {
+    table-layout: fixed;
+    width: 100%;
+    max-width: 30rem;
+}
+.teg-table.honours-table thead th {
+    font: 700 11px/1.2 var(--font-table), sans-serif;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+.teg-table.honours-table th.honours-count-col,
+.teg-table.honours-table td.honours-count-cell {
+    text-align: center;
+}
+.teg-table.honours-table td.honours-player-cell,
+.teg-table.honours-table td.honours-tegs-cell {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+.teg-table.honours-table td.honours-count-cell {
+    font-family: var(--font-table), sans-serif;
+    font-variant-numeric: tabular-nums;
+    font-size: 1.15em;
+    font-weight: 700;
+}
+/* Eagles / Holes in One: a plain list, not a table (_honours_feats_list).
+   Detail halves are blocks, so every entry breaks between course and TEG. */
+.honours-feats { list-style: none; margin: 0; padding: 0; }
+.honours-feat + .honours-feat { margin-top: 0.9rem; }
+.honours-feat-player { display: block; font-weight: 700; }
+.honours-feat-detail { display: block; font-size: 0.875rem; color: var(--text-muted); }
+.honours-feat-detail > span { display: block; }
+
+/* No zebra striping anywhere on /honours -- winner tables above and the
+   plain .teg-table Eagles/HIO tabs both opt out, scoped to the page so the
+   global .teg-table default (site-wide) is untouched. */
+.honours-page .teg-table tbody tr:nth-child(even) {
+    background-color: transparent;
+}
+
 /* Rank-toggle "+"/"−" glyph — declared once, unscoped, since the glyph
    itself doesn't vary by width (only its size/position does). Previously
    duplicated verbatim in both this file's desktop rule and mobile.css's
