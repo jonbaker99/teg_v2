@@ -18,6 +18,7 @@ from teg_analysis.reporting.verify import (
     check_arithmetic_claims,
     check_no_beat_ids,
     check_no_invented_mechanisms,
+    check_no_sibling_order,
     check_not_a_week,
     check_swing_claims,
     check_weekdays,
@@ -108,6 +109,35 @@ def test_week_language_flagged():
 
 def test_weekend_is_not_flagged_as_week():
     assert check_not_a_week(_ctx("A weekend of steady golf followed.")) == []
+
+
+# ---------------------------------------------------------------------------
+# Sibling order — the data records brothers, never which is older
+# ---------------------------------------------------------------------------
+@pytest.mark.parametrize("text", [
+    # Real archived round-report sentences, which disagreed with each other.
+    "Jon Baker entered the round one point behind older brother Alex.",
+    "His younger brother Alex, meanwhile, languished in fifth place.",
+    "By the par-5 6th, elder brother Alex had clawed back into the lead.",
+    "At the par-5 7th, the older Baker brother's triple bogey handed it back.",
+    "The younger Baker brother was relentless.",
+    "The elder Baker made a double at the 4th.",
+    "The younger of the two brothers took the Spoon.",
+])
+def test_sibling_order_flagged(text):
+    findings = check_no_sibling_order(_ctx(text))
+    assert [f.rule for f in findings] == ["no_sibling_order"]
+    assert findings[0].severity == "error"
+
+
+@pytest.mark.parametrize("text", [
+    "Runner-up by six to his own brother, which is a particular kind of weekend.",
+    "The brothers finished the round tied at the top of the Trophy.",
+    "Jon Baker, the older of the two leaders, never trailed again.",
+    "The round bore no obvious family resemblance to the one that followed.",
+])
+def test_sibling_mentions_without_age_order_pass(text):
+    assert check_no_sibling_order(_ctx(text)) == []
 
 
 # ---------------------------------------------------------------------------

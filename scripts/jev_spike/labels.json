@@ -1,0 +1,660 @@
+[
+ {
+  "id": "same_hole:43",
+  "source": "real",
+  "file": "archive 2026 v3/teg_10_report_pretighten.md",
+  "teg": 10,
+  "text": "And John Patterson, who had taken outright last at the 4th hole of Wednesday morning and held it for the remainder of the week, posted his worst round to date: 21 points, +40 gross, with an 11 at the par-5 8th — same hole where he had made 10 in R1, same hole where he had made 10 in R3. Four rounds, four entries on the par-5 8th: 10, —, 10, 11. A defending Trophy champion's first Wooden Spoon, sealed at the only hole on the property that seemed genuinely to know his name.",
+  "labels": {
+   "same_hole": true,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": "The known TEG 10 fault: R1 and R4 were at Boavista, R3 at Palmares."
+ },
+ {
+  "id": "same_hole:44",
+  "source": "real",
+  "file": "archive 2026 v3/teg_10_report_prevehicles.md",
+  "teg": 10,
+  "text": "And Patterson, defending Trophy champion eight months ago, posted his worst round to date: 21 Stableford points, +40 gross, including a sextuple-bogey 11 at the 8th — the same hole at which he had made a 10 in R1, on the same course, although by now the hole and Patterson were, frankly, on first-name terms.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": "R1 and R4 were both at Boavista, so this really is the same hole."
+ },
+ {
+  "id": "same_hole:59",
+  "source": "real",
+  "file": "archive 2026 v3/teg_12_report_styled.md",
+  "teg": 12,
+  "text": "What follows is, in essence, the answer to a single question: how on earth did that happen. The short version is that the tournament wasn't decided where you'd think it was decided. It wasn't settled on that par four at the Tour, where Patterson should by rights have signed his own obituary. It was determined across about four square inches of Stadium Course turf on Saturday afternoon — at H4, the same hole number, different hole, different course, different week's weather, and a place where the entire shape of the Catalunya double-header pivoted on its axis. Patterson took the Trophy there. Jon Baker claimed the Green Jacket there. And the only competition that didn't move that afternoon — the Wooden Spoon — held off until Sunday morning, when David Mullin, sitting in third-from-bottom and apparently safe, generously volunteered for the role.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": "Explicitly says same number, different hole."
+ },
+ {
+  "id": "same_hole:126",
+  "source": "real",
+  "file": "teg_6_round_4_report_storylinefirst.md",
+  "teg": 6,
+  "text": "The 9th is the hardest hole on the course. Baker made 10 there, a sextuple bogey, and handed everything back. Williams reclaimed the lead by making a triple bogey at the same hole. That was all the resistance the situation required.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": ""
+ },
+ {
+  "id": "same_hole:120",
+  "source": "real",
+  "file": "teg_15_round_2_report_storylinefirst.md",
+  "teg": 15,
+  "text": "Quality did appear once. At the par-five 15th, one of the easiest holes on the course, David Mullin made an eagle. On that same hole, Gregg Williams made a quintuple-bogey 10. The course was evidently open to interpretation.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": ""
+ },
+ {
+  "id": "same_hole:87",
+  "source": "real",
+  "file": "archive 2026 v3/teg_18_report_humour6.md",
+  "teg": 18,
+  "text": "Jon Baker won the Trophy at TEG 17. He arrived in Catalonia as the man to beat, and the early returns suggested he might be. He led the Jacket race after R1, by 2; he still led it after R2, by 2 again. Then in R3, on the par-4 2nd at the Stadium — the same hole at which Williams was taking outright Jacket lead at very nearly the same moment — Jon triple-bogeyed.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": ""
+ },
+ {
+  "id": "same_hole:37",
+  "source": "real",
+  "file": "archive 2026 v1/teg_6_report_A_around_draft.md",
+  "teg": 6,
+  "text": "What happened next would, in a saner sport, be reviewed by a coroner. At the 9th — a par four — Baker made 10. Williams, alongside, made 7. In the space of one hole, played badly by both men but catastrophically by one, Williams was handed back the outright Trophy lead he had spent the previous hour mislaying. The same hole, in the same group, in the same minutes, also flipped the Green Jacket back to David Mullin, who had been quietly enduring his own afternoon a step or two behind.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": ""
+ },
+ {
+  "id": "paradox:0",
+  "source": "real",
+  "file": "archive 2025/teg_11_main_report.md",
+  "teg": 11,
+  "text": "Alex Baker held a two-point Trophy lead entering Sunday but posted a career-worst twenty-seven points to hand Jon a six-point margin. The collapse ended Alex's hopes of splitting the competitions. Gregg Williams finished third in the Trophy race on one hundred and thirty-six points. David Mullin collected the Wooden Spoon despite finishing runner-up in the Jacket by just three strokes, a cruel twist that defined the tournament's paradoxes.",
+  "labels": {
+   "same_hole": false,
+   "paradox": true,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": ""
+ },
+ {
+  "id": "paradox:23",
+  "source": "real",
+  "file": "drafts/teg_5_satire.md",
+  "teg": 5,
+  "text": "Mullin's final round completed the tournament's central paradox. Thirty Stableford points to finish dead last by three. Wire-to-wire Gross dominance with a fifty-four stroke margin. Fourth Green Jacket. First Wooden Spoon. The mathematical impossibility made flesh. Henry Meller closed with a personal-best thirty-nine points to claim third, proving that peaking on Sunday matters only if you peaked harder on Saturday. Neumann struggled through four triple-bogeys to finish fourth, his Round 2 explosion now a distant memory filed under \"what might have been.\"",
+  "labels": {
+   "same_hole": false,
+   "paradox": true,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": ""
+ },
+ {
+  "id": "paradox:10",
+  "source": "real",
+  "file": "drafts/teg_11_satire.md",
+  "teg": 11,
+  "text": "**Gross Scoring Futility vs Stableford Success Paradox:**\n- David MULLIN finished 2nd in Jacket (+73 gross) but 5th in Trophy (125 points), earning the Spoon via the cruelest application of mathematics since calculus was invented.\n- This represents the TEG achievement gap: playing objectively better golf while scoring objectively fewer points, which is either profound irony or structural injustice depending on one's philosophical orientation.",
+  "labels": {
+   "same_hole": false,
+   "paradox": true,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": ""
+ },
+ {
+  "id": "paradox:29",
+  "source": "real",
+  "file": "drafts/teg_7_satire.md",
+  "teg": 7,
+  "text": "**The Green Jacket Paradox:**\n- Mullin's fifteen-stroke Jacket margin: largest in tournament history\n- Mullin's Trophy deficit to Meller: 5 points\n- Mathematical proof that Stableford and stroke play measure fundamentally different sports",
+  "labels": {
+   "same_hole": false,
+   "paradox": true,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": ""
+ },
+ {
+  "id": "paradox:8",
+  "source": "real",
+  "file": "archive 2026 v3/teg_10_report_styled.md",
+  "teg": 10,
+  "text": "- **Alex Baker** — Bridesmaid in TEG 8, bridesmaid in TEG 9, champion in TEG 10. Rounds of 41, 45, 47, 51 — three consecutive personal-best Stableford rounds, and then the highest-scoring round in TEG history to close. Personal-best gross totals at +90. Took outright Trophy lead on the 6th hole of Monday and was never headed across the 30 holes that followed.\n- **David Mullin** — An eighth Jacket, won by 12, led wire-to-wire. The R1 75 was a new Boavista course record by seven shots over 50 prior visits and the best gross round TEG has ever recorded. He posted the second-best Stableford round in TEG history on the same afternoon and still lost the Trophy by 11, which is what handicaps are for and is in no sense a paradox.\n- **Gregg Williams** — Trophy runner-up, the closest he has come without winning. Personal-best Stableford 48 and personal-best +14 gross on the Sunday at Palmares, a personal-best gross total of +76 across the week, and a two-hole spell on Monday afternoon as the outright Trophy leader. A near-miss, but the most authoritative near-miss of his career.\n- **Jon Baker** — Jacket runner-up again, for the third time in four TEGs, with a personal-best gross total of +63 and the third-best gross round in TEG history (+10) on the Sunday. Bridesmaid is becoming a difficult term to use in this account.\n- **John Patterson** — From Trophy holder to Spoon in twelve months. Bottom from the 4th hole of the opening morning and bottom at every subsequent count. Four blow-ups of quintuple bogey or worse, the 19-shot stretch across the Monday's 11th to 15th, and a closing 21 — his worst round on record.\n- **Stuart Neumann** — Escaped a third straight Spoon by the thinnest of margins and the unhappiest of routes. Two 10s at two different closing holes, a third 10 at a par-5 13th, and 13 shots gone in three holes on the Sunday. A reprieve, of sorts.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": "Explicitly says it is not a paradox."
+ },
+ {
+  "id": "paradox:7",
+  "source": "real",
+  "file": "archive 2026 v1/teg_8_round_2_report_final.md",
+  "teg": 8,
+  "text": "The Trophy race didn't change hands — Williams still leads — but the texture of it transformed entirely. A four-shot cushion became eleven, and not because the leader was clean. He shipped a 10 at the 12th and seven over 15-17, and still walked away with the day's best card. The Jacket, by contrast, did shift in character if not in name: Mullin turned a one-shot edge into a six-shot advantage in a single afternoon, the kind of move that starts to look like a verdict. At the bottom, the Spoon paradoxically tightened — Neumann is still last, but Meller's misery dragged him eight closer, where he had been twelve clear at dawn.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": ""
+ },
+ {
+  "id": "paradox:18",
+  "source": "real",
+  "file": "drafts/teg_3_main_report.md",
+  "teg": 3,
+  "text": "Stuart Neumann's tournament will be remembered for a single hole. His quintuple at the 17th in Round Four, six over par and worth no points, transformed a solid performance into Wooden Spoon infamy. Henry Meller's four birdies led the tournament yet couldn't overcome ten blow-ups, a paradox that left him fourth overall. Gregg Williams endured 11 collapses across 72 holes, his volatility making Meller look consistent by comparison.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": ""
+ },
+ {
+  "id": "paradox:32",
+  "source": "real",
+  "file": "drafts/teg_8_satire.md",
+  "teg": 8,
+  "text": "Williams led for 72 consecutive holes whilst experiencing 12 separate blow-ups, a statistic that captures amateur golf's essential paradox: you can dominate whilst simultaneously falling apart. His 12-point margin represented the kind of comfortable victory that looks inevitable in retrospect, though watching him post back-to-back quintuple bogeys in Round 3 suggested otherwise at the time. Mullin claimed his sixth Green Jacket with the methodical precision of a man collecting stamps, winning by six strokes despite finishing fourth in Stableford. The divergence between competitions reached philosophical dimensions: the Trophy winner posted 149 Stableford points but finished third in gross scoring, whilst the Jacket winner posted 126 Stableford points but led the gross leaderboard by six strokes.",
+  "labels": {
+   "same_hole": false,
+   "paradox": true,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": "Paradox keyword is about blow-ups (not a violation), but the final sentence frames the Stableford/Gross divergence as philosophical."
+ },
+ {
+  "id": "paradox:3",
+  "source": "real",
+  "file": "archive 2025/teg_8_main_report.md",
+  "teg": 8,
+  "text": "The two competitions diverged throughout. Williams barely registered in Gross, finishing 30 strokes behind Mullin. Mullin struggled for Stableford points, finishing fourth in the Trophy. Baker claimed dual runner-up honours, 12 points behind in Trophy and six strokes adrift in Jacket. Alex Baker produced the week's most puzzling performance, compiling 137 Trophy points despite 13 zeros, including a catastrophic 10 at Round 3's 8th.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": ""
+ },
+ {
+  "id": "chaos:46",
+  "source": "real",
+  "file": "archive 2026 v4/round_reports/TEG4_R1_report.md",
+  "teg": 4,
+  "text": "- **The 11th Hole Massacre:** Par-3 averaging 7.0 strokes (four over par) claimed multiple victims and reshaped the leaderboard\n- **Six Changes in Six Holes:** Opening stretch saw all five players share the lead at various points in chaotic start\n- **Baker's Closing Blitz:** 14 points in final six holes, including lead-seizing birdie at the 16th\n- **Williams' Two-Faced Round:** Brilliant 19-point front nine followed by disastrous 10-point back nine collapse\n- **The Great Equalizer:** All five players deadlocked at 9 points through six holes before chaos ensued",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": true,
+   "relationship": false
+  },
+  "note": ""
+ },
+ {
+  "id": "chaos:21",
+  "source": "real",
+  "file": "archive 2025/teg_7_main_report.md",
+  "teg": 7,
+  "text": "Henry Meller emerged from the chaos. He took the Trophy lead at the first and never relinquished it again. The advantage changed hands repeatedly through the early holes as David Mullin's birdie at the fifth briefly grabbed the Gross lead. Baker battled back with a birdie at the sixth to reclaim the Trophy. Meller responded immediately, launching a decisive surge from the ninth.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": true,
+   "relationship": false
+  },
+  "note": ""
+ },
+ {
+  "id": "relationship:65",
+  "source": "real",
+  "file": "archive 2026 v4/round_reports/TEG18_R1_report.md",
+  "teg": 18,
+  "text": "The opening round of TEG 18 delivered the kind of drama that makes the Trophy competition unpredictable—disasters, comebacks, and a leaderboard that transformed hole by hole. Alex Baker emerged from the chaos to claim both the round victory (46 points) and the TEG Trophy lead, building a commanding 12-point advantage despite a nightmarish start. His older brother Jon Baker won the day's gross competition with 24 over par, seizing the Green Jacket lead in a steadier performance. But the round's most compelling story belonged to John Patterson, who authored one of the most dramatic turnarounds in TEG history—recovering from a front-nine disaster (10 points, 22 strokes) to post 24 points on the back nine and vault from fifth to second place.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": true,
+   "relationship": true
+  },
+  "note": "Age order invented; R1 lead changes framed as chaos."
+ },
+ {
+  "id": "chaos:7",
+  "source": "real",
+  "file": "archive 2025/teg_14_main_report.md",
+  "teg": 14,
+  "text": "The round quickly turned chaotic. Gregg Williams found nine at the par-five third for no points. Jon Baker followed with his own blow-up at the same hole, then added another at the fifth. Alex Baker, who had led briefly, imploded spectacularly late: a ten at the par-five 16th cost him the Trophy lead, then a seven at the last compounded the damage. Mullin seized control at the 16th with a regulation five-pointer and never looked back. His only blemish came at the seventh, a triple-bogey seven that briefly cost him the Jacket lead. A birdie at the tenth steadied the ship.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": ""
+ },
+ {
+  "id": "chaos:32",
+  "source": "real",
+  "file": "archive 2026 v4/round_reports/TEG15_R4_report.md",
+  "teg": 15,
+  "text": "Williams never looked threatened, maintaining his lead from start to finish with a solid 34-point round that included a dominant 14-point closing stretch. The victory margin told the story of a tournament controlled from the front, even as Neumann's stunning comeback—featuring 15 points in the opening six holes alone—provided the day's most compelling narrative. The championship ended in chaos at the par-4 18th, where the field averaged 7.5 strokes in a fitting finale to a challenging Portuguese test.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": ""
+ },
+ {
+  "id": "chaos:77",
+  "source": "real",
+  "file": "drafts/teg_15_main_report.md",
+  "teg": 15,
+  "text": "John Patterson's nightmare start (a ten at the first, six over par) summed up the day's chaos. David Mullin followed with an eight. Alex Baker recorded an eight. Three disasters before most had found rhythm. Neumann recovered brilliantly, posting 21 points on the front nine. He seemed poised for a respectable finish.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": ""
+ },
+ {
+  "id": "same_hole:116",
+  "source": "real",
+  "file": "teg_10_round_1_report_storylinefirst.md",
+  "teg": 10,
+  "text": "Round one of the 2017 TEG 10 Trophy (Stableford) at Boavista Golf & Spa Resort brought plenty of movement at the top, all of it the ordinary jockeying of an opening round. Jon Baker moved to the outright Trophy lead with a par at the 9th, and the same hole brought him level at the top of the Jacket standings. David Mullin drew level for the Trophy lead at the 10th. Alex Baker joined the tie at the 11th, having already shared it once at the 6th.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": ""
+ },
+ {
+  "id": "relationship:38",
+  "source": "real",
+  "file": "archive 2026 v4/round_reports/TEG10_R1_report.md",
+  "teg": 10,
+  "text": "The Baker brothers dominated the early narrative at Boavista. Jon struck first with a blistering start through two holes, building a six-point total to claim the early advantage. But by the par-5 6th, elder brother Alex had clawed back into the lead with 14 points, setting the stage for a fascinating family duel.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": true
+  },
+  "note": "player_relationships records brothers only; age order is invented (and contradicts other reports)."
+ },
+ {
+  "id": "relationship:43",
+  "source": "real",
+  "file": "archive 2026 v4/round_reports/TEG11_R2_report.md",
+  "teg": 11,
+  "text": "With the halfway point looming, Jon Baker arrived at PGA Catalunya protecting a slender three-point advantage over younger brother Alex. What unfolded was a fascinating duel between siblings, with Alex claiming the round honours with a tournament-best 42 points, but Jon doing just enough to maintain his tournament lead—albeit by the narrowest of margins.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": true
+  },
+  "note": "Age order invented."
+ },
+ {
+  "id": "relationship:48",
+  "source": "real",
+  "file": "archive 2026 v4/round_reports/TEG11_R4_report.md",
+  "teg": 11,
+  "text": "After three rounds of trading blows, the Baker brothers' epic duel for the TEG Trophy came down to a final showdown on the Stadium Course. Jon Baker entered the round one point behind older brother Alex, with three other contenders lurking within striking distance. The stage was set for drama—and the brothers delivered.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": true
+  },
+  "note": "Age order invented."
+ },
+ {
+  "id": "relationship:92",
+  "source": "real",
+  "file": "teg_11_report_storylinefirst.md",
+  "teg": 11,
+  "text": "Jon Baker was crossing the identical ground in the opposite direction. Double, double, triple at the 11th, 12th and 13th. Three holes without a net par, conducted with the air of a man discharging an obligation. The brothers finished the round tied at the top of the Trophy, with Jon Baker leading the TEG 11 Green Jacket.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": ""
+ },
+ {
+  "id": "relationship:34",
+  "source": "real",
+  "file": "archive 2026 v3/teg_16_report_voicetest_combined.md",
+  "teg": 16,
+  "text": "Alex was on the same holes doing much the same thing, only marginally less steeply. Double bogey at the 11th, then a nine at the 12th for a quadruple bogey, then a seven at the 13th and a seven at the 14th. Twelve shots dropped across four holes, and, like his brother, a three-hole run without a net par from the 12th onward.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": ""
+ },
+ {
+  "id": "relationship:94",
+  "source": "real",
+  "file": "teg_11_round_3_report_storylinefirst.md",
+  "teg": 11,
+  "text": "Jon Baker had led the TEG 11 Trophy since the fourth hole of round one. Forty-five holes of unbroken possession. It went at the 13th on Saturday at El Prat's Azul course, and it went to his brother.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": ""
+ },
+ {
+  "id": "relationship:20",
+  "source": "real",
+  "file": "archive 2026 v3/teg_11_report_buggy.md",
+  "teg": 11,
+  "text": "- **Alex Baker.** Defending Trophy champion who, on Sunday morning, was leading outright and looked entirely capable of keeping it that way. The 27 on Sunday afternoon — a personal worst — was not one collapse but three, neatly distributed across holes 4–6, 12–14 and 16–18. Runner-up by six to his own brother, which is a particular kind of weekend.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": ""
+ },
+ {
+  "id": "relationship:91",
+  "source": "real",
+  "file": "drafts/teg_5_satire.md",
+  "teg": 5,
+  "text": "**Gregg Williams (Runner-Up):** Held the lead entering Sunday only to discover that quintuple bogeys are not, in fact, part of any winning formula. Zero birdies across seventy-two holes suggests a man committed to the puritanical view that eagles and their smaller cousins are morally suspect.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": "'cousins' is figurative."
+ },
+ {
+  "id": "seed:sh1",
+  "source": "seeded",
+  "file": null,
+  "teg": 18,
+  "text": "Williams made a 9 at the par-4 4th on Sunday at the Stadium, the very hole that had wrecked his Friday card, when he made a 9 there too. The 4th simply has his number, and it has now had him twice.",
+  "labels": {
+   "same_hole": true,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": "Friday (R1/R2) was the Tour course, Sunday (R4) the Stadium. No 'same hole' phrase."
+ },
+ {
+  "id": "seed:sh2",
+  "source": "seeded",
+  "file": null,
+  "teg": 7,
+  "text": "Alex Baker came back to the 14th in Round 2 with his Round 1 sextuple still fresh in the memory. The hole had not forgotten him either, and it took another seven off him.",
+  "labels": {
+   "same_hole": true,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": "R1 Praia D'El Rey, R2 Bom Sucesso."
+ },
+ {
+  "id": "seed:sh3",
+  "source": "seeded",
+  "file": null,
+  "teg": 12,
+  "text": "The 15th was his undoing again. He had run up a triple there on Thursday on the Tour, and on Saturday at the Stadium the same hole took another three off him.",
+  "labels": {
+   "same_hole": true,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": "R2 Tour, R3 Stadium."
+ },
+ {
+  "id": "seed:sh4",
+  "source": "seeded",
+  "file": null,
+  "teg": 10,
+  "text": "Patterson's 11 at the par-5 8th in Round 4 came at the hole where he had made 10 on the opening morning. Both rounds were at Boavista, and the 8th there had his measure all week.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": "R1 and R4 both at Boavista: correct."
+ },
+ {
+  "id": "seed:px1",
+  "source": "seeded",
+  "file": null,
+  "teg": 8,
+  "text": "Mullin was the best golfer on the property by six shots and still finished fourth on points, which nobody in the bar could explain.",
+  "labels": {
+   "same_hole": false,
+   "paradox": true,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": "Head-scratcher framing, no keyword."
+ },
+ {
+  "id": "seed:px2",
+  "source": "seeded",
+  "file": null,
+  "teg": 11,
+  "text": "How a man can finish second in the Jacket and still collect the Wooden Spoon is a question for the philosophers.",
+  "labels": {
+   "same_hole": false,
+   "paradox": true,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": "No keyword."
+ },
+ {
+  "id": "seed:px3",
+  "source": "seeded",
+  "file": null,
+  "teg": 8,
+  "text": "Mullin led the gross by six and finished fourth on points, which is exactly what handicaps are for.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": "Correct framing."
+ },
+ {
+  "id": "seed:ch1",
+  "source": "seeded",
+  "file": null,
+  "teg": 10,
+  "text": "The opening nine at Boavista was bedlam. The Trophy lead changed hands five times before the turn, and nobody could say who was in charge.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": true,
+   "relationship": false
+  },
+  "note": "No keyword."
+ },
+ {
+  "id": "seed:ch2",
+  "source": "seeded",
+  "file": null,
+  "teg": 4,
+  "text": "Round one descended into pandemonium as four different players held the lead in the first seven holes.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": true,
+   "relationship": false
+  },
+  "note": "No keyword."
+ },
+ {
+  "id": "seed:ch3",
+  "source": "seeded",
+  "file": null,
+  "teg": 18,
+  "text": "Three changes of lead on the first morning were just the field sorting itself out. The lead change that mattered came on Sunday at the 2nd.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": "Correct framing."
+ },
+ {
+  "id": "seed:rl1",
+  "source": "seeded",
+  "file": null,
+  "teg": 9,
+  "text": "David Mullin and Gregg Williams, old school friends, went out together on the final morning and came back barely speaking.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": true
+  },
+  "note": "Invented friendship."
+ },
+ {
+  "id": "seed:rl2",
+  "source": "seeded",
+  "file": null,
+  "teg": 6,
+  "text": "Stuart Neumann, Mullin's brother-in-law, had the better of him all week.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": true
+  },
+  "note": "Invented in-law."
+ },
+ {
+  "id": "seed:rl3",
+  "source": "seeded",
+  "file": null,
+  "teg": 14,
+  "text": "John Patterson and his brother Graham shared the cart and, for most of the back nine, the misery.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": "Listed relationship: correct."
+ },
+ {
+  "id": "clean:1",
+  "source": "real",
+  "file": "teg_18_report_storylinefirst.md",
+  "teg": 18,
+  "text": "Round 4, back on the Stadium, gave much of it away over the closing stretch. From the 14th he went four holes without a net par. Double bogey at the 14th. Triple at the par-five 15th. Doubles at the 16th and 17th. Nine shots against par in four holes, and three Stableford points from a possible eight. The record stood. The round it was set in bore no obvious family resemblance to the one that followed.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": "'family resemblance' is figurative."
+ },
+ {
+  "id": "clean:2",
+  "source": "real",
+  "file": "teg_13_round_4_report_storylinefirst.md",
+  "teg": 13,
+  "text": "The decisive stretch was holes 12 to 14. Three pars, nine Stableford points, three holes without a gross shot dropped. The par at the 13th, the hardest hole on the course, was the one that mattered. Then the 15th and 16th, where he posted a bogey and a double bogey and left the door pointedly ajar. Nobody walked through it. He shut it himself with a birdie at the 17th, which is roughly how winning looks round here.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": ""
+ },
+ {
+  "id": "clean:3",
+  "source": "real",
+  "file": "teg_9_round_4_report_storylinefirst.md",
+  "teg": 9,
+  "text": "John Patterson signed for 47 Stableford points at Praia D'El Rey, the best round of the final day and 13 better than his third-round 34. He managed it while carrying a quintuple-bogey 9 at the 5th, one of the hardest holes on the course. Most cards do not survive a 9. His barely broke stride. He assembled two stretches without dropping a gross shot, at the 6th and 7th and again at the 12th and 13th, the second of those including a birdie at the par-5 12th.",
+  "labels": {
+   "same_hole": false,
+   "paradox": false,
+   "chaos": false,
+   "relationship": false
+  },
+  "note": ""
+ }
+]
