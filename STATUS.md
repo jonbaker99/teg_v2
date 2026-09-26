@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-25 (Mobile scorecard sizing)
+**Last updated:** 2026-09-26 (Honours board restyle)
+
+## 2026-09-26 — Honours board restyle and aligned mobile tab rows
+
+Each `/honours` tab has a section heading, such as "TEG Trophy wins". Trophy, Green Jacket, Wooden Spoon and Doubles use full-width fixed-column tables on mobile with bold win counts and wrapping TEG lists. They have no leader shading, zebra striping or shortened names. Eagles and Holes in One are a plain list: bold name, then date and course, then TEG, round and hole. Across the site on mobile, tab rows now line up with the page title: the hidden scroll arrow no longer takes up space, and the first tab's underline starts at its text. Dark mode is unchecked.
 
 ## 2026-09-25 — Shared scorecard options
 
