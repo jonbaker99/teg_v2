@@ -14,6 +14,12 @@
 
 ## START HERE — picking this up in a new chat (2026-09-08)
 
+**Fact-check upgrade planned, not built (2026-09-26).** D3 currently checks nothing: `verify --all` still
+looks for the archived `report_final.md`. The TEG 18 report shipped 2 real errors, 3 ambiguous claims and
+1 missed record, and two of those came from detector bugs. The approved plan is claim extraction plus
+code checks, then repairing the 85 existing reports in place. Diagnosis, work packages, costs and open
+decisions: [FACTCHECK_PLAN.md](FACTCHECK_PLAN.md).
+
 **"Sidebar" badges replaced with real topics (2026-09-22).** The printed badge above a story's
 headline should always name its actual subject (`JON BAKER`, `STADIUM COURSE`); 17 report-page
 badges and every Contents-page "Also in this report" teaser still showed the machine slot name
