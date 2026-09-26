@@ -6,7 +6,7 @@ Current state and next priorities. Instructions and architecture live in `CLAUDE
 
 ## 2026-09-26 — Navigation names the current tournament
 
-The Latest TEG navigation section now shows the in-progress tournament name, or the latest completed tournament when none is underway (currently TEG 18). Desktop, tablet, phone Explore, the phone shortcut and Contents share the label. Completed tournaments show “Final leaderboard”, their context link, and the next TEG’s numbered handicap link. In-progress tournaments show “Latest Leaderboard” and their own numbered handicap link, with the context link omitted. Existing URLs and active-page keys are unchanged. Tiny dropdown arrows have been removed.
+The Latest TEG navigation section now shows the in-progress tournament name, or the latest completed tournament when none is underway (currently TEG 18). Desktop, tablet, phone Explore, the phone shortcut and Contents share the label. Completed tournaments show “Final leaderboard”, their context link, and the next TEG’s numbered handicap link. In-progress tournaments show “Latest Leaderboard” and their own numbered handicap link, with the context link omitted. Existing URLs and active-page keys are unchanged. Tiny dropdown arrows have been removed. The current-TEG menu includes its tournament report when complete and available, otherwise its latest available round report. In-progress tournaments link only to a round report; no available report means no shortcut.
 
 ## 2026-09-26 — Past results navigation label
 
