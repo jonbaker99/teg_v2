@@ -246,13 +246,24 @@ def _build_records_html(
     return "".join(rows)
 
 
+# Stacked-list records whose value is below this are hidden on mobile: a
+# count of 1 (e.g. "Most Eagles in a Round") is held by many and says little.
+_STACKED_MIN_VALUE = 2
+
+
 def _build_stacked_records_list(holders: list) -> str:
     """Mobile-only stacked list for Score Counts: one group per record
-    (label + value on top), then one tap-to-reveal row per holder with the
-    full player name, expanding to every occasion they hit that count.
+    (label + value on top), then one row per holder -- full player name
+    with the occasion(s) beside it in muted text. ui-polish.js drops every
+    occasion onto its own line under the name, list-wide, as soon as any
+    one row would not fit beside its name (.is-wrapped).
     Holdings arrive one per occasion (score_count_record_holders); a player
-    holding a record more than once gets one row listing each occasion."""
+    holding a record more than once gets one row listing each occasion.
+    Records below _STACKED_MIN_VALUE are left out."""
     names = get_player_dict()
+    holders = [h for h in holders if int(h['value']) >= _STACKED_MIN_VALUE]
+    if not holders:
+        return "<div class='records-list'><p class='text-muted text-sm'>No records.</p></div>"
     parts = ["<div class='records-list records-list--stacked'>"]
     for label in dict.fromkeys(h['label'] for h in holders):
         group = [h for h in holders if h['label'] == label]
@@ -267,15 +278,12 @@ def _build_stacked_records_list(holders: list) -> str:
             "</div>"
         )
         for code, whens in by_player.items():
-            detail = "<br>".join(escape(w) for w in whens)
+            when_html = "".join(f"<span class='rec-when'>{escape(w)}</span>" for w in whens)
             parts.append(
-                "<details class='rec-row rec-holder'>"
-                "<summary class='rec-summary'>"
+                "<div class='rec-holder'>"
                 f"<span class='rec-identity'>{escape(names.get(code, code))}</span>"
-                "<span class='rec-chevron' aria-hidden='true'></span>"
-                "</summary>"
-                f"<div class='rec-detail'>{detail}</div>"
-                "</details>"
+                f"<span class='rec-whens'>{when_html}</span>"
+                "</div>"
             )
         parts.append("</div>")
     parts.append("</div>")

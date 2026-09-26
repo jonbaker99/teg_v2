@@ -81,7 +81,9 @@
       "Bash(git fetch *)",
       "Bash(gh pr *)",
       "Bash(python3 -)",
-      "Bash(uvicorn webapp.app:app *)"
+      "Bash(uvicorn webapp.app:app *)",
+      "Bash(python -)",
+      "Bash(git commit -qm 'Records mobile: Score Counts shows occasions inline, hides counts below 2 *)"
     ],
     "deny": [],
     "ask": [
