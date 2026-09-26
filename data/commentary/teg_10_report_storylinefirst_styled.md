@@ -9,7 +9,7 @@
   <p><strong>Wooden Spoon:</strong> John Patterson (1st Spoon)</p>
 </section>
 
-## How Alex Baker turned two runner-up finishes into the highest Trophy total in TEG history, taking the lead at Palmares and never handing it back
+## How Alex Baker turned two runner-up finishes into the highest Trophy total in TEG history, taking the lead at Palmares and going clear for good at the 1st hole of the final round
 <!-- storyline: trophy -->
 
 **Alex Baker's record run**
@@ -18,7 +18,7 @@ Alex Baker won the TEG 10 Trophy with 184 points, 11 clear of Gregg Williams. It
 
 It was assembled in instalments. At Palmares, a course nobody in the field had seen before, he posted a personal best of 45 points on the Praia/Alvor loop, with a personal-best gross of +23. The following day, on Alvor/Lagos, he improved: 47 points, +22 gross, both personal bests again. He achieved that while taking a 10 at the par-five 13th. Five over par. No points. He appears to have regarded the hole as a private matter and moved on without comment.
 
-The lead changed hands in that third round. David Mullin had held it for 30 holes, from the 12th of round one, and surrendered it at the sixth at Palmares, where Baker's par drew him level. Nothing more dramatic than a par. Baker led after round three on points and was never behind again.
+The lead changed hands in that third round. David Mullin had held it for 30 holes, from the 12th of round one, and surrendered it at the sixth at Palmares, where Baker's par took him a point clear. Nothing more dramatic than a par. Gregg Williams led at the 13th and 14th, and the pair were level on 133 points after round three. Baker went clear at the first of round four and was never behind again.
 
 The final round at Boavista removed the last of the doubt. Baker scored 51 points, the best round anyone has posted in TEG to date, off a gross +17 that was another personal best. The middle stretch did the work: 21 points across holes five to ten, four pars and two bogeys measured against the strokes he was receiving. His gross total of +90 was also a personal best, closing four days in which almost every round he played was the finest of his career.
 

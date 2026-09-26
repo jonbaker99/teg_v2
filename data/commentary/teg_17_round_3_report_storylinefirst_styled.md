@@ -44,7 +44,7 @@ Gregg Williams travelled in the opposite direction, and with more commitment. A 
 ## David Mullin's fade lets Jon Baker escape in both the Trophy and the Green Jacket races
 <!-- storyline: race -->
 
-David Mullin had led the 2024 TEG Green Jacket (Gross) for 35 holes, ever since the second hole of round one. A double bogey at the first at Royal Óbidos handed it back to Jon Baker at the start of round three. The lead then changed twice more inside the round. Mullin retook it with a par at the sixth, only for Baker to draw level with bogeys at the second, one of the hardest holes on the course, and the seventh. Drawing level with bogeys is not glamorous. It is, however, permitted.
+Jon Baker had led the 2024 TEG Green Jacket (Gross) for 35 holes, ever since the second hole of round one. A triple bogey at the first at Royal Óbidos handed it to David Mullin at the start of round three. The lead then changed three more times inside the round. Baker drew level with a bogey at the second, one of the hardest holes on the course, and went back in front at the fifth. Mullin retook it with a par at the sixth, only for Baker to draw level with a bogey at the seventh and lead again at the eighth. Drawing level with bogeys is not glamorous. It is, however, permitted.
 
 By the close of play Baker held the Jacket outright. He was helped considerably by Mullin's Stableford total falling from 47 points in round two to 35, a swing of 12. Baker also carded a course personal best at Royal Óbidos, eight strokes better than his previous visit there.
 
