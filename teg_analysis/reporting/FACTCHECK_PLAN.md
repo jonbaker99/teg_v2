@@ -116,8 +116,33 @@ Items 2 (exact weekday shape), 3 and 5 were not independently re-flagged by this
 - Show the diff for review. Write to `_storylinefirst.md` only on approval, then re-run the free restyle (`_styled.md`) and the PDF build (`scripts/build_report_pdfs.py --check`).
 - Run tournament reports first (17), then round reports (68).
 
-### 6. Missed facts (item 6) — free
-Code lists the must-mention facts: records set or equalled, the winner's decisive lead change and personal-worst/best records. Flag any one no claim covers, as a **warning** ("not mentioned"). It uses WP2's detectors and needs no model call.
+### 6. Missed facts (item 6) — free — **done 2026-09-26**
+`missed_facts.py` lists each report's must-mention facts from WP2's detectors and warns on any the report never mentions (`rule="missed_fact"`, always a **warning**). No model call. Run it with `verify --all --rounds --missed`.
+
+**What must be mentioned** (decided at kick-off):
+- **Round reports:** course records set or equalled that round, low and high; and the Trophy/Jacket leader's decisive moment, only if it fell in that round.
+- **Tournament reports:** all of the TEG's course records; the winner's decisive moment in the Trophy and the Jacket; all-time streak and score-count records; personal-best/worst streaks. Per-player course PBs are left out (~59 across 18 TEGs, mostly noise).
+- **Decisive moment** = the start of the final leader's last unbroken *outright* spell. A tie ends the spell, which is stricter than `settled_facts`'s lead timeline. A competition tied at the end (an override decides it) is skipped.
+
+**What counts as covered.** One block (a paragraph or a heading) must hold the fact's number and a keyword for its type. The player must be named in the block, its section heading, or a cached claim quoted from it. The claim route resolves "he"; `_claims.json` is read, never written. Keyword rules:
+- An equalled record needs an equal-word plus "record" or the other holder's surname. "His best score on the Stadium" does not count.
+- Two exceptions. A player matching his own earlier card needs only the equal-word. A record shared within one round also accepts "record".
+- A lead change needs a lead word and the hole; tournament reports also need the round, in the block or its heading. "Wire to wire" covers it when nobody else ever led outright.
+
+**Acceptance met.** With the published text, TEG 18 and TEG 18 R4 flag Williams's R4 84 equalling Mullin's R3 84 Stadium record. Mullin's own record passes. A text that says "equalled the Stadium course record" passes. Tests: `tests/test_reporting_missed_facts.py` (real TEG 18 data, hand-written text).
+
+**85-report sweep (2026-09-26): 81 warnings from 191 facts** (untuned: 76 from 186).
+
+| Fact type | Missed / listed |
+|---|---|
+| Lead change (Trophy/Jacket) | 54 / 96 |
+| Course record equalled | 11 / 14 |
+| Course record set | 8 / 39 |
+| Course-worst equalled | 6 / 9 |
+| Course-worst set | 0 / 16 |
+| Streak and score-count records | 2 / 17 |
+
+**Hand-checked sample of the untuned run (31 warnings): 21 real misses, 8 matcher noise, 2 semantics.** Real misses: 6 of 6 records set (each told as a PB, never as a record), 10 of 16 equalled (e.g. TEG 12's Tour 84s, TEG 16 Williams's 80, TEG 8 Neumann's 114), and 5 of 9 lead changes (the report names the leader but not the moment). The noise fell into four patterns: a same-round co-record, matching his own worst, "wire to wire", and "advantage/held it". The tuning above fixed all four. The two semantics cases led to the stricter "last outright move" rule. That rule added 11 lead warnings; spot-checks (TEG 9 Patterson R4 H15, TEG 12 Patterson R3 H10) are real misses of the moment. Known residue: an equal later beaten in the same TEG (TEG 12 Jon Baker's 90) still warns.
 
 ### 7. Tests and docs
 - `tests/test_reporting_verify.py`: hand-written claim fixtures against real TEG 18 data (no LLM) — **done**. Items 1 (error), 2, 4, 5 (warnings) confirmed; item 3 documented as an out-of-cut gap, not force-fitted; item 6 (missed-fact) is WP6, not built. Plus `--all`/`--label` glob tests, `_verify.json` round-trip, and the quote-not-found-drops-the-claim rule.

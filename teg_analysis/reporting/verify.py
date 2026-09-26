@@ -28,6 +28,7 @@ CLI:  python -m teg_analysis.reporting.verify 14
       python -m teg_analysis.reporting.verify --all --rounds
       python -m teg_analysis.reporting.verify --all --label final   # legacy chain
       python -m teg_analysis.reporting.verify 14 --claims           # + LLM claim check
+      python -m teg_analysis.reporting.verify --all --rounds --missed  # + must-mention facts (free)
 """
 
 from __future__ import annotations
@@ -86,7 +87,7 @@ class Finding:
     severity: str                 # 'error' | 'warning' | 'unchecked'
     detail: str
     excerpt: str = ""
-    source: str = "mechanical"    # 'mechanical' (this module) | 'claim' (WP4)
+    source: str = "mechanical"    # 'mechanical' (this module) | 'claim' (WP4) | 'missed' (WP6)
 
     def __str__(self) -> str:
         tail = f"  …{self.excerpt}…" if self.excerpt else ""
@@ -478,6 +479,9 @@ def main(argv: Optional[list] = None) -> int:
                          "the live pipeline) or 'final' (the legacy chain)")
     ap.add_argument("--claims", action="store_true",
                     help="also run the LLM claim extractor (paid; off by default)")
+    ap.add_argument("--missed", action="store_true",
+                    help="also warn on must-mention facts the report never mentions "
+                         "(records, decisive lead change; free, no LLM call)")
     args = ap.parse_args(argv)
 
     import glob
@@ -511,6 +515,10 @@ def main(argv: Optional[list] = None) -> int:
         if args.claims:
             from teg_analysis.reporting.claims import check_claims
             findings = findings + check_claims(teg_num, round_num=round_num, label=args.label)
+        if args.missed:
+            from teg_analysis.reporting.missed_facts import check_missed_facts
+            findings = findings + check_missed_facts(teg_num, round_num=round_num,
+                                                     label=args.label)
         total_errors += sum(1 for f in findings if f.severity == "error")
         write_findings(teg_num, findings, round_num=round_num, label=args.label)
         print(format_findings(findings, teg_num=None).replace("report:", f"{label}:")

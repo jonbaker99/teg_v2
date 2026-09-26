@@ -48,7 +48,9 @@ data). Full account: `FACTCHECK_PLAN.md` → "Real extraction run, TEG 18".
 
 **Full-corpus sweep done (all 85 reports, four passes); 52 errors remain, mostly known extractor noise.** Sweep 4 fixed net-vs-gross run checks and the "last place = rank 1" habit. Nine real errors are now repaired in place: TEG 18's three, plus six more in TEG 13, TEG 15 R2, TEG 15 R3 (×3) and TEG 18 R1. Styled files and PDFs are rebuilt. Detail and the remaining noise: [FACTCHECK_PLAN.md](FACTCHECK_PLAN.md) → "Full-corpus sweep".
 
-**Still open:** triage of the remaining 52 (the next cheap fix is `rank_change` before/after confusion) and WP6 (missed-fact detection). The claims caches for the six edited reports are stale; the next `--claims` run re-extracts them (6 Sonnet calls).
+**Still open:** triage of the remaining 52 (the next cheap fix is `rank_change` before/after confusion) and WP6 (missed-fact detection).
+
+**WP6 missed-fact detection built (2026-09-26):** `verify --missed` (free) warns on 81 unmentioned must-mention facts across the 85 reports, and TEG 18 now flags item 6. Detail: [FACTCHECK_PLAN.md](FACTCHECK_PLAN.md) §6. The claims caches for the six edited reports are stale; the next `--claims` run re-extracts them (6 Sonnet calls).
 
 **"Sidebar" badges replaced with real topics (2026-09-22).** The printed badge above a story's
 headline should always name its actual subject (`JON BAKER`, `STADIUM COURSE`); 17 report-page
