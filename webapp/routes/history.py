@@ -390,15 +390,14 @@ def _honours_wins_table(df: pd.DataFrame, count_col: str) -> str:
     <colgroup> (Player/count/TEGs, or Player/count for Doubles' 2-column
     shape), uppercase tracked headers matching cell alignment, the win/double
     count as the primary bold tabular-nums number, a TEGs column that's
-    allowed to wrap instead of truncating or forcing scroll, and the max-count
-    row(s) shaded like the leaderboard's leader row (ties included). Player
+    allowed to wrap instead of truncating or forcing scroll. No leader-row
+    shading -- it's an honours list, not a leaderboard. Player
     names are never shortened -- no Initial.SURNAME form -- and are allowed
     to wrap onto a second line rather than being truncated."""
     if df is None or df.empty:
         return EMPTY_TABLE_HTML
 
     has_tegs = 'TEGs' in df.columns
-    max_count = df[count_col].max()
 
     colgroup = (
         "<col style='width:40%'><col style='width:15%'><col style='width:45%'>"
@@ -417,8 +416,7 @@ def _honours_wins_table(df: pd.DataFrame, count_col: str) -> str:
     rows.append("</tr></thead><tbody>")
 
     for _, row in df.iterrows():
-        row_cls = " class='top-rank'" if row[count_col] == max_count else ""
-        rows.append(f"<tr{row_cls}>")
+        rows.append("<tr>")
         rows.append(f"<td class='honours-player-cell'>{_wrap_player_name(row.get('Player'))}</td>")
         rows.append(f"<td class='honours-count-cell'>{escape(str(row[count_col]))}</td>")
         if has_tegs:

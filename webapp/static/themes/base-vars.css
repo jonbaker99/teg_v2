@@ -427,8 +427,7 @@ table.leaderboard td:nth-child(2) {
    4 columns of short values looked sparse stretched to the full data-card)
    rather than left at .teg-table's default content-sized auto width, since
    this table also needs `table-layout: fixed` for the colgroup percentages
-   to hold. Leader shading reuses the existing .top-rank convention (--leader-
-   tint, bold) rather than inventing a parallel class. */
+   to hold. No leader-row shading: an honours list, not a leaderboard. */
 .teg-table.honours-table {
     table-layout: fixed;
     width: 100%;
@@ -468,7 +467,7 @@ table.leaderboard td:nth-child(2) {
 /* No zebra striping anywhere on /honours -- winner tables above and the
    plain .teg-table Eagles/HIO tabs both opt out, scoped to the page so the
    global .teg-table default (site-wide) is untouched. */
-.honours-page .teg-table tbody tr:nth-child(even):not(.top-rank) {
+.honours-page .teg-table tbody tr:nth-child(even) {
     background-color: transparent;
 }
 

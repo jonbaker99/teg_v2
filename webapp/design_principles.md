@@ -191,7 +191,7 @@ to sticky-scroll or card reflow instead.
 **Third example: `/honours` winner tabs.** Trophy/Jacket/Spoon/Doubles
 (`_honours_wins_table` in `webapp/routes/history.py`, class `teg-table
 honours-table`) apply this pattern's fixed-`<colgroup>`/tracked-header/
-bold-primary-number/leader-shading recipe to a genuinely small, fixed-shape
+bold-primary-number recipe (no leader shading) to a genuinely small, fixed-shape
 table (Player + count, +TEGs for the three single-winner tabs) — full-bleed
 on mobile via a `.honours-page` wrapper (same `:has()` gutter-zeroing shape
 as `.latest-round-page`) and `table-wrapper--no-pin`, capped at `30rem` on
