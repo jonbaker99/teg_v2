@@ -248,6 +248,10 @@ Enforced by a test guard. `teg_analysis/` must import cleanly with no UI package
 
 `apply_score_writes` / `apply_admin_edits` validate score range (`MAX_SCORE = 20`), hole 1–18 and roster membership. The server — never a client clock — assigns write order. Don't add a write path that bypasses these.
 
+### Table presentation
+
+Before changing table layout or player-name rendering, read `webapp/design_principles.md` → **Tables** and follow its player-name wrapping rule.
+
 ### Webapp route handlers are sync `def`
 
 FastAPI threadpools them. `async def` handlers doing blocking work stall every polling phone. Use `async def` only to read a dynamic-keyed form, and wrap the heavy call in `run_in_threadpool`. See `webapp/README.md` → "Sync `def` handlers".

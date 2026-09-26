@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-22 (Landing-page standings, honours and links)
+**Last updated:** 2026-09-26 (Streak table formatting)
+
+## 2026-09-26 — Consistent streak table formatting
+
+Streaks by Player and Streak detail show zero lengths as dashes and single-hole streaks in grey, matching Latest Round. All four player-table selections use equal-width, centred value columns and two-line multiword headers. Desktop value columns stay compact; mobile shows full player names with tight line spacing, wrapping every name when any name needs two lines.
 
 ## 2026-09-22 — Landing-page links open individual report stories
 

@@ -560,6 +560,64 @@ table.leaderboard td:nth-child(2) {
 .streaks-table .streak-muted {
     color: var(--text-muted);
 }
+.teg-table.player-streaks-table {
+    width: auto;
+    table-layout: fixed;
+}
+.teg-table.player-streaks-table th:first-child {
+    width: 11rem;
+}
+.teg-table.player-streaks-table th:not(:first-child) {
+    width: 5rem;
+}
+.teg-table.player-streaks-table th:not(:first-child),
+.teg-table.player-streaks-table td:not(:first-child) {
+    text-align: center;
+    min-width: 0;
+}
+.teg-table.player-streaks-table th {
+    white-space: normal;
+    line-height: 1.2;
+}
+.teg-table.player-streaks-table td:first-child {
+    white-space: normal;
+}
+.player-streaks-table .player-name {
+    display: inline-block;
+}
+.player-streaks-table.names-break .player-name {
+    line-height: 1.1;
+}
+.player-streaks-table.names-break .player-name .first,
+.player-streaks-table.names-break .player-name .last {
+    display: block;
+}
+@media (max-width: 640px) {
+    .teg-table.player-streaks-table {
+        width: 100%;
+    }
+    .teg-table.player-streaks-table th:first-child {
+        width: 28%;
+    }
+    .teg-table.player-streaks-table th:not(:first-child) {
+        width: auto;
+    }
+    .teg-table.player-streaks-table th,
+    .teg-table.player-streaks-table td {
+        padding: 0.6rem 0.25rem;
+        font-size: 0.75rem;
+    }
+    .teg-table.player-streaks-table th:not(:first-child),
+    .teg-table.player-streaks-table td:not(:first-child) {
+        padding-left: 0.1875rem;
+        padding-right: 0.1875rem;
+    }
+    .teg-table.player-streaks-table td:first-child {
+        white-space: normal;
+        line-height: 1.15;
+        overflow-wrap: anywhere;
+    }
+}
 
 /* ── Buttons / Tabs ── */
 .tab-btn {

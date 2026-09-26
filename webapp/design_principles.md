@@ -131,20 +131,7 @@ Typography bullet above):
   cells carry their own background (e.g. scorecard shape cells), tint those cells on
   `tr:hover` so the highlight isn't masked.
 - Aim for Datawrapper-like density: tight row spacing, thin borders, generous but not excessive cell padding
-- **Player names on narrow screens** — where a player-name column would squeeze the
-  data on mobile, emit both a full name and a short `Initial.SURNAME` form (e.g.
-  `J.BAKER`) and swap to the short form below the mobile breakpoint via CSS, rather
-  than letting names wrap or push data off-screen. Shared helper:
-  `teg_analysis/display/scorecards.py:_player_name_spans` (classes `bw-name-full` /
-  `bw-name-short`; the display-toggle CSS itself lives in `webapp/static/mobile.css`,
-  loaded on every page, not just the scorecard bundle). Rolled out site-wide
-  2026-09-21 — see `webapp/TODOS.md`'s "Roll out mobile name shortening" entry for
-  the full list of pages and the one accepted remaining edge case. Generic
-  `df_to_html`-rendered tables opt in with `webapp/tables.py::df_to_html(...,
-  shorten_players=True)`; bespoke table renderers call `_player_name_spans`
-  directly. For wide tables that can't fit on mobile even when shortened,
-  prefer splitting into separate tables that sit side by side and wrap to stacked
-  when narrow (see the bestball/worstball Bestball and Worstball contribution tables).
+- **Player names wrap together** — preserve full names. If any player name in a table needs to wrap between first name and surname, every player name in that table must use the same two-line layout, with tight line spacing. Never mix one-line and two-line names in the same table. When all names fit again, return all names to one line. Recheck on initial load, viewport resize and HTMX content changes. Use the shared `.player-name` first/last spans and `.names-break` behaviour in `base.html`; keep the wrapper inside the table cell. Do not introduce initials or abbreviated names unless explicitly requested. Some existing tables still use `_player_name_spans` / `shorten_players=True`; that legacy behaviour is not the default for new or revised tables.
 
 ### Mobile table pattern — the reference implementation
 
