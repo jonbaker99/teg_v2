@@ -1170,6 +1170,7 @@ def test_contents_panel_complete_state_real_data(client):
     assert "TEG 18 report" in resp.text
     assert 'class="lead-teaser" href="/teg-reports?teg=18#story/0"' in resp.text
     assert "Also in this report" not in resp.text
+    assert 'class="lead-standfirst"' in resp.text  # 2-line clamp + "more" toggle
     assert resp.text.count("<li>") == 4  # capped, TEG 18 has 5 non-lead articles
     assert 'href="/results?teg=18"' in resp.text
     assert "View full report" in resp.text

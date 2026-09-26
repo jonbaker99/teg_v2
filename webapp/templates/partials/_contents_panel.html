@@ -34,10 +34,28 @@
         <p class="kicker">TEG {{ panel.teg_num }} report</p>
         <a class="lead-teaser" href="{{ panel.report_summary.lead_link | default(panel.report_summary.link) }}">
             <span class="teaser-headline">{{ panel.report_summary.headline }}</span>
-            {% if panel.report_summary.standfirst %}
-            <span class="teaser-standfirst">{{ panel.report_summary.standfirst }}</span>
-            {% endif %}
         </a>
+        {% if panel.report_summary.standfirst %}
+        <div class="lead-standfirst" id="lead-standfirst">
+            <p class="teaser-standfirst">{{ panel.report_summary.standfirst }}</p>
+            <button type="button" class="standfirst-toggle" aria-expanded="false" hidden>more</button>
+        </div>
+        <script>
+        (function () {
+            var box = document.getElementById("lead-standfirst");
+            if (!box) return;
+            var text = box.querySelector(".teaser-standfirst");
+            var btn = box.querySelector(".standfirst-toggle");
+            // Only offer "more" when the 2-line clamp actually hides text.
+            if (text.scrollHeight > text.clientHeight + 1) btn.hidden = false;
+            btn.addEventListener("click", function () {
+                var open = box.classList.toggle("expanded");
+                btn.setAttribute("aria-expanded", open ? "true" : "false");
+                btn.textContent = open ? "less" : "more";
+            });
+        })();
+        </script>
+        {% endif %}
         {% endif %}
         {% if panel.report_summary and panel.report_summary.other_articles %}
         <ul class="headline-list">
