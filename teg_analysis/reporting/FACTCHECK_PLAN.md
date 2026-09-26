@@ -181,17 +181,19 @@ Tests: `tests/test_reporting_verify.py` (six fixtures against real data, no LLM)
 - TEG 5 tournament: "16th, 17th and 18th in level par gross" (Neumann). The paragraph opens "Wednesday's move to Palmares" — that is R4 (0, 0, 0 gross; round of 96), not R3.
 - TEG 16 R2: "three holes running without a single net par" (Alex Baker). True in round 2 (net +2, +1, +1 at 13-15); the extractor attached round 1.
 
-**Real errors — six repairs drafted, NOT yet written (awaiting approval)** via `claims.repair_report()` on the `agent` provider (Opus, fresh subagent per prompt), mechanical re-verify clean, each new sentence hand-checked against the parquet:
+**Real errors — six repaired and written 2026-09-26** (approved; TEG 15 R2 with a scope nit: "the only shot he dropped in that spell") via `claims.repair_report()` on the `agent` provider (Opus, fresh subagent per prompt), mechanical re-verify clean, each new sentence hand-checked against the parquet:
 
 | Report | Was | Now |
 |---|---|---|
 | TEG 15 R3 | "ran holes 3 to 7 without dropping a gross shot" (Patterson; bogey at the 4th) | "…for just one dropped gross shot, a bogey at the 4th" |
 | TEG 15 R3 | "then ran four holes without managing better than a bogey" (Alex Baker; the 5th was a birdie) | "three holes" |
 | TEG 15 R3 | "9 points from the closing three holes … bogey-par-bogey" (Neumann; that was 14-16, the closing three scored 5) | "the next three holes" |
-| TEG 15 R2 | "extended the run to six holes without a gross shot dropped" (Williams; bogey at the 8th) | bogey at the 8th named; "six pars in seven holes" |
+| TEG 15 R2 | "extended the run to six holes without a gross shot dropped" (Williams; bogey at the 8th) | "A bogey at the 8th was the only shot he dropped in that spell… six pars in seven holes" |
 | TEG 13 tournament | "arrived at the tee fourth from bottom" (Mullin; he was 4th of 5) | "second from bottom" |
 | TEG 18 R1 | bogey at the 5th moved him "into outright second place" in the Jacket (Jon Baker; it took him into the outright lead) | "into the outright lead" |
 
 The plan's earlier table placed the two TEG 15 Baker/Neumann errors in the tournament report; both are in the R3 round report.
 
 **Known gap in the re-verify:** re-extracting a single repaired paragraph loses the round context, so most re-extracted claims come back `unchecked`. The hand check against the parquet is what actually verified these six.
+
+Each edit was spliced into both `_storylinefirst.md` and `_storylinefirst_styled.md` (the paragraph appears verbatim in both). The affected PDFs were rebuilt; `build_report_pdfs.py --check --all` is clean. The claims caches for these reports are now stale by hash; the next `--claims` run re-extracts them.

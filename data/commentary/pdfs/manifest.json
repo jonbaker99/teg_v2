@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-22T19:42:49.909785+00:00",
+  "generated_at": "2026-09-26T21:24:45.740263+00:00",
   "paper_width": 794,
   "layout_width": 1180,
   "entries": {
@@ -274,9 +274,9 @@
       "built_at": "2026-09-15T16:19:40.353469+00:00"
     },
     "teg_13": {
-      "sha": "68a814d98ee5efe92163b5d69d9e61cc0befa392df860d9b45e5af92ca97859b",
-      "bytes": 312231,
-      "built_at": "2026-09-15T16:19:40.353472+00:00"
+      "sha": "1079da7d7a8993482a6ac8cd4edb89281884fd20af6fd00df3c6fcc7af92c9b6",
+      "bytes": 312222,
+      "built_at": "2026-09-26T21:24:35.427578+00:00"
     },
     "teg_13_round_1": {
       "sha": "5d81a711369398c4758ea4bf99c50693924f8793d5da60f9989aedbe732aed41",
@@ -334,14 +334,14 @@
       "built_at": "2026-09-15T16:19:40.353499+00:00"
     },
     "teg_15_round_2": {
-      "sha": "cae041d4524cc2692b502f9781ec2a1c1df83f58df94a0dbb9e0401bf8f5d34f",
-      "bytes": 287953,
-      "built_at": "2026-09-15T16:19:40.353501+00:00"
+      "sha": "d6de7974c9309c8da166b8a07bc9e017debbd35de5312deca5dff5ab1bf9f1a1",
+      "bytes": 288028,
+      "built_at": "2026-09-26T21:24:40.320222+00:00"
     },
     "teg_15_round_3": {
-      "sha": "1c7eace9d376909e084f55ba06801ea1a16a2b895d1c111fb9b3be4277bb430d",
-      "bytes": 293584,
-      "built_at": "2026-09-15T16:19:40.353504+00:00"
+      "sha": "d516aa628e092614e0337630c9c37fbf684c3be1f0fe54687ad36fb1f34d57e7",
+      "bytes": 293603,
+      "built_at": "2026-09-26T21:24:40.320239+00:00"
     },
     "teg_15_round_4": {
       "sha": "edf93913c7122f1321e2f83b6dd5beb5948afa307b853bfab71792be9aa2c86b",
@@ -399,14 +399,14 @@
       "built_at": "2026-09-15T16:19:40.353530+00:00"
     },
     "teg_18": {
-      "sha": "69c4ddbf7c231956a52472db6f3e36e406f38178acd628dc96fb1166aa418e1b",
-      "bytes": 400151,
-      "built_at": "2026-09-22T19:42:49.909783+00:00"
+      "sha": "4c536662fb609395b6e5155eb24cc5baf473b4933f2463932e9be59adb48daae",
+      "bytes": 317941,
+      "built_at": "2026-09-26T21:24:45.740226+00:00"
     },
     "teg_18_round_1": {
-      "sha": "3c0298633ee0f41eae1089de944ebe6fff8c8e0c6831ff0324b0d13c5d230d74",
-      "bytes": 303536,
-      "built_at": "2026-09-15T16:19:40.353534+00:00"
+      "sha": "c35ca132dcb308219779ea73d826c273697978aab01bc1cbce6d477d9964caf9",
+      "bytes": 303528,
+      "built_at": "2026-09-26T21:24:45.740247+00:00"
     },
     "teg_18_round_2": {
       "sha": "531e4d84f9d480a025ac0e1a4c8b6d3d2a12d95f77b0c112ef89efbc6f2ce321",

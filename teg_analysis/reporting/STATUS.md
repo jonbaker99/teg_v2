@@ -14,7 +14,7 @@
 
 ## START HERE — picking this up in a new chat (2026-09-26)
 
-**Fact-check upgrade WP1–4 + 7 built (2026-09-26); WP5–6 still open.** D3 now checks the reports that
+**Fact-check upgrade WP1–4 + 7 built and run across all 85 reports (2026-09-26); 9 confirmed errors repaired; WP6 open.** D3 now checks the reports that
 actually exist: `verify.py` defaulted to the archived `report_final.md` glob, which matched zero of
 the 85 live `*_report_storylinefirst.md` files — silently. Re-baselined at 3 errors / 33 warnings
 across all 85 (matches the pre-existing TODOS.md count exactly, confirming the glob fix is correct,
@@ -44,12 +44,11 @@ more rounds of prompt/checker hardening followed, driven by real false positives
 descriptors with no par to convert them, a Jacket-total unit mismatch). Final result reproduces item 1
 and item 4 exactly, touches item 2's ambiguity from a different angle, and **finds two genuinely new,
 previously undiagnosed errors** (Gregg Williams's R1 and R3 opening-hole claims each contradicted by the
-data). Full account: `FACTCHECK_PLAN.md` → "Real extraction run, TEG 18". **The 17-report sweep itself
-is still not run** — worth doing now that the systematic issues are fixed, before WP5.
+data). Full account: `FACTCHECK_PLAN.md` → "Real extraction run, TEG 18".
 
-**WP5 (repair the 85 reports in place) and WP6 (missed-fact detection) are still open** — deliberately
-out of scope for this session. Diagnosis, work packages, costs and open decisions:
-[FACTCHECK_PLAN.md](FACTCHECK_PLAN.md).
+**Full-corpus sweep done (all 85 reports, four passes); 52 errors remain, mostly known extractor noise.** Sweep 4 fixed net-vs-gross run checks and the "last place = rank 1" habit. Nine real errors are now repaired in place: TEG 18's three, plus six more in TEG 13, TEG 15 R2, TEG 15 R3 (×3) and TEG 18 R1. Styled files and PDFs are rebuilt. Detail and the remaining noise: [FACTCHECK_PLAN.md](FACTCHECK_PLAN.md) → "Full-corpus sweep".
+
+**Still open:** triage of the remaining 52 (the next cheap fix is `rank_change` before/after confusion) and WP6 (missed-fact detection). The claims caches for the six edited reports are stale; the next `--claims` run re-extracts them (6 Sonnet calls).
 
 **"Sidebar" badges replaced with real topics (2026-09-22).** The printed badge above a story's
 headline should always name its actual subject (`JON BAKER`, `STADIUM COURSE`); 17 report-page
