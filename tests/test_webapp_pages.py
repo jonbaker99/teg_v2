@@ -104,7 +104,7 @@ def test_phone_explore_navigation_is_complete_and_current(client):
     assert 'nav-hamburger--phone' in resp.text
     assert 'nav-hamburger--tablet' in resp.text
     assert resp.text.count('aria-controls="mobile-explore-sheet"') == 2
-    assert '/static/mobile.css?v=41' in resp.text
+    assert '/static/mobile.css?v=42' in resp.text
     assert '/static/ui-polish.js?v=5' in resp.text
 
 

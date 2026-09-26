@@ -627,50 +627,6 @@
     font-size: 12px;
     border-radius: 0 0 6px 6px;
   }
-  /* Stacked variant (every /records tab): one .rec-group per record -- label and
-     value on a head line, then one .rec-holder row per player: full name
-     with the occasion(s) beside it in muted text. .is-wrapped (set by
-     ui-polish.js when any row overflows) drops every occasion onto its
-     own line under the name, list-wide, so rows never mix the two forms.
-     Rules separate records, not holders. */
-  .records-page .records-list--stacked .rec-group {
-    border-bottom: 1px solid var(--table-cell-border, #e0e0e0);
-    padding: 10px 0 8px;
-  }
-  .records-page .records-list--stacked .rec-group:first-child {
-    border-top: 1px solid var(--table-cell-border, #e0e0e0);
-  }
-  .records-page .rec-group-head {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    padding: 0 12px 4px;
-  }
-  .records-page .rec-group-head .rec-label { flex: 1 1 auto; }
-  .records-page .records-list--stacked .rec-holder {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    padding: 4px 12px;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-  .records-page .records-list--stacked .rec-holder .rec-identity {
-    flex: 0 0 auto;
-    overflow: visible;
-  }
-  .records-page .rec-whens {
-    font-size: 12px;
-    color: var(--text-muted, #666);
-  }
-  .records-page .rec-when + .rec-when::before { content: "; "; }
-  .records-page .records-list--stacked.is-wrapped .rec-holder {
-    display: block;
-    white-space: normal;
-  }
-  .records-page .records-list--stacked.is-wrapped .rec-when { display: block; line-height: 1.35; }
-  .records-page .records-list--stacked.is-wrapped .rec-when + .rec-when::before { content: none; }
-
   /* ── Leaderboard hero (M2.7) ──
      Markup in partials/_standings_hero.html, fed by _results_context
      (lb_hero). On phones the champion/spoon pods sit above the reflowed

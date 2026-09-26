@@ -86,7 +86,8 @@
       "Bash(git commit -qm 'Records mobile: Score Counts shows occasions inline, hides counts below 2 *)",
       "Bash(python -m pytest tests/test_webapp_pages.py -q -k records)",
       "Bash(git commit -qm 'Records mobile: Streaks uses the stacked holder layout *)",
-      "Bash(git commit -qm 'Records mobile: TEG, Round and 9-Hole use the stacked holder layout *)"
+      "Bash(git commit -qm 'Records mobile: TEG, Round and 9-Hole use the stacked holder layout *)",
+      "Bash(git commit -qm 'Records: stacked list on desktop too; plain-words streak locations *)"
     ],
     "deny": [],
     "ask": [
