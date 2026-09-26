@@ -72,7 +72,9 @@ It cannot replace the judge. The written notes were repeatedly the most useful o
 - A dev-only dependency. It must never enter `requirements.txt`: the webapp never generates reports.
 - Question wording needs tuning and a labelled test set before its numbers mean anything.
 
-## Spike status (2026-09-26): built, not yet run against Jev
+## Spike status (2026-09-26): paused, waiting on Jev API access
+
+**Paused.** TypeSafe's API access has a waitlist, so there is no key yet. Launch coverage said there was no waitlist, but that was wrong. Everything below is ready to run once access comes through.
 
 The harness and labelled set are ready. The Jev call itself is blocked in the cloud session: the network policy denies `api.typesafe.ai`, and no `TYPESAFE_API_KEY` is set. Everything else ran.
 
@@ -107,7 +109,7 @@ It prints the metrics table, latency, input-token cost and every miss or false a
 
 **Found while labelling: a real fault class nobody had flagged.** Archived round reports disagree about which Baker brother is older. TEG 10 R1 and TEG 11 R4 say Alex is older; TEG 11 R2, TEG 13 R4 and TEG 18 R1 say he is younger. The data records only that they are brothers, so every one of these claims is invented. None appears in a currently served report: all 10 files are in `data/commentary/archive 2026 v4/round_reports/`. The rule in `authoring.py` already forbids it. **Now caught by `verify.py`'s `no_sibling_order` check (2026-09-26)**: 34 hits across the archived files, none in served reports.
 
-**To finish:** allow `api.typesafe.ai` in the environment's network settings and add `TYPESAFE_API_KEY`, or run it locally. Then record the verdict here, fold it into `STATUS.md` and delete `scripts/jev_spike/` and this file.
+**To resume:** once off the waitlist, allow `api.typesafe.ai` in the environment's network settings and add `TYPESAFE_API_KEY`, or run it locally. Then record the verdict here, fold it into `STATUS.md` and delete `scripts/jev_spike/` and this file.
 
 ## Sources
 
