@@ -30,10 +30,7 @@
     </div>
     <div class="surface surface-complete">
         {% if panel.report_summary %}
-        <div class="card-head">
-            <p class="kicker"><a class="heading-link" href="{{ panel.report_summary.link }}">TEG {{ panel.teg_num }} headlines ↗</a></p>
-            <span class="card-hint">Click a headline for the full story</span>
-        </div>
+        <p class="kicker"><a class="heading-link" href="{{ panel.report_summary.link }}">TEG {{ panel.teg_num }} headlines ↗</a></p>
         <a class="lead-teaser" href="{{ panel.report_summary.lead_link | default(panel.report_summary.link) }}">
             <span class="hl-kicker">The Champion</span>
             <span class="teaser-headline">{{ panel.report_summary.headline }}</span>

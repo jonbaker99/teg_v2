@@ -1168,7 +1168,6 @@ def test_contents_panel_complete_state_real_data(client):
     assert "Final Standings" in resp.text
     assert "Green Jacket (gross)" not in resp.text  # not repeated -- honours line owns this
     assert "TEG 18 headlines" in resp.text
-    assert "Click a headline for the full story" in resp.text
     assert 'class="lead-teaser" href="/teg-reports?teg=18#story/0"' in resp.text
     assert "Also in this report" not in resp.text
     assert "The Champion" in resp.text  # lead story kicker
