@@ -400,6 +400,10 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
     layout structure.
 
 ## Mobile & dark mode
+- [X] **Records streaks: clearer "where it happened"** — done 2026-09-26: `describe_streak_span` (`teg_analysis/analysis/streaks.py`) turns record `When` into e.g. `TEG 7, R1 H8 to R2 H12` / `TEG 2, R1 H1 to date`; raw `Location` unchanged for the report pipeline. Was: — streak locations read `T17 R2 H9 to T17 R2 H10` (`format_hole_location` / `calculate_window_streaks`, `teg_analysis/analysis/streaks.py`). Describe them in plain words (TEG, round, holes; course where useful; "to date" for live streaks). Same string feeds `/records`, Scoring and player pages.
+- [X] **Records desktop: adopt the mobile stacked layout?** — done 2026-09-26: `/records` renders only the stacked list at every width. Was: — mobile `/records` now groups holders under each record with full names and inline details (PR #121). Desktop still shows the old table with initials, `(N times)` and `→` rows. Decide whether desktop should use the same list.
+- [X] **Records Streaks tab: full names on mobile** — done 2026-09-26: stacked layout shared with Score Counts (`_build_stacked_records_list`, `webapp/routes/records.py`).
+- [ ] **`_player_name_spans` omits the space after the initial** — the docstring promises `Initial. SURNAME`; the code emits `J.BAKER` (`teg_analysis/display/scorecards.py`). Fix or align the docstring wherever short names remain.
 
 - [X] **Phase M1 — app shell on phones** — bottom tab bar, app bar, segmented controls, sticky-column tables. Done (see `MOBILE_PLAN.md` → Status).
 - [X] **Phase M2.7 — leaderboard card reflow** — `/leaderboard` + `/results` standings as hero pods + card rows on phones. **Superseded by I1** (2026-09-20, `webapp/design_reviews/ui_workstream/I1-handoff.md`): the per-player card list was CSS-dead since R3.2 shipped (`.standings-page .lb-cards { display: none }` always won); I1 deleted it and gave the unified standings table its own phone reflow instead. Hero pods stay, unchanged.

@@ -104,8 +104,8 @@ def test_phone_explore_navigation_is_complete_and_current(client):
     assert 'nav-hamburger--phone' in resp.text
     assert 'nav-hamburger--tablet' in resp.text
     assert resp.text.count('aria-controls="mobile-explore-sheet"') == 2
-    assert '/static/mobile.css?v=41' in resp.text
-    assert '/static/ui-polish.js?v=4' in resp.text
+    assert '/static/mobile.css?v=42' in resp.text
+    assert '/static/ui-polish.js?v=5' in resp.text
 
 
 def test_phone_explore_static_hooks(client):
@@ -680,6 +680,43 @@ def test_embedded_scorecard_keeps_inactive_state_controls(client, page):
         "teg": 7, "tab": "net", "round": "", "type": "one_round_all_players",
     })
     _assert_ok_no_error(partial)
+
+
+@pytest.mark.parametrize("tab", ["teg", "round", "9hole"])
+def test_records_score_tabs_mobile_list_is_stacked(client, tab):
+    resp = client.get(f"/records/tab/{tab}")
+    _assert_ok_no_error(resp)
+    mobile = resp.text.split("records-list--stacked", 1)[1].split("<table", 1)[0]
+    assert "bw-name-short" not in mobile
+    assert "<span class='rec-label'>Gross</span>" in mobile
+    assert "Best Gross" not in mobile
+    assert "rec-holder" in mobile
+
+
+def test_records_score_counts_mobile_list_is_stacked_by_holder(client):
+    resp = client.get("/records/tab/score_counts")
+    _assert_ok_no_error(resp)
+    # First section's mobile list only; the next section's desktop table
+    # (which keeps the collapsed "→" / initials rows) follows it.
+    mobile = resp.text.split("records-list--stacked", 1)[1].split("<table", 1)[0]
+    assert "rec-group-head" in mobile
+    assert "rec-holder" in mobile
+    identities = re.findall(r"<span class='rec-identity'>([^<]*)</span>", mobile)
+    assert identities and all(" " in name and "/" not in name for name in identities)
+    assert "→" not in mobile
+
+
+def test_records_streaks_mobile_list_is_stacked_by_holder(client):
+    resp = client.get("/records/tab/streaks")
+    _assert_ok_no_error(resp)
+    # First section's mobile list only; the next section's desktop table
+    # (which keeps the "(N times)" placeholder text) follows it.
+    mobile = resp.text.split("records-list--stacked", 1)[1].split("<table", 1)[0]
+    assert "rec-group-head" in mobile
+    assert "rec-holder" in mobile
+    identities = re.findall(r"<span class='rec-identity'>([^<]*)</span>", mobile)
+    assert identities and all(" " in name and "/" not in name for name in identities)
+    assert "times)" not in mobile
 
 
 def test_public_request_shell_exposes_one_retry_contract(client):

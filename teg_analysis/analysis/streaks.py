@@ -5,6 +5,7 @@ tracks running streaks across player careers, and summarizes max streaks.
 """
 
 import logging
+import re
 
 import pandas as pd
 
@@ -358,6 +359,49 @@ def get_player_window_streaks(all_data, streaks_df, player=None, teg=None, round
     return calculate_window_streaks(filtered)
 
 
+_STREAK_SPAN_RE = re.compile(
+    r'^T0*(\d+) R(\d+) H(\d+) to T0*(\d+) R(\d+) H(\d+)$'
+)
+
+
+def describe_streak_span(location: str, is_current: bool = False) -> str:
+    """Turn a raw 'Txx Rn Hn to Txx Rn Hn' streak location into readable text.
+
+    Does not touch the raw `Location` format produced by
+    ``calculate_window_streaks`` / ``format_hole_location`` (that string is
+    parsed by ``teg_analysis.reporting.milestone_records``) — this only
+    reformats a copy of it for human-facing display.
+
+    Args:
+        location: A string like "T17 R2 H9 to T17 R2 H10", or "-" for no
+            streak found.
+        is_current: If True, the streak is still running: only the start is
+            shown, followed by " to date".
+
+    Returns:
+        A readable description, or `location` unchanged if it doesn't match
+        the expected format (e.g. "-").
+    """
+    if not isinstance(location, str):
+        return location
+
+    match = _STREAK_SPAN_RE.match(location.strip())
+    if not match:
+        return location
+
+    teg1, round1, hole1, teg2, round2, hole2 = match.groups()
+
+    if is_current:
+        return f"TEG {teg1}, R{round1} H{hole1} to date"
+
+    if teg1 == teg2 and round1 == round2:
+        return f"TEG {teg1} R{round1}, H{hole1} to H{hole2}"
+    elif teg1 == teg2:
+        return f"TEG {teg1}, R{round1} H{hole1} to R{round2} H{hole2}"
+    else:
+        return f"TEG {teg1}, R{round1} H{hole1} to TEG {teg2}, R{round2} H{hole2}"
+
+
 # --- Record streaks (direction-parameterised) ---------------------------------
 
 def prepare_record_streaks_data(all_data, direction='good'):
@@ -408,7 +452,7 @@ def prepare_record_streaks_data(all_data, direction='good'):
                 'Streak Type': streak_type,
                 'Record': record_display,
                 'Player': row['Player'],
-                'When': location
+                'When': describe_streak_span(location, is_current)
             })
 
     return pd.DataFrame(records)

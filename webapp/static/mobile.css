@@ -654,7 +654,6 @@
     font-size: 12px;
     border-radius: 0 0 6px 6px;
   }
-
   /* ── Leaderboard hero (M2.7) ──
      Markup in partials/_standings_hero.html, fed by _results_context
      (lb_hero). On phones the champion/spoon pods sit above the reflowed

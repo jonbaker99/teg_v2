@@ -427,3 +427,32 @@
     syncSelections();
     history.replaceState({}, '', canonicalUrl());
 })();
+
+/* /records stacked lists (mobile): show each holder's occasions beside the
+   name while every row fits on one line; as soon as any row on the page
+   would overflow, wrap them all under their names (.is-wrapped) so rows
+   never mix the two forms. Re-checked after HTMX tab swaps and resizes. */
+(function () {
+    function fitStackedRecords() {
+        document.querySelectorAll('.records-page').forEach(function (page) {
+            var lists = page.querySelectorAll('.records-list--stacked');
+            if (!lists.length) return;
+            lists.forEach(function (list) { list.classList.remove('is-wrapped'); });
+            var overflows = Array.from(page.querySelectorAll('.records-list--stacked .rec-holder'))
+                .some(function (row) { return row.scrollWidth > row.clientWidth + 1; });
+            lists.forEach(function (list) { list.classList.toggle('is-wrapped', overflows); });
+        });
+    }
+    var timer = null;
+    window.addEventListener('resize', function () {
+        clearTimeout(timer);
+        timer = setTimeout(fitStackedRecords, 100);
+    });
+    document.addEventListener('htmx:afterSwap', fitStackedRecords);
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', fitStackedRecords);
+    } else {
+        fitStackedRecords();
+    }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitStackedRecords);
+})();

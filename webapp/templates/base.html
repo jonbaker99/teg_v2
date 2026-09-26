@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-    <link rel="stylesheet" href="/static/themes/base-vars.css?v=36">
+    <link rel="stylesheet" href="/static/themes/base-vars.css?v=37">
     <link rel="stylesheet" href="/static/themes/{{ request.state.theme }}.css?v=25">
     {% if request.state.font_pairing_override %}
     <!-- Dev-only font-pairing override (/design/typography, font_pairing cookie) --
@@ -28,7 +28,7 @@
     <!-- Dark mode — inert until <html data-mode="dark">; default is light. -->
     <link rel="stylesheet" href="/static/themes/dark.css?v=3">
     <!-- Mobile app shell — all rules gated to ≤640px; inert on desktop/iPad. -->
-    <link rel="stylesheet" href="/static/mobile.css?v=41">
+    <link rel="stylesheet" href="/static/mobile.css?v=42">
     <!-- Structural hierarchy debug overlay (dev tool; inert unless body.debug-structure) -->
     <link rel="stylesheet" href="/static/themes/debug-structure.css?v=3">
     <!-- Material Symbols — nav/contents icons (names defined once in webapp/nav.py) -->
@@ -36,7 +36,7 @@
     <!-- Flag icons — CSS SVG flags via .fi.fi-{code} -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
     <link rel="stylesheet" href="/static/ui-polish.css?v=4">
-    <script defer src="/static/ui-polish.js?v=4"></script>
+    <script defer src="/static/ui-polish.js?v=5"></script>
     {% block extra_head %}{% endblock %}
     <style>
         /* Material Symbols base (Google's css2 endpoint ships only @font-face). */
