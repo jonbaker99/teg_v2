@@ -101,7 +101,14 @@ def test_use_provider_restores_previous(monkeypatch):
 
 
 def test_api_provider_without_key_says_how_to_avoid_it(monkeypatch):
-    """The error should point at the free path, not just complain about the key."""
+    """The error should point at the free path, not just complain about the key.
+
+    `get_api_key()` calls `load_dotenv()` (2026-09-26, so a bare CLI/script sees
+    the same `.env` the webapp does) — patched to a no-op here, otherwise a real
+    developer checkout's `.env` would silently refill the vars this test just
+    deleted and the RuntimeError below would never fire.
+    """
+    monkeypatch.setattr("dotenv.load_dotenv", lambda *a, **k: False)
     for var in ("ANTHROPIC_API_KEY", "TEG_ANTHROPIC_API_KEY"):
         monkeypatch.delenv(var, raising=False)
     with llm.use_provider("api"):

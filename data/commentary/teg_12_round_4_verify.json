@@ -1,0 +1,198 @@
+{
+  "teg": 12,
+  "round": 4,
+  "label": "storylinefirst",
+  "errors": 1,
+  "warnings": 0,
+  "findings": [
+    {
+      "rule": "claim_total",
+      "severity": "error",
+      "detail": "John Patterson's Trophy (Stableford) total is 172 gross, claim says 10",
+      "excerpt": "John Patterson is the TEG 12 Trophy champion, by ten points from Gregg Williams.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "John Patterson is the TEG 12 Trophy champion, by ten points from Gregg Williams.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Holes 3 to 6 yielded 13 points, two bogeys included, the strokes on his card doing quiet and uncomplaining work throughout.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Three consecutive double bogeys.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "from the 15th, he dropped six shots in three holes",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "a bogey and two doubles through the 6th",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "A birdie at the 7th, one of the easier holes on the course, stopped the slide.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "What followed was the best round he has ever played on the Stadium course, eight shots better than his last visit there.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "The Trophy gap went from eight points to ten.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "He played the golf of his life and finished two points further away than when he started.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "Jon Baker led the Green Jacket race throughout the same round.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "He dropped to the bottom of that standing with a wretched start, then spent the rest of the round demonstrating that he had not needed to.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Ten shots gone in three holes, and not one net par among them.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_comparison",
+      "severity": "unchecked",
+      "detail": "comparison with an explicit metric/competition is not numerically checked yet",
+      "excerpt": "That was enough to flip him past Alex Baker and to the foot of the Spoon race, four points adrift of the next man up.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "four points adrift of the next man up",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "A double bogey at the 13th and a bogey at the 14th threatened to undo everything he had rebuilt.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Then, at the par-5 15th, one of the easiest holes on the course, he holed out for an eagle.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Neumann signed for a gross 96, his personal best at the Stadium course, four shots inside the 100 he had carried into this, his fourth visit to the venue.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Two separate collapses, and still the best score he has ever posted at Camiral.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It is a new course record, beating the previous mark of 90 across 21 visits to the venue.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It is also a personal best there, improving on his own 90.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "He already led the Green Jacket going into the round.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "By the close his advantage had grown from five strokes to eight, with the race at the top entirely undisturbed.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Two bogeys in a row were followed by a double bogey at the par-5 7th, one of the easiest holes on the course.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "A birdie at the 8th stopped the rot.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "a double bogey at the 17th to end that run precisely as the record came into view",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The 89 stands as the best round ever posted on the course.",
+      "source": "claim"
+    }
+  ]
+}

@@ -1,0 +1,170 @@
+{
+  "teg": 6,
+  "round": null,
+  "label": "storylinefirst",
+  "errors": 0,
+  "warnings": 0,
+  "findings": [
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Gregg Williams opened the 2013 TEG in Catalonia by playing the best round in TEG history to date: -12 against par on net at PGA Catalunya's Tour Course, built on a gross 92 that stands as his personal-best gross round at +20.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "He stayed there for 59 holes across four rounds.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "Williams signed for a gross 113.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Williams then steadied, taking five net shots to par from the 10th to the 13th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Williams won the TEG 6 Trophy at level par, five clear of Baker",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "He signed for 113, his highest round of the tournament by six shots on his own Costa Brava 105.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "He came home in 100.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "David Mullin fared best of the four with 94, though he gave back seven shots between the 14th and the 16th, including an 8 at the par-five 15th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Jon Baker began TEG 6 in Catalonia with the best gross round of his career, an 18-over 90 at PGA Catalunya's Tour Course.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_comparison",
+      "severity": "unchecked",
+      "detail": "comparison claim missing both players",
+      "excerpt": "Almost all of the good work came early, his front and back nines split by 13 shots.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Baker closed with three straight net gains at 16, 17 and 18 to take the TEG 6 Green Jacket lead from David Mullin",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "who had held it for 51 holes since the third hole of the tournament",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "David Mullin took the TEG 6 Green Jacket at +85, four clear of Jon Baker, though the gross contest was not the procession the margin suggests.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "Mullin's third round was the worst gross round of his career, +29 for a 101.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Baker had built his position early, posting a personal-best gross round of +18 on the Tour course in round one.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The high point came at Costa Brava on the Sunday, where Meller signed for a round of 90.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_weekday",
+      "severity": "unchecked",
+      "detail": "weekday claim missing round/weekday",
+      "excerpt": "The high point came at Costa Brava on the Sunday, where Meller signed for a round of 90.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "On net terms it was a personal best at -5, and the gross figure of +17 was a personal best too, the first time he had assembled a full round of that quality in TEG competition.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "It also moved him from fourth to fifth in the TEG 6 Wooden Spoon standings, a position he did not subsequently relinquish, or appear to contest.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "His round came in at 109.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "no final totals for 'Wooden Spoon'",
+      "excerpt": "Meller finished the tournament on +30 net against par and collected the Wooden Spoon.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "and takes a third Wooden Spoon by 17",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "The two 10s in Round 3 accounted for seven net shots between them, which was most of the gap he needed to close.",
+      "source": "claim"
+    }
+  ]
+}

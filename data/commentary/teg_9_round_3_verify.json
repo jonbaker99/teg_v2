@@ -1,0 +1,128 @@
+{
+  "teg": 9,
+  "round": 3,
+  "label": "storylinefirst",
+  "errors": 0,
+  "warnings": 0,
+  "findings": [
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "Alex Baker's third round at Royal \u00d3bidos, played on the Sunday of TEG 3, produced 42 points on the Stableford card.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Between the 10th and the 12th, Baker bled eight shots.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It also delivered a course personal best at Royal \u00d3bidos, 13 shots better than his last visit.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "In the Trophy race, John Patterson stayed on top, though the gap at the summit tightened from 10 shots to 3.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "In the Trophy race, John Patterson stayed on top, though the gap at the summit tightened from 10 shots to 3.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "By the 5th he had 16 Stableford points banked, built on a birdie at the par-5 2nd, with a single blemish at the brutal SI-1 4th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Three holes, no net pars, eight gross shots gone, on a stretch that included the SI-2 12th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "What had promised something special finished as 34 points and +22 gross.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Mullin had carried a seven-shot lead into the round in the TEG 16 Green Jacket race.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "He left with a seven-shot lead.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "John Patterson arrived at Royal \u00d3bidos with a ten-shot lead in the TEG 9 Trophy, built on a near-record 49-point round two.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "John Patterson arrived at Royal \u00d3bidos with a ten-shot lead in the TEG 9 Trophy, built on a near-record 49-point round two.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "He bled 8 shots across holes 2 to 4: a double bogey at the par-5 2nd, then triple bogeys at the 3rd and the 4th, the last of those on the hardest hole on the course.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "The total came to 34 points, a fall of 15 from his round two score.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "He remained top of the Trophy standings, which is the only mercy available here.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "The lead that had looked unassailable now stood at three shots going into round four.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "David Mullin, meanwhile, continued to lead the Green Jacket race, his advantage entirely untroubled by Patterson's afternoon.",
+      "source": "claim"
+    }
+  ]
+}

@@ -1,0 +1,163 @@
+{
+  "teg": 5,
+  "round": 4,
+  "label": "storylinefirst",
+  "errors": 0,
+  "warnings": 0,
+  "findings": [
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Between the 10th and the 13th he dropped ten shots.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "At the 16th he added a quintuple bogey 9",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "The gap to the field closed only from five shots to two.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The closing pressure came from Jon Baker, who shot a personal-best gross round of 90.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_comparison",
+      "severity": "unchecked",
+      "detail": "comparison claim missing both players",
+      "excerpt": "That is four better than his previous mark on the course, and it deserves stating without qualification.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Baker handed over five shots to par across the first four holes.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "At the short 5th he took a quintuple bogey 8, which on a short hole requires a certain commitment.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Williams's overnight advantage proved just durable enough, and the Trophy went by two shots.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "David Mullin's overnight edge, meanwhile, kept him clear at the top of the Green Jacket race.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "extending his overall command even as the margin there narrowed from 14 strokes to 12",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "In the Trophy he fell from first place after round one all the way to fifth.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "a quadruple-bogey nine at the par-5 6th sent him from fourth to bottom of the table",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "a quadruple-bogey nine at the par-5 6th sent him from fourth to bottom of the table, swapping places with Henry Meller",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "the gap back up to the field cut from eight strokes to two",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Two consecutive holes without dropping a gross shot.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Henry Meller produced a personal-best round at Palmares, on TEG's first visit to the course.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "He finished at -3 on the net and +17 gross, his best figures on both counts.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Holes 9 through 11 then passed without a single net par: a triple bogey at the 9th, followed by two double bogeys, seven gross shots gone.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "A double bogey at the 15th duly dropped him to the bottom of the Spoon outright, from third to fifth.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "The 16th and the 17th came and went without a blemish, and the round stood as his best of the tournament by a distance.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "It also shunted David Mullin into last place in the Spoon instead, with the gap to safety cut from eight strokes to two.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "with the gap to safety cut from eight strokes to two",
+      "source": "claim"
+    }
+  ]
+}

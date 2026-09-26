@@ -1,0 +1,261 @@
+{
+  "teg": 12,
+  "round": 1,
+  "label": "storylinefirst",
+  "errors": 0,
+  "warnings": 0,
+  "findings": [
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "'TEG 12' is not a Trophy/Jacket/Spoon total (likely a course or other total, not checked here)",
+      "excerpt": "Gregg Williams opens TEG 12 with 46 points and an 84 gross",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "the lowest gross round of his 40-round TEG career and a personal best at PGA Catalunya - Tour",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "His gross 84 at PGA Catalunya - Tour, twelve over par, was the lowest of his career and eight shots better than anything he had produced on his two previous visits to the course.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "He went through the 7th and the 8th without surrendering a gross shot.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "He then took nine points across holes 12 to 14.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "He bogeyed it and was awarded three points",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "A par at the 14th moved him outright into the TEG 12 Trophy lead.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "A closing par at the 18th drew him level at the top of the TEG 12 Green Jacket standings.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Stuart Neumann's 105 gross is the highest round ever recorded at PGA Catalunya - Tour",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His 105 is the highest gross score ever recorded at PGA Catalunya - Tour, beating the previous worst of 103, a figure that had survived ten prior visits.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "The 13th, the hardest on the course, yielded a sextuple-bogey 10.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "The par-five 15th followed with a septuple-bogey 12.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Neumann gathered nine Stableford points across holes 10 to 12.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "A level par at the 2nd drew him level for the lead in the 2019 Trophy.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "He also put together pars at the 16th and the 17th without dropping a shot, calmly, like a man tidying a room he had already burned down.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It capped an unhappy return for Neumann, whose previous best gross here was 98.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "He finished seven shots worse than that.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "a triple bogey at the 1st",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "a quadruple bogey at the short 2nd",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "a triple at the 3rd",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "The 13th, the hardest hole on the course, produced a quadruple-bogey 8, part of a run through 13 to 15 that cost him nine shots.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "part of a run through 13 to 15 that cost him nine shots",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "A quintuple-bogey 10 at the 10th was folded into the total without ceremony.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "His double bogey at the 14th dropped him to the bottom of the TEG 12 Wooden Spoon race.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Pars at the 16th and the 18th, either side of a bogey at the 17th, brought him nine points from his last three holes.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "He remained bottom of the Spoon table, and his gross was ten shots worse than his best at the course a TEG earlier.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "John Patterson ends day one a single point off the TEG 12 Trophy lead despite a 12 at the 4th",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "At the par-4 4th, one of the harder holes on the PGA Catalunya Tour course, he took a 12.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "He then parred the 8th, 9th, 10th and 11th, four holes without a gross shot lost.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "The stretch from the 7th brought him 19 points and the outright Trophy lead at the 11th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "A bogey at the 15th was somehow enough to put him back in front.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "He closed the day a single point off the lead, his 96 gross a personal best at the course.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "his 96 gross a personal best at the course",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "Jon Baker birdied the 14th to draw level at the top of the gross standings.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "Gregg Williams matched him with that closing par at the 18th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "In the Wooden Spoon race, Alex Baker had gone last at the par-3 2nd, the easiest hole on the course, with a quadruple bogey.",
+      "source": "claim"
+    }
+  ]
+}

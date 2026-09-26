@@ -141,10 +141,18 @@ def _key_from_secrets_toml() -> Optional[str]:
 
 
 def get_api_key() -> Optional[str]:
-    """ANTHROPIC_API_KEY from the environment, else from a gitignored secrets.toml.
+    """ANTHROPIC_API_KEY from the environment, `.env`, or a gitignored secrets.toml.
 
-    The environment variable is the supported route. See `_SECRETS_CANDIDATES` for
-    the file fallback and which paths are deprecated.
+    The environment variable is the supported route. `webapp/app.py` calls
+    `load_dotenv()` at startup, but a bare `teg_analysis.reporting` script or
+    CLI (this module's own `verify`/`claims`/`backfill`) never goes through
+    that — it previously had no way to see a `.env` sitting right next to it
+    (found 2026-09-26, running `verify --claims` outside the webapp). Loading
+    it here too, not just checking `os.environ`, closes that gap for every
+    caller uniformly rather than requiring each one to remember. `load_dotenv`
+    never overrides an already-exported variable, so the environment still
+    wins when both are set. See `_SECRETS_CANDIDATES` for the file fallback
+    and which paths are deprecated.
 
     `TEG_ANTHROPIC_API_KEY` is accepted as an alias so the key can be namespaced
     in a shared environment (the Claude-Code-on-the-web container) without
@@ -153,6 +161,12 @@ def get_api_key() -> Optional[str]:
 
     Only the `api` provider needs this; under `agent` there is no key at all.
     """
+    try:
+        from dotenv import load_dotenv
+        load_dotenv()
+    except ImportError:
+        pass  # python-dotenv is a real dependency (requirements.txt), but
+              # don't let its absence break key resolution from a real env var
     return (os.environ.get("ANTHROPIC_API_KEY")
             or os.environ.get("TEG_ANTHROPIC_API_KEY")
             or _key_from_secrets_toml())
@@ -183,14 +197,26 @@ def _client():
 def generate_structured(system: str, user: str, schema: Type[BaseModel],
                         model: str = DEFAULT_MODEL, max_tokens: int = 16000,
                         stage: str = "structured",
-                        label: str = "") -> Tuple[BaseModel, object]:
+                        label: str = "", thinking: bool = True) -> Tuple[BaseModel, object]:
     """Call the model and return (validated_pydantic_object, usage).
 
     `stage` and `label` name the call in the mailbox (`story_plan`, `teg14`), so a
     hand-off is identifiable without opening it. They are ignored by the API path.
+
+    `thinking=False` for a call where adaptive thinking has been observed to
+    consume the entire `max_tokens` budget before emitting any output — a real,
+    reproducible failure mode on `claude-sonnet-5` for `claims.extract_claims`
+    (2026-09-26): confirmed identical with NO thinking param at all (the model's
+    own default), a raised `max_tokens` up to the API's non-streaming ceiling
+    (~21333, `_calculate_nonstreaming_timeout`), and explicit `{"type":
+    "adaptive"}` — all three burned the full budget on thinking regardless of
+    size. `{"type": "disabled"}` fixed it outright (88 claims, `end_turn`, zero
+    thinking tokens). Mirrors `generate_text`'s existing `thinking` parameter.
+    Ignored by the agent path, where the responding session's own settings decide.
     """
     if get_provider() == PROVIDER_API:
-        return _api_structured(system, user, schema, model=model, max_tokens=max_tokens)
+        return _api_structured(system, user, schema, model=model, max_tokens=max_tokens,
+                              thinking=thinking)
     return _agent_structured(system, user, schema, model=model, stage=stage, label=label)
 
 
@@ -213,13 +239,13 @@ def generate_text(system: str, user: str, model: str = DEFAULT_MODEL,
 # api provider
 # ---------------------------------------------------------------------------
 def _api_structured(system: str, user: str, schema: Type[BaseModel],
-                    model: str, max_tokens: int) -> Tuple[BaseModel, object]:
+                    model: str, max_tokens: int, thinking: bool = True) -> Tuple[BaseModel, object]:
     """The system prompt is cached; the user message carries the volatile data."""
     client = _client()
     resp = client.messages.parse(
         model=model,
         max_tokens=max_tokens,
-        thinking={"type": "adaptive"},
+        thinking={"type": "adaptive"} if thinking else {"type": "disabled"},
         system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
         messages=[{"role": "user", "content": user}],
         output_format=schema,

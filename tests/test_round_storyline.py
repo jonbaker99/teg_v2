@@ -79,8 +79,20 @@ def test_mid_tournament_bundle_omits_tournament_outcome_keys(teg, round_num):
 def test_bundle_carries_the_new_enrichment_keys():
     bundle, _ = assemble_round_storyline_bundle(16, 2)
     for key in ("round_ranks", "round_of_the_day", "race_movement", "course_context",
-               "player_history"):
+               "player_history", "settled_facts"):
         assert key in bundle
+
+
+def test_settled_facts_is_leak_safe_and_reaches_the_writer_context():
+    from teg_analysis.reporting.round_storyline import _context_for
+
+    bundle, _ = assemble_round_storyline_bundle(18, 2)
+    facts = bundle["settled_facts"]
+    assert facts["round_days"] == {1: "Saturday", 2: "Sunday"}
+    assert all(c["round"] <= 2
+              for changes in facts["lead_timeline"].values() for c in changes)
+    ctx = _context_for(set(), bundle)
+    assert ctx["settled_facts"] == facts
 
 
 def test_round_1_bundle_has_no_prior_state():

@@ -112,11 +112,13 @@ def is_active(status: Optional[dict]) -> bool:
 
 
 def artefact_names(teg: int, round_num: Optional[int]) -> list[str]:
-    """The four storyline-first filenames for this report, matching
-    `teg_analysis.reporting.paths._artefact_names`'s storyline-first half."""
+    """The storyline-first filenames for this report, matching
+    `teg_analysis.reporting.paths._artefact_names`'s storyline-first half plus
+    the D3 verify artefact `restyle_voice` writes alongside it."""
     stem = status_key(teg, round_num)
     return [f"{stem}_storyline_plan.json", f"{stem}_report_storylinedraft.md",
-            f"{stem}_report_storylinefirst.md", f"{stem}_report_storylinefirst_styled.md"]
+            f"{stem}_report_storylinefirst.md", f"{stem}_report_storylinefirst_styled.md",
+            f"{stem}_verify.json"]
 
 
 def claim(teg: int, round_num: Optional[int]) -> Optional[str]:

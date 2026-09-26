@@ -1,0 +1,233 @@
+{
+  "teg": 7,
+  "round": 3,
+  "label": "storylinefirst",
+  "errors": 0,
+  "warnings": 0,
+  "findings": [
+    {
+      "rule": "claim_comparison",
+      "severity": "unchecked",
+      "detail": "comparison claim missing both players",
+      "excerpt": "Gregg Williams posted the best round of the day at Royal \u00d3bidos in the TEG 8 Trophy.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "He opened with back-to-back bogeys, then a par at the 3rd.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Williams read it as a dare and took a quadruple bogey.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "a stretch from the 7th to the 10th that gained six shots against par",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Then the 14th, and a quintuple bogey, and the hole in the floor reopened beneath him.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_comparison",
+      "severity": "unchecked",
+      "detail": "comparison claim missing both players",
+      "excerpt": "Despite it, the back nine finished ten shots stronger than the front.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_comparison",
+      "severity": "unchecked",
+      "detail": "comparison claim missing both players",
+      "excerpt": "Nobody in the six-man field did better all day.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Henry Meller extended his Trophy lead to 15",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "David Mullin took over the Green Jacket lead by 3 from Meller",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "David Mullin took over the Green Jacket lead by 3 from Meller",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Alex Baker widened his own gap to 7",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "Baker's is at the bottom.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_weekday",
+      "severity": "unchecked",
+      "detail": "weekday claim missing round/weekday",
+      "excerpt": "Jon Baker arrived at Royal \u00d3bidos in R3 off a second round of -7 net.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "At the par-5 2nd, stroke index 3 and one of the hardest holes on the course, he made a quintuple bogey 10.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "He answered immediately at the par-3 3rd with a quadruple bogey 7.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "He did rally in a manner of speaking, going the 7th and 8th without dropping a gross shot.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_comparison",
+      "severity": "unchecked",
+      "detail": "comparison claim missing both players",
+      "excerpt": "Baker swung from -7 in Round 2 to +5 net in Round 3, a 12-shot reversal.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Henry Meller kept the overall lead and watched his advantage grow from 11 to 15 without lifting a finger.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "Henry Meller turned for home at Royal \u00d3bidos level with David Mullin at the top of the TEG 16 Green Jacket.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "He had drawn level at the 14th with a par on the sixth-hardest hole.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "He had drawn level at the 14th with a par on the sixth-hardest hole.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Mullin had twice hauled himself back to level himself, with a birdie at the 3rd and a par at the 16th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Mullin had twice hauled himself back to level himself, with a birdie at the 3rd and a par at the 16th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "Mullin had twice hauled himself back to level himself, with a birdie at the 3rd and a par at the 16th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "A triple bogey at the par-3 15th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "A double at the 16th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Another triple at the 17th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "He signed off with a double bogey at the par-5 18th, presumably for symmetry.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "Ten shots in four holes, and the Jacket lead went back to Mullin.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_comparison",
+      "severity": "unchecked",
+      "detail": "comparison claim missing both players",
+      "excerpt": "Meller shot 15-under net par in Round 2 and managed -1 in Round 3, a 14-shot swing.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "He still leads the TEG 16 Trophy, his cushion now 15, so the loss is confined to the one competition he was actively holding.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_comparison",
+      "severity": "unchecked",
+      "detail": "comparison claim missing both players",
+      "excerpt": "Stuart Neumann suffered the same fate on a grander scale, following his own strong second round with a 17-shot swing the wrong way.",
+      "source": "claim"
+    }
+  ]
+}

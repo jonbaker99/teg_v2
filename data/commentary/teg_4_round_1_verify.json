@@ -1,0 +1,128 @@
+{
+  "teg": 4,
+  "round": 1,
+  "label": "storylinefirst",
+  "errors": 0,
+  "warnings": 0,
+  "findings": [
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "drew_level claims are not checked against the outright-only lead timeline",
+      "excerpt": "He drew level at the 5th, at the 7th, at the 13th and again at the 15th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "drew_level claims are not checked against the outright-only lead timeline",
+      "excerpt": "He drew level at the 5th, at the 7th, at the 13th and again at the 15th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "drew_level claims are not checked against the outright-only lead timeline",
+      "excerpt": "He drew level at the 5th, at the 7th, at the 13th and again at the 15th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "drew_level claims are not checked against the outright-only lead timeline",
+      "excerpt": "He drew level at the 5th, at the 7th, at the 13th and again at the 15th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_comparison",
+      "severity": "unchecked",
+      "detail": "comparison claim missing both players",
+      "excerpt": "Baker's net 2 stood as the best Trophy score of the day in a field of five, and the next-best score was 14.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "The run also left him three holes without a net par",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "dropped him to the bottom of the TEG 16 Wooden Spoon race",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "A bogey at the 7th ended the run of bogeys-or-worse.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "From the 10th to the 18th he bled 22 shots, four doubles and three triples among them, with bogey-or-worse at the 14th, the hardest hole out there.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_comparison",
+      "severity": "unchecked",
+      "detail": "comparison claim missing both players",
+      "excerpt": "He finished with the worst gross score of the round.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It was his own worst hole, and the worst posted anywhere in TEG history to that point.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "A double bogey at the 7th had already deposited him at the bottom of the 2011 TEG Wooden Spoon field",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "A triple bogey at the 5th sent him to the very bottom of the Spoon standings, which by then was becoming a crowded address.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "He replied twice, breaking bogey-or-worse runs with birdies at the 10th and the 13th",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "He replied twice, breaking bogey-or-worse runs with birdies at the 10th and the 13th",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "by the close of play he led the 2011 TEG Green Jacket",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "Jon Baker sat atop the 2011 TEG Trophy standings.",
+      "source": "claim"
+    }
+  ]
+}

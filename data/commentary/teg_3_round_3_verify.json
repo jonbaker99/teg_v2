@@ -1,0 +1,177 @@
+{
+  "teg": 3,
+  "round": 3,
+  "label": "storylinefirst",
+  "errors": 1,
+  "warnings": 0,
+  "findings": [
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "David Mullin went round Boavista Golf & Spa Resort in a gross 85.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The course record was 88, and it had survived 25 prior visits.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His +14 gross is the best gross round in TEG history to date, and his net -4 ranks third-best all time.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "He played the 8th and the 9th without dropping a shot.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Jon Baker signed for a net -7, the second-best round in TEG history.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "He did it while also taking a quintuple-bogey 9 at the 18th and a quadruple-bogey 8 at the 5th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "He did it while also taking a quintuple-bogey 9 at the 18th and a quadruple-bogey 8 at the 5th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Baker's Trophy lead grew from 13 to 16.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Mullin's Green Jacket lead stretched from 5 to 9.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Williams's net -4 ranks third-best in TEG history.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Neumann's gross 18 points ranks third among all Gross rounds played.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Williams's 97 beat his previous best of 102.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Neumann's 89 bettered his 92.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "He took a quadruple bogey 7 at the short par-3 2nd, one of the easier holes on the course by stroke index.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Baker's cushion atop the TEG 3 Trophy grew from 13 to 16.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Mullin's Green Jacket lead extended from 5 to 9.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "Neumann's score lifted him off the bottom of the Wooden Spoon race.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "The unwanted spot passed to Henry Meller.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "error",
+      "detail": "Henry Meller was rank 5 in TEG 3 Wooden Spoon at R3 H1, claim says 3",
+      "excerpt": "A triple bogey at the 1st, stroke index 14 and one of the gentler holes out there, dropped him to third in the TEG 3 Wooden Spoon race.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Two holes later he took a quintuple bogey 10 at the par-5 3rd.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "Outright last place, secured before most men had loosened up.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "Stuart Neumann, who had held last place overnight, was reprieved without lifting a finger.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "Meller took the unwanted lead, and the gap back up to safety went from one shot to five.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "the gap back up to safety went from one shot to five",
+      "source": "claim"
+    }
+  ]
+}

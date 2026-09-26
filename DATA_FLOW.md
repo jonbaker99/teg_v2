@@ -47,6 +47,10 @@ artefacts sit side by side (full map: [§10](#10-report-build--scores--published
   `_report_storylinefirst.md` → `_report_storylinefirst_styled.md`. All 17 TEGs. `_storyline_plan.json`
   + `_report_storylinefirst_styled.md` are the two artefacts `/teg-reports` reads, via
   `newspaper_edition.build_edition()`.
+- **D3 (either chain)** — `teg_N_verify.json` (mechanical checks, always) and `teg_N_claims.json`
+  (LLM claim extraction, only when `--claims` is used) sit alongside the report they were run
+  against. Neither is read by any route; both are reporting-pipeline byproducts, not published
+  content. See `teg_analysis/reporting/README.md`'s D1–D3 table and `ARTEFACTS.md` ⑨/⑨b.
 
 Plus experiment snapshots and archived generations. Two sibling directories are **gitignored and
 safe to delete**: `commentary/variants/<name>/` is a parallel artefact set for one model

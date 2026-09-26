@@ -1,0 +1,191 @@
+{
+  "teg": 11,
+  "round": 1,
+  "label": "storylinefirst",
+  "errors": 1,
+  "warnings": 0,
+  "findings": [
+    {
+      "rule": "claim_total",
+      "severity": "error",
+      "detail": "Jon Baker's Trophy (Stableford) total is 35 gross, claim says 90",
+      "excerpt": "A gross 90.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It broke the course record of 94, a mark that had survived five prior visits to the venue.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It was only Baker's second time on the course.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His own previous best here was 99, so he improved it by nine strokes, which is the sort of leap normally associated with a different man playing a different game.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "drew_level claims are not checked against the outright-only lead timeline",
+      "excerpt": "The par at the 3rd also drew him level for the lead in both the Green Jacket and the TEG 11 Trophy, having sat third beforehand.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "drew_level claims are not checked against the outright-only lead timeline",
+      "excerpt": "The par at the 3rd also drew him level for the lead in both the Green Jacket and the TEG 11 Trophy, having sat third beforehand.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "having sat third beforehand",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "He carried it to the clubhouse for 35 Stableford points.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_comparison",
+      "severity": "unchecked",
+      "detail": "comparison claim missing both players",
+      "excerpt": "That was the best of the day in a five-man field where the worst was 26.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "After Round 1 he shares the lead in both the Trophy and the Jacket.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "After Round 1 he shares the lead in both the Trophy and the Jacket.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Williams made a quintuple-bogey 8.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "He dropped eight shots across the first three holes.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "making it his best score at the Stadium Course through two visits",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "Early on he shared the TEG 11 Trophy lead, drawing level at the par-5 7th despite bogeying it.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "A quintuple-bogey 9 at the 4th, part of a stretch that bled nine shots across holes 2 to 4, was the opening notice.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "part of a stretch that bled nine shots across holes 2 to 4",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Then a quadruple-bogey 8 at the 10th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Then a quintuple-bogey 9 at the 13th, inside an 11-shot bleed across holes 12 to 14.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "inside an 11-shot bleed across holes 12 to 14",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Then a quadruple-bogey 8 at the 17th, for the sake of completeness.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "The triple bogey at the 14th, one of the harder holes on the course, dropped him to the bottom of the Wooden Spoon race.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "He had gone from a share of the lead to last place in a single afternoon, signing for a gross 112.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "signing for a gross 112",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "At the other end of the card, Jon Baker leads both the Trophy and the TEG 11 Green Jacket.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "At the other end of the card, Jon Baker leads both the Trophy and the TEG 11 Green Jacket.",
+      "source": "claim"
+    }
+  ]
+}

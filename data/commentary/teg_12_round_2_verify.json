@@ -1,0 +1,142 @@
+{
+  "teg": 12,
+  "round": 2,
+  "label": "storylinefirst",
+  "errors": 1,
+  "warnings": 0,
+  "findings": [
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "a double bogey, a triple and another double cost him seven shots and three points",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "error",
+      "detail": "Stuart Neumann's Trophy (Stableford) total is 80 gross, claim says 44",
+      "excerpt": "Neumann signed for 44 points, the best score recorded by anyone in the 2019 TEG Trophy's second round, and top of the field of six by some distance.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It also stood as a course personal best for him at PGA Catalunya, improving his best gross score there this TEG to 93.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "Gregg Williams retained his lead in both the Trophy and the Green Jacket, untroubled by any of it.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "He picked up 12 Stableford points across the 2nd to the 5th, built on pars at the 2nd and the 5th, with bogeys at the 3rd and the second-hardest hole on the course, the 4th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "A double bogey there dropped him to the bottom of the TEG 12 Wooden Spoon race, and the bottom proved comfortable.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Eleven gross shots handed over across those four holes, without any noticeable change in his demeanour.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "taking 9 points from the 13th to the 15th, including a bogey at the 13th, the hardest hole on the course",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "the gap to the next-worst player in the field grew from one shot to four",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "David Mullin carded the best gross round of the day on Friday at PGA Catalunya's Tour Course. An 84, and a personal best at the venue, beating his previous mark of 85 by one shot across five visits.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "An 84, and a personal best at the venue, beating his previous mark of 85 by one shot across five visits.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "The run ended at the 9th with a triple bogey and a blank Stableford return.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "drew_level claims are not checked against the outright-only lead timeline",
+      "excerpt": "John Patterson drew level at the 4th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "drew_level claims are not checked against the outright-only lead timeline",
+      "excerpt": "He took it outright at the 12th, was pegged back to a tie at the 13th, and lost it outright at the 15th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "drew_level claims are not checked against the outright-only lead timeline",
+      "excerpt": "He levelled again at the 16th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Gregg Williams ended the round exactly as he had started it, one clear of Patterson.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "drew_level claims are not checked against the outright-only lead timeline",
+      "excerpt": "Williams drew level on gross at the 10th with a birdie, and level again at the 18th with a closing par.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "drew_level claims are not checked against the outright-only lead timeline",
+      "excerpt": "Williams drew level on gross at the 10th with a birdie, and level again at the 18th with a closing par.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "The gap stood at zero, as it had all along.",
+      "source": "claim"
+    }
+  ]
+}

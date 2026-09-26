@@ -30,7 +30,7 @@ Williams arrived leading both the TEG 16 Trophy and the TEG 16 Green Jacket. He 
 
 John Patterson's third round was his first ever sight of the Atlantic Course. For a while it went extremely well, which only made what followed more instructive.
 
-He ran holes 3 to 7 without dropping a gross shot. Across holes 3-8 he banked 19 Stableford points. He had the bearing of a man who had read the course notes and found them straightforward.
+He ran holes 3 to 7 for just one dropped gross shot, a bogey at the 4th. Across holes 3-8 he banked 19 Stableford points. He had the bearing of a man who had read the course notes and found them straightforward.
 
 Then the round turned, and it turned completely. A double bogey at the 9th. A quadruple bogey 8 at the 10th, one of the harder holes on the course. Another double bogey at the 11th. Eight shots bled across three holes, with no apparent moment where anyone intervened.
 
@@ -43,11 +43,11 @@ The gross 99 stands as the best he will manage at the course this TEG, this bein
 
 The third round at Penha Longa saw the TEG 8 Wooden Spoon change hands. Alex Baker collapsed. Stuart Neumann recovered. The transaction was completed without ceremony.
 
-Baker began with a double bogey at the 1st, then ran four holes without managing better than a bogey. A birdie at the par-3 5th halted the slide and briefly suggested a plan. It was not a plan.
+Baker began with a double bogey at the 1st, then ran three holes without managing better than a bogey. A birdie at the par-3 5th halted the slide and briefly suggested a plan. It was not a plan.
 
 From the 12th the round came apart in a manner one can only describe as thorough. A quadruple bogey at the 12th. A double bogey at the 13th. A 10 at the par-4 14th, one of the harder holes on the course. Twelve shots over three holes, and not one point to show for any of it. That stretch deposited Baker at the bottom of the Wooden Spoon standings, where he now resides.
 
-Neumann's round travelled in the opposite direction, having first travelled in Baker's. He went seven over across holes 11 to 13 and looked to be joining in. Instead he answered with 9 points from the closing three holes, built on a birdie-free but efficient bogey-par-bogey stretch. Nothing about it was handsome. All of it counted.
+Neumann's round travelled in the opposite direction, having first travelled in Baker's. He went seven over across holes 11 to 13 and looked to be joining in. Instead he answered with 9 points from the next three holes, built on a birdie-free but efficient bogey-par-bogey stretch. Nothing about it was handsome. All of it counted.
 
 It capped a substantial swing after a poor second round, and leaves Neumann's Wooden Spoon lead over Baker at 14 shots. Baker will have to work hard to lose it.
 

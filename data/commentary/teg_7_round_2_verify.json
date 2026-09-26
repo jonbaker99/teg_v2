@@ -1,0 +1,226 @@
+{
+  "teg": 7,
+  "round": 2,
+  "label": "storylinefirst",
+  "errors": 2,
+  "warnings": 0,
+  "findings": [
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Henry Meller's -15 at Bom Sucesso is the best round in TEG history.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "That alone would be worth the ink. What elevates it is the identity of the record he broke, which was his own, set one round earlier.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His gross +10 stands as the second-best gross round recorded in the competition to that point, behind only his own mark from Round 1.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "The round was built through holes 3 to 9, where Meller gained nine shots to par.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "There was a birdie at the par-5 7th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "He returned for a second helping over 15 to 17, taking three more shots off par.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Meller had led the TEG 2 Trophy overnight, and his gap went from 3 to 11.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "In the Green Jacket he took the lead from Jon Baker and opened a 3-shot advantage.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "In the Green Jacket he took the lead from Jon Baker and opened a 3-shot advantage.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Round two at Bom Sucesso produced the two best gross rounds in TEG history to that point.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "David Mullin shot a gross 9-over, the best Gross round ever recorded, assembled from five shots gained to par across holes 6-9 and another four across the front holes 1-4.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "assembled from five shots gained to par across holes 6-9 and another four across the front holes 1-4",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "At -10 it was also his personal best.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Stuart Neumann went one better in gross terms with a +10, the second-best Gross round in TEG history, while his net -13 ranked second-best of any round in TEG history outright.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "He took six shots off par through holes 8-12, including a birdie at the short 10th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "error",
+      "detail": "Stuart Neumann R2 H10 (-1 vs par) does not satisfy 'par' \u2014 claimed span H8-12",
+      "excerpt": "Then the 13th arrived and a double bogey ended his run of pars.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "He answered by gaining four more over 15 to 17, which suggests the 13th had not made much of an impression.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_comparison",
+      "severity": "unchecked",
+      "detail": "comparison claim missing both players",
+      "excerpt": "It was a considerable improvement on a round one of -3.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "For all of it, Meller's lead over the field grew. Eleven, in the TEG Trophy race.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "He opened with a quadruple bogey 8 at the 1st, which is a decisive way to begin anything, and then shed eight shots across a three-hole stretch from the 14th to the 16th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Triple bogeys either side of a double bogey.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "Baker remained the laggard of the TEG 16 Wooden Spoon, though the gap to safety had closed slightly to three shots after Bom Sucesso.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Baker remained the laggard of the TEG 16 Wooden Spoon, though the gap to safety had closed slightly to three shots after Bom Sucesso.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "At Bom Sucesso the TEG 7 Green Jacket lead shifted three times through the closing stretch.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "drew_level claims are not checked against the outright-only lead timeline",
+      "excerpt": "By the 12th, Henry Meller had drawn level, parring the sixth-hardest hole on the card to join him at the top.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "drew_level claims are not checked against the outright-only lead timeline",
+      "excerpt": "Three holes later at the 15th, David Mullin parred his way level too, taking a share of the lead on a hole ranked the second-hardest on the course.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "drew_level claims are not checked against the outright-only lead timeline",
+      "excerpt": "The picture moved again at the 14th, where Baker himself drew back level.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "He held the Jacket outright and extended to three shots, and Baker's overnight lead was gone entirely.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "He held the Jacket outright and extended to three shots, and Baker's overnight lead was gone entirely.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Meller also kept his Trophy lead through the round, the gap there stretching to eleven.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "error",
+      "detail": "no record of Jon Baker losing the Green Jacket (Gross) lead at R2 H14",
+      "excerpt": "Baker's level-par 14th proved to be his last say in the Jacket battle.",
+      "source": "claim"
+    }
+  ]
+}

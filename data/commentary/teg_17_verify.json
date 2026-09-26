@@ -1,0 +1,317 @@
+{
+  "teg": 17,
+  "round": null,
+  "label": "storylinefirst",
+  "errors": 1,
+  "warnings": 1,
+  "findings": [
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "John Patterson sets a new course-record high \u2014 the field's two extremes on the same course,",
+      "source": "mechanical"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "18 clear of runner-up David Mullin",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It is the highest Trophy total of his career.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "Three years of fourth place had begun to look less like a run of results and more like a permanent seating arrangement.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "After two rounds Baker sat on top of the Stableford table, though only level at the front",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "with Mullin leading the TEG 17 Green Jacket on gross",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Baker's second round at West Cliffs was an 86, fifteen strokes better than the 101 he had posted on his only previous visit to the Cynthia Dye links.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Baker went round Seve Ballesteros's parkland course in 86 gross, a new course record.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The previous best was 87, set across 18 prior visits by the group.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It was also a personal best there by three shots, and eight better than his last time out on the course.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Baker birdied the fourth and fifth holes back to back, a two-hole birdie streak that equals the all-time TEG record.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The all-time record for consecutive birdies in TEG is two.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "He finished on 92 gross at Praia D'El Rey in that closing round, matching his score from the previous visit rather than bettering it",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Mullin, whose own 82 at West Cliffs was a course personal best, could not close the gap.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His opening 114 at Praia D'El Rey is the highest gross round ever recorded at the course, beating the previous worst of 110 set across 24 prior visits.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "ten shots gone across holes 9 to 11, with quadruple bogeys at the 10th and 11th",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "with quadruple bogeys at the 10th and 11th",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "with quadruple bogeys at the 10th and 11th",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His 105 there is a personal best at West Cliffs, five shots better than his only previous visit",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Quadruple bogeys at the par-5 12th and the 13th ended a three-hole stretch without a net par.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Quadruple bogeys at the par-5 12th and the 13th ended a three-hole stretch without a net par.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His 111 in that final round was the best of his four scores, but still eleven shots adrift of his last visit here and eleven off his course best of 100, set at TEG 9.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "David Mullin shot 82 gross, a new West Cliffs course record.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The previous mark was 88.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "he had gone round in 94 on his only previous visit, in TEG 15, so this was twelve strokes better.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His 116 gross set a new course worst, one shot beyond the previous high of 115, and at +44 it was the worst gross round of his career.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "He had shot 97 here in TEG 15, making this visit nineteen strokes heavier.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Between the 8th and the 15th Patterson dropped 27 shots in eight holes: a double bogey at the 8th, then triple bogeys at the 9th, 10th and 11th, a double at the short 12th, a ten at the par-five 13th, a triple at the 14th and an eleven at the par-five 15th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "John Patterson's four days ran to extremes. He opened with a 96 at Praia D'El Rey, good enough to lead the Trophy race",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "then went to West Cliffs and signed for 116: a gross round of +44, the worst of his career to date, and 19 strokes more than he had taken on his only previous visit to the links.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "The triple bogey at the 10th dropped him to the bottom of the TEG 17 Wooden Spoon race.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Patterson went from 22 points in Round 2 to 41 in Round 3, a swing of 19, and his 94 was a course personal best, seven strokes better than his previous visit there.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "13 clear of David Mullin",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It is the third-best gross total of Baker's career.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "error",
+      "detail": "Jon Baker scored 7 at R3 H1, claim says 6",
+      "excerpt": "where he took six on the par-four opening hole for a double bogey and a single Stableford point",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "his 82 gross at West Cliffs in Round 2 is a new course record there, beating the previous mark of 88 set across six prior visits",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "it was a 12-stroke improvement on his own score at the course a TEG earlier",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "Baker did not stay behind for long. He recovered the lead and then extended it",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "86 at West Cliffs, 15 strokes better than his previous visit and a course personal best",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "86 at Royal \u00d3bidos, also a course best, three better than his previous mark there",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Mullin held the Jacket for a single hole and finished 13 back.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Gregg Williams, the back-to-back reigning Jacket champion with four prior Trophy wins",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "This was his fourth visit, and his best gross there on this trip, 99, was two strokes worse than his previous trip and two off his course best of 97.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "his 93 in round one was seven strokes better than his last visit, and matched his best gross at Praia D'El Rey",
+      "source": "claim"
+    }
+  ]
+}

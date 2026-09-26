@@ -45,7 +45,7 @@ The back nine belonged to somebody else entirely. From the 13th to the 16th he t
 ## Jon Baker's round split the TEG 18 competitions: best gross of the day put him top of the Green Jacket, while his stableford total left him bottom of the Trophy and Wooden Spoon standings
 <!-- storyline: race -->
 
-Jon Baker's opening round did two different jobs in two different competitions. That is what handicapping is for. On the par-5 5th, a bogey was still enough to move him into outright second place in the Green Jacket (Gross). By the close of the day his card carried the best gross score of the field, and he stood at the very top of the Jacket standings after Round 1.
+Jon Baker's opening round did two different jobs in two different competitions. That is what handicapping is for. On the par-5 5th, a bogey was still enough to move him into the outright lead of the Green Jacket (Gross). By the close of the day his card carried the best gross score of the field, and he stood at the very top of the Jacket standings after Round 1.
 
 The Stableford column was less generous. Holes 7 to 9 undid him twice over: three holes without a net par, and seven gross shots gone across a double bogey on the par-5 7th, a double on the par-3 8th and a triple on the par-4 9th. A closing double bogey on the 18th dropped him to the bottom of the Wooden Spoon race. By the end of the day Alex Baker led the Trophy, level on points at the top. Jon Baker sat bottom of the Trophy and bottom of the Spoon, and top of the Jacket. He had, in fairness, gone round in fewer shots than anybody else.
 

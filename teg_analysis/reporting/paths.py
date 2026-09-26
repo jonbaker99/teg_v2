@@ -151,7 +151,11 @@ def _artefact_names(teg_num: int, round_num: Optional[int] = None) -> list[str]:
             f"{stem}_report_A_around_draft.md", f"{stem}_report_final.md",
             f"{stem}_report_styled.md",
             f"{stem}_storyline_plan.json", f"{stem}_report_storylinedraft.md",
-            f"{stem}_report_storylinefirst.md", f"{stem}_report_storylinefirst_styled.md"]
+            f"{stem}_report_storylinefirst.md", f"{stem}_report_storylinefirst_styled.md",
+            # D3 (verify.py) + claim-extraction (claims.py) artefacts. Neither is
+            # produced by the writing pipeline itself, but both belong with a
+            # report's other files when a variant is promoted.
+            f"{stem}_verify.json", f"{stem}_claims.json"]
 
 
 def promote_variant(variant: str, teg_num: int, round_num: Optional[int] = None,

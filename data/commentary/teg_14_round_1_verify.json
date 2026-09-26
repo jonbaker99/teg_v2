@@ -1,0 +1,191 @@
+{
+  "teg": 14,
+  "round": 1,
+  "label": "storylinefirst",
+  "errors": 0,
+  "warnings": 0,
+  "findings": [
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "From the 9th to the 12th he collected 13 points.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "He birdied the 10th and played the other three in par, without dropping a single gross shot.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "Through the 11th he was level for the Trophy lead, which at Deal counts as something close to serenity.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "Through the 11th he was level for the Trophy lead, which at Deal counts as something close to serenity.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "and that second one put him outright in front for the Trophy lead",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "He signed for 40 points, the best score of the round, and a gross 87.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His previous best on the course, set on his only prior visit, was seven shots worse.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Three consecutive doubles at the 3rd, 4th and 5th removed six shots from his card before anyone had settled.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "He then parred the 6th and drew level for the lead in the 2021 Green Jacket (Gross), which is the sort of thing that encourages a man.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "An 8 at the 11th, one of the course's hardest holes, was followed by a quintuple-bogey 10 at the 16th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "An 8 at the 11th, one of the course's hardest holes, was followed by a quintuple-bogey 10 at the 16th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "Baker still walked off with 37 Stableford points and a gross 98.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "That is four shots better than his previous best here, and a personal best at the course.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Jon Baker came to Royal Cinque Ports for his second visit holding the best round this field has ever played there, an 85 in the TEG 13 Trophy.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "He shot 92, handing back seven shots on his own high-water mark.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "A double bogey at the 2nd.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "A triple at the par-5 3rd.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "A bogey at the short 4th, one of the easiest holes on the course.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Then a triple at the 5th and a bogey at the 6th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Then a triple at the 5th and a bogey at the 6th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Three straight pars from the 11th brought him nine Stableford points and the brief look of a man who remembered how this worked.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "Baker ended round one last in the Trophy standings, and bottom of the Spoon race as well.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "Baker ended round one last in the Trophy standings, and bottom of the Spoon race as well.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "and a swift descent to the bottom of the Wooden Spoon race",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "Ahead of him, David Mullin's 87 held the lead in the Trophy and the Green Jacket alike.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "Ahead of him, David Mullin's 87 held the lead in the Trophy and the Green Jacket alike.",
+      "source": "claim"
+    }
+  ]
+}

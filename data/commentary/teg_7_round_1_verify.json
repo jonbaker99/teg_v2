@@ -1,0 +1,177 @@
+{
+  "teg": 7,
+  "round": 1,
+  "label": "storylinefirst",
+  "errors": 0,
+  "warnings": 0,
+  "findings": [
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It remains the best round in TEG history to date.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The gross figure was +12, a personal best, and the front nine did not hint at any of it.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Then a double bogey at the 4th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "From the 10th to the 18th he gained ten shots against par.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "He closed with two bogeys, at the 15th and the 18th, either side of pars that caused nobody any concern.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "He closed with two bogeys, at the 15th and the 18th, either side of pars that caused nobody any concern.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "He began in reasonable order, shipping three bogeys through holes 2 to 4.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Holes 8 through 11 cost him 11 shots, a quadruple bogey at the 10th among them.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Holes 8 through 11 cost him 11 shots, a quadruple bogey at the 10th among them.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "A second quadruple arrived at the 14th, one of the harder holes on the course, and with it last place in the TEG 7 Wooden Spoon race.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "A second quadruple arrived at the 14th, one of the harder holes on the course, and with it last place in the TEG 7 Wooden Spoon race.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "The stretch from 14 to 16 removed a further eight shots.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Gregg Williams matched him with a quadruple at the 6th, then composed himself admirably.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "drew_level claims are not checked against the outright-only lead timeline",
+      "excerpt": "Two four-hole stretches, at 7-10 and 13-16, passed with nothing worse than a bogey, and carried him level with Mullin for the Trophy lead by the 10th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Stuart Neumann fared less well, triple-bogeying the 3rd and the 7th and sinking to the bottom of the Wooden Spoon race.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Stuart Neumann fared less well, triple-bogeying the 3rd and the 7th and sinking to the bottom of the Wooden Spoon race.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "Stuart Neumann fared less well, triple-bogeying the 3rd and the 7th and sinking to the bottom of the Wooden Spoon race.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "That made the day's extremes into records by default: the best score finished 11 over par, the worst 37 over, and both went straight onto the books.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Jon Baker opened TEG 7 at Praia D'El Rey with a gross round of +11, the best gross round in TEG history to date.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "He recovered to card a net -10, the third-best round in TEG history, and finished with three straight pars from the 16th that cost him nothing gross or net.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "drew_level claims are not checked against the outright-only lead timeline",
+      "excerpt": "On the 10th he had drawn level for the Trophy lead, and by the 12th he had drawn level for the Green Jacket, only for Henry Meller to reclaim the outright Jacket lead moments later at the 2nd.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "drew_level claims are not checked against the outright-only lead timeline",
+      "excerpt": "On the 10th he had drawn level for the Trophy lead, and by the 12th he had drawn level for the Green Jacket, only for Henry Meller to reclaim the outright Jacket lead moments later at the 2nd.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "By the close Baker held the Green Jacket lead by a single stroke.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Meller topped the Trophy, three clear of him.",
+      "source": "claim"
+    }
+  ]
+}

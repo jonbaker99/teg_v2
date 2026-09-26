@@ -1,0 +1,128 @@
+{
+  "teg": 17,
+  "round": 1,
+  "label": "storylinefirst",
+  "errors": 1,
+  "warnings": 0,
+  "findings": [
+    {
+      "rule": "claim_run",
+      "severity": "error",
+      "detail": "John Patterson R1 H12 (-1 vs par) does not satisfy 'par' \u2014 claimed span H12-16",
+      "excerpt": "He strung pars together and stayed gross-shot clean from the 12th through the 16th, a stretch containing two separate two-hole spells without a shot dropped.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "The finished round was 39 Stableford points, the best score of the day.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The previous worst was 110, a mark that had survived 24 prior visits to the course.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His previous best there was 100, meaning he found 14 strokes more than the last time he played it.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "A gross 114.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The round stands as the highest gross score ever recorded at Praia D'El Rey.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Three holes accounted for 27 shots.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "The 8th, a par 3, took a triple.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "and the stretch from the 12th was worth 16 Stableford points",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "The round finished on 33 points.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_comparison",
+      "severity": "unchecked",
+      "detail": "comparison claim missing both players",
+      "excerpt": "It was 13 points stronger on the back nine than the front, which is less a round of golf than two men sharing a card.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It also left him well short of his best gross at the course, eight shots worse than his last visit here.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Patterson's round leaves him level with the field on Stableford at the top, with his best gross at the course now standing at 96.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "drew_level claims are not checked against the outright-only lead timeline",
+      "excerpt": "In the TEG Green Jacket, Gregg Williams drew level for the lead with a par at the par-5 17th, the hardest hole on the course.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "He finished the day out in front.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His 93 matches his best gross score around this course, which is either consistency or a ceiling.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "The quintuple bogey at the 18th dropped him to the bottom of the Wooden Spoon standings after one round.",
+      "source": "claim"
+    }
+  ]
+}
