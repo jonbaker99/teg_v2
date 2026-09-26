@@ -40,7 +40,7 @@
         {% if panel.report_summary and panel.report_summary.other_articles %}
         <ul class="headline-list">
             {% for a in panel.report_summary.other_articles %}
-            <li><a href="{{ a.link }}"><span class="hl-kicker">{{ a.kicker }}</span><span class="hl-headline">{{ a.headline }}</span></a></li>
+            <li><a href="{{ a.link }}"><span class="hl-kicker">{{ a.kicker | title }}</span><span class="hl-headline">{{ a.headline }}</span></a></li>
             {% endfor %}
         </ul>
         {% endif %}
