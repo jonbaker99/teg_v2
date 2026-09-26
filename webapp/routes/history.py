@@ -428,6 +428,28 @@ def _honours_wins_table(df: pd.DataFrame, count_col: str) -> str:
     return "".join(rows)
 
 
+def _honours_feats_list(df: pd.DataFrame) -> str:
+    """Eagles / Holes in One as a plain list, not a table: bold player name,
+    then a muted line "September 2011, Bletchingley. TEG 4, Round 4, Hole 8."
+    The two halves of that line are separate inline-blocks, so on a narrow
+    screen it breaks between course and TEG/round/hole rather than mid-phrase.
+    Expects get_eagles_data's shape (Hole = "TEG 4 | Rd 4 | Hole 8")."""
+    items = []
+    for _, row in df.iterrows():
+        date = pd.to_datetime(row.get('Date'), dayfirst=True, errors='coerce')
+        when = date.strftime('%B %Y') if not pd.isna(date) else str(row.get('Date', ''))
+        where = str(row.get('Hole', '')).replace(' | ', ', ').replace('Rd ', 'Round ')
+        items.append(
+            "<li class='honours-feat'>"
+            f"<span class='honours-feat-player'>{escape(str(row.get('Player', '')))}</span>"
+            "<span class='honours-feat-detail'>"
+            f"<span>{escape(when)}, {escape(str(row.get('Course', '')))}.</span> "
+            f"<span>{escape(where)}.</span>"
+            "</span></li>"
+        )
+    return f"<ul class='honours-feats'>{''.join(items)}</ul>"
+
+
 def _summarise_wins(winners_df: pd.DataFrame, col: str) -> str:
     """Build a summary table: Player, Wins, TEGs with compressed ranges."""
     # Extract TEG number from 'TEG' column (e.g. "TEG 5" -> 5)
@@ -477,12 +499,15 @@ def _honours_tab_context(tab: str) -> dict:
 
         elif tab == "eagles":
             eagles = get_eagles_data(all_data)
-            sections.append({"table_html": _df_to_html(eagles, link_players=False)})  # profiles hidden 2026-09-18
+            if eagles is not None and not eagles.empty:
+                sections.append({"table_html": _honours_feats_list(eagles)})
+            else:
+                sections.append({"table_html": "<p class='text-muted text-sm'>No eagles have yet been scored on a TEG</p>"})
 
         elif tab == "hio":
             hio = get_holes_in_one_data(all_data)
             if hio is not None and not hio.empty:
-                sections.append({"table_html": _df_to_html(hio, link_players=False)})  # profiles hidden 2026-09-18
+                sections.append({"table_html": _honours_feats_list(hio)})
             else:
                 sections.append({"table_html": "<p class='text-muted text-sm'>No holes in one have yet been scored on a TEG</p>"})
 

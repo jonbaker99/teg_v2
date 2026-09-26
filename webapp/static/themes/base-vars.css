@@ -457,6 +457,14 @@ table.leaderboard td:nth-child(2) {
     font-size: 1.15em;
     font-weight: 700;
 }
+/* Eagles / Holes in One: a plain list, not a table (_honours_feats_list).
+   Detail halves are inline-blocks so the line breaks between them. */
+.honours-feats { list-style: none; margin: 0; padding: 0; }
+.honours-feat + .honours-feat { margin-top: 0.9rem; }
+.honours-feat-player { display: block; font-weight: 700; }
+.honours-feat-detail { display: block; font-size: 0.875rem; color: var(--text-muted); }
+.honours-feat-detail > span { display: inline-block; }
+
 /* No zebra striping anywhere on /honours -- winner tables above and the
    plain .teg-table Eagles/HIO tabs both opt out, scoped to the page so the
    global .teg-table default (site-wide) is untouched. */

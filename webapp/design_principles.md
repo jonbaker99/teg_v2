@@ -195,8 +195,9 @@ bold-primary-number/leader-shading recipe to a genuinely small, fixed-shape
 table (Player + count, +TEGs for the three single-winner tabs) — full-bleed
 on mobile via a `.honours-page` wrapper (same `:has()` gutter-zeroing shape
 as `.latest-round-page`) and `table-wrapper--no-pin`, capped at `30rem` on
-desktop rather than stretched full width. Eagles/HIO keep their existing
-plain `.teg-table` structure and the site-wide sticky-scroll default.
+desktop rather than stretched full width. Eagles/HIO are short lists, so
+they drop the table entirely: `_honours_feats_list` renders a bold name
+over one muted detail line (`.honours-feats`).
 
 ### Second mobile table reference: one row, two renderings (I1 standings)
 

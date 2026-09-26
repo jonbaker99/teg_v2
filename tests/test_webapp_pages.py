@@ -971,6 +971,15 @@ def test_honours_trophy_tab_uses_mobile_table_pattern(client):
     assert "table-wrapper--no-pin" in resp.text
 
 
+def test_honours_eagles_tab_is_a_list(client):
+    # Eagles render as a plain list (name, then date/course and TEG/round/hole),
+    # not a table -- see _honours_feats_list.
+    resp = client.get("/honours/tab/eagles")
+    _assert_ok_no_error(resp)
+    assert "honours-feats" in resp.text
+    assert "<table" not in resp.text
+
+
 # ---------------------------------------------------------------------------
 # Contents (I5: current-TEG home) -- one test per state against a stubbed
 # get_tournament_state(), plus the honesty/link-preservation acceptance
