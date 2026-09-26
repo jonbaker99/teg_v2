@@ -429,8 +429,8 @@ def _honours_wins_table(df: pd.DataFrame, count_col: str) -> str:
 def _honours_feats_list(df: pd.DataFrame) -> str:
     """Eagles / Holes in One as a plain list, not a table: bold player name,
     then a muted line "September 2011, Bletchingley. TEG 4, Round 4, Hole 8."
-    The two halves of that line are separate inline-blocks, so on a narrow
-    screen it breaks between course and TEG/round/hole rather than mid-phrase.
+    The two halves are separate blocks, so every entry breaks between course
+    and TEG/round/hole (consistent across rows, whatever the width).
     Expects get_eagles_data's shape (Hole = "TEG 4 | Rd 4 | Hole 8")."""
     items = []
     for _, row in df.iterrows():

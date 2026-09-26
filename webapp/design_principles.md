@@ -197,7 +197,7 @@ on mobile via a `.honours-page` wrapper (same `:has()` gutter-zeroing shape
 as `.latest-round-page`) and `table-wrapper--no-pin`, capped at `30rem` on
 desktop rather than stretched full width. Eagles/HIO are short lists, so
 they drop the table entirely: `_honours_feats_list` renders a bold name
-over one muted detail line (`.honours-feats`).
+over two muted detail lines (`.honours-feats`).
 
 ### Second mobile table reference: one row, two renderings (I1 standings)
 
