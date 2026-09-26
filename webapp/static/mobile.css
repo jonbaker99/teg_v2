@@ -484,6 +484,30 @@
     opacity: 0.85;
   }
 
+  /* ── Tab-row left alignment (2026-09-26) ──
+     The first tab's text must line up with the page title and table text.
+     Two things pushed it right: the start cue glyph kept its width in the
+     flex row even while invisible (opacity 0), and the first tab's own
+     12px left padding. Fix: cue glyphs overlay the row (negative margin
+     equal to their width, so they take no layout space but stay sticky at
+     the edge and still cover scrolled content), and the first tab drops its
+     left padding. Full-bleed pages whose tab row sits at the zeroed
+     main-content edge (see the :has() list near the top of this file) have
+     their title/table text 12px in from the row's edge, so they keep it.
+     .standings-page is left out: it pads itself, so its row already aligns. */
+  body.nc-arrows .nav-cue-start { margin-right: -26px; }
+  body.nc-arrows .nav-cue-end { margin-left: -26px; }
+  body.nc-chevron .nav-cue-start { margin-right: -20px; }
+  body.nc-chevron .nav-cue-end { margin-left: -20px; }
+  .section-nav > .tab-underline:first-child,
+  .section-nav > .nav-cue-start + .tab-underline {
+    padding-left: 0;
+  }
+  .main-content.px-6:is(:has(> .latest-round-page), :has(> .latest-teg-page), :has(> .honours-page)) .section-nav > .tab-underline:first-child,
+  .main-content.px-6:is(:has(> .latest-round-page), :has(> .latest-teg-page), :has(> .honours-page)) .section-nav > .nav-cue-start + .tab-underline {
+    padding-left: 12px;
+  }
+
   /* Pills: bigger tap targets. 44px is the touch-floor minimum
      (design_principles.md "Hit areas: two-tier"), not a stylistic choice. */
   .pill {
@@ -1136,13 +1160,12 @@
 
   /* ── Honours winner tabs (Trophy/Jacket/Spoon/Doubles) ──
      .honours-page wraps the whole tab bar + content pane (honours.html) so
-     :has(> .honours-page) above can zero main-content's gutter; the tab bar
-     gets its own inset back explicitly (same shape as .latest-round-page).
+     :has(> .honours-page) above can zero main-content's gutter; the tab
+     bar's alignment is handled by the shared tab-row alignment rules.
      Only the winner tabs' data-card (the one holding table.honours-table)
      goes fully edge-to-edge -- Eagles/HIO's plain .teg-table keeps its
      12px gutter and the site-wide sticky-scroll treatment (table-wrapper--
      no-pin is only set for the winner-tab sections in _honours_tab_context). */
-  .honours-page .section-nav { margin-left: 12px; margin-right: 12px; }
   .honours-page #honours-content .data-card {
     margin: 9px 0;
     padding-inline: 12px;
