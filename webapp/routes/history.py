@@ -251,11 +251,10 @@ def _history_table_html(df: pd.DataFrame, round_metadata: dict | None = None) ->
                 for r in rounds
             )
             # colspan matches the visible column count (TEG + 3 name columns),
-            # not len(headers): the trailing toggle column is display:none on
-            # desktop, and a colspan that overshoots the table's real column
-            # count throws off table-layout:fixed's width math for every
-            # column once this row is revealed. A matching empty cell keeps
-            # the column count consistent with every other row.
+            # not len(headers): the trailing toggle column gets its own empty
+            # cell instead, so a revealed detail row keeps the same column
+            # count as every other row and table-layout:fixed's width math
+            # stays stable.
             rows.append(
                 f"<tr class='history-detail-row' id='{detail_id}' hidden>"
                 f"<td colspan='{len(headers) - 1}'>"
