@@ -12,13 +12,44 @@
 
 ---
 
-## START HERE — picking this up in a new chat (2026-09-08)
+## START HERE — picking this up in a new chat (2026-09-26)
 
-**Fact-check upgrade planned, not built (2026-09-26).** D3 currently checks nothing: `verify --all` still
-looks for the archived `report_final.md`. The TEG 18 report shipped 2 real errors, 3 ambiguous claims and
-1 missed record, and two of those came from detector bugs. The approved plan is claim extraction plus
-code checks, then repairing the 85 existing reports in place. Diagnosis, work packages, costs and open
-decisions: [FACTCHECK_PLAN.md](FACTCHECK_PLAN.md).
+**Fact-check upgrade WP1–4 + 7 built (2026-09-26); WP5–6 still open.** D3 now checks the reports that
+actually exist: `verify.py` defaulted to the archived `report_final.md` glob, which matched zero of
+the 85 live `*_report_storylinefirst.md` files — silently. Re-baselined at 3 errors / 33 warnings
+across all 85 (matches the pre-existing TODOS.md count exactly, confirming the glob fix is correct,
+not just non-empty). Three detector bugs behind two of the six diagnosed TEG 18 errors are fixed
+upstream (`events.py`, `course_history.py`, `commentary.py` — see below); a fourth, adjacent bug
+(the Jacket's `lead_change` beat reported the Trophy's rank column, not the Gross one) was found and
+fixed alongside them. A new `settled_facts.py` gives both draft writers a round→day map, a tie-aware
+lead timeline, final totals and rank snapshots — code-derived, no new data — so a cross-competition
+or cross-round claim can be checked rather than guessed. A new `claims.py` adds an optional LLM
+claim-extraction + code-checking pass (`verify.py --claims`, off by default, Sonnet tier, cached to
+`{stem}_claims.json`), covering `hole_score` / `weekday` / `total` / `rank_change` / `lead_event` /
+`comparison` / `run`; `record` claims are extracted but not yet checked (honestly reported as
+`severity="unchecked"`, never folded into "passed"). Hand-written fixtures against real TEG 18 data
+reproduce the diagnosed items without any LLM call — see `tests/test_reporting_verify.py`'s
+`TestClaimChecks` and `tests/test_reporting_detectors.py`.
+
+**Real extraction run, TEG 18: 4 errors + 1 warning, two of them new.** No `ANTHROPIC_API_KEY` reached
+the build worktree initially (untracked `.env` doesn't propagate into a `git worktree add` checkout) and
+`anthropic` wasn't installed — both fixed, plus a real gap found in the process: `llm.get_api_key()`
+never called `load_dotenv()` itself, so any bare `teg_analysis.reporting` CLI was blind to `.env`
+regardless of environment — now fixed there too. Once the extractor actually ran, `claude-sonnet-5`
+reproducibly burned its entire token budget on adaptive thinking and returned no output at all — fixed
+by adding a `thinking: bool` parameter to `generate_structured` (mirroring `generate_text`'s existing
+one) and disabling it for claim extraction, a pure extraction task with no need for reasoning. Three
+more rounds of prompt/checker hardening followed, driven by real false positives the run surfaced
+(an invented `run` basis for point-total-only spans, hallucinated `hole_score` numbers from qualitative
+descriptors with no par to convert them, a Jacket-total unit mismatch). Final result reproduces item 1
+and item 4 exactly, touches item 2's ambiguity from a different angle, and **finds two genuinely new,
+previously undiagnosed errors** (Gregg Williams's R1 and R3 opening-hole claims each contradicted by the
+data). Full account: `FACTCHECK_PLAN.md` → "Real extraction run, TEG 18". **The 17-report sweep itself
+is still not run** — worth doing now that the systematic issues are fixed, before WP5.
+
+**WP5 (repair the 85 reports in place) and WP6 (missed-fact detection) are still open** — deliberately
+out of scope for this session. Diagnosis, work packages, costs and open decisions:
+[FACTCHECK_PLAN.md](FACTCHECK_PLAN.md).
 
 **"Sidebar" badges replaced with real topics (2026-09-22).** The printed badge above a story's
 headline should always name its actual subject (`JON BAKER`, `STADIUM COURSE`); 17 report-page

@@ -111,6 +111,7 @@ from teg_analysis.reporting.authoring import (WRITER_VOICE, _strip_derived_prose
                                              load_storyline_plan, restyle_voice)
 from teg_analysis.reporting.backfill import parse_teg_spec
 from teg_analysis.reporting.paths import output_dir
+from teg_analysis.reporting.settled_facts import build_settled_facts
 from teg_analysis.reporting.story_plan import assemble_bundle, build_storyline_plan
 
 import storyline_interweave_experiment as interweave
@@ -135,6 +136,11 @@ def _context_for(storyline_players: set, bundle: dict) -> dict:
                            if p in storyline_players},
         "player_course_history": {p: h for p, h in (bundle.get("player_course_history") or {}).items()
                                   if p in storyline_players},
+        # Code-derived facts (round→day map, lead timeline, final totals,
+        # tie-aware rank snapshots) — not scoped to this storyline's players,
+        # since a lead timeline or final totals table is meaningless with
+        # some players missing. See settled_facts.py and DRAFT_WRITER_SYSTEM.
+        "settled_facts": bundle.get("settled_facts"),
     }
     return _strip_derived_prose(ctx)
 
@@ -176,11 +182,13 @@ def _fallback_sections(plan: dict, all_beats: list) -> list:
     return []
 
 
-# The three rules below are the SHARED constants, not a paraphrase. This prompt is
+# The rules below are the SHARED constants, not a paraphrase. This prompt is
 # bespoke to the experiment — it is not built from `build_writer_system` — which
 # is exactly how it went on drafting sections under the pre-2026-09-10 rules
-# after those rules reached every production writer. Import them; don't retype
-# them, and don't let this prompt drift from `prompts.py` again.
+# after those rules reached every production writer, and again (2026-09-26) how
+# it went on drafting a "Sunday" round score inside an R1 paragraph — this
+# prompt never carried SHARED_FAITHFULNESS or the weekday rule at all. Import
+# them; don't retype them, and don't let this prompt drift from `prompts.py`.
 DRAFT_WRITER_SYSTEM = """You are writing one section of a golf tournament report — a \
 single storyline, not the whole report. Plain, clear, factual prose — this is a \
 structural draft, not the final voice; do not try to be funny or stylish. 150-250 \
@@ -194,10 +202,23 @@ leave it out. Do not let it crowd out `evidence` — this storyline's own beats 
 still the spine. Every fact you write must trace to `evidence` or `context`. Never \
 invent scores, margins, or comparisons not present in your input.
 
+`context.settled_facts` is the SOURCE OF TRUTH for anything cross-competition or \
+cross-round: `round_days` (which round fell on which weekday — never guess or \
+reuse another round's day), `lead_timeline` (every OUTRIGHT change of leader, per \
+competition, tie-aware — a hole where two players share the lead is NOT a change), \
+`final_totals` (every competition's actual final total, plus `decisive_metric` \
+naming which one decides the Trophy this era), and `rank_snapshots` (tie-aware \
+standings at the holes in `lead_timeline`). If you claim a player was "comfortably \
+the better player" or similar across competitions, check BOTH `final_totals` \
+entries first — Stableford and Gross measure different things, and a big margin on \
+one says nothing about the other.
+
 WHAT IS WORTH SAYING, and how to name it:
 """ + prompts.RANKING_RULE + """
 """ + prompts.NAMING_RULE + """
-""" + prompts.DOUBLE_RULE
+""" + prompts.DOUBLE_RULE + """
+""" + prompts.SHARED_FAITHFULNESS + """
+""" + prompts.WEEKDAY_RULE
 
 
 def draft_section(storyline: dict, evidence: list, context: dict, model: Optional[str] = None) -> str:
@@ -232,6 +253,10 @@ def build_storyline_draft(teg_num: int, model: Optional[str] = None,
 
     bundle, _ = assemble_bundle(teg_num, top_n=None)
     all_beats = bundle["beats"]
+    # Computed once, shared across every storyline's `_context_for` call below
+    # (settled_facts.py is pure pandas over already-loaded data, but there is
+    # no reason to re-derive it once per section).
+    bundle["settled_facts"] = build_settled_facts(teg_num)
 
     fallback_sections = _fallback_sections(plan, all_beats)
     if fallback_sections:

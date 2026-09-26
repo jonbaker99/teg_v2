@@ -1,10 +1,28 @@
-# Fact-check upgrade — plan (approved 2026-09-26, not yet built)
+# Fact-check upgrade — plan (approved 2026-09-26; WP1–4 + 7 built AND run 2026-09-26)
 
-**Temporary working doc.** Delete it, or fold it into `STATUS.md` / `ARTEFACTS.md`, once the work ships.
+**Temporary working doc.** Delete it, or fold it into `STATUS.md` / `ARTEFACTS.md`, once WP5–6 ship too.
 
-> **Implementing agent: before any code, ask Jon the three questions under
-> [Decisions still open](#decisions-still-open-confirm-at-kick-off)** and record his answers in that section.
-> Don't assume the defaults.
+**WP1–4 + 7 status: built, tested, and run for real against TEG 18.** 0 regressions, full suite
+genuinely all-green (see below). WP5 (repair the 85 reports) and WP6 (missed-fact detection) remain
+open — see [STATUS.md](STATUS.md)'s START HERE entry for the session summary and `ARTEFACTS.md`
+⑨/⑨b for the rebuilt component detail.
+
+**The real TEG 18 extraction run found 4 errors + 1 warning** — one exactly matching item 1, one
+matching item 4, one a different manifestation of item 2's round/weekday ambiguity, and **two
+genuinely new, previously undiagnosed errors** (see [Real extraction run](#real-extraction-run-teg-18-2026-09-26)
+below). Getting a trustworthy result took three environment fixes and three rounds of prompt/checker
+hardening after the first two extraction attempts failed outright.
+
+**TEG 18's 3 confirmed errors were then repaired in place** (item 2's finding turned out to be a
+misextraction, not a real error — see below) and the fix was committed to
+`teg_18_report_storylinefirst.md`; `_styled.md` regenerated; the PDF is flagged stale (`playwright`
+not installed in the build session — rebuild with `scripts/build_report_pdfs.py --tegs 18` when it is).
+
+**Then the full 85-report sweep ran three times**, each round fixing systemic extractor/checker bugs
+the previous round's real output surfaced — see
+[Full-corpus sweep](#full-corpus-sweep-2026-09-26-not-finished) below for the complete account,
+the two fixes still needed, and the 5 new genuine errors already found and verified against real
+data, ready to repair.
 
 **Goal:** no factual error or ambiguous claim in a report can ship silently. Code decides what is true; a model only lists the claims and rewrites flagged sentences.
 
@@ -33,38 +51,64 @@ Related: Williams's R4 84 "eight better than his previous best there" ignores hi
 
 ## Work packages (in order)
 
-### 1. Point D3 at the current reports — free
-- `verify.py`: `--all` and `load_context` resolve `teg_N[_round_R]_report_storylinefirst.md`. Keep reading legacy `report_final.md` only via explicit `text=`.
-- Persist findings next to the report (`..._verify.json`) so results survive the run; today `restyle_voice` only prints them.
-- Re-baseline and record the counts here.
+### 1. Point D3 at the current reports — free — **done**
+- `verify.py`: `--all` and `load_context` resolve `teg_N[_round_R]_report_storylinefirst.md` by default; legacy `report_final.md` is reachable via `--label final` or `text=`.
+- Findings persist next to the report (`{stem}_verify.json`), written by the CLI and by `restyle_voice`/`apply_corrections` — previously stdout-only.
+- **Re-baselined (2026-09-26):** 85/85 files found (0 under the old glob). **3 errors, 33 warnings** — identical to the pre-existing "baseline today" figure above, confirming the fix surfaces the real count rather than a new one.
 
-### 2. Upstream fixes — free, no new LLM calls
-- `events.py` `long_lead_lost`: attach the **losing** leader's hole (or both players' holes, each labelled with the player).
-- Lead/Spoon beats: add `tied_with` / `tie_size` and a race-direction-safe label (e.g. "T2 of 5, 1 pt above last"). Emit "Took Lead" for recaptures (R2 H12/H14 are missing).
-- `course_history.detect_course_records`: emit `course_record_equalled` (ties), and compare later rounds with earlier rounds of the same TEG.
-- `build_player_course_history`: expose `best_earlier_this_teg` so "previous best" can't skip a same-TEG round.
-- `DRAFT_WRITER_SYSTEM` (and the round equivalent): add `prompts.SHARED_FAITHFULNESS` plus the weekday rule from `WRITER_FAITHFULNESS`. Don't retype them; import them.
-- Re-run the tests that pin these prompts (`tests/test_reporting_prompts.py`) and `tests/test_round_storyline.py`.
+### 2. Upstream fixes — free, no new LLM calls — **done**
+- `events.py` `long_lead_lost`: attaches **both** players' hole evidence, each labelled, plus flat `taken_at_hole`/`lost_at_hole`.
+- Lead/Spoon beats: `tied_with` / `tie_size` added; Spoon beats now use `spoon_rank_before/after` + `position_label` (e.g. "T2 of 5, 1 pt above last") instead of the Trophy-direction rank columns. "Took Lead" now fires on a recapture from a tie — root cause was a boolean-`shift()` → object-dtype `~` bug in `commentary.create_round_events`'s new outright-tracking columns, not just a missing condition; TEG 18 R2 H7/H12/H14 (Jacket) now fire, matching the diagnosis exactly.
+- **Adjacent bug found and fixed:** the Jacket's `lead_change` beat context read the *Trophy's* rank_before/after columns unconditionally, not the Gross ones — same defect class as the Spoon bug, not one of the six original items.
+- `course_history.detect_course_records`: emits `course_record_equalled` / `course_record_high_equalled`; walks each TEG's rounds on a course chronologically against a running best, so a same-TEG round is compared with an earlier same-TEG round. TEG 18's Williams R4 84 now correctly equals Mullin's R3 84 at the Stadium course.
+- `build_player_course_history`: exposes `best_earlier_this_teg` / `best_earlier_this_teg_round`.
+- `DRAFT_WRITER_SYSTEM` (and the round equivalent): both now carry `prompts.SHARED_FAITHFULNESS` + a newly-extracted `prompts.WEEKDAY_RULE` (pulled out of `_WRITER_FAITHFULNESS_TOURNAMENT`, byte-identical, imported not retyped).
+- All of `tests/test_reporting_prompts.py`, `tests/test_round_storyline.py`, `tests/test_reporting_schema_and_era.py` pass unchanged in behaviour (new assertions added, none removed).
 
-### 3. Settled facts for the writer — free
-Add to the bundle / draft `context`, computed by code:
-- **Round→day map** (`R2 = Sunday`).
-- **Full lead timeline** per competition (every change, tie-aware).
-- **Final totals** in every competition, plus which metric decides each competition.
-- **Tie-aware rank snapshots** at each beat.
+### 3. Settled facts for the writer — free — **done**
+New `teg_analysis/reporting/settled_facts.py`, wired into both draft writers' `_context_for` as `context.settled_facts`:
+- **Round→day map** (`R2 = Sunday`) — leak-safe via `through_round`.
+- **Lead timeline** per competition (Trophy, Jacket, Spoon), tie-aware — records only OUTRIGHT leader identity changes, matching `long_lead_lost`'s tenure semantics (a tie doesn't count as losing the lead).
+- **Final totals** per competition (Jacket in raw gross strokes, matching how players actually read it) plus `decisive_metric`.
+- **Tie-aware rank snapshots**, scoped to the holes referenced in `lead_timeline` (not every hole — that would be ~72 holes of noise).
 
-It helps future generations. For repair (WP5) it is the source of the corrections.
+Both draft prompts reference it directly ("check it, do not just copy it" — the existing `round_by_round_status` precedent's wording).
 
-### 4. Claim extraction + code checks — 1 LLM call per report
-- **Extractor:** one structured call (`llm.generate_structured`, cheap model, Sonnet tier). Input: report text only. Output: a list of claims, each with a **verbatim quote**. Claims whose quote isn't in the text are dropped.
-- **Claim types:** `hole_score`, `lead_event`, `rank_change`, `comparison` (players, span, metric stated or not), `run` (player, round, holes, basis, ended_by), `weekday`, `record` / `personal_best`, `total`.
-- **Cache:** `..._claims.json`, keyed by a hash of the report text. `verify --all` stays free and deterministic; the model only re-runs when the text changes.
-- **Checker (code):** new `teg_analysis/reporting/claims.py` (or a section of `verify.py`) with one check per type, against `load_all_data` and the existing `teg_analysis` / records functions. Build one hole-by-hole standings timeline (cumulative Gross / Stableford, tie-aware ranks) and reuse it for leads, ranks and totals.
-- **Severity:**
-  - **Error:** the data contradicts a fully resolved claim (items 1, 4).
-  - **Warning:** the claim is ambiguous — tie hidden, gross/net basis unstated where it matters, span unclear, or weekday and paragraph round disagree (items 2, 3, 5).
-  - **Unchecked:** the claim type is not covered. Counted and listed, never reported as "passed".
-- **Cross-story contradictions** need no separate check: every claim is checked against one timeline.
+### 4. Claim extraction + code checks — 1 LLM call per report — **done, run for real**
+- **Extractor:** `claims.py`, one `llm.generate_structured` call, `claude-sonnet-5`, API billing (confirmed at kick-off), **`thinking=False`** — see [Real extraction run](#real-extraction-run-teg-18-2026-09-26): adaptive thinking reproducibly burns the whole `max_tokens` budget on this call and returns no output. Input: report text only. Output: a list of claims, each with a **verbatim quote**. Claims whose quote isn't in the text are dropped.
+- **Claim types implemented:** `hole_score`, `weekday`, `total`, `rank_change`, `lead_event`, `comparison`, `run` — all checked against `settled_facts.py`'s data. `record` is extracted but has no checker yet (reports `severity="unchecked"`).
+- **Cache:** `{stem}_claims.json`, keyed by a SHA-256 of the report text. `verify --all --claims` re-extracts only when the text changes.
+- **Checker:** `claims.FactBase` (built from `settled_facts.build_hole_timeline` + `build_settled_facts`), one function per claim type.
+- **Severity**, confirmed both against hand-written TEG 18 fixtures (`tests/test_reporting_verify.py::TestClaimChecks`, no LLM call) and against the real extraction run:
+  - **Error:** item 1 (`hole_score` — the data flatly contradicts the claimed score) — the real run reproduced this exactly, plus found two new ones (see below).
+  - **Warning:** item 4 (`comparison`, unqualified — the two competitions disagree on who was "better", exactly the plan's "true only on gross" diagnosis: a genuine ambiguity, not a flat contradiction). The real run reproduced this exactly. Item 2 (`weekday`, wrong round) and item 5 (`rank_change`, hides a tie) are confirmed only against hand-written fixtures — neither's exact sentence shape was independently re-flagged by the real run (see below for what the run found instead).
+  - **Unchecked:** `record` claims; any `comparison` with an explicit metric/competition named; a `total` claim naming a specific round rather than the tournament (no per-round total is wired into `FactBase` yet).
+  - **Item 3** (a cross-sentence span-redundancy ambiguity — two separate `run` claims referencing adjacent-but-distinct spans) is **not mechanically checkable from a single claim** in this cut; each `run` claim is validated in isolation and both would pass independently. Left as a known gap.
+
+#### Real extraction run, TEG 18 (2026-09-26)
+
+Getting a trustworthy result took three separate fixes, in order:
+
+1. **Environment.** No `ANTHROPIC_API_KEY` reached the worktree (`.env` is gitignored, so `git worktree add` never copies it — untracked files don't propagate to a new worktree) and `anthropic` wasn't installed in the interpreter. Fixed by copying `.env` and installing the SDK; then found `llm.get_api_key()` never called `load_dotenv()` itself (only `webapp/app.py` does), so a bare `teg_analysis.reporting` CLI was blind to `.env` regardless — fixed by adding `load_dotenv()` to `get_api_key()`, mirrored by a test fix (`test_reporting_provider.py`'s "no key" test now patches `dotenv.load_dotenv` to a no-op, since a real `.env` would otherwise silently defeat it).
+2. **Adaptive thinking burned the entire budget with zero output**, at 16000, at 20000, and with no `thinking` param at all (the model's own default) — confirmed reproducible and confirmed NOT max-tokens-related by testing the API directly: `thinking={"type": "disabled"}` fixed it outright (88 claims, `end_turn`, zero thinking tokens), while Opus succeeded immediately with thinking on. Added a `thinking: bool` parameter to `generate_structured`/`_api_structured`, mirroring the one `generate_text` already had; `extract_claims` now passes `thinking=False`.
+3. **Three checker/prompt bugs**, found by the run itself and fixed before trusting the output — this is the false-alarm sweep doing its job:
+   - The extractor invented a `run` basis ("par or better") for sentences that only state a point total for a hole range ("21 points from holes 11 to 16") — no per-hole result was actually stated. Tightened `EXTRACTOR_SYSTEM` to require the text explicitly name the per-hole category for the WHOLE span, and to skip the claim rather than guess.
+   - The extractor was **hallucinating raw scores from qualitative descriptors** ("doubles at the 5th, 6th and 10th" → a fabricated `hole_score` claim with a guessed number) — it can't know a hole's par from text alone, so it was guessing. Tightened the prompt to only fill `score` when the text states an explicit number.
+   - `_check_total` assumed one unit for the Jacket; the report states it in gross-vs-par ("+66"), `settled_facts.py` stored raw strokes (354) — same number, different units, flagged as a false error. Added `total_vs_par` to the Jacket's `final_totals` entries; the checker now accepts either representation. Also added a guard: a `total` claim naming a specific round is a round score, not the tournament total — unchecked rather than wrongly compared.
+
+**Final result: 4 errors, 1 warning, 49 unchecked.**
+
+| Finding | Matches | Detail |
+|---|---|---|
+| `claim_hole_score`: Jon Baker scored 8 at R2 H7, claim says 6 | **item 1**, exactly | "…where a six handed the lead to Gregg Williams" — the six was Williams's |
+| `claim_comparison`: warning, Patterson/Baker | **item 4**, exactly | Trophy and Jacket disagree on who was better |
+| `claim_hole_score`: John Patterson scored 5 at R4 H4, claim says 8 | **item 2's ambiguity**, different shape | The real R2 H4 score (8) got attributed to R4 H4 by the extractor conflating "the 4th" (a hole) with "Sunday" (R2) — the same round/hole/weekday confusion item 2 diagnosed, just caught via `hole_score` rather than `weekday` |
+| `claim_run`: Gregg Williams R1 H1 was a par, contradicting "did not make a hole better than bogey" through H14 | **new**, not one of the six | Verified directly against the parquet |
+| `claim_run`: Gregg Williams R3 H1 was a bogey, contradicting "four pars opened round three" | **new**, not one of the six | Verified directly against the parquet |
+
+Items 2 (exact weekday shape), 3 and 5 were not independently re-flagged by this run — either the extractor didn't isolate them as separate checkable claims this time (item 5's exact sentence extracted with `round`/`hole` both null, since the sentence itself doesn't restate them — falls to `unchecked`, not a miss of the checker), or (item 3) they're the documented cross-claim gap above. **Two new, previously undiagnosed real errors were found** — a concrete demonstration of the sweep's value beyond re-confirming the six known items.
+
+**The 17-report sweep itself was not run** — one report's worth of iteration was enough to find and fix the systematic issues above; running all 17 now would be re-spending on calls whose failure modes are already fixed. Do that sweep before WP5.
 
 ### 5. Repair in place (path A) — 1–2 LLM calls per flagged report
 - For each error/warning, send the **flagged sentence + surrounding paragraph + the correct facts computed by code** to a repair call. It returns a replacement sentence only, in house voice (reuse `VOICE_CORE` / `SENTENCE_DISCIPLINE`).
@@ -76,15 +120,16 @@ It helps future generations. For repair (WP5) it is the source of the correction
 Code lists the must-mention facts: records set or equalled, the winner's decisive lead change and personal-worst/best records. Flag any one no claim covers, as a **warning** ("not mentioned"). It uses WP2's detectors and needs no model call.
 
 ### 7. Tests and docs
-- `tests/test_reporting_verify.py`: hand-written claim fixtures against real TEG 18 data (no LLM). They flag items 1–5 (1, 4 errors; 2, 3, 5 warnings) and item 6 as a missed-fact warning. Plus tests that the new `--all` glob finds storyline-first files and that a missing quote drops the claim.
-- Detector unit tests for WP2.
-- Docs: `reporting/STATUS.md` (START HERE entry), `ARTEFACTS.md` (⑨ rewritten; new artefacts `_claims.json` / `_verify.json`), `README.md` D1–D3 table, `DATA_FLOW.md` §10 if the artefact list changes.
+- `tests/test_reporting_verify.py`: hand-written claim fixtures against real TEG 18 data (no LLM) — **done**. Items 1 (error), 2, 4, 5 (warnings) confirmed; item 3 documented as an out-of-cut gap, not force-fitted; item 6 (missed-fact) is WP6, not built. Plus `--all`/`--label` glob tests, `_verify.json` round-trip, and the quote-not-found-drops-the-claim rule.
+- `tests/test_reporting_detectors.py` — **done**: WP2's fixes against real TEG 18 data (both players' hole evidence, the exact H6/7/9/10/12/13/14 recapture sequence, Gross-not-Trophy ranks on the Jacket beat, Spoon direction + ties, the same-TEG course-record equal).
+- Docs updated same session: `STATUS.md` (START HERE), `ARTEFACTS.md` (⑨ rewritten + new ⑨b), `README.md` D1–D3 table + module table, `DATA_FLOW.md` (new artefacts noted in the Storage Layer section).
 
 ## Acceptance
-- TEG 18: items 1 and 4 are errors; 2, 3 and 5 are warnings; item 6 is a missed-fact warning.
-- No new **errors** on `verify --all` beyond real ones confirmed by hand. Warnings are reviewed on the 17 tournament reports.
-- After repair: every report has 0 errors; any remaining warnings are signed off by a human.
-- Tests pass (run the reporting test files, not the whole suite, unless WP2 touches shared modules).
+- TEG 18: item 1 is an error (confirmed by the real run); item 4 is a warning (confirmed by the real run); items 2 and 5 are confirmed as errors/warnings only against hand-written fixtures, not independently re-caught by the real run in their exact original shape (see the extraction-run table above for what it caught instead — including two new real errors). Item 3 is a known gap, not force-fitted into a false positive. Item 6 (missed-fact) is WP6, not attempted.
+- No new **errors** on `verify --all` beyond real ones confirmed by hand — **re-baselined 2026-09-26: 3 errors, 33 warnings across all 85** (mechanical checks only), unchanged from the pre-fix count, confirming the glob fix surfaces the true count rather than a different one.
+- The false-alarm sweep (`--claims` across all 17 tournament reports) is **not yet run** — one report's worth of iteration surfaced and fixed three systematic extractor/checker bugs first; see [Real extraction run](#real-extraction-run-teg-18-2026-09-26). Run the sweep next, before WP5.
+- After repair (WP5, not started): every report has 0 errors; any remaining warnings are signed off by a human.
+- Tests: targeted reporting suite passes (113+ tests across the affected files), plus a full-suite run (justified — WP2 touches `analysis/commentary.py`, a shared module): genuinely all-green once the environment fixes above landed (the one failure seen mid-session, `test_reporting_provider.py`, was the same missing-`anthropic`-package issue being fixed, not a new regression).
 
 ## Cost (rough; API rates Sonnet 5 $2/$10 and Opus 5 $5/$25 per M tokens)
 
@@ -98,7 +143,73 @@ Plan usage: $0 cash, ~170–250 mailbox prompts. That is feasible but mind the w
 
 **Effort:** WP1–4 + 7 ≈ 1–1.5 days of agent work; WP5–6 ≈ another day.
 
-## Decisions still open (confirm at kick-off)
-- **Extraction model:** Sonnet tier, on plan usage or API?
-- **False-alarm sweep:** all 17 tournament reports (recommended) or a sample?
-- **Repair model:** Sonnet or Opus (house voice may need Opus)?
+## Decisions confirmed at kick-off (2026-09-26)
+- **Extraction model:** Sonnet tier, **API billing** (not plan usage) — `claude-sonnet-5` in `claims.py`.
+- **False-alarm sweep:** all 85 reports (not just tournament, not a sample) — **run three times**, see below.
+- **Repair model:** Opus — used for TEG 18's 3 repairs; not yet run at scale for WP5.
+
+## Full-corpus sweep (2026-09-26, not finished)
+
+`python -m teg_analysis.reporting.verify --all --rounds --claims` run three times against all 85
+reports, fixing real systemic bugs the previous round's output surfaced each time:
+
+| Sweep | Errors | Fix applied after |
+|---|---|---|
+| 1 | 230 | Spoon rank direction (`_rank_source_for` used the inverted `_SpoonRank` column — 19 false errors); margin/lead-gap claims misclassified as `total` (~150 false errors); `run` claims invented from aggregate point totals; `hole_score` hallucinated from qualitative descriptors; Jacket total unit mismatch |
+| 2 | 133 | "Last"/"bottom" language made the extractor emit `value=1` (a regression from the spoon fix's wording) — tightened to leave `value` null rather than guess; `total` tightened further to explicitly exclude round/partial scores |
+| 3 | 65 | Sign-tolerance fix ("18 under" vs stored `-18`); one outdated test assumption fixed (`test_item5_shared_rank_is_warning` was keyed to the old inverted Spoon column) |
+
+**Sweep 3's 65 errors, triaged by hand against real parquet data** (not another sweep — the cached
+`{stem}_claims.json` files already hold the extracted claims; re-run `check_claim_list` against them
+for free after a checker fix, no new LLM call needed unless the report text itself changes):
+
+**Confirmed noise — two more fixes identified but NOT yet made:**
+1. **Net-vs-gross axis in `run` claims** (~3+ of 16). "went four straight without a **net** par" is
+   checked against raw `GrossVP`, which is always the GROSS axis. Fix: when the claim's `basis` or
+   quote says "net" (vs "gross" explicitly), check `Stableford >= 2` for "net par or better" (and
+   similarly scale the other basis levels) instead of `GrossVP`. Verified false positives: TEG 2 R2
+   Henry Meller (holes 13-16) and David Mullin (holes 16-18) — both genuinely true on the net axis.
+2. **`rank_change` "last"/"bottom" still defaults to `value=1`** (~7 of 13), despite the sweep-2
+   prompt fix telling the extractor to leave it null. This is a persistent model behaviour, not
+   prompt-fixable — the code should treat `value == 1` alongside `last`/`bottom`/`foot of the field`
+   language in the quote as ambiguous (unchecked), not a literal check against 1. Verified: five
+   separate TEG 5 R1 claims ("last place was his", "the foot of the field", "reclaimed the
+   position", etc.) all false-error against the real rank-5 (of 5) standing.
+3. **Before/after value confusion in `rank_change`** (~3-4 of 13) — for "from third into the lead",
+   the extractor sometimes reports the BEFORE number (3) where the checker validates the AFTER
+   state at that hole. Verified: TEG 9 R1 H5 John Patterson — real rank at that hole is 1, matching
+   the claim's own narrative; only the extracted number (3) was wrong. No fix designed yet; needs
+   either an extractor instruction to always report the AFTER value, or a `before`/`after` field pair.
+4. Residual round-vs-tournament total confusion despite an explicit prompt rule (~11 of 13
+   `claim_total`) and span/basis extraction slips in `run` (~5 of 16) — the model doesn't follow the
+   prompt 100% of the time; likely an acceptable floor, not chased further this session.
+
+**Confirmed genuine, new report errors — verified against real parquet data, ready to repair:**
+
+| Report | Claim (paraphrased) | Real data |
+|---|---|---|
+| TEG 5 R3 (tournament report) | "played 16th–18th in level par gross" (Stuart Neumann) | Actual: +2, +3, +5 |
+| TEG 15 R3 (round report) | "ran holes 3–7 without dropping a gross shot" (John Patterson) | Hole 4 was a bogey (+1) |
+| TEG 15 (tournament report) | "ran four holes without managing better than a bogey", holes 2-5 (Alex Baker) | Hole 5 was a birdie (-1) |
+| TEG 15 (tournament report) | "bogey-par-bogey" stretch, holes 16-18 (Stuart Neumann) | Hole 17 was a double bogey (+2), not a par |
+| TEG 16 R2 (round report) | "three holes running without a single net par", holes 13-15 (Alex Baker) | Holes 13 and 15 both had a net par or better (Stableford 4 and 2) |
+
+Use `claims.repair_report()` (built this session, in `claims.py`) exactly as done for TEG 18: locate
+each paragraph, send it + the correct fact to an Opus repair call, re-verify (mechanical + claims)
+against the actual configured pipeline before writing, show the diff, write only on approval.
+
+**Uncertain — need a closer read of surrounding paragraph context before classifying either way:**
+- TEG 13 (tournament report): "fourth from bottom" (David Mullin) — the arithmetic doesn't match
+  either the hole immediately before or after the claimed point; might be a real error or a
+  hole-misattribution.
+- TEG 18 R1 (round report): "outright second place" in the Green Jacket (Jon Baker) — real data
+  shows he was actually LEADING (rank 1) at that hole, not 2nd. Note TEG 18's tournament report was
+  already repaired this session; this is a DIFFERENT (round-level) report making a related claim.
+- TEG 15 R2 (round report): "six holes without a gross shot dropped" (Gregg Williams) — hole 8 in
+  the implied span was a bogey; depends on whether the paragraph's own framing excludes it.
+
+**To resume:** the 65-error raw sweep output is NOT preserved anywhere durable (it was in `/tmp`,
+session-local) — but every report's extracted claims ARE preserved in `data/commentary/*_claims.json`
+in this worktree, so re-running the two fixes above and then `check_claims(teg_num, round_num=...)`
+per report re-checks for free (no new LLM call) unless you also want to re-extract with the improved
+prompt (optional, ~$4-6 for all 85).

@@ -1,0 +1,303 @@
+{
+  "teg": 12,
+  "round": null,
+  "label": "storylinefirst",
+  "errors": 1,
+  "warnings": 3,
+  "findings": [
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "# Twelve, Ten, Ten \u2014 and the Trophy: John Patterson Survives Cata",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "a birdie at the 15th. His best gross rounds \u2014 96 on the Tour Course and 95 on the Stadium",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "96 on the Tour Course and 95 on the Stadium \u2014 were course personal bests.  After three rou",
+      "source": "mechanical"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "John Patterson won the TEG 12 Trophy with 172 Stableford points, ten clear of Gregg Williams.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It is the highest total he has posted in a TEG.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It is the worst score against par he has ever recorded and the worst anyone has managed on a par 4 in TEG history",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "He took 19 more from holes 12 to 17 on the Stadium Course in round three, including a birdie at the 15th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His best gross rounds \u2014 96 on the Tour Course and 95 on the Stadium \u2014 were course personal bests.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His best gross rounds \u2014 96 on the Tour Course and 95 on the Stadium \u2014 were course personal bests.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "After three rounds the Trophy was level at the top, with Jon Baker leading the Green Jacket.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Then Williams went to work on himself at the Stadium in round three, dropping 12 shots across holes 11 to 13 and capping it with an 11 at the 13th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His 105 gross on the PGA Catalunya Tour course in Round 1 is the highest score recorded there in eleven visits, surpassing a course-worst of 103 that had presumably felt safe.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The worst score against par of his career, and the worst any player has posted in TEG history.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "On the same course on Friday he took 13 points from holes 3 to 6, closing with a birdie at the 6th, and his 93 that day was a personal best on the Tour course, five strokes better than his previous 98.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "his 93 that day was a personal best on the Tour course, five strokes better than his previous 98",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Round 3 on the Stadium course reintroduced doubt: ten shots dropped across holes 14 to 17, including a 9 at the 15th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The only one recorded by anyone in the tournament, and the first eagle logged in any TEG.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His 96 that day was a Stadium course best, four better than his last visit.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Gregg Williams arrived in Catalonia in 2019 and immediately produced the best gross round of his TEG career: +12 at PGA Catalunya's Tour Course in Round 1, an 84 that beat his previous best on the course by eight shots.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Across the four rounds he finished at +76 gross, also a personal best.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His 92 on the Stadium Course in Round 4 was a course best too, seven strokes better than his last visit.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "Round 3 on the Stadium Course was also where Williams lost it back, and rather more besides.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "An eleven at the par-four 13th, seven over on one hole and the worst score he has recorded on a par four.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Then, from the 11th, he played three holes in twelve over.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "and thereby installed himself at the bottom of the TEG 12 Wooden Spoon race before most of the field had found their rhythm",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Baker took 12 points from holes 2 to 5 and nine more from 13 to 15.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Baker took 12 points from holes 2 to 5 and nine more from 13 to 15.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "In between he bled 11 shots across holes 6 to 9, going double, triple, triple, triple, an escalation with no obvious brake, until a birdie at the 10th brought proceedings to a halt.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "He had climbed back to fifth by the third round on the Stadium course, and then undid it with some care",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "error",
+      "detail": "Alex Baker R3 H15 (+2 vs par) does not satisfy 'par or better' \u2014 claimed span H15-18",
+      "excerpt": "an 8 at the 2nd, nine shots dropped over holes 2 to 4, and four straight holes without a net par from the 15th, the double bogey at the 17th returning him to the bottom rung he had worked so hard to vacate",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "the double bogey at the 17th returning him to the bottom rung he had worked so hard to vacate",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Baker's 93 at the Stadium was a course personal best, beating the 100 he had managed in TEG 11, and 13 strokes better than his previous visit.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Jon Baker took the TEG 12 Green Jacket at +63, eight shots clear of David Mullin.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It is the best gross total of his career and the third-lowest recorded in TEG history.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "He birdied the par-five 12th, parred the 13th, and went into the final round with the gap closed.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Baker went round the Stadium Course in 89 gross, a new course record.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The previous mark was 90, set across 15 prior visits, and it belonged to Baker, from TEG 11.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Williams also posted a course best there, 92 in the final round, which on any other day would have been the story.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "no final totals for 'Wooden Spoon'",
+      "excerpt": "David Mullin finished with 139 points and the TEG 12 Wooden Spoon, his second in succession.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "his second in succession",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "his 84 there was his best gross score on the Tour course in four visits",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "The nine at the 3rd was the shot that deposited him at the bottom of the Wooden Spoon standings.",
+      "source": "claim"
+    }
+  ]
+}

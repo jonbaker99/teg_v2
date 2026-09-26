@@ -1,0 +1,275 @@
+{
+  "teg": 15,
+  "round": null,
+  "label": "storylinefirst",
+  "errors": 3,
+  "warnings": 1,
+  "findings": [
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "s, 11 adrift, handing over nothing to nobody \u2014 and taking it directly from his brother, the",
+      "source": "mechanical"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Gregg Williams won the TEG 15 Trophy on 157 points, finishing 21 clear of runner-up Stuart Neumann across the four rounds on the Lisbon Coast.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "That is a Penha Longa course record.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The previous mark of 86 had stood through six prior visits and was presumed safe.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It was also a personal best gross round for Williams at +10, and it removed 14 strokes from the 96 he had posted on his only previous visit to the course.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "He opened with 86 at Estoril, a course new to the field, and closed with 91 at Oitavos Dunes, two strokes better than the 93 he managed there in TEG 8 and a course best for him.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "He opened with 86 at Estoril, a course new to the field, and closed with 91 at Oitavos Dunes, two strokes better than the 93 he managed there in TEG 8 and a course best for him.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "It left him with 88 for the round.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "He is a man of nine Green Jackets and the defending Trophy champion, and he conducted both halves of this with the same unruffled bearing.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It was the only eagle struck by anyone in the tournament.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "error",
+      "detail": "David Mullin was rank 6 in Wooden Spoon at R2 H11, claim says 4",
+      "excerpt": "by the 11th, a triple bogey at another blank hole, Mullin had slipped from fourth to last in the TEG 15 Wooden Spoon race.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Then a triple bogey at the 4th, the hardest hole on the card, closed the account.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "He still signed for 85 gross there, one stroke better than his previous best at the course.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The round came in at 22 points and +33 gross, both the worst figures of his TEG career to date.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His 104 at Oitavos was 16 strokes worse than the 88 he had managed on his only previous visit.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Six over on a single hole, and the worst he has recorded on a par four.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "He signed for 106 on a course none of the field had played before.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "The 9 at the 14th, the hardest hole on the card, dropped him to the bottom of the TEG 15 Wooden Spoon race.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "His gross total was 115.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Penha Longa turned it round. Stuart shot 92, seven strokes better than his 99 there in TEG 8 and a course best, with three straight pars-or-better against his handicap at the 14th, 15th and 16th worth nine points.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "error",
+      "detail": "Stuart Neumann R3 H14 (+1 vs par) does not satisfy 'par or better' \u2014 claimed span H14-16",
+      "excerpt": "three straight pars-or-better against his handicap at the 14th, 15th and 16th worth nine points",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "error",
+      "detail": "John Patterson R3 H4 (+1 vs par) does not satisfy 'par or better' \u2014 claimed span H3-8",
+      "excerpt": "From the 3rd to the 8th of round three he collected 19 Stableford points: pars at the 3rd, 5th, 6th and 7th, the last of those a four-pointer on the stroke index 4 short hole, and bogeys at the 4th and 8th that still banked three apiece.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "He signed for a 99, his best gross of the tournament, on a course he was seeing for the first time.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His 105 was his highest round of the tournament, and his four blow-up holes there accounted for 16 shots on their own.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "a gross total of +63, the TEG 15 Green Jacket by 29 strokes from Jon Baker, and every single round of the gross won",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It is the best gross total of his career.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Williams went round in 82 gross, +10, a new course record, beating the previous mark of 86 established across six prior visits.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It stands as the best gross round of his career.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It was also a fourteen-stroke improvement on his own previous best at the mountain parkland course, the 96 he posted on his first visit there.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "He closed with 91 at Oitavos Dunes, two better than his previous best there.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Baker was the nearest challenger and had genuine moments, including an 85 at Penha Longa, six strokes better than his previous best on the course, and a 94 at Oitavos Dunes.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "A septuple bogey, and the worst score he has recorded on a par four.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "no final totals for 'Wooden Spoon'",
+      "excerpt": "Alex Baker finished on 114 points and collected the TEG 15 Wooden Spoon, taking it directly from his brother Jon, the holder, which at least keeps the item in the family.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "At the 6th, a par 5, Alex Baker signed for an 11: a sextuple bogey, and the worst he has recorded on a par 5.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "The round came to 110 gross, which under the circumstances counts as containment.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "He still signed for 106, matching precisely the gross he made here on his previous visit in TEG 8.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His 103 at Oitavos Dunes was a shot inside the 104 he posted there in TEG 8, a course best, arriving one round too late to trouble the standings or the destination of the Spoon.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_comparison",
+      "severity": "unchecked",
+      "detail": "comparison claim missing both players",
+      "excerpt": "A man can drop 26 shots across five holes and still finish second in the Trophy.",
+      "source": "claim"
+    }
+  ]
+}

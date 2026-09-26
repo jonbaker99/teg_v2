@@ -1,0 +1,156 @@
+{
+  "teg": 4,
+  "round": 2,
+  "label": "storylinefirst",
+  "errors": 1,
+  "warnings": 0,
+  "findings": [
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "It took him three holes to reach the bottom of the 2011 Wooden Spoon standings, a quadruple bogey 8 at the 3rd depositing him last of the five.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "It was a stretch of genuine, unfussy competence, and it ended at the 12th, one of Lingfield's hardest holes, with a triple bogey.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "In Round 1 he had taken 14 shots more than net par.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Here he was 12 shots better, finishing just 2 over.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "By the close of play the cellar had a new tenant, and his name was Stuart Neumann.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "It was there that he slipped to the bottom of the Wooden Spoon race, and he reinforced the position with further double bogeys at the 5th and 9th, in the manner of a man signing a document twice for safety.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "Before the round Henry Meller had occupied the cellar.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "By the finish it was Neumann, three shots off the next-worst in the race.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His best gross score there, 99, came only after this rocky start had already done the damage.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Thirteen shots to par surrendered across three holes, in a single round.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "He had led the TEG 4 Trophy going into the round.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "error",
+      "detail": "no record of David Mullin taking the Trophy (Net VP) lead at R2 H17",
+      "excerpt": "He ran up a 9 at the 17th, and by the close David Mullin had moved to the front with a two-shot gap.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "He ran up a 9 at the 17th, and by the close David Mullin had moved to the front with a two-shot gap.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "Neumann's dropped him to the back of the field for the Wooden Spoon.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "On Lingfield's back nine the lead in the 2011 Trophy changed hands three times inside four holes.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "drew_level claims are not checked against the outright-only lead timeline",
+      "excerpt": "David Mullin twice drew back level, never ahead, first with a bogey on the 10th and then another on the 13th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "drew_level claims are not checked against the outright-only lead timeline",
+      "excerpt": "David Mullin twice drew back level, never ahead, first with a bogey on the 10th and then another on the 13th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "By the close Mullin held the outright Trophy lead, two shots clear, where Baker had led by three at the round's start.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "By the close Mullin held the outright Trophy lead, two shots clear, where Baker had led by three at the round's start.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "The Green Jacket picture was untouched, Mullin still out front there too.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "His cushion in that race had stretched to seven.",
+      "source": "claim"
+    }
+  ]
+}

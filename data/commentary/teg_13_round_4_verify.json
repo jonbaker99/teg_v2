@@ -1,0 +1,219 @@
+{
+  "teg": 13,
+  "round": 4,
+  "label": "storylinefirst",
+  "errors": 2,
+  "warnings": 2,
+  "findings": [
+    {
+      "rule": "weekdays",
+      "severity": "error",
+      "detail": "Saturday is not a round day of TEG 13 (actual: Sunday)",
+      "excerpt": "a nine at the 15th \u2014 following his 49-point Saturday <!-- storyline: d1 -->  John Patterson's fin",
+      "source": "mechanical"
+    },
+    {
+      "rule": "weekdays",
+      "severity": "error",
+      "detail": "Saturday is not a round day of TEG 13 (actual: Sunday)",
+      "excerpt": "n had posted 49 points in the third round on Saturday, among his best returns of the four days. He",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "## John Patterson's final round of extremes \u2014 an eagle three at the par-5 2nd and a nine a",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "hree at the par-5 2nd and a nine at the 15th \u2014 following his 49-point Saturday <!-- storyli",
+      "source": "mechanical"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "total claim missing player/competition/value",
+      "excerpt": "Jon Baker won at Prince's, and in doing so completed the TEG 13 double.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It is the fourth such double in TEG history, after those of TEGs 2, 4 and 11.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "He began the final round leading both races.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "He ended it leading both races.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Three pars, nine Stableford points, three holes without a gross shot dropped.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "The par at the 13th, the hardest hole on the course, was the one that mattered.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "Then the 15th and 16th, where he posted a bogey and a double bogey and left the door pointedly ajar.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "He shut it himself with a birdie at the 17th, which is roughly how winning looks round here.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "He parred 12 and 13, then 15 and 16, without dropping a shot anywhere.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Bogey-free through the 1st and 2nd.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Bogey-free again through the 4th, 5th and 6th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Then came the 10th, stroke index 3, and a nine.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "Before the 10th, Alex Baker held the bottom spot with a three-shot gap to the man above him.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Before the 10th, Alex Baker held the bottom spot with a three-shot gap to the man above him.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Afterwards, Mullin held it, with six shots of clear air behind him.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "At the par-5 2nd, stroke index 12, he holed out for an eagle three.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Thirteen holes later, at the par-5 15th, he made a quadruple bogey nine and four Stableford points vanished at a stroke.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His 97 gross stands as his best score on the course. He has only played it once.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Forty-four points, and a personal-best gross of 89, seventeen over.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_comparison",
+      "severity": "unchecked",
+      "detail": "comparison claim missing both players",
+      "excerpt": "It was the best Stableford total in the field on the final Sunday.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "It came directly off a 32-point third round, a swing of 12 that arrived with the timing of a man hearing the fire alarm and finally locating the door.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "He had started the day on the bottom of the 2020 TEG Wooden Spoon standings.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "He finished it six points clear of David Mullin, who had taken his place.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "Two holes to open without a dropped shot, pars at the 1st and 2nd.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "The same again at the 9th and 10th, the latter one of the hardest holes on the course.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It was his first visit to this routing at Prince's, so the 89 is a personal best by the narrowest of definitions.",
+      "source": "claim"
+    }
+  ]
+}

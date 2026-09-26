@@ -1,0 +1,149 @@
+{
+  "teg": 15,
+  "round": 3,
+  "label": "storylinefirst",
+  "errors": 3,
+  "warnings": 0,
+  "findings": [
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Gregg Williams shot a gross 82 in the third round at Penha Longa.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The old course record was 86, a figure that had held firm across six previous visits.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The 82 is also Williams's personal-best gross round in the TEG, +10 to par.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His previous best at the venue was a 96, set at TEG 8 on his only other visit.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "The birdie at the par-5 8th was the nearest thing to a flourish.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "The Trophy lead grew from 9 to 18, the Jacket from 14 to 17.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "The Trophy lead grew from 9 to 18, the Jacket from 14 to 17.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "error",
+      "detail": "John Patterson R3 H4 (+1 vs par) does not satisfy 'par or better' \u2014 claimed span H3-7",
+      "excerpt": "He ran holes 3 to 7 without dropping a gross shot.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "A double bogey at the 9th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Another double bogey at the 11th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The gross 99 stands as the best he will manage at the course this TEG, this being his only visit.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "The Wooden Spoon picture shifted, with Alex Baker moving into last place.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "Baker began with a double bogey at the 1st, then ran four holes without managing better than a bogey.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "error",
+      "detail": "Alex Baker R3 H5 (-1 vs par) does not satisfy 'bogey or worse' \u2014 claimed span H2-5",
+      "excerpt": "Baker began with a double bogey at the 1st, then ran four holes without managing better than a bogey.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "A birdie at the par-3 5th halted the slide and briefly suggested a plan.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "A quadruple bogey at the 12th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "A double bogey at the 13th.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "unchecked",
+      "detail": "run claim missing player/round/span/basis",
+      "excerpt": "He went seven over across holes 11 to 13 and looked to be joining in.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_run",
+      "severity": "error",
+      "detail": "Stuart Neumann R3 H17 (+2 vs par) does not satisfy 'bogey or better' \u2014 claimed span H16-18",
+      "excerpt": "Instead he answered with 9 points from the closing three holes, built on a birdie-free but efficient bogey-par-bogey stretch.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "It capped a substantial swing after a poor second round, and leaves Neumann's Wooden Spoon lead over Baker at 14 shots.",
+      "source": "claim"
+    }
+  ]
+}

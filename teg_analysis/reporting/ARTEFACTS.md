@@ -516,26 +516,65 @@ Before removing a rule, check whether ⑨ covers it. Six of the eleven are mecha
 ### ⑨ Mechanical fault checks — free
 
 ```bash
-python -m teg_analysis.reporting.verify 17            # one TEG
-python -m teg_analysis.reporting.verify --all --rounds
+python -m teg_analysis.reporting.verify 17                            # one TEG
+python -m teg_analysis.reporting.verify --all --rounds                 # every storyline-first report (default)
+python -m teg_analysis.reporting.verify --all --rounds --label final   # the legacy chain instead
 ```
 
 Eight checks against the prose and the data: leaked beat IDs, invented countback/playoff, "a week" (a
-TEG is 3–4 consecutive days), non-participants, invented weekdays, impossible over-par totals,
+TEG is 4 consecutive days), non-participants, invented weekdays, impossible over-par totals,
 mis-stated swings, and **em-dashes** (added 2026-08-15 with the ban). `backfill.py` runs it
-automatically after every generation. Findings are reported, never raised — a flagged report still
-gets written.
+automatically after every generation (against the legacy `report_final.md` chain it writes);
+`restyle_voice`/`apply_corrections` run it against whatever they just wrote. Findings are reported,
+never raised — a flagged report still gets written — and now also persisted next to the report as
+`{stem}_verify.json` (added 2026-09-26; previously stdout-only, so a clean run left no trace).
 
 *Did it work?* `✓`. Use the **error** count as the acceptance test after a regeneration; warnings are
 advisory.
 
-**Current library state (2026-08-17), for a baseline to compare against:**
+**`--all` was a silent no-op from 2026-09-11 to 2026-09-26.** It defaulted to globbing
+`teg_*_report_final.md`, the legacy chain — but the live pipeline has written
+`*_report_storylinefirst.md` since 2026-09-11, and nothing purges the old glob's target, so `--all`
+matched zero files, printed nothing, and exited 0. Fixed by making the target label a parameter
+(`--label`, default `storylinefirst`); the legacy chain is still reachable via `--label final`.
+
+**Current library state (2026-09-26 re-baseline, `--all --rounds` against the live `storylinefirst`
+chain — the count that was silently unmeasured for two weeks):**
 
 | | Count | Where |
 |---|---|---|
-| Errors | **4** | round reports only — TEG 9 R1/R4 and 10 R4 (`weekdays` ×2, `not_a_week` ×2) |
-| Errors in tournament reports | **0** | all 17 clean; the old 81-fault backlog cleared on the 2026-08-13 regeneration |
-| Warnings | **566** | all `no_em_dashes` — every report predates the ban, so this clears on regeneration |
+| Files checked | **85** | 17 tournament + 68 round, all found (0 under the pre-fix glob) |
+| Errors | **3** | see `FACTCHECK_PLAN.md` for the diagnosis of the TEG 18 case |
+| Warnings | **33** | mostly `no_em_dashes` |
+
+### ⑨b Claim extraction + code checks — off by default, ~$0.07/report (Sonnet, API)
+
+```bash
+python -m teg_analysis.reporting.verify 18 --claims               # one TEG, extraction + check
+python -m teg_analysis.reporting.verify --all --claims             # every tournament report
+```
+
+`teg_analysis/reporting/claims.py`. Where ⑨ is pattern-matching on the prose alone, this actually
+checks what a sentence CLAIMS against `settled_facts.py`'s per-hole data: `hole_score`, `weekday`,
+`total`, `rank_change`, `lead_event`, `comparison`, `run`. One structured LLM call per report (given
+ONLY the report text, so it cannot launder a fact in) extracts claims with a verbatim `quote`; a
+claim whose quote isn't in the text is dropped before checking. Cached to `{stem}_claims.json`,
+keyed on a hash of the report text — `llm.py` has no response cache of its own, so this is what keeps
+a repeat run free. `record` claims are extracted but have no checker yet
+(`severity="unchecked"`, listed and counted, never folded into "passed").
+
+Severities: **error** (the data contradicts a fully resolved claim), **warning** (the claim is
+ambiguous — a hidden tie, an unstated Stableford-vs-Gross basis, a weekday attributed to the wrong
+round), **unchecked** (claim type not covered).
+
+*Did it work?* Hand-written fixtures against real TEG 18 data reproduce the diagnosed shapes with no
+LLM call — `tests/test_reporting_verify.py`'s `TestClaimChecks`. **The real extraction call was run
+against TEG 18** (2026-09-26): 4 errors + 1 warning, reproducing items 1 and 4 exactly plus finding
+two genuinely new, previously undiagnosed errors. Getting there needed a `thinking: bool` parameter
+added to `generate_structured` — `claude-sonnet-5`'s adaptive thinking reproducibly burned its entire
+`max_tokens` budget on this call and returned no output at all, at every budget size tried, fixed only
+by disabling thinking outright. Full account: `FACTCHECK_PLAN.md` → "Real extraction run, TEG 18".
+**The 17-report false-alarm sweep is not yet run** — do that next, before WP5.
 
 ### ⑩ Standings, records, CSS hooks — free
 
