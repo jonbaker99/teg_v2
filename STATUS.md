@@ -6,7 +6,7 @@ Current state and next priorities. Instructions and architecture live in `CLAUDE
 
 ## 2026-09-26 — Mobile records show full names
 
-On phones, the TEG, Round and 9-Hole records tabs drop "Best"/"Worst" from row labels, since the section heading says it. The narrower label column leaves room for full player names; below 375px a long name wraps rather than shortening. Score Counts is stacked: record and value on top, then one row per holder with their full name and every occasion in muted text. Occasions sit beside the name when every row fits, otherwise all drop below their names. Records with a count below 2 are hidden on mobile. Holders of one record share a group with no rules between them. Streaks uses the same stacked layout; its details are short enough to sit beside the names. Desktop tables are unchanged.
+Every `/records` tab on phones now uses one stacked layout: record label and value on top, then each holder's full name with their occasion(s) in muted text. Details sit beside the name when every row fits; otherwise all drop below their names. TEG, Round and 9-Hole labels drop "Best"/"Worst", since the section heading says it. Score Counts and Streaks hide records below 2. Holders of one record share a group with no rules between them. Desktop tables are unchanged.
 
 ## 2026-09-25 — Shared scorecard options
 

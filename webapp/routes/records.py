@@ -88,15 +88,14 @@ def _pick_detail_col_idx(df: pd.DataFrame, cols: list, candidates: list) -> int:
     return b if avg_len_b >= avg_len_a else a
 
 
-# Mobile-only label prefix dropped on the compact (TEG/Round/9-Hole) tabs:
+# Mobile-only label prefix dropped on the TEG/Round/9-Hole stacked lists:
 # the section heading ("Best TEGs", "Worst Rounds") already says it.
-_COMPACT_LABEL_PREFIX_RE = re.compile(r'^(Best|Worst)\s+')
+_LABEL_PREFIX_RE = re.compile(r'^(Best|Worst)\s+')
 
 
 def _build_records_html(
     df: pd.DataFrame,
     identity_is_player: bool = True,
-    compact: bool = False,
     mobile_list_html: str | None = None,
 ) -> str:
     """Convert a records DataFrame to a styled HTML table (desktop/iPad,
@@ -112,13 +111,10 @@ def _build_records_html(
     value is rendered as-is instead of being run through _player_name_spans
     (which would otherwise abbreviate it, e.g. "Gross vs Par" -> "G.Par").
 
-    compact: the TEG/Round/9-Hole layout -- mobile labels lose their
-    "Best "/"Worst " prefix, the label column is narrow and fixed, and
-    player names render in full (no short-name swap).
-
-    mobile_list_html: replaces the generated mobile list outright (e.g. the
-    stacked Score Counts list, which needs per-holder data the table's
-    collapsed "3+ holders" rows no longer carry)."""
+    mobile_list_html: replaces the generated mobile list outright -- the
+    stacked list every /records tab uses (_build_stacked_records_list),
+    which needs per-holder data the table's collapsed "3+ holders" rows no
+    longer carry."""
     if df is None or df.empty:
         return "<p class='text-muted text-sm'>No data available.</p>"
 
@@ -181,8 +177,6 @@ def _build_records_html(
         # (see _is_placeholder_identity) -- the initials list in the other
         # column is the real answer to "who" for those rows.
         label_html = row[cols[0]] if show_title else ""
-        if compact and label_html:
-            label_html = _COMPACT_LABEL_PREFIX_RE.sub('', str(label_html))
         value_html = row[cols[value_col_idx]] if value_col_idx is not None else ""
         if identity_col_idx is not None:
             raw_id_val = row[cols[identity_col_idx]]
@@ -202,7 +196,7 @@ def _build_records_html(
             # HM") are already short -- left untouched.
             id_html = (
                 _player_name_spans(id_val)
-                if identity_is_player and not compact and not is_placeholder and id_val not in (None, "")
+                if identity_is_player and not is_placeholder and id_val not in (None, "")
                 else id_val
             )
         else:
@@ -239,8 +233,7 @@ def _build_records_html(
     if mobile_list_html is not None:
         rows.append(mobile_list_html)
     else:
-        list_cls = "records-list records-list--compact" if compact else "records-list"
-        rows.append(f"<div class='{list_cls}'>")
+        rows.append("<div class='records-list'>")
         rows.extend(list_items)
         rows.append("</div>")
     return "".join(rows)
@@ -260,7 +253,7 @@ def _stacked_value_threshold(value: str) -> int:
     return int(match.group()) if match else 0
 
 
-def _build_stacked_records_list(holders: list) -> str:
+def _build_stacked_records_list(holders: list, min_value: int | None = _STACKED_MIN_VALUE) -> str:
     """Mobile-only stacked list for Score Counts and Streaks: one group per
     record (label + value on top), then one row per holder -- full player
     name with the occasion(s) beside it in muted text. ui-polish.js drops
@@ -268,9 +261,11 @@ def _build_stacked_records_list(holders: list) -> str:
     any one row would not fit beside its name (.is-wrapped).
     Holdings arrive one per occasion (score_count_record_holders); a player
     holding a record more than once gets one row listing each occasion.
-    Records below _STACKED_MIN_VALUE are left out."""
+    Records below ``min_value`` are left out (None keeps every record --
+    TEG/Round/9-Hole values are scores, not counts)."""
     names = get_player_dict()
-    holders = [h for h in holders if _stacked_value_threshold(h['value']) >= _STACKED_MIN_VALUE]
+    if min_value is not None:
+        holders = [h for h in holders if _stacked_value_threshold(h['value']) >= min_value]
     if not holders:
         return "<div class='records-list'><p class='text-muted text-sm'>No records.</p></div>"
     parts = ["<div class='records-list records-list--stacked'>"]
@@ -314,13 +309,32 @@ def _looks_numeric(df: pd.DataFrame, col: str) -> bool:
         return False
 
 
-def _section(title: str, df, identity_is_player: bool = True, compact: bool = False,
+def _score_record_holders(df: pd.DataFrame) -> list:
+    """Holders for the stacked list from a prepare_records_table /
+    prepare_worst_records_table frame (positional columns: label, value,
+    player, when). The "Best "/"Worst " label prefix is dropped."""
+    if df is None or df.empty:
+        return []
+    return [
+        {'label': _LABEL_PREFIX_RE.sub('', str(r.iloc[0])), 'value': str(r.iloc[1]),
+         'player': r.iloc[2], 'when': r.iloc[3]}
+        for _, r in df.iterrows()
+    ]
+
+
+def _score_section(title: str, df) -> dict:
+    """TEG/Round/9-Hole section: desktop table plus the stacked mobile list."""
+    return _section(title, df, mobile_list_html=_build_stacked_records_list(
+        _score_record_holders(df), min_value=None))
+
+
+def _section(title: str, df, identity_is_player: bool = True,
              mobile_list_html: str | None = None) -> dict:
     """Build a section dict with title, HTML table and record count."""
     return {
         "title": title,
         "table_html": _build_records_html(
-            df, identity_is_player=identity_is_player, compact=compact,
+            df, identity_is_player=identity_is_player,
             mobile_list_html=mobile_list_html,
         ),
         "record_count": len(df) if df is not None and not df.empty else 0,
@@ -336,29 +350,29 @@ def _tab_context(tab_name: str) -> dict:
         if tab_name == "teg":
             ranked = cached_ranked_teg_data()
             best = prepare_records_table(ranked, 'teg')
-            sections.append(_section("Best TEGs", best, compact=True))
+            sections.append(_score_section("Best TEGs", best))
 
             filtered = get_filtered_teg_data()
             worst = prepare_worst_records_table(filtered, 'teg')
-            sections.append(_section("Worst TEGs", worst, compact=True))
+            sections.append(_score_section("Worst TEGs", worst))
 
         elif tab_name == "round":
             ranked = cached_ranked_round_data()
             best = prepare_records_table(ranked, 'round')
-            sections.append(_section("Best Rounds", best, compact=True))
+            sections.append(_score_section("Best Rounds", best))
 
             rd_data = cached_round_data()
             worst = prepare_worst_records_table(rd_data, 'round')
-            sections.append(_section("Worst Rounds", worst, compact=True))
+            sections.append(_score_section("Worst Rounds", worst))
 
         elif tab_name == "9hole":
             ranked = cached_ranked_frontback_data()
             best = prepare_records_table(ranked, 'frontback')
-            sections.append(_section("Best 9-Hole Scores", best, compact=True))
+            sections.append(_score_section("Best 9-Hole Scores", best))
 
             nine_data = cached_9_data()
             worst = prepare_worst_records_table(nine_data, 'frontback')
-            sections.append(_section("Worst 9-Hole Scores", worst, compact=True))
+            sections.append(_score_section("Worst 9-Hole Scores", worst))
 
         elif tab_name == "streaks":
             all_data = cached_load_all_data()

@@ -683,13 +683,14 @@ def test_embedded_scorecard_keeps_inactive_state_controls(client, page):
 
 
 @pytest.mark.parametrize("tab", ["teg", "round", "9hole"])
-def test_records_compact_tabs_use_full_names_and_short_labels(client, tab):
+def test_records_score_tabs_mobile_list_is_stacked(client, tab):
     resp = client.get(f"/records/tab/{tab}")
     _assert_ok_no_error(resp)
-    mobile = resp.text.split("records-list--compact", 1)[1]
+    mobile = resp.text.split("records-list--stacked", 1)[1].split("<table", 1)[0]
     assert "bw-name-short" not in mobile
     assert "<span class='rec-label'>Gross</span>" in mobile
-    assert "<span class='rec-label'>Best Gross</span>" not in mobile
+    assert "Best Gross" not in mobile
+    assert "rec-holder" in mobile
 
 
 def test_records_score_counts_mobile_list_is_stacked_by_holder(client):

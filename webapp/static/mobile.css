@@ -627,20 +627,7 @@
     font-size: 12px;
     border-radius: 0 0 6px 6px;
   }
-  /* Compact variant (TEG/Round/9-Hole tabs): labels arrive without their
-     "Best "/"Worst " prefix, so a fixed narrow label and value column fit
-     the longest full name (Graham PATTERSON) on one line from 375px and
-     keep the names aligned down the list. Below that the name wraps
-     rather than being shortened or truncated. */
-  .records-page .records-list--compact .rec-label { flex: 0 0 6.4em; }
-  .records-page .records-list--compact .rec-value { flex: 0 0 3.1em; min-width: 0; }
-  .records-page .records-list--compact .rec-identity {
-    flex: 1 1 auto;
-    white-space: normal;
-    overflow: visible;
-    line-height: 1.25;
-  }
-  /* Stacked variant (Score Counts): one .rec-group per record -- label and
+  /* Stacked variant (every /records tab): one .rec-group per record -- label and
      value on a head line, then one .rec-holder row per player: full name
      with the occasion(s) beside it in muted text. .is-wrapped (set by
      ui-polish.js when any row overflows) drops every occasion onto its

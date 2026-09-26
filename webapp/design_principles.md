@@ -140,9 +140,8 @@ Typography bullet above):
   loaded on every page, not just the scorecard bundle). Rolled out site-wide
   2026-09-21 — see `webapp/TODOS.md`'s "Roll out mobile name shortening" entry for
   the full list of pages and the one accepted remaining edge case.
-  Prefer freeing room over shortening: `/records` (TEG, Round, 9-Hole and Score
-  Counts tabs) shows full names by dropping the redundant "Best"/"Worst" label prefix
-  and fixing a narrow label column, or by stacking names under the label. Generic
+  Prefer freeing room over shortening: every `/records` tab stacks full names under
+  the record label instead (`_build_stacked_records_list`, `webapp/routes/records.py`). Generic
   `df_to_html`-rendered tables opt in with `webapp/tables.py::df_to_html(...,
   shorten_players=True)`; bespoke table renderers call `_player_name_spans`
   directly. For wide tables that can't fit on mobile even when shortened,
