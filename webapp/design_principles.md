@@ -139,7 +139,10 @@ Typography bullet above):
   `bw-name-short`; the display-toggle CSS itself lives in `webapp/static/mobile.css`,
   loaded on every page, not just the scorecard bundle). Rolled out site-wide
   2026-09-21 — see `webapp/TODOS.md`'s "Roll out mobile name shortening" entry for
-  the full list of pages and the one accepted remaining edge case. Generic
+  the full list of pages and the one accepted remaining edge case.
+  Prefer freeing room over shortening: `/records` (TEG, Round, 9-Hole and Score
+  Counts tabs) shows full names by dropping the redundant "Best"/"Worst" label prefix
+  and fixing a narrow label column, or by stacking names under the label. Generic
   `df_to_html`-rendered tables opt in with `webapp/tables.py::df_to_html(...,
   shorten_players=True)`; bespoke table renderers call `_player_name_spans`
   directly. For wide tables that can't fit on mobile even when shortened,

@@ -682,6 +682,29 @@ def test_embedded_scorecard_keeps_inactive_state_controls(client, page):
     _assert_ok_no_error(partial)
 
 
+@pytest.mark.parametrize("tab", ["teg", "round", "9hole"])
+def test_records_compact_tabs_use_full_names_and_short_labels(client, tab):
+    resp = client.get(f"/records/tab/{tab}")
+    _assert_ok_no_error(resp)
+    mobile = resp.text.split("records-list--compact", 1)[1]
+    assert "bw-name-short" not in mobile
+    assert "<span class='rec-label'>Gross</span>" in mobile
+    assert "<span class='rec-label'>Best Gross</span>" not in mobile
+
+
+def test_records_score_counts_mobile_list_is_stacked_by_holder(client):
+    resp = client.get("/records/tab/score_counts")
+    _assert_ok_no_error(resp)
+    # First section's mobile list only; the next section's desktop table
+    # (which keeps the collapsed "→" / initials rows) follows it.
+    mobile = resp.text.split("records-list--stacked", 1)[1].split("<table", 1)[0]
+    assert "rec-group-head" in mobile
+    assert "rec-holder" in mobile
+    identities = re.findall(r"<span class='rec-identity'>([^<]*)</span>", mobile)
+    assert identities and all(" " in name and "/" not in name for name in identities)
+    assert "→" not in mobile
+
+
 def test_public_request_shell_exposes_one_retry_contract(client):
     resp = client.get("/records?tab=round")
     _assert_ok_no_error(resp)

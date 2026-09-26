@@ -400,6 +400,8 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
     layout structure.
 
 ## Mobile & dark mode
+- [ ] **Records Streaks tab: full names on mobile** — TEG, Round, 9-Hole and Score Counts dropped the `Initial.SURNAME` swap on 2026-09-26 (compact three-column or stacked layout, `webapp/routes/records.py`). Streaks still uses it and its 3+-holder rows still show an initials list. Pick compact or stacked; stacked needs per-holder streak data like `score_count_record_holders`.
+- [ ] **`_player_name_spans` omits the space after the initial** — the docstring promises `Initial. SURNAME`; the code emits `J.BAKER` (`teg_analysis/display/scorecards.py`). Fix or align the docstring wherever short names remain.
 
 - [X] **Phase M1 — app shell on phones** — bottom tab bar, app bar, segmented controls, sticky-column tables. Done (see `MOBILE_PLAN.md` → Status).
 - [X] **Phase M2.7 — leaderboard card reflow** — `/leaderboard` + `/results` standings as hero pods + card rows on phones. **Superseded by I1** (2026-09-20, `webapp/design_reviews/ui_workstream/I1-handoff.md`): the per-player card list was CSS-dead since R3.2 shipped (`.standings-page .lb-cards { display: none }` always won); I1 deleted it and gave the unified standings table its own phone reflow instead. Hero pods stay, unchanged.

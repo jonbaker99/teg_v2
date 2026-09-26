@@ -1,6 +1,7 @@
 """Records routes."""
 
 import re
+from html import escape
 from pathlib import Path
 
 import pandas as pd
@@ -22,7 +23,9 @@ from teg_analysis.display.formatters import (
     prepare_worst_records_table,
     prepare_streak_records_table,
     prepare_score_count_records_table,
+    score_count_record_holders,
 )
+from teg_analysis.core.players import get_player_dict
 from teg_analysis.analysis.streaks import (
     prepare_record_best_streaks_data,
     prepare_record_worst_streaks_data,
@@ -85,7 +88,17 @@ def _pick_detail_col_idx(df: pd.DataFrame, cols: list, candidates: list) -> int:
     return b if avg_len_b >= avg_len_a else a
 
 
-def _build_records_html(df: pd.DataFrame, identity_is_player: bool = True) -> str:
+# Mobile-only label prefix dropped on the compact (TEG/Round/9-Hole) tabs:
+# the section heading ("Best TEGs", "Worst Rounds") already says it.
+_COMPACT_LABEL_PREFIX_RE = re.compile(r'^(Best|Worst)\s+')
+
+
+def _build_records_html(
+    df: pd.DataFrame,
+    identity_is_player: bool = True,
+    compact: bool = False,
+    mobile_list_html: str | None = None,
+) -> str:
     """Convert a records DataFrame to a styled HTML table (desktop/iPad,
     unchanged) plus a mobile-only tap-to-reveal list of the same rows.
     mobile.css shows exactly one of the two per breakpoint (same
@@ -97,7 +110,15 @@ def _build_records_html(df: pd.DataFrame, identity_is_player: bool = True) -> st
     column holds something else -- e.g. latest.py's Personal Bests/Worsts
     sections, where it's a metric's friendly name -- pass False so that
     value is rendered as-is instead of being run through _player_name_spans
-    (which would otherwise abbreviate it, e.g. "Gross vs Par" -> "G.Par")."""
+    (which would otherwise abbreviate it, e.g. "Gross vs Par" -> "G.Par").
+
+    compact: the TEG/Round/9-Hole layout -- mobile labels lose their
+    "Best "/"Worst " prefix, the label column is narrow and fixed, and
+    player names render in full (no short-name swap).
+
+    mobile_list_html: replaces the generated mobile list outright (e.g. the
+    stacked Score Counts list, which needs per-holder data the table's
+    collapsed "3+ holders" rows no longer carry)."""
     if df is None or df.empty:
         return "<p class='text-muted text-sm'>No data available.</p>"
 
@@ -160,6 +181,8 @@ def _build_records_html(df: pd.DataFrame, identity_is_player: bool = True) -> st
         # (see _is_placeholder_identity) -- the initials list in the other
         # column is the real answer to "who" for those rows.
         label_html = row[cols[0]] if show_title else ""
+        if compact and label_html:
+            label_html = _COMPACT_LABEL_PREFIX_RE.sub('', str(label_html))
         value_html = row[cols[value_col_idx]] if value_col_idx is not None else ""
         if identity_col_idx is not None:
             raw_id_val = row[cols[identity_col_idx]]
@@ -179,7 +202,7 @@ def _build_records_html(df: pd.DataFrame, identity_is_player: bool = True) -> st
             # HM") are already short -- left untouched.
             id_html = (
                 _player_name_spans(id_val)
-                if identity_is_player and not is_placeholder and id_val not in (None, "")
+                if identity_is_player and not compact and not is_placeholder and id_val not in (None, "")
                 else id_val
             )
         else:
@@ -213,10 +236,50 @@ def _build_records_html(df: pd.DataFrame, identity_is_player: bool = True) -> st
             )
 
     rows.append("</tbody></table>")
-    rows.append("<div class='records-list'>")
-    rows.extend(list_items)
-    rows.append("</div>")
+    if mobile_list_html is not None:
+        rows.append(mobile_list_html)
+    else:
+        list_cls = "records-list records-list--compact" if compact else "records-list"
+        rows.append(f"<div class='{list_cls}'>")
+        rows.extend(list_items)
+        rows.append("</div>")
     return "".join(rows)
+
+
+def _build_stacked_records_list(holders: list) -> str:
+    """Mobile-only stacked list for Score Counts: one group per record
+    (label + value on top), then one tap-to-reveal row per holder with the
+    full player name, expanding to every occasion they hit that count.
+    Holdings arrive one per occasion (score_count_record_holders); a player
+    holding a record more than once gets one row listing each occasion."""
+    names = get_player_dict()
+    parts = ["<div class='records-list records-list--stacked'>"]
+    for label in dict.fromkeys(h['label'] for h in holders):
+        group = [h for h in holders if h['label'] == label]
+        by_player: dict = {}
+        for h in group:
+            by_player.setdefault(h['player'], []).append(h['when'])
+        parts.append(
+            "<div class='rec-group'>"
+            "<div class='rec-group-head'>"
+            f"<span class='rec-label'>{escape(label)}</span>"
+            f"<span class='rec-value'>{escape(group[0]['value'])}</span>"
+            "</div>"
+        )
+        for code, whens in by_player.items():
+            detail = "<br>".join(escape(w) for w in whens)
+            parts.append(
+                "<details class='rec-row rec-holder'>"
+                "<summary class='rec-summary'>"
+                f"<span class='rec-identity'>{escape(names.get(code, code))}</span>"
+                "<span class='rec-chevron' aria-hidden='true'></span>"
+                "</summary>"
+                f"<div class='rec-detail'>{detail}</div>"
+                "</details>"
+            )
+        parts.append("</div>")
+    parts.append("</div>")
+    return "".join(parts)
 
 
 def _looks_numeric(df: pd.DataFrame, col: str) -> bool:
@@ -234,11 +297,15 @@ def _looks_numeric(df: pd.DataFrame, col: str) -> bool:
         return False
 
 
-def _section(title: str, df, identity_is_player: bool = True) -> dict:
+def _section(title: str, df, identity_is_player: bool = True, compact: bool = False,
+             mobile_list_html: str | None = None) -> dict:
     """Build a section dict with title, HTML table and record count."""
     return {
         "title": title,
-        "table_html": _build_records_html(df, identity_is_player=identity_is_player),
+        "table_html": _build_records_html(
+            df, identity_is_player=identity_is_player, compact=compact,
+            mobile_list_html=mobile_list_html,
+        ),
         "record_count": len(df) if df is not None and not df.empty else 0,
     }
 
@@ -252,29 +319,29 @@ def _tab_context(tab_name: str) -> dict:
         if tab_name == "teg":
             ranked = cached_ranked_teg_data()
             best = prepare_records_table(ranked, 'teg')
-            sections.append(_section("Best TEGs", best))
+            sections.append(_section("Best TEGs", best, compact=True))
 
             filtered = get_filtered_teg_data()
             worst = prepare_worst_records_table(filtered, 'teg')
-            sections.append(_section("Worst TEGs", worst))
+            sections.append(_section("Worst TEGs", worst, compact=True))
 
         elif tab_name == "round":
             ranked = cached_ranked_round_data()
             best = prepare_records_table(ranked, 'round')
-            sections.append(_section("Best Rounds", best))
+            sections.append(_section("Best Rounds", best, compact=True))
 
             rd_data = cached_round_data()
             worst = prepare_worst_records_table(rd_data, 'round')
-            sections.append(_section("Worst Rounds", worst))
+            sections.append(_section("Worst Rounds", worst, compact=True))
 
         elif tab_name == "9hole":
             ranked = cached_ranked_frontback_data()
             best = prepare_records_table(ranked, 'frontback')
-            sections.append(_section("Best 9-Hole Scores", best))
+            sections.append(_section("Best 9-Hole Scores", best, compact=True))
 
             nine_data = cached_9_data()
             worst = prepare_worst_records_table(nine_data, 'frontback')
-            sections.append(_section("Worst 9-Hole Scores", worst))
+            sections.append(_section("Worst 9-Hole Scores", worst, compact=True))
 
         elif tab_name == "streaks":
             all_data = cached_load_all_data()
@@ -290,9 +357,16 @@ def _tab_context(tab_name: str) -> dict:
 
         elif tab_name == "score_counts":
             all_data = cached_load_all_data()
-            best_df, worst_df = prepare_score_count_records_table(all_data)
-            sections.append(_section("Best Score Counts", best_df))
-            sections.append(_section("Worst Score Counts", worst_df))
+            holders = score_count_record_holders(all_data)
+            best_df, worst_df = prepare_score_count_records_table(all_data, holders)
+            sections.append(_section(
+                "Best Score Counts", best_df,
+                mobile_list_html=_build_stacked_records_list([h for h in holders if h['best']]),
+            ))
+            sections.append(_section(
+                "Worst Score Counts", worst_df,
+                mobile_list_html=_build_stacked_records_list([h for h in holders if not h['best']]),
+            ))
             caption = "Eagles, Birdies and Pars also include better scores"
 
         return {"sections": sections, "caption": caption}
