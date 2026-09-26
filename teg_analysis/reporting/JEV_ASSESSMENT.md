@@ -72,15 +72,42 @@ It cannot replace the judge. The written notes were repeatedly the most useful o
 - A dev-only dependency. It must never enter `requirements.txt`: the webapp never generates reports.
 - Question wording needs tuning and a labelled test set before its numbers mean anything.
 
-## Recommended next step
+## Spike status (2026-09-26): built, not yet run against Jev
 
-One spike, about an hour, no pipeline changes:
+The harness and labelled set are ready. The Jev call itself is blocked in the cloud session: the network policy denies `api.typesafe.ai`, and no `TYPESAFE_API_KEY` is set. Everything else ran.
 
-1. Hand-label ~40 paragraphs from existing reports for the four semantic rules, including known past faults.
-2. Ask Jev each rule as a yes/no per paragraph.
-3. Measure precision and recall against the labels.
+**Run it** (needs the key and network access to `api.typesafe.ai`):
 
-If it separates the faults cleanly, add it as an optional D3 check behind a flag. If not, drop it and delete this file. Skip the experiment-judge idea unless the spike succeeds.
+```bash
+python scripts/jev_spike/run.py --dry-run                 # free: regex baseline and a sample request
+TYPESAFE_API_KEY=... python scripts/jev_spike/run.py      # 47 requests, well under a cent
+```
+
+It prints the metrics table, latency, input-token cost and every miss or false alarm. Raw answers go to `scripts/jev_spike/results.json`.
+
+**What it does.** Each paragraph is one request with four yes/no questions, one per rule. The request state carries the facts the rules depend on: which course each round was on (from `all-data.parquet`) and `PLAYER_RELATIONSHIPS`. Without those, "same hole" and "relationship" are unanswerable.
+
+**The labelled set** (`scripts/jev_spike/labels.json`, 47 paragraphs, labelled by Claude and not yet reviewed by Jon):
+
+- 31 real paragraphs from `data/commentary/`, mostly from archived reports. They include the known TEG 10 "same hole" fault and its correct twin (R1 and R4 were both at Boavista).
+- 13 seeded paragraphs: violations written *without* the obvious keyword ("bedlam", "a question for the philosophers", "old school friends"), plus correct-framing twins.
+- 3 clean paragraphs from served reports.
+- Positives per rule: same hole 4, paradox 7, chaos 5, relationship 6. That's small, so treat any result as a direction, not a measurement.
+
+**Baseline to beat: a keyword grep**, the cheap thing we could add to `verify.py` today with no vendor.
+
+| Rule | Positives / N | Regex precision / recall |
+|---|---|---|
+| same_hole | 4/47 | 0.18 / 0.50 |
+| paradox | 7/47 | 0.56 / 0.71 |
+| chaos | 5/47 | 0.50 / 0.60 |
+| relationship | 6/47 | 0.80 / 0.67 |
+
+**Pass criteria, set before seeing Jev's answers.** Adopt Jev as an optional D3 check only if, on at least 3 of the 4 rules, AUROC is 0.85 or higher and it beats the regex on both precision and recall at the 0.5 threshold. Otherwise drop it.
+
+**Found while labelling: a real fault class nobody had flagged.** Archived round reports disagree about which Baker brother is older. TEG 10 R1 and TEG 11 R4 say Alex is older; TEG 11 R2, TEG 13 R4 and TEG 18 R1 say he is younger. The data records only that they are brothers, so every one of these claims is invented. None appears in a currently served report: all 10 files are in `data/commentary/archive 2026 v4/round_reports/`. The rule in `authoring.py` already forbids it. The grep for `older|younger|elder brother` is free, so it belongs in `verify.py` whatever Jev scores.
+
+**To finish:** allow `api.typesafe.ai` in the environment's network settings and add `TYPESAFE_API_KEY`, or run it locally. Then record the verdict here, fold it into `STATUS.md` and delete `scripts/jev_spike/` and this file.
 
 ## Sources
 
