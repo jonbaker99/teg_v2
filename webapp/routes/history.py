@@ -152,24 +152,23 @@ def _history_table_html(df: pd.DataFrame, round_metadata: dict | None = None) ->
     round_metadata = round_metadata or {}
     name_cols = ["TEG Trophy", "Green Jacket", "HMM Wooden Spoon"]
     # Trailing unlabelled column: the round/course/date disclosure "+/-"
-    # indicator. Desktop keeps the TEG cell itself as the full-width click
-    # target (unchanged) and never shows this column (display:none,
-    # base-vars.css); mobile hides the indicator that used to overlay the TEG
-    # cell and shows it here instead, in a narrow final column.
+    # indicator, shown at all widths (base-vars.css + mobile.css) so it sits
+    # at the row's right edge.
     headers = ["TEG"] + name_cols + [""]
-    # Mobile columns are too narrow for "HMM Wooden Spoon" etc. on one line;
-    # desktop keeps the full name (default-visible .th-full), mobile swaps to
-    # the approved prototype's short Trophy/Jacket/Spoon heading (.th-short,
-    # hidden by default in base-vars.css, shown only in .history-page).
-    short_headers = {"TEG Trophy": "Trophy", "Green Jacket": "Jacket", "HMM Wooden Spoon": "Spoon"}
+    # Display labels, one word per line at every width. The TEG heading is
+    # deliberately blank. Keys stay the dataframe column names.
+    header_labels = {
+        "TEG": "",
+        "TEG Trophy": "The TEG Trophy",
+        "Green Jacket": "The Green Jacket",
+        "HMM Wooden Spoon": "HMM Wooden Spoon",
+    }
 
     rows = ["<table class='teg-table history-table'>", "<thead><tr>"]
     for col in headers:
-        short = short_headers.get(col)
-        if short:
-            rows.append(f"<th><span class='th-full'>{escape(col)}</span><span class='th-short'>{escape(short)}</span></th>")
-        elif col:
-            rows.append(f"<th>{escape(col)}</th>")
+        if col:
+            label = "<br>".join(escape(w) for w in header_labels[col].split())
+            rows.append(f"<th>{label}</th>")
         else:
             rows.append("<th class='history-toggle-th'></th>")
     rows.append("</tr></thead><tbody>")

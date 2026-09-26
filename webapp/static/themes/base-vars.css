@@ -259,9 +259,14 @@ h1, h2, h3, h4, h5, h6 {
 /* Mobile's flag+year line (second copy of the flag, shown only in
    .history-page); desktop keeps the region-row flag instead. */
 .history-table .teg-mobile-meta { display: none; }
-/* Full column names ("HMM Wooden Spoon") for desktop; mobile.css swaps to
-   the approved prototype's short Trophy/Jacket/Spoon heading instead. */
-.history-table .th-short { display: none; }
+/* Headings: one word per line (<br> in history.py), centred, body-text
+   colour. Specificity beats mobile.css's muted .history-page th rule. */
+.history-page .history-table thead th {
+    color: inherit;
+    text-align: center;
+    white-space: normal;
+    line-height: 1.2;
+}
 .history-table .teg-cell {
     display: block;
 }
