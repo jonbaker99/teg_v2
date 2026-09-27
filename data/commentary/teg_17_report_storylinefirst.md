@@ -52,14 +52,14 @@ Royal Óbidos brought the correction, and it was a proper one. Patterson went fr
 
 The recovery did not hold. Back at Praia D'El Rey for the final round, he ran up a 10 at the par-four 15th, the stroke index three hole, another six-over sextuple bogey and another blank on the card, undoing much of what Round 3 had rebuilt.
 
-## Baker leads the Green Jacket from Round 1, cedes it to a rampant David Mullin for 35 holes, briefly loses it back to Mullin for a single hole in Round 3, retakes it immediately and pulls clear to win by 13.
+## Baker leads the Green Jacket for the first 35 holes, twice loses it to David Mullin for a single hole in Round 3, and pulls clear from the 8th to win by 13.
 <!-- storyline: jacket -->
 
 Jon Baker won the TEG 17 Green Jacket at +67 gross, 13 clear of David Mullin. It is the third-best gross total of Baker's career.
 
 The margin conceals how long the outcome stayed open. Baker took the lead at the second hole of Round 1 at Praia D'El Rey and held it for 35 holes across two rounds, only to hand it over at the very first hole of Round 3 at Royal Óbidos, where he took seven on the par-four opening hole for a triple bogey and no Stableford points. Thirty-five holes of authority, surrendered before anyone had settled. Mullin was the beneficiary, and he had earned the position: his 82 gross at West Cliffs in Round 2 is a new course record there, beating the previous mark of 88 set across six prior visits, and it was a 12-stroke improvement on his own score at the course a TEG earlier.
 
-Baker did not stay behind for long. He recovered the lead and then extended it, and the last two rounds became a procession rather than a contest. His scoring at the two links-influenced venues supported it: 86 at West Cliffs, 15 strokes better than his previous visit and a course personal best, and 86 at Royal Óbidos, also a course best, three better than his previous mark there. Mullin held the Jacket for a single hole and finished 13 back. A tenure best measured in yards.
+Baker did not stay behind for long. He recovered the lead and then extended it, and the last two rounds became a procession rather than a contest. His scoring at the two links-influenced venues supported it: 86 at West Cliffs, 15 strokes better than his previous visit and a course personal best, and 86 at Royal Óbidos, also a course best, three better than his previous mark there. Mullin held the Jacket outright for two single holes, the 1st and the 6th of Round 3, and finished 13 back. Two tenures, both best measured in yards.
 
 ## Gregg Williams, the back-to-back reigning Jacket champion with four prior Trophy wins, spends all four rounds in the bottom half of the field and collects the Wooden Spoon, sealed by a seven-hole stretch without a net par at Royal Óbidos.
 <!-- storyline: spoon -->

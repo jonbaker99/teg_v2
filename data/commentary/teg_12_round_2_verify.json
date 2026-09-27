@@ -2,14 +2,14 @@
   "teg": 12,
   "round": 2,
   "label": "storylinefirst",
-  "errors": 1,
+  "errors": 0,
   "warnings": 1,
   "findings": [
     {
-      "rule": "claim_run",
-      "severity": "error",
-      "detail": "John Patterson R2 H16 (+0 gross vs par) does not satisfy 'bogey or worse' \u2014 claimed span H16-18",
-      "excerpt": "He then closed with three straight bogeys worth 3 points each, nine points across the final stretch.",
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "leaves him four adrift at the foot of the TEG 12 Wooden Spoon race",
       "source": "claim"
     },
     {
@@ -23,21 +23,28 @@
       "rule": "claim_margin",
       "severity": "unchecked",
       "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Gregg Williams one point clear of John Patterson",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
       "excerpt": "Gregg Williams ended the round exactly as he had started it, one clear of Patterson.",
       "source": "claim"
     },
     {
-      "rule": "claim_rank_change",
+      "rule": "claim_margin",
       "severity": "unchecked",
-      "detail": "rank_change claim missing player/round/hole/competition/value",
-      "excerpt": "Gregg Williams retained his lead in both the Trophy and the Green Jacket, untroubled by any of it.",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "The gap stood at zero, as it had all along.",
       "source": "claim"
     },
     {
       "rule": "claim_rank_change",
       "severity": "unchecked",
       "detail": "rank_change claim missing player/round/hole/competition/value",
-      "excerpt": "Gregg Williams retained his lead in both the Trophy and the Green Jacket, untroubled by any of it.",
+      "excerpt": "leaves him four adrift at the foot of the TEG 12 Wooden Spoon race",
       "source": "claim"
     },
     {
@@ -48,17 +55,10 @@
       "source": "claim"
     },
     {
-      "rule": "claim_rank_change",
+      "rule": "claim_record",
       "severity": "unchecked",
-      "detail": "rank_change claim missing player/round/hole/competition/value",
-      "excerpt": "By the close of play Williams led both the Trophy and the Jacket, and the table looked precisely as it had that morning.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_rank_change",
-      "severity": "unchecked",
-      "detail": "rank_change claim missing player/round/hole/competition/value",
-      "excerpt": "By the close of play Williams led both the Trophy and the Jacket, and the table looked precisely as it had that morning.",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Stuart Neumann answers a ruinous opening round with 44 points and a personal best at PGA Catalunya Tour",
       "source": "claim"
     },
     {
@@ -66,6 +66,13 @@
       "severity": "unchecked",
       "detail": "claim type 'record' has no checker yet",
       "excerpt": "It also stood as a course personal best for him at PGA Catalunya, improving his best gross score there this TEG to 93.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "David Mullin posts the best gross round of the day, 84, his personal best at PGA Catalunya Tour by a single shot",
       "source": "claim"
     },
     {

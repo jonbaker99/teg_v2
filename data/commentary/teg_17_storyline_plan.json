@@ -48,7 +48,7 @@
     "humour_score": 3
   },
   "jacket_storyline": {
-    "subject": "Baker leads the Green Jacket from Round 1, cedes it to a rampant David Mullin for 35 holes, briefly loses it back to Mullin for a single hole in Round 3, retakes it immediately and pulls clear to win by 13.",
+    "subject": "Baker leads the Green Jacket for the first 35 holes, twice loses it to David Mullin for a single hole in Round 3, and pulls clear from the 8th to win by 13.",
     "why_it_matters": "The Jacket is the tournament's closest sustained duel — Baker and Mullin trade the gross lead five times before Baker's stronger closing rounds decide it.",
     "shape": "Baker leads by 3 after R1, Mullin leads by 3 after R2, the pair draw level twice early in R3 before Mullin snatches it outright at the 6th — only for Baker to retake it immediately at the 7th and never let go, beating Mullin head-to-head in three of the four rounds to win by 13, with Mullin setting a new West Cliffs course record along the way.",
     "beat_ids": [
@@ -61,8 +61,8 @@
       "Baker and Mullin Trade Blows for the Jacket",
       "The Lead Changes Nobody Noticed Stick"
     ],
-    "chosen_headline": "One Hole in the Sun",
-    "standfirst": "David Mullin held the Green Jacket lead for exactly one hole in Round 3 before Jon Baker took it straight back and never let go.",
+    "chosen_headline": "Two Holes in the Sun",
+    "standfirst": "David Mullin led the Green Jacket outright for just two single holes in Round 3, the 1st and the 6th, before Jon Baker pulled clear from the 8th.",
     "compelling_score": 6,
     "humour_score": 4
   },

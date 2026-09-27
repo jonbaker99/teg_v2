@@ -6,10 +6,10 @@
   "warnings": 0,
   "findings": [
     {
-      "rule": "claim_rank_change",
+      "rule": "claim_run",
       "severity": "error",
-      "detail": "Wooden Spoon: after R1 H14 David Mullin was rank 2, claim says rank 5",
-      "excerpt": "The blow-up dropped Mullin from second to fifth in the TEG 16 Wooden Spoon race, sending him to the bottom of that table.",
+      "detail": "Jon Baker R1 H7 (+1 net vs par) does not satisfy 'double bogey or worse' \u2014 claimed span H7-9",
+      "excerpt": "Holes 7 to 9 undid him twice over: three holes without a net par, and seven gross shots gone across a double bogey on the par-5 7th, a double on the par-3 8th and a triple on the par-4 9th.",
       "source": "claim"
     },
     {
@@ -17,6 +17,13 @@
       "severity": "unchecked",
       "detail": "lead_event claim missing player/round/hole/competition",
       "excerpt": "The card it ruined had twice been good enough to share the lead in the TEG 16 Green Jacket race.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "The blow-up dropped Mullin from second to fifth in the TEG 18 Wooden Spoon race, sending him to the bottom of that table.",
       "source": "claim"
     },
     {
@@ -52,13 +59,6 @@
       "severity": "unchecked",
       "detail": "rank_change claim missing player/round/hole/competition/value",
       "excerpt": "By the end of the day Alex Baker led the Trophy, level on points at the top.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_rank_change",
-      "severity": "unchecked",
-      "detail": "rank_change claim missing player/round/hole/competition/value",
-      "excerpt": "Jon Baker sat bottom of the Trophy and bottom of the Spoon, and top of the Jacket.",
       "source": "claim"
     },
     {

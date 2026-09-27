@@ -126,7 +126,12 @@ Items 2 (exact weekday shape), 3 and 5 were not independently re-flagged by this
 - **Extractor noise (4):** TEG 4 and TEG 5 (the known "from fourth to last" before/after confusion; both true after the hole), TEG 11 (basis "bogey or worse" on a sentence about two gross pars), TEG 17 (hole guessed for "recovered the lead").
 - **Found by hand while checking TEG 17:** the Jacket heading says Baker "cedes it to a rampant David Mullin for 35 holes", but Baker led those 35 holes (the paragraph says so); and "Mullin held the Jacket for a single hole" was two separate single holes (R3 H1 and H6).
 - Also still open: TEG 18's "Over four rounds he was comfortably the better player" (item 4's comparison warning) remains in the text.
-Not repaired; needs approval.
+**Repaired 2026-09-27 (approved), by hand, each checked against the parquet:**
+- TEG 12 R2: "He levelled again at the 16th with a par, then closed bogey, par, each of the three holes worth 3 points".
+- TEG 18 R1: "TEG 16 Wooden Spoon race" -> "TEG 18".
+- TEG 18: "comfortably the better player" -> "Arguably he was the better player: over the last three rounds he outscored Alex Baker by four points, and across all four he was 29 shots better on gross." ("Over the final 3.5 rounds" was rejected: from R1 H10 the margin is one point, 151 to 150, and from H9 Baker leads.)
+- TEG 17: heading, the "single hole" sentence, and the plan's printed headline/standfirst ("One Hole in the Sun" -> "Two Holes in the Sun"; Mullin led outright at R3 H1 and H6, Baker clear for good from the 8th).
+PDFs rebuilt. Claims re-checked on plan usage: 0 claim errors except TEG 18 R1's holes 7-9 run, which is checker noise (the text is right; the net-axis switch fired on "without a net par" for a gross span).
 
 **What must be mentioned** (decided at kick-off):
 - **Round reports:** course records set or equalled that round, low and high; and the Trophy/Jacket leader's decisive moment, only if it fell in that round.
