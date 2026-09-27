@@ -94,6 +94,14 @@ Estoril supplied the second record. Baker opened with a nine at the 1st, added a
 
 ## Personal bests and TEG records
 
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>Alex Baker's 113 at Oitavos Dunes (R1) — a new course-worst, beyond 111; 12 earlier rounds there</li>
+  <li>Alex Baker's 106 at Penha Longa (R3) — equals the course-worst, his own mark from TEG 8; 12 earlier rounds there</li>
+  <li>David Mullin's 80 at Estoril (R4) — a new course record, beating 86; 6 earlier rounds there</li>
+  <li>Gregg Williams's 80 at Estoril (R4) — equals the course record, with David Mullin in the same round; 6 earlier rounds there</li>
+  <li>Alex Baker's 107 at Estoril (R4) — a new course-worst, beyond 106; 6 earlier rounds there</li>
+</ul></div>
+
 <div class="records"><p class="records-header">Rare feats:</p><ul>
   <li>Alex Baker runs up an 11 (+7) at the 12th (R4) — his career-worst on a par-4</li>
 </ul></div>

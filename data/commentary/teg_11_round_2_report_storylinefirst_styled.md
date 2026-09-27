@@ -53,6 +53,11 @@ Alex Baker posted 42 points, the best card of the day. It clawed back exactly on
 
 ## Personal bests and TEG records
 
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>Jon Baker's 84 at PGA Catalunya - Tour — a new course record, beating 89; 5 earlier rounds there</li>
+  <li>John Patterson's 103 at PGA Catalunya - Tour — a new course-worst, beyond 101; 5 earlier rounds there</li>
+</ul></div>
+
 <div class="records"><p class="records-header">Rare feats:</p><ul>
   <li>John Patterson runs up an 11 (+6) at the 15th — his career-worst on a par-5</li>
 </ul></div>

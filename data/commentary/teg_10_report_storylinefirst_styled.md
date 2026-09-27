@@ -103,6 +103,10 @@ His best gross of the four days was the 102 in round one at Boavista, on what wa
   <li>David Mullin — -1 Gross on the Back nine (R1) is the best Back nine Gross in TEG history</li>
 </ul></div>
 
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>David Mullin's 75 at Boavista (R1) — a new course record, beating 82; 50 earlier rounds there</li>
+</ul></div>
+
 <div class="records"><p class="records-header">Personal bests:</p><ul>
   <li>Alex Baker posts a personal-best Gross round: +17 (R4)</li>
   <li>Gregg Williams posts a personal-best round: 48 pts (R2)</li>

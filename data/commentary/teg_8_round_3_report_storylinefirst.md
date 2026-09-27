@@ -14,7 +14,7 @@ Stuart Neumann's Round 3 at Quinta da Marinha unravelled early and never recover
 
 There was no respite at the turn. A quintuple bogey 8 came at the par-3 9th. A par-3 taken in 8 is not a golf hole. It is an occupation. An 11 followed at the par-5 10th, a sextuple bogey on one of the course's harder holes, then a double at the 11th. Another three holes, another absence of net pars.
 
-The round produced 20 Stableford points, the worst in the field. In Round 2 he had posted 31. He remains anchored to the bottom of the 2015 TEG Wooden Spoon standings, his gap to the next-worst player stretched from 8 points to 22. He is no longer losing that race. He is conducting it alone.
+The round produced 20 Stableford points, the worst in the field. His 114 gross equalled the worst score ever recorded at Quinta da Marinha. That record was his own 114, from round one of this TEG. In Round 2 he had posted 31. He remains anchored to the bottom of the 2015 TEG Wooden Spoon standings, his gap to the next-worst player stretched from 8 points to 22. He is no longer losing that race. He is conducting it alone.
 
 ## Alex Baker survives a sextuple-bogey ten at the 8th to set a new personal best at Quinta da Marinha
 <!-- storyline: d1 -->

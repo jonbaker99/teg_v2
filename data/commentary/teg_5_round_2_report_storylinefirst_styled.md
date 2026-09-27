@@ -56,6 +56,11 @@ The tenancy passed to Henry Meller. A double bogey on the par-5 3rd sent him fro
   <li>David Mullin's +11 (gross) is the best Gross round in TEG history to date</li>
 </ul></div>
 
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>David Mullin's 82 at Boavista — a new course record, beating 83; 40 earlier rounds there</li>
+  <li>Stuart Neumann's 82 at Boavista — equals the course record, with David Mullin in the same round; 40 earlier rounds there</li>
+</ul></div>
+
 <div class="records"><p class="records-header">Personal bests:</p><ul>
   <li>David Mullin posts a personal-best round: -4</li>
   <li>Gregg Williams posts a personal-best round: -6</li>

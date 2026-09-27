@@ -1090,7 +1090,10 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
             stem and the styling call change.
 
     Returns {teg, label, source_path, output_path, styled_path, usage,
-    findings, new_findings}.
+    findings, new_findings, missed_facts}. `findings` includes WP6's
+    `missed_fact` warnings (must-mention facts the text never mentions);
+    `missed_facts` lists them on their own, and they are printed whether or
+    not this pass introduced them.
     """
     import os
 
@@ -1167,9 +1170,20 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
 
     findings: list = []
     new_findings: list = []
+    missed_facts: list = []
     if verify:
-        found = verify_report(teg_num, text=text, round_num=round_num)
+        found = verify_report(teg_num, text=text, round_num=round_num, missed=True)
         findings = [str(f) for f in found]
+        missed_facts = [str(f) for f in found if f.rule == "missed_fact"]
+        if missed_facts:
+            # Printed whole, not just as "new": a fact the draft never carried
+            # is inherited by the voice pass, so the new-findings diff below
+            # would hide it — and it is exactly what WP6 exists to surface.
+            print(f"[restyle_voice] TEG {teg_num}"
+                  f"{f' R{round_num}' if round_num is not None else ''}: "
+                  f"{len(missed_facts)} must-mention fact(s) not mentioned:")
+            for s_ in missed_facts:
+                print(f"  {s_}")
         # Faults the source already had are not this pass's doing. What matters
         # is whether rewriting introduced one — that is the exact failure that
         # got the critique-revise variant rejected.
@@ -1184,7 +1198,8 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
         def _key(f):
             return (f.rule, f.detail)
 
-        before = Counter(_key(f) for f in verify_report(teg_num, text=source_text, round_num=round_num))
+        before = Counter(_key(f) for f in verify_report(teg_num, text=source_text,
+                                                         round_num=round_num, missed=True))
         new_findings = []
         for f in found:
             k = _key(f)
@@ -1203,7 +1218,8 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
         write_findings(teg_num, found, round_num=round_num, label=label)
     return {"teg": teg_num, "label": label, "source_path": source_path,
             "output_path": output_path, "styled_path": styled_path,
-            "usage": usage, "findings": findings, "new_findings": new_findings}
+            "usage": usage, "findings": findings, "new_findings": new_findings,
+            "missed_facts": missed_facts}
 
 
 # ===========================================================================
@@ -1380,10 +1396,11 @@ def apply_corrections(teg_num: int, *, source_label: str = "storylinefirst",
     findings: list = []
     new_findings: list = []
     if verify:
-        found = verify_report(teg_num, text=text, round_num=round_num)
+        found = verify_report(teg_num, text=text, round_num=round_num, missed=True)
         findings = [str(f) for f in found]
         before = Counter((f.rule, f.detail)
-                         for f in verify_report(teg_num, text=source_text, round_num=round_num))
+                         for f in verify_report(teg_num, text=source_text,
+                                                round_num=round_num, missed=True))
         for f in found:
             k = (f.rule, f.detail)
             if before[k]:

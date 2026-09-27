@@ -53,6 +53,11 @@ Stuart Neumann had a rougher time of it. A triple bogey at the 14th opened a fiv
 
 ## Personal bests and TEG records
 
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>David Mullin's 87 at Royal Óbidos — a new course record, beating 90; 6 earlier rounds there</li>
+  <li>Alex Baker's 115 at Royal Óbidos — a new course-worst, beyond 108; 6 earlier rounds there</li>
+</ul></div>
+
 <div class="records"><p class="records-header">Personal worsts:</p><ul>
   <li>Alex Baker's worst Gross round to date: +43</li>
   <li>Stuart Neumann — +27 Gross on the Back nine is a personal-worst Back nine Gross</li>

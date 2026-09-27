@@ -44,6 +44,10 @@ John Patterson's Round 1 in Catalonia was two rounds stitched together by a man 
 
 ## Personal bests and TEG records
 
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>Jon Baker's 90 at PGA Catalunya - Stadium — a new course record, beating 94; 5 earlier rounds there</li>
+</ul></div>
+
 <div class="records"><p class="records-header">Personal worsts:</p><ul>
   <li>John Patterson — 9 Stableford on the Back nine is a personal-worst Back nine Stableford</li>
 </ul></div>

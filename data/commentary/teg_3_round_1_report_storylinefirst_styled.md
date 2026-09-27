@@ -55,6 +55,10 @@ At the other end, Henry Meller unravelled. Bogeys from the 9th through the 13th,
   <li>David Mullin's -1 is the 3rd-best round in TEG history to date</li>
 </ul></div>
 
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>David Mullin's 88 at Boavista — a new course record, beating 89; 15 earlier rounds there</li>
+</ul></div>
+
 <div class="records"><p class="records-header">Rare feats:</p><ul>
   <li>Henry Meller runs up a 12 (+8) at the 17th — a new TEG-record and career-worst on a par-4</li>
 </ul></div>

@@ -16,9 +16,9 @@
 
 Jon Baker had held the TEG 11 Trophy lead since the fourth hole of the opening round. Forty-five holes at the top, spanning three rounds. It ended on the Saturday at El Prat's Azul course, quietly, with nobody making a fuss. Alex Baker drew level at the first, where even a bogey was worth three points — which tells you rather a lot about the Azul's opening hole. He took the lead outright at the 13th, the middle of three straight pars worth nine points across the 12th to the 14th.
 
-Jon Baker was crossing the identical ground in the opposite direction. Double, double, triple at the 11th, 12th and 13th. Three holes without a net par, conducted with the air of a man discharging an obligation. The brothers finished the round tied at the top of the Trophy, with Jon Baker leading the TEG 11 Green Jacket.
+Jon Baker was crossing the identical ground in the opposite direction. Double, double, triple at the 11th, 12th and 13th. Three holes without a net par, conducted with the air of a man discharging an obligation. The brothers finished the round with Alex Baker two points clear at the top of the Trophy, 110 to 108, and Jon Baker leading the TEG 11 Green Jacket.
 
-The final round at PGA Catalunya's Stadium course dismantled Alex Baker methodically. He posted 27 points, the worst round of his TEG career to that point, and 34 over gross. Seven shots went in three holes from the 4th. Eight more went from the 12th. Eight again over the closing three, including a quadruple-bogey eight at the 17th, which matched the eight he had already taken at the 9th and thereby lent the round a pleasing symmetry. Jon Baker had a quadruple bogey of his own at the 13th. It cost him nothing whatsoever. He could have taken another and still had change. He won the Trophy on 143 points by six, which is what happens when a man's disasters are simply better timed than everyone else's.
+The final round at PGA Catalunya's Stadium course dismantled Alex Baker methodically. He posted 27 points, the worst round of his TEG career to that point, and 34 over gross. Seven shots went in three holes from the 4th. Eight more went from the 12th. Eight again over the closing three, including a quadruple-bogey eight at the 17th, which matched the eight he had already taken at the 9th and thereby lent the round a pleasing symmetry. Jon Baker had a quadruple bogey of his own at the 13th. It cost him nothing whatsoever. He could have taken another and still had change. He had drawn level at the 6th and gone clear for good at the 7th, 123 points to 122. He won the Trophy on 143 points by six, which is what happens when a man's disasters are simply better timed than everyone else's.
 
 ## John Patterson's four rounds of demolition: two nines, an eleven, a course-worst 103, and a Spoon dodged by ten points
 <!-- storyline: d0 -->
@@ -87,6 +87,12 @@ The damage came in bursts, and it came generously. El Prat's Azul Course, new to
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> JB +70 (R4: +19) | DM +73 (R4: +19) | GW +99 (R4: +27) | AB +106 (R4: +34) | JP +123 (R4: +27)</p>
 
 ## Personal bests and TEG records
+
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>Jon Baker's 90 at PGA Catalunya - Stadium (R1) — a new course record, beating 94; 5 earlier rounds there</li>
+  <li>Jon Baker's 84 at PGA Catalunya - Tour (R2) — a new course record, beating 89; 5 earlier rounds there</li>
+  <li>John Patterson's 103 at PGA Catalunya - Tour (R2) — a new course-worst, beyond 101; 5 earlier rounds there</li>
+</ul></div>
 
 <div class="records"><p class="records-header">Personal worsts:</p><ul>
   <li>Alex Baker's worst round to date: 27 pts (R4)</li>

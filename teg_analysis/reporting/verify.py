@@ -28,6 +28,7 @@ CLI:  python -m teg_analysis.reporting.verify 14
       python -m teg_analysis.reporting.verify --all --rounds
       python -m teg_analysis.reporting.verify --all --label final   # legacy chain
       python -m teg_analysis.reporting.verify 14 --claims           # + LLM claim check
+      python -m teg_analysis.reporting.verify --all --rounds --missed  # + must-mention facts (free)
 """
 
 from __future__ import annotations
@@ -86,7 +87,7 @@ class Finding:
     severity: str                 # 'error' | 'warning' | 'unchecked'
     detail: str
     excerpt: str = ""
-    source: str = "mechanical"    # 'mechanical' (this module) | 'claim' (WP4)
+    source: str = "mechanical"    # 'mechanical' (this module) | 'claim' (WP4) | 'missed' (WP6)
 
     def __str__(self) -> str:
         tail = f"  …{self.excerpt}…" if self.excerpt else ""
@@ -409,12 +410,27 @@ def load_context(teg_num: int, text: Optional[str] = None,
 
 def verify_report(teg_num: int, text: Optional[str] = None,
                   round_num: Optional[int] = None,
-                  label: str = "storylinefirst") -> list[Finding]:
-    """Run every mechanical check. Returns findings, errors first."""
+                  label: str = "storylinefirst",
+                  missed: bool = False) -> list[Finding]:
+    """Run every mechanical check. Returns findings, errors first.
+
+    `missed=True` also runs WP6's `missed_facts.check_missed_facts` on the
+    same text — free, no model call, warnings only. The report pipeline's
+    voice pass (`authoring.restyle_voice`) turns it on.
+    """
     ctx = load_context(teg_num, text=text, round_num=round_num, label=label)
     findings: list[Finding] = []
     for check in CHECKS:
         findings.extend(check(ctx))
+    if missed:
+        from teg_analysis.reporting.missed_facts import check_missed_facts
+        try:
+            findings.extend(check_missed_facts(teg_num, round_num=round_num, text=ctx.text))
+        except Exception as e:  # noqa: BLE001 — warning-only check; never sink a run
+            findings.append(Finding(
+                rule="missed_fact_check_failed", severity="warning",
+                detail=f"missed-fact check could not run: {type(e).__name__}: {e}",
+                source="missed"))
     findings.sort(key=lambda f: (f.severity != "error", f.rule))
     return findings
 
@@ -478,6 +494,9 @@ def main(argv: Optional[list] = None) -> int:
                          "the live pipeline) or 'final' (the legacy chain)")
     ap.add_argument("--claims", action="store_true",
                     help="also run the LLM claim extractor (paid; off by default)")
+    ap.add_argument("--missed", action="store_true",
+                    help="also warn on must-mention facts the report never mentions "
+                         "(records, decisive lead change; free, no LLM call)")
     args = ap.parse_args(argv)
 
     import glob
@@ -504,7 +523,8 @@ def main(argv: Optional[list] = None) -> int:
     for teg_num, round_num in sorted(targets, key=lambda t: (t[0], t[1] or 0)):
         label = f"TEG {teg_num}" + (f" R{round_num}" if round_num else "")
         try:
-            findings = verify_report(teg_num, round_num=round_num, label=args.label)
+            findings = verify_report(teg_num, round_num=round_num, label=args.label,
+                                     missed=args.missed)
         except FileNotFoundError:
             print(f"– {label}: no report_{args.label}.md")
             continue

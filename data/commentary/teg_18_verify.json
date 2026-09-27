@@ -3,13 +3,118 @@
   "round": null,
   "label": "storylinefirst",
   "errors": 0,
-  "warnings": 1,
+  "warnings": 0,
   "findings": [
+    {
+      "rule": "claim_comparison",
+      "severity": "unchecked",
+      "detail": "comparison with an explicit metric/competition is not numerically checked yet",
+      "excerpt": "Alex Baker won the TEG 18 Trophy with 169 Stableford points, eight clear of John Patterson.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_comparison",
+      "severity": "unchecked",
+      "detail": "comparison with an explicit metric/competition is not numerically checked yet",
+      "excerpt": "over the last three rounds he outscored Alex Baker by four points",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_comparison",
+      "severity": "unchecked",
+      "detail": "comparison with an explicit metric/competition is not numerically checked yet",
+      "excerpt": "across all four he was 29 shots better on gross",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_hole_score",
+      "severity": "unchecked",
+      "detail": "hole_score claim missing player/round/hole/score",
+      "excerpt": "John Patterson contributed an eight at the third, then added another at the 4th on Sunday.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_lead_event",
+      "severity": "unchecked",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "By the close of round two, with Alex Baker leading the TEG 18 Trophy, Jon Baker was back in front in the Jacket.",
+      "source": "claim"
+    },
     {
       "rule": "claim_margin",
       "severity": "unchecked",
       "detail": "claim type 'margin' has no checker yet",
       "excerpt": "Alex Baker won the TEG 18 Trophy with 169 Stableford points, eight clear of John Patterson.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "over the last three rounds he outscored Alex Baker by four points",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "across all four he was 29 shots better on gross",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "recovers from a ruinous R1 to take the TEG 18 Green Jacket by 14 from nine-time winner David Mullin",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Williams turns a wrecked opening round into a 14-shot Green Jacket win",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Gregg Williams won the TEG 18 Green Jacket at +66 gross, 14 clear of David Mullin.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Jon Baker, defending Trophy champion, leads the gross for 20 holes and then finishes the TEG 18 Wooden Spoon 23 points adrift of anyone else",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "He finished 23 points adrift of every other man in the field, which takes a certain application.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "It also moved him in the one table nobody wishes to move in: from second to the bottom of the TEG 18 Wooden Spoon race.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "The triple at the 4th dropped him to the bottom of the TEG 18 Wooden Spoon race.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Alex Baker, three-time Spoon collector",
       "source": "claim"
     },
     {
@@ -27,31 +132,10 @@
       "source": "claim"
     },
     {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "Then 13 more across 14 to 16, the birdie at the par-five 15th the pick of them.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "A double bogey at the 17th ended the run of par or better.",
-      "source": "claim"
-    },
-    {
       "rule": "claim_record",
       "severity": "unchecked",
       "detail": "claim type 'record' has no checker yet",
       "excerpt": "His 98 was his best score of the tournament on the Tour course, though some way off the 92 he posted there in TEG 11.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_total",
-      "severity": "unchecked",
-      "detail": "total claim missing player/competition/value",
-      "excerpt": "Alex Baker signed for 106 gross.",
       "source": "claim"
     },
     {
@@ -62,80 +146,52 @@
       "source": "claim"
     },
     {
-      "rule": "claim_lead_event",
+      "rule": "claim_record",
       "severity": "unchecked",
-      "detail": "lead_event claim missing player/round/hole/competition",
-      "excerpt": "He ended the day still leading the Trophy, with Jon Baker ahead in the TEG 18 Green Jacket.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_lead_event",
-      "severity": "unchecked",
-      "detail": "lead_event claim missing player/round/hole/competition",
-      "excerpt": "He ended the day still leading the Trophy, with Jon Baker ahead in the TEG 18 Green Jacket.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "He held the lead after round three, built on 21 points from holes 11 to 16 on the Stadium course.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_lead_event",
-      "severity": "unchecked",
-      "detail": "lead_event claim missing player/round/hole/competition",
-      "excerpt": "Gregg Williams led the Jacket over the closing two rounds.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_rank_change",
-      "severity": "unchecked",
-      "detail": "rank_change claim missing player/round/hole/competition/value",
-      "excerpt": "It also moved him in the one table nobody wishes to move in: from second to the bottom of the TEG 18 Wooden Spoon race.",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "A quintuple-bogey eight at the par-three 16th was his worst ever return on that par.",
       "source": "claim"
     },
     {
       "rule": "claim_record",
       "severity": "unchecked",
       "detail": "claim type 'record' has no checker yet",
-      "excerpt": "It was comfortably his own best there too. Seven shots better than his previous personal best of 91 on the course, and eight fewer than his last visit.",
+      "excerpt": "The eleven at the par-five 18th performed the same service for par fives.",
       "source": "claim"
     },
     {
-      "rule": "claim_total",
+      "rule": "claim_record",
       "severity": "unchecked",
-      "detail": "total claim missing player/competition/value",
-      "excerpt": "Nine shots against par in four holes, and three Stableford points from a possible eight.",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "then breaks the Stadium course record with 84 in R3",
       "source": "claim"
     },
     {
-      "rule": "claim_total",
+      "rule": "claim_record",
       "severity": "unchecked",
-      "detail": "total claim missing player/competition/value",
-      "excerpt": "From the 3rd to the 10th he bled 22 shots: triple bogeys at the 4th, 7th, 8th and 9th, doubles at the 5th, 6th and 10th.",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "A sextuple bogey, no Stableford points, and the worst score relative to par of his career.",
       "source": "claim"
     },
     {
-      "rule": "claim_rank_change",
+      "rule": "claim_record",
       "severity": "unchecked",
-      "detail": "rank_change claim missing player/round/hole/competition/value",
-      "excerpt": "The triple at the 4th dropped him to the bottom of the TEG 18 Wooden Spoon race.",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Mullin went round in 84 gross, a new course record, beating the previous mark of 89 set across 27 prior visits.",
       "source": "claim"
     },
     {
-      "rule": "claim_total",
+      "rule": "claim_record",
       "severity": "unchecked",
-      "detail": "total claim missing player/competition/value",
-      "excerpt": "Patterson took 13 points from the 13th to the 16th and finished the round 14 points better on the back nine than the front, for 34 points in all.",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It was comfortably his own best there too.",
       "source": "claim"
     },
     {
-      "rule": "claim_total",
+      "rule": "claim_record",
       "severity": "unchecked",
-      "detail": "total claim missing player/competition/value",
-      "excerpt": "In round two he took 16 points in five holes from the 11th to the 15th.",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Seven shots better than his previous personal best of 91 on the course, and eight fewer than his last visit.",
       "source": "claim"
     },
     {
@@ -153,30 +209,23 @@
       "source": "claim"
     },
     {
-      "rule": "claim_total",
+      "rule": "claim_record",
       "severity": "unchecked",
-      "detail": "total claim missing player/competition/value",
-      "excerpt": "In round four he collected nine points across the 4th, 5th and 6th.",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "David Mullin opened the tournament with an 11 at the par-five 15th in round one, a sextuple bogey and the worst hole against par of his TEG career.",
       "source": "claim"
     },
     {
-      "rule": "claim_comparison",
-      "severity": "warning",
-      "detail": "'better player' claim between John Patterson and Alex Baker is unqualified, but they lead different competitions (['Trophy (Stableford)', 'Green Jacket (Gross)']) \u2014 Stableford and Gross measure different things, not the same axis",
-      "excerpt": "Over four rounds he was comfortably the better player.",
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "He then closed with an 11 at the last, a sextuple bogey and the heaviest single hole of his TEG record.",
       "source": "claim"
     },
     {
-      "rule": "claim_hole_score",
+      "rule": "claim_record",
       "severity": "unchecked",
-      "detail": "hole_score claim missing player/round/hole/score",
-      "excerpt": "John Patterson contributed an eight at the third, then added another at the 4th on Sunday.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_total",
-      "severity": "unchecked",
-      "detail": "total claim missing player/competition/value",
+      "detail": "claim type 'record' has no checker yet",
       "excerpt": "The round totalled 106 gross, a new worst score ever recorded on the Tour course, beating the previous mark of 105 set across 22 prior visits.",
       "source": "claim"
     },
@@ -188,59 +237,38 @@
       "source": "claim"
     },
     {
-      "rule": "claim_margin",
+      "rule": "claim_record",
       "severity": "unchecked",
-      "detail": "claim type 'margin' has no checker yet",
-      "excerpt": "Gregg Williams won the TEG 18 Green Jacket at +66 gross, 14 clear of David Mullin.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_total",
-      "severity": "unchecked",
-      "detail": "total claim missing player/competition/value",
-      "excerpt": "The round came in at 31 points.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_total",
-      "severity": "unchecked",
-      "detail": "total claim missing player/competition/value",
-      "excerpt": "The second round was 42.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_total",
-      "severity": "unchecked",
-      "detail": "total claim missing player/competition/value",
-      "excerpt": "An eleven-point swing, delivered without ceremony.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_total",
-      "severity": "unchecked",
-      "detail": "total claim missing player/competition/value",
-      "excerpt": "Williams took nine points from holes 3 to 5, then played 13 to 16 in level par for 13 points.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_lead_event",
-      "severity": "unchecked",
-      "detail": "drew_level claims are not checked against the outright-only lead timeline",
-      "excerpt": "Williams drew level at the 13th and went outright ahead at the 2nd hole of round three, on the Stadium Course.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_total",
-      "severity": "unchecked",
-      "detail": "total claim missing player/competition/value",
-      "excerpt": "He birdied the 5th in the final round and picked up nine points across holes 8 to 10.",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Gregg Williams, reigning Wooden Spoon holder",
       "source": "claim"
     },
     {
       "rule": "claim_record",
       "severity": "unchecked",
       "detail": "claim type 'record' has no checker yet",
-      "excerpt": "His 84 in round four was his best score on the Stadium Course, eight better than his previous best there.",
+      "excerpt": "nine-time winner David Mullin",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His 84 in round four was his best score on the Stadium Course, one better than the 85 he shot there in round three.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It equalled the Stadium course record, set by David Mullin with 84 in round three.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It equalled the Stadium course record, set by David Mullin with 84 in round three.",
       "source": "claim"
     },
     {
@@ -251,31 +279,10 @@
       "source": "claim"
     },
     {
-      "rule": "claim_total",
+      "rule": "claim_record",
       "severity": "unchecked",
-      "detail": "no final totals for 'Wooden Spoon'",
-      "excerpt": "He left with the TEG 18 Wooden Spoon, his 126 Stableford points the lowest in the field.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_hole_score",
-      "severity": "unchecked",
-      "detail": "hole_score claim missing player/round/hole/score",
-      "excerpt": "Gregg Williams made a six there, Jon Baker an eight, and the lead changed hands.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_hole_score",
-      "severity": "unchecked",
-      "detail": "hole_score claim missing player/round/hole/score",
-      "excerpt": "Gregg Williams made a six there, Jon Baker an eight, and the lead changed hands.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_total",
-      "severity": "unchecked",
-      "detail": "total claim missing player/competition/value",
-      "excerpt": "Sixteen points in five holes without dropping a gross shot.",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Jon Baker arrived in Catalonia as the defending Trophy champion.",
       "source": "claim"
     },
     {
@@ -286,20 +293,6 @@
       "source": "claim"
     },
     {
-      "rule": "claim_lead_event",
-      "severity": "unchecked",
-      "detail": "lead_event claim missing player/round/hole/competition",
-      "excerpt": "By the close of round two, with Alex Baker leading the TEG 18 Trophy, Jon Baker was back in front in the Jacket.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_lead_event",
-      "severity": "unchecked",
-      "detail": "lead_event claim missing player/round/hole/competition",
-      "excerpt": "By the close of round two, with Alex Baker leading the TEG 18 Trophy, Jon Baker was back in front in the Jacket.",
-      "source": "claim"
-    },
-    {
       "rule": "claim_record",
       "severity": "unchecked",
       "detail": "claim type 'record' has no checker yet",
@@ -307,10 +300,10 @@
       "source": "claim"
     },
     {
-      "rule": "claim_margin",
+      "rule": "claim_total",
       "severity": "unchecked",
-      "detail": "claim type 'margin' has no checker yet",
-      "excerpt": "He finished 23 points adrift of every other man in the field, which takes a certain application.",
+      "detail": "no final totals for 'Wooden Spoon'",
+      "excerpt": "He left with the TEG 18 Wooden Spoon, his 126 Stableford points the lowest in the field.",
       "source": "claim"
     }
   ]

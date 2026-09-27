@@ -8,7 +8,7 @@
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
   <p><strong>Round of the day:</strong><span> Alex BAKER (47 pts)</span></p>
-  <p><strong>Trophy lead:</strong><span> Alex BAKER, 0 ahead</span></p>
+  <p><strong>Trophy lead:</strong><span> Alex BAKER and Gregg WILLIAMS, level</span></p>
   <p><strong>Green Jacket lead:</strong><span> David MULLIN, 10 ahead</span></p>
 </section>
 

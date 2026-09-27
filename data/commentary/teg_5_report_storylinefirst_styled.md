@@ -60,7 +60,7 @@ The round added up to a gross 90, +18, the best gross round Jon Baker has record
 
 David Mullin won the TEG 5 Green Jacket at +72 gross, 12 clear of Jon Baker, and the contest was effectively decided over the first two days at Boavista.
 
-He opened with a gross round of +12, the lowest gross round recorded in TEG to that point. He then bettered it the following day with +11, a gross 82 that set a new Boavista course record and swept aside the 85 that had stood across 35 prior visits to the Howard Swan parkland at Lagos. The 85 had been Mullin's own mark, set at TEG 3 on one of his seven previous visits. He therefore spent the afternoon dismantling himself, nine strokes better than his last time round the course. The same round was a personal best against the Trophy's net-versus-par measure at −4.
+He opened with a gross round of +12, the lowest gross round recorded in TEG to that point. That 83 swept aside the 85 that had stood across 35 prior visits to the Howard Swan parkland at Lagos. The 85 had been Mullin's own mark, set at TEG 3 on one of his seven previous visits. He then bettered it the following day with +11, a gross 82 that lowered his own new Boavista course record. Stuart Neumann shot 82 that same afternoon to share it. Mullin therefore spent the afternoon dismantling himself, nine strokes better than his last visit before this TEG. The same round was a personal best against the Trophy's net-versus-par measure at −4.
 
 The third day was the opposite extreme: +12 net of par, +27 gross, the worst round of Mullin's career to date. It made no difference whatsoever. Henry Meller, who at one stage trailed by 30, pulled 12 shots back over the closing stretch and still finished 18 adrift. Baker's recovery was smaller in scale: 19 behind at his lowest point, closed to 12 by the end of the final round at Palmares, the first visit to the Robert Trent Jones Jr. course. Neither got close enough to make the last day matter.
 
@@ -106,6 +106,12 @@ The oddity is that the same four rounds produced his best scoring, too. Back-to-
   <li>David Mullin's +12 (gross) is the best Gross round in TEG history to date (R1)</li>
   <li>David Mullin's 2-hole "Birdies" streak ties the all-time TEG record (2), at T05 R4 H12 to T05 R4 H13</li>
   <li>Jon Baker's 2-hole "Birdies" streak ties the all-time TEG record (2), at T05 R4 H14 to T05 R4 H15</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>David Mullin's 83 at Boavista (R1) — a new course record, beating 85; 35 earlier rounds there</li>
+  <li>David Mullin's 82 at Boavista (R2) — a new course record, beating 83; 35 earlier rounds there</li>
+  <li>Stuart Neumann's 82 at Boavista (R2) — equals the course record, with David Mullin in the same round; 35 earlier rounds there</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Personal bests:</p><ul>

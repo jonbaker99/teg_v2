@@ -58,3 +58,9 @@ The context makes it stranger still. In round two Mullin had shot an 8, one of t
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> DM +6 (R3: -2) | JB +13 (R3: +8) | SN +23 (R3: +3) | GW +27 (R3: +6) | HM +39 (R3: +2)</p>
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +66 (R3: +18) | SN +77 (R3: +21) | HM +93 (R3: +20) | JB +97 (R3: +36) | GW +111 (R3: +34)</p>
+
+## Personal bests and TEG records
+
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>David Mullin's 89 at Boavista — a new course record, beating 91; 10 earlier rounds there</li>
+</ul></div>

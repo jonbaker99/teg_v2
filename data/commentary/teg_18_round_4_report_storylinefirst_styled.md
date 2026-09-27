@@ -46,7 +46,7 @@ John Patterson's version started worse. He took 7 at the 14th and another 7 at t
 ## Gregg Williams's closing 44 points and 84 gross at the Stadium, the best round of the day by six points and by six shots gross, sealing the TEG 18 Green Jacket
 <!-- storyline: round -->
 
-Gregg Williams finished the tournament at the Stadium Course with 44 Stableford points and an 84 gross. It was the best round of the day on both counts. Six points clear of the field of five, six shots better than anyone else's gross. The 84 was also his best score in eight visits to the Stadium, one better than the 85 he had carried as his course mark. Eight attempts to move a number by one. He got there in the end.
+Gregg Williams finished the tournament at the Stadium Course with 44 Stableford points and an 84 gross. It was the best round of the day on both counts. Six points clear of the field of five, six shots better than anyone else's gross. The 84 equalled the PGA Catalunya Stadium course record, set by David Mullin in round three the previous day. The 84 was also his best score in eight visits to the Stadium, one better than the 85 he had carried as his course mark. Eight attempts to move a number by one. He got there in the end.
 
 The scoring came in clusters. He birdied the 5th and parred the 6th. Then he took nine points from holes 8 to 10: a par at the short 8th, a bogey at the 9th, the hardest hole on the course, which still returned three points, and a par at the 10th.
 
@@ -58,3 +58,9 @@ It settled the TEG 18 Green Jacket, which he had led going into the round and no
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> AB 169 (R4: 38) | JP 161 (R4: 42) | GW 160 (R4: 44) | DM 149 (R4: 38) | JB 126 (R4: 29)</p>
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +66 (R4: +12) | DM +80 (R4: +18) | JB +92 (R4: +25) | JP +95 (R4: +22) | AB +124 (R4: +36)</p>
+
+## Personal bests and TEG records
+
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>Gregg Williams's 84 at PGA Catalunya - Stadium — equals the course record, set by David Mullin in R3; 32 earlier rounds there</li>
+</ul></div>

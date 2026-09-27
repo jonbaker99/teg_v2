@@ -56,3 +56,9 @@ The same round did the same work in the 2024 TEG Trophy. Baker's overnight lead 
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> JB 126 (R3: 44) | DM 115 (R3: 35) | AB 103 (R3: 34) | JP 102 (R3: 41) | GW 94 (R3: 26)</p>
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> JB +48 (R3: +14) | DM +56 (R3: +22) | GW +64 (R3: +27) | JP +89 (R3: +22) | AB +112 (R3: +38)</p>
+
+## Personal bests and TEG records
+
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>Jon Baker's 86 at Royal Óbidos — a new course record, beating 87; 18 earlier rounds there</li>
+</ul></div>

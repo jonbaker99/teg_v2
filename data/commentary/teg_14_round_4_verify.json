@@ -2,35 +2,21 @@
   "teg": 14,
   "round": 4,
   "label": "storylinefirst",
-  "errors": 1,
+  "errors": 0,
   "warnings": 0,
   "findings": [
     {
-      "rule": "claim_total",
+      "rule": "claim_comparison",
       "severity": "unchecked",
-      "detail": "total claim missing player/competition/value",
-      "excerpt": "David Mullin completed the TEG 14 double.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "his fifth double in TEG history after TEGs 2, 4, 11 and 13",
+      "detail": "comparison with an explicit metric/competition is not numerically checked yet",
+      "excerpt": "Neither caught Mullin.",
       "source": "claim"
     },
     {
       "rule": "claim_comparison",
       "severity": "unchecked",
-      "detail": "comparison claim missing both players",
-      "excerpt": "He did it while posting the worst round in the four-man field at Prince's - Shore/Dunes.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_hole_score",
-      "severity": "unchecked",
-      "detail": "hole_score claim missing player/round/hole/score",
-      "excerpt": "Thirty-seven stableford points.",
+      "detail": "comparison with an explicit metric/competition is not numerically checked yet",
+      "excerpt": "Neither caught Mullin.",
       "source": "claim"
     },
     {
@@ -48,24 +34,10 @@
       "source": "claim"
     },
     {
-      "rule": "claim_run",
+      "rule": "claim_margin",
       "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "ten points across the first three holes",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "then eleven more from the 13th to the 15th",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
-      "severity": "error",
-      "detail": "Alex Baker R4 H16 (+6 vs par) does not satisfy 'par' \u2014 claimed span H16-18",
-      "excerpt": "Three consecutive pars followed",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "In the Green Jacket race, Gregg Williams and Jon Baker both closed sharply, from deficits of 18 and 15 to eight and seven respectively.",
       "source": "claim"
     },
     {
@@ -79,7 +51,21 @@
       "rule": "claim_margin",
       "severity": "unchecked",
       "detail": "claim type 'margin' has no checker yet",
-      "excerpt": "In the Green Jacket race, Gregg Williams and Jon Baker both closed sharply, from deficits of 18 and 15 to eight and seven respectively.",
+      "excerpt": "Jon Baker finished the 2021 TEG 14 Wooden Spoon in last place by twelve points.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Baker's charge cut his deficit in the TEG 14 Green Jacket race from a high of fifteen points down to seven behind David Mullin, who remained in front throughout.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "He closed the tournament bottom of the Wooden Spoon table, twelve points adrift of the next player.",
       "source": "claim"
     },
     {
@@ -90,23 +76,23 @@
       "source": "claim"
     },
     {
-      "rule": "claim_hole_score",
+      "rule": "claim_rank_change",
       "severity": "unchecked",
-      "detail": "hole_score claim missing player/round/hole/score",
-      "excerpt": "Having managed 28 stableford points in round three, he returned 39 in round four.",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "He closed the tournament bottom of the Wooden Spoon table, twelve points adrift of the next player.",
       "source": "claim"
     },
     {
-      "rule": "claim_hole_score",
+      "rule": "claim_record",
       "severity": "unchecked",
-      "detail": "hole_score claim missing player/round/hole/score",
-      "excerpt": "Having managed 28 stableford points in round three, he returned 39 in round four.",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "The Trophy and the Green Jacket, both taken, his fifth double in TEG history after TEGs 2, 4, 11 and 13.",
       "source": "claim"
     },
     {
-      "rule": "claim_hole_score",
+      "rule": "claim_record",
       "severity": "unchecked",
-      "detail": "hole_score claim missing player/round/hole/score",
+      "detail": "claim type 'record' has no checker yet",
       "excerpt": "An eleven-point swing, and his best round of the tournament.",
       "source": "claim"
     },
@@ -115,27 +101,6 @@
       "severity": "unchecked",
       "detail": "claim type 'record' has no checker yet",
       "excerpt": "It was still a personal best on the course this TEG, beating his previous best gross there by two shots and improving twelve strokes on his last visit to Prince's.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_margin",
-      "severity": "unchecked",
-      "detail": "claim type 'margin' has no checker yet",
-      "excerpt": "Baker's charge cut his deficit in the TEG 14 Green Jacket race from a high of fifteen points down to seven behind David Mullin, who remained in front throughout.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_lead_event",
-      "severity": "unchecked",
-      "detail": "lead_event claim missing player/round/hole/competition",
-      "excerpt": "Baker's charge cut his deficit in the TEG 14 Green Jacket race from a high of fifteen points down to seven behind David Mullin, who remained in front throughout.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_margin",
-      "severity": "unchecked",
-      "detail": "claim type 'margin' has no checker yet",
-      "excerpt": "He closed the tournament bottom of the Wooden Spoon table, twelve points adrift of the next player.",
       "source": "claim"
     },
     {
@@ -149,28 +114,7 @@
       "rule": "claim_record",
       "severity": "unchecked",
       "detail": "claim type 'record' has no checker yet",
-      "excerpt": "He went round in 83 gross, beating the previous mark of 85, a figure that had stood across nine prior visits to the layout.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
       "excerpt": "It was also his personal best there by two shots, improving on the 85 he carded in TEG 13.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "He arrived twelve strokes better than his last visit to the course.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_hole_score",
-      "severity": "unchecked",
-      "detail": "hole_score claim missing player/round/hole/score",
-      "excerpt": "The run ended at the 16th with a double bogey.",
       "source": "claim"
     }
   ]

@@ -95,3 +95,9 @@ Then the 16th, which had already relieved Alex Baker of the Trophy that afternoo
 <div class="records"><p class="records-header">TEG records:</p><ul>
   <li>Jon Baker's 2-hole "Birdies" streak ties the all-time TEG record (2), at T14 R4 H12 to T14 R4 H13</li>
 </ul></div>
+
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>Alex Baker's 100 at Littlestone (R2) — equals the course-worst, his own mark from TEG 13; 5 earlier rounds there</li>
+  <li>Alex Baker's 97 at Prince's - Shore / Dunes (R3) — equals the course-worst, set by John Patterson in TEG 13; 5 earlier rounds there</li>
+  <li>Jon Baker's 83 at Prince's - Shore / Dunes (R4) — a new course record, beating 85; 5 earlier rounds there</li>
+</ul></div>

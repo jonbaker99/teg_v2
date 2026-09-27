@@ -116,8 +116,66 @@ Items 2 (exact weekday shape), 3 and 5 were not independently re-flagged by this
 - Show the diff for review. Write to `_storylinefirst.md` only on approval, then re-run the free restyle (`_styled.md`) and the PDF build (`scripts/build_report_pdfs.py --check`).
 - Run tournament reports first (17), then round reports (68).
 
-### 6. Missed facts (item 6) — free
-Code lists the must-mention facts: records set or equalled, the winner's decisive lead change and personal-worst/best records. Flag any one no claim covers, as a **warning** ("not mentioned"). It uses WP2's detectors and needs no model call.
+### 6. Missed facts (item 6) — free — **done 2026-09-26**
+`missed_facts.py` lists each report's must-mention facts from WP2's detectors and warns on any the report never mentions (`rule="missed_fact"`, always a **warning**). No model call. Run it with `verify --all --rounds --missed`.
+
+**Wired into the pipeline (2026-09-27).** `restyle_voice` (the storyline pipelines' last stage, also reached from `/admin/reports`) and `apply_corrections` now call `verify_report(missed=True)`. Missed facts go into `_verify.json`, are returned as `missed_facts`, and are printed in full: a fact the draft never carried is inherited, so the new-findings diff alone would hide it. A fact the voice pass *drops* still shows as a new finding. If the check itself errors, it becomes a `missed_fact_check_failed` warning rather than stopping the run. Cost: under a second per report.
+
+**Claims re-check of the 20 stale caches (2026-09-27).** Re-extracted on plan usage (agent provider, a fresh subagent per prompt — not the Sonnet API the other 65 caches used; no API key in the build container). 6 claim errors, each checked against the parquet:
+- **Real (2):** TEG 12 R2 says Patterson "closed with three straight bogeys worth 3 points each" (gross par, bogey, par at 16–18; each was a net birdie worth 3). TEG 18 R1 calls it "the TEG 16 Wooden Spoon race".
+- **Extractor noise (4):** TEG 4 and TEG 5 (the known "from fourth to last" before/after confusion; both true after the hole), TEG 11 (basis "bogey or worse" on a sentence about two gross pars), TEG 17 (hole guessed for "recovered the lead").
+- **Found by hand while checking TEG 17:** the Jacket heading says Baker "cedes it to a rampant David Mullin for 35 holes", but Baker led those 35 holes (the paragraph says so); and "Mullin held the Jacket for a single hole" was two separate single holes (R3 H1 and H6).
+- Also still open: TEG 18's "Over four rounds he was comfortably the better player" (item 4's comparison warning) remains in the text.
+**Repaired 2026-09-27 (approved), by hand, each checked against the parquet:**
+- TEG 12 R2: "He levelled again at the 16th with a par, then closed bogey, par, each of the three holes worth 3 points".
+- TEG 18 R1: "TEG 16 Wooden Spoon race" -> "TEG 18".
+- TEG 18: "comfortably the better player" -> "Arguably he was the better player: over the last three rounds he outscored Alex Baker by four points, and across all four he was 29 shots better on gross." ("Over the final 3.5 rounds" was rejected: from R1 H10 the margin is one point, 151 to 150, and from H9 Baker leads.)
+- TEG 17: heading, the "single hole" sentence, and the plan's printed headline/standfirst ("One Hole in the Sun" -> "Two Holes in the Sun"; Mullin led outright at R3 H1 and H6, Baker clear for good from the 8th).
+PDFs rebuilt. Claims re-checked on plan usage: 0 claim errors except TEG 18 R1's holes 7-9 run, which is checker noise (the text is right; the net-axis switch fired on "without a net par" for a gross span).
+
+**What must be mentioned** (decided at kick-off):
+- **Round reports:** course records set or equalled that round, low and high; and the Trophy/Jacket leader's decisive moment, only if it fell in that round.
+- **Tournament reports:** all of the TEG's course records; the winner's decisive moment in the Trophy and the Jacket; all-time streak and score-count records; personal-best/worst streaks. Per-player course PBs are left out (~59 across 18 TEGs, mostly noise).
+- **Decisive moment** = the start of the final leader's last unbroken *outright* spell. A tie ends the spell, which is stricter than `settled_facts`'s lead timeline. A competition tied at the end (an override decides it) is skipped.
+
+**What counts as covered.** One block (a paragraph or a heading) must hold the fact's number and a keyword for its type. The player must be named in the block, its section heading, or a cached claim quoted from it. The claim route resolves "he"; `_claims.json` is read, never written. Keyword rules:
+- An equalled record needs an equal-word plus "record" or the other holder's surname. "His best score on the Stadium" does not count.
+- Two exceptions. A player matching his own earlier card needs only the equal-word. A record shared within one round also accepts "record".
+- A lead change needs a lead word and the hole; tournament reports also need the round, in the block or its heading. "Wire to wire" covers it when nobody else ever led outright.
+
+**Acceptance met.** With the published text, TEG 18 and TEG 18 R4 flag Williams's R4 84 equalling Mullin's R3 84 Stadium record. Mullin's own record passes. A text that says "equalled the Stadium course record" passes. Tests: `tests/test_reporting_missed_facts.py` (real TEG 18 data, hand-written text).
+
+**85-report sweep (2026-09-26): 81 warnings from 191 facts** (untuned: 76 from 186).
+
+| Fact type | Missed / listed |
+|---|---|
+| Lead change (Trophy/Jacket) | 54 / 96 |
+| Course record equalled | 11 / 14 |
+| Course record set | 8 / 39 |
+| Course-worst equalled | 6 / 9 |
+| Course-worst set | 0 / 16 |
+| Streak and score-count records | 2 / 17 |
+
+**Hand-checked sample of the untuned run (31 warnings): 21 real misses, 8 matcher noise, 2 semantics.** Real misses: 6 of 6 records set (each told as a PB, never as a record), 10 of 16 equalled (e.g. TEG 12's Tour 84s, TEG 16 Williams's 80, TEG 8 Neumann's 114), and 5 of 9 lead changes (the report names the leader but not the moment). The noise fell into four patterns: a same-round co-record, matching his own worst, "wire to wire", and "advantage/held it". The tuning above fixed all four. The two semantics cases led to the stricter "last outright move" rule. That rule added 11 lead warnings; spot-checks (TEG 9 Patterson R4 H15, TEG 12 Patterson R3 H10) are real misses of the moment. Known residue: an equal later beaten in the same TEG (TEG 12 Jon Baker's 90) still warns.
+
+**Update 2026-09-27.** `detect_course_records` now walks each round best-card-first, so a card beaten by another in the same round no longer counts as a record (TEG 11 R1/R2 and TEG 15 R3 each credited Mullin with one). On the latest text (after #128's repairs) the sweep gives **75 warnings from 185 facts**.
+
+**Repairs from the WP6 triage — ten reports written 2026-09-27** (approved; must + should tiers) via `claims.repair_report()` on the `agent` provider (fresh subagent per prompt), built on the post-#128 text. Each "after" was hand-checked against the parquet; the mechanical re-verify was clean. Seven were outright errors that the missed-fact triage surfaced while reading the paragraph:
+
+| Report | Tier | Was | Now |
+|---|---|---|---|
+| TEG 17 | must | after R2 Baker "only level at the front", Mullin "leading the Jacket" | Baker two points clear in the Trophy (82 to 80), level with Mullin in the Jacket |
+| TEG 11 | must | brothers "tied at the top" after R3 | Alex Baker two clear, 110 to 108; adds Jon Baker level at the R4 6th, clear at the 7th |
+| TEG 12 | must | Trophy "level at the top" after three rounds | Patterson led by eight, 132 to 124; adds the equalled Tour record (84) to the Williams paragraph |
+| TEG 12 R1 | must | "Nobody in the six-man field came anywhere near it" | Patterson had 45; Jon Baker also shot 84; both equalled the Tour record |
+| TEG 5 | must | the R2 82 "swept aside the 85" | the R1 83 broke the 85; the 82 lowered his own record; Neumann shared it |
+| TEG 18 | must | the R4 84 "eight better than his previous best" at the Stadium | one better than his R3 85; equalled Mullin's R3 course record (item 6) |
+| TEG 18 R4 | must | (not mentioned) | the 84 equalled Mullin's R3 Stadium record |
+| TEG 12 R2 | should | (not mentioned) | Mullin's 84 equalled the Tour record |
+| TEG 8 R3 | should | (not mentioned) | Neumann's 114 equalled the Quinta da Marinha course-worst (his own R1 114) |
+| TEG 4 | should | (not mentioned) | Mullin went ahead at the R4 12th and was never caught |
+
+Left as is: the "could" tier (early lead moments, round-report lead holes, an equal later beaten in the same TEG, TEG 4's eagle-count record) and TEG 12's decisive moment (Patterson clear at R3 H10), which the repair did not add. All 85 `_styled.md` files were then restyled (free) so the records appendix carries course records, and the PDFs rebuilt. The claims caches for these ten reports are stale by hash. After the repairs the sweep gives **63 warnings from 185 facts**, all in the "could" tier. TEG 2 R4 has no `_styled.md` or PDF (the data holds three TEG 2 rounds), so it was skipped as before. Three round rails (TEG 12 R1/R2, TEG 17 R1) keep their published "Green Jacket lead: … 0 ahead" line: the restyle flipped the named player between two tied leaders, a pre-existing tie-ordering quirk. **Fixed the same day:** the round box now reads "X and Y, level" for a tie; six published round reports carried one (TEG 4 R3, TEG 10 R3, TEG 12 R1/R2, TEG 17 R1/R2) and were restyled, changing only that line, with PDFs rebuilt.
 
 ### 7. Tests and docs
 - `tests/test_reporting_verify.py`: hand-written claim fixtures against real TEG 18 data (no LLM) — **done**. Items 1 (error), 2, 4, 5 (warnings) confirmed; item 3 documented as an out-of-cut gap, not force-fitted; item 6 (missed-fact) is WP6, not built. Plus `--all`/`--label` glob tests, `_verify.json` round-trip, and the quote-not-found-drops-the-claim rule.

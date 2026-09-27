@@ -105,6 +105,11 @@ The closing round offered something better. His 103 at Oitavos Dunes was a shot 
 
 ## Personal bests and TEG records
 
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>Gregg Williams's 82 at Penha Longa (R3) — a new course record, beating 86; 6 earlier rounds there</li>
+  <li>Alex Baker's 106 at Penha Longa (R3) — equals the course-worst, his own mark from TEG 8; 6 earlier rounds there</li>
+</ul></div>
+
 <div class="records"><p class="records-header">Personal bests:</p><ul>
   <li>Gregg Williams posts a personal-best Gross round: +10 (R3)</li>
   <li>Gregg Williams's +63 is a personal Gross best</li>

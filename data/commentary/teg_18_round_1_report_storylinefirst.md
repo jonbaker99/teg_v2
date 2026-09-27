@@ -14,7 +14,7 @@ Two blow-up holes cost him eight shots against par. The stretches either side we
 
 David Mullin's opening round at PGA Catalunya - Tour unravelled at the 15th. A sextuple bogey 11 on the par-5, the worst score he has ever recorded on that hole. Four previous visits to the course had not prepared anyone for it. The card it ruined had twice been good enough to share the lead in the TEG 16 Green Jacket race. A quadruple bogey 8 at the 6th had already removed most of the margin for error.
 
-The 15th settled more than the Jacket. The blow-up dropped Mullin from second to fifth in the TEG 16 Wooden Spoon race, sending him to the bottom of that table. His round here was 16 strokes worse than his last visit, and well short of his prior best gross of 84 at the venue. A card of genuine promise, filed instead under evidence.
+The 15th settled more than the Jacket. The blow-up dropped Mullin from second to fifth in the TEG 18 Wooden Spoon race, sending him to the bottom of that table. His round here was 16 strokes worse than his last visit, and well short of his prior best gross of 84 at the venue. A card of genuine promise, filed instead under evidence.
 
 ## Gregg Williams survived two quadruple bogeys and briefly shared the Green Jacket lead before a third disaster hole dropped him to the bottom of the Wooden Spoon
 <!-- storyline: d1 -->

@@ -56,3 +56,9 @@ Baker's round never recovered, though it did find further ways to express itself
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> AB 131 (R3: 44) | JP 119 (R3: 43) | GW 116 (R3: 43) | DM 111 (R3: 44) | JB 97 (R3: 28)</p>
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +54 (R3: +13) | DM +62 (R3: +12) | JB +67 (R3: +28) | JP +73 (R3: +21) | AB +88 (R3: +28)</p>
+
+## Personal bests and TEG records
+
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>David Mullin's 84 at PGA Catalunya - Stadium — a new course record, beating 89; 27 earlier rounds there</li>
+</ul></div>

@@ -9,7 +9,7 @@
   <p class="at-a-glance-title">RESULTS</p>
   <p><strong>Round of the day:</strong><span> David MULLIN (47 pts)</span></p>
   <p><strong>Trophy lead:</strong><span> Jon BAKER, 2 ahead</span></p>
-  <p><strong>Green Jacket lead:</strong><span> David MULLIN, 0 ahead</span></p>
+  <p><strong>Green Jacket lead:</strong><span> Jon BAKER and David MULLIN, level</span></p>
 </section>
 
 ## David Mullin's course-record 82 headlines a stellar West Cliffs return
@@ -47,6 +47,11 @@ The collapse cost him the TEG 16 Trophy lead. It passes to Jon Baker, who moved 
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +34 (R2: +10) | JB +34 (R2: +14) | GW +37 (R2: +17) | JP +67 (R2: +44) | AB +74 (R2: +33)</p>
 
 ## Personal bests and TEG records
+
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>David Mullin's 82 at West Cliffs — a new course record, beating 88; 6 earlier rounds there</li>
+  <li>John Patterson's 116 at West Cliffs — a new course-worst, beyond 115; 6 earlier rounds there</li>
+</ul></div>
 
 <div class="records"><p class="records-header">Personal worsts:</p><ul>
   <li>John Patterson's worst Gross round to date: +44</li>

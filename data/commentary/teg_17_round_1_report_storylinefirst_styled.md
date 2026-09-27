@@ -9,7 +9,7 @@
   <p class="at-a-glance-title">RESULTS</p>
   <p><strong>Round of the day:</strong><span> John PATTERSON (39 pts)</span></p>
   <p><strong>Trophy lead:</strong><span> John PATTERSON, 1 ahead</span></p>
-  <p><strong>Green Jacket lead:</strong><span> Gregg WILLIAMS, 0 ahead</span></p>
+  <p><strong>Green Jacket lead:</strong><span> Jon BAKER and Gregg WILLIAMS, level</span></p>
 </section>
 
 ## John Patterson's round survives two early quadruple bogeys to become the best score of the day
@@ -52,6 +52,10 @@ At the other end of the field, Alex Baker's day ended as it had largely proceede
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +20 | JB +20 | JP +23 | DM +24 | AB +41</p>
 
 ## Personal bests and TEG records
+
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>Alex Baker's 114 at Praia D'El Rey — a new course-worst, beyond 110; 24 earlier rounds there</li>
+</ul></div>
 
 <div class="records"><p class="records-header">Personal worsts:</p><ul>
   <li>David Mullin — +18 Gross on the Front nine is a personal-worst Front nine Gross</li>

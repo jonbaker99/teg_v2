@@ -16,7 +16,7 @@ David Mullin won the TEG 4 Trophy at +9 net against par, eight clear of Jon Bake
 
 The drama belonged to Baker, and it travelled in the opposite direction. He arrived at the final round at Bletchingley in contention, birdied the par-3 2nd to move into the outright lead, and then eagled the par-4 8th, a two on a hole he was getting a shot at, and the only eagle struck by anyone in TEG 4. He stood on the summit, seven ahead, surveying the view. Nobody had told him the summit was a ledge.
 
-What followed occupied eight holes. Baker played 9 through 16 in 27 shots over par, and the itemisation has a certain grandeur: double bogeys at the 9th, 13th and 16th, triple bogeys at the 10th, 11th and 14th, a nine at the par-3 12th and an eleven at the par-5 15th. Both of those are the worst he has made on a par 3 and a par 5. He went seven consecutive holes, the 9th to the 15th, without a net par. He never stopped playing golf. He simply stopped scoring at it.
+What followed occupied eight holes. Baker played 9 through 16 in 27 shots over par, and the itemisation has a certain grandeur: double bogeys at the 9th, 13th and 16th, triple bogeys at the 10th, 11th and 14th, a nine at the par-3 12th and an eleven at the par-5 15th. Both of those are the worst he has made on a par 3 and a par 5. He went seven consecutive holes, the 9th to the 15th, without a net par. He never stopped playing golf. He simply stopped scoring at it. David Mullin went ahead at the 12th, where Baker took his nine, and was never caught. He finished eight clear.
 
 The round finished at +9 net, a 12-shot swing from his -3 at Crowborough the day before. His gross total of +113 was still a personal best, which is the sort of consolation one accepts quietly and does not mention again.
 

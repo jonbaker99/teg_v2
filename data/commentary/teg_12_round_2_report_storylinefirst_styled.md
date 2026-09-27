@@ -9,7 +9,7 @@
   <p class="at-a-glance-title">RESULTS</p>
   <p><strong>Round of the day:</strong><span> Stuart NEUMANN (44 pts)</span></p>
   <p><strong>Trophy lead:</strong><span> Gregg WILLIAMS, 1 ahead</span></p>
-  <p><strong>Green Jacket lead:</strong><span> Gregg WILLIAMS, 0 ahead</span></p>
+  <p><strong>Green Jacket lead:</strong><span> Jon BAKER and Gregg WILLIAMS, level</span></p>
 </section>
 
 ## Stuart Neumann answers a ruinous opening round with 44 points and a personal best at PGA Catalunya Tour, the best round of the day by any measure on the Trophy metric
@@ -33,14 +33,14 @@ A birdie at the 10th finally stopped the bleeding. He found another decent spell
 ## David Mullin posts the best gross round of the day, 84, his personal best at PGA Catalunya Tour by a single shot
 <!-- storyline: d1 -->
 
-David Mullin carded the best gross round of the day on Friday at PGA Catalunya's Tour Course. An 84, and a personal best at the venue, beating his previous mark of 85 by one shot across five visits. Five visits, one shot. The margins of a patient man.
+David Mullin carded the best gross round of the day on Friday at PGA Catalunya's Tour Course. An 84, and a personal best at the venue, beating his previous mark of 85 by one shot across five visits. Five visits, one shot. The margins of a patient man. The 84 also equalled the Tour Course record, first set by Jon Baker in TEG 11. Gregg Williams and Jon Baker had matched it in round one of this TEG.
 
 The round turned on the 5th to the 8th. Four straight pars, not a gross shot dropped, 12 Stableford points collected, including a par at the 8th, one of the harder holes out there. The run ended at the 9th with a triple bogey and a blank Stableford return. The rest of the card held firm enough to deliver the low gross of the day, which after years of near-misses at this course counts as a debt settled.
 
 ## The TEG 12 Trophy lead changed hands five times across eighteen holes and finished exactly as it started, Gregg Williams one point clear of John Patterson, with the TEG 12 Green Jacket still deadlocked
 <!-- storyline: race -->
 
-The TEG 12 Trophy lead moved five times during round two at PGA Catalunya and settled nowhere. John Patterson drew level at the 4th. He took it outright at the 12th, was pegged back to a tie at the 13th, and lost it outright at the 15th. He levelled again at the 16th. He then closed with three straight bogeys worth 3 points each, nine points across the final stretch.
+The TEG 12 Trophy lead moved five times during round two at PGA Catalunya and settled nowhere. John Patterson drew level at the 4th. He took it outright at the 12th, was pegged back to a tie at the 13th, and lost it outright at the 15th. He levelled again at the 16th with a par, then closed bogey, par, each of the three holes worth 3 points, nine points across the final stretch.
 
 The 15th deserves its own mention. Patterson made a quintuple-bogey 10 on the par 5. It cost him the outright lead and, one suspects, some quiet interior scaffolding. All that movement, and the final margin did not shift by a single point. Gregg Williams ended the round exactly as he had started it, one clear of Patterson.
 
@@ -52,3 +52,9 @@ The Green Jacket behaved much the same way. Williams drew level on gross at the 
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> GW 88 (R2: 42) | JP 87 (R2: 42) | SN 80 (R2: 44) | JB 76 (R2: 36) | DM 75 (R2: 40) | AB 71 (R2: 37)</p>
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +28 (R2: +16) | JB +28 (R2: +16) | DM +29 (R2: +12) | JP +48 (R2: +24) | AB +54 (R2: +24) | SN +54 (R2: +21)</p>
+
+## Personal bests and TEG records
+
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>David Mullin's 84 at PGA Catalunya - Tour — equals the course record, set by Jon Baker in TEG 11; 16 earlier rounds there</li>
+</ul></div>

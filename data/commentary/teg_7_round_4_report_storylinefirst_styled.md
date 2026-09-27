@@ -63,6 +63,10 @@ The 83 beat his own previous best at the course, 89, by six shots. It stands as 
   <li>David Mullin's +10 (gross) is the 2nd-best Gross round in TEG history to date</li>
 </ul></div>
 
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>David Mullin's 83 at Praia D'El Rey — a new course record, beating 84; 6 earlier rounds there</li>
+</ul></div>
+
 <div class="records"><p class="records-header">Personal bests:</p><ul>
   <li>Gregg Williams posts a personal-best round: -12</li>
   <li>Gregg Williams posts a personal-best Gross round: +20</li>
