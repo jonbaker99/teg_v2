@@ -21,7 +21,7 @@ Neither round troubled the leaders in the slightest. Baker's cushion atop the TE
 ## Henry Meller's early collapse, a triple bogey at the 1st and a quintuple bogey at the 3rd, hands him outright last place in the TEG 3 Wooden Spoon race, with Stuart Neumann reprieved after occupying the spot himself
 <!-- storyline: race -->
 
-Henry Meller's third round at Boavista came apart at the first opportunity. A triple bogey at the 1st, stroke index 14 and one of the gentler holes out there, dropped him to third in the TEG 3 Wooden Spoon race. Two holes later he took a quintuple bogey 10 at the par-5 3rd. It was his worst hole against par of the tournament, and it was enough. Outright last place, secured before most men had loosened up.
+Henry Meller's third round at Boavista came apart at the first opportunity. A triple bogey at the 1st, stroke index 14 and one of the gentler holes out there, dropped him to the foot of the TEG 3 Wooden Spoon race. He climbed off it at the 2nd. At the 3rd he took a quintuple bogey 10 at the par-5 3rd. It was his worst hole against par of the tournament, and it was enough. Outright last place, secured before most men had loosened up.
 
 He then set about consolidating. A double bogey at the 5th. A quadruple bogey at the 6th. The bleeding continued in an orderly, almost professional fashion. It was not until a birdie at the 11th that Meller finally put a hand on the wound.
 

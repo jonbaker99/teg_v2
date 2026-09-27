@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-    <link rel="stylesheet" href="/static/themes/base-vars.css?v=39">
+    <link rel="stylesheet" href="/static/themes/base-vars.css?v=40">
     <link rel="stylesheet" href="/static/themes/{{ request.state.theme }}.css?v=25">
     {% if request.state.font_pairing_override %}
     <!-- Dev-only font-pairing override (/design/typography, font_pairing cookie) --
@@ -585,8 +585,8 @@
         });
     })();
     </script>
-    <!-- Equal-height player-name rows: any table using .player-name (History,
-         Standings) breaks ALL its names onto two lines the moment ONE name
+    <!-- Equal-height player-name rows: History, Standings, and Streaks tables
+         break ALL their names onto two lines the moment ONE name
          wraps between forename/surname, rather than letting rows mix one-
          and two-line heights. Shared here (not per-page) so it re-runs after
          every HTMX swap (TEG/tab change) via the same afterSettle hook the
@@ -594,7 +594,7 @@
     <script>
     (function() {
         function checkNameBreaks(root) {
-            root.querySelectorAll('.history-table, .leaderboard-table, table.leaderboard').forEach(function(table) {
+            root.querySelectorAll('.history-table, .leaderboard-table, table.leaderboard, .player-streaks-table').forEach(function(table) {
                 table.classList.remove('names-break');
                 var names = table.querySelectorAll('.player-name');
                 if (!names.length) return;

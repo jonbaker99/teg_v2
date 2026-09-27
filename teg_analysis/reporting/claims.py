@@ -305,6 +305,21 @@ def _canonical_competition(fb: FactBase, competition: Optional[str]) -> Optional
     return None
 
 
+def _round_scores(fb: FactBase, player: str) -> dict:
+    """{round: {every way that round's score can be stated}} for one player."""
+    rows = fb.teg_df[fb.teg_df["Player"] == player]
+    out = {}
+    for rnd, g in rows.groupby("Round"):
+        vals = {int(g["Sc"].sum()), int(g["GrossVP"].sum()), int(g["NetVP"].sum()),
+                int(g["Stableford"].sum())}
+        out[int(rnd)] = vals | {abs(v) for v in vals}
+    return out
+
+
+def _margins(comp_totals: list, row: dict) -> set:
+    return {abs(row["total"] - r["total"]) for r in comp_totals if r is not row}
+
+
 def _check_total(fb: FactBase, c: Claim) -> list[Finding]:
     if not (c.player and c.competition and c.value is not None):
         return _unchecked(c, "total claim missing player/competition/value")
@@ -338,6 +353,19 @@ def _check_total(fb: FactBase, c: Claim) -> list[Finding]:
     # a false mismatch purely on sign.
     valid_values |= {abs(v) for v in valid_values if isinstance(v, (int, float)) and v < 0}
     if c.value not in valid_values:
+        # The extractor keeps labelling round scores ("signed for 44 points",
+        # "a gross 90") and margins ("by ten points") as `total` despite the
+        # prompt (sweep 5: all 11 remaining claim_total errors). Recognise
+        # both from the data rather than compare them with the final total.
+        round_scores = _round_scores(fb, c.player)
+        if fb.round_num is not None and c.value in round_scores.get(fb.round_num, set()):
+            return []  # this report's round score, and correct
+        if any(c.value in v for v in round_scores.values()):
+            return _unchecked(c, f"{c.value} matches one of {c.player}'s round scores, "
+                                 f"not the tournament total")
+        if c.value in _margins(comp_totals, row):
+            return _unchecked(c, f"{c.value} matches {c.player}'s margin to another "
+                                 f"player, not the tournament total")
         return [_finding("claim_total", "error",
                          f"{c.player}'s {comp} total is {row['total']} gross"
                          + (f" ({row['total_vs_par']:+d} vs par)" if "total_vs_par" in row else "")
@@ -373,6 +401,75 @@ def _rank_source_for(fb: FactBase, competition: str) -> Optional[tuple]:
 
 _LAST_PLACE_RE = re.compile(r"\b(last|bottom|foot of the field)\b", re.IGNORECASE)
 
+_ORDINALS = {"first": 1, "second": 2, "third": 3, "fourth": 4, "fifth": 5, "sixth": 6,
+             "seventh": 7, "eighth": 8}
+_ORDINAL = r"(first|second|third|fourth|fifth|sixth|seventh|eighth|\d+(?:st|nd|rd|th))"
+# "from fourth to last", "from third into the outright lead", "from third all
+# the way to the foot of the field". The extractor reliably reports the FROM
+# rank as `value` here (sweep 3/4: at least 5 of 9 remaining rank_change
+# errors), so check both halves of the sentence instead: FROM on the hole
+# before, TO on the claimed hole.
+_FROM_TO_RE = re.compile(
+    rf"\bfrom {_ORDINAL}\s+(?:all the way\s+)?(?:to|into)\s+(?:the\s+)?(?:outright\s+)?"
+    rf"(?P<to>last|bottom|foot of the field|lead|{_ORDINAL})",
+    re.IGNORECASE)
+
+
+def _ordinal_value(word: str) -> Optional[int]:
+    word = word.lower()
+    if word in _ORDINALS:
+        return _ORDINALS[word]
+    m = re.match(r"(\d+)", word)
+    return int(m.group(1)) if m else None
+
+
+def _previous_hole(df: pd.DataFrame, rnd: int, hole: int) -> Optional[tuple]:
+    if hole > 1:
+        return rnd, hole - 1
+    earlier = df[df["Round"] < rnd]
+    if earlier.empty:
+        return None
+    last_rnd = int(earlier["Round"].max())
+    return last_rnd, int(earlier[earlier["Round"] == last_rnd]["Hole"].max())
+
+
+def _check_from_to(c: Claim, df: pd.DataFrame, rank_col: str,
+                   m: re.Match) -> list[Finding]:
+    """Check a "from X to Y" rank claim: X on the hole before, Y on this hole."""
+    def rank_at(rnd, hole):
+        rows = df[(df["Round"] == rnd) & (df["Hole"] == hole) & (df["Player"] == c.player)]
+        return None if rows.empty else int(rows.iloc[0][rank_col])
+
+    def last_rank_at(rnd, hole):
+        return int(df[(df["Round"] == rnd) & (df["Hole"] == hole)][rank_col].max())
+
+    after = rank_at(c.round, c.hole)
+    if after is None:
+        return _unchecked(c, f"no data for {c.player} R{c.round} H{c.hole}")
+    to = m.group("to").lower()
+    if to in ("last", "bottom", "foot of the field"):
+        to_ok, to_desc = after == last_rank_at(c.round, c.hole), "last"
+    elif to == "lead":
+        to_ok, to_desc = after == 1, "the lead"
+    else:
+        want = _ordinal_value(to)
+        to_ok, to_desc = after == want, f"rank {want}"
+    problems = []
+    if not to_ok:
+        problems.append(f"after R{c.round} H{c.hole} {c.player} was rank {after}, "
+                        f"claim says {to_desc}")
+    prev = _previous_hole(df, c.round, c.hole)
+    if prev is not None:
+        before = rank_at(*prev)
+        want_before = _ordinal_value(m.group(1))
+        if before is not None and before != want_before:
+            problems.append(f"before (R{prev[0]} H{prev[1]}) {c.player} was rank {before}, "
+                            f"claim says {want_before}")
+    if problems:
+        return [_finding("claim_rank_change", "error",
+                         f"{c.competition}: " + "; ".join(problems), c.quote)]
+    return []
+
 
 def _check_rank_change(fb: FactBase, c: Claim) -> list[Finding]:
     if not (c.player and c.round and c.hole and c.competition and c.value is not None):
@@ -386,14 +483,17 @@ def _check_rank_change(fb: FactBase, c: Claim) -> list[Finding]:
     # means, so it's ambiguous — unchecked, not a check against 1. The quote
     # alone doesn't always carry the "last" word ("Meller briefly reclaimed
     # the position"), hence the Spoon condition too.
-    if c.value == 1 and (_LAST_PLACE_RE.search(c.quote)
-                         or "spoon" in (c.competition or "").lower()):
-        return _unchecked(c, "rank_change value=1 alongside last-place/Spoon language is "
-                             "ambiguous (likely 'last', not rank 1) — not checked")
     source = _rank_source_for(fb, c.competition)
     if source is None:
         return _unchecked(c, f"unrecognised competition {c.competition!r} for rank_change")
     df, rank_col = source
+    from_to = _FROM_TO_RE.search(c.quote)
+    if from_to:
+        return _check_from_to(c, df, rank_col, from_to)
+    if c.value == 1 and (_LAST_PLACE_RE.search(c.quote)
+                         or "spoon" in (c.competition or "").lower()):
+        return _unchecked(c, "rank_change value=1 alongside last-place/Spoon language is "
+                             "ambiguous (likely 'last', not rank 1) — not checked")
     rows = df[(df["Round"] == c.round) & (df["Hole"] == c.hole) & (df["Player"] == c.player)]
     if rows.empty:
         return _unchecked(c, f"no data for {c.player} R{c.round} H{c.hole}")
@@ -417,36 +517,69 @@ def _check_rank_change(fb: FactBase, c: Claim) -> list[Finding]:
     return []
 
 
+_SHARE_RE = re.compile(r"\b(share|shared|level|drew|draw|tied|joint)\b", re.IGNORECASE)
+
+
 def _check_lead_event(fb: FactBase, c: Claim) -> list[Finding]:
+    """Checked against the hole-by-hole ranks, tie-aware.
+
+    The settled-facts lead timeline records only OUTRIGHT changes of leader,
+    so a leader who fell into a tie and then went clear again ("lifted him
+    from third into the outright lead", TEG 9 R1 H5) has no "change" there
+    and read as a false error (sweep 5, 2026-09-26). Ranks show it directly:
+    took_lead = outright first now, not outright first on the hole before;
+    lost_lead = the reverse; drew_level = sharing first now. A took_lead
+    whose quote says "share"/"level" is checked as drew_level.
+    """
     if not (c.player and c.round and c.hole and c.competition):
         return _unchecked(c, "lead_event claim missing player/round/hole/competition")
     comp = _canonical_competition(fb, c.competition)
-    if comp is None:
+    source = _rank_source_for(fb, c.competition)
+    if comp is None or source is None:
         return _unchecked(c, f"{c.competition!r} is not a recognised Trophy/Jacket/Spoon name")
-    changes = fb.settled["lead_timeline"].get(comp)
-    if changes is None:
-        return _unchecked(c, f"no lead timeline for {comp!r}")
-    if c.direction == "drew_level":
-        # The settled-facts timeline only records OUTRIGHT changes (by design
-        # — it is the tenure ledger, not the play-by-play); a "drew level"
-        # claim needs the tie-aware beat data verify.py doesn't have access
-        # to here, so this is an honest unchecked rather than a guess.
-        return _unchecked(c, "drew_level claims are not checked against the outright-only "
-                             "lead timeline")
+    if comp == "Wooden Spoon":
+        return _unchecked(c, "Wooden Spoon 'lead' is last place; not checked as a lead event")
+    df, rank_col = source
+
+    def state(rnd, hole):
+        snap = df[(df["Round"] == rnd) & (df["Hole"] == hole)]
+        me = snap[snap["Player"] == c.player]
+        if me.empty:
+            return None
+        first = snap[snap[rank_col] == 1]
+        is_first = int(me.iloc[0][rank_col]) == 1
+        return {"outright": is_first and len(first) == 1,
+                "shared": is_first and len(first) > 1}
+
+    now = state(c.round, c.hole)
+    if now is None:
+        return _unchecked(c, f"no data for {c.player} R{c.round} H{c.hole}")
+    prev_hole = _previous_hole(df, c.round, c.hole)
+    before = state(*prev_hole) if prev_hole else {"outright": False, "shared": False}
+    direction = c.direction
+    if direction == "took_lead" and _SHARE_RE.search(c.quote) and not now["outright"]:
+        direction = "drew_level"
+    where = f"R{c.round} H{c.hole}"
+    # The outright-only timeline also counts: a lead held through a tie and
+    # then lost ("hand it over at the very first hole of Round 3", TEG 17)
+    # is a change there but not an outright-to-not-outright step in ranks.
+    changes = fb.settled["lead_timeline"].get(comp) or []
     at_hole = next((ch for ch in changes if ch["round"] == c.round and ch["hole"] == c.hole), None)
-    if c.direction == "took_lead":
-        if at_hole is None or at_hole["new_leader"] != c.player:
-            return [_finding("claim_lead_event", "error",
-                             f"no record of {c.player} taking the {comp} lead at "
-                             f"R{c.round} H{c.hole}", c.quote)]
-        return []
-    if c.direction == "lost_lead":
-        if at_hole is None or at_hole["previous_leader"] != c.player:
-            return [_finding("claim_lead_event", "error",
-                             f"no record of {c.player} losing the {comp} lead at "
-                             f"R{c.round} H{c.hole}", c.quote)]
-        return []
-    return _unchecked(c, f"unrecognised lead_event direction {c.direction!r}")
+    if direction == "took_lead":
+        ok = ((now["outright"] and not before["outright"])
+              or (at_hole is not None and at_hole["new_leader"] == c.player))
+        why = f"{c.player} did not go outright first in the {comp} at {where}"
+    elif direction == "lost_lead":
+        ok = ((before["outright"] or before["shared"]) and not now["outright"]
+              and not (before["shared"] and now["shared"])) \
+             or (at_hole is not None and at_hole["previous_leader"] == c.player)
+        why = f"{c.player} did not lose the {comp} lead at {where}"
+    elif direction == "drew_level":
+        ok = now["shared"]
+        why = f"{c.player} was not sharing the {comp} lead at {where}"
+    else:
+        return _unchecked(c, f"unrecognised lead_event direction {c.direction!r}")
+    return [] if ok else [_finding("claim_lead_event", "error", why, c.quote)]
 
 
 def _check_comparison(fb: FactBase, c: Claim) -> list[Finding]:

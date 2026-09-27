@@ -419,3 +419,47 @@ def test_rank_change_value_one_in_the_trophy_is_still_checked():
         quote="lifted him from third into the outright lead of the 2016 TEG Trophy")
     assert all(f.severity != "unchecked" for f in findings)
     assert all(f.severity != "error" for f in findings)
+
+
+# ---------------------------------------------------------------------------
+# Sweep-5 checker fixes (2026-09-26), real cases, no LLM.
+# ---------------------------------------------------------------------------
+def test_rank_change_from_to_checks_both_halves():
+    # TEG 13 R3: "from fourth to last" extracted with value=4 (the FROM rank).
+    ok = _check_one(
+        13, 3, type="rank_change", player="Alex Baker", round=3, hole=9,
+        competition="Wooden Spoon", value=4,
+        quote="sending Baker from fourth to last place")
+    assert ok == []
+    wrong = _check_one(
+        13, 3, type="rank_change", player="Alex Baker", round=3, hole=9,
+        competition="Wooden Spoon", value=3,
+        quote="sending Baker from third to last place")
+    assert len(wrong) == 1 and "before" in wrong[0].detail
+
+
+def test_lead_event_recapture_after_a_tie_passes():
+    # TEG 9 R1 H5: Patterson went from third to the outright lead; the
+    # outright-only timeline has no "change" there because he led at H1.
+    findings = _check_one(
+        9, 1, type="lead_event", player="John Patterson", round=1, hole=5,
+        competition="Trophy", direction="took_lead",
+        quote="John Patterson then moved outright ahead at the par-5 5th.")
+    assert findings == []
+
+
+def test_lead_event_drew_level_is_checked_against_ranks():
+    # TEG 10: Baker's par at R3 H6 took him a point CLEAR — not level.
+    findings = _check_one(
+        10, None, type="lead_event", player="Alex Baker", round=3, hole=6,
+        competition="Trophy", direction="drew_level",
+        quote="where Baker's par drew him level")
+    assert len(findings) == 1 and findings[0].severity == "error"
+
+
+def test_total_accepts_this_rounds_score():
+    # TEG 10 R3: "He signed for 27" is Patterson's round-3 Stableford score.
+    findings = _check_one(
+        10, 3, type="total", player="John Patterson", competition="Trophy",
+        value=27, quote="He signed for 27, the worst Trophy score of the day.")
+    assert findings == []

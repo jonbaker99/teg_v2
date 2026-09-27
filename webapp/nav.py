@@ -110,7 +110,9 @@ MOBILE_SHORTCUTS = [
 ]
 
 
-def navigation_for_teg(teg_num: int, *, in_progress: bool = False) -> tuple[list[dict], list[dict]]:
+def navigation_for_teg(
+    teg_num: int, *, in_progress: bool = False, report: tuple[str, str] | None = None,
+) -> tuple[list[dict], list[dict]]:
     """Build request-local navigation labels for the current TEG.
 
     Keep the shared registry unchanged. Hide the TEG context shortcut while
@@ -129,14 +131,18 @@ def navigation_for_teg(teg_num: int, *, in_progress: bool = False) -> tuple[list
 
     sections = list(NAV_SECTIONS)
     latest = NAV_SECTIONS[1]
+    pages = []
+    for title, url, key, icon in latest["pages"]:
+        if in_progress and key == "latest-teg":
+            continue
+        pages.append((page_title(title, key), url, key, icon))
+        if key == "leaderboard" and report:
+            report_title, report_url = report
+            pages.append((report_title, report_url, "teg-reports", "description"))
     sections[1] = {
         **latest,
         "label": teg_label,
-        "pages": [
-            (page_title(title, key), url, key, icon)
-            for title, url, key, icon in latest["pages"]
-            if not (in_progress and key == "latest-teg")
-        ],
+        "pages": pages,
     }
     shortcuts = list(MOBILE_SHORTCUTS)
     shortcuts[0] = {**MOBILE_SHORTCUTS[0], "label": teg_label}

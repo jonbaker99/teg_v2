@@ -160,6 +160,65 @@ def test_navigation_copies_are_request_local():
     assert earlier[1]["active"] == later[1]["active"] == NAV_SECTIONS[1]["active"]
 
 
+@pytest.mark.parametrize(
+    "in_progress,has_tournament,rounds,expected",
+    [
+        (False, True, (4, 2), ("TEG 18 report", "/teg-reports?teg=18")),
+        (False, False, (3, 4, 2), ("Round 4 report", "/teg-reports?teg=18&round=4")),
+        (True, True, (2, 1, 3), ("Round 3 report", "/teg-reports?teg=19&round=3")),
+        (False, False, (), None),
+        (True, True, (), None),
+    ],
+)
+def test_navigation_report_link_follows_tournament_status(
+    client, monkeypatch, in_progress, has_tournament, rounds, expected,
+):
+    from teg_analysis.reporting import newspaper_edition
+
+    deps_module = importlib.import_module("webapp.deps")
+    teg_num = 19 if in_progress else 18
+    monkeypatch.setattr(deps_module, "get_current_in_progress_teg_fast", lambda: (19 if in_progress else None, None))
+    monkeypatch.setattr(deps_module, "get_last_completed_teg_fast", lambda: (18, None))
+    edition_calls = []
+    round_calls = []
+
+    def has_edition(teg):
+        edition_calls.append(teg)
+        return has_tournament
+
+    def available_rounds(teg):
+        round_calls.append(teg)
+        return rounds
+
+    monkeypatch.setattr(newspaper_edition, "has_edition", has_edition)
+    monkeypatch.setattr(newspaper_edition, "available_rounds", available_rounds)
+
+    for path in ("/records", "/contents"):
+        resp = client.get(path)
+        _assert_ok_no_error(resp)
+        pages = resp.context["request"].state.nav_sections[1]["pages"]
+        reports = [(title, url, icon) for title, url, key, icon in pages if key == "teg-reports"]
+        assert reports == ([(expected[0], expected[1], "description")] if expected else [])
+        if expected:
+            assert pages[1][0:2] == expected  # Directly after the leaderboard.
+            assert f'href="{html.escape(expected[1])}"' in resp.text
+        else:
+            assert not any(key == "teg-reports" for _, _, key, _ in pages)
+        if path == "/records":
+            assert edition_calls == ([] if in_progress else [teg_num])
+            assert round_calls == ([] if not in_progress and has_tournament else [teg_num])
+        if path == "/contents":
+            assert resp.context["sections"][1]["pages"] == pages
+            assert resp.context["sitemap_page_count"] == sum(len(s["pages"]) for s in resp.context["sections"])
+
+    assert NAV_SECTIONS[1]["pages"] == [
+        ("Latest Leaderboard", "/leaderboard", "leaderboard", "leaderboard"),
+        ("Latest Round in context", "/latest-round", "latest-round", "sports_golf"),
+        ("Latest TEG in context", "/latest-teg", "latest-teg", "sports_golf"),
+        ("Handicaps", "/handicaps", "handicaps", "accessible"),
+    ]
+
+
 def test_handicaps_eyebrow_uses_current_navigation_label(client, monkeypatch):
     deps_module = importlib.import_module("webapp.deps")
     monkeypatch.setattr(deps_module, "get_current_in_progress_teg_fast", lambda: (19, None))

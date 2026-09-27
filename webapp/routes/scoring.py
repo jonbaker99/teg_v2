@@ -46,6 +46,7 @@ from webapp.deps import (
     parse_teg_label,
 )
 from webapp.chart_utils import get_chart_style, format_value, CROWDED_FIELD_THRESHOLD
+from webapp.routes.history import _wrap_player_name
 from webapp.tables import df_to_html as _df_to_html, EMPTY_TABLE_HTML
 
 logger = logging.getLogger(__name__)
@@ -151,6 +152,48 @@ STREAK_TABS = [
 ]
 
 
+def _format_streak_table(df: pd.DataFrame, value_cols: list[str], *, by_player: bool = False) -> str:
+    """Show absent streaks as dashes and mute single-hole streaks."""
+    display = df.copy()
+    for col in value_cols:
+        display[col] = display[col].astype(object)
+    cell_classes = {}
+    for row_idx, (_, row) in enumerate(df.iterrows()):
+        for col in value_cols:
+            value = row[col]
+            number = str(value).removesuffix("*")
+            if number == "0":
+                display.iat[row_idx, display.columns.get_loc(col)] = "-"
+                cell_classes[(row_idx, col)] = "col-num streak-muted"
+            elif number == "1":
+                cell_classes[(row_idx, col)] = "col-num streak-muted"
+
+    table_class = "teg-table streaks-table"
+    if by_player:
+        table_class += " player-streaks-table"
+    html = _df_to_html(
+        display,
+        table_class=table_class,
+        col_class=lambda i, col: "col-player" if i == 0 else "col-num" if col in value_cols else None,
+        cell_classes=cell_classes,
+    )
+    if by_player:
+        for name in display["Player"].dropna().unique():
+            html = html.replace(
+                f"<td class='col-player'>{escape(str(name))}</td>",
+                f"<td class='col-player'>{_wrap_player_name(name)}</td>",
+            )
+        for col in value_cols:
+            if " " in col:
+                first, rest = col.split(" ", 1)
+                html = html.replace(
+                    f"<th class='col-num'>{escape(col)}</th>",
+                    f"<th class='col-num'>{escape(first)}<br>{escape(rest)}</th>",
+                    1,
+                )
+    return html
+
+
 def _streak_detail_context(d_teg: str = "All", d_round: str = "All", d_player: str = "All") -> dict:
     """Build the 'Streak detail' tab: filtered window-streak analysis."""
     all_data = cached_load_all_data()
@@ -180,7 +223,7 @@ def _streak_detail_context(d_teg: str = "All", d_round: str = "All", d_player: s
         table_html = "<p class='text-muted text-sm'>No data matches the selected filters.</p>"
     else:
         results = calculate_window_streaks(filtered)
-        table_html = _df_to_html(results) if results is not None and not results.empty \
+        table_html = _format_streak_table(results, ["Max Streak"]) if results is not None and not results.empty \
             else "<p class='text-muted text-sm'>No streak data available for the selected filters.</p>"
 
     return {
@@ -220,7 +263,7 @@ def _streak_tab_context(tab: str, direction: str = "good", mode: str = "max",
             else:
                 df = prepare_current_bad_streaks_data(all_data)
                 title = "Current Bad Streaks"
-            sections.append({"title": title, "table_html": _df_to_html(df)})
+            sections.append({"title": title, "table_html": _format_streak_table(df, list(df.columns[1:]), by_player=True)})
 
         elif tab == "records":
             best = prepare_record_best_streaks_data(all_data)

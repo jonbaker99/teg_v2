@@ -19,6 +19,7 @@ from webapp.routes import (
     admin_new_round, admin_reports, design_lab, font_lab,
 )
 import webapp.deps as deps
+from teg_analysis.reporting import newspaper_edition
 from webapp.nav import MOBILE_SHORTCUTS, NAV_SECTIONS, navigation_for_teg
 from webapp.theme import (
     get_theme, THEMES,
@@ -60,6 +61,20 @@ def _navigation_status() -> tuple[int, bool]:
     return completed_num or deps.FALLBACK_TEG_NUM, False
 
 
+def _navigation_context() -> tuple[int, bool, tuple[str, str] | None]:
+    """Resolve status and the best available report away from the event loop."""
+    teg_num, in_progress = _navigation_status()
+    if not in_progress and newspaper_edition.has_edition(teg_num):
+        return teg_num, in_progress, (f"TEG {teg_num} report", f"/teg-reports?teg={teg_num}")
+    rounds = newspaper_edition.available_rounds(teg_num)
+    if rounds:
+        round_num = max(rounds)
+        return teg_num, in_progress, (
+            f"Round {round_num} report", f"/teg-reports?teg={teg_num}&round={round_num}",
+        )
+    return teg_num, in_progress, None
+
+
 @app.middleware("http")
 async def theme_middleware(request: Request, call_next):
     """Inject current theme into request.state for all routes."""
@@ -79,10 +94,10 @@ async def theme_middleware(request: Request, call_next):
         request.state.nav_sections = NAV_SECTIONS
         request.state.mobile_shortcuts = MOBILE_SHORTCUTS
     else:
-        teg_num, in_progress = await run_in_threadpool(_navigation_status)
+        teg_num, in_progress, report = await run_in_threadpool(_navigation_context)
         request.state.nav_teg_label = f"TEG {teg_num}"
         request.state.nav_sections, request.state.mobile_shortcuts = navigation_for_teg(
-            teg_num, in_progress=in_progress,
+            teg_num, in_progress=in_progress, report=report,
         )
     return await call_next(request)
 

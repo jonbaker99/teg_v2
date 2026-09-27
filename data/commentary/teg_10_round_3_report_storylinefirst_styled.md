@@ -33,7 +33,7 @@ He signed for 27, the worst Trophy score of the day. Before the round he trailed
 
 David Mullin had led the TEG 10 Trophy since hole 12 of Round 1. Thirty holes later, it was over. Alex Baker moved in front at the sixth hole of Round 3. Mullin drew level again at the 7th, briefly, and that was as close as he came to holding on.
 
-The back nine turned choppy. A triple bogey at the 13th, a double at the 14th, and then a three-hole burst of 11 points: birdies at the 15th and the 17th around a par at the 16th. It was, for a few minutes, an act of genuine recovery. Then he played the last. A quadruple bogey 8 left him level with Baker on points, and Baker took the lead.
+The back nine turned choppy. A triple bogey at the 13th, a double at the 14th, and then a three-hole burst of 11 points: birdies at the 15th and the 17th around a par at the 16th. It was, for a few minutes, an act of genuine recovery. Then he played the last. A quadruple bogey 8 left him on 122 points, 11 behind Baker and Williams, who finished level at the top on 133.
 
 Mullin's 31 was 11 down on his second-round 42, the sharpest swing of the day. Jon Baker also came in 10 points short of his previous round, which spared nobody's feelings. The Trophy lead is gone. Mullin still leads the TEG 10 Green Jacket, though the gap has narrowed from 13 strokes to 10. He remains in charge of something, which is more than most of the field can say.
 

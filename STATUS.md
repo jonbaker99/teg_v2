@@ -2,11 +2,15 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-26 (Tournament navigation naming)
+**Last updated:** 2026-09-26 (Streak table formatting)
+
+## 2026-09-26 — Consistent streak table formatting
+
+Streaks by Player and Streak detail show zero lengths as dashes and single-hole streaks in grey, matching Latest Round. All four player-table selections use equal-width, centred value columns and two-line multiword headers. Desktop value columns stay compact; mobile shows full player names with tight line spacing, wrapping every name when any name needs two lines.
 
 ## 2026-09-26 — Navigation names the current tournament
 
-The Latest TEG navigation section now shows the in-progress tournament name, or the latest completed tournament when none is underway (currently TEG 18). Desktop, tablet, phone Explore, the phone shortcut and Contents share the label. Completed tournaments show “Final leaderboard”, their context link, and the next TEG’s numbered handicap link. In-progress tournaments show “Latest Leaderboard” and their own numbered handicap link, with the context link omitted. Existing URLs and active-page keys are unchanged. Tiny dropdown arrows have been removed.
+The Latest TEG navigation section now shows the in-progress tournament name, or the latest completed tournament when none is underway (currently TEG 18). Desktop, tablet, phone Explore, the phone shortcut and Contents share the label. Completed tournaments show “Final leaderboard”, their context link, and the next TEG’s numbered handicap link. In-progress tournaments show “Latest Leaderboard” and their own numbered handicap link, with the context link omitted. Existing URLs and active-page keys are unchanged. Tiny dropdown arrows have been removed. The current-TEG menu includes its tournament report when complete and available, otherwise its latest available round report. In-progress tournaments link only to a round report; no available report means no shortcut.
 
 ## 2026-09-26 — Past results navigation label
 
