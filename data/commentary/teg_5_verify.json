@@ -2,14 +2,98 @@
   "teg": 5,
   "round": null,
   "label": "storylinefirst",
-  "errors": 7,
-  "warnings": 3,
+  "errors": 1,
+  "warnings": 0,
   "findings": [
+    {
+      "rule": "claim_rank_change",
+      "severity": "error",
+      "detail": "Wooden Spoon: after R4 H5 David Mullin was rank 4, claim says last",
+      "excerpt": "That one hole dropped him from fourth to last in the TEG 5 Wooden Spoon race",
+      "source": "claim"
+    },
     {
       "rule": "claim_margin",
       "severity": "unchecked",
       "detail": "claim type 'margin' has no checker yet",
-      "excerpt": "two clear of Jon Baker",
+      "excerpt": "Gregg Williams won the TEG 5 Trophy at Lagos, six under net par and two clear of Jon Baker.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "It was enough to close the gap in the TEG 5 Green Jacket from a peak of 30 shots to 18 by the finish.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "It was enough to close the gap in the TEG 5 Green Jacket from a peak of 30 shots to 18 by the finish.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Jon Baker loses the TEG 5 Trophy by two",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "It hauled him from 19 behind in the TEG 5 Green Jacket race to 12 at the finish.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "David Mullin won the TEG 5 Green Jacket at +72 gross, 12 clear of Jon Baker",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Henry Meller, who at one stage trailed by 30, pulled 12 shots back over the closing stretch and still finished 18 adrift.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Baker's recovery was smaller in scale: 19 behind at his lowest point, closed to 12 by the end of the final round at Palmares",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "The defending Trophy champion leads by five at the 1st in Round 3",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "bottom of the race after Rounds 2 and 3",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "bottom of the race after Rounds 2 and 3",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "That one hole dropped him from fourth to last in the TEG 5 Wooden Spoon race",
       "source": "claim"
     },
     {
@@ -23,42 +107,28 @@
       "rule": "claim_record",
       "severity": "unchecked",
       "detail": "claim type 'record' has no checker yet",
-      "excerpt": "Williams's Round 2 at Boavista, 27 over gross for six under net, was the best round of his career by that measure, and it came on his ninth visit to the course, eight strokes better than his previous appearance there.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "He dropped ten shots across holes 10 to 13, then added another nine at the 16th",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_hole_score",
-      "severity": "unchecked",
-      "detail": "hole_score claim missing player/round/hole/score",
-      "excerpt": "then added another nine at the 16th",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_comparison",
-      "severity": "unchecked",
-      "detail": "comparison claim missing both players",
-      "excerpt": "Mullin took the TEG 5 Green Jacket on gross.",
+      "excerpt": "Williams's Round 2 at Boavista, 27 over gross for six under net, was the best round of his career by that measure",
       "source": "claim"
     },
     {
       "rule": "claim_record",
       "severity": "unchecked",
       "detail": "claim type 'record' has no checker yet",
-      "excerpt": "On the Monday at Boavista, Stuart Neumann played the best round in TEG history. His -9 net was a record, and his +11 gross was a record too",
+      "excerpt": "it came on his ninth visit to the course, eight strokes better than his previous appearance there",
       "source": "claim"
     },
     {
-      "rule": "claim_weekday",
-      "severity": "warning",
-      "detail": "R1 was Sunday, claim says Monday",
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
       "excerpt": "On the Monday at Boavista, Stuart Neumann played the best round in TEG history.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His -9 net was a record, and his +11 gross was a record too",
       "source": "claim"
     },
     {
@@ -76,66 +146,10 @@
       "source": "claim"
     },
     {
-      "rule": "claim_weekday",
-      "severity": "warning",
-      "detail": "R2 was Monday, claim says Tuesday",
-      "excerpt": "The Tuesday at the same course took it all back.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_hole_score",
-      "severity": "error",
-      "detail": "Stuart Neumann scored 3 at R2 H2, claim says 7",
-      "excerpt": "He opened proceedings with a 7 at the par-three 2nd, a quadruple bogey",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_hole_score",
-      "severity": "error",
-      "detail": "Stuart Neumann scored 6 at R2 H16, claim says 7",
-      "excerpt": "a double bogey 7 at the 16th",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_hole_score",
-      "severity": "error",
-      "detail": "Stuart Neumann scored 4 at R2 H17, claim says 7",
-      "excerpt": "a triple bogey 7 at the 17th",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_hole_score",
-      "severity": "error",
-      "detail": "Stuart Neumann scored 7 at R2 H18, claim says 9",
-      "excerpt": "a quintuple bogey 9 at the 18th",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_weekday",
-      "severity": "warning",
-      "detail": "R3 was Tuesday, claim says Wednesday",
-      "excerpt": "Wednesday's move to Palmares, the first TEG visit to the course, offered a clean slate, and he declined it.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
+      "rule": "claim_record",
       "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "Triple bogey, triple bogey, double bogey through the 2nd, 3rd and 4th: eight shots gone in three holes.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
-      "severity": "error",
-      "detail": "Stuart Neumann R3 H16 (+2 vs par) does not satisfy 'par' \u2014 claimed span H16-18",
-      "excerpt": "He at least finished tidily, playing the 16th, 17th and 18th in level par gross, worth three net shots to par, for a round of 96 on a course nobody in the field had seen before.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_rank_change",
-      "severity": "unchecked",
-      "detail": "rank_change claim missing player/round/hole/competition/value",
-      "excerpt": "bottom of the race after Rounds 2 and 3",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "a 10 at the par-five 16th, the worst score against par he has recorded anywhere",
       "source": "claim"
     },
     {
@@ -146,13 +160,6 @@
       "source": "claim"
     },
     {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "seven shots dropped across holes 9 to 11, a triple bogey at the 9th followed by doubles at the 10th and 11th",
-      "source": "claim"
-    },
-    {
       "rule": "claim_record",
       "severity": "unchecked",
       "detail": "claim type 'record' has no checker yet",
@@ -160,24 +167,10 @@
       "source": "claim"
     },
     {
-      "rule": "claim_margin",
+      "rule": "claim_record",
       "severity": "unchecked",
-      "detail": "claim type 'margin' has no checker yet",
-      "excerpt": "It was enough to close the gap in the TEG 5 Green Jacket from a peak of 30 shots to 18 by the finish.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "Between them came a passage of genuine competence, holes 9 to 12, worth four shots to par on net.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "Jon opened with five net shots gained across the first four holes, including a birdie at the short 3rd",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "A man with two Wooden Spoons, bottom of the race after Rounds 2 and 3, had chosen the final available day to play the best golf of his life.",
       "source": "claim"
     },
     {
@@ -195,24 +188,17 @@
       "source": "claim"
     },
     {
-      "rule": "claim_margin",
+      "rule": "claim_record",
       "severity": "unchecked",
-      "detail": "claim type 'margin' has no checker yet",
-      "excerpt": "It hauled him from 19 behind in the TEG 5 Green Jacket race to 12 at the finish.",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His Boavista scoring had already been eight strokes better than his last visit there",
       "source": "claim"
     },
     {
-      "rule": "claim_comparison",
+      "rule": "claim_record",
       "severity": "unchecked",
-      "detail": "comparison claim missing both players",
-      "excerpt": "His Boavista scoring had already been eight strokes better than his last visit there; the arithmetic still declined to help.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_margin",
-      "severity": "unchecked",
-      "detail": "claim type 'margin' has no checker yet",
-      "excerpt": "12 clear of Jon Baker",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "David Mullin's fourth Green Jacket in succession",
       "source": "claim"
     },
     {
@@ -226,7 +212,7 @@
       "rule": "claim_record",
       "severity": "unchecked",
       "detail": "claim type 'record' has no checker yet",
-      "excerpt": "He then bettered it the following day with +11, a gross 82 that set a new Boavista course record and swept aside the 85 that had stood across 35 prior visits to the Howard Swan parkland at Lagos.",
+      "excerpt": "That 83 swept aside the 85 that had stood across 35 prior visits to the Howard Swan parkland at Lagos.",
       "source": "claim"
     },
     {
@@ -237,10 +223,24 @@
       "source": "claim"
     },
     {
-      "rule": "claim_comparison",
+      "rule": "claim_record",
       "severity": "unchecked",
-      "detail": "comparison claim missing both players",
-      "excerpt": "He therefore spent the afternoon dismantling himself, nine strokes better than his last time round the course.",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "He then bettered it the following day with +11, a gross 82 that lowered his own new Boavista course record.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Stuart Neumann shot 82 that same afternoon to share it.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Mullin therefore spent the afternoon dismantling himself, nine strokes better than his last visit before this TEG.",
       "source": "claim"
     },
     {
@@ -258,52 +258,17 @@
       "source": "claim"
     },
     {
-      "rule": "claim_margin",
+      "rule": "claim_record",
       "severity": "unchecked",
-      "detail": "claim type 'margin' has no checker yet",
-      "excerpt": "Henry Meller, who at one stage trailed by 30, pulled 12 shots back over the closing stretch and still finished 18 adrift.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_margin",
-      "severity": "unchecked",
-      "detail": "claim type 'margin' has no checker yet",
-      "excerpt": "Baker's recovery was smaller in scale: 19 behind at his lowest point, closed to 12 by the end of the final round at Palmares, the first visit to the Robert Trent Jones Jr. course.",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "his 82 in Round 2 beat the 85 that had stood as his best there through seven previous visits",
       "source": "claim"
     },
     {
       "rule": "claim_record",
       "severity": "unchecked",
       "detail": "claim type 'record' has no checker yet",
-      "excerpt": "He set a course best at Boavista along the way: his 82 in Round 2 beat the 85 that had stood as his best there through seven previous visits.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_hole_score",
-      "severity": "error",
-      "detail": "David Mullin scored 7 at R3 H3, claim says 5",
-      "excerpt": "The lead went at the third hole of Round 3, a par five he played in five for a net two.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_rank_change",
-      "severity": "error",
-      "detail": "David Mullin was rank 5 in Wooden Spoon at R4 H6, claim says 4",
-      "excerpt": "That one hole dropped him from fourth to last in the TEG 5 Wooden Spoon race, and he stayed there, unbothered and unassisted.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_rank_change",
-      "severity": "unchecked",
-      "detail": "rank_change claim missing player/round/hole/competition/value",
-      "excerpt": "He finished the Trophy fifth, having been first after Round 1, and collected the Spoon at +12 net.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_rank_change",
-      "severity": "unchecked",
-      "detail": "rank_change claim missing player/round/hole/competition/value",
-      "excerpt": "He finished the Trophy fifth, having been first after Round 1, and collected the Spoon at +12 net.",
+      "excerpt": "Round 3 then became Mullin's worst round to date, +12 net and +27 gross",
       "source": "claim"
     },
     {
@@ -318,6 +283,13 @@
       "severity": "unchecked",
       "detail": "claim type 'record' has no checker yet",
       "excerpt": "his six birdies or better across TEG 5 is an all-time TEG record for a single tournament",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "no final totals for 'Wooden Spoon'",
+      "excerpt": "collected the Spoon at +12 net",
       "source": "claim"
     }
   ]

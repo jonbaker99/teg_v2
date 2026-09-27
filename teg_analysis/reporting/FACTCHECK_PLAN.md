@@ -121,6 +121,13 @@ Items 2 (exact weekday shape), 3 and 5 were not independently re-flagged by this
 
 **Wired into the pipeline (2026-09-27).** `restyle_voice` (the storyline pipelines' last stage, also reached from `/admin/reports`) and `apply_corrections` now call `verify_report(missed=True)`. Missed facts go into `_verify.json`, are returned as `missed_facts`, and are printed in full: a fact the draft never carried is inherited, so the new-findings diff alone would hide it. A fact the voice pass *drops* still shows as a new finding. If the check itself errors, it becomes a `missed_fact_check_failed` warning rather than stopping the run. Cost: under a second per report.
 
+**Claims re-check of the 20 stale caches (2026-09-27).** Re-extracted on plan usage (agent provider, a fresh subagent per prompt — not the Sonnet API the other 65 caches used; no API key in the build container). 6 claim errors, each checked against the parquet:
+- **Real (2):** TEG 12 R2 says Patterson "closed with three straight bogeys worth 3 points each" (gross par, bogey, par at 16–18; each was a net birdie worth 3). TEG 18 R1 calls it "the TEG 16 Wooden Spoon race".
+- **Extractor noise (4):** TEG 4 and TEG 5 (the known "from fourth to last" before/after confusion; both true after the hole), TEG 11 (basis "bogey or worse" on a sentence about two gross pars), TEG 17 (hole guessed for "recovered the lead").
+- **Found by hand while checking TEG 17:** the Jacket heading says Baker "cedes it to a rampant David Mullin for 35 holes", but Baker led those 35 holes (the paragraph says so); and "Mullin held the Jacket for a single hole" was two separate single holes (R3 H1 and H6).
+- Also still open: TEG 18's "Over four rounds he was comfortably the better player" (item 4's comparison warning) remains in the text.
+Not repaired; needs approval.
+
 **What must be mentioned** (decided at kick-off):
 - **Round reports:** course records set or equalled that round, low and high; and the Trophy/Jacket leader's decisive moment, only if it fell in that round.
 - **Tournament reports:** all of the TEG's course records; the winner's decisive moment in the Trophy and the Jacket; all-time streak and score-count records; personal-best/worst streaks. Per-player course PBs are left out (~59 across 18 TEGs, mostly noise).

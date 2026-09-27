@@ -2,44 +2,9 @@
   "teg": 10,
   "round": 3,
   "label": "storylinefirst",
-  "errors": 4,
+  "errors": 0,
   "warnings": 0,
   "findings": [
-    {
-      "rule": "claim_total",
-      "severity": "error",
-      "detail": "Alex Baker's Trophy (Stableford) total is 133 gross, claim says 47",
-      "excerpt": "Baker's was a personal best on the Trophy card and a personal best in gross terms at +22",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "Ten points across holes 2 to 4.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "Nine more across holes 9 to 11.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_lead_event",
-      "severity": "error",
-      "detail": "no record of Alex Baker taking the Trophy (Stableford) lead at R3 H15",
-      "excerpt": "Baker regained a share of the lead at the 15th and declined to let go again",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "He had earlier assembled nine points across holes 11 to 13",
-      "source": "claim"
-    },
     {
       "rule": "claim_lead_event",
       "severity": "unchecked",
@@ -52,20 +17,6 @@
       "severity": "unchecked",
       "detail": "claim type 'margin' has no checker yet",
       "excerpt": "A five-point gap on David Mullin, closed in a single afternoon.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "Three straight pars, bogeys either side, 9 points banked from his first three holes.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_total",
-      "severity": "error",
-      "detail": "John Patterson's Trophy (Stableford) total is 91 gross, claim says 27",
-      "excerpt": "He signed for 27, the worst Trophy score of the day.",
       "source": "claim"
     },
     {
@@ -83,38 +34,10 @@
       "source": "claim"
     },
     {
-      "rule": "claim_lead_event",
-      "severity": "unchecked",
-      "detail": "drew_level claims are not checked against the outright-only lead timeline",
-      "excerpt": "Mullin drew level again at the 7th, briefly, and that was as close as he came to holding on.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_lead_event",
-      "severity": "error",
-      "detail": "no record of Alex Baker taking the Trophy (Stableford) lead at R3 H18",
-      "excerpt": "A quadruple bogey 8 left him level with Baker on points, and Baker took the lead.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "and then a three-hole burst of 11 points: birdies at the 15th and the 17th around a par at the 16th",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_total",
-      "severity": "unchecked",
-      "detail": "total claim missing player/competition/value",
-      "excerpt": "Mullin's 31 was 11 down on his second-round 42, the sharpest swing of the day.",
-      "source": "claim"
-    },
-    {
       "rule": "claim_margin",
       "severity": "unchecked",
       "detail": "claim type 'margin' has no checker yet",
-      "excerpt": "Jon Baker also came in 10 points short of his previous round, which spared nobody's feelings.",
+      "excerpt": "A quadruple bogey 8 left him on 122 points, 11 behind Baker and Williams, who finished level at the top on 133.",
       "source": "claim"
     },
     {
@@ -122,6 +45,20 @@
       "severity": "unchecked",
       "detail": "claim type 'margin' has no checker yet",
       "excerpt": "Mullin still leads the TEG 10 Green Jacket, though the gap has narrowed from 13 strokes to 10.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "He now sits 14 points clear at the foot of the TEG 10 Wooden Spoon standings.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Baker's was a personal best on the Trophy card and a personal best in gross terms at +22.",
       "source": "claim"
     }
   ]

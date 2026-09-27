@@ -2,28 +2,77 @@
   "teg": 10,
   "round": null,
   "label": "storylinefirst",
-  "errors": 2,
-  "warnings": 2,
+  "errors": 0,
+  "warnings": 4,
   "findings": [
     {
-      "rule": "no_em_dashes",
-      "severity": "warning",
-      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
-      "excerpt": "ritten down. In between, the 1st at Palmares \u2014 Praia / Alvor took a 10 off him in round two",
-      "source": "mechanical"
+      "rule": "claim_comparison",
+      "severity": "unchecked",
+      "detail": "comparison with an explicit metric/competition is not numerically checked yet",
+      "excerpt": "Stuart Neumann, holder of back-to-back Wooden Spoons, escapes a third only because John Patterson was worse, while posting 10s at the 18th in consecutive rounds",
+      "source": "claim"
     },
     {
-      "rule": "no_em_dashes",
-      "severity": "warning",
-      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
-      "excerpt": "ff him in round two, and the 8th at Palmares \u2014 Alvor / Lagos another 10 in round three.  Th",
-      "source": "mechanical"
+      "rule": "claim_comparison",
+      "severity": "unchecked",
+      "detail": "comparison with an explicit metric/competition is not numerically checked yet",
+      "excerpt": "None of it, in the end, was enough to beat Alex Baker.",
+      "source": "claim"
     },
     {
       "rule": "claim_margin",
       "severity": "unchecked",
       "detail": "claim type 'margin' has no checker yet",
-      "excerpt": "11 clear of Gregg Williams",
+      "excerpt": "Two Records at Boavista: Alex Baker Wins the TEG 10 Trophy by Eleven",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Alex Baker won the TEG 10 Trophy with 184 points, 11 clear of Gregg Williams.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "David Mullin had held it for 30 holes, from the 12th of round one, and surrendered it at the sixth at Palmares, where Baker's par took him a point clear.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "Gregg Williams plays the best scoring golf of his TEG career, leads the Trophy outright in R3, and still finishes eleven points behind Alex Baker",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "David Mullin won the TEG 10 Green Jacket at +51 gross, 12 clear of Jon Baker.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_margin",
+      "severity": "unchecked",
+      "detail": "claim type 'margin' has no checker yet",
+      "excerpt": "The defending Trophy champion John Patterson finishes last in all four rounds and 32 points adrift, undone twice by the same hole at Boavista",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "The defending Trophy champion John Patterson finishes last in all four rounds and 32 points adrift, undone twice by the same hole at Boavista",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "How Alex Baker turned two runner-up finishes into the highest Trophy total in TEG history, taking the lead at Palmares and going clear for good at the 1st hole of the final round",
       "source": "claim"
     },
     {
@@ -37,105 +86,42 @@
       "rule": "claim_record",
       "severity": "unchecked",
       "detail": "claim type 'record' has no checker yet",
-      "excerpt": "he posted a personal best of 45 points on the Praia/Alvor loop",
+      "excerpt": "At Palmares, a course nobody in the field had seen before, he posted a personal best of 45 points on the Praia/Alvor loop, with a personal-best gross of +23.",
       "source": "claim"
     },
     {
       "rule": "claim_record",
       "severity": "unchecked",
       "detail": "claim type 'record' has no checker yet",
-      "excerpt": "with a personal-best gross of +23",
+      "excerpt": "The following day, on Alvor/Lagos, he improved: 47 points, +22 gross, both personal bests again.",
       "source": "claim"
     },
     {
       "rule": "claim_record",
       "severity": "unchecked",
       "detail": "claim type 'record' has no checker yet",
-      "excerpt": "47 points, +22 gross, both personal bests again",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_hole_score",
-      "severity": "error",
-      "detail": "Alex Baker scored 6 at R4 H13, claim says 10",
-      "excerpt": "He achieved that while taking a 10 at the par-five 13th",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_lead_event",
-      "severity": "error",
-      "detail": "no record of David Mullin losing the Trophy (Stableford) lead at R1 H12",
-      "excerpt": "David Mullin had held it for 30 holes, from the 12th of round one, and surrendered it at the sixth at Palmares, where Baker's par drew him level.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_lead_event",
-      "severity": "unchecked",
-      "detail": "drew_level claims are not checked against the outright-only lead timeline",
-      "excerpt": "where Baker's par drew him level",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_lead_event",
-      "severity": "unchecked",
-      "detail": "lead_event claim missing player/round/hole/competition",
-      "excerpt": "Baker led after round three on points and was never behind again.",
+      "excerpt": "Baker scored 51 points, the best round anyone has posted in TEG to date, off a gross +17 that was another personal best.",
       "source": "claim"
     },
     {
       "rule": "claim_record",
       "severity": "unchecked",
       "detail": "claim type 'record' has no checker yet",
-      "excerpt": "Baker scored 51 points, the best round anyone has posted in TEG to date",
+      "excerpt": "His gross total of +90 was also a personal best, closing four days in which almost every round he played was the finest of his career.",
       "source": "claim"
     },
     {
       "rule": "claim_record",
       "severity": "unchecked",
       "detail": "claim type 'record' has no checker yet",
-      "excerpt": "off a gross +17 that was another personal best",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "21 points across holes five to ten, four pars and two bogeys measured against the strokes he was receiving",
+      "excerpt": "Stuart Neumann arrived in the Algarve with a decade of Boavista behind him, ten prior visits and a best gross of 82 from TEG 5, and discovered that the closing hole had entered his life as an administrative problem.",
       "source": "claim"
     },
     {
       "rule": "claim_record",
       "severity": "unchecked",
       "detail": "claim type 'record' has no checker yet",
-      "excerpt": "His gross total of +90 was also a personal best",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "ten prior visits and a best gross of 82 from TEG 5",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "par, bogey, par, par from the 9th to the 12th, 14 Stableford points in four holes",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_total",
-      "severity": "unchecked",
-      "detail": "total claim missing player/competition/value",
-      "excerpt": "It closed at 105.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_total",
-      "severity": "unchecked",
-      "detail": "total claim missing player/competition/value",
-      "excerpt": "His best of the trip, a 98, waited politely until the return to Boavista in round four.",
+      "excerpt": "These are two different holes on two different courses, and no hole in his career has ever cost him more shots against par than either of them.",
       "source": "claim"
     },
     {
@@ -149,21 +135,7 @@
       "rule": "claim_record",
       "severity": "unchecked",
       "detail": "claim type 'record' has no checker yet",
-      "excerpt": "Williams signed for 48 points, a personal best",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "a gross of +14 that was also the finest round of his career by that measure",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "pars at the 8th, 9th and 11th, a birdie at the 10th, which carries stroke index 4, and a bogey at the 12th",
+      "excerpt": "Williams signed for 48 points, a personal best, and a gross of +14 that was also the finest round of his career by that measure.",
       "source": "claim"
     },
     {
@@ -181,10 +153,17 @@
       "source": "claim"
     },
     {
-      "rule": "claim_margin",
+      "rule": "claim_record",
       "severity": "unchecked",
-      "detail": "claim type 'margin' has no checker yet",
-      "excerpt": "12 clear of Jon Baker",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "David Mullin's eighth Green Jacket, built on a Boavista course record in R1 and a gross lead Jon Baker twice out-scored but never seriously threatened",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "David Mullin takes the TEG 10 Green Jacket with the lowest gross total on record",
       "source": "claim"
     },
     {
@@ -212,13 +191,6 @@
       "rule": "claim_record",
       "severity": "unchecked",
       "detail": "claim type 'record' has no checker yet",
-      "excerpt": "It was also 23 strokes better than his last outing there.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
       "excerpt": "The same round yielded 49 Stableford points, the second-best round TEG has seen.",
       "source": "claim"
     },
@@ -227,20 +199,6 @@
       "severity": "unchecked",
       "detail": "claim type 'record' has no checker yet",
       "excerpt": "Across the four days he recorded 6 birdies or better and 34 pars or better, both all-time records.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_total",
-      "severity": "unchecked",
-      "detail": "total claim missing player/competition/value",
-      "excerpt": "Having taken 42 points in round two at Palmares - Praia / Alvor",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_total",
-      "severity": "unchecked",
-      "detail": "total claim missing player/competition/value",
-      "excerpt": "he managed 31 on the Alvor / Lagos loop the next day, a drop of 11",
       "source": "claim"
     },
     {
@@ -254,35 +212,14 @@
       "rule": "claim_record",
       "severity": "unchecked",
       "detail": "claim type 'record' has no checker yet",
-      "excerpt": "Baker also posted a personal-best gross total of +63",
+      "excerpt": "Baker also posted a personal-best gross total of +63 and a Boavista personal best of 86 in round four, improving on his previous 90.",
       "source": "claim"
     },
     {
       "rule": "claim_record",
       "severity": "unchecked",
       "detail": "claim type 'record' has no checker yet",
-      "excerpt": "a Boavista personal best of 86 in round four, improving on his previous 90",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_total",
-      "severity": "unchecked",
-      "detail": "no final totals for 'Wooden Spoon'",
-      "excerpt": "John Patterson collected the TEG 10 Wooden Spoon, finishing on 112 points after four rounds in the Algarve.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "From the 11th to the 15th he went triple bogey, quintuple bogey, triple bogey, quadruple bogey, quadruple bogey.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_total",
-      "severity": "unchecked",
-      "detail": "total claim missing player/competition/value",
-      "excerpt": "finishing on 21 points and 40 over gross",
+      "excerpt": "Boavista's par-five 8th claimed him twice: a 10 in the opening round, then an 11 in the final round, the highest score he has ever recorded on a par five.",
       "source": "claim"
     },
     {
@@ -293,18 +230,46 @@
       "source": "claim"
     },
     {
-      "rule": "claim_total",
-      "severity": "unchecked",
-      "detail": "total claim missing player/competition/value",
-      "excerpt": "His best gross of the four days was the 102 in round one at Boavista",
-      "source": "claim"
-    },
-    {
       "rule": "claim_record",
       "severity": "unchecked",
       "detail": "claim type 'record' has no checker yet",
-      "excerpt": "on what was his first visit to a course the group has now played twelve times",
+      "excerpt": "His best gross of the four days was the 102 in round one at Boavista, on what was his first visit to a course the group has now played twelve times.",
       "source": "claim"
+    },
+    {
+      "rule": "claim_total",
+      "severity": "unchecked",
+      "detail": "no final totals for 'Wooden Spoon'",
+      "excerpt": "John Patterson collected the TEG 10 Wooden Spoon, finishing on 112 points after four rounds in the Algarve.",
+      "source": "claim"
+    },
+    {
+      "rule": "missed_fact",
+      "severity": "warning",
+      "detail": "not mentioned: David Mullin went clear in the Green Jacket (Gross) for good at R1 H10 and won it",
+      "excerpt": "",
+      "source": "missed"
+    },
+    {
+      "rule": "missed_fact",
+      "severity": "warning",
+      "detail": "not mentioned: John Patterson's 12-hole \"Over Par\" streak is a personal worst (previous 7), at T10 R4 H7 to T10 R4 H18",
+      "excerpt": "",
+      "source": "missed"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "ritten down. In between, the 1st at Palmares \u2014 Praia / Alvor took a 10 off him in round two",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "ff him in round two, and the 8th at Palmares \u2014 Alvor / Lagos another 10 in round three.  Th",
+      "source": "mechanical"
     }
   ]
 }

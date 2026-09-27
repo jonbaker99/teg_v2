@@ -3,50 +3,8 @@
   "round": 3,
   "label": "storylinefirst",
   "errors": 0,
-  "warnings": 0,
+  "warnings": 1,
   "findings": [
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "His gross 89 is a new course record.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "The previous mark of 91 had stood across six prior visits",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "It was also Baker's personal best at the venue, three shots inside his previous visit, and comfortably his best gross of the trip.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "From the 7th to the 9th he went three holes without a net par.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "He steadied himself with back-to-back pars at the 12th and 13th.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_lead_event",
-      "severity": "unchecked",
-      "detail": "lead_event claim missing player/round/hole/competition",
-      "excerpt": "The par at the 12th, against one of the toughest indexes out there, drew him level for the lead in the 2015 Green Jacket (Gross).",
-      "source": "claim"
-    },
     {
       "rule": "claim_margin",
       "severity": "unchecked",
@@ -62,73 +20,10 @@
       "source": "claim"
     },
     {
-      "rule": "claim_total",
-      "severity": "unchecked",
-      "detail": "total claim missing player/competition/value",
-      "excerpt": "The round produced 20 Stableford points, the worst in the field.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_rank_change",
-      "severity": "unchecked",
-      "detail": "rank_change claim missing player/round/hole/competition/value",
-      "excerpt": "He remains anchored to the bottom of the 2015 TEG Wooden Spoon standings",
-      "source": "claim"
-    },
-    {
       "rule": "claim_margin",
       "severity": "unchecked",
       "detail": "claim type 'margin' has no checker yet",
-      "excerpt": "his gap to the next-worst player stretched from 8 points to 22",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "Triple bogeys at the 3rd, 4th and 5th cost nine shots in three holes.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "Further double and triple bogeys at the 9th and 10th completed a 13-shot stretch across four holes.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "Baker's gross beat his previous best at Quinta da Marinha, set on his only prior visit, by a single stroke.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_lead_event",
-      "severity": "unchecked",
-      "detail": "lead_event claim missing player/round/hole/competition",
-      "excerpt": "Jon Baker moved ahead there.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_lead_event",
-      "severity": "unchecked",
-      "detail": "lead_event claim missing player/round/hole/competition",
-      "excerpt": "Mullin drew level once more at the 15th, and that was the last encouraging thing to happen to him.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_margin",
-      "severity": "unchecked",
-      "detail": "claim type 'margin' has no checker yet",
-      "excerpt": "He closed with 26 points, his worst round of the tournament and a 10-shot drop from Round 2's 36.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_comparison",
-      "severity": "unchecked",
-      "detail": "comparison claim missing both players",
-      "excerpt": "Baker's 89 gross was his own course best this TEG.",
+      "excerpt": "his gap to the next-worst player stretched from 8 points to 22.",
       "source": "claim"
     },
     {
@@ -139,32 +34,60 @@
       "source": "claim"
     },
     {
-      "rule": "claim_margin",
+      "rule": "claim_rank_change",
       "severity": "unchecked",
-      "detail": "claim type 'margin' has no checker yet",
-      "excerpt": "Williams shed 14 shots across holes 8 to 11, a stretch capped by a quintuple bogey 10 at the par-5 11th.",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "He remains anchored to the bottom of the 2015 TEG Wooden Spoon standings",
       "source": "claim"
     },
     {
-      "rule": "claim_margin",
+      "rule": "claim_record",
       "severity": "unchecked",
-      "detail": "claim type 'margin' has no checker yet",
-      "excerpt": "His 29 points were a 12-shot fall from a strong Round 2.",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His gross 89 is a new course record.",
       "source": "claim"
     },
     {
-      "rule": "claim_lead_event",
+      "rule": "claim_record",
       "severity": "unchecked",
-      "detail": "lead_event claim missing player/round/hole/competition",
-      "excerpt": "He still leads.",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It was also Baker's personal best at the venue, three shots inside his previous visit, and comfortably his best gross of the trip.",
       "source": "claim"
     },
     {
-      "rule": "claim_lead_event",
+      "rule": "claim_record",
       "severity": "unchecked",
-      "detail": "lead_event claim missing player/round/hole/competition",
-      "excerpt": "And Baker goes into the weekend out in front of the Green Jacket race.",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His 114 gross equalled the worst score ever recorded at Quinta da Marinha.",
       "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "That record was his own 114, from round one of this TEG.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Baker's gross beat his previous best at Quinta da Marinha, set on his only prior visit, by a single stroke.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Baker's 89 gross was his own course best this TEG.",
+      "source": "claim"
+    },
+    {
+      "rule": "missed_fact",
+      "severity": "warning",
+      "detail": "not mentioned: Jon Baker went clear in the Green Jacket (Gross) for good at R3 H17 and led it after R3",
+      "excerpt": "",
+      "source": "missed"
     }
   ]
 }

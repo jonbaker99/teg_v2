@@ -6,94 +6,17 @@
   "warnings": 0,
   "findings": [
     {
-      "rule": "claim_hole_score",
-      "severity": "unchecked",
-      "detail": "hole_score claim missing player/round/hole/score",
-      "excerpt": "46 stableford points",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "the third-best Trophy round of his TEG career",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "Seventeen points across holes 8 to 12.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "Thirteen more from 14 to 16, including a birdie at the par-5 15th.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_hole_score",
-      "severity": "unchecked",
-      "detail": "hole_score claim missing player/round/hole/score",
-      "excerpt": "His streak of pars and better ended at the 17th, one of the hardest holes on the course, with a double bogey.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_margin",
-      "severity": "unchecked",
-      "detail": "claim type 'margin' has no checker yet",
-      "excerpt": "Two blow-up holes cost him eight shots against par.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "A sextuple bogey 11 on the par-5, the worst score he has ever recorded on that hole.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_comparison",
-      "severity": "unchecked",
-      "detail": "comparison claim missing both players",
-      "excerpt": "The card it ruined had twice been good enough to share the lead in the TEG 16 Green Jacket race.",
-      "source": "claim"
-    },
-    {
       "rule": "claim_rank_change",
-      "severity": "unchecked",
-      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "severity": "error",
+      "detail": "Wooden Spoon: after R1 H14 David Mullin was rank 2, claim says rank 5",
       "excerpt": "The blow-up dropped Mullin from second to fifth in the TEG 16 Wooden Spoon race, sending him to the bottom of that table.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_comparison",
-      "severity": "unchecked",
-      "detail": "comparison claim missing both players",
-      "excerpt": "His round here was 16 strokes worse than his last visit, and well short of his prior best gross of 84 at the venue.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "well short of his prior best gross of 84 at the venue",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_hole_score",
-      "severity": "unchecked",
-      "detail": "hole_score claim missing player/round/hole/score",
-      "excerpt": "He opened by bleeding eight shots over three holes from the 3rd: back-to-back triple bogeys, then a double at the 5th.",
       "source": "claim"
     },
     {
       "rule": "claim_lead_event",
       "severity": "unchecked",
-      "detail": "drew_level claims are not checked against the outright-only lead timeline",
-      "excerpt": "By the 16th he had drawn level for the outright lead in the TEG Green Jacket (Gross).",
+      "detail": "lead_event claim missing player/round/hole/competition",
+      "excerpt": "The card it ruined had twice been good enough to share the lead in the TEG 16 Green Jacket race.",
       "source": "claim"
     },
     {
@@ -104,20 +27,6 @@
       "source": "claim"
     },
     {
-      "rule": "claim_hole_score",
-      "severity": "unchecked",
-      "detail": "hole_score claim missing player/round/hole/score",
-      "excerpt": "A second quadruple bogey, at the 17th, confirmed the position.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "Across holes 3 to 10 he dropped 22 shots.",
-      "source": "claim"
-    },
-    {
       "rule": "claim_rank_change",
       "severity": "unchecked",
       "detail": "rank_change claim missing player/round/hole/competition/value",
@@ -125,45 +34,10 @@
       "source": "claim"
     },
     {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "From the 13th to the 16th he took 13 stableford points.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_comparison",
-      "severity": "unchecked",
-      "detail": "comparison claim missing both players",
-      "excerpt": "The nines differed by 14 points.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_hole_score",
-      "severity": "unchecked",
-      "detail": "hole_score claim missing player/round/hole/score",
-      "excerpt": "The card finished on 34 stableford points and said nothing whatsoever about the first ten holes.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_rank_change",
-      "severity": "error",
-      "detail": "Jon Baker was rank 1 in Green Jacket at R1 H5, claim says 2",
-      "excerpt": "a bogey was still enough to move him into outright second place in the Green Jacket (Gross)",
-      "source": "claim"
-    },
-    {
       "rule": "claim_rank_change",
       "severity": "unchecked",
       "detail": "rank_change claim missing player/round/hole/competition/value",
-      "excerpt": "he stood at the very top of the Jacket standings after Round 1",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_run",
-      "severity": "unchecked",
-      "detail": "run claim missing player/round/span/basis",
-      "excerpt": "Holes 7 to 9 undid him twice over: three holes without a net par, and seven gross shots gone across a double bogey on the par-5 7th, a double on the par-3 8th and a triple on the par-4 9th.",
+      "excerpt": "By the close of the day his card carried the best gross score of the field, and he stood at the very top of the Jacket standings after Round 1.",
       "source": "claim"
     },
     {
@@ -188,10 +62,45 @@
       "source": "claim"
     },
     {
-      "rule": "claim_comparison",
+      "rule": "claim_rank_change",
       "severity": "unchecked",
-      "detail": "comparison claim missing both players",
-      "excerpt": "He had, in fairness, gone round in fewer shots than anybody else.",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "Jon Baker sat bottom of the Trophy and bottom of the Spoon, and top of the Jacket.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_rank_change",
+      "severity": "unchecked",
+      "detail": "rank_change claim missing player/round/hole/competition/value",
+      "excerpt": "Jon Baker sat bottom of the Trophy and bottom of the Spoon, and top of the Jacket.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "It was the best return of the day and the third-best Trophy round of his TEG career.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "A sextuple bogey 11 on the par-5, the worst score he has ever recorded on that hole.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "Four previous visits to the course had not prepared anyone for it.",
+      "source": "claim"
+    },
+    {
+      "rule": "claim_record",
+      "severity": "unchecked",
+      "detail": "claim type 'record' has no checker yet",
+      "excerpt": "His round here was 16 strokes worse than his last visit, and well short of his prior best gross of 84 at the venue.",
       "source": "claim"
     }
   ]
