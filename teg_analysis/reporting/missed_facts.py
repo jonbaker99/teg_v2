@@ -133,21 +133,6 @@ def _round_patterns(r: int, max_round: int, weekday: Optional[str]) -> str:
     return "|".join(pats)
 
 
-def _record_holders(df: pd.DataFrame, course: str, gross: int, teg_num: int,
-                    rnd: int) -> list:
-    """(player, teg, round) for every earlier round of `gross` on `course` —
-    the record being equalled. "Earlier" includes the same round: the
-    detector walks one round's cards in row order, so of two identical
-    record cards in a round one is "set" and the other "equalled"."""
-    from teg_analysis.reporting.course_history import _proper, _round_aggregates
-    rounds = _round_aggregates(df[df["Course"] == course])
-    prior = rounds[(rounds["TEGNum"] < teg_num)
-                   | ((rounds["TEGNum"] == teg_num) & (rounds["Round"] <= rnd))]
-    prior = prior[prior["Gross"] == gross]
-    return [(_proper(r["Player"]), int(r["TEGNum"]), int(r["Round"]))
-            for _, r in prior.iterrows()]
-
-
 def _course_facts(teg_num: int, round_num: Optional[int], df: pd.DataFrame) -> list:
     from teg_analysis.reporting.course_history import detect_course_records
     events = detect_course_records(teg_num, df, through_round=round_num)
@@ -158,7 +143,7 @@ def _course_facts(teg_num: int, round_num: Optional[int], df: pd.DataFrame) -> l
         kind = e["type"]
         if kind in ("course_record_equalled", "course_record_high_equalled"):
             high = kind == "course_record_high_equalled"
-            holders = _record_holders(df, e["course"], e["gross"], teg_num, e["round"])
+            holders = [(h["player"], h["teg"], h["round"]) for h in e["record_holders"]]
             me = e["player"]
             others = sorted({p for p, _, _ in holders if p != me})
             names = [rf"\b{re.escape(n.split()[-1])}\b" for n in others]

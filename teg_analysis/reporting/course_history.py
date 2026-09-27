@@ -212,6 +212,9 @@ def detect_course_records(
             "prior_record": int,
             "n_prior_visits": int,
             "summary_fact": str,
+            # equalled types only: who shot the record being equalled, in
+            # play order — earlier TEGs and earlier cards of this TEG
+            "record_holders": [{"player", "teg", "round"}, ...],
         }
 
     Walks this TEG's rounds on each course **in order**, against a running
@@ -246,6 +249,15 @@ def detect_course_records(
         running_min = int(prior["Gross"].min())
         running_max = int(prior["Gross"].max())
 
+        def _holders(g: int) -> list:
+            return [{"player": _proper(r["Player"]), "teg": int(r["TEGNum"]),
+                     "round": int(r["Round"])}
+                    for _, r in prior[prior["Gross"] == g]
+                    .sort_values(["TEGNum", "Round"]).iterrows()]
+
+        min_holders = _holders(running_min)
+        max_holders = _holders(running_max)
+
         for _, row in current.sort_values("Round").iterrows():
             gross = int(row["Gross"])
             player = _proper(row["Player"])
@@ -263,11 +275,12 @@ def detect_course_records(
                     ),
                 })
                 running_min = gross
+                min_holders = []
             elif gross == running_min:
                 events.append({
                     "type": "course_record_equalled", "player": player, "course": course,
                     "round": rnd, "gross": gross, "prior_record": running_min,
-                    "n_prior_visits": n_prior,
+                    "n_prior_visits": n_prior, "record_holders": list(min_holders),
                     "summary_fact": (
                         f"{player} equals the {course} course record of {gross} gross "
                         f"in R{rnd} (across {n_prior} prior visits)"
@@ -286,16 +299,23 @@ def detect_course_records(
                     ),
                 })
                 running_max = gross
+                max_holders = []
             elif gross == running_max:
                 events.append({
                     "type": "course_record_high_equalled", "player": player, "course": course,
                     "round": rnd, "gross": gross, "prior_record": running_max,
-                    "n_prior_visits": n_prior,
+                    "n_prior_visits": n_prior, "record_holders": list(max_holders),
                     "summary_fact": (
                         f"{player} equals the {course} course-worst of {gross} gross "
                         f"in R{rnd} (across {n_prior} prior visits)"
                     ),
                 })
+
+            card = {"player": player, "teg": teg_num, "round": rnd}
+            if gross == running_min:
+                min_holders.append(card)
+            if gross == running_max:
+                max_holders.append(card)
 
     return events
 

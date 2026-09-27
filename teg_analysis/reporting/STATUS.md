@@ -50,7 +50,7 @@ data). Full account: `FACTCHECK_PLAN.md` → "Real extraction run, TEG 18".
 
 **Still open:** triage of the remaining 52 (the next cheap fix is `rank_change` before/after confusion) and WP6 (missed-fact detection).
 
-**WP6 missed-fact detection built (2026-09-26):** `verify --missed` (free) warns on 81 unmentioned must-mention facts across the 85 reports, and TEG 18 now flags item 6. Detail: [FACTCHECK_PLAN.md](FACTCHECK_PLAN.md) §6. The claims caches for the six edited reports are stale; the next `--claims` run re-extracts them (6 Sonnet calls).
+**WP6 missed-fact detection built (2026-09-26):** `verify --missed` (free) warns on 81 unmentioned must-mention facts across the 85 reports, and TEG 18 now flags item 6. Detail: [FACTCHECK_PLAN.md](FACTCHECK_PLAN.md) §6. The records appendix now lists course records set or equalled (2026-09-27); published `_styled.md`/PDFs pick it up on the next free restyle. The claims caches for the six edited reports are stale; the next `--claims` run re-extracts them (6 Sonnet calls).
 
 **"Sidebar" badges replaced with real topics (2026-09-22).** The printed badge above a story's
 headline should always name its actual subject (`JON BAKER`, `STADIUM COURSE`); 17 report-page

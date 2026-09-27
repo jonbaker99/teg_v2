@@ -414,6 +414,50 @@ def _blowup_feat(e, is_pw: bool, is_rw: bool, show_round: bool) -> str:
     return f"{headline} — {tag}"
 
 
+def _course_record_achievements(teg_num: int, round_num: Optional[int],
+                                all_data) -> list:
+    """Course records set or equalled, best and worst, from
+    `course_history.detect_course_records` — the same detector the bundle
+    marks mandatory. Round reports list only their own round's, detected
+    leak-safe (`through_round`). Added 2026-09-27: WP6's sweep found 25
+    course-record facts the prose never mentioned, and this appendix had no
+    course-record line at all."""
+    from teg_analysis.reporting.course_history import detect_course_records
+
+    events = detect_course_records(teg_num, all_data, through_round=round_num)
+    if round_num is not None:
+        events = [e for e in events if e["round"] == round_num]
+
+    def _when(h: dict) -> str:
+        return f"R{h['round']}" if h["teg"] == teg_num else f"TEG {h['teg']}"
+
+    out = []
+    for e in sorted(events, key=lambda e: e["round"]):
+        round_tag = "" if round_num is not None else f" (R{e['round']})"
+        head = f"{e['player']}'s {e['gross']} at {e['course']}{round_tag}"
+        # Credit the first card at that score: the one being equalled.
+        first = (e.get("record_holders") or [None])[0]
+        if first is None:
+            by = ""
+        elif first["player"] == e["player"]:
+            by = f", his own mark from {_when(first)}"
+        elif (first["teg"], first["round"]) == (teg_num, e["round"]):
+            by = f", with {first['player']} in the same round"
+        else:
+            by = f", set by {first['player']} in {_when(first)}"
+        kind = e["type"]
+        if kind == "course_record_low":
+            tail = f"a new course record, beating {e['prior_record']}"
+        elif kind == "course_record_equalled":
+            tail = f"equals the course record{by}"
+        elif kind == "course_record_high":
+            tail = f"a new course-worst, beyond {e['prior_record']}"
+        else:
+            tail = f"equals the course-worst{by}"
+        out.append(f"{head} — {tail}; {e['n_prior_visits']} earlier rounds there")
+    return out
+
+
 def _totals_achievements(teg_num: int, trophy_col: str, all_data) -> tuple[list, list, list]:
     """Tournament-total (Trophy + Gross) records/PBs/worsts, from
     `analysis.records.identify_aggregate_records_and_pbs` — the same function
@@ -549,6 +593,8 @@ def build_records_block(teg_num: int, round_num: Optional[int] = None) -> str:
 
     Categories surfaced (best AND worst, TEG record AND personal, throughout):
     - **TEG records**: all-time-best round/9/total, all-time streak ties/breaks.
+    - **Course records**: gross course records and course-worsts set or
+      equalled (`course_history.detect_course_records`).
     - **Personal bests**: player-best round/9/total, personal-best streak.
     - **Personal worsts**: player-worst round/9/total, personal-worst streak.
     - **Rare feats**: holes-in-one, eagles, career/TEG-record-worst blow-ups
@@ -625,6 +671,8 @@ def build_records_block(teg_num: int, round_num: Optional[int] = None) -> str:
     s_recs, s_pbs, s_worsts = _streak_achievements(teg_num, round_num)
     records.extend(s_recs); pbs.extend(s_pbs); worsts.extend(s_worsts)
 
+    course_recs = _course_record_achievements(teg_num, round_num, all_data)
+
     # Deduplicate within each category
     records = _dedup_entries(records)
     pbs = _dedup_entries(pbs)
@@ -634,6 +682,7 @@ def build_records_block(teg_num: int, round_num: Optional[int] = None) -> str:
     chunks = []
     for label, css_class, lines in [
         ("TEG records", "records", records),
+        ("Course records", "records", course_recs),
         ("Personal bests", "records", pbs),
         ("Personal worsts", "records", worsts),
         ("Rare feats", "records", feats),

@@ -120,3 +120,23 @@ def test_course_records_include_every_type():
     # the four documented types.
     assert types <= {"course_record_low", "course_record_high",
                      "course_record_equalled", "course_record_high_equalled"}
+
+
+def test_course_record_equalled_names_the_record_holder():
+    """TEG 18 R4: Williams's 84 equals the 84 Mullin shot in R3 of the same TEG."""
+    eq = [e for e in detect_course_records(18) if e["type"] == "course_record_equalled"]
+    assert eq[0]["record_holders"] == [{"player": "David Mullin", "teg": 18, "round": 3}]
+
+
+def test_records_appendix_lists_course_records():
+    """The appendix had no course-record line; WP6's sweep found 25 such facts
+    missing from the prose. Round reports list only their own round's."""
+    from teg_analysis.reporting.render import build_records_block
+
+    block = build_records_block(18)
+    assert "Course records:" in block
+    assert ("Gregg Williams's 84 at PGA Catalunya - Stadium (R4) — equals the "
+            "course record, set by David Mullin in R3") in block
+    r4 = build_records_block(18, round_num=4)
+    assert "Gregg Williams's 84 at PGA Catalunya - Stadium — equals" in r4
+    assert "David Mullin's 84" not in r4
