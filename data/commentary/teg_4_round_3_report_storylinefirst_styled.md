@@ -8,7 +8,7 @@
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
   <p><strong>Round of the day:</strong><span> Jon BAKER (-3)</span></p>
-  <p><strong>Trophy lead:</strong><span> David MULLIN, 0 ahead</span></p>
+  <p><strong>Trophy lead:</strong><span> Jon BAKER and David MULLIN, level</span></p>
   <p><strong>Green Jacket lead:</strong><span> David MULLIN, 16 ahead</span></p>
 </section>
 

@@ -9,7 +9,7 @@
   <p class="at-a-glance-title">RESULTS</p>
   <p><strong>Round of the day:</strong><span> David MULLIN (47 pts)</span></p>
   <p><strong>Trophy lead:</strong><span> Jon BAKER, 2 ahead</span></p>
-  <p><strong>Green Jacket lead:</strong><span> David MULLIN, 0 ahead</span></p>
+  <p><strong>Green Jacket lead:</strong><span> Jon BAKER and David MULLIN, level</span></p>
 </section>
 
 ## David Mullin's course-record 82 headlines a stellar West Cliffs return

@@ -768,11 +768,22 @@ def build_round_results_for_glance(teg_num: int, round_num: int) -> Tuple[list, 
 
     return [
         {"label": "Round of the day", "value": round_of_day_value},
-        {"label": "Trophy lead", "value": f'{by_name["Trophy"]["leader"]}, '
-                                          f'{by_name["Trophy"]["gap"]} ahead'},
-        {"label": "Green Jacket lead", "value": f'{by_name["Green Jacket"]["leader"]}, '
-                                                f'{by_name["Green Jacket"]["gap"]} ahead'},
+        {"label": "Trophy lead", "value": _lead_value(by_name["Trophy"])},
+        {"label": "Green Jacket lead", "value": _lead_value(by_name["Green Jacket"])},
     ], False
+
+
+def _lead_value(comp: dict) -> str:
+    """'Gregg WILLIAMS, 1 ahead', or every player on the leading score when
+    tied: 'Jon BAKER and Gregg WILLIAMS, level'. Tied names go in surname
+    order: the standings' own order among equal scores is arbitrary, and a
+    restyle once flipped a published "X, 0 ahead" to the other tied player."""
+    if comp["gap"] != 0:
+        return f'{comp["leader"]}, {comp["gap"]} ahead'
+    tied = [s["player"] for s in comp["standings"] if s["score"] == comp["leader_score"]]
+    tied.sort(key=lambda n: (n.split()[-1].upper(), n))
+    names = tied[0] if len(tied) == 1 else ", ".join(tied[:-1]) + " and " + tied[-1]
+    return f"{names}, level"
 
 
 def _evidence_for(storyline: dict, all_beats: list) -> list:

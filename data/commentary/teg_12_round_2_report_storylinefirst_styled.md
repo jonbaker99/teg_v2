@@ -9,7 +9,7 @@
   <p class="at-a-glance-title">RESULTS</p>
   <p><strong>Round of the day:</strong><span> Stuart NEUMANN (44 pts)</span></p>
   <p><strong>Trophy lead:</strong><span> Gregg WILLIAMS, 1 ahead</span></p>
-  <p><strong>Green Jacket lead:</strong><span> Gregg WILLIAMS, 0 ahead</span></p>
+  <p><strong>Green Jacket lead:</strong><span> Jon BAKER and Gregg WILLIAMS, level</span></p>
 </section>
 
 ## Stuart Neumann answers a ruinous opening round with 44 points and a personal best at PGA Catalunya Tour, the best round of the day by any measure on the Trophy metric

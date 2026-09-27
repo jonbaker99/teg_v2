@@ -9,7 +9,7 @@
   <p class="at-a-glance-title">RESULTS</p>
   <p><strong>Round of the day:</strong><span> Gregg WILLIAMS (46 pts)</span></p>
   <p><strong>Trophy lead:</strong><span> Gregg WILLIAMS, 1 ahead</span></p>
-  <p><strong>Green Jacket lead:</strong><span> Gregg WILLIAMS, 0 ahead</span></p>
+  <p><strong>Green Jacket lead:</strong><span> Jon BAKER and Gregg WILLIAMS, level</span></p>
 </section>
 
 ## Gregg Williams opens TEG 12 with 46 points and an 84 gross, the lowest gross round of his 40-round TEG career and a personal best at PGA Catalunya - Tour

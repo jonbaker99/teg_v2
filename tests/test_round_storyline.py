@@ -284,3 +284,27 @@ def test_correct_streak_claim_in_plan_rewrites_only_the_four_fields(tmp_path, mo
     assert saved["round_story"]["beat_ids"] == ["r4_b01"]
     assert saved["round_story"]["shape"] == "sh"
     assert saved["round_story"]["descriptor"] == "SIDEBAR"
+
+
+# ---------------------------------------------------------------------------
+# At-a-glance lead rows: ties read "level", in a stable order
+# ---------------------------------------------------------------------------
+def test_lead_value_names_every_tied_leader_in_surname_order():
+    from teg_analysis.reporting.round_storyline import _lead_value
+    comp = {"leader": "Gregg WILLIAMS", "leader_score": 84, "gap": 0,
+            "standings": [{"player": "Gregg WILLIAMS", "score": 84},
+                          {"player": "Jon BAKER", "score": 84},
+                          {"player": "David MULLIN", "score": 89}]}
+    assert _lead_value(comp) == "Jon BAKER and Gregg WILLIAMS, level"
+    comp["gap"] = 2
+    assert _lead_value(comp) == "Gregg WILLIAMS, 2 ahead"
+
+
+def test_round_glance_shows_teg12_r1_jacket_tie_as_level():
+    """TEG 12 R1: Jon Baker and Gregg Williams both 84 gross. The box used to
+    print one of them, "0 ahead", and which one depended on row order."""
+    from teg_analysis.reporting.round_storyline import build_round_results_for_glance
+    rows, is_final = build_round_results_for_glance(12, 1)
+    jacket = next(r["value"] for r in rows if r["label"] == "Green Jacket lead")
+    assert not is_final
+    assert jacket == "Jon BAKER and Gregg WILLIAMS, level"

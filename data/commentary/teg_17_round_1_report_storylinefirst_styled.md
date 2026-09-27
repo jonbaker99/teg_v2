@@ -9,7 +9,7 @@
   <p class="at-a-glance-title">RESULTS</p>
   <p><strong>Round of the day:</strong><span> John PATTERSON (39 pts)</span></p>
   <p><strong>Trophy lead:</strong><span> John PATTERSON, 1 ahead</span></p>
-  <p><strong>Green Jacket lead:</strong><span> Gregg WILLIAMS, 0 ahead</span></p>
+  <p><strong>Green Jacket lead:</strong><span> Jon BAKER and Gregg WILLIAMS, level</span></p>
 </section>
 
 ## John Patterson's round survives two early quadruple bogeys to become the best score of the day
