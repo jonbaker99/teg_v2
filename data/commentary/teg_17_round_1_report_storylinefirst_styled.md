@@ -53,6 +53,10 @@ At the other end of the field, Alex Baker's day ended as it had largely proceede
 
 ## Personal bests and TEG records
 
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>Alex Baker's 114 at Praia D'El Rey — a new course-worst, beyond 110; 24 earlier rounds there</li>
+</ul></div>
+
 <div class="records"><p class="records-header">Personal worsts:</p><ul>
   <li>David Mullin — +18 Gross on the Front nine is a personal-worst Front nine Gross</li>
   <li>David Mullin — 10 Stableford on the Front nine is a personal-worst Front nine Stableford</li>

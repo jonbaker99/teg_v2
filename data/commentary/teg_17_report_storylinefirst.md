@@ -5,7 +5,7 @@
 
 Jon Baker won the TEG 17 Trophy with 166 Stableford points, 18 clear of runner-up David Mullin. It is the highest Trophy total of his career. Three years of fourth place had begun to look less like a run of results and more like a permanent seating arrangement. He has now vacated the chair.
 
-The shape of the win was steady rather than sudden. After two rounds Baker sat on top of the Stableford table, though only level at the front, with Mullin leading the TEG 17 Green Jacket on gross. Baker's second round at West Cliffs was an 86, fifteen strokes better than the 101 he had posted on his only previous visit to the Cynthia Dye links. Fifteen strokes is a great deal of improvement. It also implies a great deal of 101.
+The shape of the win was steady rather than sudden. After two rounds Baker sat on top of the Stableford table, two points clear, and level with Mullin for the TEG 17 Green Jacket on gross. Baker's second round at West Cliffs was an 86, fifteen strokes better than the 101 he had posted on his only previous visit to the Cynthia Dye links. Fifteen strokes is a great deal of improvement. It also implies a great deal of 101.
 
 Round three at Royal Óbidos settled it. Baker went round Seve Ballesteros's parkland course in 86 gross, a new course record. The previous best was 87, set across 18 prior visits by the group. Eighteen visits, and the bar had been left at a height a grown man could step over without breaking stride. Baker stepped over it. It was also a personal best there by three shots, and eight better than his last time out on the course.
 

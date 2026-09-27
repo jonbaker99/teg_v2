@@ -11,7 +11,7 @@ The manner was appalling. In the first round on the PGA Catalunya Tour Course he
 
 The rest of his golf simply absorbed them, the way a large ledger absorbs a small fraud. Patterson took 19 points from holes 7 to 11 in round one, four pars in a row after a bogey at the 7th. He took 19 more from holes 12 to 17 on the Stadium Course in round three, including a birdie at the 15th. His best gross rounds — 96 on the Tour Course and 95 on the Stadium — were course personal bests.
 
-After three rounds the Trophy was level at the top, with Jon Baker leading the Green Jacket. Then Williams went to work on himself at the Stadium in round three, dropping 12 shots across holes 11 to 13 and capping it with an 11 at the 13th. That settled the margin. Patterson did not seize the Trophy so much as stand quietly to one side while the alternative dismantled itself.
+After three rounds John Patterson led the Trophy by eight points, 132 to Gregg Williams's 124, with Jon Baker leading the Green Jacket. Williams had gone to work on himself at the Stadium in round three, dropping 12 shots across holes 11 to 13 and capping it with an 11 at the 13th. That settled the margin. Patterson did not seize the Trophy so much as stand quietly to one side while the alternative dismantled itself.
 
 ## Stuart Neumann's TEG 12: the worst round in the Tour course's history in Round 1, the only eagle of the tournament in Round 4
 <!-- storyline: d0 -->
@@ -31,7 +31,7 @@ The 15th settled the account in Round 4. After a double bogey at the 13th and a 
 
 **Williams' best gross golf ends in the rough**
 
-Gregg Williams arrived in Catalonia in 2019 and immediately produced the best gross round of his TEG career: +12 at PGA Catalunya's Tour Course in Round 1, an 84 that beat his previous best on the course by eight shots. Across the four rounds he finished at +76 gross, also a personal best. His 92 on the Stadium Course in Round 4 was a course best too, seven strokes better than his last visit.
+Gregg Williams arrived in Catalonia in 2019 and immediately produced the best gross round of his TEG career: +12 at PGA Catalunya's Tour Course in Round 1, an 84 that beat his previous best on the course by eight shots. It equalled the Tour Course record of 84, set by Jon Baker in TEG 11. Jon Baker matched it in the same round, and David Mullin matched it in Round 2. Across the four rounds he finished at +76 gross, also a personal best. His 92 on the Stadium Course in Round 4 was a course best too, seven strokes better than his last visit.
 
 For a time this was enough to put him in front. Jon Baker had led the TEG 12 Green Jacket from the 16th hole of Round 1, a run of 23 holes, and lost it to Williams at the 3rd in Round 3.
 

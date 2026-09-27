@@ -15,7 +15,7 @@
 ## Gregg Williams opens TEG 12 with 46 points and an 84 gross, the lowest gross round of his 40-round TEG career and a personal best at PGA Catalunya - Tour
 <!-- storyline: round -->
 
-Gregg Williams has played 40 rounds of TEG golf. On the opening day of TEG 12 he played the best of them. His gross 84 at PGA Catalunya - Tour, twelve over par, was the lowest of his career and eight shots better than anything he had produced on his two previous visits to the course. It was worth 46 Stableford points. Nobody in the six-man field came anywhere near it.
+Gregg Williams has played 40 rounds of TEG golf. On the opening day of TEG 12 he played the best of them. His gross 84 at PGA Catalunya - Tour, twelve over par, was the lowest of his career and eight shots better than anything he had produced on his two previous visits to the course. It was worth 46 Stableford points. John Patterson came closest with 45. Jon Baker also went round in 84 gross. Both 84s equalled the course record, set by Baker in TEG 11.
 
 The round built steadily, which in this company counts as an exotic technique. He went through the 7th and the 8th without surrendering a gross shot. He then took nine points across holes 12 to 14. The 13th is the hardest hole on the course. He bogeyed it and was awarded three points, which says something about handicapping and rather more about the 13th. A par at the 14th moved him outright into the TEG 12 Trophy lead. A closing par at the 18th drew him level at the top of the TEG 12 Green Jacket standings. By the end of the day he led both competitions outright.
 
@@ -48,6 +48,12 @@ Elsewhere the 2019 Green Jacket honours were shared. Jon Baker birdied the 14th 
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +12 | JB +12 | DM +17 | JP +24 | AB +30 | SN +33</p>
 
 ## Personal bests and TEG records
+
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>Gregg Williams's 84 at PGA Catalunya - Tour — equals the course record, set by Jon Baker in TEG 11; 10 earlier rounds there</li>
+  <li>Jon Baker's 84 at PGA Catalunya - Tour — equals the course record, his own mark from TEG 11; 10 earlier rounds there</li>
+  <li>Stuart Neumann's 105 at PGA Catalunya - Tour — a new course-worst, beyond 103; 10 earlier rounds there</li>
+</ul></div>
 
 <div class="records"><p class="records-header">Personal bests:</p><ul>
   <li>Gregg Williams posts a personal-best Gross round: +12</li>

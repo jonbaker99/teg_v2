@@ -57,6 +57,10 @@ Then the round turned. Between the 11th and the 13th he shed twelve gross shots 
 
 ## Personal bests and TEG records
 
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>Jon Baker's 90 at PGA Catalunya - Stadium — equals the course record, his own mark from TEG 11; 15 earlier rounds there</li>
+</ul></div>
+
 <div class="records"><p class="records-header">Rare feats:</p><ul>
   <li>Gregg Williams runs up an 11 (+7) at the 13th — his career-worst on a par-4</li>
 </ul></div>

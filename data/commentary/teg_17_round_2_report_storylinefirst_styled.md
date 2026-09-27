@@ -48,6 +48,11 @@ The collapse cost him the TEG 16 Trophy lead. It passes to Jon Baker, who moved 
 
 ## Personal bests and TEG records
 
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>David Mullin's 82 at West Cliffs — a new course record, beating 88; 6 earlier rounds there</li>
+  <li>John Patterson's 116 at West Cliffs — a new course-worst, beyond 115; 6 earlier rounds there</li>
+</ul></div>
+
 <div class="records"><p class="records-header">Personal worsts:</p><ul>
   <li>John Patterson's worst Gross round to date: +44</li>
   <li>John Patterson — +25 Gross on the Back nine is a personal-worst Back nine Gross</li>

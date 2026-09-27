@@ -53,6 +53,10 @@ The round itself was not serene. Two bogeys in a row were followed by a double b
 
 ## Personal bests and TEG records
 
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>Jon Baker's 89 at PGA Catalunya - Stadium — a new course record, beating 90; 21 earlier rounds there</li>
+</ul></div>
+
 <div class="records"><p class="records-header">Rare feats:</p><ul>
   <li>Stuart Neumann eagles the par-5 15th (R4)</li>
 </ul></div>

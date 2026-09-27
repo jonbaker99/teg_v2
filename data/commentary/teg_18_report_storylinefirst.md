@@ -53,7 +53,7 @@ Gregg Williams won the TEG 18 Green Jacket at +66 gross, 14 clear of David Mulli
 
 The second round was 42. An eleven-point swing, delivered without ceremony. Williams took nine points from holes 3 to 5, then played 13 to 16 in level par for 13 points. Jon Baker had led the gross competition since the 5th hole of round one. He lost it at the 7th in round two, after 20 holes in front. Williams drew level at the 13th and went outright ahead at the 2nd hole of round three, on the Stadium Course.
 
-From there he mostly held on. A bogey at the 1st opened round three, followed by four pars and then a double bogey at the 6th. He birdied the 5th in the final round and picked up nine points across holes 8 to 10. His 84 in round four was his best score on the Stadium Course, eight better than his previous best there. His +66 is the lowest gross total of his TEG career. The man who began with two quadruple bogeys ended with the Jacket.
+From there he mostly held on. A bogey at the 1st opened round three, followed by four pars and then a double bogey at the 6th. He birdied the 5th in the final round and picked up nine points across holes 8 to 10. His 84 in round four was his best score on the Stadium Course, one better than the 85 he shot there in round three. It equalled the Stadium course record, set by David Mullin with 84 in round three. His +66 is the lowest gross total of his TEG career. The man who began with two quadruple bogeys ended with the Jacket.
 
 ## Jon Baker, defending Trophy champion, leads the gross for 20 holes and then finishes the TEG 18 Wooden Spoon 23 points adrift of anyone else
 <!-- storyline: spoon -->

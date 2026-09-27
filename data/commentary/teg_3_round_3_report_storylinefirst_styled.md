@@ -56,6 +56,10 @@ The result was a straight swap at the bottom. Stuart Neumann, who had held last 
   <li>David Mullin's -4 is the 3rd-best round in TEG history to date</li>
 </ul></div>
 
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>David Mullin's 85 at Boavista — a new course record, beating 88; 25 earlier rounds there</li>
+</ul></div>
+
 <div class="records"><p class="records-header">Rare feats:</p><ul>
   <li>Henry Meller runs up a 10 (+5) at the 3rd — his career-worst on a par-5</li>
 </ul></div>

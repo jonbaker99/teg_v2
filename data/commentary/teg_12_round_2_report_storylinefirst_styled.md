@@ -33,7 +33,7 @@ A birdie at the 10th finally stopped the bleeding. He found another decent spell
 ## David Mullin posts the best gross round of the day, 84, his personal best at PGA Catalunya Tour by a single shot
 <!-- storyline: d1 -->
 
-David Mullin carded the best gross round of the day on Friday at PGA Catalunya's Tour Course. An 84, and a personal best at the venue, beating his previous mark of 85 by one shot across five visits. Five visits, one shot. The margins of a patient man.
+David Mullin carded the best gross round of the day on Friday at PGA Catalunya's Tour Course. An 84, and a personal best at the venue, beating his previous mark of 85 by one shot across five visits. Five visits, one shot. The margins of a patient man. The 84 also equalled the Tour Course record, first set by Jon Baker in TEG 11. Gregg Williams and Jon Baker had matched it in round one of this TEG.
 
 The round turned on the 5th to the 8th. Four straight pars, not a gross shot dropped, 12 Stableford points collected, including a par at the 8th, one of the harder holes out there. The run ended at the 9th with a triple bogey and a blank Stableford return. The rest of the card held firm enough to deliver the low gross of the day, which after years of near-misses at this course counts as a debt settled.
 
@@ -52,3 +52,9 @@ The Green Jacket behaved much the same way. Williams drew level on gross at the 
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> GW 88 (R2: 42) | JP 87 (R2: 42) | SN 80 (R2: 44) | JB 76 (R2: 36) | DM 75 (R2: 40) | AB 71 (R2: 37)</p>
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +28 (R2: +16) | JB +28 (R2: +16) | DM +29 (R2: +12) | JP +48 (R2: +24) | AB +54 (R2: +24) | SN +54 (R2: +21)</p>
+
+## Personal bests and TEG records
+
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>David Mullin's 84 at PGA Catalunya - Tour — equals the course record, set by Jon Baker in TEG 11; 16 earlier rounds there</li>
+</ul></div>

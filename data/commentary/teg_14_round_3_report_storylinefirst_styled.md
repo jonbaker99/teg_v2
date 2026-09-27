@@ -56,3 +56,9 @@ At the top, Mullin's leads survived. He remains clear in the Trophy, his advanta
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> DM 117 (R3: 36) | AB 109 (R3: 37) | GW 99 (R3: 39) | JB 86 (R3: 28)</p>
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +49 (R3: +20) | GW +61 (R3: +14) | JB +64 (R3: +23) | AB +80 (R3: +25)</p>
+
+## Personal bests and TEG records
+
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>Alex Baker's 97 at Prince's - Shore / Dunes — equals the course-worst, set by John Patterson in TEG 13; 5 earlier rounds there</li>
+</ul></div>

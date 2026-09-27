@@ -26,7 +26,7 @@ Stuart Neumann's Round 3 at Quinta da Marinha unravelled early and never recover
 
 There was no respite at the turn. A quintuple bogey 8 came at the par-3 9th. A par-3 taken in 8 is not a golf hole. It is an occupation. An 11 followed at the par-5 10th, a sextuple bogey on one of the course's harder holes, then a double at the 11th. Another three holes, another absence of net pars.
 
-The round produced 20 Stableford points, the worst in the field. In Round 2 he had posted 31. He remains anchored to the bottom of the 2015 TEG Wooden Spoon standings, his gap to the next-worst player stretched from 8 points to 22. He is no longer losing that race. He is conducting it alone.
+The round produced 20 Stableford points, the worst in the field. His 114 gross equalled the worst score ever recorded at Quinta da Marinha. That record was his own 114, from round one of this TEG. In Round 2 he had posted 31. He remains anchored to the bottom of the 2015 TEG Wooden Spoon standings, his gap to the next-worst player stretched from 8 points to 22. He is no longer losing that race. He is conducting it alone.
 
 ## Alex Baker survives a sextuple-bogey ten at the 8th to set a new personal best at Quinta da Marinha
 <!-- storyline: d1 -->
@@ -50,6 +50,11 @@ Gregg Williams held on to his 2015 Trophy lead. He held on to rather less of his
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> JB +58 (R3: +18) | DM +60 (R3: +26) | HM +83 (R3: +24) | GW +85 (R3: +35) | SN +113 (R3: +43) | AB +115 (R3: +40)</p>
 
 ## Personal bests and TEG records
+
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>Jon Baker's 89 at Quinta da Marinha — a new course record, beating 91; 6 earlier rounds there</li>
+  <li>Stuart Neumann's 114 at Quinta da Marinha — equals the course-worst, his own mark from R1; 6 earlier rounds there</li>
+</ul></div>
 
 <div class="records"><p class="records-header">Personal worsts:</p><ul>
   <li>David Mullin's worst round to date: 26 pts</li>

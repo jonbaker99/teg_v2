@@ -59,6 +59,12 @@ Set beside round 3 it barely looks like the same man: 30 Stableford points then,
 
 ## Personal bests and TEG records
 
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>David Mullin's 80 at Estoril — a new course record, beating 86; 6 earlier rounds there</li>
+  <li>Gregg Williams's 80 at Estoril — equals the course record, with David Mullin in the same round; 6 earlier rounds there</li>
+  <li>Alex Baker's 107 at Estoril — a new course-worst, beyond 106; 6 earlier rounds there</li>
+</ul></div>
+
 <div class="records"><p class="records-header">Rare feats:</p><ul>
   <li>Alex Baker runs up an 11 (+7) at the 12th — his career-worst on a par-4</li>
 </ul></div>

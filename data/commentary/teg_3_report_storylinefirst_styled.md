@@ -113,6 +113,11 @@ He finished 16 over net, and collected the Wooden Spoon. He had, at various mome
   <li>David Mullin's -1 is the 3rd-best round in TEG history to date (R1)</li>
 </ul></div>
 
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>David Mullin's 88 at Boavista (R1) — a new course record, beating 89; 15 earlier rounds there</li>
+  <li>David Mullin's 85 at Boavista (R3) — a new course record, beating 88; 15 earlier rounds there</li>
+</ul></div>
+
 <div class="records"><p class="records-header">Rare feats:</p><ul>
   <li>Stuart Neumann runs up a 10 (+6) at the 17th (R4) — his career-worst on a par-4</li>
   <li>Henry Meller runs up a 12 (+8) at the 17th (R1) — a new TEG-record and career-worst on a par-4</li>

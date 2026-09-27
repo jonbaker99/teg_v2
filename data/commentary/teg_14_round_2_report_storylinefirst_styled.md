@@ -49,3 +49,9 @@ At the other end of the table, the TEG 14 Wooden Spoon is closer than it was. Jo
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> DM 81 (R2: 41) | AB 72 (R2: 35) | GW 60 (R2: 27) | JB 58 (R2: 29)</p>
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +29 (R2: +14) | JB +41 (R2: +21) | GW +47 (R2: +26) | AB +55 (R2: +29)</p>
+
+## Personal bests and TEG records
+
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>Alex Baker's 100 at Littlestone — equals the course-worst, his own mark from TEG 13; 5 earlier rounds there</li>
+</ul></div>

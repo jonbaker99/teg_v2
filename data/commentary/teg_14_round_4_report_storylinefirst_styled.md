@@ -43,3 +43,7 @@ The record was built on a five-hole stretch from the 11th during which he did no
 <div class="records"><p class="records-header">TEG records:</p><ul>
   <li>Jon Baker's 2-hole "Birdies" streak ties the all-time TEG record (2), at T14 R4 H12 to T14 R4 H13</li>
 </ul></div>
+
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>Jon Baker's 83 at Prince's - Shore / Dunes — a new course record, beating 85; 9 earlier rounds there</li>
+</ul></div>

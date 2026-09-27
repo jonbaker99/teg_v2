@@ -52,3 +52,7 @@ The Jacket race was an altogether calmer affair. The Trophy contenders were pack
 <div class="records"><p class="records-header">TEG records:</p><ul>
   <li>David Mullin's +12 (gross) is the best Gross round in TEG history to date</li>
 </ul></div>
+
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>David Mullin's 83 at Boavista — a new course record, beating 85; 35 earlier rounds there</li>
+</ul></div>

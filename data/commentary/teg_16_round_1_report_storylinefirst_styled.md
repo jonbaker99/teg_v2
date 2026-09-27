@@ -48,3 +48,9 @@ His grip on the lead was briefly interrupted when David Mullin drew level for to
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> SN 39 | GW 34 | JB 34 | DM 33 | AB 29</p>
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +18 | JB +21 | DM +23 | SN +26 | AB +42</p>
+
+## Personal bests and TEG records
+
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>Alex Baker's 113 at Oitavos Dunes — a new course-worst, beyond 111; 12 earlier rounds there</li>
+</ul></div>

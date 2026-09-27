@@ -41,3 +41,9 @@ The timing was cruel. Williams had begun the day leading the Jacket race by just
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> SN 113 (R3: 39) | GW 101 (R3: 37) | JB 99 (R3: 33) | DM 97 (R3: 30) | AB 94 (R3: 33)</p>
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +55 (R3: +15) | JB +69 (R3: +25) | DM +71 (R3: +26) | SN +82 (R3: +26) | AB +110 (R3: +34)</p>
+
+## Personal bests and TEG records
+
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>Alex Baker's 106 at Penha Longa — equals the course-worst, his own mark from TEG 8; 12 earlier rounds there</li>
+</ul></div>

@@ -110,6 +110,11 @@ The improvement was real. He got better every time out and finished last after e
   <li>John Patterson — 30 Stableford on the Back nine (R2) is the best Back nine Stableford in TEG history</li>
 </ul></div>
 
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>David Mullin's 87 at Royal Óbidos (R1) — a new course record, beating 90; 6 earlier rounds there</li>
+  <li>Alex Baker's 115 at Royal Óbidos (R1) — a new course-worst, beyond 108; 6 earlier rounds there</li>
+</ul></div>
+
 <div class="records"><p class="records-header">Personal bests:</p><ul>
   <li>Alex Baker posts a personal-best round: 44 pts (R2, R4)</li>
   <li>Alex Baker posts a personal-best Gross round: +27 (R2, R4)</li>

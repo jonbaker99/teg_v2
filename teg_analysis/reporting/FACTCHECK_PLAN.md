@@ -146,6 +146,23 @@ Items 2 (exact weekday shape), 3 and 5 were not independently re-flagged by this
 
 **Update 2026-09-27.** `detect_course_records` now walks each round best-card-first, so a card beaten by another in the same round no longer counts as a record (TEG 11 R1/R2 and TEG 15 R3 each credited Mullin with one). On the latest text (after #128's repairs) the sweep gives **75 warnings from 185 facts**.
 
+**Repairs from the WP6 triage — ten reports written 2026-09-27** (approved; must + should tiers) via `claims.repair_report()` on the `agent` provider (fresh subagent per prompt), built on the post-#128 text. Each "after" was hand-checked against the parquet; the mechanical re-verify was clean. Seven were outright errors that the missed-fact triage surfaced while reading the paragraph:
+
+| Report | Tier | Was | Now |
+|---|---|---|---|
+| TEG 17 | must | after R2 Baker "only level at the front", Mullin "leading the Jacket" | Baker two points clear in the Trophy (82 to 80), level with Mullin in the Jacket |
+| TEG 11 | must | brothers "tied at the top" after R3 | Alex Baker two clear, 110 to 108; adds Jon Baker level at the R4 6th, clear at the 7th |
+| TEG 12 | must | Trophy "level at the top" after three rounds | Patterson led by eight, 132 to 124; adds the equalled Tour record (84) to the Williams paragraph |
+| TEG 12 R1 | must | "Nobody in the six-man field came anywhere near it" | Patterson had 45; Jon Baker also shot 84; both equalled the Tour record |
+| TEG 5 | must | the R2 82 "swept aside the 85" | the R1 83 broke the 85; the 82 lowered his own record; Neumann shared it |
+| TEG 18 | must | the R4 84 "eight better than his previous best" at the Stadium | one better than his R3 85; equalled Mullin's R3 course record (item 6) |
+| TEG 18 R4 | must | (not mentioned) | the 84 equalled Mullin's R3 Stadium record |
+| TEG 12 R2 | should | (not mentioned) | Mullin's 84 equalled the Tour record |
+| TEG 8 R3 | should | (not mentioned) | Neumann's 114 equalled the Quinta da Marinha course-worst (his own R1 114) |
+| TEG 4 | should | (not mentioned) | Mullin went ahead at the R4 12th and was never caught |
+
+Left as is: the "could" tier (early lead moments, round-report lead holes, an equal later beaten in the same TEG, TEG 4's eagle-count record) and TEG 12's decisive moment (Patterson clear at R3 H10), which the repair did not add. All 85 `_styled.md` files were then restyled (free) so the records appendix carries course records, and the PDFs rebuilt. The claims caches for these ten reports are stale by hash. After the repairs the sweep gives **63 warnings from 185 facts**, all in the "could" tier. TEG 2 R4 has no `_styled.md` or PDF (the data holds three TEG 2 rounds), so it was skipped as before. Three round rails (TEG 12 R1/R2, TEG 17 R1) keep their published "Green Jacket lead: … 0 ahead" line: the restyle flipped the named player between two tied leaders, a pre-existing tie-ordering quirk left for a separate fix.
+
 ### 7. Tests and docs
 - `tests/test_reporting_verify.py`: hand-written claim fixtures against real TEG 18 data (no LLM) — **done**. Items 1 (error), 2, 4, 5 (warnings) confirmed; item 3 documented as an out-of-cut gap, not force-fitted; item 6 (missed-fact) is WP6, not built. Plus `--all`/`--label` glob tests, `_verify.json` round-trip, and the quote-not-found-drops-the-claim rule.
 - `tests/test_reporting_detectors.py` — **done**: WP2's fixes against real TEG 18 data (both players' hole evidence, the exact H6/7/9/10/12/13/14 recapture sequence, Gross-not-Trophy ranks on the Jacket beat, Spoon direction + ties, the same-TEG course-record equal).

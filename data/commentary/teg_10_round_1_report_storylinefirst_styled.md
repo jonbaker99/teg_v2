@@ -54,6 +54,10 @@ At the other end, John Patterson dropped to the bottom of the Wooden Spoon table
   <li>David Mullin — -1 Gross on the Back nine is the best Back nine Gross in TEG history</li>
 </ul></div>
 
+<div class="records"><p class="records-header">Course records:</p><ul>
+  <li>David Mullin's 75 at Boavista — a new course record, beating 82; 50 earlier rounds there</li>
+</ul></div>
+
 <div class="records"><p class="records-header">Personal bests:</p><ul>
   <li>David Mullin — -1 Gross on the Back nine is a personal-best Back nine Gross</li>
   <li>David Mullin — 28 Stableford on the Back nine is a personal-best Back nine Stableford</li>
