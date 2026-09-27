@@ -217,7 +217,8 @@ def detect_course_records(
             "record_holders": [{"player", "teg", "round"}, ...],
         }
 
-    Walks this TEG's rounds on each course **in order**, against a running
+    Walks this TEG's rounds on each course **in order** (within a round,
+    best card first for records and worst first for course-worsts), against a running
     best that starts at the prior (cross-TEG) record. A later round is
     therefore compared with an earlier round of the SAME TEG, not just with
     history before this TEG started — and a round that exactly matches the
@@ -258,11 +259,15 @@ def detect_course_records(
         min_holders = _holders(running_min)
         max_holders = _holders(running_max)
 
-        for _, row in current.sort_values("Round").iterrows():
+        # Two passes, one per direction, each walking a round's cards
+        # best-first for that direction. Row order within a round is
+        # arbitrary, and walking in it credited a "record" to a card another
+        # player beat in the same round (TEG 11 R1: Mullin's 92 "broke" the
+        # Stadium record before Jon Baker's 90 in the same round did).
+        for _, row in current.sort_values(["Round", "Gross"]).iterrows():
             gross = int(row["Gross"])
             player = _proper(row["Player"])
             rnd = int(row["Round"])
-
             if gross < running_min:
                 events.append({
                     "type": "course_record_low", "player": player, "course": course,
@@ -286,7 +291,14 @@ def detect_course_records(
                         f"in R{rnd} (across {n_prior} prior visits)"
                     ),
                 })
+            if gross == running_min:
+                min_holders.append({"player": player, "teg": teg_num, "round": rnd})
 
+        for _, row in current.sort_values(["Round", "Gross"],
+                                          ascending=[True, False]).iterrows():
+            gross = int(row["Gross"])
+            player = _proper(row["Player"])
+            rnd = int(row["Round"])
             if gross > running_max:
                 events.append({
                     "type": "course_record_high", "player": player, "course": course,
@@ -310,12 +322,8 @@ def detect_course_records(
                         f"in R{rnd} (across {n_prior} prior visits)"
                     ),
                 })
-
-            card = {"player": player, "teg": teg_num, "round": rnd}
-            if gross == running_min:
-                min_holders.append(card)
             if gross == running_max:
-                max_holders.append(card)
+                max_holders.append({"player": player, "teg": teg_num, "round": rnd})
 
     return events
 

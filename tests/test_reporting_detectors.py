@@ -140,3 +140,11 @@ def test_records_appendix_lists_course_records():
     r4 = build_records_block(18, round_num=4)
     assert "Gregg Williams's 84 at PGA Catalunya - Stadium — equals" in r4
     assert "David Mullin's 84" not in r4
+
+
+def test_course_record_goes_to_the_best_card_in_the_round():
+    """TEG 11 R1: Mullin's 92 and Jon Baker's 90 both beat the Stadium's 94.
+    Only Baker's 90 set the record; row order used to credit Mullin too."""
+    lows = [(e["player"], e["gross"]) for e in detect_course_records(11)
+            if e["type"] == "course_record_low" and e["course"] == "PGA Catalunya - Stadium"]
+    assert lows == [("Jon Baker", 90)]
