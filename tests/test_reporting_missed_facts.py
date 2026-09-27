@@ -119,3 +119,49 @@ def test_or_heading_entry_reads_the_section_heading():
     b = Block(text="Williams took the lead at the 2nd.", heading="Williams in R3")
     assert covering_block(fact, [b], PLAYERS) is b
     assert covering_block(fact, [Block(text=b.text, heading="")], PLAYERS) is None
+
+
+# ---------------------------------------------------------------------------
+# Pipeline wiring: verify_report(missed=True) and the voice pass
+# ---------------------------------------------------------------------------
+def test_verify_report_runs_missed_facts_only_when_asked():
+    from teg_analysis.reporting.verify import verify_report
+    rules = lambda fs: [f.rule for f in fs]
+    assert "missed_fact" not in rules(verify_report(18, text=OMITS, round_num=4))
+    assert "missed_fact" in rules(verify_report(18, text=OMITS, round_num=4, missed=True))
+
+
+def test_verify_report_surfaces_a_failed_missed_check_as_a_warning(monkeypatch):
+    from teg_analysis.reporting import missed_facts
+    from teg_analysis.reporting.verify import verify_report
+
+    def boom(*a, **k):
+        raise RuntimeError("no data")
+    monkeypatch.setattr(missed_facts, "check_missed_facts", boom)
+    failed = [f for f in verify_report(18, text=OMITS, round_num=4, missed=True)
+              if f.rule == "missed_fact_check_failed"]
+    assert len(failed) == 1 and failed[0].severity == "warning"
+
+
+def test_voice_pass_reports_missed_facts_even_when_inherited(monkeypatch):
+    """A fact the draft never carried is inherited by the voice pass, so it is
+    not a NEW finding, but `restyle_voice` must still report it."""
+    import os
+    from unittest.mock import patch
+    from teg_analysis.reporting import authoring, verify
+
+    monkeypatch.setattr(verify, "write_findings", lambda *a, **k: None)  # keep real _verify.json
+    src_path = "data/commentary/teg_18_round_4_report_unittest_src.md"
+    out_path = "data/commentary/teg_18_round_4_report_unittest_tmp.md"
+    with open(src_path, "w") as f:
+        f.write(OMITS)
+    try:
+        with patch.object(authoring.llm, "generate_text", return_value=(OMITS, {})):
+            out = authoring.restyle_voice(18, "VOICE: x", "unittest_tmp", round_num=4,
+                                          source_label="unittest_src", style=False)
+        assert any("Gregg Williams equals" in m for m in out["missed_facts"])
+        assert not any("missed_fact" in n for n in out["new_findings"])
+    finally:
+        for p in (src_path, out_path):
+            if os.path.exists(p):
+                os.remove(p)

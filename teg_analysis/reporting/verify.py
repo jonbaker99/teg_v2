@@ -410,12 +410,27 @@ def load_context(teg_num: int, text: Optional[str] = None,
 
 def verify_report(teg_num: int, text: Optional[str] = None,
                   round_num: Optional[int] = None,
-                  label: str = "storylinefirst") -> list[Finding]:
-    """Run every mechanical check. Returns findings, errors first."""
+                  label: str = "storylinefirst",
+                  missed: bool = False) -> list[Finding]:
+    """Run every mechanical check. Returns findings, errors first.
+
+    `missed=True` also runs WP6's `missed_facts.check_missed_facts` on the
+    same text — free, no model call, warnings only. The report pipeline's
+    voice pass (`authoring.restyle_voice`) turns it on.
+    """
     ctx = load_context(teg_num, text=text, round_num=round_num, label=label)
     findings: list[Finding] = []
     for check in CHECKS:
         findings.extend(check(ctx))
+    if missed:
+        from teg_analysis.reporting.missed_facts import check_missed_facts
+        try:
+            findings.extend(check_missed_facts(teg_num, round_num=round_num, text=ctx.text))
+        except Exception as e:  # noqa: BLE001 — warning-only check; never sink a run
+            findings.append(Finding(
+                rule="missed_fact_check_failed", severity="warning",
+                detail=f"missed-fact check could not run: {type(e).__name__}: {e}",
+                source="missed"))
     findings.sort(key=lambda f: (f.severity != "error", f.rule))
     return findings
 
@@ -508,17 +523,14 @@ def main(argv: Optional[list] = None) -> int:
     for teg_num, round_num in sorted(targets, key=lambda t: (t[0], t[1] or 0)):
         label = f"TEG {teg_num}" + (f" R{round_num}" if round_num else "")
         try:
-            findings = verify_report(teg_num, round_num=round_num, label=args.label)
+            findings = verify_report(teg_num, round_num=round_num, label=args.label,
+                                     missed=args.missed)
         except FileNotFoundError:
             print(f"– {label}: no report_{args.label}.md")
             continue
         if args.claims:
             from teg_analysis.reporting.claims import check_claims
             findings = findings + check_claims(teg_num, round_num=round_num, label=args.label)
-        if args.missed:
-            from teg_analysis.reporting.missed_facts import check_missed_facts
-            findings = findings + check_missed_facts(teg_num, round_num=round_num,
-                                                     label=args.label)
         total_errors += sum(1 for f in findings if f.severity == "error")
         write_findings(teg_num, findings, round_num=round_num, label=args.label)
         print(format_findings(findings, teg_num=None).replace("report:", f"{label}:")

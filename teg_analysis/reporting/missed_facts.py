@@ -41,7 +41,6 @@ import json
 import os
 import re
 from dataclasses import dataclass, field
-from functools import lru_cache
 from typing import Optional
 
 import pandas as pd
@@ -99,8 +98,11 @@ class Block:
 # ---------------------------------------------------------------------------
 # Listing the facts
 # ---------------------------------------------------------------------------
-@lru_cache(maxsize=1)
 def _load_df() -> pd.DataFrame:
+    # Not cached: the webapp runs the pipeline in-process (`/admin/reports`),
+    # and a process-lifetime cache would check new reports against the data
+    # as it stood at startup. `check_missed_facts` loads once per report and
+    # passes the frame down.
     from teg_analysis.core.data_loader import load_all_data
     return load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
 

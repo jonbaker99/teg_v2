@@ -119,6 +119,8 @@ Items 2 (exact weekday shape), 3 and 5 were not independently re-flagged by this
 ### 6. Missed facts (item 6) — free — **done 2026-09-26**
 `missed_facts.py` lists each report's must-mention facts from WP2's detectors and warns on any the report never mentions (`rule="missed_fact"`, always a **warning**). No model call. Run it with `verify --all --rounds --missed`.
 
+**Wired into the pipeline (2026-09-27).** `restyle_voice` (the storyline pipelines' last stage, also reached from `/admin/reports`) and `apply_corrections` now call `verify_report(missed=True)`. Missed facts go into `_verify.json`, are returned as `missed_facts`, and are printed in full: a fact the draft never carried is inherited, so the new-findings diff alone would hide it. A fact the voice pass *drops* still shows as a new finding. If the check itself errors, it becomes a `missed_fact_check_failed` warning rather than stopping the run. Cost: under a second per report.
+
 **What must be mentioned** (decided at kick-off):
 - **Round reports:** course records set or equalled that round, low and high; and the Trophy/Jacket leader's decisive moment, only if it fell in that round.
 - **Tournament reports:** all of the TEG's course records; the winner's decisive moment in the Trophy and the Jacket; all-time streak and score-count records; personal-best/worst streaks. Per-player course PBs are left out (~59 across 18 TEGs, mostly noise).
