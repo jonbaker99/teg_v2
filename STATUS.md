@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-26 (Streak table formatting)
+**Last updated:** 2026-09-27 (Latest TEG aggregate headers)
+
+## 2026-09-27 — Latest TEG aggregate headers
+
+The Latest TEG Aggregate Score tab labels its total column “Total” and leaves the rank column header blank for every score measure. Total values are bold on desktop as well as mobile.
 
 ## 2026-09-26 — Consistent streak table formatting
 
