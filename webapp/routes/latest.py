@@ -188,7 +188,7 @@ def _score_mix_chart_html(counts: pd.DataFrame, player_code: str, field: str,
 
 def _build_scoreboard_table(values: pd.DataFrame, mix_counts: pd.DataFrame | None,
                             mix_field: str | None, uid_prefix: str, total_label: str = "Round",
-                            detail_cols=(("Out", "Out"), ("In", "In"))) -> str:
+                            detail_cols=(("Out", "Out"), ("In", "In")), rank_label: str = "#") -> str:
     """Render the Scoreboards-tab table: a 5-column main row (# / Player /
     Total / Personal rank / All-time rank) plus a per-player expandable
     detail row (Out/In split + per-hole score mix), collapsed by default.
@@ -220,7 +220,8 @@ def _build_scoreboard_table(values: pd.DataFrame, mix_counts: pd.DataFrame | Non
     TEG-cumulative figure. Presence of each of these is checked via
     ``values.columns``, not a separate flag, so they stay in sync by
     construction. ``total_label`` becomes the Total column's header
-    ("Round" or "TEG") so the header itself reflects what it's showing.
+    ("Round", "TEG" or "Total") so the header itself reflects what it's showing.
+    ``rank_label`` allows callers to leave the rank column header blank.
 
     ``detail_cols`` drives the top row of the expandable detail panel: a
     list of (label, column) pairs, each rendered as one ``<span>label
@@ -262,7 +263,7 @@ def _build_scoreboard_table(values: pd.DataFrame, mix_counts: pd.DataFrame | Non
            f"<col class='lr-total-col'>{rank_cols}{round_total_col}",
            toggle_col,
            "</colgroup><thead><tr>",
-           "<th scope='col'>#</th>",
+           f"<th scope='col'>{escape(rank_label)}</th>",
            "<th scope='col'>Player</th>",
            f"<th scope='col'>{escape(total_label)}</th>",
            rank_headers,
@@ -1002,7 +1003,7 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
 
                 table_html = _build_scoreboard_table(
                     values, mix_counts, mix_field, uid_prefix=f"lt-rank-{teg_num}",
-                    total_label="TEG", detail_cols=detail_cols)
+                    total_label="Total", detail_cols=detail_cols, rank_label="")
             except Exception:
                 logger.exception("_latest_teg_tab_context: aggregate table build failed")
                 table_html = "<p class='text-muted text-sm'>No aggregate data available.</p>"
