@@ -90,13 +90,13 @@ Run: 47 requests, median 316 ms, max 624 ms, 41,506 input tokens, $0.00174 in to
 **Errors at 0.5:**
 
 - **paradox, 5 false alarms** (p 0.54 to 0.85). Two are "same hole" paragraphs, one of which explicitly says "same number, different hole". AUROC 1.00 means a higher threshold would separate them cleanly, but that threshold is picked on the same 47 rows, so it is not yet evidence.
-- **same_hole, 1 miss** (`seed:sh1`, p 0.14). The link is implied by day names (Friday on the Tour course, Sunday on the Stadium), with no "same hole" phrase. That is the hardest case, and the one a regex cannot catch at all.
+- **same_hole, 1 miss** (`seed:sh1`, p 0.14). The link is implied by day names (Friday on the Tour course, Sunday on the Stadium), with no "same hole" phrase. The request state maps rounds to courses but not days to rounds, so Jev could not resolve it. That is a harness gap, not a clean Jev miss.
 
-**Caveats.** Positives per rule are 4 to 7, so these are directions, not measurements. The labels were written by Claude and are not yet reviewed by Jon. Paradox precision only just clears the regex.
+**Caveats.** Positives per rule are 4 to 7, so these are directions, not measurements. The labels were written by Claude. Jon reviewed 4 of the 5 paradox false alarms (2026-09-28) and agreed Jev was wrong on all 4; `paradox:7` ("the Spoon paradoxically tightened") is unresolved. The other 42 labels are unreviewed. Paradox precision only just clears the regex.
 
 **Next steps if adopted:**
 
-1. Jon reviews `labels.json`, especially the paradox false alarms.
+1. Add day-to-round mapping to the request state and re-run, so `seed:sh1` is a fair test.
 2. Wire Jev into `verify.py` as an opt-in, advisory check. Keep it a dev-only dependency, never in `requirements.txt`.
 3. Set the paradox threshold on fresh paragraphs, not these 47.
 4. Fold this verdict into `STATUS.md`, then delete `scripts/jev_spike/` and this file.
@@ -114,7 +114,7 @@ It prints the metrics table, latency, input-token cost and every miss or false a
 
 **What it does.** Each paragraph is one request with four yes/no questions, one per rule. The request state carries the facts the rules depend on: which course each round was on (from `all-data.parquet`) and `PLAYER_RELATIONSHIPS`. Without those, "same hole" and "relationship" are unanswerable.
 
-**The labelled set** (`scripts/jev_spike/labels.json`, 47 paragraphs, labelled by Claude and not yet reviewed by Jon):
+**The labelled set** (`scripts/jev_spike/labels.json`, 47 paragraphs, labelled by Claude; see *Caveats* above for what Jon has reviewed):
 
 - 31 real paragraphs from `data/commentary/`, mostly from archived reports. They include the known TEG 10 "same hole" fault and its correct twin (R1 and R4 were both at Boavista).
 - 13 seeded paragraphs: violations written *without* the obvious keyword ("bedlam", "a question for the philosophers", "old school friends"), plus correct-framing twins.
