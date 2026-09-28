@@ -141,7 +141,20 @@ It prints the metrics table, latency, input-token cost and every miss or false a
 
 **Reading it.** Jev and Opus broadly agree, but not enough for Jev to replace the editor's pick. Opus's scores only span 6 to 9, and Jev bunches near the top (median 0.85 of 1), so both give a weak signal. Jev ranks the Trophy story highest on average, as Opus does.
 
-**Verdict: not worth adopting for storyline ranking yet.** Agreement with a self-scoring LLM is not evidence either one is right. A fair test needs your ranking of a few plans as the answer key.
+**Verdict: not worth adopting for storyline ranking yet.** Agreement with a self-scoring LLM is not evidence either one is right. 
+
+**Jon's ranking (2026-09-28), TEG 16 to 18 season plans, blind.** Rank agreement with Jon (1 = identical order):
+
+| TEG | Jon's top | Opus rho / top | Jev rho / top |
+|---|---|---|---|
+| 16 | Trophy | 0.58 / Trophy (tied) | 0.60 / a discovered story |
+| 17 | Trophy | 0.77 / Trophy (tied) | -0.03 / a discovered story |
+| 18 | Spoon | 0.17 / a discovered story | -0.14 / Jacket |
+| Mean | | **0.51** | **0.14** |
+
+Jon's TEG 18 order was given as `C D F A D B`; the second `D` was read as `E`.
+
+**Verdict: drop Jev for storyline ranking.** On three plans it tracked Jon's taste far worse than Opus's self-score, and never matched his top pick. Three plans is small, but the gap is wide.
 
 ## Sources
 
