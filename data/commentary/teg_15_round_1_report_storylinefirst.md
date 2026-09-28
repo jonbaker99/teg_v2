@@ -5,7 +5,7 @@
 
 Gregg Williams began his Estoril Golf Club career with a quadruple bogey 8 at the 1st. It is one of the hardest holes on the course, which is the kindest thing available to say about it. He responded with admirable calm. A bogey at the 2nd, then a birdie at the 3rd, and the bleeding stopped.
 
-What followed was the best golf anyone produced all day. Back-to-back birdies at the 3rd and 4th carried him to the outright lead in the TEG 1 Trophy. By the 11th he held the outright lead in the TEG 1 Green Jacket as well. He then kept house with real discipline: par and par at the 8th and 9th, par and par again at the 13th and 14th. A man in complete command of his own affairs.
+What followed was the best golf anyone produced all day. Back-to-back birdies at the 3rd and 4th carried him to the outright lead in the TEG 15 Trophy. By the 11th he held the outright lead in the TEG 15 Green Jacket as well. He then kept house with real discipline: par and par at the 8th and 9th, par and par again at the 13th and 14th. A man in complete command of his own affairs.
 
 Then came the 18th. Another quadruple bogey 8. The day ended precisely as it had started, as though the round had been written with symmetry in mind and nobody had consulted Williams about it.
 

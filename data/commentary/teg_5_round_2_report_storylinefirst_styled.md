@@ -35,11 +35,11 @@ The curious detail is that his back nine still came in 12 shots better than his 
 ## Gregg Williams' career-best round and Stuart Neumann's leap from last both vault past a level-par Jon Baker in the Trophy chase, while Henry Meller's collapse flips the Wooden Spoon race entirely
 <!-- storyline: race -->
 
-At Boavista in TEG 9's second round, Gregg Williams posted the best round of his career, finishing six-under-par net. It was enough to leapfrog Jon Baker. Baker had gone round level par, which is a perfectly respectable thing to do and, on this particular day, entirely beside the point.
+At Boavista in TEG 5's second round, Gregg Williams posted the best round of his career, finishing six-under-par net. It was enough to leapfrog Jon Baker. Baker had gone round level par, which is a perfectly respectable thing to do and, on this particular day, entirely beside the point.
 
 Neumann matched the move stroke for stroke. A poor first-round 6-over became a nine-under second round, a swing of 15 shots. It also carried him clear of the Wooden Spoon cellar he had occupied overnight. He vacated the premises without leaving a note.
 
-The tenancy passed to Henry Meller. A double bogey on the par-5 3rd sent him from fourth to last in the TEG 9 Wooden Spoon standings, flipping the race entirely. David Mullin, meanwhile, retained his TEG 9 Trophy lead. The gap to the chasing pack widened from one shot to three. He did it with a card that was eleven over par. Round here, that is what command looks like.
+The tenancy passed to Henry Meller. A double bogey on the par-5 3rd sent him from fourth to last in the TEG 5 Wooden Spoon standings, flipping the race entirely. David Mullin, meanwhile, retained his TEG 5 Trophy lead. The gap to the chasing pack widened from one shot to three. He did it with a card that was eleven over par. Round here, that is what command looks like.
 
 ## Round standings
 

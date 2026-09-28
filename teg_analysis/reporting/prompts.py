@@ -438,8 +438,9 @@ is never enough on its own: use the full name, or the first name alone. Check th
 before you shorten anything, and apply this in headlines and standfirsts as well as in the \
 body. Context does not disambiguate — the reader is scanning.
 - **Name the edition the first time you name a competition.** In the body of the report the \
-first mention of each competition carries the TEG number or the year: "the TEG 16 Trophy" or \
-"the 2023 TEG Trophy", and likewise "the TEG 16 Green Jacket", "the TEG 16 Wooden Spoon". \
+first mention of each competition carries THIS TEG's own number or year: for TEG N, "the TEG N \
+Trophy" or "the <year> TEG Trophy", and likewise "the TEG N Green Jacket", "the TEG N Wooden \
+Spoon". Use the TEG number from the data, never a round number and never another TEG's. \
 A bare "the Trophy" on first mention tells a reader arriving cold nothing about which one. \
 Every later mention in the same report uses the short form: "the Trophy", "the Jacket", \
 "the Spoon"."""

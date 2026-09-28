@@ -22,9 +22,9 @@ He answered at once. Pars at the 15th and the 16th, not a gross shot dropped acr
 ## Gregg Williams's day of whiplash: a fleeting outright Trophy lead off a birdie at the 8th collapses into a nine-hole, 22-shot bleed and the worst gross score of the round
 <!-- storyline: d0 -->
 
-Gregg Williams's opening round at Royal Ashdown Forest had two moods and no middle. It began badly. From the 2nd to the 6th he shipped 13 gross shots, the centrepiece being a quadruple bogey 8 at the par-4 4th. The 4th is the easiest hole on the course. The run also left him three holes without a net par and dropped him to the bottom of the TEG 16 Wooden Spoon race.
+Gregg Williams's opening round at Royal Ashdown Forest had two moods and no middle. It began badly. From the 2nd to the 6th he shipped 13 gross shots, the centrepiece being a quadruple bogey 8 at the par-4 4th. The 4th is the easiest hole on the course. The run also left him three holes without a net par and dropped him to the bottom of the TEG 4 Wooden Spoon race.
 
-Then, briefly, order. A bogey at the 7th ended the run of bogeys-or-worse. A birdie at the 8th completed the rescue and sent him to the outright lead of the TEG 16 Trophy on net scoring. For a short while, Gregg Williams was the best golfer in the tournament.
+Then, briefly, order. A bogey at the 7th ended the run of bogeys-or-worse. A birdie at the 8th completed the rescue and sent him to the outright lead of the TEG 4 Trophy on net scoring. For a short while, Gregg Williams was the best golfer in the tournament.
 
 It did not survive the back nine. From the 10th to the 18th he bled 22 shots, four doubles and three triples among them, with bogey-or-worse at the 14th, the hardest hole out there. He finished with the worst gross score of the round. The lead had been a rumour, and the rumour was corrected.
 

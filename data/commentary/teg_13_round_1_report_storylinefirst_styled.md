@@ -19,7 +19,7 @@ Jon Baker opened the 2020 TEG at Royal Cinque Ports Golf Club with 39 points. It
 
 The foundation was laid early and laid cleanly. Pars at the first, the second and the fourth. A birdie at the par-5 3rd, one of the harder holes on the card. A par at the 5th to round off five holes without a dropped shot. That opening burst was worth 10 stableford points across its first three holes alone. Nobody else was doing anything of the sort.
 
-He then closed with three more pars, from the 16th through the 18th, and brought the round home without further alarm. It put him top of both the TEG 2020 Trophy and the TEG 2020 Jacket after the opening round. He had never played the course before. His 85 gross set the mark he would need to chase across the rest of the tournament.
+He then closed with three more pars, from the 16th through the 18th, and brought the round home without further alarm. It put him top of both the TEG 13 Trophy and the TEG 13 Jacket after the opening round. He had never played the course before. His 85 gross set the mark he would need to chase across the rest of the tournament.
 
 ## Alex Baker loses eighteen gross shots across two three- and four-hole stretches, the 4th to the 7th and the 10th to the 12th, on the way to 102
 <!-- storyline: d0 -->

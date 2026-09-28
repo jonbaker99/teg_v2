@@ -19,7 +19,7 @@ John Patterson's second round at Praia D'El Rey came to 49 points. It is the sec
 
 He began with three straight bogeys, holes 1 to 3, the golfing equivalent of clearing one's throat for a very long time. Then it got worse. Holes 4 to 6 cost him eight shots: a double bogey, then two triple bogeys, one of them at the 5th, which is among the hardest holes on the course. Six holes in, he was a man with nothing but arithmetic for company. He birdied the 7th. The bleeding stopped there.
 
-What followed was an avalanche. Patterson gathered 17 points across holes 9 to 13, including a birdie at the 12th. He then took 14 more from the final four holes. Having posted 38 in Round 1, his 49 here represented an 11-shot swing. It carried him into the lead of the TEG 2 Trophy race, past Jon Baker, and opened a gap of ten points. He had begun the day dropping shots in threes. He ended it in front of everybody.
+What followed was an avalanche. Patterson gathered 17 points across holes 9 to 13, including a birdie at the 12th. He then took 14 more from the final four holes. Having posted 38 in Round 1, his 49 here represented an 11-shot swing. It carried him into the lead of the TEG 9 Trophy race, past Jon Baker, and opened a gap of ten points. He had begun the day dropping shots in threes. He ended it in front of everybody.
 
 ## Alex Baker, a day after his worst-ever gross round, posts a personal-best round, a personal-best gross score, and a new course record at Praia D'El Rey
 <!-- storyline: d0 -->
@@ -42,7 +42,7 @@ The short par-3 14th did the rest. Stroke index 17, normally one of the kinder h
 ## Jon Baker's one-point overnight Trophy lead evaporates as a ragged middle nine drops him to third, ten adrift of the new leader
 <!-- storyline: race -->
 
-Jon Baker began the second round at Praia D'El Rey a single point clear in the TEG 16 Trophy race. The lead lasted until the middle of his card, and not a hole longer. From the 5th he went three holes without a net par. A double bogey at the 5th. Another at the 6th. A triple bogey at the par-5 7th. Seven shots gone, in the calm manner of a man conceding territory he had never really controlled.
+Jon Baker began the second round at Praia D'El Rey a single point clear in the TEG 9 Trophy race. The lead lasted until the middle of his card, and not a hole longer. From the 5th he went three holes without a net par. A double bogey at the 5th. Another at the 6th. A triple bogey at the par-5 7th. Seven shots gone, in the calm manner of a man conceding territory he had never really controlled.
 
 He did recover, briefly. Three straight pars from the 11th suggested order restored. Then came the quadruple bogey at the short 14th, the same stroke-index-17 hole that had already had Alex Baker, and the run was over.
 

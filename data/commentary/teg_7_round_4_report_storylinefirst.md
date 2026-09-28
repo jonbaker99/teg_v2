@@ -14,7 +14,7 @@ None of it was enough. Meller's lead never actually changed hands, which is the 
 ## Jon Baker's back-to-back blow-ups at the 10th and 11th
 <!-- storyline: d0 -->
 
-Jon Baker's Sunday at Praia D'El Rey began quietly. His opening round of the tournament had already put him second in the TEG 4 Trophy and first in the TEG 4 Green Jacket. He then played holes 2 through 5 without dropping a single gross shot, gaining five strokes to par. It looked like the work of a man who had solved something.
+Jon Baker's Sunday at Praia D'El Rey began quietly. His opening round of the tournament had already put him second in the TEG 7 Trophy and first in the TEG 7 Green Jacket. He then played holes 2 through 5 without dropping a single gross shot, gaining five strokes to par. It looked like the work of a man who had solved something.
 
 Then came the 10th. A sextuple bogey 11 on the par-5, his worst hole of the tournament. He walked to the short 11th and made a quadruple bogey 7. Two holes. No survivors.
 

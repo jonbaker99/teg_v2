@@ -15,11 +15,11 @@
 ## Jon Baker's two-competition collapse, and the survivors either side of him
 <!-- storyline: race -->
 
-Gregg Williams had held the TEG 4 Trophy lead since the 2nd hole of Round 1. Fifty-nine holes. At the 7th on PGA Catalunya's Stadium course, Jon Baker took it off him outright. It lasted two holes.
+Gregg Williams had held the TEG 6 Trophy lead since the 2nd hole of Round 1. Fifty-nine holes. At the 7th on PGA Catalunya's Stadium course, Jon Baker took it off him outright. It lasted two holes.
 
 The 9th is the hardest hole on the course. Baker made 10 there, a sextuple bogey, and handed everything back. Williams reclaimed the lead by making a triple bogey at the same hole. That was all the resistance the situation required.
 
-Baker's afternoon had a second act, and it rhymed with the first. He had carried a one-stroke lead into the round for the TEG 4 Green Jacket. He lost it to David Mullin at that same 9th, drew level again at the 16th, and got no closer. Mullin finished the round four clear.
+Baker's afternoon had a second act, and it rhymed with the first. He had carried a one-stroke lead into the round for the TEG 6 Green Jacket. He lost it to David Mullin at that same 9th, drew level again at the 16th, and got no closer. Mullin finished the round four clear.
 
 Williams, for his part, did not win this with golf anyone would want filmed. Eleven shots went over the first four holes. From the 6th he played four consecutive holes without a net par. He then gained five shots from the 10th, which suggested a man remembering his profession, before bleeding 14 over the closing five. His eight-stroke lead finished at five. He spent three strokes of it and kept the rest, which is what winning looks like here.
 

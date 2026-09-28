@@ -20,6 +20,7 @@ from teg_analysis.reporting.verify import (
     check_no_invented_mechanisms,
     check_not_a_week,
     check_swing_claims,
+    check_teg_references,
     check_weekdays,
     format_findings,
     verify_report,
@@ -463,3 +464,35 @@ def test_total_accepts_this_rounds_score():
         10, 3, type="total", player="John Patterson", competition="Trophy",
         value=27, quote="He signed for 27, the worst Trophy score of the day.")
     assert findings == []
+
+
+# ---------------------------------------------------------------------------
+# TEG-number references (2026-09-28): the writers copied NAMING_RULE's old
+# "TEG 16" example, and used round numbers as TEG numbers
+# ---------------------------------------------------------------------------
+def _teg_refs(text, teg=18):
+    return [(f.severity, f.detail) for f in check_teg_references(_ctx(text, teg_num=teg))]
+
+
+def test_teg_reference_to_this_teg_passes():
+    assert _teg_refs("Baker led the TEG 18 Trophy after the TEG 18 opener.") == []
+
+
+def test_later_teg_is_an_error():
+    # The real TEG 18 R1 shape was a past number; the TEG 16 R4 one was "the TEG 17 Trophy".
+    (sev, detail), = _teg_refs("Stuart Neumann has won the TEG 17 Trophy.", teg=16)
+    assert sev == "error" and "TEG 17" in detail
+
+
+def test_year_as_teg_number_is_an_error():
+    (sev, _), = _teg_refs("It put him top of the TEG 2020 Trophy.", teg=13)
+    assert sev == "error"
+
+
+def test_earlier_teg_competition_is_a_warning():
+    (sev, detail), = _teg_refs("Baker led the TEG 16 Green Jacket race.")
+    assert sev == "warning" and "TEG 16" in detail
+
+
+def test_plain_earlier_teg_reference_passes():
+    assert _teg_refs("His 94 beat the 96 he posted in TEG 12.") == []

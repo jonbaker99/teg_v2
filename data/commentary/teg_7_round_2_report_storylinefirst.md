@@ -7,7 +7,7 @@ Henry Meller's -15 at Bom Sucesso is the best round in TEG history. That alone w
 
 The round was built through holes 3 to 9, where Meller gained nine shots to par. There was a birdie at the par-5 7th. There were pars either side of bogeys at the 4th and the 6th, the latter being the hardest hole on the course and thus entitled to rather more than a bogey. He then played holes 7 through 9 without dropping a gross shot. He returned for a second helping over 15 to 17, taking three more shots off par.
 
-The damage was felt in both races. Meller had led the TEG 2 Trophy overnight, and his gap went from 3 to 11. In the Green Jacket he took the lead from Jon Baker and opened a 3-shot advantage.
+The damage was felt in both races. Meller had led the TEG 7 Trophy overnight, and his gap went from 3 to 11. In the Green Jacket he took the lead from Jon Baker and opened a 3-shot advantage.
 
 ## David Mullin and Stuart Neumann both produce career- and TEG-best rounds in Meller's shadow
 <!-- storyline: d0 -->
@@ -25,7 +25,7 @@ Round 2 at Bom Sucesso offered Alex Baker and Gregg Williams nothing at all. Bot
 
 Baker matched him. He opened with a quadruple bogey 8 at the 1st, which is a decisive way to begin anything, and then shed eight shots across a three-hole stretch from the 14th to the 16th. Triple bogeys either side of a double bogey. The symmetry was the only tidy thing about it.
 
-Neither round improved their standing. Baker remained the laggard of the TEG 16 Wooden Spoon, though the gap to safety had closed slightly to three shots after Bom Sucesso. He did not close it by playing well. With Meller disappearing over the horizon in the TEG 16 Trophy, events at the bottom had no bearing on the wider race. For Baker and Williams, that was probably a mercy.
+Neither round improved their standing. Baker remained the laggard of the TEG 7 Wooden Spoon, though the gap to safety had closed slightly to three shots after Bom Sucesso. He did not close it by playing well. With Meller disappearing over the horizon in the TEG 7 Trophy, events at the bottom had no bearing on the wider race. For Baker and Williams, that was probably a mercy.
 
 ## The Green Jacket lead changes hands three times before Jon Baker's overnight advantage disappears
 <!-- storyline: race -->
