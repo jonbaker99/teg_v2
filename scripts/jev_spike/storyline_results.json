@@ -1,0 +1,1820 @@
+[
+ {
+  "plan": "teg_10_round_1_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Boavista's Eighteenth Collects Its Dues",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.817,
+  "jev_humour": 0.513
+ },
+ {
+  "plan": "teg_10_round_2_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Jon Baker Signs for Eighty-Two",
+  "opus_compelling": 8,
+  "opus_humour": 4,
+  "jev_compelling": 0.75,
+  "jev_humour": 0.547
+ },
+ {
+  "plan": "teg_10_round_2_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Thirteen Shots in Three Holes",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.72,
+  "jev_humour": 0.66
+ },
+ {
+  "plan": "teg_10_round_3_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Patterson Loses Nineteen Shots in Five Holes",
+  "opus_compelling": 7,
+  "opus_humour": 7,
+  "jev_compelling": 0.673,
+  "jev_humour": 0.623
+ },
+ {
+  "plan": "teg_10_round_4_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Eleven at the Eighth",
+  "opus_compelling": 7,
+  "opus_humour": 7,
+  "jev_compelling": 0.737,
+  "jev_humour": 0.667
+ },
+ {
+  "plan": "teg_10_round_4_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Three Course Bests in One Afternoon",
+  "opus_compelling": 6,
+  "opus_humour": 6,
+  "jev_compelling": 0.907,
+  "jev_humour": 0.577
+ },
+ {
+  "plan": "teg_10_storyline_plan",
+  "slot": "trophy_storyline",
+  "headline": "Alex Baker Ends the Waiting with 184",
+  "opus_compelling": 9,
+  "opus_humour": 4,
+  "jev_compelling": 0.983,
+  "jev_humour": 0.317
+ },
+ {
+  "plan": "teg_10_storyline_plan",
+  "slot": "jacket_storyline",
+  "headline": "David Mullin Breaks Boavista, Then the Record Book",
+  "opus_compelling": 8,
+  "opus_humour": 4,
+  "jev_compelling": 0.967,
+  "jev_humour": 0.2
+ },
+ {
+  "plan": "teg_10_storyline_plan",
+  "slot": "spoon_storyline",
+  "headline": "Ten, Then Eleven, at Boavista's Eighth",
+  "opus_compelling": 8,
+  "opus_humour": 8,
+  "jev_compelling": 0.843,
+  "jev_humour": 0.807
+ },
+ {
+  "plan": "teg_10_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Two Rounds, Two Tens at the 18th",
+  "opus_compelling": 7,
+  "opus_humour": 9,
+  "jev_compelling": 0.75,
+  "jev_humour": 0.777
+ },
+ {
+  "plan": "teg_10_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Three Personal Bests, Still Eleven Short",
+  "opus_compelling": 7,
+  "opus_humour": 4,
+  "jev_compelling": 0.85,
+  "jev_humour": 0.443
+ },
+ {
+  "plan": "teg_11_round_1_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Gregg Williams Improves by Twelve Anyway",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.787,
+  "jev_humour": 0.723
+ },
+ {
+  "plan": "teg_11_round_2_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Patterson Sets a Record Nobody Wants",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.737,
+  "jev_humour": 0.66
+ },
+ {
+  "plan": "teg_11_round_2_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Williams Shrugs Off a Ten",
+  "opus_compelling": 6,
+  "opus_humour": 7,
+  "jev_compelling": 0.797,
+  "jev_humour": 0.653
+ },
+ {
+  "plan": "teg_11_round_3_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Mullin Leads the Jacket for One Hole",
+  "opus_compelling": 7,
+  "opus_humour": 7,
+  "jev_compelling": 0.81,
+  "jev_humour": 0.79
+ },
+ {
+  "plan": "teg_11_round_4_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Mullin's Best Here and Still Last",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.723,
+  "jev_humour": 0.737
+ },
+ {
+  "plan": "teg_11_round_4_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Eleven Shots Gone in Four Holes",
+  "opus_compelling": 6,
+  "opus_humour": 6,
+  "jev_compelling": 0.83,
+  "jev_humour": 0.63
+ },
+ {
+  "plan": "teg_11_storyline_plan",
+  "slot": "trophy_storyline",
+  "headline": "Alex Baker's Four-Shot Lead Lasted Three Holes",
+  "opus_compelling": 9,
+  "opus_humour": 6,
+  "jev_compelling": 0.98,
+  "jev_humour": 0.747
+ },
+ {
+  "plan": "teg_11_storyline_plan",
+  "slot": "jacket_storyline",
+  "headline": "Two Course Records, One Green Jacket",
+  "opus_compelling": 8,
+  "opus_humour": 4,
+  "jev_compelling": 0.973,
+  "jev_humour": 0.24
+ },
+ {
+  "plan": "teg_11_storyline_plan",
+  "slot": "spoon_storyline",
+  "headline": "Eight Jackets, And Now A Spoon",
+  "opus_compelling": 8,
+  "opus_humour": 8,
+  "jev_compelling": 0.827,
+  "jev_humour": 0.77
+ },
+ {
+  "plan": "teg_11_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Patterson's Eleven, And The Spoon Dodged",
+  "opus_compelling": 8,
+  "opus_humour": 9,
+  "jev_compelling": 0.95,
+  "jev_humour": 0.803
+ },
+ {
+  "plan": "teg_11_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Fourteen Shots Better, Still Detonating",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.933,
+  "jev_humour": 0.82
+ },
+ {
+  "plan": "teg_12_round_1_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Neumann Sets a Mark Nobody Wanted",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.843,
+  "jev_humour": 0.67
+ },
+ {
+  "plan": "teg_12_round_1_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Ten Shots Gone in Three Holes",
+  "opus_compelling": 6,
+  "opus_humour": 6,
+  "jev_compelling": 0.72,
+  "jev_humour": 0.66
+ },
+ {
+  "plan": "teg_12_round_2_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Eleven Shots in Four Holes",
+  "opus_compelling": 7,
+  "opus_humour": 7,
+  "jev_compelling": 0.717,
+  "jev_humour": 0.613
+ },
+ {
+  "plan": "teg_12_round_2_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Four Pars, Then the 9th",
+  "opus_compelling": 6,
+  "opus_humour": 5,
+  "jev_compelling": 0.633,
+  "jev_humour": 0.267
+ },
+ {
+  "plan": "teg_12_round_3_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Alex Baker Drops Nine Twice Over",
+  "opus_compelling": 7,
+  "opus_humour": 7,
+  "jev_compelling": 0.69,
+  "jev_humour": 0.717
+ },
+ {
+  "plan": "teg_12_round_3_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Two Rounds Unravel on the Back Nine",
+  "opus_compelling": 6,
+  "opus_humour": 6,
+  "jev_compelling": 0.677,
+  "jev_humour": 0.613
+ },
+ {
+  "plan": "teg_12_round_4_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Two Quadruple Bogeys Sink David Mullin",
+  "opus_compelling": 7,
+  "opus_humour": 7,
+  "jev_compelling": 0.897,
+  "jev_humour": 0.823
+ },
+ {
+  "plan": "teg_12_round_4_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Stuart Neumann Holes Out for Five",
+  "opus_compelling": 6,
+  "opus_humour": 6,
+  "jev_compelling": 0.867,
+  "jev_humour": 0.39
+ },
+ {
+  "plan": "teg_12_storyline_plan",
+  "slot": "trophy_storyline",
+  "headline": "Three Blow-Ups, One Trophy, Ten Clear",
+  "opus_compelling": 9,
+  "opus_humour": 7,
+  "jev_compelling": 0.973,
+  "jev_humour": 0.697
+ },
+ {
+  "plan": "teg_12_storyline_plan",
+  "slot": "jacket_storyline",
+  "headline": "Jon Baker Breaks The Stadium Record",
+  "opus_compelling": 8,
+  "opus_humour": 4,
+  "jev_compelling": 0.973,
+  "jev_humour": 0.24
+ },
+ {
+  "plan": "teg_12_storyline_plan",
+  "slot": "spoon_storyline",
+  "headline": "Ten Shots, Three Holes, One Spoon",
+  "opus_compelling": 8,
+  "opus_humour": 8,
+  "jev_compelling": 0.943,
+  "jev_humour": 0.813
+ },
+ {
+  "plan": "teg_12_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Neumann's Twelve, Then Neumann's Eagle",
+  "opus_compelling": 8,
+  "opus_humour": 8,
+  "jev_compelling": 0.983,
+  "jev_humour": 0.723
+ },
+ {
+  "plan": "teg_12_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Two Personal Bests, One Eleven",
+  "opus_compelling": 8,
+  "opus_humour": 6,
+  "jev_compelling": 0.94,
+  "jev_humour": 0.62
+ },
+ {
+  "plan": "teg_12_storyline_plan",
+  "slot": "discovered_2",
+  "headline": "Bottom For Three Rounds, Then Spared",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.853,
+  "jev_humour": 0.683
+ },
+ {
+  "plan": "teg_13_round_1_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Eighteen Shots Lost in Seven Holes",
+  "opus_compelling": 6,
+  "opus_humour": 7,
+  "jev_compelling": 0.837,
+  "jev_humour": 0.74
+ },
+ {
+  "plan": "teg_13_round_1_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Gregg Williams and David Mullin Rally",
+  "opus_compelling": 6,
+  "opus_humour": 5,
+  "jev_compelling": 0.657,
+  "jev_humour": 0.53
+ },
+ {
+  "plan": "teg_13_round_2_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "John Patterson's Three Good Holes",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.693,
+  "jev_humour": 0.71
+ },
+ {
+  "plan": "teg_13_round_2_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Five Doubles to Finish for Alex Baker",
+  "opus_compelling": 6,
+  "opus_humour": 7,
+  "jev_compelling": 0.757,
+  "jev_humour": 0.683
+ },
+ {
+  "plan": "teg_13_round_3_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Alex Baker Inherits the Wooden Spoon",
+  "opus_compelling": 7,
+  "opus_humour": 7,
+  "jev_compelling": 0.667,
+  "jev_humour": 0.613
+ },
+ {
+  "plan": "teg_13_round_3_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Forty Points and Four Shots Lost",
+  "opus_compelling": 6,
+  "opus_humour": 7,
+  "jev_compelling": 0.85,
+  "jev_humour": 0.657
+ },
+ {
+  "plan": "teg_13_round_4_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "David Mullin Undone at the Tenth",
+  "opus_compelling": 7,
+  "opus_humour": 7,
+  "jev_compelling": 0.93,
+  "jev_humour": 0.707
+ },
+ {
+  "plan": "teg_13_round_4_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "An Eagle and a Nine",
+  "opus_compelling": 7,
+  "opus_humour": 7,
+  "jev_compelling": 0.877,
+  "jev_humour": 0.687
+ },
+ {
+  "plan": "teg_13_storyline_plan",
+  "slot": "trophy_storyline",
+  "headline": "Jon Baker's Pars Break The Field",
+  "opus_compelling": 8,
+  "opus_humour": 4,
+  "jev_compelling": 0.81,
+  "jev_humour": 0.137
+ },
+ {
+  "plan": "teg_13_storyline_plan",
+  "slot": "jacket_storyline",
+  "headline": "Eighteen Clear: Jon Baker's Third Straight Jacket",
+  "opus_compelling": 7,
+  "opus_humour": 4,
+  "jev_compelling": 0.93,
+  "jev_humour": 0.267
+ },
+ {
+  "plan": "teg_13_storyline_plan",
+  "slot": "spoon_storyline",
+  "headline": "David Mullin Completes The Spoon Hat-Trick",
+  "opus_compelling": 8,
+  "opus_humour": 8,
+  "jev_compelling": 0.787,
+  "jev_humour": 0.817
+ },
+ {
+  "plan": "teg_13_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Forty-Nine At Littlestone, Eights Everywhere Else",
+  "opus_compelling": 9,
+  "opus_humour": 9,
+  "jev_compelling": 0.963,
+  "jev_humour": 0.843
+ },
+ {
+  "plan": "teg_13_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Alex Baker Saves His Best For Last",
+  "opus_compelling": 7,
+  "opus_humour": 6,
+  "jev_compelling": 0.87,
+  "jev_humour": 0.577
+ },
+ {
+  "plan": "teg_14_round_1_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Alex Baker's Ten at the Sixteenth",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.797,
+  "jev_humour": 0.707
+ },
+ {
+  "plan": "teg_14_round_2_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "The Links Collects Its Debts",
+  "opus_compelling": 7,
+  "opus_humour": 7,
+  "jev_compelling": 0.687,
+  "jev_humour": 0.693
+ },
+ {
+  "plan": "teg_14_round_3_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Mullin Closes With Thirteen Points",
+  "opus_compelling": 7,
+  "opus_humour": 7,
+  "jev_compelling": 0.673,
+  "jev_humour": 0.387
+ },
+ {
+  "plan": "teg_14_round_3_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Alex Baker Gains A Single Point",
+  "opus_compelling": 6,
+  "opus_humour": 7,
+  "jev_compelling": 0.68,
+  "jev_humour": 0.72
+ },
+ {
+  "plan": "teg_14_round_4_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "The Spoon Arrives With a Record",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.81,
+  "jev_humour": 0.77
+ },
+ {
+  "plan": "teg_14_storyline_plan",
+  "slot": "trophy_storyline",
+  "headline": "Mullin Survives the Sixteenth",
+  "opus_compelling": 9,
+  "opus_humour": 5,
+  "jev_compelling": 0.977,
+  "jev_humour": 0.733
+ },
+ {
+  "plan": "teg_14_storyline_plan",
+  "slot": "jacket_storyline",
+  "headline": "Twelve Down to Seven, Never in Doubt",
+  "opus_compelling": 7,
+  "opus_humour": 3,
+  "jev_compelling": 0.557,
+  "jev_humour": 0.213
+ },
+ {
+  "plan": "teg_14_storyline_plan",
+  "slot": "spoon_storyline",
+  "headline": "Twelve Shots Adrift, No Argument",
+  "opus_compelling": 6,
+  "opus_humour": 6,
+  "jev_compelling": 0.49,
+  "jev_humour": 0.393
+ },
+ {
+  "plan": "teg_14_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Baker Breaks the Course Record \u2014 And Still Finishes Last",
+  "opus_compelling": 9,
+  "opus_humour": 8,
+  "jev_compelling": 0.983,
+  "jev_humour": 0.817
+ },
+ {
+  "plan": "teg_14_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "The Sixteenth Strikes Twice",
+  "opus_compelling": 7,
+  "opus_humour": 7,
+  "jev_compelling": 0.907,
+  "jev_humour": 0.627
+ },
+ {
+  "plan": "teg_14_storyline_plan",
+  "slot": "discovered_2",
+  "headline": "Williams's Best Week, Nobody Noticed",
+  "opus_compelling": 6,
+  "opus_humour": 4,
+  "jev_compelling": 0.69,
+  "jev_humour": 0.447
+ },
+ {
+  "plan": "teg_15_round_1_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Two Quintuple Bogeys Sink Jon Baker",
+  "opus_compelling": 7,
+  "opus_humour": 6,
+  "jev_compelling": 0.807,
+  "jev_humour": 0.63
+ },
+ {
+  "plan": "teg_15_round_2_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Neumann Inherits the Spoon at the Fourteenth",
+  "opus_compelling": 7,
+  "opus_humour": 7,
+  "jev_compelling": 0.703,
+  "jev_humour": 0.653
+ },
+ {
+  "plan": "teg_15_round_2_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "A New Course Collects Its Dues",
+  "opus_compelling": 8,
+  "opus_humour": 8,
+  "jev_compelling": 0.847,
+  "jev_humour": 0.65
+ },
+ {
+  "plan": "teg_15_round_3_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Patterson's Wild Penha Longa Baptism",
+  "opus_compelling": 6,
+  "opus_humour": 6,
+  "jev_compelling": 0.763,
+  "jev_humour": 0.587
+ },
+ {
+  "plan": "teg_15_round_4_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Mullin's Round to Forget",
+  "opus_compelling": 8,
+  "opus_humour": 6,
+  "jev_compelling": 0.817,
+  "jev_humour": 0.683
+ },
+ {
+  "plan": "teg_15_round_4_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Patterson's Ten at the First Sets the Tone",
+  "opus_compelling": 7,
+  "opus_humour": 7,
+  "jev_compelling": 0.723,
+  "jev_humour": 0.6
+ },
+ {
+  "plan": "teg_15_storyline_plan",
+  "slot": "trophy_storyline",
+  "headline": "Williams Banks the Trophy in Sintra",
+  "opus_compelling": 7,
+  "opus_humour": 4,
+  "jev_compelling": 0.823,
+  "jev_humour": 0.24
+ },
+ {
+  "plan": "teg_15_storyline_plan",
+  "slot": "jacket_storyline",
+  "headline": "Williams's First Jacket, Won By Twenty-Nine",
+  "opus_compelling": 7,
+  "opus_humour": 3,
+  "jev_compelling": 0.94,
+  "jev_humour": 0.47
+ },
+ {
+  "plan": "teg_15_storyline_plan",
+  "slot": "spoon_storyline",
+  "headline": "The Spoon Stays in the Family",
+  "opus_compelling": 8,
+  "opus_humour": 9,
+  "jev_compelling": 0.757,
+  "jev_humour": 0.743
+ },
+ {
+  "plan": "teg_15_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Mullin Eagles, Then Falls Apart at Oitavos",
+  "opus_compelling": 8,
+  "opus_humour": 7,
+  "jev_compelling": 0.947,
+  "jev_humour": 0.753
+ },
+ {
+  "plan": "teg_15_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Neumann Turns 115 Into Second Place",
+  "opus_compelling": 7,
+  "opus_humour": 6,
+  "jev_compelling": 0.96,
+  "jev_humour": 0.82
+ },
+ {
+  "plan": "teg_15_storyline_plan",
+  "slot": "discovered_2",
+  "headline": "Nineteen Points, Then a Ten",
+  "opus_compelling": 6,
+  "opus_humour": 6,
+  "jev_compelling": 0.827,
+  "jev_humour": 0.7
+ },
+ {
+  "plan": "teg_16_round_1_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Alex Baker Sets a Record Nobody Wants",
+  "opus_compelling": 8,
+  "opus_humour": 8,
+  "jev_compelling": 0.86,
+  "jev_humour": 0.723
+ },
+ {
+  "plan": "teg_16_round_1_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Jon Baker's Purple Patch Ends at the 17th",
+  "opus_compelling": 6,
+  "opus_humour": 6,
+  "jev_compelling": 0.667,
+  "jev_humour": 0.247
+ },
+ {
+  "plan": "teg_16_round_2_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Williams Survives The Turn",
+  "opus_compelling": 6,
+  "opus_humour": 6,
+  "jev_compelling": 0.823,
+  "jev_humour": 0.38
+ },
+ {
+  "plan": "teg_16_round_2_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Alex Baker's Troia Ordeal",
+  "opus_compelling": 6,
+  "opus_humour": 7,
+  "jev_compelling": 0.71,
+  "jev_humour": 0.703
+ },
+ {
+  "plan": "teg_16_round_3_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Two Collapses, One Round for Alex Baker",
+  "opus_compelling": 7,
+  "opus_humour": 7,
+  "jev_compelling": 0.883,
+  "jev_humour": 0.723
+ },
+ {
+  "plan": "teg_16_round_4_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Williams Seals a Second Green Jacket",
+  "opus_compelling": 7,
+  "opus_humour": 5,
+  "jev_compelling": 0.567,
+  "jev_humour": 0.143
+ },
+ {
+  "plan": "teg_16_round_4_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Alex Baker Sets a New Estoril Worst",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.91,
+  "jev_humour": 0.73
+ },
+ {
+  "plan": "teg_16_storyline_plan",
+  "slot": "trophy_storyline",
+  "headline": "Two Spoons, Then This: Neumann Wins by 13",
+  "opus_compelling": 8,
+  "opus_humour": 4,
+  "jev_compelling": 0.91,
+  "jev_humour": 0.667
+ },
+ {
+  "plan": "teg_16_storyline_plan",
+  "slot": "jacket_storyline",
+  "headline": "Williams Breaks It Open at Penha Longa",
+  "opus_compelling": 7,
+  "opus_humour": 3,
+  "jev_compelling": 0.72,
+  "jev_humour": 0.237
+ },
+ {
+  "plan": "teg_16_storyline_plan",
+  "slot": "spoon_storyline",
+  "headline": "Two Course Records, Both the Wrong Way",
+  "opus_compelling": 7,
+  "opus_humour": 9,
+  "jev_compelling": 0.887,
+  "jev_humour": 0.823
+ },
+ {
+  "plan": "teg_16_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Mullin's 80 Is the Lowest Estoril Has Seen",
+  "opus_compelling": 8,
+  "opus_humour": 5,
+  "jev_compelling": 0.927,
+  "jev_humour": 0.617
+ },
+ {
+  "plan": "teg_16_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "The Bakers Both Break at the Twelfth",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.75,
+  "jev_humour": 0.65
+ },
+ {
+  "plan": "teg_17_round_1_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Baker Rewrites the Record Books, Badly",
+  "opus_compelling": 9,
+  "opus_humour": 8,
+  "jev_compelling": 0.937,
+  "jev_humour": 0.787
+ },
+ {
+  "plan": "teg_17_round_1_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Mullin's Round of Two Halves",
+  "opus_compelling": 6,
+  "opus_humour": 4,
+  "jev_compelling": 0.67,
+  "jev_humour": 0.43
+ },
+ {
+  "plan": "teg_17_round_2_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Two Quads Can't Stop Alex Baker",
+  "opus_compelling": 7,
+  "opus_humour": 6,
+  "jev_compelling": 0.83,
+  "jev_humour": 0.733
+ },
+ {
+  "plan": "teg_17_round_3_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Four Blow-Ups Undo Alex Baker",
+  "opus_compelling": 6,
+  "opus_humour": 7,
+  "jev_compelling": 0.737,
+  "jev_humour": 0.633
+ },
+ {
+  "plan": "teg_17_round_3_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Williams Slips To The Bottom",
+  "opus_compelling": 7,
+  "opus_humour": 6,
+  "jev_compelling": 0.707,
+  "jev_humour": 0.573
+ },
+ {
+  "plan": "teg_17_round_4_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Twin Collapses Steal the Show",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.937,
+  "jev_humour": 0.823
+ },
+ {
+  "plan": "teg_17_storyline_plan",
+  "slot": "trophy_storyline",
+  "headline": "Fourth Place, No More",
+  "opus_compelling": 8,
+  "opus_humour": 3,
+  "jev_compelling": 0.847,
+  "jev_humour": 0.253
+ },
+ {
+  "plan": "teg_17_storyline_plan",
+  "slot": "jacket_storyline",
+  "headline": "One Hole in the Sun",
+  "opus_compelling": 6,
+  "opus_humour": 4,
+  "jev_compelling": 0.9,
+  "jev_humour": 0.453
+ },
+ {
+  "plan": "teg_17_storyline_plan",
+  "slot": "spoon_storyline",
+  "headline": "From the Podium to the Cellar",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.913,
+  "jev_humour": 0.737
+ },
+ {
+  "plan": "teg_17_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "The Baker Who Couldn't Stop Bleeding Shots",
+  "opus_compelling": 7,
+  "opus_humour": 9,
+  "jev_compelling": 0.873,
+  "jev_humour": 0.717
+ },
+ {
+  "plan": "teg_17_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "West Cliffs Breaks Both Ways",
+  "opus_compelling": 7,
+  "opus_humour": 6,
+  "jev_compelling": 0.973,
+  "jev_humour": 0.647
+ },
+ {
+  "plan": "teg_17_storyline_plan",
+  "slot": "discovered_2",
+  "headline": "Leader, Loser, Fighter, Fallen",
+  "opus_compelling": 8,
+  "opus_humour": 7,
+  "jev_compelling": 0.95,
+  "jev_humour": 0.743
+ },
+ {
+  "plan": "teg_18_round_1_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "An Eleven At The Fifteenth Undoes David Mullin",
+  "opus_compelling": 7,
+  "opus_humour": 6,
+  "jev_compelling": 0.857,
+  "jev_humour": 0.64
+ },
+ {
+  "plan": "teg_18_round_1_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Gregg Williams Survives A War Of Attrition",
+  "opus_compelling": 6,
+  "opus_humour": 6,
+  "jev_compelling": 0.887,
+  "jev_humour": 0.67
+ },
+ {
+  "plan": "teg_18_round_1_storyline_plan",
+  "slot": "discovered_2",
+  "headline": "John Patterson's Round Of Two Halves",
+  "opus_compelling": 7,
+  "opus_humour": 6,
+  "jev_compelling": 0.847,
+  "jev_humour": 0.69
+ },
+ {
+  "plan": "teg_18_round_2_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "A Record Nobody Wanted",
+  "opus_compelling": 9,
+  "opus_humour": 8,
+  "jev_compelling": 0.977,
+  "jev_humour": 0.7
+ },
+ {
+  "plan": "teg_18_round_3_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Alex Baker Rescues a Ruined Round",
+  "opus_compelling": 7,
+  "opus_humour": 7,
+  "jev_compelling": 0.903,
+  "jev_humour": 0.673
+ },
+ {
+  "plan": "teg_18_round_3_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "The Stadium Yields Three Personal Bests",
+  "opus_compelling": 6,
+  "opus_humour": 6,
+  "jev_compelling": 0.887,
+  "jev_humour": 0.497
+ },
+ {
+  "plan": "teg_18_round_4_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Five Straight Doubles Settle the Spoon",
+  "opus_compelling": 7,
+  "opus_humour": 7,
+  "jev_compelling": 0.743,
+  "jev_humour": 0.703
+ },
+ {
+  "plan": "teg_18_round_4_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Nobody Escapes Fourteen Through Seventeen",
+  "opus_compelling": 7,
+  "opus_humour": 6,
+  "jev_compelling": 0.767,
+  "jev_humour": 0.577
+ },
+ {
+  "plan": "teg_18_storyline_plan",
+  "slot": "trophy_storyline",
+  "headline": "Alex Baker Wins It in Round One",
+  "opus_compelling": 8,
+  "opus_humour": 6,
+  "jev_compelling": 0.893,
+  "jev_humour": 0.76
+ },
+ {
+  "plan": "teg_18_storyline_plan",
+  "slot": "jacket_storyline",
+  "headline": "Nine at the Seventh, Jacket by Fourteen",
+  "opus_compelling": 8,
+  "opus_humour": 5,
+  "jev_compelling": 0.987,
+  "jev_humour": 0.743
+ },
+ {
+  "plan": "teg_18_storyline_plan",
+  "slot": "spoon_storyline",
+  "headline": "The Defending Champion Finishes Last",
+  "opus_compelling": 8,
+  "opus_humour": 7,
+  "jev_compelling": 0.947,
+  "jev_humour": 0.813
+ },
+ {
+  "plan": "teg_18_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "An Eleven, Then a Record 84",
+  "opus_compelling": 9,
+  "opus_humour": 5,
+  "jev_compelling": 0.963,
+  "jev_humour": 0.753
+ },
+ {
+  "plan": "teg_18_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Twenty-Two Shots Gone by the Tenth",
+  "opus_compelling": 8,
+  "opus_humour": 6,
+  "jev_compelling": 0.937,
+  "jev_humour": 0.657
+ },
+ {
+  "plan": "teg_18_storyline_plan",
+  "slot": "discovered_2",
+  "headline": "Eleven, Eleven and a Ten",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.833,
+  "jev_humour": 0.733
+ },
+ {
+  "plan": "teg_2_round_1_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Level at Two, Lost by Eighteen",
+  "opus_compelling": 7,
+  "opus_humour": 6,
+  "jev_compelling": 0.967,
+  "jev_humour": 0.72
+ },
+ {
+  "plan": "teg_2_round_2_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Three Eights at the Last",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.837,
+  "jev_humour": 0.617
+ },
+ {
+  "plan": "teg_2_round_2_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Meller's Best Round Yet, Still Last",
+  "opus_compelling": 6,
+  "opus_humour": 6,
+  "jev_compelling": 0.613,
+  "jev_humour": 0.55
+ },
+ {
+  "plan": "teg_2_round_3_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Meller's Masterclass Comes Too Late",
+  "opus_compelling": 7,
+  "opus_humour": 6,
+  "jev_compelling": 0.74,
+  "jev_humour": 0.673
+ },
+ {
+  "plan": "teg_2_round_3_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Five Holes That Cost The Trophy",
+  "opus_compelling": 7,
+  "opus_humour": 5,
+  "jev_compelling": 0.833,
+  "jev_humour": 0.54
+ },
+ {
+  "plan": "teg_2_storyline_plan",
+  "slot": "trophy_storyline",
+  "headline": "Mullin Breaks His Own Record To Win",
+  "opus_compelling": 9,
+  "opus_humour": 5,
+  "jev_compelling": 0.993,
+  "jev_humour": 0.707
+ },
+ {
+  "plan": "teg_2_storyline_plan",
+  "slot": "jacket_storyline",
+  "headline": "Mullin Owns The Gross From Round One",
+  "opus_compelling": 6,
+  "opus_humour": 4,
+  "jev_compelling": 0.843,
+  "jev_humour": 0.507
+ },
+ {
+  "plan": "teg_2_storyline_plan",
+  "slot": "spoon_storyline",
+  "headline": "Meller Finds His Game, Keeps The Spoon",
+  "opus_compelling": 8,
+  "opus_humour": 8,
+  "jev_compelling": 0.843,
+  "jev_humour": 0.79
+ },
+ {
+  "plan": "teg_2_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "One Par Three, Four Disasters",
+  "opus_compelling": 8,
+  "opus_humour": 9,
+  "jev_compelling": 0.827,
+  "jev_humour": 0.68
+ },
+ {
+  "plan": "teg_2_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Williams Signs For Three Nines",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.743,
+  "jev_humour": 0.747
+ },
+ {
+  "plan": "teg_3_round_1_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Thirteen Shots in Four Holes",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.913,
+  "jev_humour": 0.767
+ },
+ {
+  "plan": "teg_3_round_2_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "A New Boavista Best, Somehow",
+  "opus_compelling": 6,
+  "opus_humour": 8,
+  "jev_compelling": 0.853,
+  "jev_humour": 0.72
+ },
+ {
+  "plan": "teg_3_round_3_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Two Personal Bests Go Unnoticed",
+  "opus_compelling": 6,
+  "opus_humour": 4,
+  "jev_compelling": 0.687,
+  "jev_humour": 0.503
+ },
+ {
+  "plan": "teg_3_round_4_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Boavista's Easiest Hole Takes Another Ten",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.883,
+  "jev_humour": 0.823
+ },
+ {
+  "plan": "teg_3_round_4_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Three Quadruple Bogeys, One Respectable Net",
+  "opus_compelling": 6,
+  "opus_humour": 8,
+  "jev_compelling": 0.677,
+  "jev_humour": 0.633
+ },
+ {
+  "plan": "teg_3_storyline_plan",
+  "slot": "trophy_storyline",
+  "headline": "Baker Settles It in Round One",
+  "opus_compelling": 8,
+  "opus_humour": 4,
+  "jev_compelling": 0.99,
+  "jev_humour": 0.297
+ },
+ {
+  "plan": "teg_3_storyline_plan",
+  "slot": "jacket_storyline",
+  "headline": "Mullin Rewrites Boavista, Loses His Crown",
+  "opus_compelling": 7,
+  "opus_humour": 4,
+  "jev_compelling": 0.96,
+  "jev_humour": 0.6
+ },
+ {
+  "plan": "teg_3_storyline_plan",
+  "slot": "spoon_storyline",
+  "headline": "A 12, an 89, and the Spoon",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.943,
+  "jev_humour": 0.82
+ },
+ {
+  "plan": "teg_3_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Boavista's 17th Eats Three Men",
+  "opus_compelling": 7,
+  "opus_humour": 9,
+  "jev_compelling": 0.77,
+  "jev_humour": 0.713
+ },
+ {
+  "plan": "teg_3_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Four Quadruples and a Personal Best",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.943,
+  "jev_humour": 0.787
+ },
+ {
+  "plan": "teg_4_round_1_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "One Birdie, Then Freefall",
+  "opus_compelling": 7,
+  "opus_humour": 7,
+  "jev_compelling": 0.97,
+  "jev_humour": 0.787
+ },
+ {
+  "plan": "teg_4_round_2_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Neumann Takes Over Last Place",
+  "opus_compelling": 6,
+  "opus_humour": 5,
+  "jev_compelling": 0.627,
+  "jev_humour": 0.557
+ },
+ {
+  "plan": "teg_4_round_2_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "A Debut Course Takes No Prisoners",
+  "opus_compelling": 7,
+  "opus_humour": 6,
+  "jev_compelling": 0.81,
+  "jev_humour": 0.63
+ },
+ {
+  "plan": "teg_4_round_3_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Four Blow-Ups Sink Williams",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.943,
+  "jev_humour": 0.73
+ },
+ {
+  "plan": "teg_4_round_4_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Eagle at Eight, Ruin by Sixteen",
+  "opus_compelling": 9,
+  "opus_humour": 7,
+  "jev_compelling": 0.987,
+  "jev_humour": 0.77
+ },
+ {
+  "plan": "teg_4_round_4_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Worst Round in TEG History",
+  "opus_compelling": 8,
+  "opus_humour": 7,
+  "jev_compelling": 0.937,
+  "jev_humour": 0.68
+ },
+ {
+  "plan": "teg_4_storyline_plan",
+  "slot": "trophy_storyline",
+  "headline": "Baker Leads by Seven, Loses by Eight",
+  "opus_compelling": 9,
+  "opus_humour": 6,
+  "jev_compelling": 0.963,
+  "jev_humour": 0.75
+ },
+ {
+  "plan": "teg_4_storyline_plan",
+  "slot": "jacket_storyline",
+  "headline": "Nineteen Clear: Mullin Makes It Three",
+  "opus_compelling": 6,
+  "opus_humour": 3,
+  "jev_compelling": 0.8,
+  "jev_humour": 0.293
+ },
+ {
+  "plan": "teg_4_storyline_plan",
+  "slot": "spoon_storyline",
+  "headline": "Twenty-Eight Blow-Ups Buy One Spoon",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.977,
+  "jev_humour": 0.857
+ },
+ {
+  "plan": "teg_4_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "The Par Threes Did the Damage",
+  "opus_compelling": 7,
+  "opus_humour": 7,
+  "jev_compelling": 0.92,
+  "jev_humour": 0.71
+ },
+ {
+  "plan": "teg_4_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Two Tens and Still Not Last",
+  "opus_compelling": 7,
+  "opus_humour": 7,
+  "jev_compelling": 0.9,
+  "jev_humour": 0.83
+ },
+ {
+  "plan": "teg_5_round_1_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Ten Shots Lost In Three Holes",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.84,
+  "jev_humour": 0.737
+ },
+ {
+  "plan": "teg_5_round_1_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Neumann Left Holding The Spoon",
+  "opus_compelling": 6,
+  "opus_humour": 6,
+  "jev_compelling": 0.647,
+  "jev_humour": 0.617
+ },
+ {
+  "plan": "teg_5_round_2_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Three Holes Undo Henry Meller",
+  "opus_compelling": 8,
+  "opus_humour": 8,
+  "jev_compelling": 0.937,
+  "jev_humour": 0.663
+ },
+ {
+  "plan": "teg_5_round_3_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "The 18th Claims Two Victims",
+  "opus_compelling": 6,
+  "opus_humour": 8,
+  "jev_compelling": 0.78,
+  "jev_humour": 0.683
+ },
+ {
+  "plan": "teg_5_round_4_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Mullin Wins Jacket, Finds The Spoon Too",
+  "opus_compelling": 8,
+  "opus_humour": 7,
+  "jev_compelling": 0.95,
+  "jev_humour": 0.81
+ },
+ {
+  "plan": "teg_5_storyline_plan",
+  "slot": "trophy_storyline",
+  "headline": "Gregg Williams Turns Spoon Into Trophy",
+  "opus_compelling": 8,
+  "opus_humour": 5,
+  "jev_compelling": 0.96,
+  "jev_humour": 0.663
+ },
+ {
+  "plan": "teg_5_storyline_plan",
+  "slot": "jacket_storyline",
+  "headline": "Mullin Wins Fourth Jacket With Record 82",
+  "opus_compelling": 7,
+  "opus_humour": 4,
+  "jev_compelling": 0.917,
+  "jev_humour": 0.45
+ },
+ {
+  "plan": "teg_5_storyline_plan",
+  "slot": "spoon_storyline",
+  "headline": "Record Six Birdies, One Wooden Spoon",
+  "opus_compelling": 9,
+  "opus_humour": 8,
+  "jev_compelling": 0.987,
+  "jev_humour": 0.87
+ },
+ {
+  "plan": "teg_5_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "History's Lowest Round, Then A Nine",
+  "opus_compelling": 8,
+  "opus_humour": 6,
+  "jev_compelling": 0.99,
+  "jev_humour": 0.8
+ },
+ {
+  "plan": "teg_5_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Meller Escapes The Spoon By Two",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.927,
+  "jev_humour": 0.71
+ },
+ {
+  "plan": "teg_5_storyline_plan",
+  "slot": "discovered_2",
+  "headline": "Second By Two, Undone By Four Holes",
+  "opus_compelling": 8,
+  "opus_humour": 6,
+  "jev_compelling": 0.953,
+  "jev_humour": 0.663
+ },
+ {
+  "plan": "teg_6_round_1_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Meller's Twin Nines Seal Last Place",
+  "opus_compelling": 6,
+  "opus_humour": 6,
+  "jev_compelling": 0.803,
+  "jev_humour": 0.713
+ },
+ {
+  "plan": "teg_6_round_2_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Williams Wobbles But The Lead Holds",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.703,
+  "jev_humour": 0.577
+ },
+ {
+  "plan": "teg_6_round_3_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Two Tens Sink Meller At El Prat",
+  "opus_compelling": 8,
+  "opus_humour": 8,
+  "jev_compelling": 0.943,
+  "jev_humour": 0.703
+ },
+ {
+  "plan": "teg_6_round_3_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "El Prat's Front Nine Bares Its Teeth",
+  "opus_compelling": 7,
+  "opus_humour": 6,
+  "jev_compelling": 0.657,
+  "jev_humour": 0.37
+ },
+ {
+  "plan": "teg_6_round_4_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Neumann's Great Escape",
+  "opus_compelling": 6,
+  "opus_humour": 5,
+  "jev_compelling": 0.707,
+  "jev_humour": 0.537
+ },
+ {
+  "plan": "teg_6_storyline_plan",
+  "slot": "trophy_storyline",
+  "headline": "Record Round Buys Williams a Trophy",
+  "opus_compelling": 8,
+  "opus_humour": 6,
+  "jev_compelling": 0.987,
+  "jev_humour": 0.777
+ },
+ {
+  "plan": "teg_6_storyline_plan",
+  "slot": "jacket_storyline",
+  "headline": "Mullin Reclaims the Jacket at the Ninth",
+  "opus_compelling": 7,
+  "opus_humour": 4,
+  "jev_compelling": 0.943,
+  "jev_humour": 0.52
+ },
+ {
+  "plan": "teg_6_storyline_plan",
+  "slot": "spoon_storyline",
+  "headline": "Two Tens at El Prat Settle It",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.893,
+  "jev_humour": 0.827
+ },
+ {
+  "plan": "teg_6_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "The Stadium Course Takes Its Cut",
+  "opus_compelling": 7,
+  "opus_humour": 9,
+  "jev_compelling": 0.96,
+  "jev_humour": 0.777
+ },
+ {
+  "plan": "teg_6_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Baker Led Both, Won Neither",
+  "opus_compelling": 9,
+  "opus_humour": 5,
+  "jev_compelling": 0.953,
+  "jev_humour": 0.647
+ },
+ {
+  "plan": "teg_7_round_1_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Alex Baker's Debut Measured in Eights",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.663,
+  "jev_humour": 0.73
+ },
+ {
+  "plan": "teg_7_round_1_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Praia D'El Rey Sorts the Field",
+  "opus_compelling": 6,
+  "opus_humour": 7,
+  "jev_compelling": 0.94,
+  "jev_humour": 0.723
+ },
+ {
+  "plan": "teg_7_round_2_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Two More Records Fall Unnoticed",
+  "opus_compelling": 8,
+  "opus_humour": 5,
+  "jev_compelling": 0.653,
+  "jev_humour": 0.51
+ },
+ {
+  "plan": "teg_7_round_2_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Carnage While History Is Made",
+  "opus_compelling": 6,
+  "opus_humour": 8,
+  "jev_compelling": 0.68,
+  "jev_humour": 0.663
+ },
+ {
+  "plan": "teg_7_round_3_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Two Holes Wreck Jon Baker's Charge",
+  "opus_compelling": 7,
+  "opus_humour": 6,
+  "jev_compelling": 0.77,
+  "jev_humour": 0.517
+ },
+ {
+  "plan": "teg_7_round_4_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Two Holes Undo Jon Baker",
+  "opus_compelling": 7,
+  "opus_humour": 6,
+  "jev_compelling": 0.813,
+  "jev_humour": 0.62
+ },
+ {
+  "plan": "teg_7_round_4_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Alex Baker Wraps Up the Spoon",
+  "opus_compelling": 6,
+  "opus_humour": 8,
+  "jev_compelling": 0.647,
+  "jev_humour": 0.707
+ },
+ {
+  "plan": "teg_7_storyline_plan",
+  "slot": "trophy_storyline",
+  "headline": "Meller Breaks the Record Book, Then Holds On",
+  "opus_compelling": 9,
+  "opus_humour": 6,
+  "jev_compelling": 0.933,
+  "jev_humour": 0.567
+ },
+ {
+  "plan": "teg_7_storyline_plan",
+  "slot": "jacket_storyline",
+  "headline": "Mullin Rewrites the Gross Record and Strolls",
+  "opus_compelling": 7,
+  "opus_humour": 4,
+  "jev_compelling": 0.97,
+  "jev_humour": 0.16
+ },
+ {
+  "plan": "teg_7_storyline_plan",
+  "slot": "spoon_storyline",
+  "headline": "The Steadiest Man in Portugal Finishes Last",
+  "opus_compelling": 6,
+  "opus_humour": 8,
+  "jev_compelling": 0.823,
+  "jev_humour": 0.793
+ },
+ {
+  "plan": "teg_7_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "The Record Book Lasted One Day",
+  "opus_compelling": 8,
+  "opus_humour": 5,
+  "jev_compelling": 0.963,
+  "jev_humour": 0.747
+ },
+ {
+  "plan": "teg_7_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "From the Best Round Ever to an Eleven",
+  "opus_compelling": 8,
+  "opus_humour": 7,
+  "jev_compelling": 0.95,
+  "jev_humour": 0.767
+ },
+ {
+  "plan": "teg_7_storyline_plan",
+  "slot": "discovered_2",
+  "headline": "Williams Finishes Fastest, Seven Too Late",
+  "opus_compelling": 7,
+  "opus_humour": 5,
+  "jev_compelling": 0.83,
+  "jev_humour": 0.61
+ },
+ {
+  "plan": "teg_8_round_1_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Neumann Sets A New Low",
+  "opus_compelling": 8,
+  "opus_humour": 7,
+  "jev_compelling": 0.923,
+  "jev_humour": 0.73
+ },
+ {
+  "plan": "teg_8_round_2_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Penha Longa's Sixteenth Draws Blood",
+  "opus_compelling": 7,
+  "opus_humour": 6,
+  "jev_compelling": 0.707,
+  "jev_humour": 0.493
+ },
+ {
+  "plan": "teg_8_round_2_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "The Wooden Spoon Race Tightens",
+  "opus_compelling": 6,
+  "opus_humour": 6,
+  "jev_compelling": 0.667,
+  "jev_humour": 0.49
+ },
+ {
+  "plan": "teg_8_round_3_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Neumann's Spoon Grip Tightens Further",
+  "opus_compelling": 7,
+  "opus_humour": 6,
+  "jev_compelling": 0.717,
+  "jev_humour": 0.667
+ },
+ {
+  "plan": "teg_8_round_3_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Wreckage and a New Best for Alex Baker",
+  "opus_compelling": 6,
+  "opus_humour": 7,
+  "jev_compelling": 0.823,
+  "jev_humour": 0.713
+ },
+ {
+  "plan": "teg_8_round_4_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Twenty-Two Shots Before the Seventh",
+  "opus_compelling": 7,
+  "opus_humour": 9,
+  "jev_compelling": 0.743,
+  "jev_humour": 0.753
+ },
+ {
+  "plan": "teg_8_round_4_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Neumann's Best Round Wins Nothing",
+  "opus_compelling": 6,
+  "opus_humour": 7,
+  "jev_compelling": 0.637,
+  "jev_humour": 0.663
+ },
+ {
+  "plan": "teg_8_storyline_plan",
+  "slot": "trophy_storyline",
+  "headline": "Williams Wins By Twelve, Tens And All",
+  "opus_compelling": 8,
+  "opus_humour": 6,
+  "jev_compelling": 0.793,
+  "jev_humour": 0.45
+ },
+ {
+  "plan": "teg_8_storyline_plan",
+  "slot": "jacket_storyline",
+  "headline": "Mullin Takes The Jacket Back Immediately",
+  "opus_compelling": 8,
+  "opus_humour": 5,
+  "jev_compelling": 0.963,
+  "jev_humour": 0.35
+ },
+ {
+  "plan": "teg_8_storyline_plan",
+  "slot": "spoon_storyline",
+  "headline": "Neumann Last From The Fourth Hole",
+  "opus_compelling": 8,
+  "opus_humour": 8,
+  "jev_compelling": 0.87,
+  "jev_humour": 0.687
+ },
+ {
+  "plan": "teg_8_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "From Spoon Holder To Runner-Up",
+  "opus_compelling": 8,
+  "opus_humour": 8,
+  "jev_compelling": 0.797,
+  "jev_humour": 0.643
+ },
+ {
+  "plan": "teg_8_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Meller Loses Twenty-Two Shots In Six",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.763,
+  "jev_humour": 0.653
+ },
+ {
+  "plan": "teg_8_storyline_plan",
+  "slot": "discovered_2",
+  "headline": "Quinta da Marinha Bites Back",
+  "opus_compelling": 7,
+  "opus_humour": 7,
+  "jev_compelling": 0.87,
+  "jev_humour": 0.587
+ },
+ {
+  "plan": "teg_9_round_1_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Alex Baker Writes \u00d3bidos's Darkest Chapter",
+  "opus_compelling": 8,
+  "opus_humour": 7,
+  "jev_compelling": 0.923,
+  "jev_humour": 0.783
+ },
+ {
+  "plan": "teg_9_round_1_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Patterson's Debut Survives A Nightmare Hole",
+  "opus_compelling": 7,
+  "opus_humour": 6,
+  "jev_compelling": 0.87,
+  "jev_humour": 0.653
+ },
+ {
+  "plan": "teg_9_round_2_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Alex Baker's Total Turnaround",
+  "opus_compelling": 8,
+  "opus_humour": 6,
+  "jev_compelling": 0.96,
+  "jev_humour": 0.61
+ },
+ {
+  "plan": "teg_9_round_2_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Praia D'El Rey Draws Blood",
+  "opus_compelling": 6,
+  "opus_humour": 7,
+  "jev_compelling": 0.737,
+  "jev_humour": 0.553
+ },
+ {
+  "plan": "teg_9_round_3_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Jon Baker's Round Of Two Halves",
+  "opus_compelling": 7,
+  "opus_humour": 6,
+  "jev_compelling": 0.7,
+  "jev_humour": 0.513
+ },
+ {
+  "plan": "teg_9_round_3_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Mullin Survives A Horror Tenth",
+  "opus_compelling": 6,
+  "opus_humour": 6,
+  "jev_compelling": 0.797,
+  "jev_humour": 0.463
+ },
+ {
+  "plan": "teg_9_round_4_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Mullin Never Bettered In Any Round",
+  "opus_compelling": 7,
+  "opus_humour": 3,
+  "jev_compelling": 0.653,
+  "jev_humour": 0.217
+ },
+ {
+  "plan": "teg_9_round_4_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "Neumann's Rally Comes Too Late",
+  "opus_compelling": 7,
+  "opus_humour": 6,
+  "jev_compelling": 0.63,
+  "jev_humour": 0.567
+ },
+ {
+  "plan": "teg_9_storyline_plan",
+  "slot": "trophy_storyline",
+  "headline": "John Patterson's 168 Sets a TEG Record",
+  "opus_compelling": 9,
+  "opus_humour": 5,
+  "jev_compelling": 0.96,
+  "jev_humour": 0.297
+ },
+ {
+  "plan": "teg_9_storyline_plan",
+  "slot": "jacket_storyline",
+  "headline": "David Mullin's Course Record Kills the Jacket Race",
+  "opus_compelling": 7,
+  "opus_humour": 4,
+  "jev_compelling": 0.94,
+  "jev_humour": 0.17
+ },
+ {
+  "plan": "teg_9_storyline_plan",
+  "slot": "spoon_storyline",
+  "headline": "Stuart Neumann Improves Daily, Finishes Last Anyway",
+  "opus_compelling": 7,
+  "opus_humour": 8,
+  "jev_compelling": 0.647,
+  "jev_humour": 0.67
+ },
+ {
+  "plan": "teg_9_storyline_plan",
+  "slot": "discovered_0",
+  "headline": "Alex Baker's Opening 115 Cost Him the Trophy",
+  "opus_compelling": 9,
+  "opus_humour": 6,
+  "jev_compelling": 0.977,
+  "jev_humour": 0.763
+ },
+ {
+  "plan": "teg_9_storyline_plan",
+  "slot": "discovered_1",
+  "headline": "An Eleven, a Ten and a Personal Best",
+  "opus_compelling": 7,
+  "opus_humour": 9,
+  "jev_compelling": 0.883,
+  "jev_humour": 0.783
+ },
+ {
+  "plan": "teg_9_storyline_plan",
+  "slot": "discovered_2",
+  "headline": "Three Holes Undo Jon Baker at Royal \u00d3bidos",
+  "opus_compelling": 6,
+  "opus_humour": 5,
+  "jev_compelling": 0.863,
+  "jev_humour": 0.637
+ }
+]

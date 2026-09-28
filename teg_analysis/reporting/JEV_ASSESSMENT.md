@@ -128,6 +128,21 @@ It prints the metrics table, latency, input-token cost and every miss or false a
 **Found while labelling: a real fault class nobody had flagged.** Archived round reports disagree about which Baker brother is older. TEG 10 R1 and TEG 11 R4 say Alex is older; TEG 11 R2, TEG 13 R4 and TEG 18 R1 say he is younger. The data records only that they are brothers, so every one of these claims is invented. None appears in a currently served report: all 10 files are in `data/commentary/archive 2026 v4/round_reports/`. The rule in `authoring.py` already forbids it. **Now caught by `verify.py`'s `no_sibling_order` check (2026-09-26)**: 34 hits across the archived files, none in served reports.
 
 
+## Storyline scoring test (2026-09-28): agrees with Opus only moderately
+
+`scripts/jev_spike/storylines.py` scored all 202 saved storylines (84 plans) on compellingness and humour, as 4-level Score questions. It compared Jev with the editor's own `compelling_score` and `humour_score`. There is no human ground truth, so this measures agreement with Opus, not quality.
+
+| Measure | Result |
+|---|---|
+| Rank agreement, compelling (Spearman) | 0.60 |
+| Rank agreement, humour (Spearman) | 0.67 |
+| Same top storyline in a plan | 37 of 57 (chance: 28) |
+| Cost / speed | $0.0063 total / median 328 ms |
+
+**Reading it.** Jev and Opus broadly agree, but not enough for Jev to replace the editor's pick. Opus's scores only span 6 to 9, and Jev bunches near the top (median 0.85 of 1), so both give a weak signal. Jev ranks the Trophy story highest on average, as Opus does.
+
+**Verdict: not worth adopting for storyline ranking yet.** Agreement with a self-scoring LLM is not evidence either one is right. A fair test needs your ranking of a few plans as the answer key.
+
 ## Sources
 
 - [Tom's Hardware — launch claims (speed, cost)](https://www.tomshardware.com/tech-industry/artificial-intelligence/typesafe-ais-jev-offers-an-alternative-to-llms-that-claims-to-be-193x-faster-and-445x-cheaper-system-one-type-model-is-bespoke-for-probabilistic-decision-making)
