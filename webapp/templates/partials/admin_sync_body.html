@@ -47,6 +47,20 @@
     <span id="sync-filter-count" style="font-size:.8rem;opacity:.75;"></span>
   </div>
 
+  {# Tick every row with a given status in one click (added to the current
+     selection, and only rows the filter shows). "Same size" is not proof two
+     files match: an edit that keeps the length identical shows as Same size. #}
+  <div style="display:flex;gap:.4rem;align-items:center;margin-bottom:.5rem;flex-wrap:wrap;font-size:.85rem;">
+    <span class="page-label">Select by status:</span>
+    {% for status in ["Only on GitHub", "Only in store", "Different size", "Same size"] %}
+      {% set n = rows | selectattr("status", "equalto", status) | list | length %}
+      {% if n %}
+        <button type="button" class="btn-secondary" onclick="tegSyncSelectStatus('{{ status }}')">{{ status }} ({{ n }})</button>
+      {% endif %}
+    {% endfor %}
+    <button type="button" class="btn-secondary" onclick="tegSyncClearSelection()">Clear</button>
+  </div>
+
   <div class="admin-table-scroll">
     <table class="teg-table" id="sync-files-table">
       <thead>
@@ -58,7 +72,7 @@
       <tbody>
         {% for row in rows %}
           {% set defn = get_definition(row.name) %}
-          <tr>
+          <tr data-status="{{ row.status }}">
             <td><input type="checkbox" name="files" value="{{ row.name }}" onchange="tegSyncRefreshSelected()"></td>
             <td>
               {{ row.name }}
@@ -149,6 +163,21 @@ function tegSyncToggleAll(master) {
     if (row.style.display === 'none') return;
     var cb = row.querySelector('input[name="files"]');
     if (cb) cb.checked = master.checked;
+  });
+  tegSyncRefreshSelected();
+}
+function tegSyncSelectStatus(status) {
+  // Adds to the current selection; respects the filename filter.
+  document.querySelectorAll('#sync-files-table tbody tr').forEach(function (row) {
+    if (row.style.display === 'none' || row.dataset.status !== status) return;
+    var cb = row.querySelector('input[name="files"]');
+    if (cb) cb.checked = true;
+  });
+  tegSyncRefreshSelected();
+}
+function tegSyncClearSelection() {
+  document.querySelectorAll('#sync-files-table input[type="checkbox"]').forEach(function (cb) {
+    cb.checked = false;
   });
   tegSyncRefreshSelected();
 }
