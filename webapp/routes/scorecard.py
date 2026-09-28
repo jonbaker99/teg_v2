@@ -83,7 +83,7 @@ def _scorecard_context_one_round_one_player(teg_num: int, round_num: int, player
         subheader = ' | '.join(subheader_parts) if subheader_parts else None
 
         player_name = df['Player'].iloc[0]
-        title = f"{player_name} | TEG {teg_num}, Round {round_num}"
+        title = f"{player_name} | TEG {teg_num} Round {round_num}"
 
         # Single combined card: one gross "Score" row + one "Stableford" row.
         # Landscape (holes as columns) + portrait (holes as rows, mobile).
@@ -147,7 +147,7 @@ def _scorecard_context_one_round_all_players(teg_num: int, round_num: int) -> di
         subheader_parts = [p for p in [course, formatted_date] if p]
         subheader = ' | '.join(subheader_parts) if subheader_parts else None
 
-        title = f"TEG {teg_num}, Round {round_num}"
+        title = f"TEG {teg_num} Round {round_num}"
 
         gross_table = build_round_comparison_gross_table(round_data)
         stableford_table = build_round_comparison_stableford_table(round_data)

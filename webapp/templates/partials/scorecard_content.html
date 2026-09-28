@@ -2,6 +2,9 @@
 {% include "partials/_public_response_error.html" %}
 {% else %}
 <div>
+    {% if title %}
+    <p class="heading text-base mb-1">{{ title }}</p>
+    {% endif %}
     {% if subheader %}
     <p class="text-secondary mb-4">{{ subheader }}</p>
     {% endif %}
