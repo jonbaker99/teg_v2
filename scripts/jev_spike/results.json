@@ -1,0 +1,1464 @@
+{
+ "model": "jev-latest",
+ "scores": {
+  "same_hole:43": {
+   "same_hole": 0.81,
+   "paradox": 0.22,
+   "chaos": 0.05,
+   "relationship": 0.17
+  },
+  "same_hole:44": {
+   "same_hole": 0.1,
+   "paradox": 0.12,
+   "chaos": 0.05,
+   "relationship": 0.25
+  },
+  "same_hole:59": {
+   "same_hole": 0.17,
+   "paradox": 0.6,
+   "chaos": 0.09,
+   "relationship": 0.12
+  },
+  "same_hole:126": {
+   "same_hole": 0.12,
+   "paradox": 0.05,
+   "chaos": 0.11,
+   "relationship": 0.11
+  },
+  "same_hole:120": {
+   "same_hole": 0.1,
+   "paradox": 0.24,
+   "chaos": 0.06,
+   "relationship": 0.09
+  },
+  "same_hole:87": {
+   "same_hole": 0.16,
+   "paradox": 0.13,
+   "chaos": 0.07,
+   "relationship": 0.15
+  },
+  "same_hole:37": {
+   "same_hole": 0.04,
+   "paradox": 0.57,
+   "chaos": 0.49,
+   "relationship": 0.22
+  },
+  "paradox:0": {
+   "same_hole": 0.05,
+   "paradox": 0.94,
+   "chaos": 0.15,
+   "relationship": 0.16
+  },
+  "paradox:23": {
+   "same_hole": 0.07,
+   "paradox": 0.97,
+   "chaos": 0.05,
+   "relationship": 0.17
+  },
+  "paradox:10": {
+   "same_hole": 0.08,
+   "paradox": 0.97,
+   "chaos": 0.03,
+   "relationship": 0.11
+  },
+  "paradox:29": {
+   "same_hole": 0.07,
+   "paradox": 0.93,
+   "chaos": 0.03,
+   "relationship": 0.21
+  },
+  "paradox:8": {
+   "same_hole": 0.14,
+   "paradox": 0.08,
+   "chaos": 0.07,
+   "relationship": 0.32
+  },
+  "paradox:7": {
+   "same_hole": 0.12,
+   "paradox": 0.54,
+   "chaos": 0.07,
+   "relationship": 0.15
+  },
+  "paradox:18": {
+   "same_hole": 0.04,
+   "paradox": 0.85,
+   "chaos": 0.08,
+   "relationship": 0.14
+  },
+  "paradox:32": {
+   "same_hole": 0.16,
+   "paradox": 0.91,
+   "chaos": 0.08,
+   "relationship": 0.13
+  },
+  "paradox:3": {
+   "same_hole": 0.09,
+   "paradox": 0.83,
+   "chaos": 0.05,
+   "relationship": 0.14
+  },
+  "chaos:46": {
+   "same_hole": 0.12,
+   "paradox": 0.1,
+   "chaos": 0.92,
+   "relationship": 0.12
+  },
+  "chaos:21": {
+   "same_hole": 0.1,
+   "paradox": 0.05,
+   "chaos": 0.76,
+   "relationship": 0.1
+  },
+  "relationship:65": {
+   "same_hole": 0.04,
+   "paradox": 0.07,
+   "chaos": 0.71,
+   "relationship": 0.94
+  },
+  "chaos:7": {
+   "same_hole": 0.08,
+   "paradox": 0.07,
+   "chaos": 0.32,
+   "relationship": 0.15
+  },
+  "chaos:32": {
+   "same_hole": 0.07,
+   "paradox": 0.03,
+   "chaos": 0.15,
+   "relationship": 0.11
+  },
+  "chaos:77": {
+   "same_hole": 0.07,
+   "paradox": 0.12,
+   "chaos": 0.32,
+   "relationship": 0.1
+  },
+  "same_hole:116": {
+   "same_hole": 0.06,
+   "paradox": 0.03,
+   "chaos": 0.04,
+   "relationship": 0.12
+  },
+  "relationship:38": {
+   "same_hole": 0.06,
+   "paradox": 0.03,
+   "chaos": 0.32,
+   "relationship": 0.94
+  },
+  "relationship:43": {
+   "same_hole": 0.05,
+   "paradox": 0.03,
+   "chaos": 0.07,
+   "relationship": 0.82
+  },
+  "relationship:48": {
+   "same_hole": 0.05,
+   "paradox": 0.02,
+   "chaos": 0.3,
+   "relationship": 0.91
+  },
+  "relationship:92": {
+   "same_hole": 0.19,
+   "paradox": 0.11,
+   "chaos": 0.05,
+   "relationship": 0.19
+  },
+  "relationship:34": {
+   "same_hole": 0.17,
+   "paradox": 0.05,
+   "chaos": 0.07,
+   "relationship": 0.17
+  },
+  "relationship:94": {
+   "same_hole": 0.28,
+   "paradox": 0.03,
+   "chaos": 0.04,
+   "relationship": 0.3
+  },
+  "relationship:20": {
+   "same_hole": 0.13,
+   "paradox": 0.06,
+   "chaos": 0.12,
+   "relationship": 0.17
+  },
+  "relationship:91": {
+   "same_hole": 0.08,
+   "paradox": 0.06,
+   "chaos": 0.06,
+   "relationship": 0.08
+  },
+  "seed:sh1": {
+   "same_hole": 0.14,
+   "paradox": 0.06,
+   "chaos": 0.05,
+   "relationship": 0.08
+  },
+  "seed:sh2": {
+   "same_hole": 0.74,
+   "paradox": 0.1,
+   "chaos": 0.06,
+   "relationship": 0.09
+  },
+  "seed:sh3": {
+   "same_hole": 0.88,
+   "paradox": 0.06,
+   "chaos": 0.06,
+   "relationship": 0.08
+  },
+  "seed:sh4": {
+   "same_hole": 0.04,
+   "paradox": 0.05,
+   "chaos": 0.02,
+   "relationship": 0.08
+  },
+  "seed:px1": {
+   "same_hole": 0.06,
+   "paradox": 0.94,
+   "chaos": 0.03,
+   "relationship": 0.09
+  },
+  "seed:px2": {
+   "same_hole": 0.06,
+   "paradox": 0.93,
+   "chaos": 0.03,
+   "relationship": 0.11
+  },
+  "seed:px3": {
+   "same_hole": 0.06,
+   "paradox": 0.04,
+   "chaos": 0.03,
+   "relationship": 0.1
+  },
+  "seed:ch1": {
+   "same_hole": 0.04,
+   "paradox": 0.03,
+   "chaos": 0.96,
+   "relationship": 0.07
+  },
+  "seed:ch2": {
+   "same_hole": 0.05,
+   "paradox": 0.02,
+   "chaos": 0.96,
+   "relationship": 0.08
+  },
+  "seed:ch3": {
+   "same_hole": 0.08,
+   "paradox": 0.02,
+   "chaos": 0.14,
+   "relationship": 0.07
+  },
+  "seed:rl1": {
+   "same_hole": 0.04,
+   "paradox": 0.02,
+   "chaos": 0.02,
+   "relationship": 0.97
+  },
+  "seed:rl2": {
+   "same_hole": 0.06,
+   "paradox": 0.02,
+   "chaos": 0.03,
+   "relationship": 0.96
+  },
+  "seed:rl3": {
+   "same_hole": 0.06,
+   "paradox": 0.03,
+   "chaos": 0.06,
+   "relationship": 0.15
+  },
+  "clean:1": {
+   "same_hole": 0.08,
+   "paradox": 0.3,
+   "chaos": 0.08,
+   "relationship": 0.18
+  },
+  "clean:2": {
+   "same_hole": 0.13,
+   "paradox": 0.09,
+   "chaos": 0.05,
+   "relationship": 0.1
+  },
+  "clean:3": {
+   "same_hole": 0.07,
+   "paradox": 0.21,
+   "chaos": 0.04,
+   "relationship": 0.08
+  }
+ },
+ "raw": {
+  "same_hole:43": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.81
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.22
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.05
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.17
+    }
+   },
+   "usage": {
+    "input_tokens": 932,
+    "output_tokens": 72
+   }
+  },
+  "same_hole:44": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.1
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.12
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.05
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.25
+    }
+   },
+   "usage": {
+    "input_tokens": 878,
+    "output_tokens": 72
+   }
+  },
+  "same_hole:59": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.17
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.6
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.09
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.12
+    }
+   },
+   "usage": {
+    "input_tokens": 968,
+    "output_tokens": 72
+   }
+  },
+  "same_hole:126": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.12
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.05
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.11
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.11
+    }
+   },
+   "usage": {
+    "input_tokens": 846,
+    "output_tokens": 72
+   }
+  },
+  "same_hole:120": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.1
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.24
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.06
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.09
+    }
+   },
+   "usage": {
+    "input_tokens": 846,
+    "output_tokens": 72
+   }
+  },
+  "same_hole:87": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.16
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.13
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.07
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.15
+    }
+   },
+   "usage": {
+    "input_tokens": 895,
+    "output_tokens": 72
+   }
+  },
+  "same_hole:37": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.04
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.57
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.49
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.22
+    }
+   },
+   "usage": {
+    "input_tokens": 911,
+    "output_tokens": 72
+   }
+  },
+  "paradox:0": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.05
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.94
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.15
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.16
+    }
+   },
+   "usage": {
+    "input_tokens": 879,
+    "output_tokens": 72
+   }
+  },
+  "paradox:23": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.07
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.97
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.05
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.17
+    }
+   },
+   "usage": {
+    "input_tokens": 903,
+    "output_tokens": 72
+   }
+  },
+  "paradox:10": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.08
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.97
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.03
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.11
+    }
+   },
+   "usage": {
+    "input_tokens": 889,
+    "output_tokens": 72
+   }
+  },
+  "paradox:29": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.07
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.93
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.03
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.21
+    }
+   },
+   "usage": {
+    "input_tokens": 843,
+    "output_tokens": 72
+   }
+  },
+  "paradox:8": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.14
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.08
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.07
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.32
+    }
+   },
+   "usage": {
+    "input_tokens": 1303,
+    "output_tokens": 72
+   }
+  },
+  "paradox:7": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.12
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.54
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.07
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.15
+    }
+   },
+   "usage": {
+    "input_tokens": 941,
+    "output_tokens": 72
+   }
+  },
+  "paradox:18": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.04
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.85
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.08
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.14
+    }
+   },
+   "usage": {
+    "input_tokens": 882,
+    "output_tokens": 72
+   }
+  },
+  "paradox:32": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.16
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.91
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.08
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.13
+    }
+   },
+   "usage": {
+    "input_tokens": 947,
+    "output_tokens": 72
+   }
+  },
+  "paradox:3": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.09
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.83
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.05
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.14
+    }
+   },
+   "usage": {
+    "input_tokens": 893,
+    "output_tokens": 72
+   }
+  },
+  "chaos:46": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.12
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.1
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.92
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.12
+    }
+   },
+   "usage": {
+    "input_tokens": 928,
+    "output_tokens": 72
+   }
+  },
+  "chaos:21": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.1
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.05
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.76
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.1
+    }
+   },
+   "usage": {
+    "input_tokens": 870,
+    "output_tokens": 72
+   }
+  },
+  "relationship:65": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.04
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.07
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.71
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.94
+    }
+   },
+   "usage": {
+    "input_tokens": 965,
+    "output_tokens": 72
+   }
+  },
+  "chaos:7": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.08
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.07
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.32
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.15
+    }
+   },
+   "usage": {
+    "input_tokens": 932,
+    "output_tokens": 72
+   }
+  },
+  "chaos:32": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.07
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.03
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.15
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.11
+    }
+   },
+   "usage": {
+    "input_tokens": 899,
+    "output_tokens": 72
+   }
+  },
+  "chaos:77": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.07
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.12
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.32
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.1
+    }
+   },
+   "usage": {
+    "input_tokens": 857,
+    "output_tokens": 72
+   }
+  },
+  "same_hole:116": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.06
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.03
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.04
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.12
+    }
+   },
+   "usage": {
+    "input_tokens": 915,
+    "output_tokens": 72
+   }
+  },
+  "relationship:38": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.06
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.03
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.32
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.94
+    }
+   },
+   "usage": {
+    "input_tokens": 865,
+    "output_tokens": 72
+   }
+  },
+  "relationship:43": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.05
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.03
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.07
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.82
+    }
+   },
+   "usage": {
+    "input_tokens": 863,
+    "output_tokens": 72
+   }
+  },
+  "relationship:48": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.05
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.02
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.3
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.91
+    }
+   },
+   "usage": {
+    "input_tokens": 855,
+    "output_tokens": 72
+   }
+  },
+  "relationship:92": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.19
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.11
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.05
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.19
+    }
+   },
+   "usage": {
+    "input_tokens": 874,
+    "output_tokens": 72
+   }
+  },
+  "relationship:34": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.17
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.05
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.07
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.17
+    }
+   },
+   "usage": {
+    "input_tokens": 884,
+    "output_tokens": 72
+   }
+  },
+  "relationship:94": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.28
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.03
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.04
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.3
+    }
+   },
+   "usage": {
+    "input_tokens": 847,
+    "output_tokens": 72
+   }
+  },
+  "relationship:20": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.13
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.06
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.12
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.17
+    }
+   },
+   "usage": {
+    "input_tokens": 883,
+    "output_tokens": 72
+   }
+  },
+  "relationship:91": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.08
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.06
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.06
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.08
+    }
+   },
+   "usage": {
+    "input_tokens": 851,
+    "output_tokens": 72
+   }
+  },
+  "seed:sh1": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.14
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.06
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.05
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.08
+    }
+   },
+   "usage": {
+    "input_tokens": 851,
+    "output_tokens": 72
+   }
+  },
+  "seed:sh2": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.74
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.1
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.06
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.09
+    }
+   },
+   "usage": {
+    "input_tokens": 836,
+    "output_tokens": 72
+   }
+  },
+  "seed:sh3": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.88
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.06
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.06
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.08
+    }
+   },
+   "usage": {
+    "input_tokens": 833,
+    "output_tokens": 72
+   }
+  },
+  "seed:sh4": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.04
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.05
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.02
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.08
+    }
+   },
+   "usage": {
+    "input_tokens": 849,
+    "output_tokens": 72
+   }
+  },
+  "seed:px1": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.06
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.94
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.03
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.09
+    }
+   },
+   "usage": {
+    "input_tokens": 821,
+    "output_tokens": 72
+   }
+  },
+  "seed:px2": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.06
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.93
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.03
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.11
+    }
+   },
+   "usage": {
+    "input_tokens": 816,
+    "output_tokens": 72
+   }
+  },
+  "seed:px3": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.06
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.04
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.03
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.1
+    }
+   },
+   "usage": {
+    "input_tokens": 816,
+    "output_tokens": 72
+   }
+  },
+  "seed:ch1": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.04
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.03
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.96
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.07
+    }
+   },
+   "usage": {
+    "input_tokens": 825,
+    "output_tokens": 72
+   }
+  },
+  "seed:ch2": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.05
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.02
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.96
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.08
+    }
+   },
+   "usage": {
+    "input_tokens": 806,
+    "output_tokens": 72
+   }
+  },
+  "seed:ch3": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.08
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.02
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.14
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.07
+    }
+   },
+   "usage": {
+    "input_tokens": 824,
+    "output_tokens": 72
+   }
+  },
+  "seed:rl1": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.04
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.02
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.02
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.97
+    }
+   },
+   "usage": {
+    "input_tokens": 817,
+    "output_tokens": 72
+   }
+  },
+  "seed:rl2": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.06
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.02
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.03
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.96
+    }
+   },
+   "usage": {
+    "input_tokens": 811,
+    "output_tokens": 72
+   }
+  },
+  "seed:rl3": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.06
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.03
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.06
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.15
+    }
+   },
+   "usage": {
+    "input_tokens": 817,
+    "output_tokens": 72
+   }
+  },
+  "clean:1": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.08
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.3
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.08
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.18
+    }
+   },
+   "usage": {
+    "input_tokens": 902,
+    "output_tokens": 72
+   }
+  },
+  "clean:2": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.13
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.09
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.05
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.1
+    }
+   },
+   "usage": {
+    "input_tokens": 913,
+    "output_tokens": 72
+   }
+  },
+  "clean:3": {
+   "model": "jev-1.13.0",
+   "answers": {
+    "same_hole": {
+     "type": "noul",
+     "noul": 0.07
+    },
+    "paradox": {
+     "type": "noul",
+     "noul": 0.21
+    },
+    "chaos": {
+     "type": "noul",
+     "noul": 0.04
+    },
+    "relationship": {
+     "type": "noul",
+     "noul": 0.08
+    }
+   },
+   "usage": {
+    "input_tokens": 925,
+    "output_tokens": 72
+   }
+  }
+ }
+}

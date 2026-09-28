@@ -8,6 +8,8 @@ Jev cannot generate text. Every stage that costs time or money in our pipeline i
 
 Where it could help is **judgement**: typed yes/no, choice or score answers about text we already have. Our weakest area is exactly that — semantic fact-checking (Theme D) and scoring A/B experiments. Worth one small, measured spike there. Not worth wiring into generation.
 
+**Spike result (2026-09-28): passed on 4 of 4 rules.** Adopt as an optional, advisory check. See *Spike result* below.
+
 ## What Jev is
 
 Sources are launch-week articles and third-party tests; nothing below was verified by us.
@@ -72,11 +74,34 @@ It cannot replace the judge. The written notes were repeatedly the most useful o
 - A dev-only dependency. It must never enter `requirements.txt`: the webapp never generates reports.
 - Question wording needs tuning and a labelled test set before its numbers mean anything.
 
-## Spike status (2026-09-26): paused, waiting on Jev API access
+## Spike result (2026-09-28): passes on all four rules
 
-**Paused.** TypeSafe's API access has a waitlist, so there is no key yet. Launch coverage said there was no waitlist, but that was wrong. Everything below is ready to run once access comes through.
+**Verdict: adopt Jev as an optional, advisory D3 check.** It met the pre-set bar on 4 of 4 rules; the bar needed 3.
 
-The harness and labelled set are ready. The Jev call itself is blocked in the cloud session: the network policy denies `api.typesafe.ai`, and no `TYPESAFE_API_KEY` is set. Everything else ran.
+| Rule | Pos / N | Regex P / R | Jev P / R @0.5 | Jev AUROC | Pass? |
+|---|---|---|---|---|---|
+| same_hole | 4/47 | 0.18 / 0.50 | 1.00 / 0.75 | 0.96 | Yes |
+| paradox | 7/47 | 0.56 / 0.71 | 0.58 / 1.00 | 1.00 | Yes, narrowly on precision |
+| chaos | 5/47 | 0.50 / 0.60 | 1.00 / 1.00 | 1.00 | Yes |
+| relationship | 6/47 | 0.80 / 0.67 | 1.00 / 1.00 | 1.00 | Yes |
+
+Run: 47 requests, median 316 ms, max 624 ms, 41,506 input tokens, $0.00174 in total. Raw answers: `scripts/jev_spike/results.json`.
+
+**Errors at 0.5:**
+
+- **paradox, 5 false alarms** (p 0.54 to 0.85). Two are "same hole" paragraphs, one of which explicitly says "same number, different hole". AUROC 1.00 means a higher threshold would separate them cleanly, but that threshold is picked on the same 47 rows, so it is not yet evidence.
+- **same_hole, 1 miss** (`seed:sh1`, p 0.14). The link is implied by day names (Friday on the Tour course, Sunday on the Stadium), with no "same hole" phrase. That is the hardest case, and the one a regex cannot catch at all.
+
+**Caveats.** Positives per rule are 4 to 7, so these are directions, not measurements. The labels were written by Claude and are not yet reviewed by Jon. Paradox precision only just clears the regex.
+
+**Next steps if adopted:**
+
+1. Jon reviews `labels.json`, especially the paradox false alarms.
+2. Wire Jev into `verify.py` as an opt-in, advisory check. Keep it a dev-only dependency, never in `requirements.txt`.
+3. Set the paradox threshold on fresh paragraphs, not these 47.
+4. Fold this verdict into `STATUS.md`, then delete `scripts/jev_spike/` and this file.
+
+### Spike setup
 
 **Run it** (needs the key and network access to `api.typesafe.ai`):
 
@@ -96,20 +121,12 @@ It prints the metrics table, latency, input-token cost and every miss or false a
 - 3 clean paragraphs from served reports.
 - Positives per rule: same hole 4, paradox 7, chaos 5, relationship 6. That's small, so treat any result as a direction, not a measurement.
 
-**Baseline to beat: a keyword grep**, the cheap thing we could add to `verify.py` today with no vendor.
-
-| Rule | Positives / N | Regex precision / recall |
-|---|---|---|
-| same_hole | 4/47 | 0.18 / 0.50 |
-| paradox | 7/47 | 0.56 / 0.71 |
-| chaos | 5/47 | 0.50 / 0.60 |
-| relationship | 6/47 | 0.80 / 0.67 |
+**Baseline to beat: a keyword grep**, the cheap thing we could add to `verify.py` today with no vendor. Its scores are in the regex column of the result table above.
 
 **Pass criteria, set before seeing Jev's answers.** Adopt Jev as an optional D3 check only if, on at least 3 of the 4 rules, AUROC is 0.85 or higher and it beats the regex on both precision and recall at the 0.5 threshold. Otherwise drop it.
 
 **Found while labelling: a real fault class nobody had flagged.** Archived round reports disagree about which Baker brother is older. TEG 10 R1 and TEG 11 R4 say Alex is older; TEG 11 R2, TEG 13 R4 and TEG 18 R1 say he is younger. The data records only that they are brothers, so every one of these claims is invented. None appears in a currently served report: all 10 files are in `data/commentary/archive 2026 v4/round_reports/`. The rule in `authoring.py` already forbids it. **Now caught by `verify.py`'s `no_sibling_order` check (2026-09-26)**: 34 hits across the archived files, none in served reports.
 
-**To resume:** once off the waitlist, allow `api.typesafe.ai` in the environment's network settings and add `TYPESAFE_API_KEY`, or run it locally. Then record the verdict here, fold it into `STATUS.md` and delete `scripts/jev_spike/` and this file.
 
 ## Sources
 
