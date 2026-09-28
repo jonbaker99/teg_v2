@@ -121,7 +121,7 @@ def test_volume_sync_page_renders_when_authed(client, monkeypatch):
     import teg_analysis.io as tio
     monkeypatch.setattr(tio, "build_sync_status", lambda folder: [
         {"name": "round_info.csv", "gh_size": 10, "store_size": 10,
-         "on_github": True, "on_store": True, "status": "Same size"},
+         "on_github": True, "on_store": True, "status": "Identical"},
     ])
     _login(client)
     resp = client.get("/admin/volume-sync?folder=data")
@@ -137,15 +137,15 @@ def test_volume_sync_offers_select_by_status(client, monkeypatch):
     row = lambda n, st: {"name": n, "gh_size": 1, "store_size": 2,
                          "on_github": True, "on_store": True, "status": st}
     monkeypatch.setattr(tio, "build_sync_status", lambda folder: [
-        row("a.md", "Different size"), row("b.md", "Different size"), row("c.md", "Same size"),
+        row("a.md", "Different"), row("b.md", "Different"), row("c.md", "Identical"),
     ])
     _login(client)
     resp = client.get("/admin/volume-sync?folder=data/commentary")
     assert resp.status_code == 200
-    assert "tegSyncSelectStatus('Different size')\">Different size (2)</button>" in resp.text
-    assert "Same size (1)</button>" in resp.text
+    assert "tegSyncSelectStatus('Different')\">Different (2)</button>" in resp.text
+    assert "Identical (1)</button>" in resp.text
     assert "Only on GitHub (" not in resp.text
-    assert resp.text.count('data-status="Different size"') == 2
+    assert resp.text.count('data-status="Different"') == 2
 
 
 def test_volume_sync_pull_empty_selection(client, monkeypatch):

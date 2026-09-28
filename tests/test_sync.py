@@ -10,26 +10,46 @@ from teg_analysis.io import sync
 
 
 def test_build_sync_status_classifies(monkeypatch):
-    gh = {"a.csv": 100, "b.csv": 200, "shared.csv": 50}
-    store = {"b.csv": 999, "shared.csv": 50, "c.csv": 10}
-    monkeypatch.setattr(sync, "list_github_files", lambda folder: gh)
+    gh = {"a.csv": (100, "x"), "b.csv": (200, "y"), "shared.csv": (50, "same"),
+          "edited.md": (50, "new")}
+    store = {"b.csv": 999, "shared.csv": 50, "c.csv": 10, "edited.md": 50}
+    monkeypatch.setattr(sync, "list_github_entries", lambda folder: gh)
     monkeypatch.setattr(sync, "list_store_files", lambda folder: store)
+    monkeypatch.setattr(sync, "store_blob_sha",
+                        lambda folder, name: {"shared.csv": "same", "edited.md": "old"}[name])
 
     rows = {r["name"]: r for r in sync.build_sync_status("data")}
 
     assert rows["a.csv"]["status"] == "Only on GitHub"
     assert rows["c.csv"]["status"] == "Only in store"
-    assert rows["b.csv"]["status"] == "Different size"
-    assert rows["shared.csv"]["status"] == "Same size"
+    assert rows["b.csv"]["status"] == "Different"
+    assert rows["shared.csv"]["status"] == "Identical"
+    # Same length, different bytes: the "TEG 16" -> "TEG 18" case that size
+    # comparison reported as in sync.
+    assert rows["edited.md"]["status"] == "Different"
 
 
 def test_build_sync_status_ordering(monkeypatch):
     """Actionable rows come before in-sync rows."""
-    monkeypatch.setattr(sync, "list_github_files", lambda folder: {"only_gh": 1, "match": 5})
+    monkeypatch.setattr(sync, "list_github_entries",
+                        lambda folder: {"only_gh": (1, "a"), "match": (5, "b")})
     monkeypatch.setattr(sync, "list_store_files", lambda folder: {"match": 5})
+    monkeypatch.setattr(sync, "store_blob_sha", lambda folder, name: "b")
 
     statuses = [r["status"] for r in sync.build_sync_status("data")]
-    assert statuses.index("Only on GitHub") < statuses.index("Same size")
+    assert statuses.index("Only on GitHub") < statuses.index("Identical")
+
+
+def test_git_blob_sha_matches_git():
+    # `printf 'hello\n' | git hash-object --stdin`
+    assert sync.git_blob_sha(b"hello\n") == "ce013625030ba8dba906f756967f9e9ca394464a"
+
+
+def test_store_blob_sha_reads_the_store_copy(monkeypatch, tmp_path):
+    (tmp_path / "data").mkdir()
+    (tmp_path / "data" / "f.md").write_bytes(b"hello\n")
+    monkeypatch.setattr(sync, "_store_path", lambda rel: tmp_path / rel)
+    assert sync.store_blob_sha("data", "f.md") == "ce013625030ba8dba906f756967f9e9ca394464a"
 
 
 def test_pull_files_writes_to_store(monkeypatch, tmp_path):

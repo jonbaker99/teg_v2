@@ -11,12 +11,15 @@ safely:
   * **pull** — copy selected files from GitHub down to the store.
   * **push** — copy selected files from the store up to GitHub (single batch commit).
 
-Status is derived from presence + size only (no per-file commit-time lookups), so
-the listing stays a single GitHub API call per folder and is responsive.
+Status is derived from presence and CONTENT, still in a single GitHub API call per
+folder: the folder listing already carries each file's git blob SHA, and the store
+copy's blob SHA is computed locally (only when the sizes match). Size alone was not
+enough: a same-length edit ("TEG 16" -> "TEG 18") looked in sync.
 """
 
 import base64
 import difflib
+import hashlib
 import logging
 import os
 import re
@@ -78,11 +81,9 @@ def store_label() -> str:
 # Listing
 # ---------------------------------------------------------------------------
 
-def list_github_files(folder: str) -> dict[str, int]:
-    """Map filename -> size for files directly under ``folder`` on GitHub.
-
-    Returns an empty dict if the folder doesn't exist on GitHub.
-    """
+def list_github_entries(folder: str) -> dict[str, tuple[int, Optional[str]]]:
+    """Map filename -> (size, git blob SHA) for files directly under ``folder``
+    on GitHub. One API call. Empty dict if the folder doesn't exist."""
     repo, branch = _repo()
     try:
         contents = repo.get_contents(folder, ref=branch)
@@ -93,7 +94,25 @@ def list_github_files(folder: str) -> dict[str, int]:
     if not isinstance(contents, list):
         contents = [contents]
 
-    return {item.name: int(item.size or 0) for item in contents if item.type == "file"}
+    return {item.name: (int(item.size or 0), item.sha)
+            for item in contents if item.type == "file"}
+
+
+def list_github_files(folder: str) -> dict[str, int]:
+    """Map filename -> size for files directly under ``folder`` on GitHub.
+
+    Returns an empty dict if the folder doesn't exist on GitHub.
+    """
+    return {name: size for name, (size, _sha) in list_github_entries(folder).items()}
+
+
+def git_blob_sha(data: bytes) -> str:
+    """The SHA git (and the GitHub contents API) gives a file with these bytes."""
+    return hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
+
+
+def store_blob_sha(folder: str, name: str) -> str:
+    return git_blob_sha((_store_path(folder) / name).read_bytes())
 
 
 def list_store_files(folder: str) -> dict[str, int]:
@@ -112,8 +131,8 @@ def list_store_files(folder: str) -> dict[str, int]:
 _STATUS_ORDER = {
     "Only on GitHub": 0,
     "Only in store": 1,
-    "Different size": 2,
-    "Same size": 3,
+    "Different": 2,
+    "Identical": 3,
 }
 
 
@@ -121,9 +140,12 @@ def build_sync_status(folder: str) -> list[dict]:
     """Compare a folder across GitHub and the store.
 
     Returns a list of rows ``{name, gh_size, store_size, on_github, on_store,
-    status}`` sorted with actionable differences first.
+    status}`` sorted with actionable differences first. ``status`` is "Only on
+    GitHub", "Only in store", "Different" (size or content differs) or
+    "Identical" (same bytes, by git blob SHA).
     """
-    gh = list_github_files(folder)
+    gh_entries = list_github_entries(folder)
+    gh = {name: size for name, (size, _sha) in gh_entries.items()}
     store = list_store_files(folder)
 
     rows = []
@@ -135,9 +157,11 @@ def build_sync_status(folder: str) -> list[dict]:
         elif on_store and not on_gh:
             status = "Only in store"
         elif gh.get(name) != store.get(name):
-            status = "Different size"
+            status = "Different"
+        elif gh_entries[name][1] and gh_entries[name][1] != store_blob_sha(folder, name):
+            status = "Different"      # same length, different bytes
         else:
-            status = "Same size"
+            status = "Identical"
         rows.append({
             "name": name,
             "gh_size": gh.get(name),
