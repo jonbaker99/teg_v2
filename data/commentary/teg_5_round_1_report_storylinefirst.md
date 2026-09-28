@@ -10,7 +10,7 @@ The start gave no hint of it. He bogeyed the 1st and then the 2nd, the opening o
 ## Gregg Williams's round unravels twice over — nine shots lost in his first four holes and ten more in his last three, including a quintuple bogey at the 17th.
 <!-- storyline: d0 -->
 
-Gregg Williams's opening round at Boavista never found any rhythm. He lost nine shots in the first four holes. It began with a triple bogey at the 1st, and was reinforced by double bogeys at the 2nd, the 3rd and the 4th. Each one was delivered with the steady regularity of a man following a plan. By the second hole he was already bottom of the TEG 1 Wooden Spoon race.
+Gregg Williams's opening round at Boavista never found any rhythm. He lost nine shots in the first four holes. It began with a triple bogey at the 1st, and was reinforced by double bogeys at the 2nd, the 3rd and the 4th. Each one was delivered with the steady regularity of a man following a plan. By the second hole he was already bottom of the TEG 5 Wooden Spoon race.
 
 The other end of the round removed any remaining ambiguity. A double bogey at the 16th set the tone. The 17th produced a quintuple bogey, a 9 on a hole ranked among the easiest on the course by stroke index. The 18th then yielded a triple bogey, because it would have been inconsistent to stop. Ten shots gone across three holes, neatly answering the nine lost in his first four.
 

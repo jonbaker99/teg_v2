@@ -14,6 +14,8 @@
 
 ## START HERE — picking this up in a new chat (2026-09-26)
 
+**Wrong-TEG labels fixed (2026-09-28).** `prompts.NAMING_RULE`'s literal example ("the TEG 16 Trophy") was being copied into other TEGs' reports, and round numbers were used as TEG numbers ("the TEG 4 Trophy lead" in TEG 7 R4). 36 slips fixed across 20 reports (styled files and PDFs too); the rule's example is now number-free, and a new `verify` check (`teg_references`) errors on a later TEG or a year used as a TEG number and warns on an earlier TEG's competition. The one remaining warning (TEG 14 R1, "an 85 in the TEG 13 Trophy") is genuine history. **Not yet covered:** the plan's printed headlines/standfirsts (checked by hand: clean), and year labels ("the 2025 TEG Trophy") are not compared with the TEG's actual year.
+
 **Fact-check upgrade WP1–4 + 7 built and run across all 85 reports (2026-09-26); 18 confirmed errors repaired; WP6 open.** D3 now checks the reports that
 actually exist: `verify.py` defaulted to the archived `report_final.md` glob, which matched zero of
 the 85 live `*_report_storylinefirst.md` files — silently. Re-baselined at 3 errors / 33 warnings

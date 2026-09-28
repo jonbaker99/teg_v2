@@ -33,9 +33,9 @@ The mitigation is thin. Only the double at the 15th came on a genuinely hard hol
 ## The Trophy lead changes hands four times before David Mullin's finish secures it, while Henry Meller is already isolated at the foot of the Wooden Spoon race
 <!-- storyline: race -->
 
-The Trophy lead changed hands four times across the front nine at Boavista. This was opening jockeying rather than drama. Williams drew level with his birdie at the par-3 2nd. Jon Baker took the outright lead at the 4th, and did so while making a bogey. Mullin pulled level with a bogey of his own at the par-4 5th. Baker shared the lead again with a par at the par-5 8th. Then Mullin's finish settled the matter and carried him to the outright TEG 1 Trophy lead.
+The Trophy lead changed hands four times across the front nine at Boavista. This was opening jockeying rather than drama. Williams drew level with his birdie at the par-3 2nd. Jon Baker took the outright lead at the 4th, and did so while making a bogey. Mullin pulled level with a bogey of his own at the par-4 5th. Baker shared the lead again with a par at the par-5 8th. Then Mullin's finish settled the matter and carried him to the outright TEG 2 Trophy lead.
 
-At the other end, Henry Meller was already beyond assistance. A double bogey at the par-5 3rd dropped him to the bottom of the TEG 1 Wooden Spoon race, and he treated the position as permanent. From the 11th to the 15th he bled 20 shots, including a quintuple bogey at the 14th and a quadruple bogey at the 15th, Boavista's hardest hole. That last one is almost respectable. The rest were not. By the close of play he stood alone at the foot of the Spoon table, unbothered, unchallenged, and entirely responsible.
+At the other end, Henry Meller was already beyond assistance. A double bogey at the par-5 3rd dropped him to the bottom of the TEG 2 Wooden Spoon race, and he treated the position as permanent. From the 11th to the 15th he bled 20 shots, including a quintuple bogey at the 14th and a quadruple bogey at the 15th, Boavista's hardest hole. That last one is almost respectable. The rest were not. By the close of play he stood alone at the foot of the Spoon table, unbothered, unchallenged, and entirely responsible.
 
 ## Round standings
 

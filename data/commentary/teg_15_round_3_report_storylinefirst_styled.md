@@ -23,7 +23,7 @@ His previous best at the venue was a 96, set at TEG 8 on his only other visit. T
 
 There was no purple patch, which is the unsettling part. Two separate two-hole stretches, 7-8 and 10-11, each yielded a birdie and a par with nothing dropped. The birdie at the par-5 8th was the nearest thing to a flourish.
 
-Williams arrived leading both the TEG 16 Trophy and the TEG 16 Green Jacket. He left leading both by more. The Trophy lead grew from 9 to 18, the Jacket from 14 to 17. The field's contribution was to stand still and watch it happen.
+Williams arrived leading both the TEG 15 Trophy and the TEG 15 Green Jacket. He left leading both by more. The Trophy lead grew from 9 to 18, the Jacket from 14 to 17. The field's contribution was to stand still and watch it happen.
 
 ## John Patterson's wild first look at Penha Longa
 <!-- storyline: d0 -->
@@ -36,12 +36,12 @@ Then the round turned, and it turned completely. A double bogey at the 9th. A qu
 
 The 16th finished the job. A quintuple bogey 9 at Penha Longa's stroke index 1, which is a great deal of effort for no points whatsoever.
 
-The gross 99 stands as the best he will manage at the course this TEG, this being his only visit. There is a certain economy to that. Elsewhere Gregg Williams retained his lead in both the TEG 3 Trophy and the Green Jacket. The Wooden Spoon picture shifted, with Alex Baker moving into last place.
+The gross 99 stands as the best he will manage at the course this TEG, this being his only visit. There is a certain economy to that. Elsewhere Gregg Williams retained his lead in both the TEG 15 Trophy and the Green Jacket. The Wooden Spoon picture shifted, with Alex Baker moving into last place.
 
 ## The Wooden Spoon changes hands as Alex Baker collapses and Stuart Neumann recovers
 <!-- storyline: race -->
 
-The third round at Penha Longa saw the TEG 8 Wooden Spoon change hands. Alex Baker collapsed. Stuart Neumann recovered. The transaction was completed without ceremony.
+The third round at Penha Longa saw the TEG 15 Wooden Spoon change hands. Alex Baker collapsed. Stuart Neumann recovered. The transaction was completed without ceremony.
 
 Baker began with a double bogey at the 1st, then ran three holes without managing better than a bogey. A birdie at the par-3 5th halted the slide and briefly suggested a plan. It was not a plan.
 

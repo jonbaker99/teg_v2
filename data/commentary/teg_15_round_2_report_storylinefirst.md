@@ -25,7 +25,7 @@ He signed for 26 points, matching the worst Trophy score of the round, and a gro
 ## West Cliffs on its first appearance in TEG: the par-five 6th and the par-four 17th between them accounting for four double-figure scores, against one eagle
 <!-- storyline: d1 -->
 
-West Cliffs Golf Links, on Portugal's Lisbon Coast, made its TEG debut in round 2 of TEG 16. Two holes did almost all the work.
+West Cliffs Golf Links, on Portugal's Lisbon Coast, made its TEG debut in round 2 of TEG 15. Two holes did almost all the work.
 
 The par-five 6th, stroke index 11, produced four blow-ups in a single round. Alex Baker took 11, a sextuple bogey and his worst score against par of the day. David Mullin and Stuart Neumann both managed quintuple-bogey 10s. John Patterson, showing restraint, settled for a quadruple-bogey 9. Baker's afternoon then unravelled further, a 9 and a 7 completing a stretch of holes 6 to 8 in which he dropped 13 shots and did not record a single net par.
 

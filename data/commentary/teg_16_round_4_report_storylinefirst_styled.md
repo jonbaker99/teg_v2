@@ -15,7 +15,7 @@
 ## Stuart Neumann's first Trophy, sealed under pressure
 <!-- storyline: race -->
 
-Stuart Neumann has won the TEG 17 Trophy at Estoril Golf Club. It is his first. He led throughout the final round and crossed the line with his overall advantage extended from 12 to 13. Gregg Williams took the round and the Green Jacket lead with it. The Trophy was Neumann's alone, and is now his to defend.
+Stuart Neumann has won the TEG 16 Trophy at Estoril Golf Club. It is his first. He led throughout the final round and crossed the line with his overall advantage extended from 12 to 13. Gregg Williams took the round and the Green Jacket lead with it. The Trophy was Neumann's alone, and is now his to defend.
 
 It was not comfortable. Between the 7th and the 9th he bled nine shots. The low point was a quintuple-bogey 9 at the 8th, the hardest hole on the course. It was flanked by two double bogeys, which is at least a tidy way to arrange a disaster. In almost any other round, that stretch takes the title off him.
 

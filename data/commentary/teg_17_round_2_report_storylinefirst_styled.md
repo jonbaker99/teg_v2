@@ -19,7 +19,7 @@ On Sunday 6 October, David Mullin returned to West Cliffs Golf Links for only th
 
 Round 1 had yielded 33 Stableford points, a figure best described as attended rather than contested. In Round 2 he returned 47. A swing of 14.
 
-The engine of it was a run from the 7th to the 10th, where he gained 14 points. Three consecutive holes, the 8th, 9th and 10th, passed without a single dropped gross shot. He birdied both the 9th and the 10th. Two more clean holes to close, the 17th and the 18th, drew him level with Gregg Williams at the top of the TEG 16 Green Jacket standings.
+The engine of it was a run from the 7th to the 10th, where he gained 14 points. Three consecutive holes, the 8th, 9th and 10th, passed without a single dropped gross shot. He birdied both the 9th and the 10th. Two more clean holes to close, the 17th and the 18th, drew him level with Gregg Williams at the top of the TEG 17 Green Jacket standings.
 
 ## Alex Baker survives two quadruple bogeys to set a new West Cliffs personal best
 <!-- storyline: d0 -->
@@ -37,7 +37,7 @@ John Patterson's round at West Cliffs on Sunday began to unravel at the 8th and 
 
 The damage added up to a gross 44, his worst round to date, and a new West Cliffs course-worst of 116. The previous mark of 115 had stood across six prior visits. It came a day after a strong opening round. The swing between the two was 17 Stableford points.
 
-The collapse cost him the TEG 16 Trophy lead. It passes to Jon Baker, who moved ahead at the 1st hole and built on it with 14 points over the next four. Patterson also drops to last in the Wooden Spoon race. He arrived at West Cliffs leading the tournament. He left holding its worst score.
+The collapse cost him the TEG 17 Trophy lead. It passes to Jon Baker, who moved ahead at the 1st hole and built on it with 14 points over the next four. Patterson also drops to last in the Wooden Spoon race. He arrived at West Cliffs leading the tournament. He left holding its worst score.
 
 ## Round standings
 

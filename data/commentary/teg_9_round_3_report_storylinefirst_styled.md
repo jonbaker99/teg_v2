@@ -31,7 +31,7 @@ What had promised something special finished as 34 points and +22 gross. His fro
 
 David Mullin's round 3 at Royal Óbidos had its rough patch. It did not cost him his position. At the 10th, a par 4 of stroke index 8, he made a nine. That is a quintuple bogey, and his worst hole of the tournament so far. Nothing in the round had signalled it. Earlier he had assembled his steadiest stretch of the tournament, playing the 2nd and 3rd without dropping a gross shot: a par, then a birdie at the 3rd.
 
-The nine changed nothing at all. Mullin had carried a seven-shot lead into the round in the TEG 16 Green Jacket race. He left with a seven-shot lead. The men behind him had been handed an opportunity and declined it politely.
+The nine changed nothing at all. Mullin had carried a seven-shot lead into the round in the TEG 9 Green Jacket race. He left with a seven-shot lead. The men behind him had been handed an opportunity and declined it politely.
 
 ## John Patterson's ten-shot Trophy cushion, built on a near-record 49-point round, shrank to just three after a 34-point comedown at Royal Óbidos.
 <!-- storyline: race -->

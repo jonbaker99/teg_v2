@@ -351,6 +351,48 @@ def check_swing_claims(ctx: ReportContext) -> list[Finding]:
     return out
 
 
+_TEG_REF_RE = re.compile(r"\bTEG\s+(\d+)\b")
+_COMPETITION_AFTER_RE = re.compile(r"\s+(?:Trophy|Green Jacket|Jacket|Wooden Spoon|Spoon)\b")
+
+
+def check_teg_references(ctx: ReportContext) -> list[Finding]:
+    """Every "TEG N" must be this TEG, or a real reference to an earlier one.
+
+    The storyline writers copied `prompts.NAMING_RULE`'s old literal example
+    ("the TEG 16 Trophy") into reports for other TEGs, and several used the
+    ROUND number as the TEG number ("the TEG 4 Trophy lead" in a TEG 7 R4
+    report). A 2026-09-28 sweep found 38 such slips across the 85 reports.
+
+    - error: N is later than this TEG (it cannot be history), or N is a year
+      ("TEG 2020") — never a valid TEG number.
+    - warning: an EARLIER TEG named with a competition ("the TEG 4 Trophy").
+      Usually a mislabel of this TEG's race, but real history reads the same
+      way ("arrived as the TEG 9 Trophy holder"), so a person decides.
+    Other earlier-TEG references ("his 96 in TEG 12") pass.
+    """
+    body = _strip_code_and_tables(ctx.text)
+    out = []
+    for m in _TEG_REF_RE.finditer(body):
+        n = int(m.group(1))
+        if n == ctx.teg_num:
+            continue
+        excerpt = _excerpt(body, m.start(), m.end())
+        if n >= 1900:
+            out.append(Finding("teg_references", "error",
+                               f"'TEG {n}' uses a year as the TEG number; this is TEG {ctx.teg_num}",
+                               excerpt))
+        elif n > ctx.teg_num:
+            out.append(Finding("teg_references", "error",
+                               f"names TEG {n}, which comes after this TEG {ctx.teg_num}",
+                               excerpt))
+        elif _COMPETITION_AFTER_RE.match(body, m.end()):
+            out.append(Finding("teg_references", "warning",
+                               f"names the TEG {n} competition in a TEG {ctx.teg_num} report: "
+                               f"a mislabel unless it's genuinely about TEG {n}",
+                               excerpt))
+    return out
+
+
 CHECKS = (
     check_no_beat_ids,
     check_no_em_dashes,
@@ -360,6 +402,7 @@ CHECKS = (
     check_weekdays,
     check_arithmetic_claims,
     check_swing_claims,
+    check_teg_references,
 )
 
 

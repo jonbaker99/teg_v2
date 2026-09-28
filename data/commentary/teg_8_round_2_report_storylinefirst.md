@@ -17,13 +17,13 @@ Neumann's was the most expensive. He had arrived at Penha Longa already anchored
 ## Stuart Neumann's recovery narrows the Wooden Spoon gap, with Henry Meller's rough finish closing fast
 <!-- storyline: d1 -->
 
-Stuart Neumann arrived at Penha Longa firmly last in the race for the TEG 2015 Wooden Spoon. A wretched opening round of 17 Stableford points had tightened his grip on the booby prize, the gap to safety out to 12. Round two told a different story. Neumann jumped to 31 points. That is a swing of 14 on his first-round total, and his best score of the trip on the course. It did not move him off the bottom. It did cut the gap to 8.
+Stuart Neumann arrived at Penha Longa firmly last in the race for the TEG 8 Wooden Spoon. A wretched opening round of 17 Stableford points had tightened his grip on the booby prize, the gap to safety out to 12. Round two told a different story. Neumann jumped to 31 points. That is a swing of 14 on his first-round total, and his best score of the trip on the course. It did not move him off the bottom. It did cut the gap to 8.
 
 Henry Meller made sure it closed no further. Through the front nine he had the card of a man in complete control, on for a share of the best round of the day on this course. Then he lost the plot for four holes in the middle of the back nine. A double bogey, two triple bogeys and another double across holes 11 to 14. Ten shots dropped, two Stableford points salvaged. It kept Neumann's rescue act from becoming a genuine escape.
 
 ## David Mullin stretches his Green Jacket lead as Alex Baker's back-nine implosion drags him to the rear of the pack
 <!-- storyline: race -->
 
-David Mullin extended his TEG 16 Green Jacket lead at Penha Longa on Thursday. The gap in the Trophy race behind Gregg Williams stretched to 11, with scoring brutal for most of the field. Mullin was steady rather than spectacular. He went two holes around the turn without dropping a shot, with a birdie at the par-5 6th and a par at the 7th. He finished with 86, his best gross score at the course through the event. Nothing about it was memorable. It is currently leading the Green Jacket.
+David Mullin extended his TEG 8 Green Jacket lead at Penha Longa on Thursday. The gap in the Trophy race behind Gregg Williams stretched to 11, with scoring brutal for most of the field. Mullin was steady rather than spectacular. He went two holes around the turn without dropping a shot, with a birdie at the par-5 6th and a par at the 7th. He finished with 86, his best gross score at the course through the event. Nothing about it was memorable. It is currently leading the Green Jacket.
 
 Alex Baker's day collapsed at the other end of the card. Four straight double bogeys from the 11th through the 14th cost him eight shots. The finish was worse. A double bogey at the 17th, sandwiched between quadruple bogeys at the 16th and the 18th. Ten shots in three holes. The 18th is a par 5 and it produced a 9. He then ran out of holes on which to continue. Baker's Green Jacket gap to Mullin now stands at six, and his Wooden Spoon prospects are looking increasingly real.

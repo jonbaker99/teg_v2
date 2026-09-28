@@ -3,7 +3,7 @@
 ## Gregg Williams's 41-point, 86-gross round at Prince's, the best of the day by four points and the second-lowest gross round of his 45 TEG rounds
 <!-- storyline: round -->
 
-Gregg Williams produced the round of the day at Prince's Golf Club on the Friday of TEG 2020. He scored 41 points off a gross 86. The best anyone else managed was 37. In this company, four points is not a margin. It is a different postcode. It also stands as the second-lowest gross round of his 45 TEG rounds.
+Gregg Williams produced the round of the day at Prince's Golf Club on the Friday of TEG 13. He scored 41 points off a gross 86. The best anyone else managed was 37. In this company, four points is not a margin. It is a different postcode. It also stands as the second-lowest gross round of his 45 TEG rounds.
 
 The round turned on the Dunes and Himalayas holes 11 to 13. Three straight pars, one of them on the par-4 13th, the third-hardest hole on the course. Nine points in a row. He then kept it going through 15 and 16, two more clean holes without a gross shot dropped. A par at the par-5 15th, the hardest hole at Prince's, and another at the par-3 16th. It was less a charge than a man quietly filing paperwork while the building burned around him.
 
