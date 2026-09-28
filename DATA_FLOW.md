@@ -105,7 +105,7 @@ is no longer Streamlit-only).
 **Selective sync (UI-agnostic):** `teg_analysis/io/sync.py` moves individual files
 between GitHub and the app's store (the Railway volume in production, the local working
 tree in dev) at byte level. `build_sync_status(folder)` compares a folder across both
-sides (presence + size); `pull_files` copies GitHub → store; `push_files` copies
+sides (presence + content: GitHub's listing gives each file's git blob SHA and the store copy's is computed locally when the sizes match); `pull_files` copies GitHub → store; `push_files` copies
 store → GitHub in a single batch commit. This is how reference CSVs for a new TEG can
 be synced individually without a full data update. Driven by the webapp
 `/admin/volume-sync` page. Each pull backs up the existing store file to

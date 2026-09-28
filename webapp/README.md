@@ -220,11 +220,11 @@ real Live round use; not triggered yet.
   `/admin/volume-sync/push` (HTMX, the actual transfer).
 - **Flow:** pick a folder (`data`, `data/commentary`, …) → see a per-file status
   table comparing GitHub vs the store (Only on GitHub / Only in store / Different
-  size / Same size) → tick files (a live **Selected (N)** box beside the action
+  / Identical — by content, via git blob SHA, so a same-length edit still shows
+  as *Different*) → tick files (a live **Selected (N)** box beside the action
   buttons lists what's currently ticked so the long table can't hide the
   selection; **Select by status** buttons tick every shown row of one status,
-  e.g. all *Different size*, adding to the selection — but an edit that keeps a
-  file's length shows as *Same size*, so tick those by name) → **Pull** or **Push** → a **preview** (`build_sync_preview`) lists
+  e.g. all *Different*, adding to the selection) → **Pull** or **Push** → a **preview** (`build_sync_preview`) lists
   exactly what each file will do (Create new vs Overwrite, store-vs-GitHub
   modified times, which side is newer, conflicts highlighted) with an optional
   per-file **View diff** (`file_diff`, unified text diff for
