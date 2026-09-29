@@ -31,7 +31,7 @@ The 15th settled the account in Round 4. After a double bogey at the 13th and a 
 
 **Williams' best gross golf ends in the rough**
 
-Gregg Williams arrived in Catalonia in 2019 and immediately produced the best gross round of his TEG career: +12 at PGA Catalunya's Tour Course in Round 1, an 84 that beat his previous best on the course by eight shots. It equalled the Tour Course record of 84, set by Jon Baker in TEG 11. Jon Baker matched it in the same round, and David Mullin matched it in Round 2. Across the four rounds he finished at +76 gross, also a personal best. His 92 on the Stadium Course in Round 4 was a course best too, seven strokes better than his last visit.
+Gregg Williams arrived in Catalonia in 2019 and immediately produced the best gross round of his TEG career: +12 at PGA Catalunya's Tour Course in Round 1, an 84 that beat his previous best on the course by eight shots. It equalled the Tour Course record of 84, set by Jon Baker in TEG 11. Jon Baker matched it in the same round, and David Mullin matched it in Round 2. Across the four rounds he finished at +76 gross, also a personal best. His 92 on the Stadium Course in Round 4 was a course best too, eight strokes better than his 100 there in Round 3.
 
 For a time this was enough to put him in front. Jon Baker had led the TEG 12 Green Jacket from the 16th hole of Round 1, a run of 23 holes, and lost it to Williams at the 3rd in Round 3.
 
@@ -50,7 +50,7 @@ The second round was a study in contrasts, in that it contained both golf and th
 
 He had climbed back to fifth by the third round on the Stadium course, and then undid it with some care: an 8 at the 2nd, nine shots dropped over holes 2 to 4, and four straight holes without a net par from the 15th, the double bogey at the 17th returning him to the bottom rung he had worked so hard to vacate.
 
-The Sunday reply was his best golf on the property. Baker's 93 at the Stadium was a course personal best, beating the 100 he had managed in TEG 11, and 13 strokes better than his previous visit. Thirteen strokes is a great deal of improvement. It also tells you where he started.
+The Sunday reply was his best golf on the property. Baker's 93 at the Stadium was a course personal best, beating the 100 he had managed in TEG 11, and eight strokes better than his 101 there in Round 3. Thirteen strokes is a great deal of improvement. It also tells you where he started.
 
 ## Jon Baker's TEG 12 Green Jacket: twenty-three holes in front, one hole behind, then a course record 89 to finish
 <!-- storyline: jacket -->

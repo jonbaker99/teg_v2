@@ -40,7 +40,7 @@ The peak arrived in the second round, on the Praia/Alvor nines at Palmares, a co
 
 It had not begun in that spirit. On the opening day at Boavista he took nine at the 18th, a par four, a quintuple bogey worth precisely nothing.
 
-Boavista offered a tidier farewell. Williams had played the course ten times before this TEG, with a previous best gross of 97. In the final round he went round in 93, a course best and ten strokes better than his last visit.
+Boavista offered a tidier farewell. Williams had played the course ten times before this TEG, with a previous best gross of 97. In the final round he went round in 93, a course best and three strokes better than his 96 there in round one.
 
 None of it, in the end, was enough to beat Alex Baker.
 

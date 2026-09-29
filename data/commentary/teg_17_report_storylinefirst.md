@@ -24,7 +24,7 @@ Round two at West Cliffs was quieter but still leaky: ten shots gone across hole
 
 Royal Óbidos produced another 10, this time at the par-4 14th in round three. Then came the return to Praia D'El Rey, where Baker bled 25 shots between the 5th and the 13th, a nine-hole run without a single hole played in better than double bogey. Nine holes. Not one of them recoverable. Quadruple bogeys at the par-5 12th and the 13th ended a three-hole stretch without a net par.
 
-His 111 in that final round was the best of his four scores, but still eleven shots adrift of his last visit here and eleven off his course best of 100, set at TEG 9. The bucket was smaller by then. It was still a bucket with a hole in it.
+His 111 in that final round was the best of his four scores, but still eleven off his course best of 100, set at TEG 9. The bucket was smaller by then. It was still a bucket with a hole in it.
 
 ## In the same Round 2 at West Cliffs, David Mullin sets a new course-record low while John Patterson sets a new course-record high — the field's two extremes on the same course, the same day.
 <!-- storyline: d1 -->

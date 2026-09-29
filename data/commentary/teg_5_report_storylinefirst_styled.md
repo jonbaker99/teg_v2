@@ -27,7 +27,7 @@ That left Williams with room to survive Palmares, a first visit for the group, a
 
 **Stuart Neumann**
 
-On the Monday at Boavista, Stuart Neumann played the best round in TEG history. His -9 net was a record, and his +11 gross was a record too: an 82 on a course he had already visited seven times, where his previous best was 89. Twelve strokes better than his last visit there, and a course personal best by a distance. For one afternoon he was, incontestably, the finest golfer the tournament had ever produced.
+On the Monday at Boavista, Stuart Neumann played the best round in TEG history. His -9 net was a record, and his +11 gross was a record too: an 82 on a course he had already visited eight times, where his previous best was 89. Fifteen strokes better than his 97 there in Round 1, and a course personal best by a distance. For one afternoon he was, incontestably, the finest golfer the tournament had ever produced.
 
 The Tuesday at the same course took it all back. He opened proceedings with a 7 at the par-three 2nd, a quadruple bogey, which turned out to be merely the overture. The round was lost over the closing stretch: a double bogey 7 at the 16th, a triple bogey 7 at the 17th and a quintuple bogey 9 at the 18th. Ten gross shots in three holes, with no net par among them.
 
@@ -67,7 +67,7 @@ The third day was the opposite extreme: +12 net of par, +27 gross, the worst rou
 ## The defending Trophy champion leads by five at the 1st in Round 3 and finishes last: David Mullin's descent from the top of everything to the Wooden Spoon
 <!-- storyline: spoon -->
 
-David Mullin led the TEG 5 Trophy on net-versus-par from the 18th hole of the opening round, and held it for 21 holes across three rounds. He set a course best at Boavista along the way: his 82 in Round 2 beat the 85 that had stood as his best there through seven previous visits. He was leading the Trophy, walking towards the Green Jacket and holding a course record. There was nowhere left to go but down, and he went with commitment.
+David Mullin led the TEG 5 Trophy on net-versus-par from the 18th hole of the opening round, and held it for 21 holes across three rounds. He set a course best at Boavista along the way: his 82 in Round 2 beat the 83 he had shot there in Round 1, which had already broken the 85 that stood as his best through seven previous visits. He was leading the Trophy, walking towards the Green Jacket and holding a course record. There was nowhere left to go but down, and he went with commitment.
 
 The lead went at the third hole of Round 3, a par five he played in seven for a double bogey, a net bogey. Enough, as Gregg Williams moved ahead. Round 3 then became Mullin's worst round to date, +12 net and +27 gross, including a nine at the 13th, a par five, for a quadruple bogey.
 

@@ -73,7 +73,7 @@ Jon Baker arrived in Catalonia as the defending Trophy champion. He left with th
 
 For a while it looked like a different tournament. Jon Baker took the lead in the TEG 18 Green Jacket, the gross competition, at the fifth hole of the opening round on the Tour Course and held it for 20 holes, into the second round. It ended at the par-five seventh on Sunday. Gregg Williams made a six there, Jon Baker an eight, and the lead changed hands. He answered late and answered well. A birdie at the 14th, then pars at the 15th, 16th, 17th and 18th. Sixteen points in five holes without dropping a gross shot. His 87 on the Tour Course was one stroke better than his previous visit there. By the close of round two, with Alex Baker leading the TEG 18 Trophy, Jon Baker was back in front in the Jacket.
 
-Then came the Stadium Course. At the fourth in round three he ran up a nine, a quintuple bogey worth nothing at all. His best gross round on the Stadium was 97, eight strokes more than his last visit to the course. The Jacket lead did not come back. Neither did the Trophy defence. He finished 23 points adrift of every other man in the field, which takes a certain application.
+Then came the Stadium Course. At the fourth in round three he ran up a nine, a quintuple bogey worth nothing at all. His best gross round on the Stadium was 97, eight strokes more than his course best of 89 there. The Jacket lead did not come back. Neither did the Trophy defence. He finished 23 points adrift of every other man in the field, which takes a certain application.
 
 ## Standings by round
 
