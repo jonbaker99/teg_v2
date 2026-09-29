@@ -167,7 +167,8 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
   **Read-only once done:** a finalised or cancelled round's review page shows the
   scorecard as plain values, with no Save, resolve, Finalise or Cancel. A finalised
   round's status card offers **View leaderboard** (`/leaderboard`) and **Generate round
-  report** (`/admin/reports?teg=N&round=R`).
+  report** (`/admin/reports?teg=N&round=R`). The server enforces it too:
+  `apply_admin_edits` refuses a round that isn't active.
   **Random fill (test only):** on an active round the review page offers "Fill empty
   cells with random scores" for dry runs. `live_round.fill_random_scores` fills only
   empty cells (par −2 to par +3, never below 1, weighted to par and bogey) through
