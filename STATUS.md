@@ -6,7 +6,7 @@ Current state and next priorities. Instructions and architecture live in `CLAUDE
 
 ## 2026-09-29 — Next TEG tab on Contents
 
-Between tournaments, the Contents page switches between Last TEG and Next TEG. Next TEG replaces the whole results section, with rounds on the left and handicaps on the right. Unknown dates, courses or venue show TBC. `/contents?view=next` is linkable. Each round shows its course's region and country, from `course_info.csv`, which now includes Quinta da Ria and Monte Rei. Rounds and handicaps are matching tables, so the two columns line up. The old "Next:" line and handicap link are gone.
+Between tournaments, the Contents page switches between Last TEG and Next TEG. Next TEG replaces the whole results section, with rounds on the left and handicaps on the right. Unknown dates, courses or venue show TBC. `/contents?view=next` is linkable. Each round shows its course's region and country, from `course_info.csv`, which now includes Quinta da Ria and Monte Rei. Rounds are a plain list, not a table: "Round N" over its date, beside the course over its region. The first round and first handicap line up at the top. The old "Next:" line and handicap link are gone.
 
 ## 2026-09-29 — In-progress Contents pane switcher
 

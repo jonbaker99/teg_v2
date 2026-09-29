@@ -1367,7 +1367,7 @@ def test_contents_complete_next_teg_view(client, monkeypatch):
     assert "Final Standings" not in resp.text
 
     # No rounds scheduled yet: area and year come from future_tegs.csv,
-    # and the rounds table is a single TBC row.
+    # and the rounds list shows a single TBC row.
     def _no_rounds(teg):
         raise ValueError("No round_info")
     monkeypatch.setattr(contents_route, "build_venue_context", _no_rounds)
@@ -1376,8 +1376,7 @@ def test_contents_complete_next_teg_view(client, monkeypatch):
     resp = client.get("/contents/view", params={"view": "next"})
     _assert_ok_no_error(resp)
     assert "Somewhere. 2026" in resp.text
-    assert resp.text.count('class="nr-date nr-tbc">TBC') == 1
-    assert resp.text.count('class="nr-course nr-tbc">TBC') == 1
+    assert "Dates and courses TBC" in resp.text
 
     # Neither source knows the area or dates.
     monkeypatch.setattr(contents_route, "get_future_tegs", lambda: pd.DataFrame(
@@ -1409,7 +1408,7 @@ def test_contents_complete_next_teg_view_blank_round_cells_show_tbc(client, monk
     resp = client.get("/contents/view", params={"view": "next"})
     _assert_ok_no_error(resp)
     assert "Algarve, Portugal. 2026" in resp.text
-    assert 'class="nr-date"><span class="nr-tbc">TBC' in resp.text
+    assert "Date TBC" in resp.text
 
 
 def test_contents_view_param_on_full_page(client, monkeypatch):

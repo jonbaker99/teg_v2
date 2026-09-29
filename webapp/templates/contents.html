@@ -350,33 +350,30 @@
     /* Complete state: Last TEG / Next TEG tabs above the headline. */
     .view-switch { margin-bottom: var(--sp-4, 16px); }
 
-    /* Next TEG: rounds (left) and handicaps (right) share one table
-       treatment, so their header rules and first rows line up across the
-       columns. First cells sit flush with the column heading. Rounds rows
-       are two lines (course, then location) on every row, so they stay
-       even; cells top-align so the first lines match. */
-    .teg-table.next-table { width: 100%; }
-    .teg-table.next-table th,
-    .teg-table.next-table td { padding: 10px 8px; vertical-align: top; }
-    .teg-table.next-table th:first-child,
-    .teg-table.next-table td:first-child { padding-left: 0; }
-    .teg-table.next-table th:last-child,
-    .teg-table.next-table td:last-child { padding-right: 0; }
-    .teg-table.next-rounds .nr-round { width: 1%; font-weight: 600; }
-    .teg-table.next-rounds td.nr-date { width: 1%; color: var(--text-secondary); }
-    .teg-table.next-rounds td.nr-course { white-space: normal; }
-    .nr-course-name { font-weight: 600; color: var(--text-primary); }
-    .nr-location {
+    /* Next TEG rounds: a plain list, no rules or header. Each row is two
+       lines: "Round N" beside the course (primary), then the date beside
+       the region (secondary). Row padding matches .hc-list cells so the
+       first rounds row and first handicap row share a top edge. */
+    .next-rounds { list-style: none; margin: 0; padding: 0; }
+    .nr-row {
+        display: grid;
+        grid-template-columns: 7rem 1fr;
+        gap: 0 var(--sp-4, 16px);
+        padding: 10px 4px;
+        font-family: var(--font-sans);
+    }
+    .nr-primary {
+        display: block;
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+    .nr-secondary {
         display: block;
         margin-top: 2px;
         font-size: var(--fs-200, 12px);
-        color: var(--text-muted);
+        color: var(--text-secondary);
     }
-    .teg-table.next-rounds td.nr-tbc, .nr-tbc { color: var(--text-muted); }
-    .teg-table.next-hc th.col-num, .teg-table.next-hc td.nh-value,
-    .teg-table.next-hc td.nh-change { width: 1%; text-align: right; }
-    .teg-table.next-hc td.nh-value { font-weight: 700; }
-    .teg-table.next-hc td.nh-change { font-size: var(--fs-200, 12px); font-weight: 600; background: none; }
     .gross-line {
         font-family: var(--font-sans);
         font-size: var(--fs-200, 12px);

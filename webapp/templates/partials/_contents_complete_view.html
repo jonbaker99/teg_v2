@@ -20,50 +20,36 @@
     <div class="panel-grid two-col equal-col" id="contents-panel">
         <div class="surface surface-open">
             <p class="standings-heading">Rounds</p>
-            <table class="teg-table next-table next-rounds">
-                <thead>
-                    <tr>
-                        <th class="nr-round">Round</th>
-                        <th class="nr-date">Date</th>
-                        <th class="nr-course">Course</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for r in next_teg.rounds %}
-                    <tr>
-                        <td class="nr-round">{{ r.round }}</td>
-                        <td class="nr-date">{% if r.day %}{{ r.weekday }} {{ r.day }}{% else %}<span class="nr-tbc">TBC</span>{% endif %}</td>
-                        <td class="nr-course">
-                            {% if r.course %}<span class="nr-course-name">{{ r.course }}</span>{% else %}<span class="nr-tbc">TBC</span>{% endif %}
-                            {% if r.location %}<span class="nr-location">{{ r.location }}</span>{% endif %}
-                        </td>
-                    </tr>
-                    {% else %}
-                    <tr><td class="nr-round nr-tbc">–</td><td class="nr-date nr-tbc">TBC</td><td class="nr-course nr-tbc">TBC</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            {# Not a table: each round is two balanced lines, "Round N" over
+               its date beside the course over its region. #}
+            <ul class="next-rounds">
+                {% for r in next_teg.rounds %}
+                <li class="nr-row">
+                    <div>
+                        <span class="nr-primary">Round {{ r.round }}</span>
+                        <span class="nr-secondary">{% if r.day %}{{ r.weekday }} {{ r.day }}{% else %}Date TBC{% endif %}</span>
+                    </div>
+                    <div>
+                        <span class="nr-primary">{{ r.course or "Course TBC" }}</span>
+                        {% if r.location %}<span class="nr-secondary">{{ r.location }}</span>{% endif %}
+                    </div>
+                </li>
+                {% else %}
+                <li class="nr-row"><div><span class="nr-secondary">Dates and courses TBC</span></div></li>
+                {% endfor %}
+            </ul>
         </div>
-        <div class="surface surface-open">
-            <p class="standings-heading"><a class="heading-link" href="/handicaps">Handicaps ↗</a></p>
+        <div class="surface surface-open contents-pane">
+            <p class="kicker"><a class="heading-link" href="/handicaps">Handicaps ↗</a></p>
             {% if next_teg.handicaps.is_draft %}<p class="gross-line">Draft, subject to final review</p>{% endif %}
-            <table class="teg-table next-table next-hc">
-                <thead>
-                    <tr>
-                        <th class="nh-player">Player</th>
-                        <th class="col-num nh-value">Handicap</th>
-                        <th class="col-num nh-change">Change</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for t in next_teg.handicaps.tiles %}
-                    <tr>
-                        <td class="nh-player">{{ t.name_parts | join(' ') }}</td>
-                        <td class="nh-value">{{ t.value }}</td>
-                        <td class="nh-change hc-delta--{{ t.delta_dir }}">{{ t.delta_arrow }} {{ t.delta_text }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
+            <table class="hc-list">
+                {% for t in next_teg.handicaps.tiles %}
+                <tr>
+                    <td class="hc-list-name">{{ t.name_parts | join(' ') }}</td>
+                    <td class="hc-list-value">{{ t.value }}</td>
+                    <td class="hc-list-delta hc-delta--{{ t.delta_dir }}">{{ t.delta_arrow }} {{ t.delta_text }}</td>
+                </tr>
+                {% endfor %}
             </table>
         </div>
     </div>
