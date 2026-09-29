@@ -54,52 +54,24 @@
         </div>
     </div>
 {% else %}
-    {% if state.report_summary %}
-        <h1 class="state-headline">{{ state.teg_label }} results</h1>
-        <p class="state-context">{{ state.area }}. {{ state.dateline_month_year }}</p>
+    <h1 class="state-headline">{{ state.teg_label }} results</h1>
+    <p class="state-context">{{ state.area }}. {{ state.dateline_month_year or state.year }}</p>
 
-        <div class="honours-line" style="margin-bottom: var(--sp-5, 20px);">
-            <span class="honour-champion"><span class="honour-label">Champion</span> <span class="honour-name">{{ state.trophy or "–" }}</span></span>
-            <span class="honour-sep">/</span>
-            <span><span class="honour-label">Green Jacket</span> <span class="honour-name">{{ state.jacket or "–" }}</span></span>
-            <span class="honour-sep">/</span>
-            <span><span class="honour-label">Wooden spoon</span> <span class="honour-name">{{ state.spoon or "–" }}</span></span>
-        </div>
+    <div class="honours-line" style="margin-bottom: var(--sp-5, 20px);">
+        <span class="honour-champion"><span class="honour-label">Champion</span> <span class="honour-name">{{ state.trophy or "–" }}</span></span>
+        <span class="honour-sep">/</span>
+        <span><span class="honour-label">Green Jacket</span> <span class="honour-name">{{ state.jacket or "–" }}</span></span>
+        <span class="honour-sep">/</span>
+        <span><span class="honour-label">Wooden spoon</span> <span class="honour-name">{{ state.spoon or "–" }}</span></span>
+    </div>
 
-        <div hx-get="/contents/panel?teg={{ state.teg_num }}&state=complete" hx-trigger="load" hx-swap="outerHTML">
-            <div class="panel-grid two-col equal-col" id="contents-panel" aria-busy="true">
-                <div class="surface surface-open">
-                    <p class="standings-heading">Final Standings</p>
-                    <p class="gross-line">Loading…</p>
-                </div>
+    <div hx-get="/contents/panel?teg={{ state.teg_num }}&state=complete" hx-trigger="load" hx-swap="outerHTML">
+        <div class="panel-grid{% if state.report_summary %} two-col equal-col{% endif %}" id="contents-panel" aria-busy="true">
+            <div class="surface surface-open">
+                <p class="standings-heading">Final Standings</p>
+                <p class="gross-line">Loading…</p>
             </div>
         </div>
-
-    {% else %}
-        <p class="state-eyebrow state-eyebrow-muted">Latest result</p>
-        <h1 class="state-headline">{{ state.teg_label }} — Final Results</h1>
-        <p class="state-context">
-            {{ state.area }}{% if state.year %} · {{ state.year }}{% endif %}{% if state.last_round_date %} · Last round {{ state.last_round_date }}{% endif %}
-        </p>
-
-        <div class="state-leaders">
-            <div class="state-leader-row">
-                <span class="state-leader-label">TEG Trophy <span class="state-leader-measure">(net)</span></span>
-                <span class="state-leader-names state-honour">{{ state.trophy or "–" }}</span>
-            </div>
-            <div class="state-leader-row">
-                <span class="state-leader-label">Green Jacket <span class="state-leader-measure">(gross)</span></span>
-                <span class="state-leader-names state-honour">{{ state.jacket or "–" }}</span>
-            </div>
-            <div class="state-leader-row state-leader-row-muted">
-                <span class="state-leader-label">Wooden spoon</span>
-                <span class="state-leader-names">{{ state.spoon or "–" }}</span>
-            </div>
-        </div>
-
-        <div class="state-actions">
-            <a class="state-btn state-btn-primary" href="/results?teg={{ state.teg_num }}">Full Results</a>
-        </div>
-    {% endif %}
+    </div>
 {% endif %}
 </div>

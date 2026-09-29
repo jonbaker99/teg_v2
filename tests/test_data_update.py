@@ -375,5 +375,46 @@ def test_execute_data_deletion_reports_cache_failure(scratch_repo, monkeypatch):
     assert result['cache_errors'][0]['step'] == 'bestball'
 
 
+def test_execute_data_update_runs_winners_step_and_reports_failure(scratch_repo, monkeypatch):
+    """The winners step runs after the status files, and a failure lands in
+    cache_errors under 'winners' without losing the write."""
+    import teg_analysis.analysis.history as history
+    from teg_analysis.analysis.data_update import execute_data_update
+
+    seen = []
+    real = history.update_winners_cache
+
+    def _spy(all_data, defer_github=False):
+        seen.append(True)
+        return real(all_data, defer_github=defer_github)
+
+    monkeypatch.setattr(history, 'update_winners_cache', _spy)
+    long_df = process_google_sheets_data(_fake_wide_round())
+    result = execute_data_update(long_df, overwrite=True)
+    assert seen and result['cache_errors'] == []
+
+    def _boom(all_data, defer_github=False):
+        raise RuntimeError("winners blew up")
+
+    monkeypatch.setattr(history, 'update_winners_cache', _boom)
+    result = execute_data_update(long_df, overwrite=True)
+    assert [e['step'] for e in result['cache_errors']] == ['winners']
+    assert 'winners blew up' in result['cache_errors'][0]['error']
+
+
+def test_execute_data_deletion_reports_winners_failure(scratch_repo, monkeypatch):
+    import teg_analysis.analysis.history as history
+    from teg_analysis.analysis.data_update import execute_data_update, execute_data_deletion
+
+    execute_data_update(process_google_sheets_data(_fake_wide_round()), overwrite=True)
+
+    def _boom(all_data, defer_github=False):
+        raise RuntimeError("winners blew up")
+
+    monkeypatch.setattr(history, 'update_winners_cache', _boom)
+    result = execute_data_deletion(50, [1])
+    assert [e['step'] for e in result['cache_errors']] == ['winners']
+
+
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])

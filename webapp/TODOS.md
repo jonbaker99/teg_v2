@@ -6,6 +6,9 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 ## IN PROGRESS
 
+- [ ] **TEG 19 dry-run fixes, Batches 1B to 4 (2026-09-29).** Batch 1A (post-completion crashes, issues 13 to 16) is done. Before 10 October: wave 1 (Batches 1B, 3 and 4a) runs in parallel now, then wave 2 (Batch 4b, admin pages on mobile) once 1B and 3 merge. Batch 2 (finalise reliability) waits until after the tournament. Plan, root causes and acceptance criteria: `TEG19_FIX_PLAN.md`; evidence: `TEST_TOURNAMENT_ISSUES.md`. Delete both once every item is fixed or moved here.
+- [ ] **Draft handicap for a player with only one TEG of history (2026-09-29).** `get_hc` now leaves out anyone missing a handicap in either of the two TEGs it weighs, so a first-year player gets no draft and TEG setup shows a blank to fill by hand. Decide whether to weight their one TEG at 100% instead.
+
 - [x] **Scorecard controls follow-up (2026-09-25).** View occupies its own mobile row with parallel labels; the remaining selectors wrap below with consistent 44px dropdown sizing and a white light-mode surface. Header rules are thin and muted. Browser interaction checks cover dependent selectors.
 
 - [ ] **Wire PDF build into report generation (2026-09-15).** `/teg-reports`'s Download PDF button

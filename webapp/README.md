@@ -119,7 +119,10 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
   that TEG if already confirmed, else the calculated draft (`get_hc`), else blank/not-playing.
   A checkbox + handicap field per player lets the admin override before saving; save
   (`teg_setup.save_teg_roster`) upserts the one `handicaps.csv` row for that TEG in place
-  (not-playing is written as the existing `0`-in-that-cell convention, no schema change).
+  and replaces that TEG's rows in `teg_rosters.csv` (who plays), in one commit. A player
+  sitting out keeps their calculated handicap (36-point rule), never 0, so the next TEG's
+  handicap has a figure to use. TEGs with no `teg_rosters.csv` rows fall back to the old
+  "non-zero handicap = playing" rule.
   The roster offers **every known player** — `handicaps.csv` columns first, then anyone
   in `data/players.csv` without a column yet (they get one the first time they're saved
   onto a TEG).

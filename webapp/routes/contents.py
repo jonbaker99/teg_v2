@@ -6,6 +6,7 @@ completed TEG, or an honest no-data message, chosen by
 beneath it, with labels and links suited to the current tournament state.
 """
 
+import logging
 from datetime import datetime
 from pathlib import Path
 
@@ -28,6 +29,7 @@ from teg_analysis.analysis.history import get_future_tegs
 from teg_analysis.reporting.newspaper_edition import available_rounds, get_edition_summary
 from teg_analysis.reporting.venue import build_venue_context
 
+logger = logging.getLogger(__name__)
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
@@ -221,6 +223,12 @@ def _next_teg_context() -> dict:
         when = next((r["month"] for r in rounds if r["month"]), "")
         if not when and venue["year"]:
             when = str(venue["year"])
+    try:
+        handicaps = _current_handicap_tiles(next_tegnum)
+    except Exception:
+        # A handicap failure must not take the whole Next TEG view down.
+        logger.exception("Next TEG handicaps unavailable for TEG %s", next_tegnum)
+        handicaps = {"is_draft": False, "next_teg_label": "", "tiles": []}
     if not area or not when:
         future = get_future_tegs()
         row = future[future["TEGNum"] == next_tegnum] if not future.empty else future
@@ -232,7 +240,7 @@ def _next_teg_context() -> dict:
         "area": area,
         "when": when,
         "rounds": rounds,
-        "handicaps": _current_handicap_tiles(next_tegnum),
+        "handicaps": handicaps,
     }
 
 
