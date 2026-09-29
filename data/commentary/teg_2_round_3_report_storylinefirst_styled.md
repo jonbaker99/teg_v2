@@ -21,7 +21,7 @@ Mullin was already sitting on the Jacket lead. Round 3 handed him the Trophy as 
 
 By the close of the round he led the Trophy by seven. Baker's three-shot cushion had simply ceased to exist. The Jacket lead, meanwhile, stretched from eight to eleven.
 
-The round also marked a personal high point at the course. An 89, his best gross score there across five visits through this TEG. That is ten strokes better than his previous visit and a new course best for him this TEG. With both prizes in hand, his position looked close to unassailable heading into the closing rounds.
+The round also marked a personal high point at the course. An 89, his best gross score there across three visits through this TEG. That is ten strokes better than his previous visit and a new course best for him this TEG. With both prizes in hand, his position looked close to unassailable heading into the closing rounds.
 
 ## Henry Meller's best round of the week arrives one round too late
 <!-- storyline: d0 -->
@@ -30,7 +30,7 @@ Henry Meller produced the round of his tournament at Boavista Golf & Spa Resort 
 
 His gross 20 was the second-best gross round recorded in TEG history to date. It arrived directly after a miserable Round 2 that had left him near the bottom of the field. The swing from a 13 to a 2 stands as one of the sharpest turnarounds of the tournament. Somewhere in the middle of it he went two holes without dropping a shot, birdieing the par-4 5th and then parring the 6th. In the context of his week, this was a golden age.
 
-It was also a course personal best for Meller at Boavista, on his fifth visit to the venue, eleven strokes better than his previous visit there. None of it moved him off the bottom of the Wooden Spoon race. He was the laggard before the round and the laggard after it. The gap to safety narrowed from 16 to 12. That is the kind of progress that gets a man precisely nowhere.
+It was also a course personal best for Meller at Boavista, on his third visit to the venue, eleven strokes better than his previous visit there. None of it moved him off the bottom of the Wooden Spoon race. He was the laggard before the round and the laggard after it. The gap to safety narrowed from 16 to 12. That is the kind of progress that gets a man precisely nowhere.
 
 ## Jon Baker's front nine implosion
 <!-- storyline: d1 -->

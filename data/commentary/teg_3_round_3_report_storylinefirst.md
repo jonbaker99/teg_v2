@@ -12,7 +12,7 @@ Nothing changed at the top, which was rather the point. Baker's Trophy lead grew
 ## Gregg Williams's net -4 and Stuart Neumann's gross 18 rank third-best in TEG history to date, and both mark new personal bests at Boavista, yet neither performance troubles the top of either the Trophy or Green Jacket table
 <!-- storyline: d0 -->
 
-Gregg Williams and Stuart Neumann produced the two outstanding rounds of the day at Boavista. By TEG standards, they were among the outstanding rounds of all time. Williams's net -4 ranks third-best in TEG history. Neumann's gross 18 points ranks third among all Gross rounds played. Both were personal bests on the course. Williams's 97 beat his previous best of 102. Neumann's 89 bettered his 92. Each man has now visited Boavista eight times, and each finally got something back for it.
+Gregg Williams and Stuart Neumann produced the two outstanding rounds of the day at Boavista. By TEG standards, they were among the outstanding rounds of all time. Williams's net -4 ranks third-best in TEG history. Neumann's gross 18 points ranks third among all Gross rounds played. Both were personal bests on the course. Williams's 97 beat his previous best of 102. Neumann's 89 bettered his 92. Each man has now visited Boavista six times, and each finally got something back for it.
 
 Williams's card was not spotless. He took a quadruple bogey 7 at the short par-3 2nd, one of the easier holes on the course by stroke index. For a few minutes the whole thing looked like it might come apart. It did not.
 
