@@ -123,6 +123,10 @@ Records page uses, rather than a parallel hand-rolled implementation:
 `paths.py:_artefact_names` staying stable. Anyone refactoring either should check that route first.
 Detail: `webapp/TODOS.md`'s dated 2026-09-12 entry.
 
+### To-do: re-style TEGs 3, 5, 12, 14 for corrected course-record counts (2026-09-29)
+
+`detect_course_records` gave every record on a course one shared "earlier rounds there" count; fixed and TEG 18 re-styled. The tournament `*_storylinefirst_styled.md` for TEGs 3, 5, 12 and 14 still carry the old counts. Re-running `render.style_text(n, <storylinefirst.md>)` is free and changes only the records lines. Then rebuild their PDFs (`scripts/build_report_pdfs.py`).
+
 ### Next: one to-do (items 1–3 done 2026-09-11)
 
 The storyline-first newspaper report (Fraunces/Source Serif newspaper layout, row-packed
