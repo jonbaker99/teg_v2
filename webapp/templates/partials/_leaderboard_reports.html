@@ -1,6 +1,7 @@
 {#- Reports tab body for /leaderboard: round report headlines for one TEG.
     Included from leaderboard_table.html when reports_view is set (or when
-    the reports tab errored). Mirrors _standings_page.html's OOB title/header
+    the reports tab errored). Rows link to the round report itself, not
+    its lead-story anchor. Mirrors _standings_page.html's OOB title/header
     swap and error include. #}
 {% if not full_page %}
 <span id="lb-context-header" hx-swap-oob="true" class="page-label">{{ context_header }}</span>
@@ -11,16 +12,17 @@
 {% else %}
 <section class="lb-reports">
     {% if tournament_summary %}
-    <a class="lead-teaser" href="{{ tournament_summary.lead_link | default(tournament_summary.link) }}">
+    <a class="lead-teaser" href="{{ tournament_summary.link }}">
         <span class="hl-kicker">Tournament report</span>
         <span class="teaser-headline">{{ tournament_summary.headline }}</span>
     </a>
     {% endif %}
+    {% if rounds %}
     <ul class="headline-list lb-report-rounds">
         {% for r in rounds %}
         <li>
             {% if r.summary %}
-            <a href="{{ r.summary.lead_link | default(r.summary.link) }}">
+            <a href="{{ r.summary.link }}">
                 <span class="hl-kicker">Round {{ r.round }}{% if r.course %} / {{ r.course }}{% endif %}</span>
                 <span class="hl-headline">{{ r.summary.headline }}</span>
             </a>
@@ -33,5 +35,8 @@
         </li>
         {% endfor %}
     </ul>
+    {% else %}
+    <p class="hl-pending">No rounds scheduled yet</p>
+    {% endif %}
 </section>
 {% endif %}

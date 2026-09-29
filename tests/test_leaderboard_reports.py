@@ -6,6 +6,7 @@ the last test hits the real data with no patching.
 
 import re
 
+import pandas as pd
 import pytest
 from starlette.testclient import TestClient
 
@@ -21,7 +22,7 @@ def client():
     return TestClient(app)
 
 
-def _fake_summary(teg, round_num):
+def _fake_summary(teg, round_num=None):
     if round_num == 2 or round_num == 4:
         return {
             "teg": teg,
@@ -31,6 +32,7 @@ def _fake_summary(teg, round_num):
             "headline": f"Headline for round {round_num}",
             "standfirst": "A standfirst.",
             "link": f"/teg-reports?teg={teg}&round={round_num}",
+            "lead_link": f"/teg-reports?teg={teg}&round={round_num}#story/0",
             "other_articles": [],
         }
     if round_num is None:
@@ -53,14 +55,10 @@ def patched(monkeypatch):
         monkeypatch.setattr(lb, "_round_rows", lambda teg_num: [
             {"round": r, "course": f"Course {r}"} for r in (1, 2, 3, 4)
         ])
-        monkeypatch.setattr(lb, "get_edition_summary", _fake_summary_lookup)
+        monkeypatch.setattr(lb, "get_edition_summary", _fake_summary)
         monkeypatch.setattr(lb, "_teg_is_complete", lambda teg_num: complete)
         monkeypatch.setattr(lb, "available_tegs", lambda: [TEG])
     return apply
-
-
-def _fake_summary_lookup(teg, round_num=None, *args, **kwargs):
-    return _fake_summary(teg, round_num)
 
 
 def _reports_section(html):
@@ -78,8 +76,8 @@ def test_in_progress_lists_all_rounds(client, patched):
         assert f"Course {r}" in section
     for r in (2, 4):
         assert f"Headline for round {r}" in section
-        assert f'href="/teg-reports?teg={TEG}&amp;round={r}"' in section or \
-            f'href="/teg-reports?teg={TEG}&round={r}"' in section
+        # Rows open the round report itself, not its lead-story anchor.
+        assert f'href="/teg-reports?teg={TEG}&amp;round={r}"' in section
     assert section.count("lb-report-pending") == 2
     assert section.count("Pending") == 2
     assert "No report" not in section
@@ -113,7 +111,36 @@ def test_full_page_marks_reports_tab_active(client, patched):
     )
     assert button, "Reports tab button missing"
     assert "tab-underline--active" in button.group(0)
-    assert 'id="lb-report-tab"' in resp.text
+    # The full page renders the title itself: no OOB swaps.
+    assert "hx-swap-oob" not in _reports_section(resp.text)
+
+
+def test_partial_swaps_title_and_header_out_of_band(client, patched):
+    patched(complete=False)
+    html = client.get(f"/leaderboard/table?teg={TEG}&tab=reports").text
+    assert re.search(r'id="lb-context-header" hx-swap-oob="true"', html)
+    assert re.search(rf'id="lb-page-title" hx-swap-oob="true"[^>]*>TEG {TEG} Leaderboard', html)
+
+
+def test_no_rounds_is_an_empty_state_not_an_error(client, monkeypatch):
+    monkeypatch.setattr(lb, "_round_rows", lambda teg_num: [])
+    resp = client.get(f"/leaderboard/table?teg={TEG}&tab=reports")
+    assert resp.status_code == 200
+    assert "data-public-response-error" not in resp.text
+    assert "No rounds scheduled yet" in _reports_section(resp.text)
+
+
+def test_round_rows_coerces_and_dedupes(monkeypatch):
+    frame = pd.DataFrame({
+        "TEGNum": ["18", "18", "18", "18", "17"],
+        "Round": [2, 1, 1, None, 1],
+        "Course": ["B Course", float("nan"), "dupe", "x", "other"],
+    })
+    monkeypatch.setattr(lb, "read_file", lambda path: frame)
+    assert lb._round_rows(18) == [
+        {"round": 1, "course": None},
+        {"round": 2, "course": "B Course"},
+    ]
 
 
 def test_unknown_tab_normalises_to_net(client):

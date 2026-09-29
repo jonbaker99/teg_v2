@@ -15,21 +15,22 @@ unless the selected TEG has an edition; `available_tegs()` only considers TEGs
 in completed_tegs.csv, so an in-progress TEG never shows one.
 """
 
+import logging
 from pathlib import Path
 from typing import Optional
 from urllib.parse import urlencode
 
+import pandas as pd
 from fastapi import APIRouter, Request, Query
 from fastapi.templating import Jinja2Templates
 
 from teg_analysis.io.file_operations import read_file
-from teg_analysis.reporting.newspaper_edition import (
-    available_rounds, available_tegs, get_edition_summary,
-)
+from teg_analysis.reporting.newspaper_edition import available_tegs, get_edition_summary
 from webapp.deps import get_default_teg_num, get_available_teg_numbers
 from webapp.routes.history import RESULTS_CHART_TYPES, _results_context, _teg_is_complete
 from webapp.routes.scorecard import parse_scorecard_round
 
+logger = logging.getLogger(__name__)
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
@@ -39,45 +40,48 @@ LB_TABS = ("net", "gross", "scorecards", "reports")
 def _round_rows(teg_num: int) -> list[dict]:
     """Rounds of a TEG as [{"round", "course"}], from round_info.csv.
 
-    Falls back to the rounds that have a report edition when the file is
-    unreadable or has no rows for the TEG."""
+    If round_info is unreadable or has no rows for the TEG, falls back to the
+    round count from the venue context (the same source `available_rounds`
+    probes), so unreported rounds still show as pending."""
     try:
         df = read_file("data/round_info.csv")
-        df = df[df["TEGNum"] == teg_num].sort_values("Round")
-        rows, seen = [], set()
+        df = df.assign(TEGNum=pd.to_numeric(df["TEGNum"], errors="coerce"),
+                       Round=pd.to_numeric(df["Round"], errors="coerce"))
+        df = (df[df["TEGNum"] == teg_num].dropna(subset=["Round"])
+              .drop_duplicates("Round").sort_values("Round"))
+        rows = []
         for _, r in df.iterrows():
-            rnd = int(r["Round"])
-            if rnd in seen:
-                continue
-            seen.add(rnd)
-            course = r["Course"] if "Course" in df.columns else None
-            course = str(course).strip() if course is not None and course == course else ""
-            rows.append({"round": rnd, "course": course or None})
+            course = r.get("Course")
+            course = str(course).strip() if isinstance(course, str) else ""
+            rows.append({"round": int(r["Round"]), "course": course or None})
         if rows:
             return rows
-    except Exception:
-        pass
-    return [{"round": r, "course": None} for r in available_rounds(teg_num)]
+    except Exception:          # noqa: BLE001 - degrade to the venue fallback
+        logger.warning("round_info read failed for TEG %s", teg_num, exc_info=True)
+    try:
+        from teg_analysis.reporting.venue import build_venue_context
+        total = len(build_venue_context(teg_num).get("rounds", []))
+    except Exception:          # noqa: BLE001 - no round_info for this TEG at all
+        return []
+    return [{"round": r, "course": None} for r in range(1, total + 1)]
 
 
 def _reports_context(teg_num: int) -> dict:
-    """Context for the Reports tab: round report headlines for one TEG."""
+    """Context for the Reports tab: round report headlines for one TEG.
+
+    A TEG with no rounds set up yet gets an empty list (an honest empty
+    state), not an error: a Retry could never fix it."""
     from webapp.routes.latest import _teg_context_header  # avoid import cycle
     complete = _teg_is_complete(teg_num)
-    context_header = _teg_context_header(teg_num)
-    rows = _round_rows(teg_num)
-    if not rows:
-        return {"error": f"No rounds found for TEG {teg_num}",
-                "teg_complete": complete, "context_header": context_header}
     tournament = (get_edition_summary(teg_num)
                   if complete and teg_num in available_tegs() else None)
     return {
         "reports_view": True,
         "teg_complete": complete,
-        "context_header": context_header,
+        "context_header": _teg_context_header(teg_num),
         "tournament_summary": tournament,
-        "rounds": [{"round": r["round"], "course": r["course"],
-                    "summary": get_edition_summary(teg_num, r["round"])} for r in rows],
+        "rounds": [{**r, "summary": get_edition_summary(teg_num, r["round"])}
+                   for r in _round_rows(teg_num)],
         "pending_label": "No report" if complete else "Pending",
     }
 

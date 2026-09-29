@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-29 (Live round entry links)
+**Last updated:** 2026-09-29 (Leaderboard Reports tab)
+
+## 2026-09-29 — Leaderboard Reports tab
+
+`/leaderboard` has a Reports tab for every TEG, including one in progress. It lists each round with its report's lead headline, linking to that round's report. Rounds without a report show "Pending", or "No report" once the TEG is complete. A completed TEG also shows its tournament report headline, and the hero "View tournament report" link is unchanged (TEG 19 dry-run issue 12).
 
 ## 2026-09-29 — Live round entry links
 

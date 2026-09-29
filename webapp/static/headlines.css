@@ -40,7 +40,7 @@
 }
 .lb-reports .headline-list a:hover .hl-headline,
 .lb-reports .lead-teaser:hover .teaser-headline {
-    color: var(--green);
+    color: inherit;
     text-decoration: underline;
     text-underline-offset: 3px;
 }
@@ -68,4 +68,11 @@
 }
 .lb-reports .lb-report-pending {
     display: block;
+}
+
+/* Row links meet the 44px touch floor on phones and touch screens
+   (design_principles.md, Hit areas). */
+@media (max-width: 640px), (pointer: coarse) {
+    .lb-reports .headline-list a,
+    .lb-reports .lead-teaser { min-height: 44px; }
 }
