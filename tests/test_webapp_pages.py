@@ -1532,7 +1532,7 @@ def test_contents_state_complete_with_report_leads_with_headline(client, monkeyp
     assert "TEG 18 Handicaps" not in resp.text
 
 
-def test_contents_state_complete_no_report_falls_back_to_results_primary(client, monkeypatch):
+def test_contents_state_complete_no_report_still_shows_standings(client, monkeypatch):
     monkeypatch.setattr(contents_route, "get_tournament_state", lambda: {
         "state": "complete", "teg_num": 12, "teg_label": "TEG 12",
         "area": "Algarve, Portugal", "year": "2019",
@@ -1544,15 +1544,17 @@ def test_contents_state_complete_no_report_falls_back_to_results_primary(client,
     resp = client.get("/contents")
     _assert_ok_no_error(resp)
     # Never invents a headline for a report that doesn't exist.
-    assert "TEG 12 — Final Results" in resp.text
+    assert "TEG 12 results" in resp.text and "Algarve, Portugal. May 2019" in resp.text
+    assert "Final Results" not in resp.text
+    assert 'hx-get="/contents/panel?teg=12&state=complete"' in resp.text
+    assert 'class="panel-grid" id="contents-panel"' in resp.text  # no report: full width
     assert "Next TEG" in resp.text and "TEG 13 Handicaps" not in resp.text
     assert 'class="headline-link"' not in resp.text
     assert 'class="dateline"' not in resp.text
     # E7: never a dead report link -- the sitemap's general, state-agnostic
     # /teg-reports link still renders; only the pinned report action is absent.
     assert 'href="/teg-reports?teg=12"' not in resp.text
-    assert 'href="/results?teg=12"' in resp.text
-    assert "state-btn-primary" in resp.text
+    assert "Champion" in resp.text and "David MULLIN" in resp.text
 
 
 def test_contents_state_no_data(client, monkeypatch):
