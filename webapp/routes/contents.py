@@ -190,6 +190,14 @@ def _text(value) -> str:
     return "" if value is None or (isinstance(value, float) and value != value) else str(value).strip()
 
 
+def _short_location(value) -> str:
+    """The region and country only: 'Vila Nova de Cacela, East Algarve,
+    Portugal' -> 'East Algarve, Portugal'. The town adds length, not
+    meaning, next to the area headline."""
+    parts = [part.strip() for part in _text(value).split(",") if part.strip()]
+    return ", ".join(parts[-2:])
+
+
 def _next_teg_context() -> dict:
     """The next TEG: area, when, each round's date and course (from
     round_info.csv once set up) and its handicaps. The area falls back to
@@ -208,9 +216,7 @@ def _next_teg_context() -> dict:
                 "round": r["round"],
                 **_round_date_parts(r["date"]),
                 "course": _text(r["course"]),
-                # A course's location shows on its first round only.
-                "location": "" if any(x["course"] == _text(r["course"]) for x in rounds)
-                            else _text(r["location"]),
+                "location": _short_location(r["location"]),
             })
         when = next((r["month"] for r in rounds if r["month"]), "")
         if not when and venue["year"]:

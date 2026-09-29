@@ -1341,9 +1341,9 @@ def test_contents_complete_next_teg_view(client, monkeypatch):
         "area": "Algarve, Portugal", "year": 2026,
         "rounds": [
             {"round": 1, "date": "10/10/2026", "course": "Monte Rei",
-             "full_name": None, "location": "Vila Nova de Cacela"},
+             "full_name": None, "location": "Vila Nova de Cacela, East Algarve, Portugal"},
             {"round": 2, "date": "11/10/2026", "course": "Monte Rei",
-             "full_name": None, "location": "Vila Nova de Cacela"},
+             "full_name": None, "location": "Vila Nova de Cacela, East Algarve, Portugal"},
         ],
     })
     monkeypatch.setattr(contents_route, "_current_handicap_tiles", lambda teg: {
@@ -1356,10 +1356,11 @@ def test_contents_complete_next_teg_view(client, monkeypatch):
     _assert_ok_no_error(resp)
     assert '<h1 class="state-headline">TEG 19</h1>' in resp.text
     assert "Algarve, Portugal. October 2026" in resp.text
-    assert "Sat" in resp.text and "10 Oct" in resp.text and "Sun" in resp.text
+    assert "Sat 10 Oct" in resp.text and "Sun 11 Oct" in resp.text
     assert "Monte Rei" in resp.text
-    # A course's location shows on its first round only.
-    assert resp.text.count("Vila Nova de Cacela") == 1
+    # Every round shows its location, shortened to the last two parts.
+    assert resp.text.count("East Algarve, Portugal") == 2
+    assert "Vila Nova de Cacela" not in resp.text
     assert "Jon BAKER" in resp.text and ">21<" in resp.text
     assert "Handicaps ↗" in resp.text
     assert 'aria-pressed="true"\n                hx-get="/contents/view?view=next"' in resp.text
@@ -1384,6 +1385,15 @@ def test_contents_complete_next_teg_view(client, monkeypatch):
     resp = client.get("/contents/view", params={"view": "next"})
     _assert_ok_no_error(resp)
     assert "Venue TBC. Dates TBC" in resp.text
+
+
+def test_short_location_keeps_last_two_parts():
+    short = contents_route._short_location
+    assert short("Vila Nova de Cacela, East Algarve, Portugal") == "East Algarve, Portugal"
+    assert short("East Sussex, England") == "East Sussex, England"
+    assert short("Portugal") == "Portugal"
+    assert short("") == ""
+    assert short(float("nan")) == ""
 
 
 def test_contents_complete_next_teg_view_blank_round_cells_show_tbc(client, monkeypatch):
