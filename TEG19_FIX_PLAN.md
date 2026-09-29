@@ -46,8 +46,9 @@ All four are silent until the last round is finalised, then they hit every visit
 | 5 | A finalised round's review page still offers Save, Finalize and Cancel. | Render finalised and cancelled rounds read-only. | same as above |
 | 7 | No next step after finalising. | Add a "Generate round report" button to `/admin/reports?teg=N&round=R`. | same as above |
 | 2 | Players aren't told that finalising is admin-only. | Once all scores are in, the banner says who finalises. Mostly solved by 6. | `live_round_leaderboard.html` |
+| 17 | Feature: filling each round by hand makes dry runs slow. | A test-only "Fill empty cells with random scores" button on the admin review page. Each score is par −2 to par +3 for that hole (eagle to triple bogey; never below 1), weighted towards par and bogey. It fills only empty cells, and writes through `apply_admin_edits` so the usual validation applies. **Hidden, and refused server-side, on production:** enable it only when `RAILWAY_ENVIRONMENT_NAME` isn't `production` (PR environments and local). | `webapp/routes/admin_live_round.py`, `templates/admin_live_round_review.html`, `teg_analysis/analysis/live_round.py` |
 
-**Acceptance:** on a phone, a player can move between entry and leaderboard both ways. An admin can find any active round's link, finalise once with clear feedback, and move on to the report.
+**Acceptance:** on a phone, a player can move between entry and leaderboard both ways. An admin can find any active round's link, finalise once with clear feedback, and move on to the report. On the PR preview, the random-fill button fills a round in one tap; on production, it's absent and its route refuses.
 
 ### Batch 2: finalise reliability (after the tournament)
 
@@ -112,7 +113,7 @@ Each batch is one task: its own branch and worktree, and one PR against `main` w
 Branch fresh from `main`, open a draft PR, and use its Railway environment. First, confirm its disk usage is separate from production's.
 
 1. Go live for Round 1. Find the link again from the admin list.
-2. Enter scores on a phone. Go from the leaderboard to entry and back.
+2. Enter a few scores on a phone. Go from the leaderboard to entry and back. Fill the rest with the random-fill button.
 3. Finalise once. Check the feedback, the read-only review page, and the report button.
 4. Generate the round report.
 5. Repeat for Rounds 2 to 4.
