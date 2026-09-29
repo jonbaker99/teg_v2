@@ -1,0 +1,23 @@
+{
+  "teg": 19,
+  "round": 4,
+  "label": "storylinefirst",
+  "errors": 0,
+  "warnings": 2,
+  "findings": [
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "ns the TEG 19 Trophy by one point with a 108 \u2014 the worst gross round ever recorded at Monte",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "worst gross round ever recorded at Monte Rei \u2014 having lost the lead at the 17th and taken i",
+      "source": "mechanical"
+    }
+  ]
+}

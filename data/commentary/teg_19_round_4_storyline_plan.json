@@ -1,0 +1,126 @@
+{
+  "title": "Won by One at Monte Rei",
+  "title_candidates": [
+    "Won by One at Monte Rei",
+    "Sixty-Two Holes in Front, One Point Clear",
+    "The Record and the Course-Worst, Same Group"
+  ],
+  "theme": "On the same Nicklaus course on the same Tuesday, one man matched the Monte Rei record and the other set its worst-ever score — and the worse round won the TEG 19 Trophy by a single point.",
+  "tone": "house",
+  "opening_hook": "Walking off the 17th green at Monte Rei, Gregg Williams led the TEG 19 Trophy for the first time in the entire tournament — Alex Baker having held it for 62 unbroken holes since the 9th of round one. The lead lasted precisely one hole.",
+  "narrative_vehicles": [
+    "counterfactual",
+    "dual_narrative",
+    "catalogue"
+  ],
+  "prominent_vehicle": "counterfactual",
+  "prominent_palette": "decisive_moment",
+  "is_final_round": true,
+  "round_story": {
+    "subject": "Gregg Williams's 41-point, 84-gross final round at Monte Rei: the best round of the day, a course record equalled, his own course personal best, and still one point short of the Trophy",
+    "why_it_matters": "It was the finest round played all day by both measures — 41 Stableford and 12 over par against a field whose next best gross was 18 — and it equalled the Monte Rei course record of 84 across ten prior visits while being the third-best gross round of Williams's own 71-round career. It sealed the TEG 19 Green Jacket by fourteen and, agonisingly, moved him to within one point of a Trophy he briefly held with a hole to play.",
+    "shape": "Williams begins in the ruck, five points behind Alex Baker and nowhere in the Trophy after three rounds; bogeys at the 3rd and 4th are answered by a birdie at the short 5th, another at the 6th and an eagle three at the par-5 8th. He draws level at the 10th, survives a three-bogey slide and a triple at the 14th, birdies the 16th and pars the 17th to lead outright for the first time in the tournament. The 84 equals the course record and wins him the Jacket by fourteen shots; the one point he could not find at the last leaves the Trophy with Alex Baker.",
+    "beat_ids": [
+      "cr01",
+      "r4_b03",
+      "r4_b25",
+      "r4_b19",
+      "r4_b14",
+      "r4_b08",
+      "r4_b10",
+      "r4_b16",
+      "r4_b21"
+    ],
+    "headline_candidates": [
+      "Williams Equals the Monte Rei Record",
+      "Eighty-Four, and Still One Short",
+      "Forty-One Points, No Trophy"
+    ],
+    "chosen_headline": "Williams Equals the Monte Rei Record",
+    "standfirst": "An eagle at the 8th and a birdie at the 16th carried Gregg Williams to the Green Jacket by fourteen shots and his own best score on the course, one point from the only prize he wanted.",
+    "compelling_score": 8,
+    "humour_score": 6,
+    "descriptor": "GREGG WILLIAMS"
+  },
+  "race_story": {
+    "subject": "Alex Baker wins the TEG 19 Trophy by one point with a 108 — the worst gross round ever recorded at Monte Rei — having lost the lead at the 17th and taken it back at the 18th",
+    "why_it_matters": "This is the coronation, and it arrives sideways: the TEG 19 Trophy goes to Alex Baker on 157 to Gregg Williams's 156, while the same 18 holes produced a new Monte Rei course-worst of 108 gross from the champion, beating the previous worst of 106 across ten prior visits. Gregg Williams was the better player over three of the four rounds and takes the Green Jacket instead; Jon Baker takes the Wooden Spoon.",
+    "shape": "Alex Baker arrives on the first tee five points clear and immediately begins shedding shots — an 8 at the 3rd, an 8 at the short 7th, a 7 at the 9th — and still somehow leads at the 12th. Then the collapse proper: 11 gross shots gone across the 13th, 14th and 15th, including a 10 at the par-3 14th, the worst he has ever made on a par three, and a quadruple-bogey 8 at the 17th that finally surrenders a lead held since round one. A birdie at the 16th and a routine par five at the last are enough: 37 points, 108 gross, the Trophy by one, and last place in the Jacket on +124.",
+    "beat_ids": [
+      "r4_b01",
+      "r4_b11",
+      "r4_b02",
+      "cr02",
+      "r4_b04",
+      "r4_b13",
+      "r4_b23",
+      "r4_b05",
+      "r4_b06",
+      "r4_b09",
+      "r4_b07",
+      "r4_b26",
+      "r4_b15",
+      "r4_b17",
+      "r4_b18"
+    ],
+    "headline_candidates": [
+      "Alex Baker Wins It Going Backwards",
+      "A Hundred and Eight Wins It",
+      "Lost at the Seventeenth, Won at the Last"
+    ],
+    "chosen_headline": "Alex Baker Wins It Going Backwards",
+    "standfirst": "The champion signed for the highest gross score in Monte Rei's history and took the Trophy by a single point, having led for 62 holes, lost it for one, and reclaimed it with a par.",
+    "compelling_score": 9,
+    "humour_score": 8,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "The par-3 14th at Monte Rei, which took 10 from Alex Baker, 7 from John Patterson and a triple bogey from Gregg Williams on the final afternoon",
+      "why_it_matters": "Stroke index 17 — the second-easiest hole on the card by the committee's reckoning — and it removed 14 gross shots from three of the five players in a single pass, including the worst score Alex Baker has ever made on a par three.",
+      "shape": "A 190-odd yard afternoon hole with water never far away, handicapped as an afterthought. Alex Baker makes 10 there in the middle of an 11-shot slide across three holes; John Patterson makes 7; Gregg Williams, on his way to a course record, makes 6. All three answer it with a birdie at the par-5 16th, which tells you rather a lot about the 14th.",
+      "beat_ids": [
+        "r4_b02",
+        "r4_b20",
+        "r4_b08",
+        "r4_b31",
+        "r4_b13"
+      ],
+      "headline_candidates": [
+        "Fourteen Shots Lost at the Fourteenth",
+        "Stroke Index Seventeen, Apparently",
+        "The Short Hole Takes Its Toll"
+      ],
+      "chosen_headline": "Fourteen Shots Lost at the Fourteenth",
+      "standfirst": "Nominally the second-easiest hole at Monte Rei, the 14th relieved three of the five players of a combined 14 gross shots inside an hour.",
+      "compelling_score": 7,
+      "humour_score": 8,
+      "descriptor": "MONTE REI'S 14TH"
+    },
+    {
+      "subject": "Jon Baker takes the TEG 19 Wooden Spoon by seven, finishing last in the field on the final day after leading the Green Jacket race in round one",
+      "why_it_matters": "He held the gross lead from the 5th hole of round one until the 7th of round two and led the Trophy briefly on day one, then finished bottom of the field in both of the last two rounds; 33 points on Tuesday was the worst score of the day and left him seven adrift of David Mullin.",
+      "shape": "Jon Baker opens the tournament leading the Jacket and sitting second in the Trophy, and posts the best round of the field in round two. From there it unwinds: last in the field in round three, last again in round four, and a four-hole stretch from the 9th to the 12th on Tuesday that cost nine gross shots without a single net par. A birdie at the 13th and nine points across the 15th to 17th tidied the ledger without changing the destination.",
+      "beat_ids": [
+        "r4_b39",
+        "r4_b30",
+        "r4_b28",
+        "r4_b33",
+        "r4_b34",
+        "r4_b35"
+      ],
+      "headline_candidates": [
+        "Jon Baker Takes the Spoon by Seven",
+        "Nine Shots Gone in Four Holes",
+        "From Jacket Leader to Last"
+      ],
+      "chosen_headline": "Jon Baker Takes the Spoon by Seven",
+      "standfirst": "The man who led the gross race for 20 holes in round one finished bottom of the field in each of the last two rounds.",
+      "compelling_score": 7,
+      "humour_score": 6,
+      "descriptor": "WOODEN SPOON"
+    }
+  ],
+  "race_state_note": "Alex Baker won the Trophy on 157 while finishing last in the Green Jacket on +124 — that is the handicap doing its job, not a curiosity, so state it plainly and move on. There is no countback in TEG: one point is the margin and the margin is final. This was not a double — the Trophy and Jacket went to different men, as they have in every TEG bar the seven listed.",
+  "storyline_note": "Final round, so race_story leads as the coronation; round_story runs second because its subject (Gregg Williams) is the man who lost the Trophy, and the two sections are deliberately written from opposite ends of the same one-point margin."
+}
