@@ -256,15 +256,35 @@
         height: 18px;
         flex: none;
     }
-    .honour-icon-trophy { color: #ae8420; }
-    .honour-icon-jacket { color: #3d7055; }
+    .honour-icon-trophy { color: #e0a412; }
+    .honour-icon-jacket { color: #16a34a; }
     .honour-icon-spoon { color: #8b603d; }
-    html[data-mode="dark"] .honour-icon-trophy { color: #e0bd64; }
-    html[data-mode="dark"] .honour-icon-jacket { color: #83b994; }
+    html[data-mode="dark"] .honour-icon-trophy { color: #f2bd3a; }
+    html[data-mode="dark"] .honour-icon-jacket { color: #4ade80; }
     html[data-mode="dark"] .honour-icon-spoon { color: #cba47b; }
-    .surface-complete {
+    /* Complete state: no box per column -- the page card already frames
+       them. A single rule splits the columns: vertical side by side,
+       horizontal once they stack. */
+    .surface.surface-complete {
         display: flex;
         flex-direction: column;
+        background: transparent;
+        border: 0;
+        border-radius: 0;
+        padding: 0;
+    }
+    @media (min-width: 900px) {
+        .panel-grid.two-col.equal-col { gap: 0; }
+        .panel-grid.equal-col > .surface-complete:first-child { padding-right: var(--sp-6, 32px); }
+        .panel-grid.equal-col > .surface-complete + .surface-complete {
+            padding-left: var(--sp-6, 32px);
+            border-left: 1px solid var(--rule-color);
+        }
+    }
+    /* Stacked: space, not a rule. A rule here doubles up with the
+       standings table's own row rules and reads as one more row. */
+    @media (max-width: 899px) {
+        .panel-grid.two-col.equal-col { gap: var(--sp-7, 48px); }
     }
     /* Complete-state card titles double as the "full results"/"full
        report" links; the arrow marks them as links on touch screens. */
@@ -345,7 +365,7 @@
         display: block;
         text-decoration: none;
         color: var(--text-primary);
-        border-top: 1px solid var(--rule-color);
+        border-top: 1px dotted var(--text-muted);
         padding-top: var(--sp-3, 12px);
     }
     .lead-teaser .teaser-headline {
@@ -366,7 +386,7 @@
         display: flex;
         flex-direction: column;
         gap: var(--sp-4, 16px);
-        border-top: 1px solid var(--rule-color);
+        border-top: 1px dotted var(--text-muted);
     }
     .headline-list a {
         display: block;
@@ -389,6 +409,8 @@
         color: var(--text-muted);
         margin-bottom: 2px;
     }
+    .hl-kicker .honour-icons { vertical-align: -2px; margin-right: 4px; }
+    .hl-kicker .honour-icon { width: 13px; height: 13px; }
     .hl-headline {
         font-family: var(--font-serif);
         font-size: var(--fs-400, 16px);
@@ -456,19 +478,19 @@
     {% elif state.state == "complete" %}
         {% if state.report_summary %}
             <h1 class="state-headline">{{ state.teg_label }} results</h1>
-            <p class="state-context">{{ state.area }} | {{ state.dateline_month_year }}</p>
+            <p class="state-context">{{ state.area }}. {{ state.dateline_month_year }}</p>
 
             <div class="honours-line" style="margin-bottom: var(--sp-5, 20px);">
                 <span class="honour-champion"><span class="honour-label">Champion</span> <span class="honour-name">{{ state.trophy or "–" }}</span></span>
-                <span class="honour-sep">|</span>
+                <span class="honour-sep">/</span>
                 <span><span class="honour-label">Green Jacket</span> <span class="honour-name">{{ state.jacket or "–" }}</span></span>
-                <span class="honour-sep">|</span>
+                <span class="honour-sep">/</span>
                 <span><span class="honour-label">Wooden spoon</span> <span class="honour-name">{{ state.spoon or "–" }}</span></span>
             </div>
 
             <div hx-get="/contents/panel?teg={{ state.teg_num }}&state=complete" hx-trigger="load" hx-swap="outerHTML">
                 <div class="panel-grid two-col equal-col" id="contents-panel" aria-busy="true">
-                    <div class="surface">
+                    <div class="surface surface-complete">
                         <p class="standings-heading">Final Standings</p>
                         <p class="gross-line">Loading…</p>
                     </div>
@@ -476,7 +498,7 @@
             </div>
 
             {% if state.next_teg %}
-            <p class="state-next" style="margin-top: var(--sp-5, 20px);">Next: {{ state.next_teg.label }} | {{ state.next_teg.area }} | {{ state.next_teg.year }}</p>
+            <p class="state-next" style="margin-top: var(--sp-5, 20px);">Next: {{ state.next_teg.label }} / {{ state.next_teg.area }} / {{ state.next_teg.year }}</p>
             {% endif %}
             <a class="teaser-link teaser-handicaps" href="/handicaps" style="display:inline-block; margin-top: var(--sp-2, 8px);">TEG {{ state.teg_num + 1 }} Handicaps ↗</a>
         {% else %}

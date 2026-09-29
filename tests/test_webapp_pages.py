@@ -1364,6 +1364,12 @@ def test_contents_panel_complete_state_real_data(client):
     assert 'class="lead-teaser" href="/teg-reports?teg=18#story/0"' in resp.text
     assert "Also in this report" not in resp.text
     assert "The Champion" in resp.text  # lead story kicker
+    # Lead kicker carries a decorative trophy; the text already names it.
+    lead = resp.text[resp.text.index('class="lead-teaser"'):resp.text.index("The Champion")]
+    assert 'honour-icon-trophy" aria-hidden="true"' in lead
+    # Report descriptors store "A | B"; the page shows slashes.
+    headlines = resp.text[resp.text.index('class="headline-list"'):]
+    assert " | " not in headlines
     assert "teaser-standfirst" not in resp.text  # no lead synopsis
     assert resp.text.count("<li>") == 4  # capped, TEG 18 has 5 non-lead articles
     assert 'href="/results?teg=18"' in resp.text
@@ -1390,7 +1396,7 @@ def test_contents_state_complete_with_report_leads_with_headline(client, monkeyp
     # Title is plain "TEG N results"; the lead headline lives in the
     # deferred report box with the other headlines, not the page h1.
     assert '<h1 class="state-headline">TEG 18 results</h1>' in resp.text
-    assert "Catalonia, Spain | October 2025" in resp.text
+    assert "Catalonia, Spain. October 2025" in resp.text
     assert "Alex Baker Wins It in Round One" not in resp.text
     assert "TEG 18 — Final Results" not in resp.text  # fallback headline must not also render
     # Compact honours line, not stacked label/name rows.
@@ -1402,7 +1408,7 @@ def test_contents_state_complete_with_report_leads_with_headline(client, monkeyp
     assert 'hx-get="/contents/panel?teg=18&state=complete"' in resp.text
     # Owner decision: Full Results only appears inside the deferred panel
     # now (moved below the standings table), not as a page-level action.
-    assert "Next: TEG 19 | Algarve, Portugal | 2026" in resp.text
+    assert "Next: TEG 19 / Algarve, Portugal / 2026" in resp.text
     assert "TEG 19 Handicaps" in resp.text
     assert "TEG 18 Handicaps" not in resp.text
 

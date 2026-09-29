@@ -82,7 +82,8 @@
       "Bash(gh pr *)",
       "Bash(python3 -)",
       "Bash(uvicorn webapp.app:app *)",
-      "Bash(git commit -qam 'Tell the implementing agent to confirm open decisions first *)"
+      "Bash(git commit -qam 'Tell the implementing agent to confirm open decisions first *)",
+      "Bash(git commit -qam 'Contents: separate stacked columns with space, not a rule *)"
     ],
     "deny": [],
     "ask": [
