@@ -149,7 +149,7 @@ def test_full_lifecycle_two_devices_conflict_and_finalize(admin, scratch_repo):
     device_a.post(f"/api/live-round/{token}/scores", json={"device_id": "dev-A", "device_name": "Jon", "cells": remaining})
 
     finalize_resp = admin.post(f"/admin/live-round/{token}/finalize")
-    assert "finalized" in finalize_resp.text.lower(), finalize_resp.text
+    assert finalize_resp.headers.get("HX-Redirect") == f"/admin/live-round/{token}/review?finalized=1", finalize_resp.text
 
     # The real pipeline actually wrote to all-scores.parquet in the scratch repo.
     all_scores = pd.read_parquet(scratch_repo / "data" / "all-scores.parquet")

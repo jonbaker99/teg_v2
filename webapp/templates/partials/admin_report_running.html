@@ -1,0 +1,32 @@
+{# Every live or just-finished report run, any TEG/round. Polls itself only
+   while a run is active, so polling stops when nothing is running. #}
+{% if runs %}
+  {% for run in runs %}
+    <div class="data-card" style="margin-bottom:.75rem;">
+      <h2 class="card-header" style="margin-bottom:.25rem;">{{ run.label }}</h2>
+      <p class="text-muted text-sm">
+        Started <time datetime="{{ run.started_at }}" data-local>{{ fmt_hhmm(run.started_at) }} UTC</time>
+      </p>
+      {% set phases = run.phases %}
+      {% include "partials/admin_report_phases.html" with context %}
+      {% if run.stale %}
+        <p class="text-sm" style="margin-top:.5rem;">Stopped responding. Try generating again.</p>
+      {% elif run.state == "done" %}
+        <p class="text-sm" style="margin-top:.5rem;">Ready.
+          <a href="/teg-reports?teg={{ run.teg }}{% if run.round %}&round={{ run.round }}{% endif %}">View it →</a></p>
+      {% elif run.state == "done_local_only" %}
+        <p class="text-sm" style="margin-top:.5rem;">Live but not on GitHub. {{ run.error }}
+          <a href="/teg-reports?teg={{ run.teg }}{% if run.round %}&round={{ run.round }}{% endif %}">View it →</a>
+          <a href="/admin/volume-sync?folder=data/commentary">Retry the GitHub push</a></p>
+      {% elif run.state == "error" %}
+        <p class="text-sm" style="margin-top:.5rem;">Failed: {{ run.error }}</p>
+      {% endif %}
+    </div>
+  {% endfor %}
+  {% if runs | selectattr("active") | list %}
+    <div hx-get="/admin/reports/running" hx-trigger="load delay:3s"
+         hx-target="#running-reports" hx-swap="innerHTML"></div>
+  {% endif %}
+{% else %}
+  <p class="text-muted text-sm">No reports running.</p>
+{% endif %}

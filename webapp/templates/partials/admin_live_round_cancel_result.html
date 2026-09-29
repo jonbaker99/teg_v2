@@ -1,7 +1,4 @@
+{# Error case only: success redirects to the review page via HX-Redirect. #}
 {% if error %}
   <p class="error" style="color:#b00020;">{{ error }}</p>
-{% elif result %}
-  <p style="color:#1a1a1a;">
-    Cancelled — nothing was written to the permanent record. <a href="/admin/live-round" class="text-link">Back to live rounds</a>.
-  </p>
 {% endif %}

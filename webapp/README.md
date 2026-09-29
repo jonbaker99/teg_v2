@@ -143,7 +143,8 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
   (editable scorecard grid + conflicts + finalize), `/admin/live-round/{token}/edit`
   (bulk admin edit — a plain form POST that redirects back to review),
   `/admin/live-round/{token}/resolve`, `/admin/live-round/{token}/finalize`,
-  `/admin/live-round/{token}/cancel` (the rest HTMX).
+  `/admin/live-round/{token}/cancel` (HTMX), `/admin/live-round/{token}/random-fill`
+  (test only, plain form POST).
 - **Purpose:** start a live, multi-device round-entry session for an already-set-up
   round, hand out its shareable link, and review/finalize once everyone's done.
   The score-entry link isn't a one-shot: every **active** round shows its full
@@ -161,24 +162,56 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
   and finalizes. Admin edits go through `live_round.apply_admin_edits`, which is
   authoritative: an admin value overwrites a player entry and clears any conflict flag,
   and only cells whose value actually changed are written (a re-save is a no-op).
+  **Finalise feedback:** finalise takes about 40 seconds (it runs the full data update
+  in the request). While it runs, an indicator says so and Finalise, Cancel and Save are
+  disabled. On success the route answers with `HX-Redirect` back to the review page
+  (`?finalized=1`, plus `cache_errors=` naming any failed cache step), so the
+  confirmation lands at the top. Cancel does the same with `?cancelled=1`.
+  **Read-only once done:** a finalised or cancelled round's review page shows the
+  scorecard as plain values, with no Save, resolve, Finalise or Cancel. A finalised
+  round's status card offers **View leaderboard** (`/leaderboard`) and **Generate round
+  report** (`/admin/reports?teg=N&round=R`). The server enforces it too:
+  `apply_admin_edits` refuses a round that isn't active.
+  **Random fill (test only):** on an active round the review page offers "Fill empty
+  cells with random scores" for dry runs. `live_round.fill_random_scores` fills only
+  empty cells (par −2 to par +3, never below 1, weighted to par and bogey) through
+  `apply_admin_edits`, so normal validation applies. It's on only when
+  `RAILWAY_ENVIRONMENT_NAME` (or its older alias `RAILWAY_ENVIRONMENT`) isn't
+  `production`, so local runs and PR environments have it. On production the button is
+  hidden and the route returns 403.
   Finalizing runs the staged scores through the *existing* `execute_data_update`
   pipeline exactly as "Add a round" does — one GitHub commit, every derived cache
   regenerated. See the player-facing side below and
   `DATA_STORAGE_INGESTION_PLAN.md`'s "Phase 3.4 design" for the full model.
 
 **Reports** — templates `admin_reports.html`, `partials/admin_report_panel.html`,
-`partials/admin_report_status.html`; route `webapp/routes/admin_reports.py`; state machine +
+`partials/admin_report_status.html`, `partials/admin_report_confirm.html`,
+`partials/admin_report_running.html`; route `webapp/routes/admin_reports.py`; state machine +
 background task in `webapp/report_generation.py`.
 - **Routes:** `/admin/reports` (TEG/round pickers), `/admin/reports/panel` (HTMX, repopulates
-  rounds when the TEG changes), `/admin/reports/generate` (`kind=round|tournament`, HTMX),
-  `/admin/reports/status` (HTMX poll target).
+  rounds when the TEG changes), `/admin/reports/generate` (`kind=round|tournament`, optional
+  `confirm=1`, HTMX), `/admin/reports/running` (HTMX poll target for the running-reports panel).
+- **Phases:** a run moves through `storylines → draft → voice → publish → push`
+  (`report_generation.PHASES`). The background task calls the pipeline's `run_one` once per
+  stage (`--from X --to X`), so it records each phase in the status file's `phase` field without
+  any hook in `teg_analysis/`. The same LLM calls are made as one full run.
+- **Running reports panel:** sits above the pickers, so it shows every report in flight whichever
+  TEG and round is selected, each with its phases marked done / in progress / to do. It also keeps
+  runs that ended in the last 15 minutes, with their outcome. It polls every 3s only while a run is
+  active, and a successful Generate refreshes it at once (`HX-Trigger: report-started`). A run with
+  no update for 30 minutes (`STALE_AFTER_SECONDS`) shows as stopped responding.
+- **Confirm before Generate:** `generate` without `confirm=1` first asks
+  `report_generation.confirmation_needed()`. A running report shows when it started and its
+  phase, with no way to start a second run. A report finished in the last 6 hours
+  (`RECENT_SECONDS`) asks before overwriting it, since a rerun costs another API run. Times are
+  stored UTC and shown in the phone's local time by a small script (`time[data-local]`).
 - **Purpose:** trigger the newspaper-style report pipeline (storylines → draft → voice) from a
   phone, no laptop — the clubhouse use case. Runs for minutes, not seconds, so status lives in a
   **JSON file per (TEG, round-or-None)**, not the in-memory `_sync_jobs` dict the volume-sync pull
   jobs use (`admin.py`) — a phone's screen locking mid-poll would otherwise lose the job. A
   `claim()` call makes the (TEG, round) slot single-flight: a second trigger while one is active
   is refused, not queued. The pipeline writes to a CWD-relative `data/commentary/`, which on
-  Railway is not the mounted volume, so the background task stages its four output files into the
+  Railway is not the mounted volume, so the background task stages its output files into the
   real store, then pushes them to GitHub (`teg_analysis.io.push_files`) as the sync-of-record — a
   failed push doesn't block reading the report, it's a separate terminal state
   (`done_local_only`) with its own retry path. Copy this file-based-status pattern for any future
@@ -353,7 +386,10 @@ don't need the link sent to them.
   (reusing `data_update.process_round_for_all_scores`, so gross/net/Stableford match
   the eventual finalized round), shows both competitions (TEG Trophy = net, Green Jacket
   = gross) with a "scoring in progress" banner until all 18 holes are in for everyone,
-  and polls every 10s. It reads **only staging** — a live round isn't on the main-site
+  and polls every 10s. Once all scores are in, its banner says an admin finalises the
+  round. The app bar's **Enter scores** link goes back to entry. Both pages follow the
+  phone's light/dark setting (`prefers-color-scheme`); the mock-up's fixed Light / Dark
+  toggle was removed because it covered that link. It reads **only staging** — a live round isn't on the main-site
   `/leaderboard` or `/results` until it's finalized.
 - **Page:** a standalone page (does **not** extend `base.html`'s desktop site
   chrome) styled like `webapp/mobile_mockups/round_entry_grid.html`, which it's

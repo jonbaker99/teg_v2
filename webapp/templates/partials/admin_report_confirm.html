@@ -1,0 +1,32 @@
+{# Confirmation before Generate: a run is already live (dismiss only), or the
+   report was generated recently (regenerate anyway / cancel). #}
+{% set s = pending.status %}
+{% if pending.reason == "running" %}
+  <div class="admin-callout admin-callout--warning">
+    <div class="admin-callout-title">Already running</div>
+    <div class="admin-callout-detail">
+      {{ pending.label }} is already generating — started
+      <time datetime="{{ s.started_at }}" data-local>{{ fmt_hhmm(s.started_at) }} UTC</time>,
+      at phase {{ pending.phase_label or "starting" }}.
+    </div>
+    <div style="margin-top:.75rem;">
+      <button type="button" class="btn-secondary" onclick="document.getElementById('report-status').innerHTML=''">Dismiss</button>
+    </div>
+  </div>
+{% else %}
+  <div class="admin-callout admin-callout--warning">
+    <div class="admin-callout-title">Regenerate this report?</div>
+    <div class="admin-callout-detail">
+      {{ pending.label }} was generated at
+      <time datetime="{{ s.finished_at }}" data-local>{{ fmt_hhmm(s.finished_at) }} UTC</time>.
+      Regenerating overwrites it and costs another API run.
+    </div>
+    <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-top:.75rem;">
+      <button type="button" class="btn-action"
+              hx-post="/admin/reports/generate"
+              hx-vals='{"kind": "{{ kind }}", "teg": "{{ teg }}", "round": "{{ round or 0 }}", "confirm": "1"}'
+              hx-target="#report-status" hx-swap="innerHTML">Regenerate anyway</button>
+      <button type="button" class="btn-secondary" onclick="document.getElementById('report-status').innerHTML=''">Cancel</button>
+    </div>
+  </div>
+{% endif %}

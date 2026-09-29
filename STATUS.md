@@ -2,11 +2,15 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-29 (Leaderboard Reports tab; TEG 19 post-completion fixes)
+**Last updated:** 2026-09-29 (Leaderboard Reports tab; report admin; TEG 19 post-completion fixes)
 
 ## 2026-09-29 — Leaderboard Reports tab
 
 `/leaderboard` has a Reports tab for every TEG, including one in progress. It lists each round with its report's lead headline, linking to that round's report. Rounds without a report show "Pending", or "No report" once the TEG is complete. A completed TEG also shows its tournament report headline, and the hero "View tournament report" link is unchanged (TEG 19 dry-run issue 12).
+
+## 2026-09-29 — Report admin shows progress and asks before Generate (Batch 3)
+
+`/admin/reports` now lists every running report, whichever TEG is selected, with each phase (storylines, draft, voice, publish, commit) marked done, in progress or to do. Generate asks first when that report is already running, or was generated in the last 6 hours, since a rerun overwrites it and costs another API run. Fixes dry-run issues 8 and 9. Detail: `webapp/README.md` → Reports.
 
 ## 2026-09-29 — TEG 19 post-completion fixes (Batch 1A)
 

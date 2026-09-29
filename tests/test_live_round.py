@@ -529,6 +529,92 @@ def test_get_live_round_context_combines_roster_and_pars(store, monkeypatch):
     assert len(ctx["holes"]) == 18
 
 
+# ---------------------------------------------------------------------------
+# Test-only random fill
+# ---------------------------------------------------------------------------
+
+def _staged_scores(store, token):
+    df = store[f"data/live_rounds/{token}.csv"]
+    return {(int(r.Hole), r.Pl): int(r.Score) for r in df.itertuples() if not pd.isna(r.Score)}
+
+
+def test_fill_random_scores_fills_only_empty_cells(store):
+    import random
+    token = lr.start_live_round(10, 1)["Token"]
+    lr.apply_score_writes(token, "dev-A", "Jon", [{"hole": 1, "player": "DM", "value": 4}])
+    # Conflicted cell: DM hole 2 written by two devices with different values.
+    lr.apply_score_writes(token, "dev-A", "Jon", [{"hole": 2, "player": "DM", "value": 3}])
+    lr.apply_score_writes(token, "dev-B", "Dave", [{"hole": 2, "player": "DM", "value": 9}])
+
+    result = lr.fill_random_scores(token, random.Random(1))
+
+    assert result["written"] == 36 - 2
+    scores = _staged_scores(store, token)
+    assert len(scores) == 36
+    assert scores[(1, "DM")] == 4
+    assert scores[(2, "DM")] == 9
+    conflict = lr.get_scores_since(token, 0)["cells"]
+    assert any(c["hole"] == 2 and c["player"] == "DM" and c["conflict"] for c in conflict)
+
+
+def test_fill_random_scores_stay_within_par_window(store, confirmed_round_setup, monkeypatch):
+    import random
+    import teg_analysis.analysis.round_setup as rs
+    # Par 3s and 5s, plus a par 1 to exercise the floor at 1.
+    pars = {h: (3 if h % 2 else 5) for h in range(1, 19)}
+    pars[1] = 1
+    monkeypatch.setattr(rs, "get_round_setup_form", lambda t, r: {
+        "teg_num": t, "round_num": r, "course": "Ashdown", "source": "confirmed",
+        "flagged": False, "flag_note": None,
+        "holes": [{"hole": h, "par": pars[h], "si": h} for h in range(1, 19)],
+    })
+    token = lr.start_live_round(10, 1)["Token"]
+    for seed in range(20):
+        # Clear staging so every cell is empty again.
+        store[f"data/live_rounds/{token}.csv"] = store[f"data/live_rounds/{token}.csv"].iloc[0:0]
+        lr.fill_random_scores(token, random.Random(seed))
+        for (hole, _), score in _staged_scores(store, token).items():
+            assert max(1, pars[hole] - 2) <= score <= pars[hole] + 3
+
+
+def test_fill_random_scores_seeded_rng_is_deterministic(store):
+    import random
+    a = lr.start_live_round(10, 1)["Token"]
+    lr.fill_random_scores(a, random.Random(42))
+    first = _staged_scores(store, a)
+    lr.cancel_live_round(a)
+
+    b = lr.start_live_round(10, 1)["Token"]
+    lr.fill_random_scores(b, random.Random(42))
+    assert _staged_scores(store, b) == first
+
+
+def test_fill_random_scores_unknown_token_raises(store):
+    with pytest.raises(lr.LiveRoundNotFoundError):
+        lr.fill_random_scores("nope")
+
+
+def test_fill_random_scores_inactive_round_raises(store):
+    token = lr.start_live_round(10, 1)["Token"]
+    lr.cancel_live_round(token)
+    with pytest.raises(lr.LiveRoundInactiveError):
+        lr.fill_random_scores(token)
+
+
+def test_fill_random_scores_full_round_writes_nothing(store, monkeypatch):
+    import random
+    token = lr.start_live_round(10, 1)["Token"]
+    lr.fill_random_scores(token, random.Random(3))
+    before = store[f"data/live_rounds/{token}.csv"].copy()
+
+    def boom(*a, **k):
+        pytest.fail("must not write when nothing is empty")
+
+    monkeypatch.setattr(lr, "apply_admin_edits", boom)
+    assert lr.fill_random_scores(token, random.Random(4)) == {"written": 0}
+    pd.testing.assert_frame_equal(store[f"data/live_rounds/{token}.csv"], before)
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
 
@@ -554,3 +640,24 @@ def test_public_entry_link_lists_only_active_rounds_when_on(store):
 
     lr.set_public_entry_enabled(False)
     assert lr.get_public_live_rounds() == []
+
+
+def test_apply_admin_edits_refuses_inactive_round(store):
+    token = lr.start_live_round(10, 1)["Token"]
+    lr.cancel_live_round(token)
+    with pytest.raises(lr.LiveRoundInactiveError):
+        lr.apply_admin_edits(token, [{"hole": 1, "player": "AB", "value": 4}], "Admin")
+
+
+def test_apply_admin_edits_only_if_empty_keeps_existing_score(store):
+    token = lr.start_live_round(10, 1)["Token"]
+    player = lr.get_live_round_context(token)["players"][0]
+    lr.apply_admin_edits(token, [{"hole": 1, "player": player, "value": 4}], "Admin")
+    result = lr.apply_admin_edits(
+        token, [{"hole": 1, "player": player, "value": 7}, {"hole": 2, "player": player, "value": 3}],
+        "Random fill", only_if_empty=True,
+    )
+    assert result["written"] == 1
+    cells = {(c["hole"], c["player"]): c["value"] for c in lr.get_scores_since(token)["cells"]}
+    assert cells[(1, player)] == 4
+    assert cells[(2, player)] == 3

@@ -744,6 +744,7 @@ def test_live_round_resolve(client, monkeypatch):
 
 def test_live_round_finalize_success(client, monkeypatch):
     import teg_analysis.analysis.live_round as lrmod
+    from webapp import deps
 
     monkeypatch.setattr(lrmod, "finalize_live_round", lambda token: {
         "token": token, "teg_num": 19, "round_num": 1, "records_added": 18,
@@ -751,9 +752,25 @@ def test_live_round_finalize_success(client, monkeypatch):
     })
 
     _login(client)
+    monkeypatch.setattr(deps, "clear_all_data_caches", lambda: None)
     resp = client.post("/admin/live-round/tok123/finalize")
     assert resp.status_code == 200
-    assert "finalized" in resp.text.lower()
+    assert resp.text == ""
+    assert resp.headers["HX-Redirect"] == "/admin/live-round/tok123/review?finalized=1"
+
+
+def test_live_round_finalize_success_passes_cache_errors(client, monkeypatch):
+    import teg_analysis.analysis.live_round as lrmod
+    from webapp import deps
+
+    monkeypatch.setattr(lrmod, "finalize_live_round", lambda token: {
+        "token": token, "teg_num": 19, "round_num": 1, "records_added": 18,
+        "cache_errors": [{"step": "streaks", "error": "x"}, {"step": "records", "error": "y"}],
+    })
+    monkeypatch.setattr(deps, "clear_all_data_caches", lambda: None)
+    _login(client)
+    resp = client.post("/admin/live-round/tok123/finalize")
+    assert resp.headers["HX-Redirect"] == "/admin/live-round/tok123/review?finalized=1&cache_errors=streaks%2Crecords"
 
 
 def test_live_round_finalize_blocked_by_conflicts(client, monkeypatch):
@@ -778,7 +795,137 @@ def test_live_round_cancel(client, monkeypatch):
     _login(client)
     resp = client.post("/admin/live-round/tok123/cancel")
     assert resp.status_code == 200
-    assert "cancelled" in resp.text.lower()
+    assert resp.text == ""
+    assert resp.headers["HX-Redirect"] == "/admin/live-round/tok123/review?cancelled=1"
+
+
+def _review_setup(monkeypatch, status="active"):
+    import teg_analysis.analysis.live_round as lrmod
+    import teg_analysis.analysis.teg_setup as ts
+
+    _fake_review_ctx(monkeypatch, status)
+    monkeypatch.setattr(lrmod, "get_scores_since", lambda token, since_seq=0: {
+        "seq": 1, "status": status, "cells": [
+            {"hole": 1, "player": "DM", "value": 4, "conflict": False, "device_name": "Jon",
+             "prev_value": None, "prev_device_name": None},
+        ],
+    })
+    monkeypatch.setattr(ts, "get_teg_roster_form", lambda teg_num: {"source": "confirmed"})
+
+
+def test_random_fill_requires_auth(client):
+    resp = client.post("/admin/live-round/tok123/random-fill")
+    assert resp.status_code == 303
+    assert resp.headers["location"] == "/admin/login"
+
+
+@pytest.mark.parametrize("var", ["RAILWAY_ENVIRONMENT_NAME", "RAILWAY_ENVIRONMENT"])
+def test_random_fill_forbidden_on_production(client, monkeypatch, var):
+    import teg_analysis.analysis.live_round as lrmod
+
+    monkeypatch.delenv("RAILWAY_ENVIRONMENT_NAME", raising=False)
+    monkeypatch.delenv("RAILWAY_ENVIRONMENT", raising=False)
+    monkeypatch.setenv(var, "production")
+    calls = []
+    monkeypatch.setattr(lrmod, "fill_random_scores", lambda token, rng=None: calls.append(token), raising=False)
+
+    _login(client)
+    resp = client.post("/admin/live-round/tok123/random-fill")
+    assert resp.status_code == 403
+    assert calls == []
+
+
+@pytest.mark.parametrize("env", ["pr-150", None])
+def test_random_fill_runs_off_production(client, monkeypatch, env):
+    import teg_analysis.analysis.live_round as lrmod
+
+    monkeypatch.delenv("RAILWAY_ENVIRONMENT_NAME", raising=False)
+    monkeypatch.delenv("RAILWAY_ENVIRONMENT", raising=False)
+    if env:
+        monkeypatch.setenv("RAILWAY_ENVIRONMENT_NAME", env)
+    calls = []
+
+    def fake_fill(token, rng=None):
+        calls.append(token)
+        return {"written": 7}
+
+    monkeypatch.setattr(lrmod, "fill_random_scores", fake_fill, raising=False)
+
+    _login(client)
+    resp = client.post("/admin/live-round/tok123/random-fill")
+    assert resp.status_code == 303
+    assert resp.headers["location"] == "/admin/live-round/tok123/review?saved=7"
+    assert calls == ["tok123"]
+
+
+def test_random_fill_inactive_round_redirects_with_error(client, monkeypatch):
+    import teg_analysis.analysis.live_round as lrmod
+
+    monkeypatch.delenv("RAILWAY_ENVIRONMENT_NAME", raising=False)
+    monkeypatch.delenv("RAILWAY_ENVIRONMENT", raising=False)
+
+    def fake_fill(token, rng=None):
+        raise lrmod.LiveRoundInactiveError("Round is not active.")
+
+    monkeypatch.setattr(lrmod, "fill_random_scores", fake_fill, raising=False)
+    _login(client)
+    resp = client.post("/admin/live-round/tok123/random-fill")
+    assert resp.status_code == 303
+    assert "?error=Round%20is%20not%20active." in resp.headers["location"]
+
+
+def test_review_random_fill_button_visibility(client, monkeypatch):
+    monkeypatch.delenv("RAILWAY_ENVIRONMENT", raising=False)
+    _review_setup(monkeypatch, "active")
+    _login(client)
+
+    monkeypatch.setenv("RAILWAY_ENVIRONMENT_NAME", "pr-150")
+    resp = client.get("/admin/live-round/tok123/review")
+    assert "/admin/live-round/tok123/random-fill" in resp.text
+    assert "Fill empty cells with random scores" in resp.text
+
+    monkeypatch.setenv("RAILWAY_ENVIRONMENT_NAME", "production")
+    resp = client.get("/admin/live-round/tok123/review")
+    assert "random-fill" not in resp.text
+    assert "name=\"score-1-DM\"" in resp.text  # still editable
+
+
+def test_review_finalized_is_read_only(client, monkeypatch):
+    monkeypatch.delenv("RAILWAY_ENVIRONMENT", raising=False)
+    monkeypatch.setenv("RAILWAY_ENVIRONMENT_NAME", "pr-150")
+    _review_setup(monkeypatch, "finalized")
+    _login(client)
+    resp = client.get("/admin/live-round/tok123/review")
+    assert resp.status_code == 200
+    assert 'name="score-' not in resp.text
+    assert "/finalize" not in resp.text
+    assert "/cancel" not in resp.text
+    assert "random-fill" not in resp.text
+    assert "Round finalised" in resp.text
+    assert "TEG 19 Round 1 is in the permanent record" in resp.text
+    assert "/admin/reports?teg=19&amp;round=1" in resp.text or "/admin/reports?teg=19&round=1" in resp.text
+    assert 'href="/leaderboard"' in resp.text
+    assert "stale data" not in resp.text
+    assert "Finalised." not in resp.text
+
+
+def test_review_finalized_query_flags(client, monkeypatch):
+    _review_setup(monkeypatch, "finalized")
+    _login(client)
+    resp = client.get("/admin/live-round/tok123/review?finalized=1&cache_errors=streaks,records")
+    assert "Finalised." in resp.text
+    assert "stale data" in resp.text
+    assert "<strong>streaks</strong>" in resp.text
+    assert "<strong>records</strong>" in resp.text
+
+
+def test_review_cancelled_is_read_only(client, monkeypatch):
+    _review_setup(monkeypatch, "cancelled")
+    _login(client)
+    resp = client.get("/admin/live-round/tok123/review?cancelled=1")
+    assert 'name="score-' not in resp.text
+    assert "Nothing was written to the permanent record" in resp.text
+    assert 'href="/admin/live-round"' in resp.text
 
 
 def test_reports_page_renders(client):
@@ -823,6 +970,102 @@ def test_reports_generate_enqueues_and_guards_double_run(client, monkeypatch, tm
     assert resp2.status_code == 200
     assert "already generating" in resp2.text.lower()
     assert len(calls) == 1
+
+
+def _iso_ago(hours=0.0, minutes=0.0):
+    from datetime import datetime, timedelta, timezone
+    return (datetime.now(timezone.utc) - timedelta(hours=hours, minutes=minutes)).isoformat()
+
+
+def _report_env(client, monkeypatch, tmp_path):
+    import webapp.report_generation as rg
+    from webapp import deps
+    monkeypatch.setattr(rg, "_store_path", lambda rel: tmp_path / rel)
+    calls = []
+    monkeypatch.setattr(rg, "generate_report", lambda t, r: calls.append((t, r)))
+    teg = deps.get_default_teg_num()
+    rounds = deps.get_rounds_for_teg(teg)
+    round_num = rounds[-1] if rounds else 1
+    _login(client)
+    return rg, calls, teg, round_num
+
+
+def test_running_panel_lists_all_active_runs(client, monkeypatch, tmp_path):
+    from webapp import deps
+    import webapp.report_generation as rg
+    monkeypatch.setattr(rg, "_store_path", lambda rel: tmp_path / rel)
+    _login(client)
+    rg.write_status(3, 1, state="running", phase="draft", started_at=_iso_ago(minutes=5))
+    rg.write_status(4, None, state="running", phase="voice", started_at=_iso_ago(minutes=2))
+
+    other = [t for t in deps.get_available_teg_numbers() if t not in (3, 4)][0]
+    for url in (f"/admin/reports?teg={other}", "/admin/reports/running"):
+        resp = client.get(url)
+        assert resp.status_code == 200
+        assert "TEG 3 R1" in resp.text and "TEG 4 tournament" in resp.text
+        assert "in progress" in resp.text and "to do" in resp.text
+        assert 'hx-trigger="load delay:3s"' in resp.text
+
+    # Nothing active: no polling element.
+    rg.write_status(3, 1, state="error", phase="draft", started_at=_iso_ago(minutes=5),
+                    finished_at=_iso_ago(minutes=1), error="boom")
+    rg.write_status(4, None, state="done", phase="push", started_at=_iso_ago(minutes=5),
+                    finished_at=_iso_ago(minutes=1))
+    resp = client.get("/admin/reports/running")
+    assert 'hx-trigger="load delay:3s"' not in resp.text
+    assert "boom" in resp.text
+
+
+def test_running_panel_empty(client, monkeypatch, tmp_path):
+    _report_env(client, monkeypatch, tmp_path)
+    resp = client.get("/admin/reports/running")
+    assert "No reports running" in resp.text
+    assert 'hx-trigger="load delay:3s"' not in resp.text
+
+
+def test_running_endpoint_requires_auth(client):
+    resp = client.get("/admin/reports/running")
+    assert resp.status_code == 401
+
+
+def test_recent_report_needs_confirmation(client, monkeypatch, tmp_path):
+    rg, calls, teg, round_num = _report_env(client, monkeypatch, tmp_path)
+    rg.write_status(teg, round_num, state="done", phase="push",
+                    started_at=_iso_ago(hours=1, minutes=5), finished_at=_iso_ago(hours=1))
+    before = rg.read_status(teg, round_num)
+    data = {"kind": "round", "teg": teg, "round": round_num}
+
+    resp = client.post("/admin/reports/generate", data=data)
+    assert resp.status_code == 200
+    assert "Regenerate anyway" in resp.text
+    assert calls == []
+    assert rg.read_status(teg, round_num) == before
+
+    resp = client.post("/admin/reports/generate", data={**data, "confirm": 1})
+    assert resp.status_code == 200
+    assert len(calls) == 1
+    assert resp.headers.get("HX-Trigger") == "report-started"
+
+
+def test_old_report_regenerates_without_confirmation(client, monkeypatch, tmp_path):
+    rg, calls, teg, round_num = _report_env(client, monkeypatch, tmp_path)
+    rg.write_status(teg, round_num, state="done", phase="push",
+                    started_at=_iso_ago(hours=7, minutes=5), finished_at=_iso_ago(hours=7))
+    resp = client.post("/admin/reports/generate",
+                       data={"kind": "round", "teg": teg, "round": round_num})
+    assert "Regenerate anyway" not in resp.text
+    assert len(calls) == 1
+
+
+def test_running_report_confirmation_has_phase_and_no_regenerate(client, monkeypatch, tmp_path):
+    rg, calls, teg, round_num = _report_env(client, monkeypatch, tmp_path)
+    rg.write_status(teg, round_num, state="running", phase="voice", started_at=_iso_ago(minutes=3))
+    resp = client.post("/admin/reports/generate",
+                       data={"kind": "round", "teg": teg, "round": round_num})
+    assert "already generating" in resp.text.lower()
+    assert "Voice pass" in resp.text
+    assert "Regenerate anyway" not in resp.text
+    assert calls == []
 
 
 def test_generate_rejects_tournament_for_in_progress_teg(client, monkeypatch, tmp_path):
