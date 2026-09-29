@@ -9,7 +9,9 @@ same pipeline from inside the webapp process, triggered by a button, so a
 report is ready to read minutes after the round ends — no laptop required.
 
 State machine per (TEG, round-or-None): `queued -> running -> pushing ->
-done | done_local_only | error`. State lives in a JSON file, not an in-memory
+done | done_local_only | error`. While running, a `phase` field (one of
+`PHASES`) says which step is in flight, so the admin page can show progress
+instead of one opaque spinner. State lives in a JSON file, not an in-memory
 dict, because a run takes minutes and the admin's phone screen may lock and
 unlock mid-poll — see `webapp/README.md`'s admin section for why this differs
 from the volume-sync jobs' in-memory `_sync_jobs` (admin.py), which only ever
@@ -44,6 +46,20 @@ logger = logging.getLogger(__name__)
 #: goes stale.
 ACTIVE_STATES = ("queued", "running", "pushing")
 
+#: Steps of one run, in order: (key, label). `generate_report` records the
+#: current key in the status file's `phase` field; `phase_rows` turns that into
+#: per-step done/active/todo/failed for the templates.
+PHASES: tuple[tuple[str, str], ...] = (
+    ("storylines", "Storylines"), ("draft", "Draft"), ("voice", "Voice pass"),
+    ("publish", "Publish to site"), ("push", "Commit to GitHub"),
+)
+
+#: "Generated recently" window for the regenerate confirmation.
+RECENT_SECONDS = 6 * 3600  # 6 h
+
+#: How long a finished run stays in the running-reports panel.
+ENDED_VISIBLE_SECONDS = 15 * 60  # 15 min
+
 #: An "active" status older than this is treated as abandoned (worker died
 #: mid-run, e.g. a Railway redeploy) rather than still in flight.
 STALE_AFTER_SECONDS = 1800  # 30 min
@@ -57,6 +73,16 @@ def _store_path(rel: str) -> Path:
     """Path to `rel` in the real data store — the volume on Railway, the repo
     working tree locally. Mirrors `teg_analysis.io.sync._store_path`."""
     return Path(_get_volume_path(rel)) if _is_railway() else _get_local_path(rel)
+
+
+def report_label(teg: int, round_num: Optional[int]) -> str:
+    """Human label: "TEG 19 R2" for a round, "TEG 19 tournament" otherwise."""
+    return f"TEG {teg} R{round_num}" if round_num else f"TEG {teg} tournament"
+
+
+def phase_label(key: Optional[str]) -> Optional[str]:
+    """Label for a PHASES key; None if `key` is None or unknown."""
+    return dict(PHASES).get(key)
 
 
 def status_key(teg: int, round_num: Optional[int]) -> str:
@@ -88,7 +114,7 @@ def write_status(teg: int, round_num: Optional[int], **fields) -> dict:
     existing = read_status(teg, round_num) or {
         "teg": teg, "round": round_num,
         "kind": "tournament" if round_num is None else "round",
-        "state": None, "message": None, "error": None, "files": [],
+        "state": None, "phase": None, "message": None, "error": None, "files": [],
         "committed": False, "started_at": None, "finished_at": None,
     }
     existing.update(fields)
@@ -97,18 +123,109 @@ def write_status(teg: int, round_num: Optional[int], **fields) -> dict:
     return existing
 
 
-def is_active(status: Optional[dict]) -> bool:
-    """Whether `status` represents a run still in flight (not stale)."""
+def _age_seconds(iso: Optional[str], now: Optional[datetime] = None) -> Optional[float]:
+    """Seconds since ISO timestamp `iso`; None if missing or unparseable."""
+    if not iso:
+        return None
+    try:
+        then = datetime.fromisoformat(iso)
+    except ValueError:
+        return None
+    if then.tzinfo is None:
+        then = then.replace(tzinfo=timezone.utc)
+    return ((now or datetime.now(timezone.utc)) - then).total_seconds()
+
+
+def is_active(status: Optional[dict], now: Optional[datetime] = None) -> bool:
+    """Whether `status` represents a run still in flight (not stale).
+    `now` is only for tests."""
     if not status or status.get("state") not in ACTIVE_STATES:
         return False
     updated_at = status.get("updated_at")
     if not updated_at:
         return True
+    age = _age_seconds(updated_at, now)
+    return True if age is None else age < STALE_AFTER_SECONDS
+
+
+def phase_rows(status: Optional[dict], now: Optional[datetime] = None) -> list[dict]:
+    """One {"key", "label", "state"} per PHASES entry, state being
+    done / active / todo / failed, derived from the status file.
+    `now` is only for tests."""
+    keys = [k for k, _ in PHASES]
+    state = (status or {}).get("state")
+    marks = ["todo"] * len(keys)
+    phase = (status or {}).get("phase")
+    idx = keys.index(phase) if phase in keys else None
+    if state == "done":
+        marks = ["done"] * len(keys)
+    elif state == "done_local_only":
+        marks = ["done"] * (len(keys) - 1) + ["failed"]
+    elif state in ACTIVE_STATES and is_active(status, now):
+        if state != "queued" and idx is not None:
+            marks = ["done"] * idx + ["active"] + ["todo"] * (len(keys) - idx - 1)
+    elif state == "error" or state in ACTIVE_STATES:  # error, or stale (abandoned)
+        at = idx or 0
+        marks = ["done"] * at + ["failed"] + ["todo"] * (len(keys) - at - 1)
+    return [{"key": k, "label": lbl, "state": m} for (k, lbl), m in zip(PHASES, marks)]
+
+
+def list_statuses() -> list[dict]:
+    """Every status file in the status directory; unreadable ones are skipped."""
+    directory = status_path(0, None).parent
+    if not directory.is_dir():
+        return []
+    out = []
+    for path in sorted(directory.glob("*.json")):
+        try:
+            out.append(json.loads(path.read_text()))
+        except (OSError, json.JSONDecodeError) as e:
+            logger.warning(f"Could not read report-generation status {path}: {e}")
+    return out
+
+
+def running_reports(now: Optional[datetime] = None) -> list[dict]:
+    """Active runs plus ones that ended within ENDED_VISIBLE_SECONDS, oldest
+    first, each enriched with label / active / stale / phases / phase_label."""
+    out = []
+    for s in list_statuses():
+        active = is_active(s, now)
+        stale = not active and s.get("state") in ACTIVE_STATES
+        if not active:
+            # Stale runs have no finished_at; their last sign of life is updated_at.
+            age = _age_seconds(s.get("updated_at") if stale else s.get("finished_at"), now)
+            if age is None or age > ENDED_VISIBLE_SECONDS:
+                continue
+        out.append({**s, "label": report_label(s["teg"], s.get("round")), "active": active,
+                    "stale": stale, "phases": phase_rows(s, now),
+                    "phase_label": phase_label(s.get("phase"))})
+    return sorted(out, key=lambda r: r.get("started_at") or "")
+
+
+def confirmation_needed(teg: int, round_num: Optional[int],
+                        now: Optional[datetime] = None) -> Optional[dict]:
+    """Why the admin should confirm before (re)generating this report, or None.
+
+    "running": a run is in flight. "recent": one finished within RECENT_SECONDS.
+    """
+    s = read_status(teg, round_num)
+    label = report_label(teg, round_num)
+    if is_active(s, now):
+        return {"reason": "running", "status": s, "label": label,
+                "phase_label": phase_label(s.get("phase"))}
+    if s and s.get("state") in ("done", "done_local_only"):
+        age = _age_seconds(s.get("finished_at"), now)
+        if age is not None and age < RECENT_SECONDS:
+            return {"reason": "recent", "status": s, "label": label}
+    return None
+
+
+def fmt_hhmm(iso: Optional[str]) -> str:
+    """"HH:MM" (UTC) from an ISO timestamp; "?" if missing or unparseable."""
     try:
-        age = (datetime.now(timezone.utc) - datetime.fromisoformat(updated_at)).total_seconds()
-    except ValueError:
-        return True
-    return age < STALE_AFTER_SECONDS
+        return datetime.fromisoformat(iso).astimezone(timezone.utc).strftime("%H:%M")
+    except (TypeError, ValueError):
+        return "?"
 
 
 def artefact_names(teg: int, round_num: Optional[int]) -> list[str]:
@@ -129,9 +246,9 @@ def claim(teg: int, round_num: Optional[int]) -> Optional[str]:
     """
     existing = read_status(teg, round_num)
     if is_active(existing):
-        label = f"TEG {teg}" + (f" R{round_num}" if round_num else "")
+        label = report_label(teg, round_num)
         return f"A report for {label} is already generating (started {existing.get('started_at', '?')})."
-    write_status(teg, round_num, state="queued", message="Queued.", error=None,
+    write_status(teg, round_num, state="queued", phase=None, message="Queued.", error=None,
                 files=[], committed=False, started_at=_now(), finished_at=None)
     return None
 
@@ -159,15 +276,39 @@ def stage_artefacts_to_store(teg: int, round_num: Optional[int]) -> list[str]:
     return staged
 
 
+def _run_stage(teg: int, round_num: Optional[int], stage: str) -> None:
+    """Run exactly one pipeline stage. Lazy import keeps the heavy pipeline
+    (and `scripts/`) off the webapp's startup path. Later stages reuse the
+    previous stage's output from disk, so this makes the same LLM calls as
+    one whole-run call would."""
+    if round_num is None:
+        from scripts.storyline_full_report_experiment import run_one as run_tournament
+        run_tournament(teg, start_from=stage, stop_after=stage)
+    else:
+        from scripts.storyline_round_report_experiment import run_one as run_round
+        run_round(teg, round_num, start_from=stage, stop_after=stage)
+
+
+#: Pipeline stages run one at a time so each can be reported as a phase.
+_STAGE_MESSAGES = {
+    "storylines": "Choosing the storylines...",
+    "draft": "Drafting the report...",
+    "voice": "Applying the house voice...",
+}
+
+
 def generate_report(teg: int, round_num: Optional[int]) -> None:
     """The background task: run the pipeline, stage the output, push to GitHub.
+
+    Progress is recorded as a `phase` in the status file: storylines, draft,
+    voice, publish, push. On failure the failing phase stays in the file.
 
     Never raises — every failure is recorded in the status file instead, so a
     bad run can't silently die with no trace for the admin page to show.
     """
     kind = "tournament" if round_num is None else "round"
-    label = f"TEG {teg}" + (f" R{round_num}" if round_num else "")
-    write_status(teg, round_num, state="running",
+    label = report_label(teg, round_num)
+    write_status(teg, round_num, state="running", phase=None,
                 message="Generating (storylines -> draft -> voice)...")
 
     if llm.get_provider() == llm.PROVIDER_API and not llm.has_api_key():
@@ -178,12 +319,9 @@ def generate_report(teg: int, round_num: Optional[int]) -> None:
 
     t0 = time.monotonic()
     try:
-        if round_num is None:
-            from scripts.storyline_full_report_experiment import run_one as run_tournament
-            run_tournament(teg, start_from="storylines", stop_after="voice")
-        else:
-            from scripts.storyline_round_report_experiment import run_one as run_round
-            run_round(teg, round_num, start_from="storylines", stop_after="voice")
+        for stage, message in _STAGE_MESSAGES.items():
+            write_status(teg, round_num, state="running", phase=stage, message=message)
+            _run_stage(teg, round_num, stage)
     except Exception as e:  # noqa: BLE001
         logger.error(f"Report generation failed for {label}: {e}", exc_info=True)
         write_status(teg, round_num, state="error", error=f"{type(e).__name__}: {e}",
@@ -191,6 +329,8 @@ def generate_report(teg: int, round_num: Optional[int]) -> None:
         return
     logger.info(f"Report generation for {label} took {time.monotonic() - t0:.0f}s")
 
+    write_status(teg, round_num, state="running", phase="publish",
+                message="Publishing to the site...")
     try:
         staged = stage_artefacts_to_store(teg, round_num)
     except Exception as e:  # noqa: BLE001
@@ -212,9 +352,10 @@ def generate_report(teg: int, round_num: Optional[int]) -> None:
     from webapp import deps
     deps.clear_all_data_caches()  # report now readable at /teg-reports
 
-    write_status(teg, round_num, state="pushing", message="Committing to GitHub...", files=staged)
+    write_status(teg, round_num, state="pushing", phase="push",
+                message="Committing to GitHub...", files=staged)
 
-    commit_message = f"Add {kind} report for TEG {teg}" + (f" R{round_num}" if round_num else "")
+    commit_message = f"Add {kind} report for {label.replace(' tournament', '')}"
     try:
         outcome = push_files("data/commentary", staged, commit_message=commit_message)
         if outcome["failed"]:
