@@ -368,6 +368,17 @@
         font-weight: 600;
         color: var(--text-primary);
     }
+    /* Side by side, the two columns are already equal height (grid
+       stretch). Each list fills its column and shares out the spare
+       height evenly between its rows, so rounds and handicaps end level
+       whichever is longer. Text stays top-aligned in each row, keeping
+       the first rows level too. Stacked on phones, nothing stretches. */
+    @media (min-width: 900px) {
+        .next-teg-grid .next-rounds { flex: 1; display: flex; flex-direction: column; }
+        .next-teg-grid .nr-row { flex: 1 1 auto; align-content: start; }
+        .next-teg-grid .hc-list { flex: 1; height: 100%; }
+        .next-teg-grid .hc-list td { vertical-align: baseline; }
+    }
     .nr-secondary {
         display: block;
         margin-top: 2px;

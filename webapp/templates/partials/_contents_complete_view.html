@@ -14,10 +14,10 @@
     </div>
 
 {% if view == "next" %}
-    <h1 class="state-headline">TEG {{ next_teg.teg_num }}</h1>
+    <h1 class="state-headline">Next: TEG {{ next_teg.teg_num }}</h1>
     <p class="state-context">{{ next_teg.area or "Venue TBC" }}. {{ next_teg.when or "Dates TBC" }}</p>
 
-    <div class="panel-grid two-col equal-col" id="contents-panel">
+    <div class="panel-grid two-col equal-col next-teg-grid" id="contents-panel">
         <div class="surface surface-open">
             <p class="standings-heading">Rounds</p>
             {# Not a table: each round is two balanced lines, "Round N" over

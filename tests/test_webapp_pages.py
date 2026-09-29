@@ -1354,7 +1354,7 @@ def test_contents_complete_next_teg_view(client, monkeypatch):
 
     resp = client.get("/contents/view", params={"view": "next"})
     _assert_ok_no_error(resp)
-    assert '<h1 class="state-headline">TEG 19</h1>' in resp.text
+    assert '<h1 class="state-headline">Next: TEG 19</h1>' in resp.text
     assert "Algarve, Portugal. October 2026" in resp.text
     assert "Sat 10 Oct" in resp.text and "Sun 11 Oct" in resp.text
     assert "Monte Rei" in resp.text
@@ -1429,7 +1429,7 @@ def test_contents_view_param_on_full_page(client, monkeypatch):
 
     resp = client.get("/contents", params={"view": "next"})
     _assert_ok_no_error(resp)
-    assert '<h1 class="state-headline">TEG 19</h1>' in resp.text
+    assert '<h1 class="state-headline">Next: TEG 19</h1>' in resp.text
     assert "TEG 18 results" not in resp.text
     assert 'id="complete-view"' in resp.text
 
