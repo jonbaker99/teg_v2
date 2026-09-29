@@ -148,3 +148,33 @@ def test_course_record_goes_to_the_best_card_in_the_round():
     lows = [(e["player"], e["gross"]) for e in detect_course_records(11)
             if e["type"] == "course_record_low" and e["course"] == "PGA Catalunya - Stadium"]
     assert lows == [("Jon Baker", 90)]
+
+
+def test_course_record_n_prior_visits_is_per_card():
+    """TEG 18 Stadium: R4 has R3's cards behind it, so its prior-visit count
+    must exceed R3's by exactly the number of R3 cards on that course (the
+    count used to be computed once per course, giving both "27")."""
+    from teg_analysis.core.data_loader import load_all_data
+    from teg_analysis.reporting.course_history import _round_aggregates
+
+    course = "PGA Catalunya - Stadium"
+    events = [e for e in detect_course_records(18) if e["course"] == course]
+    r3 = [e for e in events if e["round"] == 3]
+    r4 = [e for e in events if e["round"] == 4]
+    assert r3 and r4
+    rounds = _round_aggregates(load_all_data())
+    n_r3 = len(rounds[(rounds["Course"] == course) & (rounds["TEGNum"] == 18)
+                      & (rounds["Round"] == 3)])
+    assert r4[0]["n_prior_visits"] - r3[0]["n_prior_visits"] == n_r3
+    assert f"across {r4[0]['n_prior_visits']} prior visits" in r4[0]["summary_fact"]
+
+
+def test_course_records_through_round_only_reports_that_round():
+    """Round mode must not re-walk earlier rounds already in `prior`: that
+    turned Mullin's R3 record into a self-"equalled" beat in the R4 bundle
+    and listed him twice as a record holder."""
+    events = detect_course_records(18, through_round=4)
+    assert events and all(e["round"] == 4 for e in events)
+    for e in events:
+        holders = [(h["player"], h["teg"], h["round"]) for h in e.get("record_holders", [])]
+        assert len(holders) == len(set(holders))

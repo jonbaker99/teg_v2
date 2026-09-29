@@ -100,9 +100,9 @@ Then came the Stadium Course. At the fourth in round three he ran up a nine, a q
 ## Personal bests and TEG records
 
 <div class="records"><p class="records-header">Course records:</p><ul>
-  <li>Alex Baker's 106 at PGA Catalunya - Tour (R2) — a new course-worst, beyond 105; 22 earlier rounds there</li>
+  <li>Alex Baker's 106 at PGA Catalunya - Tour (R2) — a new course-worst, beyond 105; 27 earlier rounds there</li>
   <li>David Mullin's 84 at PGA Catalunya - Stadium (R3) — a new course record, beating 89; 27 earlier rounds there</li>
-  <li>Gregg Williams's 84 at PGA Catalunya - Stadium (R4) — equals the course record, set by David Mullin in R3; 27 earlier rounds there</li>
+  <li>Gregg Williams's 84 at PGA Catalunya - Stadium (R4) — equals the course record, set by David Mullin in R3; 32 earlier rounds there</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>

@@ -195,7 +195,7 @@ def detect_course_records(
     `min_prior_visits` times across all TEGs before this one — otherwise
     the sample is too small for a "record" to be meaningful.
 
-    `through_round`: when given, "this TEG" is bounded to rounds `<= through_round`
+    `through_round`: when given, only round `through_round` is checked,
     and "prior" includes earlier rounds of THIS TEG on the same course, not just
     earlier TEGs — see `build_player_course_history` for why this matters for a
     mid-tournament round report. Round callers MUST pass `through_round=round_num`.
@@ -210,7 +210,7 @@ def detect_course_records(
             "round": int,
             "gross": int,
             "prior_record": int,
-            "n_prior_visits": int,
+            "n_prior_visits": int,  # cards on this course before THIS card's round
             "summary_fact": str,
             # equalled types only: who shot the record being equalled, in
             # play order — earlier TEGs and earlier cards of this TEG
@@ -239,14 +239,16 @@ def detect_course_records(
         if through_round is not None:
             prior = group[(group["TEGNum"] < teg_num)
                           | ((group["TEGNum"] == teg_num) & (group["Round"] < through_round))]
-            current = group[(group["TEGNum"] == teg_num) & (group["Round"] <= through_round)]
+            # Only this round: earlier rounds are already in `prior`, and
+            # walking them again re-compared cards with themselves (a spurious
+            # "equalled" beat per earlier record, duplicate record_holders).
+            current = group[(group["TEGNum"] == teg_num) & (group["Round"] == through_round)]
         else:
             prior = group[group["TEGNum"] < teg_num]
             current = group[group["TEGNum"] == teg_num]
         if len(prior) < min_prior_visits or current.empty:
             continue
 
-        n_prior = len(prior)
         running_min = int(prior["Gross"].min())
         running_max = int(prior["Gross"].max())
 
@@ -255,6 +257,11 @@ def detect_course_records(
                      "round": int(r["Round"])}
                     for _, r in prior[prior["Gross"] == g]
                     .sort_values(["TEGNum", "Round"]).iterrows()]
+
+        def _n_before(rnd: int) -> int:
+            """Cards on this course strictly before (teg_num, rnd)."""
+            return int(((group["TEGNum"] < teg_num)
+                        | ((group["TEGNum"] == teg_num) & (group["Round"] < rnd))).sum())
 
         min_holders = _holders(running_min)
         max_holders = _holders(running_max)
@@ -268,6 +275,7 @@ def detect_course_records(
             gross = int(row["Gross"])
             player = _proper(row["Player"])
             rnd = int(row["Round"])
+            n_prior = _n_before(rnd)
             if gross < running_min:
                 events.append({
                     "type": "course_record_low", "player": player, "course": course,
@@ -299,6 +307,7 @@ def detect_course_records(
             gross = int(row["Gross"])
             player = _proper(row["Player"])
             rnd = int(row["Round"])
+            n_prior = _n_before(rnd)
             if gross > running_max:
                 events.append({
                     "type": "course_record_high", "player": player, "course": course,
