@@ -1,0 +1,16 @@
+{
+  "teg": 19,
+  "round": null,
+  "label": "storylinefirst",
+  "errors": 0,
+  "warnings": 1,
+  "findings": [
+    {
+      "rule": "missed_fact",
+      "severity": "warning",
+      "detail": "not mentioned: Alex Baker went clear in the Trophy (Stableford) for good at R4 H18 and won it",
+      "excerpt": "",
+      "source": "missed"
+    }
+  ]
+}
