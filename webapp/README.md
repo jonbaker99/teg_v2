@@ -164,18 +164,32 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
   `DATA_STORAGE_INGESTION_PLAN.md`'s "Phase 3.4 design" for the full model.
 
 **Reports** — templates `admin_reports.html`, `partials/admin_report_panel.html`,
-`partials/admin_report_status.html`; route `webapp/routes/admin_reports.py`; state machine +
+`partials/admin_report_status.html`, `partials/admin_report_confirm.html`,
+`partials/admin_report_running.html`; route `webapp/routes/admin_reports.py`; state machine +
 background task in `webapp/report_generation.py`.
 - **Routes:** `/admin/reports` (TEG/round pickers), `/admin/reports/panel` (HTMX, repopulates
-  rounds when the TEG changes), `/admin/reports/generate` (`kind=round|tournament`, HTMX),
-  `/admin/reports/status` (HTMX poll target).
+  rounds when the TEG changes), `/admin/reports/generate` (`kind=round|tournament`, optional
+  `confirm=1`, HTMX), `/admin/reports/running` (HTMX poll target for the running-reports panel).
+- **Phases:** a run moves through `storylines → draft → voice → publish → push`
+  (`report_generation.PHASES`). The background task calls the pipeline's `run_one` once per
+  stage (`--from X --to X`), so it records each phase in the status file's `phase` field without
+  any hook in `teg_analysis/`. The same LLM calls are made as one full run.
+- **Running reports panel:** sits above the pickers, so it shows every report in flight whichever
+  TEG and round is selected, each with its phases marked done / in progress / to do. It also keeps
+  runs that ended in the last 15 minutes, with their outcome. It polls every 3s only while a run is
+  active, and a successful Generate refreshes it at once (`HX-Trigger: report-started`).
+- **Confirm before Generate:** `generate` without `confirm=1` first asks
+  `report_generation.confirmation_needed()`. A running report shows when it started and its
+  phase, with no way to start a second run. A report finished in the last 6 hours
+  (`RECENT_SECONDS`) asks before overwriting it, since a rerun costs another API run. Times are
+  stored UTC and shown in the phone's local time by a small script (`time[data-local]`).
 - **Purpose:** trigger the newspaper-style report pipeline (storylines → draft → voice) from a
   phone, no laptop — the clubhouse use case. Runs for minutes, not seconds, so status lives in a
   **JSON file per (TEG, round-or-None)**, not the in-memory `_sync_jobs` dict the volume-sync pull
   jobs use (`admin.py`) — a phone's screen locking mid-poll would otherwise lose the job. A
   `claim()` call makes the (TEG, round) slot single-flight: a second trigger while one is active
   is refused, not queued. The pipeline writes to a CWD-relative `data/commentary/`, which on
-  Railway is not the mounted volume, so the background task stages its four output files into the
+  Railway is not the mounted volume, so the background task stages its output files into the
   real store, then pushes them to GitHub (`teg_analysis.io.push_files`) as the sync-of-record — a
   failed push doesn't block reading the report, it's a separate terminal state
   (`done_local_only`) with its own retry path. Copy this file-based-status pattern for any future
