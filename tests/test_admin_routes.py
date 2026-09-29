@@ -596,6 +596,54 @@ def test_live_round_list_shows_entry_link_for_active_rounds_only(client, monkeyp
     assert 'data-url="https://testserver/live-round/donetok"' not in resp.text
 
 
+def test_live_round_public_link_switch(client, monkeypatch):
+    import teg_analysis.analysis.live_round as lrmod
+
+    calls = []
+    monkeypatch.setattr(lrmod, "set_public_entry_enabled", lambda enabled: calls.append(enabled))
+
+    _login(client)
+    resp = client.post("/admin/live-round/public-link", data={"enabled": "on"})
+    assert resp.status_code == 303
+    assert resp.headers["location"] == "/admin/live-round?saved=on"
+    resp = client.post("/admin/live-round/public-link", data={"enabled": "off"})
+    assert resp.headers["location"] == "/admin/live-round?saved=off"
+    assert calls == [True, False]
+
+
+def test_live_round_public_link_switch_requires_auth(client):
+    resp = client.post("/admin/live-round/public-link", data={"enabled": "on"})
+    assert resp.status_code == 303
+    assert resp.headers["location"] == "/admin/login"
+
+
+def test_public_banner_shows_only_when_switched_on(client, monkeypatch):
+    import teg_analysis.analysis.live_round as lrmod
+    from webapp import deps
+
+    monkeypatch.setattr(lrmod, "list_live_rounds", lambda: [
+        {"Token": "livetok", "TEGNum": 19, "Round": 2, "CreatedAt": "b", "Status": "active"},
+    ])
+    import teg_analysis.analysis.round_setup as rs
+    monkeypatch.setattr(rs, "get_rounds_status", lambda: [])
+    _login(client)
+
+    monkeypatch.setattr(lrmod, "get_public_entry_enabled", lambda: False)
+    deps.clear_public_live_rounds_cache()
+    resp = client.get("/admin/live-round")
+    assert "live-entry-banner" not in resp.text
+    assert "Turn on" in resp.text
+
+    monkeypatch.setattr(lrmod, "get_public_entry_enabled", lambda: True)
+    deps.clear_public_live_rounds_cache()
+    resp = client.get("/admin/live-round")
+    assert "live-entry-banner" in resp.text
+    assert 'href="/live-round/livetok"' in resp.text
+    assert "TEG 19 Round 2" in resp.text
+    assert "Turn off" in resp.text
+    deps.clear_public_live_rounds_cache()
+
+
 def test_live_round_start_success(client, monkeypatch):
     import teg_analysis.analysis.live_round as lrmod
 

@@ -148,6 +148,11 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
   on the review page (`partials/live_round_entry_link.html`). The URL is built per
   request by `_entry_url` in the route (`url_for` plus the proxy's
   `X-Forwarded-Proto`), so it's right on any host, PR previews included.
+  A **Public entry link** switch (`POST /admin/live-round/public-link`, off by
+  default) shows an "Enter scores" banner on every `base.html` page for each active
+  round. Stored in `data/live_round_settings.csv`; read via
+  `deps.get_public_live_rounds_cached` (30s TTL, cleared on switch, start, cancel
+  and finalize) so the per-request middleware stays cheap.
   The review page shows the **full staged scorecard as an editable grid** — the admin
   can correct any cell (not just flagged conflicts), links out to the live leaderboard,
   and finalizes. Admin edits go through `live_round.apply_admin_edits`, which is
@@ -320,8 +325,9 @@ real Live round use; not triggered yet.
 admin auth — a live round's token in the URL *is* its access control (trust
 the small group, matching the pattern elsewhere in this app), started from
 the admin Live round page above, which keeps a copyable entry link on show
-for every active round. There's no public-site way in yet: players get the
-link from an admin.
+for every active round. With the admin's **Public entry link** switch on, every
+public page also shows an "Enter scores" banner for each active round, so players
+don't need the link sent to them.
 
 - **Routes:** `GET /live-round/{token}` (the entry page itself),
   `GET /live-round/{token}/leaderboard` (a read-only live leaderboard page),

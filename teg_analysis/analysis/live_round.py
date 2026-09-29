@@ -6,7 +6,7 @@ scores on separate phones for the same round need a shared, server-arbitrated
 state instead of the mockup's same-browser BroadcastChannel/localStorage
 stand-in. This module is that shared state.
 
-Storage is two CSVs, read/written through the existing `teg_analysis.io`
+Storage is three CSVs, read/written through the existing `teg_analysis.io`
 layer like everything else in `data/` (no new file type):
 
     data/live_rounds.csv                registry: one row per live round ever
@@ -18,6 +18,10 @@ layer like everything else in `data/` (no new file type):
                                          result discarded) on every score
                                          write so live entry never spams
                                          GitHub commits
+    data/live_round_settings.csv        one admin switch (PublicEntryLink
+                                         on/off): may the public site link
+                                         players to active rounds? Missing
+                                         file = off
 
 The server -- never a client clock -- assigns a monotonic `Seq` to every
 write, in arrival order. That's what makes polling deltas
@@ -48,7 +52,9 @@ from datetime import datetime, timezone
 
 import pandas as pd
 
-from teg_analysis.constants import LIVE_ROUNDS_REGISTRY_CSV, LIVE_ROUND_STAGING_DIR, ROUND_PARS_CSV
+from teg_analysis.constants import (
+    LIVE_ROUNDS_REGISTRY_CSV, LIVE_ROUND_SETTINGS_CSV, LIVE_ROUND_STAGING_DIR, ROUND_PARS_CSV,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -243,6 +249,46 @@ def list_live_rounds() -> list[dict]:
     if registry.empty:
         return []
     return registry.sort_values("CreatedAt", ascending=False).to_dict("records")
+
+
+# ---------------------------------------------------------------------------
+# Public entry link: one admin switch for the whole site
+# ---------------------------------------------------------------------------
+
+_PUBLIC_LINK_SETTING = "PublicEntryLink"
+
+
+def get_public_entry_enabled() -> bool:
+    """Whether the public site may link players to active rounds' entry pages.
+
+    Off unless an admin has turned it on: a missing settings file means off.
+    """
+    from teg_analysis.io import read_file
+
+    try:
+        settings = read_file(LIVE_ROUND_SETTINGS_CSV)
+    except FileNotFoundError:
+        return False
+    rows = settings[settings["Setting"] == _PUBLIC_LINK_SETTING]
+    return bool(len(rows)) and str(rows["Value"].iloc[-1]).strip().lower() == "on"
+
+
+def set_public_entry_enabled(enabled: bool) -> None:
+    from teg_analysis.io import write_file
+
+    df = pd.DataFrame([{"Setting": _PUBLIC_LINK_SETTING, "Value": "on" if enabled else "off"}])
+    write_file(LIVE_ROUND_SETTINGS_CSV, df,
+               f"Turn public live-round entry link {'on' if enabled else 'off'}")
+
+
+def get_public_live_rounds() -> list[dict]:
+    """Active rounds to advertise on the public site, or [] when the switch is off."""
+    if not get_public_entry_enabled():
+        return []
+    return [
+        {"token": r["Token"], "teg_num": int(r["TEGNum"]), "round_num": int(r["Round"])}
+        for r in list_live_rounds() if r["Status"] == "active"
+    ]
 
 
 def start_live_round(teg_num: int, round_num: int) -> dict:

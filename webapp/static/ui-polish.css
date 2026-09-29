@@ -63,3 +63,29 @@ body.ts-a .page-title-area { padding-inline: 2.5rem; }
     .main-content .section-nav::-webkit-scrollbar-thumb { background: var(--table-header-border); border-radius: 3px; }
     .request-feedback { margin-inline: 0.75rem; }
 }
+/* Live-round entry banner: shown site-wide while an admin has the public
+   entry link switched on (Admin > Live round). Green is the sanctioned
+   "live status" accent, spent only on the label. */
+.live-entry-banner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.75rem;
+    padding: 0.6rem 1.5rem;
+    border-bottom: 1px solid var(--rule-color, #e0e0e0);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+}
+.live-entry-label {
+    color: var(--green, var(--accent));
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.live-entry-link {
+    color: var(--text-primary);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}

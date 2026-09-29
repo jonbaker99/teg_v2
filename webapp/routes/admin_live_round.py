@@ -8,6 +8,7 @@ resolving, finalizing, cancelling a round) are admin-only.
 
 Flow:
   GET  /admin/live-round                        -> list every live round + status
+  POST /admin/live-round/public-link             -> switch the public "Enter scores" banner on/off
   POST /admin/live-round/start                   -> start one (HTMX, from a set-up round)
   GET  /admin/live-round/{token}/review           -> conflicts + finalize/cancel controls
   POST /admin/live-round/{token}/resolve          -> pick a value for one conflicted cell
@@ -58,8 +59,10 @@ def admin_live_round_list(request: Request):
     from teg_analysis.analysis.live_round import list_live_rounds
     from teg_analysis.analysis.round_setup import get_rounds_status
 
-    ctx = {"request": request, "active_page": None}
+    ctx = {"request": request, "active_page": None, "saved": request.query_params.get("saved")}
     try:
+        from teg_analysis.analysis.live_round import get_public_entry_enabled
+        ctx["public_link_on"] = get_public_entry_enabled()
         ctx["live_rounds"] = list_live_rounds()
         # Entry link per active round, so it's never lost after "Go live".
         ctx["entry_urls"] = {
@@ -77,10 +80,29 @@ def admin_live_round_list(request: Request):
         logger.error(f"Live round list failed: {e}", exc_info=True)
         ctx["error"] = f"Could not load live rounds: {e}"
         ctx["live_rounds"] = []
+        ctx["public_link_on"] = False
         ctx["entry_urls"] = {}
         ctx["startable_rounds"] = []
 
     return templates.TemplateResponse("admin_live_round.html", ctx)
+
+
+@router.post("/admin/live-round/public-link")
+def admin_live_round_public_link(request: Request, enabled: str = Form("")):
+    """Plain form POST: show or hide the public site's "Enter scores" banner."""
+    if not is_authed(request):
+        return _redirect("/admin/login")
+
+    from teg_analysis.analysis.live_round import set_public_entry_enabled
+
+    on = enabled == "on"
+    try:
+        set_public_entry_enabled(on)
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Public link switch failed: {e}", exc_info=True)
+        return _redirect("/admin/live-round?saved=error")
+    deps.clear_public_live_rounds_cache()
+    return _redirect(f"/admin/live-round?saved={'on' if on else 'off'}")
 
 
 @router.post("/admin/live-round/start", response_class=HTMLResponse)
@@ -95,6 +117,7 @@ def admin_live_round_start(request: Request, teg_num: str = Form(""), round_num:
     ctx = {"request": request}
     try:
         row = start_live_round(int(teg_num), int(round_num))
+        deps.clear_public_live_rounds_cache()
         ctx["result"] = row
         ctx["link"] = _entry_url(request, row["Token"])
     except (RoundParsNotConfirmedError, LiveRoundAlreadyActiveError) as e:
@@ -260,6 +283,7 @@ def admin_live_round_cancel(request: Request, token: str):
     ctx = {"request": request, "token": token}
     try:
         ctx["result"] = cancel_live_round(token)
+        deps.clear_public_live_rounds_cache()
     except LiveRoundNotFoundError:
         ctx["error"] = "Live round not found."
     except Exception as e:  # noqa: BLE001

@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-29 (Next TEG tab on Contents)
+**Last updated:** 2026-09-29 (Live round entry links)
+
+## 2026-09-29 — Live round entry links
+
+Active live rounds now show their full score-entry link, with a Copy link button, in the admin live-round table and on the review page. A new admin switch, off by default, adds an "Enter scores" banner to every public page while a round is active, so players can find it without an admin.
 
 ## 2026-09-29 — Next TEG tab on Contents
 
