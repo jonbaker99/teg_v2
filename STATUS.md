@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-29 (Lighter completed Contents panel)
+**Last updated:** 2026-09-29 (Open in-progress Contents panel)
+
+## 2026-09-29 — Open in-progress Contents panel
+
+The in-progress Contents panel drops its boxes too, matching the completed state. The site-contents chevron is larger and points right when closed, down when open.
 
 ## 2026-09-29 — Lighter completed Contents panel
 

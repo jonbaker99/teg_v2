@@ -262,10 +262,9 @@
     html[data-mode="dark"] .honour-icon-trophy { color: #f2bd3a; }
     html[data-mode="dark"] .honour-icon-jacket { color: #4ade80; }
     html[data-mode="dark"] .honour-icon-spoon { color: #cba47b; }
-    /* Complete state: no box per column -- the page card already frames
-       them. A single rule splits the columns: vertical side by side,
-       horizontal once they stack. */
-    .surface.surface-complete {
+    /* Panel columns (both states): no box per column -- the page card
+       already frames them. A vertical rule splits them side by side. */
+    .surface.surface-open {
         display: flex;
         flex-direction: column;
         background: transparent;
@@ -274,9 +273,9 @@
         padding: 0;
     }
     @media (min-width: 900px) {
-        .panel-grid.two-col.equal-col { gap: 0; }
-        .panel-grid.equal-col > .surface-complete:first-child { padding-right: var(--sp-6, 32px); }
-        .panel-grid.equal-col > .surface-complete + .surface-complete {
+        .panel-grid.two-col { gap: 0; }
+        .panel-grid.two-col > .surface-open:first-child { padding-right: var(--sp-6, 32px); }
+        .panel-grid.two-col > .surface-open + .surface-open {
             padding-left: var(--sp-6, 32px);
             border-left: 1px solid var(--rule-color);
         }
@@ -284,7 +283,7 @@
     /* Stacked: space, not a rule. A rule here doubles up with the
        standings table's own row rules and reads as one more row. */
     @media (max-width: 899px) {
-        .panel-grid.two-col.equal-col { gap: var(--sp-7, 48px); }
+        .panel-grid.two-col { gap: var(--sp-7, 48px); }
     }
     /* Complete-state card titles double as the "full results"/"full
        report" links; the arrow marks them as links on touch screens. */
@@ -438,11 +437,11 @@
     }
     .sitemap-summary::-webkit-details-marker { display: none; }
     .sitemap-summary .chev {
-        font-family: var(--font-sans);
+        font-size: 22px;
         color: var(--text-muted);
         transition: transform 150ms ease;
     }
-    .sitemap-disclosure[open] .sitemap-summary .chev { transform: rotate(180deg); }
+    .sitemap-disclosure[open] .sitemap-summary .chev { transform: rotate(90deg); }
     .sitemap-summary .count {
         font-weight: 400;
         color: var(--text-secondary);
@@ -462,7 +461,7 @@
 
         <div hx-get="/contents/panel?teg={{ state.teg_num }}&state=in_progress&rounds={{ state.rounds_played }}" hx-trigger="load" hx-swap="outerHTML">
             <div class="panel-grid two-col" id="contents-panel" aria-busy="true">
-                <div class="surface">
+                <div class="surface surface-open">
                     <p class="standings-heading">Standings after Round {{ state.rounds_played }}</p>
                     <p class="gross-line">Loading…</p>
                 </div>
@@ -490,7 +489,7 @@
 
             <div hx-get="/contents/panel?teg={{ state.teg_num }}&state=complete" hx-trigger="load" hx-swap="outerHTML">
                 <div class="panel-grid two-col equal-col" id="contents-panel" aria-busy="true">
-                    <div class="surface surface-complete">
+                    <div class="surface surface-open">
                         <p class="standings-heading">Final Standings</p>
                         <p class="gross-line">Loading…</p>
                     </div>
@@ -543,7 +542,7 @@
 
 <details class="sitemap-disclosure" id="sitemap-disclosure">
     <summary class="sitemap-summary">
-        <span class="chev">▾</span>
+        <span class="chev material-symbols-outlined" aria-hidden="true">chevron_right</span>
         Full site contents <span class="count">(click to expand)</span>
     </summary>
     <div class="contents-grid">
