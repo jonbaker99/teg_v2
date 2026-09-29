@@ -32,7 +32,7 @@ Elsewhere the standings simply hardened. Alex Baker's lead in the 2017 Trophy he
 ## Alex Baker's 51-point round at Boavista, the highest scoring round in TEG history to date, which turns a dead-level Trophy race into an eleven-point win
 <!-- storyline: round -->
 
-Alex Baker's fourth round at Boavista was the best in TEG history to that point. Fifty-one Stableford points, built on a gross score of 17 over par. That was his own personal best at the course, three shots better than his previous visit here.
+Alex Baker's fourth round at Boavista was the best in TEG history to that point. Fifty-one Stableford points, built on a gross score of 17 over par. That was his own personal best at the course, eleven shots better than his previous visit here.
 
 The card was not spotless. He bogeyed the par-4 5th and bogeyed the par-5 8th, one of the harder holes on the property. In this company that passes for a scandal. From holes 5 to 10 he still gained 21 points, and across holes 6-7 and 9-10 he did not drop a single gross shot.
 

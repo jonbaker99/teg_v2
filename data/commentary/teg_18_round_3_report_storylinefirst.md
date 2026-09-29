@@ -12,7 +12,7 @@ The 44 points were the best Trophy score of the day in a field of five. The Spoo
 ## Alex Baker shoots 100 gross, seven worse than his last visit here, and still takes 44 points and extends his Trophy lead
 <!-- storyline: d0 -->
 
-Alex Baker signed for 100 gross on his sixth visit to the Stadium Course. That is seven strokes worse than he managed here last time. He walked off with 44 points, the best Trophy return in the field of five, and pushed his lead in the 2025 TEG Trophy from 11 to 12. The handicap system is not a moral framework.
+Alex Baker signed for 100 gross on his fifth visit to the Stadium Course. That is seven strokes worse than he managed here last time. He walked off with 44 points, the best Trophy return in the field of five, and pushed his lead in the 2025 TEG Trophy from 11 to 12. The handicap system is not a moral framework.
 
 The gross number was assembled almost entirely in one stretch. From the 6th through the 10th he dropped 12 shots. A triple bogey at the 6th. Doubles at the 7th, the 8th and the 9th, the hardest hole on the course. Another triple at the 10th. Five holes yielded eight points, and he kept walking.
 

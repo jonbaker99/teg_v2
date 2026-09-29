@@ -56,8 +56,8 @@ def build_player_course_history(teg_num: int, df: Optional[pd.DataFrame] = None,
         - `summary_facts`: list of factual phrases the editor/writer can use
           verbatim as anchors — neutral, factual, no flourish
 
-    `through_round`: when given, scopes "this TEG" to rounds `<= through_round`
-    of `teg_num` and "prior" to rounds strictly before `(teg_num, through_round)`
+    `through_round`: when given, scopes "this TEG" to round `through_round`
+    of `teg_num` only, and "prior" to rounds strictly before `(teg_num, through_round)`
     — i.e. earlier TEGs OR earlier rounds of THIS TEG. Without it (the tournament
     default), "this TEG" is every round of `teg_num` and "prior" is only earlier
     TEGs, which is correct once the TEG is complete but a leak for a mid-
@@ -71,7 +71,10 @@ def build_player_course_history(teg_num: int, df: Optional[pd.DataFrame] = None,
     rounds = _round_aggregates(df)
     current = rounds[rounds["TEGNum"] == teg_num]
     if through_round is not None:
-        current = current[current["Round"] <= through_round]
+        # Only this round: earlier rounds are already in `prior` below, and
+        # keeping them here double-counted visits and let an earlier round's
+        # card stand in for this round's (compared with itself).
+        current = current[current["Round"] == through_round]
     if current.empty:
         return {}
 
@@ -108,27 +111,32 @@ def build_player_course_history(teg_num: int, df: Optional[pd.DataFrame] = None,
         strokes_vs_last_visit: Optional[int] = None
         is_pb = False
 
-        if n_prior > 0:
-            best_prior_idx = prior["Gross"].idxmin()
-            prior_best_gross = int(prior.loc[best_prior_idx, "Gross"])
-            prior_best_teg = int(prior.loc[best_prior_idx, "TEGNum"])
-            last_visit_gross = int(prior.iloc[-1]["Gross"])
-            strokes_vs_last_visit = this_teg_best_gross - last_visit_gross
-            is_pb = this_teg_best_gross < prior_best_gross
-
         # Best from an EARLIER round of THIS SAME TEG on this course, if any —
         # distinct from `prior_best_gross` (earlier TEGs only). Without this, a
         # "previous best" claim about `this_teg_best_round` can silently ignore
         # a better (or equal) round played earlier in the same TEG at the same
         # course (real case: TEG 18's Williams R4 84 was compared only against
         # cross-TEG history, ignoring his own 85 at the same course in R3).
-        earlier_this_teg = group[group["Round"] < this_teg_best_round]
+        earlier_this_teg = group[group["Round"] < this_teg_best_round].sort_values("Round")
         best_earlier_this_teg: Optional[int] = None
         best_earlier_this_teg_round: Optional[int] = None
         if not earlier_this_teg.empty:
             idx = earlier_this_teg["Gross"].idxmin()
             best_earlier_this_teg = int(earlier_this_teg.loc[idx, "Gross"])
             best_earlier_this_teg_round = int(earlier_this_teg.loc[idx, "Round"])
+
+        if n_prior > 0:
+            best_prior_idx = prior["Gross"].idxmin()
+            prior_best_gross = int(prior.loc[best_prior_idx, "Gross"])
+            prior_best_teg = int(prior.loc[best_prior_idx, "TEGNum"])
+            # The visit before the best card: an earlier round of this TEG
+            # if there was one (TEG 18 Williams: R3's 85, not TEG 12's card).
+            last = earlier_this_teg if not earlier_this_teg.empty else prior
+            last_visit_gross = int(last.iloc[-1]["Gross"])
+            strokes_vs_last_visit = this_teg_best_gross - last_visit_gross
+            is_pb = this_teg_best_gross < prior_best_gross
+        # The best card's visit number, counting earlier rounds of this TEG.
+        best_visit_n = n_prior + len(earlier_this_teg) + 1
 
         facts: list[str] = []
         player_proper = _proper(player)
@@ -139,7 +147,8 @@ def build_player_course_history(teg_num: int, df: Optional[pd.DataFrame] = None,
             # Visit ordinal — only foreground when the venue is well-established
             if n_prior >= 2:
                 facts.append(
-                    f"{player_proper}'s {_ordinal(n_prior + 1)} visit to {course}"
+                    f"{player_proper}'s {_ordinal(best_visit_n)} visit to {course}"
+                    + (f" (R{this_teg_best_round})" if len(group) > 1 else "")
                 )
 
             if prior_best_gross is not None:
@@ -153,6 +162,10 @@ def build_player_course_history(teg_num: int, df: Optional[pd.DataFrame] = None,
                     f"{player_proper}'s new personal best at {course} in R{this_teg_best_round}: "
                     f"{this_teg_best_gross} gross — improved by "
                     f"{prior_best_gross - this_teg_best_gross}"
+                    + (f"; his R{best_earlier_this_teg_round} {best_earlier_this_teg} "
+                       f"had already beaten {prior_best_gross}"
+                       if best_earlier_this_teg is not None
+                       and best_earlier_this_teg < prior_best_gross else "")
                 )
 
             if strokes_vs_last_visit is not None and abs(strokes_vs_last_visit) >= 5:
@@ -195,7 +208,7 @@ def detect_course_records(
     `min_prior_visits` times across all TEGs before this one — otherwise
     the sample is too small for a "record" to be meaningful.
 
-    `through_round`: when given, "this TEG" is bounded to rounds `<= through_round`
+    `through_round`: when given, only round `through_round` is checked,
     and "prior" includes earlier rounds of THIS TEG on the same course, not just
     earlier TEGs — see `build_player_course_history` for why this matters for a
     mid-tournament round report. Round callers MUST pass `through_round=round_num`.
@@ -210,7 +223,7 @@ def detect_course_records(
             "round": int,
             "gross": int,
             "prior_record": int,
-            "n_prior_visits": int,
+            "n_prior_visits": int,  # cards on this course before THIS card's round
             "summary_fact": str,
             # equalled types only: who shot the record being equalled, in
             # play order — earlier TEGs and earlier cards of this TEG
@@ -239,14 +252,16 @@ def detect_course_records(
         if through_round is not None:
             prior = group[(group["TEGNum"] < teg_num)
                           | ((group["TEGNum"] == teg_num) & (group["Round"] < through_round))]
-            current = group[(group["TEGNum"] == teg_num) & (group["Round"] <= through_round)]
+            # Only this round: earlier rounds are already in `prior`, and
+            # walking them again re-compared cards with themselves (a spurious
+            # "equalled" beat per earlier record, duplicate record_holders).
+            current = group[(group["TEGNum"] == teg_num) & (group["Round"] == through_round)]
         else:
             prior = group[group["TEGNum"] < teg_num]
             current = group[group["TEGNum"] == teg_num]
         if len(prior) < min_prior_visits or current.empty:
             continue
 
-        n_prior = len(prior)
         running_min = int(prior["Gross"].min())
         running_max = int(prior["Gross"].max())
 
@@ -255,6 +270,11 @@ def detect_course_records(
                      "round": int(r["Round"])}
                     for _, r in prior[prior["Gross"] == g]
                     .sort_values(["TEGNum", "Round"]).iterrows()]
+
+        def _n_before(rnd: int) -> int:
+            """Cards on this course strictly before (teg_num, rnd)."""
+            return int(((group["TEGNum"] < teg_num)
+                        | ((group["TEGNum"] == teg_num) & (group["Round"] < rnd))).sum())
 
         min_holders = _holders(running_min)
         max_holders = _holders(running_max)
@@ -268,6 +288,7 @@ def detect_course_records(
             gross = int(row["Gross"])
             player = _proper(row["Player"])
             rnd = int(row["Round"])
+            n_prior = _n_before(rnd)
             if gross < running_min:
                 events.append({
                     "type": "course_record_low", "player": player, "course": course,
@@ -299,6 +320,7 @@ def detect_course_records(
             gross = int(row["Gross"])
             player = _proper(row["Player"])
             rnd = int(row["Round"])
+            n_prior = _n_before(rnd)
             if gross > running_max:
                 events.append({
                     "type": "course_record_high", "player": player, "course": course,

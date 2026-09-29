@@ -77,7 +77,7 @@ The pattern was set in the opening round at Royal Óbidos, where he managed 23 p
 
 There were better passages later. In the third round, back at Royal Óbidos, he picked up nine points across holes 6 to 8, three points on each, and then 12 more in a four-hole run from the 10th, holding a point a hole through two bogeys and two pars. That round produced a gross 98, one stroke better than the 99 he had posted on his only previous visit to the course in TEG 7, and his best score at Royal Óbidos.
 
-His strongest stretch came on the final day at Praia D'El Rey, where holes 11 to 15 yielded 16 points, the run built on four holes without dropping a shot to par and a birdie at the 13th. He also signed for 98 there, though that was some way off his form on the same course in TEG 7, when he had gone round in 84, 14 strokes fewer than his last visit.
+His strongest stretch came on the final day at Praia D'El Rey, where holes 11 to 15 yielded 16 points, the run built on four holes without dropping a shot to par and a birdie at the 13th. He also signed for 98 there, though that was some way off his form on the same course in TEG 7, when he had gone round in 84, 14 strokes fewer.
 
 The improvement was real. He got better every time out and finished last after every round anyway. The Spoon was never in doubt, and it never left the room.
 

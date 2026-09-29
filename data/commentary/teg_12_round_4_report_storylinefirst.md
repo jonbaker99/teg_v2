@@ -23,7 +23,7 @@ The same round contained the best four-hole stretch of his day. From the 11th to
 
 Stuart Neumann's fourth round at PGA Catalunya's Stadium course was a rescue job. He bled seven shots across holes 3 to 5: a double bogey on the par-5 3rd, a triple on the par-4 4th, a double on the par-3 5th. A second slide arrived late. A double bogey at the 13th and a bogey at the 14th threatened to undo everything he had rebuilt. Then, at the par-5 15th, one of the easiest holes on the course, he holed out for an eagle. A five-point stableford swing, and a run of bogeys-or-worse brought to an abrupt halt.
 
-That one hole set the shape of the round. Neumann signed for a gross 96, his personal best at the Stadium course, four shots inside the 100 he had carried into this, his fourth visit to the venue. Two separate collapses, and still the best score he has ever posted at Camiral. The eagle did that.
+That one hole set the shape of the round. Neumann signed for a gross 96, his personal best at the Stadium course, four shots inside the 100 he had carried into this, his third visit to the venue. Two separate collapses, and still the best score he has ever posted at Camiral. The eagle did that.
 
 ## Jon Baker's 89 at PGA Catalunya - Stadium: a new course record, a personal best at the venue, and the round that closed out the TEG 12 Green Jacket
 <!-- storyline: round -->
