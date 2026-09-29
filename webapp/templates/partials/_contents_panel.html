@@ -8,7 +8,7 @@
     {% if panel.report_summary %}
     {# Same headline treatment as the completed state: lead between dotted
        rules, then the round report's other stories. #}
-    <div class="surface surface-open">
+    <div class="surface surface-open headlines-pane{% if panel.report_summary and panel.report_summary.other_articles | length >= 4 %} headlines-compact{% endif %}">
         <p class="kicker"><a class="heading-link" href="{{ panel.report_summary.link }}">Round {{ panel.report_summary.round }} headlines ↗</a></p>
         <a class="lead-teaser" href="{{ panel.report_summary.lead_link | default(panel.report_summary.link) }}">
             {% if panel.report_summary.kicker %}<span class="hl-kicker">{{ panel.report_summary.kicker | replace(" | ", " / ") }}</span>{% endif %}
@@ -30,7 +30,7 @@
         <p class="standings-heading"><a class="heading-link" href="/results?teg={{ panel.teg_num }}">Final Standings ↗</a></p>
         <div style="overflow-x:auto;">{% with standings = panel.standings %}{% include "partials/_standings_table.html" %}{% endwith %}</div>
     </div>
-    <div class="surface surface-open">
+    <div class="surface surface-open headlines-pane{% if panel.report_summary and panel.report_summary.other_articles | length >= 4 %} headlines-compact{% endif %}">
         {% if panel.report_summary %}
         <p class="kicker"><a class="heading-link" href="{{ panel.report_summary.link }}">TEG {{ panel.teg_num }} headlines ↗</a></p>
         <a class="lead-teaser" href="{{ panel.report_summary.lead_link | default(panel.report_summary.link) }}">

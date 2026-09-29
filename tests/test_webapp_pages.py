@@ -1331,6 +1331,115 @@ def test_contents_complete_panel_marks_recorded_honours_only(client, monkeypatch
     assert 'aria-label="Trophy"' not in jon_row
 
 
+def test_contents_complete_next_teg_view(client, monkeypatch):
+    # Between TEGs, the "Next TEG" tab replaces the results section: area and
+    # when, each round's date and course from round_info.csv, and handicaps.
+    import pandas as pd
+    monkeypatch.setattr(contents_route, "get_next_teg_and_check_if_in_progress_fast",
+                        lambda: (18, 19, False))
+    monkeypatch.setattr(contents_route, "build_venue_context", lambda teg: {
+        "area": "Algarve, Portugal", "year": 2026,
+        "rounds": [
+            {"round": 1, "date": "10/10/2026", "course": "Monte Rei",
+             "full_name": None, "location": "Vila Nova de Cacela, East Algarve, Portugal"},
+            {"round": 2, "date": "11/10/2026", "course": "Monte Rei",
+             "full_name": None, "location": "Vila Nova de Cacela, East Algarve, Portugal"},
+        ],
+    })
+    monkeypatch.setattr(contents_route, "_current_handicap_tiles", lambda teg: {
+        "is_draft": False, "next_teg_label": f"TEG {teg} Handicaps",
+        "tiles": [{"name_parts": ["Jon", "BAKER"], "value": 21,
+                   "delta_dir": "up", "delta_arrow": "↑", "delta_text": "3"}],
+    })
+
+    resp = client.get("/contents/view", params={"view": "next"})
+    _assert_ok_no_error(resp)
+    assert '<h1 class="state-headline">Next: TEG 19</h1>' in resp.text
+    assert "Algarve, Portugal. October 2026" in resp.text
+    assert "Sat 10 Oct" in resp.text and "Sun 11 Oct" in resp.text
+    assert "Monte Rei" in resp.text
+    # Every round shows its location, shortened to the last two parts.
+    assert resp.text.count("East Algarve, Portugal") == 2
+    assert "Vila Nova de Cacela" not in resp.text
+    assert "Jon BAKER" in resp.text and ">21<" in resp.text
+    assert "Handicaps ↗" in resp.text
+    assert 'aria-pressed="true"\n                hx-get="/contents/view?view=next"' in resp.text
+    assert "Final Standings" not in resp.text
+
+    # No rounds scheduled yet: area and year come from future_tegs.csv,
+    # and the rounds list shows a single TBC row.
+    def _no_rounds(teg):
+        raise ValueError("No round_info")
+    monkeypatch.setattr(contents_route, "build_venue_context", _no_rounds)
+    monkeypatch.setattr(contents_route, "get_future_tegs", lambda: pd.DataFrame(
+        {"TEGNum": [19], "TEG": ["TEG 19"], "Year": [2026], "Area": ["Somewhere"]}))
+    resp = client.get("/contents/view", params={"view": "next"})
+    _assert_ok_no_error(resp)
+    assert "Somewhere. 2026" in resp.text
+    assert "Dates and courses TBC" in resp.text
+
+    # Neither source knows the area or dates.
+    monkeypatch.setattr(contents_route, "get_future_tegs", lambda: pd.DataFrame(
+        {"TEGNum": [], "TEG": [], "Year": [], "Area": []}))
+    resp = client.get("/contents/view", params={"view": "next"})
+    _assert_ok_no_error(resp)
+    assert "Venue TBC. Dates TBC" in resp.text
+
+
+def test_short_location_keeps_last_two_parts():
+    short = contents_route._short_location
+    assert short("Vila Nova de Cacela, East Algarve, Portugal") == "East Algarve, Portugal"
+    assert short("East Sussex, England") == "East Sussex, England"
+    assert short("Portugal") == "Portugal"
+    assert short("") == ""
+    assert short(float("nan")) == ""
+
+
+def test_contents_complete_next_teg_view_blank_round_cells_show_tbc(client, monkeypatch):
+    monkeypatch.setattr(contents_route, "get_next_teg_and_check_if_in_progress_fast",
+                        lambda: (18, 19, False))
+    monkeypatch.setattr(contents_route, "build_venue_context", lambda teg: {
+        "area": "Algarve, Portugal", "year": 2026,
+        "rounds": [{"round": 1, "date": float("nan"), "course": "",
+                    "full_name": None, "location": ""}],
+    })
+    monkeypatch.setattr(contents_route, "_current_handicap_tiles", lambda teg: {
+        "is_draft": False, "next_teg_label": "", "tiles": []})
+    resp = client.get("/contents/view", params={"view": "next"})
+    _assert_ok_no_error(resp)
+    assert "Algarve, Portugal. 2026" in resp.text
+    assert "Date TBC" in resp.text
+
+
+def test_contents_view_param_on_full_page(client, monkeypatch):
+    state = {
+        "state": "complete", "teg_num": 18, "teg_label": "TEG 18",
+        "area": "Catalonia, Spain", "year": "2025",
+        "last_round_date": "14 October 2025", "dateline_month_year": "October 2025",
+        "trophy": "Alex BAKER", "jacket": "Gregg WILLIAMS", "spoon": "Jon BAKER",
+        "report_summary": {"headline": "H", "standfirst": "S", "link": "/teg-reports?teg=18"},
+    }
+    monkeypatch.setattr(contents_route, "get_tournament_state", lambda: state)
+    monkeypatch.setattr(contents_route, "get_next_teg_and_check_if_in_progress_fast",
+                        lambda: (18, 19, False))
+    monkeypatch.setattr(contents_route, "build_venue_context", lambda teg: {
+        "area": "Algarve, Portugal", "year": 2026, "rounds": []})
+    monkeypatch.setattr(contents_route, "_current_handicap_tiles", lambda teg: {
+        "is_draft": False, "next_teg_label": "", "tiles": []})
+
+    resp = client.get("/contents", params={"view": "next"})
+    _assert_ok_no_error(resp)
+    assert '<h1 class="state-headline">Next: TEG 19</h1>' in resp.text
+    assert "TEG 18 results" not in resp.text
+    assert 'id="complete-view"' in resp.text
+
+    for query in ({"view": "bogus"}, {}):
+        resp = client.get("/contents", params=query)
+        _assert_ok_no_error(resp)
+        assert '<h1 class="state-headline">TEG 18 results</h1>' in resp.text
+        assert 'hx-get="/contents/panel?teg=18&state=complete"' in resp.text
+
+
 def test_contents_in_progress_panel_has_no_honour_icons(client, monkeypatch):
     import pandas as pd
     fake_rd = pd.DataFrame({
@@ -1414,8 +1523,12 @@ def test_contents_state_complete_with_report_leads_with_headline(client, monkeyp
     assert 'hx-get="/contents/panel?teg=18&state=complete"' in resp.text
     # Owner decision: Full Results only appears inside the deferred panel
     # now (moved below the standings table), not as a page-level action.
-    assert "Next: TEG 19 / Algarve, Portugal / 2026" in resp.text
-    assert "TEG 19 Handicaps" in resp.text
+    # The next TEG (area, dates, handicaps) lives in the "Next TEG" tab, so
+    # the page-level line and link are gone.
+    assert 'aria-pressed="true"\n                hx-get="/contents/view?view=results"' in resp.text
+    assert 'hx-get="/contents/view?view=next"' in resp.text
+    assert "Last TEG" in resp.text and "Next TEG" in resp.text
+    assert "Next: TEG 19" not in resp.text
     assert "TEG 18 Handicaps" not in resp.text
 
 
@@ -1432,8 +1545,7 @@ def test_contents_state_complete_no_report_falls_back_to_results_primary(client,
     _assert_ok_no_error(resp)
     # Never invents a headline for a report that doesn't exist.
     assert "TEG 12 — Final Results" in resp.text
-    assert "TEG 13 Handicaps" in resp.text
-    assert "TEG 12 Handicaps" not in resp.text
+    assert "Next TEG" in resp.text and "TEG 13 Handicaps" not in resp.text
     assert 'class="headline-link"' not in resp.text
     assert 'class="dateline"' not in resp.text
     # E7: never a dead report link -- the sitemap's general, state-agnostic

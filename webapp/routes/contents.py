@@ -6,6 +6,7 @@ completed TEG, or an honest no-data message, chosen by
 beneath it, with labels and links suited to the current tournament state.
 """
 
+from datetime import datetime
 from pathlib import Path
 
 from fastapi import APIRouter, Request, Query
@@ -23,19 +24,25 @@ from webapp.deps import (
 from webapp.routes.history import _standings_rows
 from teg_analysis.analysis.handicaps import get_next_teg_and_check_if_in_progress_fast
 from webapp.routes.latest import _current_handicap_tiles, _round_scoreboard_html
+from teg_analysis.analysis.history import get_future_tegs
 from teg_analysis.reporting.newspaper_edition import available_rounds, get_edition_summary
+from teg_analysis.reporting.venue import build_venue_context
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
 @router.get("/contents")
-def contents_page(request: Request):
+def contents_page(request: Request, view: str = Query("results")):
     sections = request.state.nav_sections
+    state = get_tournament_state()
+    # ?view=next is only meaningful between tournaments.
+    view_ctx = _complete_view_context(request, view, state) if state["state"] == "complete" else {}
     return templates.TemplateResponse("contents.html", {
+        **view_ctx,
         "request": request,
         "active_page": "contents",
         "sections": sections,
-        "state": get_tournament_state(),
+        "state": state,
         "sitemap_page_count": sum(len(s["pages"]) for s in sections),
         "sitemap_group_labels": ", ".join(s["label"] for s in sections),
     })
@@ -163,6 +170,72 @@ def _in_progress_panel(teg_num: int) -> dict:
     }
 
 
+# Complete-state views, switched in place by /contents/view: the finished
+# TEG's results, or the next TEG's rounds and handicaps.
+COMPLETE_VIEWS = ("results", "next")
+
+
+def _round_date_parts(date_str) -> dict:
+    """'10/10/2026' -> weekday 'Sat', day '10 Oct', month 'October 2026'.
+    Blank or unparseable dates come back empty, for the template's TBC."""
+    try:
+        dt = datetime.strptime(str(date_str).strip(), "%d/%m/%Y")
+    except (ValueError, TypeError):
+        return {"weekday": "", "day": "", "month": ""}
+    return {"weekday": dt.strftime("%a"), "day": dt.strftime("%-d %b"), "month": dt.strftime("%B %Y")}
+
+
+def _text(value) -> str:
+    """A CSV cell as display text: NaN/None become ''."""
+    return "" if value is None or (isinstance(value, float) and value != value) else str(value).strip()
+
+
+def _short_location(value) -> str:
+    """The region and country only: 'Vila Nova de Cacela, East Algarve,
+    Portugal' -> 'East Algarve, Portugal'. The town adds length, not
+    meaning, next to the area headline."""
+    parts = [part.strip() for part in _text(value).split(",") if part.strip()]
+    return ", ".join(parts[-2:])
+
+
+def _next_teg_context() -> dict:
+    """The next TEG: area, when, each round's date and course (from
+    round_info.csv once set up) and its handicaps. The area falls back to
+    future_tegs.csv before any rounds are scheduled; anything unknown is
+    left blank for the template to show as TBC."""
+    _last, next_tegnum, _in_progress = get_next_teg_and_check_if_in_progress_fast()
+    area, when, rounds = "", "", []
+    try:
+        venue = build_venue_context(next_tegnum)
+    except ValueError:
+        venue = None  # no round_info rows yet
+    if venue:
+        area = _text(venue["area"])
+        for r in venue["rounds"]:
+            rounds.append({
+                "round": r["round"],
+                **_round_date_parts(r["date"]),
+                "course": _text(r["course"]),
+                "location": _short_location(r["location"]),
+            })
+        when = next((r["month"] for r in rounds if r["month"]), "")
+        if not when and venue["year"]:
+            when = str(venue["year"])
+    if not area or not when:
+        future = get_future_tegs()
+        row = future[future["TEGNum"] == next_tegnum] if not future.empty else future
+        if not row.empty:
+            area = area or _text(row.iloc[0]["Area"])
+            when = when or _text(int(row.iloc[0]["Year"]))
+    return {
+        "teg_num": next_tegnum,
+        "area": area,
+        "when": when,
+        "rounds": rounds,
+        "handicaps": _current_handicap_tiles(next_tegnum),
+    }
+
+
 def _complete_panel(teg_num: int) -> dict:
     """Complete-state rich content: final standings (left) + "Also in this
     report" secondary headlines (right). Winners (Trophy/Jacket/spoon)
@@ -209,3 +282,21 @@ def contents_pane(request: Request, teg: int = Query(...), rounds: int = Query(.
         "rounds_played": rounds,
         "panel": _pane_context(view, teg, rounds, metric),
     })
+
+
+@router.get("/contents/view")
+def contents_view(request: Request, view: str = Query("results")):
+    # Complete state only: swaps the whole tournament section between the
+    # finished TEG's results and the next TEG, without leaving Contents.
+    return templates.TemplateResponse("partials/_contents_complete_view.html",
+                                      _complete_view_context(request, view))
+
+
+def _complete_view_context(request: Request, view: str, state: dict | None = None) -> dict:
+    view = view if view in COMPLETE_VIEWS else "results"
+    return {
+        "request": request,
+        "view": view,
+        "state": state or get_tournament_state(),
+        "next_teg": _next_teg_context() if view == "next" else None,
+    }

@@ -1,0 +1,105 @@
+{# Complete-state Contents: the finished TEG's results or the next TEG,
+   swapped whole by the view tabs via GET /contents/view (outerHTML), so the
+   active state comes back with the content. ?view=next on /contents renders
+   the same markup directly, so the URL reproduces the view. #}
+<div id="complete-view">
+    <div class="pane-switch view-switch" role="group" aria-label="Show">
+        {% for key, label in [("results", "Last TEG"), ("next", "Next TEG")] %}
+        <button type="button" class="tab-underline{% if key == view %} tab-underline--active{% endif %}"
+                aria-pressed="{{ 'true' if key == view else 'false' }}"
+                hx-get="/contents/view?view={{ key }}"
+                hx-push-url="/contents{% if key == 'next' %}?view=next{% endif %}"
+                hx-target="#complete-view" hx-swap="outerHTML">{{ label }}</button>
+        {% endfor %}
+    </div>
+
+{% if view == "next" %}
+    <h1 class="state-headline">Next: TEG {{ next_teg.teg_num }}</h1>
+    <p class="state-context">{{ next_teg.area or "Venue TBC" }}. {{ next_teg.when or "Dates TBC" }}</p>
+
+    <div class="panel-grid two-col equal-col next-teg-grid" id="contents-panel">
+        <div class="surface surface-open">
+            <p class="standings-heading">TEG {{ next_teg.teg_num }} schedule</p>
+            {# Not a table: each round is two balanced lines, "Round N" over
+               its date beside the course over its region. #}
+            <ul class="next-rounds">
+                {% for r in next_teg.rounds %}
+                <li class="nr-row">
+                    <div>
+                        <span class="nr-primary">Round {{ r.round }}</span>
+                        <span class="nr-secondary">{% if r.day %}{{ r.weekday }} {{ r.day }}{% else %}Date TBC{% endif %}</span>
+                    </div>
+                    <div>
+                        <span class="nr-primary">{{ r.course or "Course TBC" }}</span>
+                        {% if r.location %}<span class="nr-secondary">{{ r.location }}</span>{% endif %}
+                    </div>
+                </li>
+                {% else %}
+                <li class="nr-row"><div><span class="nr-secondary">Dates and courses TBC</span></div></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="surface surface-open contents-pane">
+            <p class="kicker"><a class="heading-link" href="/handicaps">TEG {{ next_teg.teg_num }} Handicaps ↗</a></p>
+            {% if next_teg.handicaps.is_draft %}<p class="gross-line">Draft, subject to final review</p>{% endif %}
+            <table class="hc-list">
+                {% for t in next_teg.handicaps.tiles %}
+                <tr>
+                    <td class="hc-list-name">{{ t.name_parts | join(' ') }}</td>
+                    <td class="hc-list-value">{{ t.value }}</td>
+                    <td class="hc-list-delta hc-delta--{{ t.delta_dir }}">{{ t.delta_arrow }} {{ t.delta_text }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% else %}
+    {% if state.report_summary %}
+        <h1 class="state-headline">{{ state.teg_label }} results</h1>
+        <p class="state-context">{{ state.area }}. {{ state.dateline_month_year }}</p>
+
+        <div class="honours-line" style="margin-bottom: var(--sp-5, 20px);">
+            <span class="honour-champion"><span class="honour-label">Champion</span> <span class="honour-name">{{ state.trophy or "–" }}</span></span>
+            <span class="honour-sep">/</span>
+            <span><span class="honour-label">Green Jacket</span> <span class="honour-name">{{ state.jacket or "–" }}</span></span>
+            <span class="honour-sep">/</span>
+            <span><span class="honour-label">Wooden spoon</span> <span class="honour-name">{{ state.spoon or "–" }}</span></span>
+        </div>
+
+        <div hx-get="/contents/panel?teg={{ state.teg_num }}&state=complete" hx-trigger="load" hx-swap="outerHTML">
+            <div class="panel-grid two-col equal-col" id="contents-panel" aria-busy="true">
+                <div class="surface surface-open">
+                    <p class="standings-heading">Final Standings</p>
+                    <p class="gross-line">Loading…</p>
+                </div>
+            </div>
+        </div>
+
+    {% else %}
+        <p class="state-eyebrow state-eyebrow-muted">Latest result</p>
+        <h1 class="state-headline">{{ state.teg_label }} — Final Results</h1>
+        <p class="state-context">
+            {{ state.area }}{% if state.year %} · {{ state.year }}{% endif %}{% if state.last_round_date %} · Last round {{ state.last_round_date }}{% endif %}
+        </p>
+
+        <div class="state-leaders">
+            <div class="state-leader-row">
+                <span class="state-leader-label">TEG Trophy <span class="state-leader-measure">(net)</span></span>
+                <span class="state-leader-names state-honour">{{ state.trophy or "–" }}</span>
+            </div>
+            <div class="state-leader-row">
+                <span class="state-leader-label">Green Jacket <span class="state-leader-measure">(gross)</span></span>
+                <span class="state-leader-names state-honour">{{ state.jacket or "–" }}</span>
+            </div>
+            <div class="state-leader-row state-leader-row-muted">
+                <span class="state-leader-label">Wooden spoon</span>
+                <span class="state-leader-names">{{ state.spoon or "–" }}</span>
+            </div>
+        </div>
+
+        <div class="state-actions">
+            <a class="state-btn state-btn-primary" href="/results?teg={{ state.teg_num }}">Full Results</a>
+        </div>
+    {% endif %}
+{% endif %}
+</div>

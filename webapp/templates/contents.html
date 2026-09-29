@@ -118,13 +118,6 @@
     }
     .state-link:hover { color: var(--green); }
 
-    .state-next {
-        font-family: var(--font-sans);
-        font-size: var(--fs-200, 12px);
-        color: var(--text-primary);
-        margin-top: var(--sp-3, 12px);
-    }
-
     .state-empty {
         font-family: var(--font-sans);
         font-size: var(--fs-300, 14px);
@@ -354,6 +347,45 @@
     .contents-pane .hc-list-name { font-size: 0.9375rem; color: var(--text-primary); }
     .contents-pane .hc-list-value { width: 20%; text-align: right; font-family: var(--font-table), sans-serif; font-size: 1.0625rem; font-weight: 700; color: var(--text-primary); }
     .contents-pane .hc-list-delta { width: 30%; text-align: right; font-family: var(--font-table), sans-serif; font-size: 0.8125rem; font-weight: 600; background: none; padding: 10px 4px; border-radius: 0; }
+    /* Complete state: Last TEG / Next TEG tabs above the headline. */
+    .view-switch { margin-bottom: var(--sp-4, 16px); }
+
+    /* Next TEG rounds: a plain list, no rules or header. Each row is two
+       lines: "Round N" beside the course (primary), then the date beside
+       the region (secondary). Row padding matches .hc-list cells so the
+       first rounds row and first handicap row share a top edge. */
+    .next-rounds { list-style: none; margin: 0; padding: 0; }
+    .nr-row {
+        display: grid;
+        grid-template-columns: 7rem 1fr;
+        gap: 0 var(--sp-4, 16px);
+        padding: 10px 4px;
+        font-family: var(--font-sans);
+    }
+    .nr-primary {
+        display: block;
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+    /* Side by side, the handicaps list matches the height of a 4-round
+       schedule: each round row is a fixed --nr-row-h tall, and the table
+       is 4 of those, which a table shares out evenly between its rows
+       (total / number of players). Text stays at the top of each row, so
+       the first rows stay level. With more players than fit, the table
+       just grows. Stacked on phones, nothing is sized. */
+    .next-teg-grid { --nr-row-h: 4rem; }
+    @media (min-width: 900px) {
+        .next-teg-grid .nr-row { box-sizing: border-box; height: var(--nr-row-h); }
+        .next-teg-grid .hc-list { height: calc(4 * var(--nr-row-h)); }
+        .next-teg-grid .hc-list td { vertical-align: baseline; }
+    }
+    .nr-secondary {
+        display: block;
+        margin-top: 2px;
+        font-size: var(--fs-200, 12px);
+        color: var(--text-secondary);
+    }
     .gross-line {
         font-family: var(--font-sans);
         font-size: var(--fs-200, 12px);
@@ -467,6 +499,13 @@
         font-weight: 700;
         line-height: 1.3;
     }
+    /* Headlines pane: a little more air under the pane title, so the
+       lead story starts about where the standings table's header does. */
+    .headlines-pane .kicker { margin-bottom: var(--sp-5, 24px); }
+    /* More than four stories (lead included): tighten the secondary
+       stories so the pane stays close to the standings' height. */
+    .headlines-compact .headline-list .hl-headline { font-size: 15px; }
+    .headlines-compact .headline-list .hl-kicker { font-size: 10px; margin-bottom: 0; }
 
     /* --- Collapsible sitemap signpost (I5 revision: reopens the "always
        visible" decision at the owner's request). Native <details> -- zero
@@ -517,62 +556,7 @@
         </div>
 
     {% elif state.state == "complete" %}
-        {% if state.report_summary %}
-            <h1 class="state-headline">{{ state.teg_label }} results</h1>
-            <p class="state-context">{{ state.area }}. {{ state.dateline_month_year }}</p>
-
-            <div class="honours-line" style="margin-bottom: var(--sp-5, 20px);">
-                <span class="honour-champion"><span class="honour-label">Champion</span> <span class="honour-name">{{ state.trophy or "–" }}</span></span>
-                <span class="honour-sep">/</span>
-                <span><span class="honour-label">Green Jacket</span> <span class="honour-name">{{ state.jacket or "–" }}</span></span>
-                <span class="honour-sep">/</span>
-                <span><span class="honour-label">Wooden spoon</span> <span class="honour-name">{{ state.spoon or "–" }}</span></span>
-            </div>
-
-            <div hx-get="/contents/panel?teg={{ state.teg_num }}&state=complete" hx-trigger="load" hx-swap="outerHTML">
-                <div class="panel-grid two-col equal-col" id="contents-panel" aria-busy="true">
-                    <div class="surface surface-open">
-                        <p class="standings-heading">Final Standings</p>
-                        <p class="gross-line">Loading…</p>
-                    </div>
-                </div>
-            </div>
-
-            {% if state.next_teg %}
-            <p class="state-next" style="margin-top: var(--sp-5, 20px);">Next: {{ state.next_teg.label }} / {{ state.next_teg.area }} / {{ state.next_teg.year }}</p>
-            {% endif %}
-            <a class="teaser-link teaser-handicaps" href="/handicaps" style="display:inline-block; margin-top: var(--sp-2, 8px);">TEG {{ state.teg_num + 1 }} Handicaps ↗</a>
-        {% else %}
-            <p class="state-eyebrow state-eyebrow-muted">Latest result</p>
-            <h1 class="state-headline">{{ state.teg_label }} — Final Results</h1>
-            <p class="state-context">
-                {{ state.area }}{% if state.year %} · {{ state.year }}{% endif %}{% if state.last_round_date %} · Last round {{ state.last_round_date }}{% endif %}
-            </p>
-
-            <div class="state-leaders">
-                <div class="state-leader-row">
-                    <span class="state-leader-label">TEG Trophy <span class="state-leader-measure">(net)</span></span>
-                    <span class="state-leader-names state-honour">{{ state.trophy or "–" }}</span>
-                </div>
-                <div class="state-leader-row">
-                    <span class="state-leader-label">Green Jacket <span class="state-leader-measure">(gross)</span></span>
-                    <span class="state-leader-names state-honour">{{ state.jacket or "–" }}</span>
-                </div>
-                <div class="state-leader-row state-leader-row-muted">
-                    <span class="state-leader-label">Wooden spoon</span>
-                    <span class="state-leader-names">{{ state.spoon or "–" }}</span>
-                </div>
-            </div>
-
-            <div class="state-actions">
-                <a class="state-btn state-btn-primary" href="/results?teg={{ state.teg_num }}">Full Results</a>
-                <a class="state-link" href="/handicaps">TEG {{ state.teg_num + 1 }} Handicaps</a>
-            </div>
-
-            {% if state.next_teg %}
-            <p class="state-next">Next: {{ state.next_teg.label }} · {{ state.next_teg.area }} · {{ state.next_teg.year }}</p>
-            {% endif %}
-        {% endif %}
+        {% include "partials/_contents_complete_view.html" %}
 
     {% else %}
         <h1 class="state-headline">No tournament data</h1>
