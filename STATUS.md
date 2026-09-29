@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-29 (TEG 19 post-completion fixes; live round entry links)
+**Last updated:** 2026-09-29 (report admin progress and confirmations; TEG 19 post-completion fixes)
+
+## 2026-09-29 — Report admin shows progress and asks before Generate (Batch 3)
+
+`/admin/reports` now lists every running report, whichever TEG is selected, with each phase (storylines, draft, voice, publish, commit) marked done, in progress or to do. Generate asks first when that report is already running, or was generated in the last 6 hours, since a rerun overwrites it and costs another API run. Fixes dry-run issues 8 and 9. Detail: `webapp/README.md` → Reports.
 
 ## 2026-09-29 — TEG 19 post-completion fixes (Batch 1A)
 

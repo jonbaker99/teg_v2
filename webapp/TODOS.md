@@ -54,8 +54,8 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
   webapp process, for both tournament and round reports, then pushes the result to GitHub — no
   laptop or CLI needed after a round ends. `POST /admin/reports/generate` (`kind=round|tournament`)
   claims a single-flight slot per (TEG, round) and enqueues a `BackgroundTasks` job;
-  `GET /admin/reports/status` is the HTMX poll target, self-terminating once the run reaches a
-  terminal state. All of it lives in the new `webapp/report_generation.py` (the status-file state
+  progress originally polled `GET /admin/reports/status` (replaced 2026-09-29 by the
+  running-reports panel, `GET /admin/reports/running`). All of it lives in the new `webapp/report_generation.py` (the status-file state
   machine + the background task) and `webapp/routes/admin_reports.py` (route plumbing only) — see
   `webapp/README.md`'s admin section for why status is a file, not the in-memory dict the
   volume-sync jobs use. **The staging step is the load-bearing part**: the pipeline writes its
@@ -162,6 +162,8 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
   `scripts/inline_editions` still runs standalone to re-inline without a rebuild.
 
 ## NEXT UP
+
+- [ ] **Report runs: a stage over 30 minutes looks stale.** `updated_at` only refreshes between phases, so one very slow stage (e.g. the `agent` mailbox provider, or a slow tournament draft) passes `STALE_AFTER_SECONDS` and `claim()` would allow a second run over the same artefacts. Fix with a heartbeat during a stage, or a longer stale window under the `agent` provider (`webapp/report_generation.py`).
 
 - [X] **2026-07-10 to-do batch (done)** — shipped on `claude/web-app-todos-planning-0o3uui` (PR #67):
   - by-teg `nan` → `-` (fixed centrally in `webapp/tables.py::df_to_html`, + `tests/test_tables.py`)

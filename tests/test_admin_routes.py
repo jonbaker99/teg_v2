@@ -825,6 +825,102 @@ def test_reports_generate_enqueues_and_guards_double_run(client, monkeypatch, tm
     assert len(calls) == 1
 
 
+def _iso_ago(hours=0.0, minutes=0.0):
+    from datetime import datetime, timedelta, timezone
+    return (datetime.now(timezone.utc) - timedelta(hours=hours, minutes=minutes)).isoformat()
+
+
+def _report_env(client, monkeypatch, tmp_path):
+    import webapp.report_generation as rg
+    from webapp import deps
+    monkeypatch.setattr(rg, "_store_path", lambda rel: tmp_path / rel)
+    calls = []
+    monkeypatch.setattr(rg, "generate_report", lambda t, r: calls.append((t, r)))
+    teg = deps.get_default_teg_num()
+    rounds = deps.get_rounds_for_teg(teg)
+    round_num = rounds[-1] if rounds else 1
+    _login(client)
+    return rg, calls, teg, round_num
+
+
+def test_running_panel_lists_all_active_runs(client, monkeypatch, tmp_path):
+    from webapp import deps
+    import webapp.report_generation as rg
+    monkeypatch.setattr(rg, "_store_path", lambda rel: tmp_path / rel)
+    _login(client)
+    rg.write_status(3, 1, state="running", phase="draft", started_at=_iso_ago(minutes=5))
+    rg.write_status(4, None, state="running", phase="voice", started_at=_iso_ago(minutes=2))
+
+    other = [t for t in deps.get_available_teg_numbers() if t not in (3, 4)][0]
+    for url in (f"/admin/reports?teg={other}", "/admin/reports/running"):
+        resp = client.get(url)
+        assert resp.status_code == 200
+        assert "TEG 3 R1" in resp.text and "TEG 4 tournament" in resp.text
+        assert "in progress" in resp.text and "to do" in resp.text
+        assert 'hx-trigger="load delay:3s"' in resp.text
+
+    # Nothing active: no polling element.
+    rg.write_status(3, 1, state="error", phase="draft", started_at=_iso_ago(minutes=5),
+                    finished_at=_iso_ago(minutes=1), error="boom")
+    rg.write_status(4, None, state="done", phase="push", started_at=_iso_ago(minutes=5),
+                    finished_at=_iso_ago(minutes=1))
+    resp = client.get("/admin/reports/running")
+    assert 'hx-trigger="load delay:3s"' not in resp.text
+    assert "boom" in resp.text
+
+
+def test_running_panel_empty(client, monkeypatch, tmp_path):
+    _report_env(client, monkeypatch, tmp_path)
+    resp = client.get("/admin/reports/running")
+    assert "No reports running" in resp.text
+    assert 'hx-trigger="load delay:3s"' not in resp.text
+
+
+def test_running_endpoint_requires_auth(client):
+    resp = client.get("/admin/reports/running")
+    assert resp.status_code == 401
+
+
+def test_recent_report_needs_confirmation(client, monkeypatch, tmp_path):
+    rg, calls, teg, round_num = _report_env(client, monkeypatch, tmp_path)
+    rg.write_status(teg, round_num, state="done", phase="push",
+                    started_at=_iso_ago(hours=1, minutes=5), finished_at=_iso_ago(hours=1))
+    before = rg.read_status(teg, round_num)
+    data = {"kind": "round", "teg": teg, "round": round_num}
+
+    resp = client.post("/admin/reports/generate", data=data)
+    assert resp.status_code == 200
+    assert "Regenerate anyway" in resp.text
+    assert calls == []
+    assert rg.read_status(teg, round_num) == before
+
+    resp = client.post("/admin/reports/generate", data={**data, "confirm": 1})
+    assert resp.status_code == 200
+    assert len(calls) == 1
+    assert resp.headers.get("HX-Trigger") == "report-started"
+
+
+def test_old_report_regenerates_without_confirmation(client, monkeypatch, tmp_path):
+    rg, calls, teg, round_num = _report_env(client, monkeypatch, tmp_path)
+    rg.write_status(teg, round_num, state="done", phase="push",
+                    started_at=_iso_ago(hours=7, minutes=5), finished_at=_iso_ago(hours=7))
+    resp = client.post("/admin/reports/generate",
+                       data={"kind": "round", "teg": teg, "round": round_num})
+    assert "Regenerate anyway" not in resp.text
+    assert len(calls) == 1
+
+
+def test_running_report_confirmation_has_phase_and_no_regenerate(client, monkeypatch, tmp_path):
+    rg, calls, teg, round_num = _report_env(client, monkeypatch, tmp_path)
+    rg.write_status(teg, round_num, state="running", phase="voice", started_at=_iso_ago(minutes=3))
+    resp = client.post("/admin/reports/generate",
+                       data={"kind": "round", "teg": teg, "round": round_num})
+    assert "already generating" in resp.text.lower()
+    assert "Voice pass" in resp.text
+    assert "Regenerate anyway" not in resp.text
+    assert calls == []
+
+
 def test_generate_rejects_tournament_for_in_progress_teg(client, monkeypatch, tmp_path):
     import webapp.report_generation as report_generation
     from webapp import deps
