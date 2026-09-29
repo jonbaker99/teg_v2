@@ -12,12 +12,19 @@ Flow:
   POST /admin/live-round/start                   -> start one (HTMX, from a set-up round)
   GET  /admin/live-round/{token}/review           -> conflicts + finalize/cancel controls
   POST /admin/live-round/{token}/resolve          -> pick a value for one conflicted cell
+  POST /admin/live-round/{token}/random-fill      -> test only: fill empty cells with random scores (off on production)
   POST /admin/live-round/{token}/finalize         -> write to all-scores via execute_data_update
   POST /admin/live-round/{token}/cancel           -> abandon without touching all-scores
+
+Finalize and cancel succeed with an empty 200 + HX-Redirect back to the review
+page (?finalized=1 / ?cancelled=1), which then renders read-only with a status
+card at the top; errors render into #finalize-result instead.
 """
 
 import logging
+import os
 from pathlib import Path
+from urllib.parse import quote
 
 from fastapi import APIRouter, Request, Form
 from fastapi.responses import HTMLResponse
@@ -44,6 +51,13 @@ def _entry_url(request: Request, token: str) -> str:
     if proto in ("http", "https") and not url.startswith(proto + "://"):
         url = proto + url[url.index("://"):]
     return url
+
+
+def _random_fill_enabled() -> bool:
+    """Test-only random fill is off on production. Railway sets RAILWAY_ENVIRONMENT_NAME
+    (RAILWAY_ENVIRONMENT is its older alias); locally neither is set, so it's on."""
+    name = os.getenv("RAILWAY_ENVIRONMENT_NAME") or os.getenv("RAILWAY_ENVIRONMENT") or ""
+    return name.strip().lower() != "production"
 
 
 def _redirect(url: str):
@@ -140,6 +154,12 @@ def admin_live_round_review(request: Request, token: str):
         "request": request, "token": token,
         "saved": request.query_params.get("saved"),
         "error": request.query_params.get("error"),
+        "finalized": request.query_params.get("finalized"),
+        "cancelled": request.query_params.get("cancelled"),
+        "cache_errors": [
+            c for c in (request.query_params.get("cache_errors") or "").split(",") if c
+        ],
+        "random_fill_enabled": _random_fill_enabled(),
     }
     try:
         live_ctx = get_live_round_context(token)
@@ -147,6 +167,7 @@ def admin_live_round_review(request: Request, token: str):
             ctx["error"] = f"No live round found for token {token}."
         else:
             ctx["live"] = live_ctx
+            ctx["read_only"] = live_ctx["status"] != "active"
             if live_ctx["status"] == "active":
                 ctx["entry_url"] = _entry_url(request, token)
             polled = get_scores_since(token, since_seq=0)
@@ -188,7 +209,8 @@ async def admin_live_round_edit(request: Request, token: str):
         return _redirect("/admin/login")
 
     from teg_analysis.analysis.live_round import (
-        apply_admin_edits, LiveRoundNotFoundError, InvalidScoreCellError, MAX_SCORE,
+        apply_admin_edits, LiveRoundNotFoundError, LiveRoundInactiveError,
+        InvalidScoreCellError, MAX_SCORE,
     )
 
     form = await request.form()
@@ -213,8 +235,6 @@ async def admin_live_round_edit(request: Request, token: str):
                 continue  # ignore out-of-range typos rather than write them
         cells.append({"hole": hole, "player": player, "value": value})
 
-    from urllib.parse import quote
-
     try:
         result = await run_in_threadpool(apply_admin_edits, token, cells, "Admin")
         written = result["written"]
@@ -223,7 +243,28 @@ async def admin_live_round_edit(request: Request, token: str):
     except InvalidScoreCellError as e:
         logger.warning(f"Live round admin edit rejected invalid cells: {e.errors}")
         return _redirect(f"/admin/live-round/{token}/review?error={quote(str(e))}")
+    except LiveRoundInactiveError as e:
+        return _redirect(f"/admin/live-round/{token}/review?error={quote(str(e))}")
 
+    return _redirect(f"/admin/live-round/{token}/review?saved={written}")
+
+
+@router.post("/admin/live-round/{token}/random-fill")
+def admin_live_round_random_fill(request: Request, token: str):
+    """Test-only: fill every empty cell with a random plausible score, then back to review."""
+    if not is_authed(request):
+        return _redirect("/admin/login")
+    if not _random_fill_enabled():
+        return HTMLResponse("Random fill is disabled on production.", status_code=403)
+
+    from teg_analysis.analysis.live_round import (
+        fill_random_scores, LiveRoundNotFoundError, LiveRoundInactiveError, InvalidScoreCellError,
+    )
+
+    try:
+        written = fill_random_scores(token)["written"]
+    except (LiveRoundNotFoundError, LiveRoundInactiveError, InvalidScoreCellError) as e:
+        return _redirect(f"/admin/live-round/{token}/review?error={quote(str(e))}")
     return _redirect(f"/admin/live-round/{token}/review?saved={written}")
 
 
@@ -260,8 +301,16 @@ def admin_live_round_finalize(request: Request, token: str):
 
     ctx = {"request": request, "token": token}
     try:
-        ctx["result"] = finalize_live_round(token)
+        result = finalize_live_round(token)
         deps.clear_all_data_caches()
+        url = f"/admin/live-round/{token}/review?finalized=1"
+        steps = [str(ce.get("step", "")) for ce in (result.get("cache_errors") or [])]
+        steps = [x for x in steps if x]
+        if result.get("cache_errors") and not steps:
+            steps = ["unknown"]
+        if steps:
+            url += "&cache_errors=" + quote(",".join(steps), safe="")
+        return HTMLResponse("", headers={"HX-Redirect": url})
     except ConflictsUnresolvedError as e:
         ctx["error"] = str(e)
     except (LiveRoundInactiveError, LiveRoundNotFoundError, ValueError) as e:
@@ -282,8 +331,9 @@ def admin_live_round_cancel(request: Request, token: str):
 
     ctx = {"request": request, "token": token}
     try:
-        ctx["result"] = cancel_live_round(token)
+        cancel_live_round(token)
         deps.clear_public_live_rounds_cache()
+        return HTMLResponse("", headers={"HX-Redirect": f"/admin/live-round/{token}/review?cancelled=1"})
     except LiveRoundNotFoundError:
         ctx["error"] = "Live round not found."
     except Exception as e:  # noqa: BLE001
