@@ -19,7 +19,7 @@
 
     <div class="panel-grid two-col equal-col next-teg-grid" id="contents-panel">
         <div class="surface surface-open">
-            <p class="standings-heading">Rounds</p>
+            <p class="standings-heading">TEG {{ next_teg.teg_num }} schedule</p>
             {# Not a table: each round is two balanced lines, "Round N" over
                its date beside the course over its region. #}
             <ul class="next-rounds">
@@ -40,7 +40,7 @@
             </ul>
         </div>
         <div class="surface surface-open contents-pane">
-            <p class="kicker"><a class="heading-link" href="/handicaps">Handicaps ↗</a></p>
+            <p class="kicker"><a class="heading-link" href="/handicaps">TEG {{ next_teg.teg_num }} Handicaps ↗</a></p>
             {% if next_teg.handicaps.is_draft %}<p class="gross-line">Draft, subject to final review</p>{% endif %}
             <table class="hc-list">
                 {% for t in next_teg.handicaps.tiles %}

@@ -368,15 +368,16 @@
         font-weight: 600;
         color: var(--text-primary);
     }
-    /* Side by side, the two columns are already equal height (grid
-       stretch). Each list fills its column and shares out the spare
-       height evenly between its rows, so rounds and handicaps end level
-       whichever is longer. Text stays top-aligned in each row, keeping
-       the first rows level too. Stacked on phones, nothing stretches. */
+    /* Side by side, the handicaps list matches the height of a 4-round
+       schedule: each round row is a fixed --nr-row-h tall, and the table
+       is 4 of those, which a table shares out evenly between its rows
+       (total / number of players). Text stays at the top of each row, so
+       the first rows stay level. With more players than fit, the table
+       just grows. Stacked on phones, nothing is sized. */
+    .next-teg-grid { --nr-row-h: 4rem; }
     @media (min-width: 900px) {
-        .next-teg-grid .next-rounds { flex: 1; display: flex; flex-direction: column; }
-        .next-teg-grid .nr-row { flex: 1 1 auto; align-content: start; }
-        .next-teg-grid .hc-list { flex: 1; height: 100%; }
+        .next-teg-grid .nr-row { box-sizing: border-box; height: var(--nr-row-h); }
+        .next-teg-grid .hc-list { height: calc(4 * var(--nr-row-h)); }
         .next-teg-grid .hc-list td { vertical-align: baseline; }
     }
     .nr-secondary {

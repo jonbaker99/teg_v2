@@ -228,7 +228,7 @@ For a few records with two or three facts each (schedules, fixtures, venues), pr
 - **One colour per line.** Never mix colours within a single value (e.g. a greyer weekday beside its date).
 - **Every row has the same shape.** Repeat line 2 on every row rather than dropping repeats, and trim it to what adds meaning next to the headline (region and country, not the town).
 - **Honest gaps.** Unknown values read "Date TBC" / "Course TBC" in place.
-- **Align with neighbours.** Match row padding to any list beside it so first rows share a top edge; where two columns sit side by side, let each list fill its column and share spare height between rows so they end level.
+- **Align with neighbours.** Match row padding to any list beside it so first rows share a top edge; where two columns sit side by side, fix the reference list's row height and size the neighbour to match, letting its rows share that height (Next TEG: `--nr-row-h`, handicaps sized to four rounds).
 
 Reach for a real table when readers compare values down a column (numbers, ranks, many rows).
 
