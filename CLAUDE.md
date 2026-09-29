@@ -114,6 +114,7 @@ When a to-do surfaces mid-conversation, add it to the right area's `TODOS.md` be
 - Only the lead updates shared task notes, coordinates shared writes and performs Git mutations. Preserve unrelated dirty and untracked files.
 - Never switch branches, reset, clean or remove another task's worktree. Do not merge into the primary checkout while the user is changing it; coordinate integration first.
 - If relevant starting changes are uncommitted, preserve them and clarify which belong in the task. A new worktree does not automatically include them.
+- `.claude/settings.local.json` is per-machine and gitignored. Never commit or push it, and don't treat changes to it as uncommitted work.
 
 Worktree recovery setup and limitations: `README.md` → *Shared CLI recovery*.
 
