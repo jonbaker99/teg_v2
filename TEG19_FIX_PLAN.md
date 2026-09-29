@@ -110,7 +110,7 @@ Each batch is one task: its own branch and worktree, and one PR against `main` w
 **Per batch:**
 
 1. **Plan (Opus):** read this file and the issue log. Confirm the root causes against the code. Write acceptance tests first for the crash fixes.
-2. **Implement (Sonnet workers):** one worker per file group. Run only the relevant tests: `test_webapp_pages.py`, `test_data_update.py`, `test_teg_setup.py` for 1A; `test_live_round*.py`, `test_admin_routes.py` for 1B; `test_admin_routes.py` and the report-generation tests for 3; `test_webapp_pages.py` for 4a and 4b; the full suite for Batch 2.
+2. **Implement (Sonnet workers):** one worker per file group. Run only the relevant tests: `test_webapp_pages.py`, `test_data_update.py`, `test_teg_setup.py` for 1A; `test_live_round*.py`, `test_admin_routes.py` for 1B; `test_admin_routes.py` for 3; `test_webapp_pages.py` for 4a and 4b; the full suite for Batch 2.
 3. **Review (Opus, fresh context):** the lead fixes the findings.
 4. **Preview:** push, open the PR, and check the Railway preview on a phone.
 5. **Merge:** only with your explicit go-ahead.
