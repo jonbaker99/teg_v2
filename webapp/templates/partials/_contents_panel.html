@@ -4,21 +4,23 @@
    grid; stacks below 900px (.panel-grid rules in contents.html). #}
 {% if panel.state == "in_progress" %}
 <div class="panel-grid{% if panel.report_summary %} two-col{% endif %}" id="contents-panel">
-    <div class="surface surface-open">
-        <p class="standings-heading">Standings after Round {{ rounds_played }}</p>
-        {% if panel.gross_leader %}
-        <p class="gross-line">Green Jacket (gross) — <b>{{ panel.gross_leader.names | join(", ") }}</b> {{ panel.gross_leader.total }}</p>
-        {% endif %}
-        <div style="overflow-x:auto;">{% with standings = panel.standings %}{% include "partials/_standings_table.html" %}{% endwith %}</div>
-    </div>
+    {% with pane = "standings", teg_num = panel.teg_num %}{% include "partials/_contents_pane.html" %}{% endwith %}
     {% if panel.report_summary %}
+    {# Same headline treatment as the completed state: lead between dotted
+       rules, then the round report's other stories. #}
     <div class="surface surface-open">
-        <p class="kicker">Round {{ panel.report_summary.round }} report</p>
-        <p class="teaser-headline">{{ panel.report_summary.headline }}</p>
-        {% if panel.report_summary.standfirst %}
-        <p class="teaser-standfirst">{{ panel.report_summary.standfirst }}</p>
+        <p class="kicker"><a class="heading-link" href="{{ panel.report_summary.link }}">Round {{ panel.report_summary.round }} headlines ↗</a></p>
+        <a class="lead-teaser" href="{{ panel.report_summary.lead_link | default(panel.report_summary.link) }}">
+            {% if panel.report_summary.kicker %}<span class="hl-kicker">{{ panel.report_summary.kicker | replace(" | ", " / ") }}</span>{% endif %}
+            <span class="teaser-headline">{{ panel.report_summary.headline }}</span>
+        </a>
+        {% if panel.report_summary.other_articles %}
+        <ul class="headline-list">
+            {% for a in panel.report_summary.other_articles %}
+            <li><a href="{{ a.link }}"><span class="hl-kicker">{{ a.kicker | replace(" | ", " / ") }}</span><span class="hl-headline">{{ a.headline }}</span></a></li>
+            {% endfor %}
+        </ul>
         {% endif %}
-        <a class="teaser-link" href="{{ panel.report_summary.lead_link | default(panel.report_summary.link) }}">Read the Round {{ panel.report_summary.round }} report ↗</a>
     </div>
     {% endif %}
 </div>

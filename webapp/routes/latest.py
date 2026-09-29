@@ -545,6 +545,90 @@ def _echo_chart_state(ctx: dict, metric: str, scale: str, player: str, rewind, t
     return ctx
 
 
+def _round_scoreboard_html(teg_num: int, round_num: int, metric: str = "Sc",
+                           total: str = "round", detail: bool = True) -> str:
+    """The Scoreboards tab's ranked round table, as HTML. Shared with the
+    Contents page's in-progress "Round N" pane so both show the same table;
+    that pane passes ``detail=False`` since the expand-row script lives on
+    /latest-round only."""
+    friendly = dict(METRIC_TABS)[metric]
+    teg_str = f"TEG {teg_num}"
+    try:
+        score_data = cached_load_all_data()
+        score_data = score_data[(score_data['TEG'] == teg_str) & (score_data['Round'] == round_num)]
+        grouped = score_data.groupby('Pl', sort=False)
+        if total == "teg":
+            # Cumulative TEG total through the end of THIS round --
+            # {metric} Cum TEG is already a running total, correct as
+            # of each row, so the last row (by Hole order) per player
+            # is that player's tournament standing entering the next
+            # round. Out/In stay round-based below regardless of mode
+            # (within-round halves, not a cumulative concept).
+            teg_cum_col = f'{metric} Cum TEG'
+            values = (score_data.sort_values('Hole').groupby('Pl', sort=False)[teg_cum_col]
+                      .last().rename('Total').to_frame())
+            # De-emphasised secondary column alongside the primary
+            # TEG-cumulative Total, so the round score isn't lost
+            # entirely when the toggle is in TEG mode.
+            values['RoundTotal'] = grouped[metric].sum()
+        else:
+            values = grouped[metric].sum().rename('Total').to_frame()
+        values['Out'] = score_data[score_data['Hole'] < 10].groupby('Pl')[metric].sum()
+        values['In'] = score_data[score_data['Hole'] >= 10].groupby('Pl')[metric].sum()
+        values = values.reset_index()
+        ascending = metric != 'Stableford'
+        values = values.sort_values('Total', ascending=ascending).reset_index(drop=True)
+        values.insert(0, 'Rank', values['Total'].rank(method='min', ascending=ascending).astype(int))
+        values['Player'] = values['Pl'].map(lambda code: get_player_name(str(code)))
+        format_cols = ['Out', 'In', 'Total'] + (['RoundTotal'] if total == 'teg' else [])
+        for col in format_cols:
+            values[col] = values[col].apply(lambda v: _fmt_record_value(v, metric))
+
+        if total == "round":
+            # Personal-rank / all-time-rank context, reusing the same
+            # ranked-round-data helper the pre-mobile-rollout scoreboard
+            # table used (prepare_round_context_display) rather than
+            # recomputing Rank_within_player_*/Rank_within_all_* by hand.
+            # Its output keys on 'Player' (display name), which the
+            # aggregated round data agrees on for the same TEG/round.
+            # Skipped entirely in TEG-total mode -- these columns are
+            # inherently round-based and don't make sense next to a
+            # TEG-total column, so they must not exist as columns at
+            # all there (not just be blanked).
+            try:
+                ranked = cached_ranked_round_data()
+                ctx_df = prepare_round_context_display(ranked, teg_str, round_num, metric, friendly)
+                rank_ctx = ctx_df[['Player', 'Pl rank', 'All time rank']].rename(
+                    columns={'Pl rank': 'Personal rank', 'All time rank': 'All-time rank'})
+                values = values.merge(rank_ctx, on='Player', how='left')
+                # Tighten "n / N" -> "n/N" -- cosmetic only, saves the
+                # width these two columns can't spare at phone widths.
+                for col in ('Personal rank', 'All-time rank'):
+                    values[col] = values[col].astype(str).str.replace(' / ', '/', regex=False)
+            except Exception:
+                logger.exception("_latest_round_tab_context: personal/all-time rank context failed")
+                values['Personal rank'] = ''
+                values['All-time rank'] = ''
+
+        # Per-hole score mix for the expandable detail row -- reuses
+        # the Scoring tab's own field selection (GrossVP vs-par
+        # notation, or Stableford point counts; Sc/NetVP have no
+        # separate per-hole formatting elsewhere in this file, so
+        # they fall back to the same GrossVP-style mix).
+        mix_field = 'Stableford' if metric == 'Stableford' else 'GrossVP'
+        mix_counts = count_scores_by_player(score_data, mix_field)
+
+        total_label = "Round" if total == "round" else "TEG"
+        if not detail:
+            mix_counts = mix_field = None
+        return _build_scoreboard_table(
+            values, mix_counts, mix_field,
+            uid_prefix=f"lr-rank-{teg_num}-{round_num}", total_label=total_label)
+    except Exception:
+        logger.exception("_latest_round_tab_context: scoreboard table build failed")
+        return "<p class='text-muted text-sm'>No data.</p>"
+
+
 def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                               score_type: str = "GrossVP", metric: str = "Sc",
                               display_mode: str = "count", scale: str = "adjusted",
@@ -581,78 +665,7 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
             rewind = 18
             friendly = dict(METRIC_TABS)[metric]
             teg_str = f"TEG {teg_num}"
-            try:
-                score_data = cached_load_all_data()
-                score_data = score_data[(score_data['TEG'] == teg_str) & (score_data['Round'] == round_num)]
-                grouped = score_data.groupby('Pl', sort=False)
-                if total == "teg":
-                    # Cumulative TEG total through the end of THIS round --
-                    # {metric} Cum TEG is already a running total, correct as
-                    # of each row, so the last row (by Hole order) per player
-                    # is that player's tournament standing entering the next
-                    # round. Out/In stay round-based below regardless of mode
-                    # (within-round halves, not a cumulative concept).
-                    teg_cum_col = f'{metric} Cum TEG'
-                    values = (score_data.sort_values('Hole').groupby('Pl', sort=False)[teg_cum_col]
-                              .last().rename('Total').to_frame())
-                    # De-emphasised secondary column alongside the primary
-                    # TEG-cumulative Total, so the round score isn't lost
-                    # entirely when the toggle is in TEG mode.
-                    values['RoundTotal'] = grouped[metric].sum()
-                else:
-                    values = grouped[metric].sum().rename('Total').to_frame()
-                values['Out'] = score_data[score_data['Hole'] < 10].groupby('Pl')[metric].sum()
-                values['In'] = score_data[score_data['Hole'] >= 10].groupby('Pl')[metric].sum()
-                values = values.reset_index()
-                ascending = metric != 'Stableford'
-                values = values.sort_values('Total', ascending=ascending).reset_index(drop=True)
-                values.insert(0, 'Rank', values['Total'].rank(method='min', ascending=ascending).astype(int))
-                values['Player'] = values['Pl'].map(lambda code: get_player_name(str(code)))
-                format_cols = ['Out', 'In', 'Total'] + (['RoundTotal'] if total == 'teg' else [])
-                for col in format_cols:
-                    values[col] = values[col].apply(lambda v: _fmt_record_value(v, metric))
-
-                if total == "round":
-                    # Personal-rank / all-time-rank context, reusing the same
-                    # ranked-round-data helper the pre-mobile-rollout scoreboard
-                    # table used (prepare_round_context_display) rather than
-                    # recomputing Rank_within_player_*/Rank_within_all_* by hand.
-                    # Its output keys on 'Player' (display name), which the
-                    # aggregated round data agrees on for the same TEG/round.
-                    # Skipped entirely in TEG-total mode -- these columns are
-                    # inherently round-based and don't make sense next to a
-                    # TEG-total column, so they must not exist as columns at
-                    # all there (not just be blanked).
-                    try:
-                        ranked = cached_ranked_round_data()
-                        ctx_df = prepare_round_context_display(ranked, teg_str, round_num, metric, friendly)
-                        rank_ctx = ctx_df[['Player', 'Pl rank', 'All time rank']].rename(
-                            columns={'Pl rank': 'Personal rank', 'All time rank': 'All-time rank'})
-                        values = values.merge(rank_ctx, on='Player', how='left')
-                        # Tighten "n / N" -> "n/N" -- cosmetic only, saves the
-                        # width these two columns can't spare at phone widths.
-                        for col in ('Personal rank', 'All-time rank'):
-                            values[col] = values[col].astype(str).str.replace(' / ', '/', regex=False)
-                    except Exception:
-                        logger.exception("_latest_round_tab_context: personal/all-time rank context failed")
-                        values['Personal rank'] = ''
-                        values['All-time rank'] = ''
-
-                # Per-hole score mix for the expandable detail row -- reuses
-                # the Scoring tab's own field selection (GrossVP vs-par
-                # notation, or Stableford point counts; Sc/NetVP have no
-                # separate per-hole formatting elsewhere in this file, so
-                # they fall back to the same GrossVP-style mix).
-                mix_field = 'Stableford' if metric == 'Stableford' else 'GrossVP'
-                mix_counts = count_scores_by_player(score_data, mix_field)
-
-                total_label = "Round" if total == "round" else "TEG"
-                table_html = _build_scoreboard_table(
-                    values, mix_counts, mix_field,
-                    uid_prefix=f"lr-rank-{teg_num}-{round_num}", total_label=total_label)
-            except Exception:
-                logger.exception("_latest_round_tab_context: scoreboard table build failed")
-                table_html = "<p class='text-muted text-sm'>No data.</p>"
+            table_html = _round_scoreboard_html(teg_num, round_num, metric, total)
             if total == "teg":
                 chart_title = f"TEG {teg_num} cumulative {friendly}"
             else:
@@ -1203,42 +1216,47 @@ def latest_teg_tab(request: Request, teg: int = Query(...), tab: str = Query("ag
 
 # --- /handicaps ---------------------------------------------------------------
 
+def _current_handicap_tiles(next_tegnum: int) -> dict:
+    """Current handicaps, lowest first, as tile/list rows. Shared with the
+    Contents page's in-progress "Handicaps" pane."""
+    next_teg_str = f"TEG {next_tegnum}"
+    # current_hc columns: 'Handicap' (player name), '<next_teg_str>' (value), 'Change'.
+    current_hc, were_calculated = get_current_handicaps_formatted(next_tegnum - 1, next_tegnum)
+    current_hc = current_hc.sort_values(by=next_teg_str, ascending=True).reset_index(drop=True)
+
+    # --- Metric tiles: name / handicap / change (down = good → green). ---
+    tiles = []
+    for _, row in current_hc.iterrows():
+        change = int(row["Change"])
+        if change < 0:
+            delta_dir, arrow = "down", "↓"
+        elif change > 0:
+            delta_dir, arrow = "up", "↑"
+        else:
+            delta_dir, arrow = "none", ""
+        # First name proper case, surname(s) in caps.
+        parts = str(row["Handicap"]).split(" ")
+        name_parts = [parts[0]] + [p.upper() for p in parts[1:]] if parts else parts
+        tiles.append({
+            "name_parts": name_parts,
+            "value": int(row[next_teg_str]),
+            "delta_dir": delta_dir,
+            "delta_arrow": arrow,
+            "delta_text": str(change) if change != 0 else "–",
+        })
+
+    return {
+        "is_draft": were_calculated,
+        "next_teg_label": f"{next_teg_str} Handicaps" + (" (Draft)" if were_calculated else ""),
+        "tiles": tiles,
+    }
+
+
 @router.get("/handicaps")
 def handicaps_page(request: Request):
     try:
         last_completed, next_tegnum, in_progress = get_next_teg_and_check_if_in_progress_fast()
-        next_teg_str = f"TEG {next_tegnum}"
-        # current_hc columns: 'Handicap' (player name), '<next_teg_str>' (value), 'Change'.
-        current_hc, were_calculated = get_current_handicaps_formatted(next_tegnum - 1, next_tegnum)
-        current_hc = current_hc.sort_values(by=next_teg_str, ascending=True).reset_index(drop=True)
-
-        # --- Metric tiles: name / handicap / change (down = good → green). ---
-        tiles = []
-        for _, row in current_hc.iterrows():
-            change = int(row["Change"])
-            if change < 0:
-                delta_dir, arrow = "down", "↓"
-            elif change > 0:
-                delta_dir, arrow = "up", "↑"
-            else:
-                delta_dir, arrow = "none", ""
-            # First name proper case, surname(s) in caps.
-            parts = str(row["Handicap"]).split(" ")
-            name_parts = [parts[0]] + [p.upper() for p in parts[1:]] if parts else parts
-            tiles.append({
-                "name_parts": name_parts,
-                "value": int(row[next_teg_str]),
-                "delta_dir": delta_dir,
-                "delta_arrow": arrow,
-                "delta_text": str(change) if change != 0 else "–",
-            })
-
-        ctx = {
-            "is_draft": were_calculated,
-            "next_teg_label": f"{next_teg_str} Handicaps" + (" (Draft)" if were_calculated else ""),
-            "tiles": tiles,
-            "draft_html": None,
-        }
+        ctx = {**_current_handicap_tiles(next_tegnum), "draft_html": None}
 
         # --- Handicap history (initials, oldest-first, '-' for 0/blank). ---
         hc_df = read_file(HANDICAPS_CSV)

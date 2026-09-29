@@ -1,0 +1,50 @@
+{# In-progress Contents left column. The view tabs swap this
+   whole block in place via GET /contents/pane (outerHTML), so the active
+   state comes back with the content and needs no JS. Each pane ends with a
+   link to its full page. #}
+<div class="surface surface-open contents-pane" id="contents-pane">
+    {# Site control patterns: .tab-underline switches views, .segmented
+       switches measures (base-vars.css, C3). #}
+    <div class="pane-switch" role="group" aria-label="Show">
+        {% for key, label in [("standings", "Standings"), ("round", "Round " ~ rounds_played), ("handicaps", "Handicaps")] %}
+        <button type="button" class="tab-underline{% if key == pane %} tab-underline--active{% endif %}"
+                aria-pressed="{{ 'true' if key == pane else 'false' }}"
+                hx-get="/contents/pane?view={{ key }}&teg={{ teg_num }}&rounds={{ rounds_played }}"
+                hx-target="#contents-pane" hx-swap="outerHTML">{{ label }}</button>
+        {% endfor %}
+    </div>
+
+    {% if pane == "round" %}
+    <div class="segmented metric-switch" role="group" aria-label="Score type">
+        {% for key, label in panel.metrics %}
+        <button type="button" class="seg-option"
+                aria-pressed="{{ 'true' if key == panel.metric else 'false' }}"
+                hx-get="/contents/pane?view=round&metric={{ key }}&teg={{ teg_num }}&rounds={{ rounds_played }}"
+                hx-target="#contents-pane" hx-swap="outerHTML">{{ label }}</button>
+        {% endfor %}
+    </div>
+    <div class="pane-body pane-round" style="overflow-x:auto;">{{ panel.round_html | safe }}</div>
+    <a class="teaser-link pane-link" href="/latest-round?teg={{ teg_num }}&round={{ rounds_played }}&metric={{ panel.metric }}">Round {{ rounds_played }} in context ↗</a>
+
+    {% elif pane == "handicaps" %}
+    <div class="pane-body">
+        {% if panel.is_draft %}<p class="gross-line">Draft, subject to final review</p>{% endif %}
+        <table class="hc-list">
+            {% for t in panel.tiles %}
+            <tr>
+                <td class="hc-list-name">{{ t.name_parts | join(' ') }}</td>
+                <td class="hc-list-value">{{ t.value }}</td>
+                <td class="hc-list-delta hc-delta--{{ t.delta_dir }}">{{ t.delta_arrow }} {{ t.delta_text }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <a class="teaser-link pane-link" href="/handicaps">{{ panel.next_teg_label | replace(" (Draft)", "") }} ↗</a>
+
+    {% else %}
+    <div class="pane-body">
+        <div style="overflow-x:auto;">{% with standings = panel.standings %}{% include "partials/_standings_table.html" %}{% endwith %}</div>
+    </div>
+    <a class="teaser-link pane-link" href="/leaderboard?teg={{ teg_num }}">Full leaderboard ↗</a>
+    {% endif %}
+</div>

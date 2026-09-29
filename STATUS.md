@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-29 (Open in-progress Contents panel)
+**Last updated:** 2026-09-29 (In-progress Contents pane switcher)
+
+## 2026-09-29 — In-progress Contents pane switcher
+
+The in-progress Contents left column now switches in place between Standings, the latest Round and Handicaps. It uses the site's own controls: underline tabs for the view and the joined segmented bar for score type, so both read as switchable. Round shows /latest-round's scoreboard with personal and all-time rank, no expand rows. A Points / Gross / Score / Net switch picks the score type (Points by default), and the onward link keeps it. Handicaps shows /handicaps' phone list. Each pane links on to its full page. The old button row beneath the panel is gone: it looked like pane tabs but opened pages. The round report column now lists all its headlines, like the completed state, not just the lead. The standings pane drops its separate Green Jacket line; the Gross column covers it.
 
 ## 2026-09-29 — Open in-progress Contents panel
 

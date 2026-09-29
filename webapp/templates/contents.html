@@ -298,6 +298,62 @@
         color: var(--green);
         margin: 0 0 var(--sp-4, 14px) 0;
     }
+    /* In-progress pane: the site's view tabs and measure control (base-vars
+       .tab-underline / .segmented). No bar rule: it stacked with the table's
+       rules. The active underline is flush with the column edge. */
+    .pane-switch {
+        display: flex; flex-wrap: wrap; gap: 0 var(--sp-5, 24px);
+        margin: 0 0 var(--sp-3, 12px) 0;
+    }
+    /* Idle tabs: grey with a dotted underline (echoing the dotted lead
+       rules) so they read as clickable; active is the solid green bar. */
+    .pane-switch .tab-underline { padding: 0 0 4px 0; }
+    .pane-switch .tab-underline:not(.tab-underline--active) {
+        color: var(--text-muted);
+        border-bottom: 1px dotted var(--text-muted);
+        padding-bottom: 5px;
+    }
+    .pane-switch .tab-underline:not(.tab-underline--active):hover {
+        color: var(--text-primary);
+        border-bottom-color: var(--text-primary);
+    }
+    /* Compact form of .segmented: a quiet filter, not a primary control. */
+    .metric-switch { align-self: flex-start; margin: 0 0 var(--sp-2, 8px) 0; }
+    .metric-switch .seg-option { font-size: var(--fs-200, 12px); padding: 3px 10px; min-height: 26px; }
+    @media (max-width: 640px), (pointer: coarse) {
+        .metric-switch .seg-option { font-size: var(--fs-200, 12px); padding: 6px 12px; min-height: 32px; }
+    }
+    .contents-pane .pane-body { flex: 1; }
+    .contents-pane.htmx-request .pane-body { opacity: 0.5; transition: opacity 150ms; }
+    .pane-link { display: inline-block; margin-top: var(--sp-4, 16px); }
+    /* /latest-round's scoreboard, fitted to half a panel. Its own compact
+       rules are phone-only and scoped to that page, so size it here. */
+    .pane-round table.leaderboard { width: 100%; table-layout: fixed; border-collapse: collapse; }
+    .pane-round .lr-rank-col { width: 9%; }
+    .pane-round .lr-player-col { width: 37%; }
+    .pane-round .lr-total-col { width: 16%; }
+    .pane-round .lr-personal-col, .pane-round .lr-alltime-col { width: 19%; }
+    .pane-round table.leaderboard th { white-space: normal; line-height: 1.2; vertical-align: bottom; }
+    .pane-round table.leaderboard th:not(:nth-child(2)), .pane-round table.leaderboard td:not(:nth-child(2)) { text-align: center; }
+    .pane-round td.lr-total-cell { font-weight: 700; }
+    .pane-round td.lr-rank-context { color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+    .pane-round .lr-rank-value small { color: var(--text-muted); font-size: .78em; }
+    .pane-round table.leaderboard tbody tr.rank-1 { background-color: var(--leader-tint); }
+    .pane-round tr.rank-1 td { font-weight: 700; }
+    @media (max-width: 640px) {
+        .pane-round .lr-rank-col { width: 8%; }
+        .pane-round .lr-player-col { width: 36%; }
+        .pane-round .lr-total-col { width: 14%; }
+        .pane-round .lr-personal-col, .pane-round .lr-alltime-col { width: 21%; }
+        .pane-round table.leaderboard th { font-size: 11px; letter-spacing: .03em; text-transform: uppercase; padding-inline: 2px; }
+        .pane-round table.leaderboard td { padding-inline: 2px; }
+    }
+    /* /handicaps' phone list, shown at every width here. */
+    .contents-pane .hc-list { display: table; width: 100%; border-collapse: collapse; }
+    .contents-pane .hc-list td { padding: 10px 4px; vertical-align: middle; }
+    .contents-pane .hc-list-name { font-size: 0.9375rem; color: var(--text-primary); }
+    .contents-pane .hc-list-value { width: 20%; text-align: right; font-family: var(--font-table), sans-serif; font-size: 1.0625rem; font-weight: 700; color: var(--text-primary); }
+    .contents-pane .hc-list-delta { width: 30%; text-align: right; font-family: var(--font-table), sans-serif; font-size: 0.8125rem; font-weight: 600; background: none; padding: 10px 4px; border-radius: 0; }
     .gross-line {
         font-family: var(--font-sans);
         font-size: var(--fs-200, 12px);
@@ -454,16 +510,10 @@
         <div hx-get="/contents/panel?teg={{ state.teg_num }}&state=in_progress&rounds={{ state.rounds_played }}" hx-trigger="load" hx-swap="outerHTML">
             <div class="panel-grid two-col" id="contents-panel" aria-busy="true">
                 <div class="surface surface-open">
-                    <p class="standings-heading">Standings after Round {{ state.rounds_played }}</p>
+                    <p class="standings-heading">Standings</p>
                     <p class="gross-line">Loading…</p>
                 </div>
             </div>
-        </div>
-
-        <div class="state-actions">
-            <a class="state-btn state-btn-primary" href="/leaderboard?teg={{ state.teg_num }}">Latest Leaderboard</a>
-            <a class="state-link" href="/latest-round">Latest Round in context</a>
-            <a class="state-link" href="/handicaps">{{ state.teg_label }} Handicaps</a>
         </div>
 
     {% elif state.state == "complete" %}

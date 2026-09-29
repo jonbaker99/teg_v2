@@ -21,6 +21,8 @@ from webapp.deps import (
     get_tournament_state,
 )
 from webapp.routes.history import _standings_rows
+from teg_analysis.analysis.handicaps import get_next_teg_and_check_if_in_progress_fast
+from webapp.routes.latest import _current_handicap_tiles, _round_scoreboard_html
 from teg_analysis.reporting.newspaper_edition import available_rounds, get_edition_summary
 
 router = APIRouter()
@@ -119,19 +121,35 @@ def _standings_table_context(teg_num: int, honours_by_player: dict[str, tuple[st
     return {"standings": standings}
 
 
+# In-progress left-column panes, switched in place by /contents/pane.
+PANES = ("standings", "round", "handicaps")
+# Round-pane score types: Stableford first, since it decides the TEG.
+ROUND_METRICS = (("Stableford", "Points"), ("GrossVP", "Gross"), ("Sc", "Score"), ("NetVP", "Net"))
+
+
+def _standings_pane(teg_num: int) -> dict:
+    """Standings (net, with a Gross column -- no separate gross line)."""
+    return _standings_table_context(teg_num)
+
+
+def _pane_context(view: str, teg_num: int, rounds_played: int, metric: str = "Stableford") -> dict:
+    """One in-progress pane: standings, the latest round's scoreboard (the
+    /latest-round default table) or current handicaps (the /handicaps
+    phone list). Each links on to its full page."""
+    if view == "round":
+        metric = metric if metric in dict(ROUND_METRICS) else "Stableford"
+        return {"round_html": _round_scoreboard_html(teg_num, rounds_played, metric, detail=False),
+                "metric": metric, "metrics": ROUND_METRICS}
+    if view == "handicaps":
+        # Same TEG choice as /handicaps itself, so the two never disagree.
+        _last, next_tegnum, _in_progress = get_next_teg_and_check_if_in_progress_fast()
+        return _current_handicap_tiles(next_tegnum)
+    return _standings_pane(teg_num)
+
+
 def _in_progress_panel(teg_num: int) -> dict:
-    """In-progress rich content: standings + a compact gross-competition
-    line + a round-report teaser when one exists."""
-    rd = cached_round_data()
-    teg_rd = rd[rd['TEGNum'] == teg_num]
-
-    gross_lb = create_leaderboard(teg_rd, 'GrossVP', ascending=True)
-    gross_leader = None
-    if not gross_lb.empty:
-        top_total = gross_lb.iloc[0]['Total']
-        names = gross_lb.loc[gross_lb['Total'] == top_total, PLAYER_COLUMN].tolist()
-        gross_leader = {"names": names, "total": format_value(top_total, 'GrossVP')}
-
+    """In-progress rich content: the standings pane + a round-report teaser
+    when one exists."""
     report_summary = None
     rounds = available_rounds(teg_num)
     if rounds:
@@ -140,9 +158,8 @@ def _in_progress_panel(teg_num: int) -> dict:
     return {
         "state": "in_progress",
         "teg_num": teg_num,
-        "gross_leader": gross_leader,
         "report_summary": report_summary,
-        **_standings_table_context(teg_num),
+        **_standings_pane(teg_num),
     }
 
 
@@ -176,4 +193,19 @@ def contents_panel(request: Request, teg: int = Query(...), state: str = Query(.
         "request": request,
         "panel": panel,
         "rounds_played": rounds,
+    })
+
+
+@router.get("/contents/pane")
+def contents_pane(request: Request, teg: int = Query(...), rounds: int = Query(...),
+                  view: str = Query("standings"), metric: str = Query("Stableford")):
+    # In-progress only: swaps the left column between standings, the latest
+    # round and handicaps without leaving Contents.
+    view = view if view in PANES else "standings"
+    return templates.TemplateResponse("partials/_contents_pane.html", {
+        "request": request,
+        "pane": view,
+        "teg_num": teg,
+        "rounds_played": rounds,
+        "panel": _pane_context(view, teg, rounds, metric),
     })
