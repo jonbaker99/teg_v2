@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-27 (Latest TEG aggregate headers)
+**Last updated:** 2026-09-29 (Lighter completed Contents panel)
+
+## 2026-09-29 — Lighter completed Contents panel
+
+The completed-TEG Contents panel drops the box around each column. One rule splits standings from headlines: vertical side by side, horizontal when stacked. Dotted rules frame the lead headline, whose kicker now carries a small trophy. Separators use slashes, and the location and date line uses a full stop. Trophy and Green Jacket icons are brighter.
 
 ## 2026-09-27 — Latest TEG aggregate headers
 
