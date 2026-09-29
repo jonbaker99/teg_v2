@@ -123,6 +123,8 @@ def _standings_table_context(teg_num: int, honours_by_player: dict[str, tuple[st
 
 # In-progress left-column panes, switched in place by /contents/pane.
 PANES = ("standings", "round", "handicaps")
+# Round-pane score types: Stableford first, since it decides the TEG.
+ROUND_METRICS = (("Stableford", "Points"), ("GrossVP", "Gross"), ("Sc", "Score"), ("NetVP", "Net"))
 
 
 def _standings_pane(teg_num: int) -> dict:
@@ -139,12 +141,14 @@ def _standings_pane(teg_num: int) -> dict:
     return {"gross_leader": gross_leader, **_standings_table_context(teg_num)}
 
 
-def _pane_context(view: str, teg_num: int, rounds_played: int) -> dict:
+def _pane_context(view: str, teg_num: int, rounds_played: int, metric: str = "Stableford") -> dict:
     """One in-progress pane: standings, the latest round's scoreboard (the
     /latest-round default table) or current handicaps (the /handicaps
     phone list). Each links on to its full page."""
     if view == "round":
-        return {"round_html": _round_scoreboard_html(teg_num, rounds_played, detail=False)}
+        metric = metric if metric in dict(ROUND_METRICS) else "Stableford"
+        return {"round_html": _round_scoreboard_html(teg_num, rounds_played, metric, detail=False),
+                "metric": metric, "metrics": ROUND_METRICS}
     if view == "handicaps":
         # Same TEG choice as /handicaps itself, so the two never disagree.
         _last, next_tegnum, _in_progress = get_next_teg_and_check_if_in_progress_fast()
@@ -203,7 +207,7 @@ def contents_panel(request: Request, teg: int = Query(...), state: str = Query(.
 
 @router.get("/contents/pane")
 def contents_pane(request: Request, teg: int = Query(...), rounds: int = Query(...),
-                  view: str = Query("standings")):
+                  view: str = Query("standings"), metric: str = Query("Stableford")):
     # In-progress only: swaps the left column between standings, the latest
     # round and handicaps without leaving Contents.
     view = view if view in PANES else "standings"
@@ -212,5 +216,5 @@ def contents_pane(request: Request, teg: int = Query(...), rounds: int = Query(.
         "pane": view,
         "teg_num": teg,
         "rounds_played": rounds,
-        "panel": _pane_context(view, teg, rounds),
+        "panel": _pane_context(view, teg, rounds, metric),
     })

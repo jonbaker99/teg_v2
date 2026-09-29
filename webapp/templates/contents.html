@@ -319,6 +319,15 @@
     .pane-tab:hover { color: var(--text-primary); }
     .pane-tab.is-active { color: var(--green); text-decoration-color: currentColor; cursor: default; }
     .pane-sep { font-family: var(--font-sans); font-size: var(--fs-200, 12px); color: var(--text-muted); }
+    /* Round-pane score type: a quieter second row -- sentence case, ink
+       when active -- so it reads as a filter under the pane switcher. */
+    .metric-switch { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px var(--sp-2, 8px); margin: 0 0 var(--sp-2, 8px) 0; }
+    .metric-tab {
+        font-family: var(--font-sans); font-size: var(--fs-300, 14px);
+        color: var(--text-muted); background: none; border: 0; padding: 0; cursor: pointer;
+    }
+    .metric-tab:hover { color: var(--text-primary); }
+    .metric-tab.is-active { color: var(--text-primary); font-weight: 600; cursor: default; }
     .contents-pane .pane-body { flex: 1; }
     .contents-pane.htmx-request .pane-body { opacity: 0.5; transition: opacity 150ms; }
     .pane-link { display: inline-block; margin-top: var(--sp-4, 16px); }
@@ -334,7 +343,7 @@
     .pane-round td.lr-total-cell { font-weight: 700; }
     .pane-round td.lr-rank-context { color: var(--text-secondary); font-variant-numeric: tabular-nums; }
     .pane-round .lr-rank-value small { color: var(--text-muted); font-size: .78em; }
-    .pane-round tr.rank-1 { background-color: var(--leader-tint); }
+    .pane-round table.leaderboard tbody tr.rank-1 { background-color: var(--leader-tint); }
     .pane-round tr.rank-1 td { font-weight: 700; }
     @media (max-width: 640px) {
         .pane-round .lr-rank-col { width: 8%; }

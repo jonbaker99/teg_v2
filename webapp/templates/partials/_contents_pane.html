@@ -14,8 +14,17 @@
     </div>
 
     {% if pane == "round" %}
+    <div class="metric-switch" role="group" aria-label="Score type">
+        {% for key, label in panel.metrics %}
+        {% if not loop.first %}<span class="pane-sep" aria-hidden="true">/</span>{% endif %}
+        <button type="button" class="metric-tab{% if key == panel.metric %} is-active{% endif %}"
+                aria-pressed="{{ 'true' if key == panel.metric else 'false' }}"
+                hx-get="/contents/pane?view=round&metric={{ key }}&teg={{ teg_num }}&rounds={{ rounds_played }}"
+                hx-target="#contents-pane" hx-swap="outerHTML">{{ label }}</button>
+        {% endfor %}
+    </div>
     <div class="pane-body pane-round" style="overflow-x:auto;">{{ panel.round_html | safe }}</div>
-    <a class="teaser-link pane-link" href="/latest-round?teg={{ teg_num }}&round={{ rounds_played }}">Round {{ rounds_played }} in context ↗</a>
+    <a class="teaser-link pane-link" href="/latest-round?teg={{ teg_num }}&round={{ rounds_played }}&metric={{ panel.metric }}">Round {{ rounds_played }} in context ↗</a>
 
     {% elif pane == "handicaps" %}
     <div class="pane-body">

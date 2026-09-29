@@ -1481,19 +1481,33 @@ def test_contents_pane_switches_in_place(client):
     # active state arrives with the content. Unknown views fall back.
     for view, marker, link in (
         ("standings", ">Points</th>", 'href="/leaderboard?teg=18"'),
-        ("round", "Personal rank", 'href="/latest-round?teg=18&round=4"'),
+        ("round", "Personal rank", 'href="/latest-round?teg=18&round=4&metric=Stableford"'),
         ("handicaps", 'class="hc-list"', 'href="/handicaps"'),
     ):
         resp = client.get("/contents/pane", params={"teg": 18, "rounds": 4, "view": view})
         _assert_ok_no_error(resp)
         assert marker in resp.text and link in resp.text, view
-        assert resp.text.count('aria-pressed="true"') == 1
+        assert resp.text.count('class="pane-tab is-active"') == 1
         assert 'hx-target="#contents-pane" hx-swap="outerHTML"' in resp.text
     # No expand toggle: its script lives on /latest-round only.
     resp = client.get("/contents/pane", params={"teg": 18, "rounds": 4, "view": "round"})
     assert "data-lr-rank-toggle" not in resp.text
     resp = client.get("/contents/pane", params={"teg": 18, "rounds": 4, "view": "bogus"})
     assert ">Points</th>" in resp.text
+
+
+def test_contents_round_pane_score_type(client):
+    # Round pane defaults to Stableford; its score-type switch re-requests
+    # the pane, and the onward link carries the chosen metric.
+    resp = client.get("/contents/pane", params={"teg": 18, "rounds": 4, "view": "round"})
+    _assert_ok_no_error(resp)
+    assert 'class="metric-tab is-active"\n                aria-pressed="true"\n                hx-get="/contents/pane?view=round&metric=Stableford' in resp.text
+    assert "&metric=Stableford\">Round 4 in context" in resp.text
+    resp = client.get("/contents/pane", params={"teg": 18, "rounds": 4, "view": "round", "metric": "GrossVP"})
+    assert "view=round&metric=GrossVP&teg=18&rounds=4\"\n                hx-target" in resp.text
+    assert "&metric=GrossVP\">Round 4 in context" in resp.text
+    resp = client.get("/contents/pane", params={"teg": 18, "rounds": 4, "view": "round", "metric": "bogus"})
+    assert "&metric=Stableford\">Round 4 in context" in resp.text
 
 
 def test_contents_sitemap_is_collapsible_and_closed_by_default(client):
