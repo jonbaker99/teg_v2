@@ -113,6 +113,12 @@ def get_current_handicaps_formatted(last_completed_teg: int, next_teg: int):
         current_hc = hc_data[hc_data['TEG'] == next_teg_str]
 
     current_hc = current_hc.dropna(subset=['HC'])
+    # Non-players keep a saved handicap (36-point rule), so list only the
+    # players the TEG's roster marks as playing, when it has one.
+    from teg_analysis.analysis.teg_setup import playing_codes
+    playing = playing_codes(next_teg)
+    if playing is not None:
+        current_hc = current_hc[current_hc['Pl'].isin(playing)]
     merged = current_hc.merge(previous_hc[['Pl', 'HC']], on='Pl', how='left', suffixes=('_current', '_previous'))
     merged['HC_previous'] = merged['HC_previous'].fillna(merged['HC_current'])
     merged['Change'] = merged['HC_current'] - merged['HC_previous']

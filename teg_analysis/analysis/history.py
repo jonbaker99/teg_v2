@@ -327,6 +327,10 @@ def update_winners_cache(all_data: pd.DataFrame, defer_github: bool = False):
 
     completed = read_file('data/completed_tegs.csv')
     completed_nums = ({int(n) for n in completed['TEGNum']} - {50}) if not completed.empty else set()
+    if not completed_nums:
+        # An empty status file means something upstream broke, not that
+        # history vanished: never let it wipe every winners row.
+        raise ValueError("completed_tegs.csv lists no completed TEGs; refusing to rewrite teg_winners.csv")
 
     try:
         cached = read_file(WINNERS_FILE)
@@ -338,6 +342,8 @@ def update_winners_cache(all_data: pd.DataFrame, defer_github: bool = False):
     keep = cached_nums.isin(completed_nums)
     changed = not keep.all()
     kept = cached[keep]
+    for teg in cached.loc[~keep, 'TEG']:
+        logger.warning("Dropping winners row for %s: no longer complete", teg)
     missing = sorted(completed_nums - {n for n in cached_nums[keep] if n is not None})
 
     new_rows = []

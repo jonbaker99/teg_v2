@@ -19,9 +19,13 @@ Not every player plays every TEG. Two files hold that:
                                    its teg_rosters.csv rows (one GitHub commit)
 """
 
+import logging
+
 import pandas as pd
 
 from teg_analysis.constants import HANDICAPS_CSV
+
+logger = logging.getLogger(__name__)
 
 TEG_ROSTERS_CSV = "data/teg_rosters.csv"  # TEGNum,Pl,Playing
 
@@ -35,23 +39,44 @@ def _read_handicaps_raw() -> pd.DataFrame:
     return read_file(HANDICAPS_CSV)
 
 
-def _read_rosters_raw() -> pd.DataFrame:
-    """teg_rosters.csv, or an empty frame if missing/unreadable.
+def _read_rosters_raw(strict: bool = False) -> pd.DataFrame:
+    """teg_rosters.csv, or an empty frame if the file doesn't exist yet.
 
-    The Railway volume won't have the file until it's synced, so callers treat
-    "empty" as "use the legacy bool(handicap) convention".
+    Callers treat "empty" as "use the legacy bool(handicap) convention". Any
+    other failure (a GitHub fetch error, bad columns) is logged and also falls
+    back when ``strict`` is False (readers), but raises when ``strict`` is True
+    (``save_teg_roster``), since writing back an empty frame would delete every
+    other TEG's roster rows.
     """
     from teg_analysis.io import read_file
 
     try:
         df = read_file(TEG_ROSTERS_CSV)
-        if not {"TEGNum", "Pl", "Playing"} <= set(df.columns):
-            raise ValueError("unexpected columns")
-        df = df[ROSTER_COLUMNS].copy()
-        df["Playing"] = df["Playing"].map(lambda v: str(v).strip().lower() == "true")
-        return df
-    except Exception:  # noqa: BLE001 - any failure -> legacy fallback
+    except FileNotFoundError:
         return pd.DataFrame(columns=ROSTER_COLUMNS)
+    except Exception as e:  # noqa: BLE001
+        if strict:
+            raise
+        logger.warning("Could not read %s, using legacy roster rule: %s", TEG_ROSTERS_CSV, e)
+        return pd.DataFrame(columns=ROSTER_COLUMNS)
+    if not {"TEGNum", "Pl", "Playing"} <= set(df.columns):
+        if strict:
+            raise ValueError(f"{TEG_ROSTERS_CSV} has unexpected columns: {list(df.columns)}")
+        logger.warning("%s has unexpected columns, using legacy roster rule", TEG_ROSTERS_CSV)
+        return pd.DataFrame(columns=ROSTER_COLUMNS)
+    df = df[ROSTER_COLUMNS].copy()
+    df["Playing"] = df["Playing"].map(lambda v: str(v).strip().lower() == "true")
+    return df
+
+
+def playing_codes(teg_num: int) -> set[str] | None:
+    """Codes marked playing for ``teg_num`` in teg_rosters.csv, or None when
+    the TEG has no roster rows (legacy: non-zero handicap = playing)."""
+    rosters = _read_rosters_raw()
+    rows = rosters[pd.to_numeric(rosters["TEGNum"], errors="coerce") == teg_num]
+    if rows.empty:
+        return None
+    return set(rows.loc[rows["Playing"], "Pl"])
 
 
 def get_roster_players() -> list[str]:
@@ -189,7 +214,9 @@ def save_teg_roster(teg_num: int, players: list[dict]) -> dict:
         code = p.get("code", p.get("Code"))
         playing = bool(p.get("playing", p.get("Playing")))
         hc = p.get("handicap", p.get("Handicap"))
-        if hc not in (None, "") and not pd.isna(hc):
+        given = hc not in (None, "") and not pd.isna(hc)
+        # A non-player's 0 is the legacy "not playing" marker, not a handicap.
+        if given and (playing or int(hc) != 0):
             value = int(hc)
         elif not playing:
             value = calc_for(code)
@@ -206,7 +233,7 @@ def save_teg_roster(teg_num: int, players: list[dict]) -> dict:
     else:
         raw = pd.concat([raw, pd.DataFrame([row])], ignore_index=True)
 
-    rosters = _read_rosters_raw()
+    rosters = _read_rosters_raw(strict=True)
     rosters = rosters[pd.to_numeric(rosters["TEGNum"], errors="coerce") != teg_num]
     rosters = pd.concat([rosters, pd.DataFrame(flags, columns=ROSTER_COLUMNS)], ignore_index=True)
     rosters["TEGNum"] = rosters["TEGNum"].astype(int)

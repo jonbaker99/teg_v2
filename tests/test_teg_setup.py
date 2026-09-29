@@ -305,3 +305,74 @@ def test_form_legacy_fallback_when_roster_file_has_no_rows_for_teg(monkeypatch):
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
+
+
+def test_save_non_player_legacy_zero_becomes_calculated(monkeypatch):
+    # The form prefills a confirmed legacy 0; saving it must not keep the 0.
+    import teg_analysis.io as tio
+
+    captured = {}
+    monkeypatch.setattr(tio, "read_file", _reader())
+    _capture_writes(monkeypatch, captured)
+    _calc(monkeypatch, {"GW": 17})
+
+    teg_setup.save_teg_roster(
+        19,
+        [
+            {"code": "DM", "playing": True, "handicap": "18"},
+            {"code": "GW", "playing": False, "handicap": "0"},
+        ],
+    )
+    row = captured[HANDICAPS_CSV].query("TEG == 'TEG 19'").iloc[0]
+    assert row["GW"] == 17
+
+
+def test_save_refuses_when_roster_file_unreadable(monkeypatch):
+    # A fetch error (not a missing file) must not be read as "no rosters",
+    # or the save would write back only this TEG and delete the others.
+    import teg_analysis.io as tio
+
+    captured = {}
+
+    def read(path):
+        if path == ROSTERS:
+            raise RuntimeError("GitHub rate limit")
+        return _handicaps()
+
+    monkeypatch.setattr(tio, "read_file", read)
+    _capture_writes(monkeypatch, captured)
+    _no_calc(monkeypatch)
+
+    with pytest.raises(RuntimeError):
+        teg_setup.save_teg_roster(19, [{"code": "DM", "playing": True, "handicap": "18"}])
+    assert ROSTERS not in captured
+
+
+def test_form_falls_back_when_roster_file_unreadable(monkeypatch):
+    import teg_analysis.io as tio
+
+    def read(path):
+        if path == ROSTERS:
+            raise RuntimeError("GitHub rate limit")
+        return _handicaps()
+
+    monkeypatch.setattr(tio, "read_file", read)
+    form = teg_setup.get_teg_roster_form(18)
+    by_code = {p["code"]: p for p in form["players"]}
+    assert by_code["DM"]["playing"] is True
+    assert by_code["GW"]["playing"] is False
+
+
+def test_save_on_railway_commits_both_files_once(monkeypatch):
+    import teg_analysis.io as tio
+
+    commits = []
+    monkeypatch.setattr(tio, "read_file", _reader())
+    monkeypatch.setattr(tio, "_is_railway", lambda: True)
+    monkeypatch.setattr(tio, "write_file", lambda path, df, msg="", defer_github=False: {"path": path} if defer_github else None)
+    monkeypatch.setattr(tio, "batch_commit_to_github", lambda files, msg: commits.append([f["path"] for f in files]))
+    _no_calc(monkeypatch)
+
+    teg_setup.save_teg_roster(19, [{"code": "DM", "playing": True, "handicap": "18"}])
+
+    assert commits == [[HANDICAPS_CSV, ROSTERS]]

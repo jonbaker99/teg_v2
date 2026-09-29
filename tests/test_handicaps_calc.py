@@ -71,3 +71,20 @@ def test_get_current_handicaps_formatted_survives_missing_player(monkeypatch):
     assert calculated is True
     assert list(table["Handicap"]) == ["DM"]
     assert table["TEG 20"].dtype.kind == "i"
+
+
+def test_get_current_handicaps_formatted_lists_only_roster_players(monkeypatch):
+    # SN sits TEG 19 out but keeps a saved 27 (36-point rule); the TEG 19
+    # handicap list must still leave SN out when the roster says so.
+    from teg_analysis.analysis import teg_setup
+
+    rows = [("TEG 18", "DM", 20), ("TEG 18", "SN", 27),
+            ("TEG 19", "DM", 19), ("TEG 19", "SN", 27)]
+    _patch_sources(monkeypatch, rows, [("DM", 18, 144)])
+    monkeypatch.setattr(hmod, "get_player_name", lambda code: code)
+    monkeypatch.setattr(teg_setup, "playing_codes", lambda teg: {"DM"} if teg == 19 else None)
+
+    table, calculated = hmod.get_current_handicaps_formatted(18, 19)
+
+    assert calculated is False
+    assert list(table["Handicap"]) == ["DM"]

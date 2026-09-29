@@ -88,7 +88,7 @@ def test_no_change_does_not_write(repo, monkeypatch):
     assert calls == []
 
 
-def test_defer_github_returns_file_info(repo):
+def test_defer_github_still_writes_locally(repo):
     _completed(repo, [30])
     info = update_winners_cache(_all_data(), defer_github=False)
     assert info is None
@@ -100,12 +100,23 @@ def test_defer_github_returns_file_info(repo):
 
 
 def test_teg_50_excluded(repo):
-    _completed(repo, [50])
-    update_winners_cache(_all_data(teg_num=50))
-    assert not (repo / "data" / "teg_winners.csv").exists() or _winners(repo).empty
+    _completed(repo, [30, 50])
+    all_data = pd.concat([_all_data(), _all_data(teg_num=50)], ignore_index=True)
+    update_winners_cache(all_data)
+    assert list(_winners(repo)["TEG"]) == ["TEG 30"]
 
 
 def test_completed_teg_without_data_raises(repo):
     _completed(repo, [30])
     with pytest.raises(ValueError):
         update_winners_cache(_all_data(teg_num=31))
+
+
+def test_empty_completed_list_refuses_to_wipe_winners(repo):
+    _completed(repo, [])
+    _write(repo, "teg_winners.csv", [["TEG 2", 2009, "Algarve", "X", "Y", "Z"]], COLS)
+
+    with pytest.raises(ValueError, match="no completed TEGs"):
+        update_winners_cache(_all_data())
+
+    assert list(_winners(repo)["TEG"]) == ["TEG 2"]
