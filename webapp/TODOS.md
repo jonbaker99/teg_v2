@@ -428,6 +428,8 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 ## Planned enhancements
 
+- [ ] **Wizard: save a new course's Par/SI to `course_pars.csv` (2026-09-29).** The Par/SI step only reads `course_pars.csv` for defaults, so a new course must be typed in for every round played there. Offer to save the confirmed card as that course's default. Worked around for TEG 19 by adding Quinta da Ria and Monte Rei by hand (PR #137).
+
 - [ ] **Hole-level score correction** — inline editor to fix individual hole scores after entry. Not built in either app: Streamlit's `data_edit.py` and the webapp's `/admin/edit-data` both only cover metadata CSVs (round info, handicaps, etc.), not raw hole-level scores. Not a Streamlit-retirement blocker (Streamlit never had this either) — a standalone future enhancement.
 
 - [ ] **Score-count matrix % pill** — absolute / % toggle on `/scoring/matrix` and Scoring tab on `/latest-teg`. Use `.pill-group` component.
