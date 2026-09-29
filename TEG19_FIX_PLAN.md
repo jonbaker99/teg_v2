@@ -1,4 +1,4 @@
-# TEG 19 dry-run fixes: two PRs before 10 October, the rest after
+# TEG 19 dry-run fixes: everything but Batch 2 ships before 10 October
 
 Temporary working plan. Delete it once every item below is fixed or moved into `webapp/TODOS.md`.
 
@@ -6,10 +6,12 @@ Temporary working plan. Delete it once every item below is fixed or moved into `
 
 The dry run found 16 issues. Four of them break the site the moment TEG 19 completes. Three stop the live-round flow working smoothly on the day.
 
-TEG 19 starts on **10 October 2026**. Fix those seven first, in two PRs that can run in parallel. The rest can wait until after the tournament.
+TEG 19 starts on **10 October 2026**. Everything except Batch 2 ships before then, in two waves:
 
-- **Before the tournament:** Batch 1A (post-completion crashes) and Batch 1B (live-round day flow). Then re-run the dry run.
-- **After the tournament:** Batch 2 (finalise reliability), Batch 3 (report admin) and Batch 4 (admin mobile layout and the leaderboard reports tab).
+- **Wave 1, starting now, in parallel:** Batch 1A (post-completion crashes), Batch 1B (live-round day flow and the random score fill), Batch 3 (report admin) and Batch 4a (the leaderboard reports tab).
+- **Wave 2, once 1B and 3 are merged:** Batch 4b (admin pages on mobile). It restyles the pages those two batches change.
+- **Then** a second dry run of the whole flow.
+- **After the tournament:** Batch 2 (finalise reliability).
 
 Evidence for every item is in `TEST_TOURNAMENT_ISSUES.md` on the dry-run branch (PR #140). Issue numbers below match that log.
 
@@ -46,8 +48,9 @@ All four are silent until the last round is finalised, then they hit every visit
 | 5 | A finalised round's review page still offers Save, Finalize and Cancel. | Render finalised and cancelled rounds read-only. | same as above |
 | 7 | No next step after finalising. | Add a "Generate round report" button to `/admin/reports?teg=N&round=R`. | same as above |
 | 2 | Players aren't told that finalising is admin-only. | Once all scores are in, the banner says who finalises. Mostly solved by 6. | `live_round_leaderboard.html` |
+| 17 | Feature: filling each round by hand makes dry runs slow. | A test-only "Fill empty cells with random scores" button on the admin review page. Each score is par −2 to par +3 for that hole (eagle to triple bogey; never below 1), weighted towards par and bogey. It fills only empty cells, and writes through `apply_admin_edits` so the usual validation applies. **Hidden, and refused server-side, on production:** enable it only when `RAILWAY_ENVIRONMENT_NAME` isn't `production` (PR environments and local). | `webapp/routes/admin_live_round.py`, `templates/admin_live_round_review.html`, `teg_analysis/analysis/live_round.py` |
 
-**Acceptance:** on a phone, a player can move between entry and leaderboard both ways. An admin can find any active round's link, finalise once with clear feedback, and move on to the report.
+**Acceptance:** on a phone, a player can move between entry and leaderboard both ways. An admin can find any active round's link, finalise once with clear feedback, and move on to the report. On the PR preview, the random-fill button fills a round in one tap; on production, it's absent and its route refuses.
 
 ### Batch 2: finalise reliability (after the tournament)
 
@@ -60,19 +63,34 @@ All four are silent until the last round is finalised, then they hit every visit
 
 This is the riskiest batch. It touches the shared data pipeline, so run the full test suite.
 
-### Batch 3: report admin (after the tournament)
+### Batch 3: report admin (wave 1)
 
 | # | Problem | Proposed fix |
 |---|---|---|
 | 8 | One vague status message covers a multi-minute run. | Record each phase in the status file. Show every running report, with each phase marked done, in progress or to do, on `/admin/reports`. |
 | 9 | Generate has no check. In-progress runs error after the tap, and recent reports are silently regenerated (costing money). | Confirm before starting: "already generating, started HH:MM, at phase X" or "generated at HH:MM, regenerate and overwrite?". |
 
-### Batch 4: admin mobile layout and leaderboard reports (after the tournament)
+Main files: `webapp/report_generation.py`, `webapp/routes/admin_reports.py`, `templates/admin_reports.html`, `partials/admin_report_*.html`. Phase tracking may need a progress callback from the report pipeline (`teg_analysis/reporting/`). Keep that hook minimal and UI-agnostic.
+
+**Acceptance:** with two reports running, `/admin/reports` shows both with their phases, whichever TEG and round is selected. Tapping Generate on a running report, or on one made in the last few hours, asks first.
+
+### Batch 4a: leaderboard reports tab (wave 1)
 
 | # | Problem | Proposed fix |
 |---|---|---|
-| 3 | Admin pages aren't mobile-friendly. The review grid is too wide for the screen. | Audit admin templates at phone width, starting with the live-round review grid. Follow `webapp/design_principles.md`. |
 | 12 | Feature: round reports can't be reached from `/leaderboard` mid-tournament. | Add a Reports tab, shown during a tournament. It lists each round's report headline, links through to the report, and shows "pending" for rounds without one. Reuse `get_edition_summary`. |
+
+Main files: `webapp/routes/leaderboard.py` and its templates. Don't touch the home page (`contents.py`), which is Batch 1A's.
+
+**Acceptance:** mid-tournament, the tab lists every round, with headlines for rounds that have a report and "pending" for the rest. Each headline opens that round's report. Completed TEGs still reach the full edition.
+
+### Batch 4b: admin pages on mobile (wave 2, after 1B and 3 merge)
+
+| # | Problem | Proposed fix |
+|---|---|---|
+| 3 | Admin pages aren't mobile-friendly. The review grid is too wide for the screen. | Audit admin templates at phone width, starting with the pages used on the day: live-round list, review and finalise, reports, and round setup. Fix shared styles in `webapp/static/admin.css` first, then per page. Follow `webapp/design_principles.md`. |
+
+**Acceptance:** at 390px wide, every admin page used on the day works with no sideways page scroll, and the review grid fits or scrolls within its own box.
 
 ### Housekeeping (with Batch 1A)
 
@@ -81,7 +99,7 @@ This is the riskiest batch. It touches the shared data pipeline, so run the full
 
 ## How to work through it
 
-Each batch is one task: its own branch and worktree, and one PR against `main` with a Railway preview. Batches 1A and 1B touch different files, so they can run at the same time.
+Each batch is one task: its own branch and worktree, and one PR against `main` with a Railway preview. The four wave-1 batches touch different files, so they can run at the same time. Shared docs (`STATUS.md`, `webapp/README.md`) are the one overlap: each batch edits only its own section, and the second PR to merge brings in `main` and resolves any conflict.
 
 **Model split** (repo rule: use tier aliases, not version names):
 
@@ -92,7 +110,7 @@ Each batch is one task: its own branch and worktree, and one PR against `main` w
 **Per batch:**
 
 1. **Plan (Opus):** read this file and the issue log. Confirm the root causes against the code. Write acceptance tests first for the crash fixes.
-2. **Implement (Sonnet workers):** one worker per file group. Run only the relevant tests: `test_webapp_pages.py`, `test_data_update.py`, `test_teg_setup.py` for 1A; `test_live_round*.py`, `test_admin_routes.py` for 1B; the full suite for Batch 2.
+2. **Implement (Sonnet workers):** one worker per file group. Run only the relevant tests: `test_webapp_pages.py`, `test_data_update.py`, `test_teg_setup.py` for 1A; `test_live_round*.py`, `test_admin_routes.py` for 1B; `test_admin_routes.py` for 3; `test_webapp_pages.py` for 4a and 4b; the full suite for Batch 2.
 3. **Review (Opus, fresh context):** the lead fixes the findings.
 4. **Preview:** push, open the PR, and check the Railway preview on a phone.
 5. **Merge:** only with your explicit go-ahead.
@@ -101,22 +119,27 @@ Each batch is one task: its own branch and worktree, and one PR against `main` w
 
 | When | What |
 |---|---|
-| by 3 Oct | Batches 1A and 1B merged |
-| 4 to 6 Oct | Second dry run on a fresh PR environment (below) |
-| 9 Oct | Turn auto-deploy off. Close PR #140 and delete its branch. |
+| now to 3 Oct | Wave 1: Batches 1A, 1B, 3 and 4a, in parallel |
+| 3 to 5 Oct | Wave 2: Batch 4b |
+| 6 to 7 Oct | Second dry run on a fresh PR environment (below). Fix only what it finds. |
+| 8 Oct | Code freeze. Close PR #140 and delete its branch. |
+| 9 Oct | Turn auto-deploy off. |
 | 10 to 13 Oct | TEG 19 |
-| after | Turn auto-deploy back on. Batches 2, 3 and 4. |
+| after | Batch 2. Then turn auto-deploy back on. |
+
+If a batch slips past 5 October, drop it rather than squeeze it in: 1A and 1B are the only must-haves. Anything merged late gets only a partial rehearsal.
 
 ## Second dry run: the same flow, checking the fixes
 
 Branch fresh from `main`, open a draft PR, and use its Railway environment. First, confirm its disk usage is separate from production's.
 
 1. Go live for Round 1. Find the link again from the admin list.
-2. Enter scores on a phone. Go from the leaderboard to entry and back.
+2. Enter a few scores on a phone. Go from the leaderboard to entry and back. Fill the rest with the random-fill button.
 3. Finalise once. Check the feedback, the read-only review page, and the report button.
-4. Generate the round report.
+4. Generate the round report. Watch its phases on `/admin/reports`. Tap Generate again to check the confirmation. Check the leaderboard's Reports tab once it finishes.
 5. Repeat for Rounds 2 to 4.
 6. After Round 4, check the home page (both tabs) and `/handicaps` **before** generating the tournament report. Then check them again after.
-7. Check the Railway deploy list for any redeploys triggered by data commits.
+7. Use every admin page on a phone.
+8. Check the Railway deploy list for any redeploys triggered by data commits.
 
 Log anything new in the same way. Close the PR afterwards.
