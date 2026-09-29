@@ -80,6 +80,14 @@
               {{ 'Review & Finalize' if r.Status == 'active' else 'View' }} →
             </a></td>
           </tr>
+          {% if entry_urls.get(r.Token) %}
+          <tr>
+            <td colspan="5">
+              <p style="margin:0 0 .25rem;font-size:.85rem;color:#666;">Score-entry link for players:</p>
+              {% with url = entry_urls[r.Token] %}{% include "partials/live_round_entry_link.html" %}{% endwith %}
+            </td>
+          </tr>
+          {% endif %}
           {% endfor %}
         </tbody>
       </table>

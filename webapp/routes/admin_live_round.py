@@ -32,6 +32,19 @@ router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
 
+def _entry_url(request: Request, token: str) -> str:
+    """Absolute player score-entry URL for a live round, on whatever host served this request.
+
+    Behind Railway's proxy the app sees plain http, so honour X-Forwarded-Proto
+    -- otherwise the copied link would start http:// on an https site.
+    """
+    url = str(request.url_for("live_round_page", token=token))
+    proto = request.headers.get("x-forwarded-proto", "").split(",")[0].strip()
+    if proto in ("http", "https") and not url.startswith(proto + "://"):
+        url = proto + url[url.index("://"):]
+    return url
+
+
 def _redirect(url: str):
     from fastapi.responses import RedirectResponse
     return RedirectResponse(url, status_code=303)
@@ -48,6 +61,11 @@ def admin_live_round_list(request: Request):
     ctx = {"request": request, "active_page": None}
     try:
         ctx["live_rounds"] = list_live_rounds()
+        # Entry link per active round, so it's never lost after "Go live".
+        ctx["entry_urls"] = {
+            r["Token"]: _entry_url(request, r["Token"])
+            for r in ctx["live_rounds"] if r["Status"] == "active"
+        }
         # Only rounds that are set up (confirmed Par/SI) and not already live
         # are worth offering to start -- mirrors round-setup's own scoping.
         already_started = {(r["TEGNum"], r["Round"]) for r in ctx["live_rounds"] if r["Status"] == "active"}
@@ -59,6 +77,7 @@ def admin_live_round_list(request: Request):
         logger.error(f"Live round list failed: {e}", exc_info=True)
         ctx["error"] = f"Could not load live rounds: {e}"
         ctx["live_rounds"] = []
+        ctx["entry_urls"] = {}
         ctx["startable_rounds"] = []
 
     return templates.TemplateResponse("admin_live_round.html", ctx)
@@ -77,7 +96,7 @@ def admin_live_round_start(request: Request, teg_num: str = Form(""), round_num:
     try:
         row = start_live_round(int(teg_num), int(round_num))
         ctx["result"] = row
-        ctx["link"] = str(request.url_for("live_round_page", token=row["Token"]))
+        ctx["link"] = _entry_url(request, row["Token"])
     except (RoundParsNotConfirmedError, LiveRoundAlreadyActiveError) as e:
         ctx["error"] = str(e)
     except Exception as e:  # noqa: BLE001
@@ -105,6 +124,8 @@ def admin_live_round_review(request: Request, token: str):
             ctx["error"] = f"No live round found for token {token}."
         else:
             ctx["live"] = live_ctx
+            if live_ctx["status"] == "active":
+                ctx["entry_url"] = _entry_url(request, token)
             polled = get_scores_since(token, since_seq=0)
             ctx["conflicts"] = [c for c in polled["cells"] if c["conflict"]]
             progress = {p: 0 for p in live_ctx["players"]}

@@ -143,6 +143,11 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
   `/admin/live-round/{token}/cancel` (the rest HTMX).
 - **Purpose:** start a live, multi-device round-entry session for an already-set-up
   round, hand out its shareable link, and review/finalize once everyone's done.
+  The score-entry link isn't a one-shot: every **active** round shows its full
+  absolute URL with a **Copy link** button, both in the "Every live round" table and
+  on the review page (`partials/live_round_entry_link.html`). The URL is built per
+  request by `_entry_url` in the route (`url_for` plus the proxy's
+  `X-Forwarded-Proto`), so it's right on any host, PR previews included.
   The review page shows the **full staged scorecard as an editable grid** — the admin
   can correct any cell (not just flagged conflicts), links out to the live leaderboard,
   and finalizes. Admin edits go through `live_round.apply_admin_edits`, which is
@@ -314,7 +319,9 @@ real Live round use; not triggered yet.
 `webapp/routes/live_round.py` + `templates/live_round_entry.html`. Not behind
 admin auth — a live round's token in the URL *is* its access control (trust
 the small group, matching the pattern elsewhere in this app), started from
-the admin Live round page above.
+the admin Live round page above, which keeps a copyable entry link on show
+for every active round. There's no public-site way in yet: players get the
+link from an admin.
 
 - **Routes:** `GET /live-round/{token}` (the entry page itself),
   `GET /live-round/{token}/leaderboard` (a read-only live leaderboard page),

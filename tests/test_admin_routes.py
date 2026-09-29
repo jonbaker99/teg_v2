@@ -577,6 +577,25 @@ def test_live_round_list_renders(client, monkeypatch):
     assert 'value="3"' not in resp.text
 
 
+def test_live_round_list_shows_entry_link_for_active_rounds_only(client, monkeypatch):
+    import teg_analysis.analysis.live_round as lrmod
+
+    monkeypatch.setattr(lrmod, "list_live_rounds", lambda: [
+        {"Token": "livetok", "TEGNum": 19, "Round": 2, "CreatedAt": "b", "Status": "active"},
+        {"Token": "donetok", "TEGNum": 19, "Round": 1, "CreatedAt": "a", "Status": "finalized"},
+    ])
+    import teg_analysis.analysis.round_setup as rs
+    monkeypatch.setattr(rs, "get_rounds_status", lambda: [])
+
+    _login(client)
+    resp = client.get("/admin/live-round", headers={"x-forwarded-proto": "https"})
+    assert resp.status_code == 200
+    # Absolute, on the request's host, with the proxy's scheme.
+    assert 'data-url="https://testserver/live-round/livetok"' in resp.text
+    assert "Copy link" in resp.text
+    assert 'data-url="https://testserver/live-round/donetok"' not in resp.text
+
+
 def test_live_round_start_success(client, monkeypatch):
     import teg_analysis.analysis.live_round as lrmod
 
@@ -627,6 +646,36 @@ def test_live_round_review_shows_conflicts_and_progress(client, monkeypatch):
     assert "David MULLIN" in resp.text
     assert "1 cell" in resp.text or "disagree" in resp.text
     assert "disabled" in resp.text  # Finalize disabled while a conflict remains
+
+
+def _fake_review_ctx(monkeypatch, status):
+    import teg_analysis.analysis.live_round as lrmod
+
+    monkeypatch.setattr(lrmod, "get_live_round_context", lambda token: {
+        "token": token, "teg_num": 19, "round_num": 1, "status": status, "course": "Ashdown",
+        "players": ["DM"], "player_names": {"DM": "David MULLIN"},
+        "holes": [{"hole": h, "par": 4, "si": h} for h in range(1, 19)],
+    })
+    monkeypatch.setattr(lrmod, "get_scores_since", lambda token, since_seq=0: {
+        "seq": 0, "status": status, "cells": [],
+    })
+
+
+def test_live_round_review_shows_entry_link_when_active(client, monkeypatch):
+    _fake_review_ctx(monkeypatch, "active")
+    _login(client)
+    resp = client.get("/admin/live-round/tok123/review")
+    assert resp.status_code == 200
+    assert 'data-url="http://testserver/live-round/tok123"' in resp.text
+    assert "Copy link" in resp.text
+
+
+def test_live_round_review_hides_entry_link_when_finalized(client, monkeypatch):
+    _fake_review_ctx(monkeypatch, "finalized")
+    _login(client)
+    resp = client.get("/admin/live-round/tok123/review")
+    assert resp.status_code == 200
+    assert "Copy link" not in resp.text
 
 
 def test_live_round_resolve(client, monkeypatch):
