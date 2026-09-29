@@ -219,6 +219,19 @@ the same data is exactly the shape that produces silent drift — the fix
 (I1) was to make one Jinja loop responsible for both visible states, not to
 better-coordinate two of them.
 
+### Two-line list: the owner's preferred pattern for short record lists
+
+For a few records with two or three facts each (schedules, fixtures, venues), prefer a plain two-line list to a formal table. The reference is the Contents Next TEG rounds list (`partials/_contents_complete_view.html`, `.next-rounds` / `.nr-row` in `contents.html`). The owner rated it "absolutely perfect"; reuse it rather than reinventing.
+
+- **No header row, no gridlines.** The labels carry their own meaning ("Round 1", not a "Round" column of bare numbers).
+- **Two balanced lines per row.** A small grid: a fixed-width left block and a flexible right block. Line 1 is the identity, in primary colour at 600 weight (e.g. "Round 1" / "Quinta da Ria"). Line 2 is the supporting fact, small and secondary (e.g. "Sat 10 Oct" / "East Algarve, Portugal").
+- **One colour per line.** Never mix colours within a single value (e.g. a greyer weekday beside its date).
+- **Every row has the same shape.** Repeat line 2 on every row rather than dropping repeats, and trim it to what adds meaning next to the headline (region and country, not the town).
+- **Honest gaps.** Unknown values read "Date TBC" / "Course TBC" in place.
+- **Align with neighbours.** Match row padding to any list beside it so first rows share a top edge; where two columns sit side by side, let each list fill its column and share spare height between rows so they end level.
+
+Reach for a real table when readers compare values down a column (numbers, ranks, many rows).
+
 ## Components
 
 - All inputs (dropdowns, buttons, tabs) follow the same styling language
