@@ -21,6 +21,7 @@ data/
   round_pars.csv          ← hole-level Par/SI per *specific* TEG+Round, set up by an admin before the round is played
   live_rounds.csv         ← registry of every live (in-progress, multi-device) round entry session ever started
   live_rounds/{token}.csv ← per-live-round staging: current per-cell state, volume-only until finalize
+  live_round_settings.csv ← admin switch (PublicEntryLink on/off) for the public "Enter scores" banner; missing = off
   streaks.parquet         ← pre-computed streak counters per hole per player
   bestball.parquet        ← pre-computed per-round bestball/worstball totals (read by the webapp for all-time ranking; rebuilt on every add/delete)
   commentary_*.parquet    ← AI-generated commentary (round/tournament summaries, streaks)

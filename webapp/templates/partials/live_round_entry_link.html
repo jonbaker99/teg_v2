@@ -1,0 +1,6 @@
+{# Full score-entry URL plus a copy button. Needs `url` in scope. #}
+<div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;">
+  <a href="{{ url }}" class="text-link" target="_blank" style="word-break:break-all;">{{ url }}</a>
+  <button type="button" class="btn-action" data-url="{{ url }}"
+          onclick="var b=this,u=b.dataset.url,f=function(){window.prompt('Copy this link:',u);};if(!navigator.clipboard){f();return;}navigator.clipboard.writeText(u).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy link';},1500);},f);">Copy link</button>
+</div>

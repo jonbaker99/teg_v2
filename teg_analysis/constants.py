@@ -21,6 +21,7 @@ COURSE_PARS_CSV = "data/course_pars.csv"
 ROUND_PARS_CSV = "data/round_pars.csv"
 LIVE_ROUNDS_REGISTRY_CSV = "data/live_rounds.csv"
 LIVE_ROUND_STAGING_DIR = "data/live_rounds"
+LIVE_ROUND_SETTINGS_CSV = "data/live_round_settings.csv"
 
 # Commentary data files
 COMMENTARY_ROUND_EVENTS_PARQUET = "data/commentary_round_events.parquet"
