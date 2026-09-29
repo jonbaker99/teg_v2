@@ -137,22 +137,17 @@
         margin: 0 0 var(--sp-6, 2rem) 0;
     }
 
-    /* --- Sitemap: one bounded surface per NAV_SECTIONS group (I4 ruling on
-       surface treatment) -- not a bare hairline, and not the old three
-       arbitrary column cards that packed unrelated groups together. Uses
-       the theme's own card surface (1px border + --card-radius), no
-       stacked shadow, no !important. --- */
+    /* --- Sitemap: one group per NAV_SECTIONS entry, each capped by a
+       hairline instead of a card box, matching the open panel above. --- */
     .contents-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-        gap: var(--sp-5, 24px);
+        gap: var(--sp-6, 32px) var(--sp-7, 48px);
         align-items: start;
     }
     .contents-group {
-        background: var(--bg-card);
-        border: 1px solid var(--rule-color);
-        border-radius: var(--card-radius);
-        padding: var(--sp-5, 24px);
+        border-top: 1px solid var(--rule-color);
+        padding-top: var(--sp-4, 16px);
     }
     .contents-links a {
         display: flex;
@@ -262,10 +257,9 @@
     html[data-mode="dark"] .honour-icon-trophy { color: #f2bd3a; }
     html[data-mode="dark"] .honour-icon-jacket { color: #4ade80; }
     html[data-mode="dark"] .honour-icon-spoon { color: #cba47b; }
-    /* Complete state: no box per column -- the page card already frames
-       them. A single rule splits the columns: vertical side by side,
-       horizontal once they stack. */
-    .surface.surface-complete {
+    /* Panel columns (both states): no box per column -- the page card
+       already frames them. A vertical rule splits them side by side. */
+    .surface.surface-open {
         display: flex;
         flex-direction: column;
         background: transparent;
@@ -274,9 +268,9 @@
         padding: 0;
     }
     @media (min-width: 900px) {
-        .panel-grid.two-col.equal-col { gap: 0; }
-        .panel-grid.equal-col > .surface-complete:first-child { padding-right: var(--sp-6, 32px); }
-        .panel-grid.equal-col > .surface-complete + .surface-complete {
+        .panel-grid.two-col { gap: 0; }
+        .panel-grid.two-col > .surface-open:first-child { padding-right: var(--sp-6, 32px); }
+        .panel-grid.two-col > .surface-open + .surface-open {
             padding-left: var(--sp-6, 32px);
             border-left: 1px solid var(--rule-color);
         }
@@ -284,7 +278,7 @@
     /* Stacked: space, not a rule. A rule here doubles up with the
        standings table's own row rules and reads as one more row. */
     @media (max-width: 899px) {
-        .panel-grid.two-col.equal-col { gap: var(--sp-7, 48px); }
+        .panel-grid.two-col { gap: var(--sp-7, 48px); }
     }
     /* Complete-state card titles double as the "full results"/"full
        report" links; the arrow marks them as links on touch screens. */
@@ -427,10 +421,7 @@
         display: flex;
         align-items: center;
         gap: var(--sp-3, 10px);
-        padding: var(--sp-4, 14px) var(--sp-5, 20px);
-        background: var(--bg-card);
-        border: 1px solid var(--rule-color);
-        border-radius: var(--card-radius);
+        padding: var(--sp-3, 12px) 0;
         font-family: var(--font-sans);
         font-size: var(--fs-300, 14px);
         font-weight: 600;
@@ -438,11 +429,11 @@
     }
     .sitemap-summary::-webkit-details-marker { display: none; }
     .sitemap-summary .chev {
-        font-family: var(--font-sans);
+        font-size: 22px;
         color: var(--text-muted);
         transition: transform 150ms ease;
     }
-    .sitemap-disclosure[open] .sitemap-summary .chev { transform: rotate(180deg); }
+    .sitemap-disclosure[open] .sitemap-summary .chev { transform: rotate(90deg); }
     .sitemap-summary .count {
         font-weight: 400;
         color: var(--text-secondary);
@@ -462,7 +453,7 @@
 
         <div hx-get="/contents/panel?teg={{ state.teg_num }}&state=in_progress&rounds={{ state.rounds_played }}" hx-trigger="load" hx-swap="outerHTML">
             <div class="panel-grid two-col" id="contents-panel" aria-busy="true">
-                <div class="surface">
+                <div class="surface surface-open">
                     <p class="standings-heading">Standings after Round {{ state.rounds_played }}</p>
                     <p class="gross-line">Loading…</p>
                 </div>
@@ -490,7 +481,7 @@
 
             <div hx-get="/contents/panel?teg={{ state.teg_num }}&state=complete" hx-trigger="load" hx-swap="outerHTML">
                 <div class="panel-grid two-col equal-col" id="contents-panel" aria-busy="true">
-                    <div class="surface surface-complete">
+                    <div class="surface surface-open">
                         <p class="standings-heading">Final Standings</p>
                         <p class="gross-line">Loading…</p>
                     </div>
@@ -543,7 +534,7 @@
 
 <details class="sitemap-disclosure" id="sitemap-disclosure">
     <summary class="sitemap-summary">
-        <span class="chev">▾</span>
+        <span class="chev material-symbols-outlined" aria-hidden="true">chevron_right</span>
         Full site contents <span class="count">(click to expand)</span>
     </summary>
     <div class="contents-grid">

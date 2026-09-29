@@ -4,7 +4,7 @@
    grid; stacks below 900px (.panel-grid rules in contents.html). #}
 {% if panel.state == "in_progress" %}
 <div class="panel-grid{% if panel.report_summary %} two-col{% endif %}" id="contents-panel">
-    <div class="surface">
+    <div class="surface surface-open">
         <p class="standings-heading">Standings after Round {{ rounds_played }}</p>
         {% if panel.gross_leader %}
         <p class="gross-line">Green Jacket (gross) — <b>{{ panel.gross_leader.names | join(", ") }}</b> {{ panel.gross_leader.total }}</p>
@@ -12,7 +12,7 @@
         <div style="overflow-x:auto;">{% with standings = panel.standings %}{% include "partials/_standings_table.html" %}{% endwith %}</div>
     </div>
     {% if panel.report_summary %}
-    <div class="surface">
+    <div class="surface surface-open">
         <p class="kicker">Round {{ panel.report_summary.round }} report</p>
         <p class="teaser-headline">{{ panel.report_summary.headline }}</p>
         {% if panel.report_summary.standfirst %}
@@ -24,11 +24,11 @@
 </div>
 {% else %}
 <div class="panel-grid two-col equal-col" id="contents-panel">
-    <div class="surface surface-complete">
+    <div class="surface surface-open">
         <p class="standings-heading"><a class="heading-link" href="/results?teg={{ panel.teg_num }}">Final Standings ↗</a></p>
         <div style="overflow-x:auto;">{% with standings = panel.standings %}{% include "partials/_standings_table.html" %}{% endwith %}</div>
     </div>
-    <div class="surface surface-complete">
+    <div class="surface surface-open">
         {% if panel.report_summary %}
         <p class="kicker"><a class="heading-link" href="{{ panel.report_summary.link }}">TEG {{ panel.teg_num }} headlines ↗</a></p>
         <a class="lead-teaser" href="{{ panel.report_summary.lead_link | default(panel.report_summary.link) }}">

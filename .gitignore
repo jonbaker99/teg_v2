@@ -51,3 +51,6 @@ node_modules/
 # Playwright MCP verification artifacts (screenshots, console logs, page snapshots)
 .playwright-mcp/
 .playwright-mcp
+
+# Per-machine Claude Code permissions; never commit
+.claude/settings.local.json
