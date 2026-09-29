@@ -19,13 +19,39 @@
 <div class="section-panel">
   <p style="margin-bottom:1rem;">
     <a href="/admin/live-round" class="text-link">← All live rounds</a>
-    {% if live %}<span style="margin:0 .5rem;color:#ccc;">·</span>
-    <a href="/live-round/{{ token }}/leaderboard" class="text-link" target="_blank">Live leaderboard ↗</a>{% endif %}
+    {% if live %}<a href="/live-round/{{ token }}/leaderboard" class="text-link" target="_blank" style="margin-left:1.25rem;">Live leaderboard ↗</a>{% endif %}
   </p>
 
   {% if error %}
     <p class="error" style="color:#b00020;">{{ error }}</p>
   {% else %}
+
+  {% if read_only %}
+  <div class="data-card" style="margin-bottom:1rem;{% if live.status == 'finalized' and cache_errors %}border-left:4px solid #b00020;{% endif %}">
+    {% if live.status == 'finalized' %}
+      {% if finalized %}
+        <p style="background:#eef4ee;border:1px solid #cfe0cf;color:#2f6b34;padding:.6rem .9rem;border-radius:8px;margin:0 0 .75rem;font-weight:600;">Finalised.</p>
+      {% endif %}
+      <h2 class="card-header">Round finalised</h2>
+      <p style="margin:.5rem 0;">TEG {{ live.teg_num }} Round {{ live.round_num }} is in the permanent record.</p>
+      {% if cache_errors %}
+      <div style="border:1px solid #b00020;border-radius:8px;padding:.6rem .9rem;margin:.75rem 0;">
+        <p style="margin:0 0 .25rem;font-weight:600;color:#b00020;">Some derived caches failed</p>
+        <p style="margin:.25rem 0;">These steps failed: {% for c in cache_errors %}<strong>{{ c }}</strong>{% if not loop.last %}, {% endif %}{% endfor %}.
+          Parts of the site may show <strong>stale data</strong> until re-run; check the server logs.</p>
+      </div>
+      {% endif %}
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-top:.75rem;">
+        <a href="/leaderboard" class="btn-action">View leaderboard</a>
+        <a href="/admin/reports?teg={{ live.teg_num }}&amp;round={{ live.round_num }}" class="btn-action">Generate round report</a>
+      </div>
+    {% else %}
+      <h2 class="card-header">Round cancelled</h2>
+      <p style="margin:.5rem 0;">Round cancelled. Nothing was written to the permanent record.</p>
+      <p style="margin:.5rem 0 0;"><a href="/admin/live-round" class="text-link">Back to all live rounds</a></p>
+    {% endif %}
+  </div>
+  {% endif %}
 
   {% if entry_url %}
   <div class="data-card" style="margin-bottom:1rem;">
@@ -58,11 +84,11 @@
   </div>
 
   <div class="data-card" style="margin-bottom:1rem;">
-    <h2 class="card-header">Review &amp; edit scores</h2>
-    <p style="margin:.5rem 0;">Every entered score is shown below. Edit any cell and press
+    <h2 class="card-header">{% if read_only %}Scores{% else %}Review &amp; edit scores{% endif %}</h2>
+    {% if not read_only %}<p style="margin:.5rem 0;">Every entered score is shown below. Edit any cell and press
       <strong>Save edits</strong> — admin edits are authoritative (they overwrite player entries and
-      clear any conflict). Leave a cell blank to clear it. Scores may be any value 1–20.</p>
-    <form method="post" action="/admin/live-round/{{ token }}/edit">
+      clear any conflict). Leave a cell blank to clear it. Scores may be any value 1–20.</p>{% endif %}
+    {% if not read_only %}<form method="post" action="/admin/live-round/{{ token }}/edit">{% endif %}
       <div style="overflow-x:auto;">
         <table class="admin-settings-table live-edit-grid">
           <thead>
@@ -79,10 +105,12 @@
               {% for p in live.players %}
                 {% set cell = grid.get(h.hole ~ '-' ~ p) %}
                 <td style="text-align:center;{% if cell and cell.conflict %}background:#fbf3e2;{% endif %}">
+                  {% if read_only %}{{ cell.value if cell and cell.value is not none else '' }}{% else %}
                   <input type="number" name="score-{{ h.hole }}-{{ p }}" min="1" max="20"
                          value="{{ cell.value if cell and cell.value is not none else '' }}"
                          style="width:3.2rem;text-align:center;{% if cell and cell.conflict %}border-color:#d99a1f;{% endif %}"
                          {% if cell and cell.conflict %}title="Conflicted — two devices disagreed; saving your value here resolves it"{% endif %}>
+                  {% endif %}
                 </td>
               {% endfor %}
             </tr>
@@ -90,13 +118,28 @@
           </tbody>
         </table>
       </div>
+      {% if not read_only %}
       <div style="margin-top:1rem;display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;">
-        <button type="submit" class="btn-action">💾 Save edits</button>
+        <button type="submit" id="save-btn" class="btn-action">💾 Save edits</button>
         <span style="color:#8a6100;font-size:.85rem;">Cells shaded amber are unresolved conflicts.</span>
       </div>
-    </form>
+      {% endif %}
+    {% if not read_only %}</form>{% endif %}
   </div>
 
+  {% if not read_only and random_fill_enabled %}
+  <div class="data-card" style="margin-bottom:1rem;border:1px dashed #999;">
+    <h2 class="card-header">Test tool</h2>
+    <form method="post" action="/admin/live-round/{{ token }}/random-fill"
+          onsubmit="return confirm('Fill every empty cell with a random score? Test rounds only.');"
+          style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;margin-top:.5rem;">
+      <button type="submit" class="btn-action">Fill empty cells with random scores</button>
+      <span style="color:#666;font-size:.85rem;">Test only. Hidden on production.</span>
+    </form>
+  </div>
+  {% endif %}
+
+  {% if not read_only %}
   <div class="data-card" style="margin-bottom:1rem;">
     <h2 class="card-header">Conflicts</h2>
     {% if not conflicts %}
@@ -130,6 +173,9 @@
     {% endif %}
   </div>
 
+  {% endif %}
+
+  {% if not read_only %}
   <div class="data-card">
     {% if not roster_confirmed %}
       <div style="background:#fff3cd;border:1px solid #ffc107;color:#8a6b00;padding:.75rem;border-radius:8px;margin-bottom:1rem;">
@@ -139,14 +185,21 @@
       </div>
     {% endif %}
     <div style="display:flex;gap:1rem;flex-wrap:wrap;">
-      <form hx-post="/admin/live-round/{{ token }}/finalize" hx-target="#finalize-result" hx-swap="innerHTML">
-        <button type="submit" class="btn-action" {% if conflicts %}disabled{% endif %} hx-disabled-elt="this">
-          ✅ Finalize — write to permanent record
+      <form hx-post="/admin/live-round/{{ token }}/finalize" hx-target="#finalize-result" hx-swap="innerHTML"
+            hx-disabled-elt="#finalize-btn, #cancel-btn, #save-btn"
+            hx-on::after-request="if (event.detail.xhr.getResponseHeader('HX-Redirect')) document.querySelectorAll('#finalize-btn, #cancel-btn, #save-btn').forEach(function (b) { b.disabled = true; })"
+            hx-confirm="Write TEG {{ live.teg_num }} Round {{ live.round_num }} to the permanent record?"
+            style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;">
+        <button type="submit" id="finalize-btn" class="btn-action" {% if conflicts %}disabled{% endif %}>
+          ✅ Finalise — write to permanent record
         </button>
+        <span class="htmx-indicator" role="status">Finalising. This takes about a minute. Keep this page open.</span>
       </form>
       <form hx-post="/admin/live-round/{{ token }}/cancel" hx-target="#finalize-result" hx-swap="innerHTML"
+            hx-disabled-elt="{% if not conflicts %}#finalize-btn, {% endif %}#cancel-btn, #save-btn"
+            hx-on::after-request="if (event.detail.xhr.getResponseHeader('HX-Redirect')) document.querySelectorAll('#finalize-btn, #cancel-btn, #save-btn').forEach(function (b) { b.disabled = true; })"
             hx-confirm="Cancel this live round without saving anything to the permanent record?">
-        <button type="submit" class="btn-action" style="background:#b00020;" hx-disabled-elt="this">Cancel round</button>
+        <button type="submit" id="cancel-btn" class="btn-action" style="background:#b00020;">Cancel round</button>
       </form>
     </div>
     {% if conflicts %}
@@ -154,6 +207,7 @@
     {% endif %}
     <div id="finalize-result" style="margin-top:1rem;"></div>
   </div>
+  {% endif %}
 
   {% endif %}
 </div>

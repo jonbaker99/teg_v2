@@ -458,7 +458,8 @@ def _archive_staging(token: str) -> None:
     write_file(_archive_path(token), staging, f"Archive finished live round {token}", defer_github=True)
 
 
-def apply_admin_edits(token: str, cells: list[dict], resolved_by: str) -> dict:
+def apply_admin_edits(token: str, cells: list[dict], resolved_by: str,
+                      only_if_empty: bool = False) -> dict:
     """Admin sets/clears cells from the review page -- authoritative.
 
     Each cell: {"hole": int, "player": str, "value": int | None} (None clears).
@@ -468,12 +469,17 @@ def apply_admin_edits(token: str, cells: list[dict], resolved_by: str) -> dict:
     actually differs from the current staged value are written, so re-saving an
     unchanged grid doesn't churn the sequence or stomp concurrent player entry.
 
+    ``only_if_empty`` skips any cell that already holds a score, checked under
+    the lock (used by the test-only random fill so it never races a player).
+
     Returns {"seq": <new highest seq>, "written": <count>}.
     """
     with _lock:
         reg = _get_registry_row(token)
         if reg is None:
             raise LiveRoundNotFoundError(token)
+        if reg["Status"] != "active":
+            raise LiveRoundInactiveError(f"Live round {token} is {reg['Status']}, not active.")
         if token in _finalizing:
             raise LiveRoundInactiveError(f"Live round {token} is being finalized -- scores are locked.")
 
@@ -493,6 +499,8 @@ def apply_admin_edits(token: str, cells: list[dict], resolved_by: str) -> dict:
             if not existing.empty:
                 row = existing.iloc[0]
                 existing_score = None if pd.isna(row["Score"]) else int(row["Score"])
+                if only_if_empty and existing_score is not None:
+                    continue
                 # Nothing to do if the value already matches and the cell isn't
                 # flagged -- an admin re-save shouldn't bump the seq needlessly.
                 if existing_score == value and not bool(row.get("Conflict", False)):
@@ -536,10 +544,9 @@ def fill_random_scores(token: str, rng: random.Random | None = None) -> dict:
     """Test-only: fill every EMPTY staged cell with a random score.
 
     Never overwrites an existing score (conflicted cells included). All cells
-    go through one apply_admin_edits call, so roster, range and finalizing-lock
-    validation still apply. Read-then-write is not atomic: a score entered in
-    between is overwritten (acceptable for a test tool). The webapp only
-    exposes this outside production.
+    go through one apply_admin_edits call with only_if_empty=True, so roster,
+    range and finalizing-lock validation still apply, and a score a player
+    enters meanwhile is kept. The webapp only exposes this outside production.
 
     Returns {"written": <count>}.
     """
@@ -570,7 +577,7 @@ def fill_random_scores(token: str, rng: random.Random | None = None) -> dict:
 
     if not cells:
         return {"written": 0}
-    return {"written": apply_admin_edits(token, cells, "Random fill")["written"]}
+    return {"written": apply_admin_edits(token, cells, "Random fill", only_if_empty=True)["written"]}
 
 
 # ---------------------------------------------------------------------------

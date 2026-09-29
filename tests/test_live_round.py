@@ -640,3 +640,24 @@ def test_public_entry_link_lists_only_active_rounds_when_on(store):
 
     lr.set_public_entry_enabled(False)
     assert lr.get_public_live_rounds() == []
+
+
+def test_apply_admin_edits_refuses_inactive_round(store):
+    token = lr.start_live_round(10, 1)["Token"]
+    lr.cancel_live_round(token)
+    with pytest.raises(lr.LiveRoundInactiveError):
+        lr.apply_admin_edits(token, [{"hole": 1, "player": "AB", "value": 4}], "Admin")
+
+
+def test_apply_admin_edits_only_if_empty_keeps_existing_score(store):
+    token = lr.start_live_round(10, 1)["Token"]
+    player = lr.get_live_round_context(token)["players"][0]
+    lr.apply_admin_edits(token, [{"hole": 1, "player": player, "value": 4}], "Admin")
+    result = lr.apply_admin_edits(
+        token, [{"hole": 1, "player": player, "value": 7}, {"hole": 2, "player": player, "value": 3}],
+        "Random fill", only_if_empty=True,
+    )
+    assert result["written"] == 1
+    cells = {(c["hole"], c["player"]): c["value"] for c in lr.get_scores_since(token)["cells"]}
+    assert cells[(1, player)] == 4
+    assert cells[(2, player)] == 3

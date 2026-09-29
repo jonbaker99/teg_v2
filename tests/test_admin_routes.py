@@ -744,6 +744,7 @@ def test_live_round_resolve(client, monkeypatch):
 
 def test_live_round_finalize_success(client, monkeypatch):
     import teg_analysis.analysis.live_round as lrmod
+    from webapp import deps
 
     monkeypatch.setattr(lrmod, "finalize_live_round", lambda token: {
         "token": token, "teg_num": 19, "round_num": 1, "records_added": 18,
@@ -751,9 +752,25 @@ def test_live_round_finalize_success(client, monkeypatch):
     })
 
     _login(client)
+    monkeypatch.setattr(deps, "clear_all_data_caches", lambda: None)
     resp = client.post("/admin/live-round/tok123/finalize")
     assert resp.status_code == 200
-    assert "finalized" in resp.text.lower()
+    assert resp.text == ""
+    assert resp.headers["HX-Redirect"] == "/admin/live-round/tok123/review?finalized=1"
+
+
+def test_live_round_finalize_success_passes_cache_errors(client, monkeypatch):
+    import teg_analysis.analysis.live_round as lrmod
+    from webapp import deps
+
+    monkeypatch.setattr(lrmod, "finalize_live_round", lambda token: {
+        "token": token, "teg_num": 19, "round_num": 1, "records_added": 18,
+        "cache_errors": [{"step": "streaks", "error": "x"}, {"step": "records", "error": "y"}],
+    })
+    monkeypatch.setattr(deps, "clear_all_data_caches", lambda: None)
+    _login(client)
+    resp = client.post("/admin/live-round/tok123/finalize")
+    assert resp.headers["HX-Redirect"] == "/admin/live-round/tok123/review?finalized=1&cache_errors=streaks%2Crecords"
 
 
 def test_live_round_finalize_blocked_by_conflicts(client, monkeypatch):
@@ -778,7 +795,137 @@ def test_live_round_cancel(client, monkeypatch):
     _login(client)
     resp = client.post("/admin/live-round/tok123/cancel")
     assert resp.status_code == 200
-    assert "cancelled" in resp.text.lower()
+    assert resp.text == ""
+    assert resp.headers["HX-Redirect"] == "/admin/live-round/tok123/review?cancelled=1"
+
+
+def _review_setup(monkeypatch, status="active"):
+    import teg_analysis.analysis.live_round as lrmod
+    import teg_analysis.analysis.teg_setup as ts
+
+    _fake_review_ctx(monkeypatch, status)
+    monkeypatch.setattr(lrmod, "get_scores_since", lambda token, since_seq=0: {
+        "seq": 1, "status": status, "cells": [
+            {"hole": 1, "player": "DM", "value": 4, "conflict": False, "device_name": "Jon",
+             "prev_value": None, "prev_device_name": None},
+        ],
+    })
+    monkeypatch.setattr(ts, "get_teg_roster_form", lambda teg_num: {"source": "confirmed"})
+
+
+def test_random_fill_requires_auth(client):
+    resp = client.post("/admin/live-round/tok123/random-fill")
+    assert resp.status_code == 303
+    assert resp.headers["location"] == "/admin/login"
+
+
+@pytest.mark.parametrize("var", ["RAILWAY_ENVIRONMENT_NAME", "RAILWAY_ENVIRONMENT"])
+def test_random_fill_forbidden_on_production(client, monkeypatch, var):
+    import teg_analysis.analysis.live_round as lrmod
+
+    monkeypatch.delenv("RAILWAY_ENVIRONMENT_NAME", raising=False)
+    monkeypatch.delenv("RAILWAY_ENVIRONMENT", raising=False)
+    monkeypatch.setenv(var, "production")
+    calls = []
+    monkeypatch.setattr(lrmod, "fill_random_scores", lambda token, rng=None: calls.append(token), raising=False)
+
+    _login(client)
+    resp = client.post("/admin/live-round/tok123/random-fill")
+    assert resp.status_code == 403
+    assert calls == []
+
+
+@pytest.mark.parametrize("env", ["pr-150", None])
+def test_random_fill_runs_off_production(client, monkeypatch, env):
+    import teg_analysis.analysis.live_round as lrmod
+
+    monkeypatch.delenv("RAILWAY_ENVIRONMENT_NAME", raising=False)
+    monkeypatch.delenv("RAILWAY_ENVIRONMENT", raising=False)
+    if env:
+        monkeypatch.setenv("RAILWAY_ENVIRONMENT_NAME", env)
+    calls = []
+
+    def fake_fill(token, rng=None):
+        calls.append(token)
+        return {"written": 7}
+
+    monkeypatch.setattr(lrmod, "fill_random_scores", fake_fill, raising=False)
+
+    _login(client)
+    resp = client.post("/admin/live-round/tok123/random-fill")
+    assert resp.status_code == 303
+    assert resp.headers["location"] == "/admin/live-round/tok123/review?saved=7"
+    assert calls == ["tok123"]
+
+
+def test_random_fill_inactive_round_redirects_with_error(client, monkeypatch):
+    import teg_analysis.analysis.live_round as lrmod
+
+    monkeypatch.delenv("RAILWAY_ENVIRONMENT_NAME", raising=False)
+    monkeypatch.delenv("RAILWAY_ENVIRONMENT", raising=False)
+
+    def fake_fill(token, rng=None):
+        raise lrmod.LiveRoundInactiveError("Round is not active.")
+
+    monkeypatch.setattr(lrmod, "fill_random_scores", fake_fill, raising=False)
+    _login(client)
+    resp = client.post("/admin/live-round/tok123/random-fill")
+    assert resp.status_code == 303
+    assert "?error=Round%20is%20not%20active." in resp.headers["location"]
+
+
+def test_review_random_fill_button_visibility(client, monkeypatch):
+    monkeypatch.delenv("RAILWAY_ENVIRONMENT", raising=False)
+    _review_setup(monkeypatch, "active")
+    _login(client)
+
+    monkeypatch.setenv("RAILWAY_ENVIRONMENT_NAME", "pr-150")
+    resp = client.get("/admin/live-round/tok123/review")
+    assert "/admin/live-round/tok123/random-fill" in resp.text
+    assert "Fill empty cells with random scores" in resp.text
+
+    monkeypatch.setenv("RAILWAY_ENVIRONMENT_NAME", "production")
+    resp = client.get("/admin/live-round/tok123/review")
+    assert "random-fill" not in resp.text
+    assert "name=\"score-1-DM\"" in resp.text  # still editable
+
+
+def test_review_finalized_is_read_only(client, monkeypatch):
+    monkeypatch.delenv("RAILWAY_ENVIRONMENT", raising=False)
+    monkeypatch.setenv("RAILWAY_ENVIRONMENT_NAME", "pr-150")
+    _review_setup(monkeypatch, "finalized")
+    _login(client)
+    resp = client.get("/admin/live-round/tok123/review")
+    assert resp.status_code == 200
+    assert 'name="score-' not in resp.text
+    assert "/finalize" not in resp.text
+    assert "/cancel" not in resp.text
+    assert "random-fill" not in resp.text
+    assert "Round finalised" in resp.text
+    assert "TEG 19 Round 1 is in the permanent record" in resp.text
+    assert "/admin/reports?teg=19&amp;round=1" in resp.text or "/admin/reports?teg=19&round=1" in resp.text
+    assert 'href="/leaderboard"' in resp.text
+    assert "stale data" not in resp.text
+    assert "Finalised." not in resp.text
+
+
+def test_review_finalized_query_flags(client, monkeypatch):
+    _review_setup(monkeypatch, "finalized")
+    _login(client)
+    resp = client.get("/admin/live-round/tok123/review?finalized=1&cache_errors=streaks,records")
+    assert "Finalised." in resp.text
+    assert "stale data" in resp.text
+    assert "<strong>streaks</strong>" in resp.text
+    assert "<strong>records</strong>" in resp.text
+
+
+def test_review_cancelled_is_read_only(client, monkeypatch):
+    _review_setup(monkeypatch, "cancelled")
+    _login(client)
+    resp = client.get("/admin/live-round/tok123/review?cancelled=1")
+    assert 'name="score-' not in resp.text
+    assert "Nothing was written to the permanent record" in resp.text
+    assert 'href="/admin/live-round"' in resp.text
 
 
 def test_reports_page_renders(client):
