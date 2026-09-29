@@ -6,6 +6,19 @@
   <span class="page-label">Admin</span>
   <h1 class="page-title">Generate reports</h1>
 </div>
+
+<script>
+(function () {
+  function localise() {
+    document.querySelectorAll('time[data-local]').forEach(function (t) {
+      var d = new Date(t.getAttribute('datetime'));
+      if (!isNaN(d)) t.textContent = d.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+    });
+  }
+  document.addEventListener('htmx:afterSwap', localise);
+  localise();
+})();
+</script>
 {% endblock %}
 
 {% block extra_head %}
@@ -24,8 +37,28 @@
     <a href="/teg-reports">/teg-reports</a> once it's done.
   </p>
 
+  <h2 class="card-header">Running reports</h2>
+  <div id="running-reports" style="margin-bottom:1.25rem;"
+       hx-get="/admin/reports/running" hx-trigger="report-started from:body" hx-swap="innerHTML">
+    {% include "partials/admin_report_running.html" %}
+  </div>
+
   <div id="report-panel">
     {% include "partials/admin_report_panel.html" %}
   </div>
 </div>
+
+<script>
+(function () {
+  function localise() {
+    document.querySelectorAll('time[data-local]').forEach(function (t) {
+      var d = new Date(t.getAttribute('datetime'));
+      if (!isNaN(d)) t.textContent = d.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+    });
+  }
+  document.addEventListener('htmx:afterSwap', localise);
+  localise();
+})();
+</script>
 {% endblock %}
+

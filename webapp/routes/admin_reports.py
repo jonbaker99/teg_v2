@@ -8,8 +8,11 @@ route plumbing only — auth, form handling, picking which partial to render.
 Flow:
   GET  /admin/reports          -> the generate-report page (TEG/round pickers)
   GET  /admin/reports/panel    -> re-render the panel for a different TEG (HTMX)
-  POST /admin/reports/generate -> claim + enqueue a background run (HTMX)
-  GET  /admin/reports/status   -> poll target while a run is in flight (HTMX)
+  POST /admin/reports/generate -> confirm if a run is live/recent, else claim
+                                  + enqueue a background run (HTMX)
+  GET  /admin/reports/running  -> the page-level "Running reports" panel: every
+                                  live or just-finished run with per-phase state;
+                                  self-polls while any run is active (HTMX)
 """
 
 import logging
@@ -27,6 +30,7 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
+templates.env.globals["fmt_hhmm"] = report_generation.fmt_hhmm
 
 
 def _redirect(url: str):
@@ -67,17 +71,6 @@ def _panel_ctx(request: Request, teg: int, round_num: int) -> dict:
     round_status = report_generation.read_status(teg, round_num) if round_num else None
     tournament_status = report_generation.read_status(teg, None)
 
-    # On a fresh page load, only an already-in-flight run needs the live
-    # polling container — a finished/errored one is shown as a static badge
-    # next to its button instead (see the template). If a round happened to
-    # be mid-run too, it wins arbitrarily; both keep their own status file
-    # regardless, so nothing is lost, just not both shown live at once.
-    active_status, active_kind, active_round = None, None, None
-    if report_generation.is_active(tournament_status):
-        active_status, active_kind, active_round = tournament_status, "tournament", None
-    if report_generation.is_active(round_status):
-        active_status, active_kind, active_round = round_status, "round", round_num
-
     return {
         "request": request,
         "tegs": tegs,
@@ -89,9 +82,7 @@ def _panel_ctx(request: Request, teg: int, round_num: int) -> dict:
         "rounds_with_reports": rounds_with_reports,
         "round_status": round_status,
         "tournament_status": tournament_status,
-        "status": active_status,
-        "kind": active_kind,
-        "round": active_round,
+        "status": None,
         "teg": teg,
         "error_message": None,
     }
@@ -104,6 +95,7 @@ def admin_reports_page(request: Request, teg: Optional[int] = None, round: int =
 
     ctx = _panel_ctx(request, teg or deps.get_default_teg_num(), round)
     ctx["active_page"] = None
+    ctx["runs"] = report_generation.running_reports()
     return templates.TemplateResponse("admin_reports.html", ctx)
 
 
@@ -116,9 +108,20 @@ def admin_reports_panel(request: Request, teg: int, round: int = 0):
     return templates.TemplateResponse("partials/admin_report_panel.html", ctx)
 
 
+@router.get("/admin/reports/running", response_class=HTMLResponse)
+def admin_reports_running(request: Request):
+    if not is_authed(request):
+        return _unauthed_fragment()
+
+    return templates.TemplateResponse("partials/admin_report_running.html", {
+        "request": request, "runs": report_generation.running_reports(),
+    })
+
+
 @router.post("/admin/reports/generate", response_class=HTMLResponse)
 def admin_reports_generate(request: Request, background_tasks: BackgroundTasks,
-                           kind: str = Form(...), teg: int = Form(...), round: int = Form(0)):
+                           kind: str = Form(...), teg: int = Form(...), round: int = Form(0),
+                           confirm: int = Form(0)):
     if not is_authed(request):
         return _unauthed_fragment()
 
@@ -135,27 +138,26 @@ def admin_reports_generate(request: Request, background_tasks: BackgroundTasks,
     elif kind == "tournament" and not _teg_is_complete(teg):
         error_message = f"TEG {teg} is still in progress — the tournament report needs the final round in first."
 
+    if error_message is None and not confirm:
+        pending = report_generation.confirmation_needed(teg, round_num)
+        if pending:
+            return templates.TemplateResponse("partials/admin_report_confirm.html", {
+                "request": request, "teg": teg, "round": round_num, "kind": kind,
+                "pending": pending,
+            })
+
     if error_message is None:
         error_message = report_generation.claim(teg, round_num)
 
-    if error_message is None:
+    started = error_message is None
+    if started:
         background_tasks.add_task(report_generation.generate_report, teg, round_num)
 
-    status = report_generation.read_status(teg, round_num)
-    return templates.TemplateResponse("partials/admin_report_status.html", {
+    response = templates.TemplateResponse("partials/admin_report_status.html", {
         "request": request, "teg": teg, "round": round_num, "kind": kind,
-        "status": status, "error_message": error_message,
+        "status": report_generation.read_status(teg, round_num),
+        "error_message": error_message, "started": started,
     })
-
-
-@router.get("/admin/reports/status", response_class=HTMLResponse)
-def admin_reports_status(request: Request, teg: int, round: int = 0, kind: str = "round"):
-    if not is_authed(request):
-        return _unauthed_fragment()
-
-    round_num = None if kind == "tournament" else round
-    status = report_generation.read_status(teg, round_num)
-    return templates.TemplateResponse("partials/admin_report_status.html", {
-        "request": request, "teg": teg, "round": round_num, "kind": kind,
-        "status": status, "error_message": None,
-    })
+    if started:
+        response.headers["HX-Trigger"] = "report-started"
+    return response

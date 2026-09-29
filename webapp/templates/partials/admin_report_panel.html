@@ -32,7 +32,7 @@
       Generate round report
     </button>
     {% if round_status and round_status.state not in ("queued", "running", "pushing") %}
-      <span class="text-muted text-sm">Last run: {{ round_status.state }}{% if round_status.finished_at %} ({{ round_status.finished_at[:16] }}){% endif %}</span>
+      <span class="text-muted text-sm">Last run: {{ round_status.state }}{% if round_status.finished_at %} (<time datetime="{{ round_status.finished_at }}" data-local>{{ fmt_hhmm(round_status.finished_at) }} UTC</time>){% endif %}</span>
     {% endif %}
 
     <button type="button" class="btn-secondary"
@@ -42,7 +42,7 @@
       Generate tournament report
     </button>
     {% if tournament_status and tournament_status.state not in ("queued", "running", "pushing") %}
-      <span class="text-muted text-sm">Last run: {{ tournament_status.state }}{% if tournament_status.finished_at %} ({{ tournament_status.finished_at[:16] }}){% endif %}</span>
+      <span class="text-muted text-sm">Last run: {{ tournament_status.state }}{% if tournament_status.finished_at %} (<time datetime="{{ tournament_status.finished_at }}" data-local>{{ fmt_hhmm(tournament_status.finished_at) }} UTC</time>){% endif %}</span>
     {% endif %}
 
     {% if has_tournament_report %}
