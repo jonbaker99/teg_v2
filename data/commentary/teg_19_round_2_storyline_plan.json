@@ -1,0 +1,128 @@
+{
+  "title": "Monte Rei Gives With One Hand",
+  "title_candidates": [
+    "Monte Rei Gives With One Hand",
+    "Five Eagles and No Pars at the Seventh",
+    "The Seventh Collects Its Toll"
+  ],
+  "theme": "On its first appearance in TEG, Jack Nicklaus's Monte Rei handed out five eagles on its par fives and took twenty shots over par off the field at a single par three.",
+  "tone": "Subverted gravitas: a straight-faced dispatch from Portugal's No.1 course, which spent Sunday alternately gifting and confiscating, told in exact numbers with the amusement left to the reader.",
+  "opening_hook": "Water is in play on eleven holes at Monte Rei, which turned out to be the least of anyone's problems: the par fives surrendered five eagles and the 158-yard-ish par-3 7th — no pars, five players, thirty-five shots between them — quietly removed twenty shots from the field's collective afternoon.",
+  "narrative_vehicles": [
+    "ensemble",
+    "catalogue",
+    "motif"
+  ],
+  "prominent_vehicle": "ensemble",
+  "prominent_palette": "venue_character",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Jon Baker's 44 points at Monte Rei, the best round of the day, containing two eagles, a quintuple-bogey eight and a closing burst of 19 points",
+    "why_it_matters": "It was eleven points better than his opening 33, hauled him to within four of Alex Baker in the Trophy, and won back the Green Jacket lead he had handed over at the 7th — all in the same eighteen holes.",
+    "shape": "Jon Baker eagled the par-5 2nd and then lost seven shots to par across the 3rd, 4th and 5th before taking eight at the par-3 7th, surrendering a Jacket lead he had held for twenty holes since the 5th of round one. A birdie at the 8th steadied him, a birdie at the 14th broke a second bogey run and retook the lead outright, and from the 14th to the 18th he took 19 points, including an eagle at the 16th and no dropped gross shots over the last three. He signed for 44, the best trophy score of the day and his best of the TEG so far.",
+    "beat_ids": [
+      "r2_b02",
+      "r2_b06",
+      "r2_b48",
+      "r2_b08",
+      "r2_b07",
+      "r2_b24",
+      "r2_b12",
+      "r2_b17",
+      "r2_b04",
+      "r2_b10",
+      "r2_b28"
+    ],
+    "headline_candidates": [
+      "Jon Baker Answers an Eight With Nineteen",
+      "Jon Baker Closes With Nineteen Points",
+      "An Eight, Then a Blur"
+    ],
+    "chosen_headline": "Jon Baker Answers an Eight With Nineteen",
+    "standfirst": "Twenty holes in front of the Green Jacket field ended at the 7th on Sunday morning; by the 14th he had it back, and by the 18th he had the day's best round.",
+    "compelling_score": 8,
+    "humour_score": 7,
+    "descriptor": "JON BAKER"
+  },
+  "race_story": {
+    "subject": "Alex Baker's ten-point Trophy cushion cut to four, and David Mullin's fall from second overnight to last and sole possession of the Wooden Spoon",
+    "why_it_matters": "Nobody lost the lead, but everybody moved: the two men who had finished round one first and second on the trophy metric both went backwards on Sunday, one by degrees and one wholesale.",
+    "shape": "Alex Baker still leads on 81 and scored a respectable 38 points, but a gross 34 — the worst in the field by twelve shots — dropped him from second to fifth in the Green Jacket, with a quadruple bogey at the 10th and, at the last, an eleven on the par-5 18th, his worst ever score on a par five. David Mullin, second after round one, bled fifteen shots to par across holes 4 to 7, took another eight at the 15th and posted 36, the lowest of the day. Mullin ends the round fifth in the Trophy on 69 and four adrift at the bottom of the Wooden Spoon, which Gregg Williams had carried into the day and shed by the 15th; the Jacket gap between Jon Baker and Williams is unchanged at two, despite the lead changing hands five times between them.",
+    "beat_ids": [
+      "r2_b18",
+      "r2_b25",
+      "r2_b26",
+      "r2_b43",
+      "r2_b50",
+      "r2_b11",
+      "r2_b09",
+      "r2_b42",
+      "r2_b47",
+      "r2_b20",
+      "r2_b52",
+      "r2_b27",
+      "r2_b22"
+    ],
+    "headline_candidates": [
+      "Alex Baker's Ten Is Now Four",
+      "Ten Becomes Four at Monte Rei",
+      "David Mullin Inherits the Spoon"
+    ],
+    "chosen_headline": "Alex Baker's Ten Is Now Four",
+    "standfirst": "David Mullin arrived second overnight and left last, four clear at the bottom of a Wooden Spoon race that changed hands three times before the 15th.",
+    "compelling_score": 7,
+    "humour_score": 6,
+    "descriptor": "THE THREE RACES"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "The par-3 7th at Monte Rei, where all five players failed to make par and gave up twenty shots between them",
+      "why_it_matters": "A single short hole cost the field more than any stretch on the card, took the Green Jacket lead off one man and handed it to another, and produced two personal worsts.",
+      "shape": "Nobody in the field made par at the 7th: Jon Baker and Alex Baker both took eight, John Patterson seven, Gregg Williams and David Mullin six apiece — thirty-five shots on a hole worth fifteen. Alex Baker's eight is his worst score on a par three. The hole also settled ownership of the Green Jacket lead for an afternoon, Jon Baker's eight there being worse than Williams's six.",
+      "beat_ids": [
+        "r2_b08",
+        "r2_b39",
+        "r2_b14",
+        "r2_b07",
+        "r2_b25",
+        "r2_b30"
+      ],
+      "headline_candidates": [
+        "Nobody Made Par at the Seventh",
+        "Thirty-Five Shots at One Par Three",
+        "The Seventh Collects Twenty Over Par"
+      ],
+      "chosen_headline": "Nobody Made Par at the Seventh",
+      "standfirst": "Five players, one short hole, twenty shots over par, and a change of leadership in the Green Jacket as a by-product.",
+      "compelling_score": 8,
+      "humour_score": 9,
+      "descriptor": "MONTE REI'S 7TH"
+    },
+    {
+      "subject": "Five eagles on Monte Rei's par fives in a single round, two of them by David Mullin in the middle of an otherwise ruinous day",
+      "why_it_matters": "The same course that removed twenty shots at the 7th gave five back in threes, and the giving and the taking largely cancelled out.",
+      "shape": "The 2nd gave up eagles to both David Mullin and Jon Baker, the 16th to both Gregg Williams and Jon Baker, and the 8th to Mullin — five threes on par fives in one afternoon. Mullin's at the 8th arrived directly after eight, eight, eight and six, which is one way to stop the bleeding. He still signed for the lowest trophy score of the day, which tells its own story about the rest of his card.",
+      "beat_ids": [
+        "r2_b01",
+        "r2_b03",
+        "r2_b05",
+        "r2_b02",
+        "r2_b06",
+        "r2_b23",
+        "r2_b45"
+      ],
+      "headline_candidates": [
+        "Five Eagles on the Par Fives",
+        "The Par Fives Give It Back",
+        "Five Threes and No Comfort"
+      ],
+      "chosen_headline": "Five Eagles on the Par Fives",
+      "standfirst": "David Mullin made two of them and still posted the lowest score in the field, which is the sort of arithmetic Monte Rei specialises in.",
+      "compelling_score": 7,
+      "humour_score": 7,
+      "descriptor": "THE PAR FIVES"
+    }
+  ],
+  "race_state_note": "Two rounds remain: four points covers the Trophy lead, two shots covers the Green Jacket, and the Wooden Spoon changed hands three times inside this round alone.",
+  "storyline_note": ""
+}

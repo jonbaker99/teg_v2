@@ -1,0 +1,23 @@
+{
+  "teg": 19,
+  "round": 2,
+  "label": "storylinefirst",
+  "errors": 1,
+  "warnings": 1,
+  "findings": [
+    {
+      "rule": "teg_references",
+      "severity": "error",
+      "detail": "'TEG 2026' uses a year as the TEG number; this is TEG 19",
+      "excerpt": ". Mullin signed for 94, finished last in the TEG 2026 Trophy standings, and took over the Wooden S",
+      "source": "mechanical"
+    },
+    {
+      "rule": "missed_fact",
+      "severity": "warning",
+      "detail": "not mentioned: Jon Baker went clear in the Green Jacket (Gross) for good at R2 H14 and led it after R2",
+      "excerpt": "",
+      "source": "missed"
+    }
+  ]
+}
