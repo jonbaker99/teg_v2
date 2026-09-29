@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-29 (Open in-progress Contents panel)
+**Last updated:** 2026-09-29 (In-progress Contents actions as links)
+
+## 2026-09-29 — In-progress Contents actions as links
+
+The in-progress Contents actions (Latest Leaderboard, Latest Round in context, Handicaps) are now plain ↗ links. The old black button beside muted text read as tabs that would swap the standings pane. Swapping the pane in place is a possible later step.
 
 ## 2026-09-29 — Open in-progress Contents panel
 

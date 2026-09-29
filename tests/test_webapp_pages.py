@@ -1189,6 +1189,9 @@ def test_contents_state_in_progress(client, monkeypatch):
     assert "Round 2 played 14 May 2026" in resp.text  # R3: dated context line
     # R2: primary action pins the current TEG, never a bare route.
     assert 'href="/leaderboard?teg=19"' in resp.text
+    # Actions open pages, so they read as links, not a button + tab row.
+    assert "state-actions-links" in resp.text
+    assert "state-btn-primary\"" not in resp.text
 
 
 def test_contents_state_in_progress_always_defers_rich_content(client, monkeypatch):
@@ -1473,7 +1476,9 @@ def test_contents_panel_actions_are_all_in_the_sitemap(client, monkeypatch):
     resp = client.get("/contents")
     _assert_ok_no_error(resp)
     sitemap_bases = {url for section in NAV_SECTIONS for (_t, url, _k, _i) in section["pages"]}
-    panel_hrefs = re.findall(r'class="state-(?:btn|link)[^"]*"\s+href="([^"]+)"', resp.text)
+    actions = resp.text[resp.text.index('class="state-actions'):]
+    actions = actions[:actions.index("</div>")]
+    panel_hrefs = re.findall(r'href="([^"]+)"', actions)
     assert panel_hrefs
     for href in panel_hrefs:
         base = href.split("?")[0]

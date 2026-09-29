@@ -110,6 +110,7 @@
         border: 1px solid var(--rule-color);
     }
     .state-btn:hover { opacity: 0.85; }
+    .state-actions-links { gap: var(--sp-2, 8px) var(--sp-5, 24px); margin-top: var(--sp-5, 24px); }
     .state-link {
         font-family: var(--font-sans);
         font-size: var(--fs-300, 14px);
@@ -460,10 +461,12 @@
             </div>
         </div>
 
-        <div class="state-actions">
-            <a class="state-btn state-btn-primary" href="/leaderboard?teg={{ state.teg_num }}">Latest Leaderboard</a>
-            <a class="state-link" href="/latest-round">Latest Round in context</a>
-            <a class="state-link" href="/handicaps">{{ state.teg_label }} Handicaps</a>
+        {# Plain links, not a button + text pair: that pairing read as tabs
+           that would swap the standings pane, but each one opens a page. #}
+        <div class="state-actions state-actions-links">
+            <a class="teaser-link" href="/leaderboard?teg={{ state.teg_num }}">Latest Leaderboard ↗</a>
+            <a class="teaser-link teaser-handicaps" href="/latest-round">Latest Round in context ↗</a>
+            <a class="teaser-link teaser-handicaps" href="/handicaps">{{ state.teg_label }} Handicaps ↗</a>
         </div>
 
     {% elif state.state == "complete" %}
