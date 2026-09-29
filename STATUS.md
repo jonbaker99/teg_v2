@@ -6,7 +6,7 @@ Current state and next priorities. Instructions and architecture live in `CLAUDE
 
 ## 2026-09-29 — Lighter completed Contents panel
 
-The completed-TEG Contents panel drops the box around each column. One rule splits standings from headlines: vertical side by side, horizontal when stacked. Dotted rules frame the lead headline, whose kicker now carries a small trophy. Separators use slashes, and the location and date line uses a full stop. Trophy and Green Jacket icons are brighter.
+The completed-TEG Contents panel drops the box around each column. A vertical rule splits standings from headlines side by side; stacked on phones, a wide gap separates them instead. Dotted rules frame the lead headline, whose kicker now carries a small trophy. Separators use slashes, and the location and date line uses a full stop. Trophy and Green Jacket icons are brighter.
 
 ## 2026-09-27 — Latest TEG aggregate headers
 

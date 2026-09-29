@@ -281,11 +281,10 @@
             border-left: 1px solid var(--rule-color);
         }
     }
+    /* Stacked: space, not a rule. A rule here doubles up with the
+       standings table's own row rules and reads as one more row. */
     @media (max-width: 899px) {
-        .panel-grid.equal-col > .surface-complete + .surface-complete {
-            padding-top: var(--sp-5, 24px);
-            border-top: 1px solid var(--rule-color);
-        }
+        .panel-grid.two-col.equal-col { gap: var(--sp-7, 48px); }
     }
     /* Complete-state card titles double as the "full results"/"full
        report" links; the arrow marks them as links on touch screens. */
