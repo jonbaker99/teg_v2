@@ -2,11 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-29 (In-progress Contents actions as links)
+**Last updated:** 2026-09-29 (In-progress Contents pane switcher)
 
-## 2026-09-29 — In-progress Contents actions as links
+## 2026-09-29 — In-progress Contents pane switcher
 
-The in-progress Contents actions (Latest Leaderboard, Latest Round in context, Handicaps) are now plain ↗ links. The old black button beside muted text read as tabs that would swap the standings pane. Swapping the pane in place is a possible later step.
+The in-progress Contents left column now switches in place between Standings, the latest Round and Handicaps. The switcher sits in the kicker line, so it lines up with the report kicker opposite. Round shows /latest-round's scoreboard (Score, with personal and all-time rank, no expand rows). Handicaps shows /handicaps' phone list. Each pane links on to its full page. The old button row beneath the panel is gone: it looked like pane tabs but opened pages.
 
 ## 2026-09-29 — Open in-progress Contents panel
 

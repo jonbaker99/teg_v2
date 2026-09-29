@@ -1184,13 +1184,12 @@ def test_contents_state_in_progress(client, monkeypatch):
     _assert_ok_no_error(resp)
     assert "In progress" in resp.text
     assert "TEG 19 — after Round 2 of 4" in resp.text
-    assert "TEG 19 Handicaps" in resp.text
+    # The handicaps link moved into the deferred pane; it takes its label
+    # from /handicaps' own TEG choice (test_contents_pane_switches_in_place).
     assert "TEG 20 Handicaps" not in resp.text
     assert "Round 2 played 14 May 2026" in resp.text  # R3: dated context line
     # R2: primary action pins the current TEG, never a bare route.
-    assert 'href="/leaderboard?teg=19"' in resp.text
-    # Actions open pages, so they read as links, not a button + tab row.
-    assert "state-actions-links" in resp.text
+    # Actions live in the deferred panel's pane switcher now; no button row.
     assert "state-btn-primary\"" not in resp.text
 
 
@@ -1217,7 +1216,8 @@ def test_contents_panel_route_real_data(client):
     # label) and a gross-competition summary line.
     resp = client.get("/contents/panel", params={"teg": 18, "state": "in_progress", "rounds": 4})
     _assert_ok_no_error(resp)
-    assert "Standings after Round 4" in resp.text
+    assert '<button type="button" class="pane-tab is-active"' in resp.text  # Standings pane first
+    assert ">Round 4</button>" in resp.text
     assert "col-round" not in resp.text  # round columns dropped -- Total only
     assert "Green Jacket (gross)" in resp.text
     assert ">Points</th>" in resp.text  # unit-aware header, Stableford era
@@ -1464,25 +1464,36 @@ def test_contents_complete_state_costs_no_parquet_load(client):
     assert deps.cached_round_data.cache_info().misses == misses_before
 
 
-def test_contents_panel_actions_are_all_in_the_sitemap(client, monkeypatch):
-    # I4 R11: the state panel adds zero new destinations -- every panel
-    # action already exists in the NAV_SECTIONS sitemap.
-    monkeypatch.setattr(contents_route, "get_tournament_state", lambda: {
-        "state": "in_progress", "teg_num": 19, "teg_label": "TEG 19",
-        "area": "Algarve, Portugal", "year": "2026",
-        "rounds_played": 2, "rounds_expected": 4,
-        "last_round_date": "14 May 2026",
-    })
-    resp = client.get("/contents")
-    _assert_ok_no_error(resp)
+def test_contents_panel_actions_are_all_in_the_sitemap(client):
+    # I4 R11: the state panel adds zero new destinations -- every in-progress
+    # pane's onward link already exists in the NAV_SECTIONS sitemap.
     sitemap_bases = {url for section in NAV_SECTIONS for (_t, url, _k, _i) in section["pages"]}
-    actions = resp.text[resp.text.index('class="state-actions'):]
-    actions = actions[:actions.index("</div>")]
-    panel_hrefs = re.findall(r'href="([^"]+)"', actions)
-    assert panel_hrefs
-    for href in panel_hrefs:
-        base = href.split("?")[0]
-        assert base in sitemap_bases, f"panel action {href!r} is not in the sitemap"
+    for view in ("standings", "round", "handicaps"):
+        resp = client.get("/contents/pane", params={"teg": 18, "rounds": 4, "view": view})
+        _assert_ok_no_error(resp)
+        hrefs = re.findall(r'class="teaser-link pane-link" href="([^"]+)"', resp.text)
+        assert len(hrefs) == 1, view
+        assert hrefs[0].split("?")[0] in sitemap_bases, f"pane link {hrefs[0]!r} is not in the sitemap"
+
+
+def test_contents_pane_switches_in_place(client):
+    # Each switcher button re-requests the whole pane (outerHTML), so the
+    # active state arrives with the content. Unknown views fall back.
+    for view, marker, link in (
+        ("standings", ">Points</th>", 'href="/leaderboard?teg=18"'),
+        ("round", "Personal rank", 'href="/latest-round?teg=18&round=4"'),
+        ("handicaps", 'class="hc-list"', 'href="/handicaps"'),
+    ):
+        resp = client.get("/contents/pane", params={"teg": 18, "rounds": 4, "view": view})
+        _assert_ok_no_error(resp)
+        assert marker in resp.text and link in resp.text, view
+        assert resp.text.count('aria-pressed="true"') == 1
+        assert 'hx-target="#contents-pane" hx-swap="outerHTML"' in resp.text
+    # No expand toggle: its script lives on /latest-round only.
+    resp = client.get("/contents/pane", params={"teg": 18, "rounds": 4, "view": "round"})
+    assert "data-lr-rank-toggle" not in resp.text
+    resp = client.get("/contents/pane", params={"teg": 18, "rounds": 4, "view": "bogus"})
+    assert ">Points</th>" in resp.text
 
 
 def test_contents_sitemap_is_collapsible_and_closed_by_default(client):

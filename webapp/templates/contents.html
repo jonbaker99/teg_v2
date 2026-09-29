@@ -110,7 +110,6 @@
         border: 1px solid var(--rule-color);
     }
     .state-btn:hover { opacity: 0.85; }
-    .state-actions-links { gap: var(--sp-2, 8px) var(--sp-5, 24px); margin-top: var(--sp-5, 24px); }
     .state-link {
         font-family: var(--font-sans);
         font-size: var(--fs-300, 14px);
@@ -299,6 +298,60 @@
         color: var(--green);
         margin: 0 0 var(--sp-4, 14px) 0;
     }
+    /* In-progress pane switcher: kicker type, so it lines up with the
+       report kicker opposite. Active is green and underlined; the others
+       are muted until hovered. Slashes match the page's separators. */
+    .pane-switch {
+        display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px var(--sp-2, 8px);
+        margin: 0 0 var(--sp-4, 14px) 0;
+    }
+    .pane-tab {
+        font-family: var(--font-sans);
+        font-size: var(--fs-200, 12px);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-muted);
+        background: none; border: 0; padding: 0; cursor: pointer;
+        text-decoration: underline 2px transparent;
+        text-underline-offset: 6px;
+    }
+    .pane-tab:hover { color: var(--text-primary); }
+    .pane-tab.is-active { color: var(--green); text-decoration-color: currentColor; cursor: default; }
+    .pane-sep { font-family: var(--font-sans); font-size: var(--fs-200, 12px); color: var(--text-muted); }
+    .contents-pane .pane-body { flex: 1; }
+    .contents-pane.htmx-request .pane-body { opacity: 0.5; transition: opacity 150ms; }
+    .pane-link { display: inline-block; margin-top: var(--sp-4, 16px); }
+    /* /latest-round's scoreboard, fitted to half a panel. Its own compact
+       rules are phone-only and scoped to that page, so size it here. */
+    .pane-round table.leaderboard { width: 100%; table-layout: fixed; border-collapse: collapse; }
+    .pane-round .lr-rank-col { width: 9%; }
+    .pane-round .lr-player-col { width: 37%; }
+    .pane-round .lr-total-col { width: 16%; }
+    .pane-round .lr-personal-col, .pane-round .lr-alltime-col { width: 19%; }
+    .pane-round table.leaderboard th { white-space: normal; line-height: 1.2; vertical-align: bottom; }
+    .pane-round table.leaderboard th:not(:nth-child(2)), .pane-round table.leaderboard td:not(:nth-child(2)) { text-align: center; }
+    .pane-round td.lr-total-cell { font-weight: 700; }
+    .pane-round td.lr-rank-context { color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+    .pane-round .lr-rank-value small { color: var(--text-muted); font-size: .78em; }
+    .pane-round tr.rank-1 { background-color: var(--leader-tint); }
+    .pane-round tr.rank-1 td { font-weight: 700; }
+    @media (max-width: 640px) {
+        .pane-round .lr-rank-col { width: 8%; }
+        .pane-round .lr-player-col { width: 36%; }
+        .pane-round .lr-total-col { width: 14%; }
+        .pane-round .lr-personal-col, .pane-round .lr-alltime-col { width: 21%; }
+        .pane-round table.leaderboard th { font-size: 11px; letter-spacing: .03em; text-transform: uppercase; padding-inline: 2px; }
+        .pane-round table.leaderboard td { padding-inline: 2px; }
+    }
+    /* /handicaps' phone list, shown at every width here. */
+    .contents-pane .hc-list { display: table; width: 100%; border-collapse: collapse; }
+    .contents-pane .hc-list tr { border-top: 1px solid var(--table-cell-border, #e0e0e0); }
+    .contents-pane .hc-list tr:first-child { border-top: none; }
+    .contents-pane .hc-list td { padding: 10px 4px; vertical-align: middle; }
+    .contents-pane .hc-list-name { font-size: 0.9375rem; color: var(--text-primary); }
+    .contents-pane .hc-list-value { width: 20%; text-align: right; font-family: var(--font-table), sans-serif; font-size: 1.0625rem; font-weight: 700; color: var(--text-primary); }
+    .contents-pane .hc-list-delta { width: 30%; text-align: right; font-family: var(--font-table), sans-serif; font-size: 0.8125rem; font-weight: 600; background: none; padding: 10px 4px; border-radius: 0; }
     .gross-line {
         font-family: var(--font-sans);
         font-size: var(--fs-200, 12px);
@@ -455,18 +508,10 @@
         <div hx-get="/contents/panel?teg={{ state.teg_num }}&state=in_progress&rounds={{ state.rounds_played }}" hx-trigger="load" hx-swap="outerHTML">
             <div class="panel-grid two-col" id="contents-panel" aria-busy="true">
                 <div class="surface surface-open">
-                    <p class="standings-heading">Standings after Round {{ state.rounds_played }}</p>
+                    <p class="standings-heading">Standings</p>
                     <p class="gross-line">Loading…</p>
                 </div>
             </div>
-        </div>
-
-        {# Plain links, not a button + text pair: that pairing read as tabs
-           that would swap the standings pane, but each one opens a page. #}
-        <div class="state-actions state-actions-links">
-            <a class="teaser-link" href="/leaderboard?teg={{ state.teg_num }}">Latest Leaderboard ↗</a>
-            <a class="teaser-link teaser-handicaps" href="/latest-round">Latest Round in context ↗</a>
-            <a class="teaser-link teaser-handicaps" href="/handicaps">{{ state.teg_label }} Handicaps ↗</a>
         </div>
 
     {% elif state.state == "complete" %}
