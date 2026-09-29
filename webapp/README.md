@@ -23,6 +23,7 @@ Visit `http://localhost:8000` in your browser. Use Clean Page for current UI wor
   `TemplateResponse` calls to the modern `TemplateResponse(request, name, context)`
   signature, then drop the pins. (A related variant of this error also appears on
   Python 3.14 with jinja2 3.1.x — use Python 3.12/3.13 there.)
+- **Data-only commits don't redeploy:** the production service's Railway watch patterns (set in the Railway dashboard, not `railway.toml`) exclude `data/**`, root `*.md` and a few notes folders. So the app's own data commits, and merged PRs that only touch `data/`, don't trigger a redeploy — use `/admin/volume-sync` to pull such files onto the volume.
 - **Known gotcha — local dev can outrun the deploy Python version:** keep the local interpreter aligned with `.python-version` and run `python scripts/check_python_compat.py` before pushing Python changes. The incident history and setup details are below.
 
 #### Python deployment compatibility
@@ -86,6 +87,7 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
   Year falling back to the date's trailing year) instead of hand-typing them in
   the raw Edit-data grid. The other three steps reuse `teg_setup` /
   `round_setup` / `live_round` save functions unchanged.
+- **Par/SI prefill for a new course:** the Par/SI step prefills only from `course_pars.csv`, and the wizard never writes a new course there. Add the course's rows to `course_pars.csv` first (then pull it onto the volume) and type the course name exactly as it appears there; otherwise each round's card must be typed by hand.
 
 **Round setup** — templates `admin_round_setup.html`, `admin_round_setup_form.html`,
 `partials/admin_round_setup_result.html`.

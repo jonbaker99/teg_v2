@@ -99,5 +99,48 @@ def test_write_file_local_creates_missing_parent_directory(monkeypatch, tmp_path
     assert (tmp_path / "data" / "brand_new_dir" / "x.csv").exists()
 
 
+def test_read_file_railway_github_404_raises_file_not_found_error(monkeypatch, tmp_path):
+    """On Railway, a file absent from both volume and GitHub raised a raw
+    GithubException 404, so callers' `except FileNotFoundError` fallbacks never
+    fired. First production go-live failed this way: data/live_rounds.csv
+    didn't exist yet, and live_round._read_registry expects FileNotFoundError."""
+    monkeypatch.setenv("RAILWAY_ENVIRONMENT", "true")
+    monkeypatch.setattr(
+        file_operations.volume_operations,
+        "_get_volume_path",
+        lambda path: str(tmp_path / "volume" / path),
+    )
+
+    from github import GithubException
+
+    def fake_read_from_github(path):
+        raise GithubException(404, "Not Found", None)
+
+    monkeypatch.setattr(file_operations, "read_from_github", fake_read_from_github)
+
+    with pytest.raises(FileNotFoundError):
+        file_operations.read_file("data/live_rounds.csv")
+
+
+def test_read_file_railway_other_github_errors_propagate(monkeypatch, tmp_path):
+    """Only a 404 means 'absent'; auth or network errors must still surface."""
+    monkeypatch.setenv("RAILWAY_ENVIRONMENT", "true")
+    monkeypatch.setattr(
+        file_operations.volume_operations,
+        "_get_volume_path",
+        lambda path: str(tmp_path / "volume" / path),
+    )
+
+    from github import GithubException
+
+    def fake_read_from_github(path):
+        raise GithubException(401, "Bad credentials", None)
+
+    monkeypatch.setattr(file_operations, "read_from_github", fake_read_from_github)
+
+    with pytest.raises(GithubException):
+        file_operations.read_file("data/live_rounds.csv")
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

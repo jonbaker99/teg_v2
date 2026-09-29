@@ -36,6 +36,8 @@ def read_file(file_path: str) -> pd.DataFrame:
 
     Raises:
         ValueError: If the file type is not supported.
+        FileNotFoundError: If the file does not exist locally, or is absent
+            from both the volume and GitHub.
     """
     if volume_operations._is_railway():
         volume_path = volume_operations._get_volume_path(file_path)
@@ -70,6 +72,13 @@ def read_file(file_path: str) -> pd.DataFrame:
             logger.info(f"Cached {file_path} to volume for future reads")
             return data
 
+        except GithubException as e:
+            # Absent from both volume and GitHub: raise what the local branch
+            # raises, so callers' `except FileNotFoundError` fallbacks work here too.
+            if e.status == 404:
+                raise FileNotFoundError(file_path) from e
+            logger.error(f"Error reading {file_path} from GitHub: {e}")
+            raise
         except Exception as e:
             logger.error(f"Error reading {file_path} from GitHub: {e}")
             raise
