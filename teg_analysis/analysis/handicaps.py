@@ -32,8 +32,14 @@ def get_hc(TEG_needed: int | None = None) -> pd.DataFrame:
     Uses a 0.75/0.25 weighting of the adjusted gross from the previous two
     TEGs. Defaults to the next TEG after the highest available TEGNum.
 
+    A player without an adjusted gross in both of the two TEGs (no saved
+    handicap for one of them) is excluded, with a logged warning. A missed TEG
+    counts as the handicap saved for it (the "36-point rule"), so a player who
+    sat one out still needs a handicap saved for that TEG.
+
     Returns:
-        DataFrame with columns ['Pl', 'hc_raw', 'hc'].
+        DataFrame with columns ['Pl', 'hc_raw', 'hc'] (empty if nobody
+        qualifies).
     """
     hc = load_and_prepare_handicap_data(HANDICAPS_CSV)
     hc['TEGNum'] = hc["TEG"].str[-2:].str.strip().astype(int)
@@ -60,6 +66,20 @@ def get_hc(TEG_needed: int | None = None) -> pd.DataFrame:
     hc_merged['AdjGross'] = 36 - hc_merged['ave_stab'] + hc_merged['HC']
 
     pivoted = hc_merged.pivot(index="Pl", columns="TEGNum", values="AdjGross")
+    # A player needs an AdjGross in *both* TEGs. Anyone with a gap (e.g. no
+    # handicap saved for one of them) is left out rather than breaking the page.
+    pivoted = pivoted.reindex(columns=[TEG_1, TEG_2])
+    incomplete = pivoted.index[pivoted.isna().any(axis=1)]
+    if len(incomplete):
+        logger.warning(
+            "get_hc(%s): excluding %s -- missing an adjusted gross for TEG %s or TEG %s",
+            TEG_needed, ", ".join(map(str, incomplete)), TEG_1, TEG_2,
+        )
+    pivoted = pivoted.dropna()
+    if pivoted.empty:
+        return pd.DataFrame({"Pl": pd.Series(dtype=object),
+                             "hc_raw": pd.Series(dtype=float),
+                             "hc": pd.Series(dtype=int)})
     result = (0.75 * pivoted[TEG_1] + 0.25 * pivoted[TEG_2]).reset_index(name="hc_raw")
     result['hc'] = result['hc_raw'].round(0).astype(int)
     return result
@@ -92,6 +112,13 @@ def get_current_handicaps_formatted(last_completed_teg: int, next_teg: int):
         hc_data = pd.concat([hc_data, pd.DataFrame(calculated_rows)], ignore_index=True)
         current_hc = hc_data[hc_data['TEG'] == next_teg_str]
 
+    current_hc = current_hc.dropna(subset=['HC'])
+    # Non-players keep a saved handicap (36-point rule), so list only the
+    # players the TEG's roster marks as playing, when it has one.
+    from teg_analysis.analysis.teg_setup import playing_codes
+    playing = playing_codes(next_teg)
+    if playing is not None:
+        current_hc = current_hc[current_hc['Pl'].isin(playing)]
     merged = current_hc.merge(previous_hc[['Pl', 'HC']], on='Pl', how='left', suffixes=('_current', '_previous'))
     merged['HC_previous'] = merged['HC_previous'].fillna(merged['HC_current'])
     merged['Change'] = merged['HC_current'] - merged['HC_previous']
