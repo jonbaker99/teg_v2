@@ -1,4 +1,4 @@
-# TEG 19 dry-run fixes: four PRs, two before 10 October
+# TEG 19 dry-run fixes: two PRs before 10 October, the rest after
 
 Temporary working plan. Delete it once every item below is fixed or moved into `webapp/TODOS.md`.
 
@@ -9,23 +9,17 @@ The dry run found 16 issues. Four of them break the site the moment TEG 19 compl
 TEG 19 starts on **10 October 2026**. Fix those seven first, in two PRs that can run in parallel. The rest can wait until after the tournament.
 
 - **Before the tournament:** Batch 1A (post-completion crashes) and Batch 1B (live-round day flow). Then re-run the dry run.
-- **Before or after, depending on time:** Batch 2 (finalise reliability). If it slips, turn Railway auto-deploy off for 10 to 13 October instead.
-- **After the tournament:** Batch 3 (report admin) and Batch 4 (admin mobile layout and the leaderboard reports tab).
+- **After the tournament:** Batch 2 (finalise reliability), Batch 3 (report admin) and Batch 4 (admin mobile layout and the leaderboard reports tab).
 
 Evidence for every item is in `TEST_TOURNAMENT_ISSUES.md` on the dry-run branch (PR #140). Issue numbers below match that log.
 
-## Decisions needed before work starts
+## Decisions (settled)
 
-These change what gets built. Everything else has a sensible default.
+1. **Handicaps for players who miss a TEG (issue 14): they're assumed to score 36 points a round.** The calculation already does this (`fillna(36)` in `get_hc`), so a missed TEG counts as that TEG's handicap. That only works if a handicap is saved for the missed TEG. Past TEGs followed that convention: SN sat out TEGs 11, 13, 14, 17 and 18, and JP sat out 14 and 16, yet each had a handicap saved. TEG setup (`save_teg_roster`) now writes `0` for anyone not playing, which breaks it: SN's TEG 19 handicap is 0, so SN's TEG 20 figure comes out wrong.
+2. **Batch 2 waits until after the tournament.** With auto-deploy off, the redeploy risk (issue 11) goes away. With Batch 1B's feedback, a 40-second finalise is tolerable. Batch 2 changes the shared data pipeline, which is the wrong thing to change a week before the tournament.
+3. **Auto-deploy is off from 9 to 13 October.** Deploy fixes by hand (below), and only when no finalise or report is running. Turn it back on afterwards, or it's easy to merge a fix that never goes live.
 
-1. **Handicaps for players missing a TEG (issue 14).** SN played TEG 18 but not 19. HM and GP played neither. Options:
-   - **Recommended:** exclude non-players, and show "needs manual handicap" for anyone missing one of the two TEGs. Never guess.
-   - Use the single TEG they did play, flagged as a draft.
-   - Carry forward their last handicap.
-2. **Finalise before the tournament (issues 10, 11).** Options:
-   - **Recommended:** ship only the feedback fixes (Batch 1B) before the tournament. Turn auto-deploy off for 10 to 13 October. Do the background job and single commit (Batch 2) afterwards.
-   - Do Batch 2 before the tournament too, if Batches 1A and 1B are merged and re-tested by about 4 October.
-3. **Auto-deploy off during the tournament (issue 11).** **Recommended:** yes. Deploy fixes by hand (Railway, Cmd+K, then *Deploy Latest Commit*), and only when no finalise or report is running.
+**Deploying by hand:** in the Railway dashboard, open the project, press Cmd+K and choose *Deploy Latest Commit*. That deploys the newest commit on `main`. A Claude session with the Railway connector can also trigger it for you.
 
 ## The issues, grouped into batches
 
@@ -36,7 +30,7 @@ All four are silent until the last round is finalised, then they hit every visit
 | # | Problem | Proposed fix | Main files |
 |---|---|---|---|
 | 13 | Home page shows dashes for Champion, Jacket and Spoon. Nothing saves the winners when a TEG completes. | Add a winners step to the finalise/data-update cache steps. It runs when a TEG becomes complete and on deletion, and fails loudly like the other cache steps. Remove or wire in the unused `calculate_and_save_missing_winners`. | `teg_analysis/analysis/history.py`, `analysis/data_update.py` |
-| 14 | `/handicaps` crashes (NaN to int). TEG setup saves `0` for non-players, so the TEG 20 calculation meets gaps. | Treat 0 and blank as "didn't play". Exclude non-players. Apply decision 1 to anyone missing a TEG. One player's gap must never break the page. The home page's Next TEG tiles share this path. | `teg_analysis/analysis/handicaps.py` |
+| 14 | `/handicaps` crashes (NaN to int). HM and GP have no TEG 18 handicap and `0` for TEG 19, so they get gaps. SN's TEG 19 handicap is `0` because TEG setup saves 0 for non-players, so SN's TEG 20 handicap is wrong. | Keep the 36-point rule (decision 1). (a) For regulars who sit a TEG out, TEG setup saves their calculated handicap (not 0) and marks them not playing some other way, so the rule has a handicap to use. (b) Repair TEG 19's row for SN. (c) Exclude anyone with no handicap in either of the two TEGs (HM, GP). (d) One player's gap must never break the page. The home page's Next TEG tiles share this path. Check which other readers treat 0 as "not playing" before changing what's saved. | `teg_analysis/analysis/handicaps.py`, `analysis/teg_setup.py`, `data/handicaps.csv` |
 | 15 | Home page Next TEG tab crashes (`KeyError: 'TEGNum'`) when the next TEG has no rounds set up. | Return `TEGNum` from `get_future_tegs`. Show TBC when there's no row at all (future_tegs.csv has no TEG 20). | `teg_analysis/analysis/history.py`, `webapp/routes/contents.py` |
 | 16 | Home page final standings only appear once the tournament report exists. | Always load the standings panel. Show the headlines column only when a report exists. The panel partial already handles no report. | `webapp/templates/partials/_contents_complete_view.html` |
 
@@ -55,7 +49,7 @@ All four are silent until the last round is finalised, then they hit every visit
 
 **Acceptance:** on a phone, a player can move between entry and leaderboard both ways. An admin can find any active round's link, finalise once with clear feedback, and move on to the report.
 
-### Batch 2: finalise reliability (before the tournament only if time allows)
+### Batch 2: finalise reliability (after the tournament)
 
 | # | Problem | Proposed fix |
 |---|---|---|
@@ -108,10 +102,10 @@ Each batch is one task: its own branch and worktree, and one PR against `main` w
 | When | What |
 |---|---|
 | by 3 Oct | Batches 1A and 1B merged |
-| 4 to 6 Oct | Second dry run on a fresh PR environment (below). Batch 2, if you've chosen it. |
+| 4 to 6 Oct | Second dry run on a fresh PR environment (below) |
 | 9 Oct | Turn auto-deploy off. Close PR #140 and delete its branch. |
 | 10 to 13 Oct | TEG 19 |
-| after | Turn auto-deploy back on. Batches 3 and 4. |
+| after | Turn auto-deploy back on. Batches 2, 3 and 4. |
 
 ## Second dry run: the same flow, checking the fixes
 
