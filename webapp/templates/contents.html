@@ -499,6 +499,13 @@
         font-weight: 700;
         line-height: 1.3;
     }
+    /* Headlines pane: a little more air under the pane title, so the
+       lead story starts about where the standings table's header does. */
+    .headlines-pane .kicker { margin-bottom: var(--sp-5, 24px); }
+    /* More than four stories (lead included): tighten the secondary
+       stories so the pane stays close to the standings' height. */
+    .headlines-compact .headline-list .hl-headline { font-size: 15px; }
+    .headlines-compact .headline-list .hl-kicker { font-size: 10px; margin-bottom: 0; }
 
     /* --- Collapsible sitemap signpost (I5 revision: reopens the "always
        visible" decision at the owner's request). Native <details> -- zero
