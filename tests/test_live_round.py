@@ -531,3 +531,26 @@ def test_get_live_round_context_combines_roster_and_pars(store, monkeypatch):
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
+
+
+# ---------------------------------------------------------------------------
+# Public entry link switch
+# ---------------------------------------------------------------------------
+
+def test_public_entry_link_off_by_default(store):
+    lr.start_live_round(19, 1)
+    assert lr.get_public_entry_enabled() is False
+    assert lr.get_public_live_rounds() == []
+
+
+def test_public_entry_link_lists_only_active_rounds_when_on(store):
+    live = lr.start_live_round(19, 1)
+    done = lr.start_live_round(19, 2)
+    lr.cancel_live_round(done["Token"])
+
+    lr.set_public_entry_enabled(True)
+    assert lr.get_public_entry_enabled() is True
+    assert lr.get_public_live_rounds() == [{"token": live["Token"], "teg_num": 19, "round_num": 1}]
+
+    lr.set_public_entry_enabled(False)
+    assert lr.get_public_live_rounds() == []

@@ -2,7 +2,7 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-29 (TEG 19 post-completion fixes)
+**Last updated:** 2026-09-29 (TEG 19 post-completion fixes; live round entry links)
 
 ## 2026-09-29 — TEG 19 post-completion fixes (Batch 1A)
 
@@ -14,6 +14,10 @@ The dry run found four bugs that hit every visitor once TEG 19 completes. All fo
 - **Final standings show without a report.** The headlines column appears only once the tournament report exists.
 
 Batches 1B to 4 are in `TEG19_FIX_PLAN.md`.
+## 2026-09-29 — Live round entry links
+
+Active live rounds now show their full score-entry link, with a Copy link button, in the admin live-round table and on the review page. A new admin switch, off by default, adds an "Enter scores" banner to every public page while a round is active, so players can find it without an admin.
+
 
 ## 2026-09-29 — Next TEG tab on Contents
 

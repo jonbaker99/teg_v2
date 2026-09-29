@@ -95,6 +95,7 @@ async def theme_middleware(request: Request, call_next):
         request.state.mobile_shortcuts = MOBILE_SHORTCUTS
     else:
         teg_num, in_progress, report = await run_in_threadpool(_navigation_context)
+        request.state.public_live_rounds = await run_in_threadpool(deps.get_public_live_rounds_cached)
         request.state.nav_teg_label = f"TEG {teg_num}"
         request.state.nav_sections, request.state.mobile_shortcuts = navigation_for_teg(
             teg_num, in_progress=in_progress, report=report,

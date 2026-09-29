@@ -29,6 +29,26 @@
   {% endif %}
 
   <div class="data-card" style="margin-bottom:1rem;">
+    <h2 class="card-header">Public entry link</h2>
+    {% if saved == 'error' %}
+      <p class="error" style="color:#b00020;">Could not save the switch. Try again.</p>
+    {% endif %}
+    <p style="margin:.5rem 0;">
+      When on, every public page shows an "Enter scores" link for each active round, so
+      players don't need the link sent to them. Anyone who can see the site can then enter scores.
+    </p>
+    <form method="post" action="/admin/live-round/public-link"
+          style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;">
+      <strong>{{ 'On' if public_link_on else 'Off' }}</strong>
+      <input type="hidden" name="enabled" value="{{ 'off' if public_link_on else 'on' }}">
+      <button type="submit" class="btn-action">{{ 'Turn off' if public_link_on else 'Turn on' }}</button>
+      {% if public_link_on and not entry_urls %}
+        <span style="color:#666;font-size:.85rem;">No round is active, so nothing shows yet.</span>
+      {% endif %}
+    </form>
+  </div>
+
+  <div class="data-card" style="margin-bottom:1rem;">
     <h2 class="card-header">Start a live round</h2>
     {% if not startable_rounds %}
       <p>No rounds are ready to go live — a round needs confirmed Par/SI first (see
@@ -80,6 +100,14 @@
               {{ 'Review & Finalize' if r.Status == 'active' else 'View' }} →
             </a></td>
           </tr>
+          {% if entry_urls.get(r.Token) %}
+          <tr>
+            <td colspan="5">
+              <p style="margin:0 0 .25rem;font-size:.85rem;color:#666;">Score-entry link for players:</p>
+              {% with url = entry_urls[r.Token] %}{% include "partials/live_round_entry_link.html" %}{% endwith %}
+            </td>
+          </tr>
+          {% endif %}
           {% endfor %}
         </tbody>
       </table>

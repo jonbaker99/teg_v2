@@ -177,6 +177,41 @@ def clear_all_data_caches() -> None:
         clear_fn()
 
 
+# --- Public live-round entry link ---------------------------------------------
+
+# Every page renders this banner, so read the switch + registry at most once
+# per TTL rather than per request. Admin changes clear it immediately.
+_PUBLIC_LIVE_TTL_SECONDS = 30
+_public_live_cache: dict = {"at": 0.0, "rounds": []}
+
+
+def get_public_live_rounds_cached() -> list[dict]:
+    """Active rounds the public site may link to; [] when the admin switch is off.
+
+    Never raises: a read failure hides the banner rather than breaking every page.
+    """
+    import time
+    from teg_analysis.analysis.live_round import get_public_live_rounds
+
+    now = time.monotonic()
+    if now - _public_live_cache["at"] < _PUBLIC_LIVE_TTL_SECONDS:
+        return _public_live_cache["rounds"]
+    try:
+        rounds = get_public_live_rounds()
+    except Exception as e:  # noqa: BLE001
+        logger.warning(f"Public live-round lookup failed: {e}")
+        rounds = []
+    _public_live_cache.update(at=now, rounds=rounds)
+    return rounds
+
+
+def clear_public_live_rounds_cache() -> None:
+    _public_live_cache.update(at=0.0, rounds=[])
+
+
+register_cache_clearer(clear_public_live_rounds_cache)
+
+
 # --- Leaderboard logic (from streamlit/leaderboard_utils.py) ------------------
 
 def create_leaderboard(leaderboard_df: pd.DataFrame, value_column: str, ascending: bool = True) -> pd.DataFrame:
