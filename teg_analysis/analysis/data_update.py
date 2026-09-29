@@ -29,7 +29,7 @@ The "edit metadata CSV" flow:
 
 ``execute_data_update`` / ``execute_data_deletion`` reuse the existing building
 blocks in ``teg_analysis.analysis.pipeline`` (``update_all_data``,
-``update_streaks_cache``, ``update_commentary_caches``, ``update_bestball_cache``,
+``update_streaks_cache``, ``update_commentary_caches``, ``update_bestball_cache``, ``history.update_winners_cache``,
 ``load_and_prepare_handicap_data``) and ``teg_analysis.io`` (``read_file``,
 ``write_file``, ``backup_file``, ``batch_commit_to_github``).
 """
@@ -463,6 +463,7 @@ def _execute_data_update_locked(
         update_commentary_caches,
         update_bestball_cache,
     )
+    from teg_analysis.analysis.history import update_winners_cache
 
     if defer_github is None:
         defer_github = bool(_is_railway())
@@ -568,6 +569,15 @@ def _execute_data_update_locked(
     )
     if bestball_file:
         batch_files.append(bestball_file)
+
+    # Reads completed_tegs.csv, written above by update_teg_status_files (the
+    # volume/local write lands immediately even when the GitHub push is deferred).
+    winners_file = _run_cache_step(
+        cache_errors, 'winners',
+        lambda: update_winners_cache(all_data, defer_github=defer_github),
+    )
+    if winners_file:
+        batch_files.append(winners_file)
 
     committed = False
     if defer_github and batch_files:
@@ -714,6 +724,7 @@ def _execute_data_deletion_locked(
         update_commentary_caches,
         update_bestball_cache,
     )
+    from teg_analysis.analysis.history import update_winners_cache
 
     if defer_github is None:
         defer_github = bool(_is_railway())
@@ -780,6 +791,15 @@ def _execute_data_deletion_locked(
     )
     if bestball_file:
         batch_files.append(bestball_file)
+
+    # Reads completed_tegs.csv, written above by update_teg_status_files (the
+    # volume/local write lands immediately even when the GitHub push is deferred).
+    winners_file = _run_cache_step(
+        cache_errors, 'winners',
+        lambda: update_winners_cache(all_data, defer_github=defer_github),
+    )
+    if winners_file:
+        batch_files.append(winners_file)
 
     committed = False
     if defer_github and batch_files:
