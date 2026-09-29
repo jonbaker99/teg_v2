@@ -308,7 +308,6 @@ def get_tournament_state() -> dict:
     from teg_analysis.io.file_operations import read_file
     from teg_analysis.core.metadata import get_teg_metadata
     from teg_analysis.core.data_loader import get_tegnum_rounds
-    from teg_analysis.analysis.history import get_future_tegs
     from teg_analysis.reporting.newspaper_edition import has_edition, get_edition_summary
 
     in_teg, rounds_played = get_current_in_progress_teg_fast()
@@ -344,19 +343,6 @@ def get_tournament_state() -> dict:
         except Exception:
             winners = {}
 
-        next_teg = None
-        try:
-            future = get_future_tegs()
-            if not future.empty:
-                next_row = future.iloc[0]
-                next_teg = {
-                    "label": next_row['TEG'],
-                    "year": int(next_row['Year']),
-                    "area": next_row['Area'],
-                }
-        except Exception:
-            next_teg = None
-
         report_summary = get_edition_summary(last_teg) if has_edition(last_teg) else None
 
         return {
@@ -371,7 +357,6 @@ def get_tournament_state() -> dict:
             "jacket": winners.get('Green Jacket', ''),
             "spoon": winners.get('HMM Wooden Spoon', ''),
             "report_summary": report_summary,
-            "next_teg": next_teg,
         }
 
     return {"state": "no_data"}

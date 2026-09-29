@@ -26,7 +26,10 @@
 </div>
 {% else %}
 <div class="panel-grid two-col equal-col" id="contents-panel">
-    {% with pane = "standings", teg_num = panel.teg_num %}{% include "partials/_contents_complete_pane.html" %}{% endwith %}
+    <div class="surface surface-open">
+        <p class="standings-heading"><a class="heading-link" href="/results?teg={{ panel.teg_num }}">Final Standings ↗</a></p>
+        <div style="overflow-x:auto;">{% with standings = panel.standings %}{% include "partials/_standings_table.html" %}{% endwith %}</div>
+    </div>
     <div class="surface surface-open">
         {% if panel.report_summary %}
         <p class="kicker"><a class="heading-link" href="{{ panel.report_summary.link }}">TEG {{ panel.teg_num }} headlines ↗</a></p>

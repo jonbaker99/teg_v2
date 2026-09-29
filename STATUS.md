@@ -6,7 +6,7 @@ Current state and next priorities. Instructions and architecture live in `CLAUDE
 
 ## 2026-09-29 — Next TEG tab on Contents
 
-Between tournaments, the completed Contents panel's left column switches between Final standings and Next TEG. Next TEG shows the area and year, each round's date and course, and the next TEG's handicaps. Rounds come from `round_info.csv` once set up; before that the area comes from `future_tegs.csv` and rounds show as TBC. Course locations show when `course_info.csv` has the course. The old "Next:" line and handicap link under the panel are gone; the tab covers both.
+Between tournaments, the Contents page switches between Last TEG and Next TEG. Next TEG replaces the whole results section, with rounds on the left and handicaps on the right. Unknown dates, courses or venue show TBC. `/contents?view=next` is linkable. Course locations come from `course_info.csv`, which now includes Quinta da Ria and Monte Rei. The old "Next:" line and handicap link are gone.
 
 ## 2026-09-29 — In-progress Contents pane switcher
 
