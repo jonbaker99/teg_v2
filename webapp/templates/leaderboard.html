@@ -3,6 +3,7 @@
 {% block title_suffix %} — Leaderboard{% endblock %}
 {% block extra_head %}
 <link rel="stylesheet" href="/static/scorecard.css?v=32">
+<link rel="stylesheet" href="/static/headlines.css?v=1">
 <script defer src="/static/scorecard-controls.js?v=2"></script>
 {% endblock %}
 
@@ -52,9 +53,9 @@
        toggle switch inside partials/leaderboard_table.html) and
        Scorecards. Clicking Leaderboard while already on it preserves the
        current measure instead of resetting to net. #}
-    <button class="tab-underline{% if active_lb_tab != 'scorecards' %} tab-underline--active{% endif %}"
+    <button class="tab-underline{% if active_lb_tab in ('net', 'gross') %} tab-underline--active{% endif %}"
             data-public-state-key="tab" data-public-state-values="net,gross"
-            onclick="document.getElementById('lb-tab-input').value='{{ 'net' if active_lb_tab == 'scorecards' else active_lb_tab }}';
+            onclick="document.getElementById('lb-tab-input').value='{{ 'net' if active_lb_tab in ('scorecards', 'reports') else active_lb_tab }}';
                      htmx.trigger(document.getElementById('lb-teg-select'), 'change')">
         Leaderboard
     </button>
@@ -63,6 +64,12 @@
             onclick="document.getElementById('lb-tab-input').value='scorecards';
                      htmx.trigger(document.getElementById('lb-teg-select'), 'change')">
         Scorecards
+    </button>
+    <button class="tab-underline{% if active_lb_tab == 'reports' %} tab-underline--active{% endif %}"
+            data-public-state-key="tab" data-public-state-value="reports"
+            onclick="document.getElementById('lb-tab-input').value='reports';
+                     htmx.trigger(document.getElementById('lb-teg-select'), 'change')">
+        Reports
     </button>
 </div>
 

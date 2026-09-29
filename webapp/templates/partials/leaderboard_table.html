@@ -1,8 +1,13 @@
 {#- /leaderboard wrapper around the shared standings body (I1) -- see
    partials/_standings_page.html for the real markup; this file only fixes
    the id prefix, route and page-level context this route uses. #}
+{% if reports_view or (error and active_lb_tab == 'reports') %}
+{% set full_page = lb_full_page %}
+{% include "partials/_leaderboard_reports.html" %}
+{% else %}
 {% set ns = 'lb' %}
 {% set active_measure = active_lb_tab %}
 {% set full_page = lb_full_page %}
 {% set route_base = '/leaderboard' %}
 {% include "partials/_standings_page.html" %}
+{% endif %}

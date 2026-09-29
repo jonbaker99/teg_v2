@@ -74,7 +74,7 @@ Main files: `webapp/report_generation.py`, `webapp/routes/admin_reports.py`, `te
 
 **Acceptance:** with two reports running, `/admin/reports` shows both with their phases, whichever TEG and round is selected. Tapping Generate on a running report, or on one made in the last few hours, asks first.
 
-### Batch 4a: leaderboard reports tab (wave 1)
+### Batch 4a: leaderboard reports tab (wave 1, done)
 
 | # | Problem | Proposed fix |
 |---|---|---|
