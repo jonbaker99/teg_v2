@@ -1218,6 +1218,9 @@ def test_contents_panel_route_real_data(client):
     _assert_ok_no_error(resp)
     assert '<button type="button" class="tab-underline tab-underline--active"' in resp.text  # Standings pane first
     assert ">Round 4</button>" in resp.text
+    # Round report: lead plus the other stories, as in the completed state.
+    assert 'class="lead-teaser"' in resp.text and 'class="headline-list"' in resp.text
+    assert "Round 4 headlines" in resp.text
     assert "col-round" not in resp.text  # round columns dropped -- Total only
     assert "Green Jacket (gross)" in resp.text
     assert ">Points</th>" in resp.text  # unit-aware header, Stableford era
