@@ -37,7 +37,7 @@ Real incident, 2026-09-12: Railway was deploying on Python 3.11 while local dev 
 Run a full test tournament (setup → live scores → reports) on a PR environment, never on production. The isolation comes from two separate mechanisms, and both must hold:
 
 - **GitHub commits go to the PR branch.** Every write commits to `RAILWAY_GIT_BRANCH` (`teg_analysis/io/github_operations.py`), which Railway sets to the branch the environment deploys. Volume misses are also read from that branch.
-- **The volume must be the PR environment's own.** The volume at `/mnt/data_repo` is a plain folder with no branch awareness. If it were shared with production, test writes would land in live data. Check in the Railway dashboard that the PR service's volume has its own name/ID and starts near-empty. The in-app volume browser can't prove this, because pages fill the volume from GitHub on first read.
+- **The volume must be the PR environment's own.** The volume at `/mnt/data_repo` is a plain folder with no branch awareness. If it were shared with production, test writes would land in live data. Railway gives each environment its own volume instance, but the dashboard shows the same volume name and ID in every environment, so those prove nothing. Compare the service's disk usage per environment instead (Railway metrics, `DISK_USAGE_GB`): a fresh PR environment shows a few MB against production's ~230 MB. The in-app volume browser can't prove this, because pages fill the volume from GitHub on first read.
 
 Before relying on it, make one test write and confirm the commit appears on the PR branch and not on `main`. Build test reports with the local CLI on the same branch. To reset, close the PR and delete the branch; production needs no clean-up.
 
