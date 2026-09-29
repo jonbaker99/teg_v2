@@ -137,22 +137,17 @@
         margin: 0 0 var(--sp-6, 2rem) 0;
     }
 
-    /* --- Sitemap: one bounded surface per NAV_SECTIONS group (I4 ruling on
-       surface treatment) -- not a bare hairline, and not the old three
-       arbitrary column cards that packed unrelated groups together. Uses
-       the theme's own card surface (1px border + --card-radius), no
-       stacked shadow, no !important. --- */
+    /* --- Sitemap: one group per NAV_SECTIONS entry, each capped by a
+       hairline instead of a card box, matching the open panel above. --- */
     .contents-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-        gap: var(--sp-5, 24px);
+        gap: var(--sp-6, 32px) var(--sp-7, 48px);
         align-items: start;
     }
     .contents-group {
-        background: var(--bg-card);
-        border: 1px solid var(--rule-color);
-        border-radius: var(--card-radius);
-        padding: var(--sp-5, 24px);
+        border-top: 1px solid var(--rule-color);
+        padding-top: var(--sp-4, 16px);
     }
     .contents-links a {
         display: flex;
@@ -426,10 +421,7 @@
         display: flex;
         align-items: center;
         gap: var(--sp-3, 10px);
-        padding: var(--sp-4, 14px) var(--sp-5, 20px);
-        background: var(--bg-card);
-        border: 1px solid var(--rule-color);
-        border-radius: var(--card-radius);
+        padding: var(--sp-3, 12px) 0;
         font-family: var(--font-sans);
         font-size: var(--fs-300, 14px);
         font-weight: 600;
