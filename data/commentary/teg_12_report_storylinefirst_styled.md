@@ -113,9 +113,9 @@ He then played the rest of the round rather well, which is the cruellest detail 
   <li>Gregg Williams's 84 at PGA Catalunya - Tour (R1) — equals the course record, set by Jon Baker in TEG 11; 10 earlier rounds there</li>
   <li>Jon Baker's 84 at PGA Catalunya - Tour (R1) — equals the course record, his own mark from TEG 11; 10 earlier rounds there</li>
   <li>Stuart Neumann's 105 at PGA Catalunya - Tour (R1) — a new course-worst, beyond 103; 10 earlier rounds there</li>
-  <li>David Mullin's 84 at PGA Catalunya - Tour (R2) — equals the course record, set by Jon Baker in TEG 11; 10 earlier rounds there</li>
+  <li>David Mullin's 84 at PGA Catalunya - Tour (R2) — equals the course record, set by Jon Baker in TEG 11; 16 earlier rounds there</li>
   <li>Jon Baker's 90 at PGA Catalunya - Stadium (R3) — equals the course record, his own mark from TEG 11; 15 earlier rounds there</li>
-  <li>Jon Baker's 89 at PGA Catalunya - Stadium (R4) — a new course record, beating 90; 15 earlier rounds there</li>
+  <li>Jon Baker's 89 at PGA Catalunya - Stadium (R4) — a new course record, beating 90; 21 earlier rounds there</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Personal bests:</p><ul>

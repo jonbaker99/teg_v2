@@ -115,7 +115,7 @@ He finished 16 over net, and collected the Wooden Spoon. He had, at various mome
 
 <div class="records"><p class="records-header">Course records:</p><ul>
   <li>David Mullin's 88 at Boavista (R1) — a new course record, beating 89; 15 earlier rounds there</li>
-  <li>David Mullin's 85 at Boavista (R3) — a new course record, beating 88; 15 earlier rounds there</li>
+  <li>David Mullin's 85 at Boavista (R3) — a new course record, beating 88; 25 earlier rounds there</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Rare feats:</p><ul>

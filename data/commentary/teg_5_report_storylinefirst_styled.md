@@ -110,8 +110,8 @@ The oddity is that the same four rounds produced his best scoring, too. Back-to-
 
 <div class="records"><p class="records-header">Course records:</p><ul>
   <li>David Mullin's 83 at Boavista (R1) — a new course record, beating 85; 35 earlier rounds there</li>
-  <li>David Mullin's 82 at Boavista (R2) — a new course record, beating 83; 35 earlier rounds there</li>
-  <li>Stuart Neumann's 82 at Boavista (R2) — equals the course record, with David Mullin in the same round; 35 earlier rounds there</li>
+  <li>David Mullin's 82 at Boavista (R2) — a new course record, beating 83; 40 earlier rounds there</li>
+  <li>Stuart Neumann's 82 at Boavista (R2) — equals the course record, with David Mullin in the same round; 40 earlier rounds there</li>
 </ul></div>
 
 <div class="records"><p class="records-header">Personal bests:</p><ul>

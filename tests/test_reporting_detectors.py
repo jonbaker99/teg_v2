@@ -178,3 +178,23 @@ def test_course_records_through_round_only_reports_that_round():
     for e in events:
         holders = [(h["player"], h["teg"], h["round"]) for h in e.get("record_holders", [])]
         assert len(holders) == len(set(holders))
+
+
+def test_player_course_history_counts_same_teg_rounds():
+    """TEG 18 Stadium: Williams shot 85 in R3 then 84 in R4. The tournament
+    entry must count R3 as a visit and as his last visit; the R4 round entry
+    must describe R4 (not re-walk R3) without double-counting visits."""
+    from teg_analysis.reporting.course_history import build_player_course_history
+
+    course = "PGA Catalunya - Stadium"
+    gw = build_player_course_history(18)["Gregg Williams"][course]
+    assert gw["this_teg_best_round"] == 4
+    assert gw["strokes_vs_last_visit"] == -1          # vs R3's 85
+    assert gw["visit_count_through_this_teg"] == gw["n_prior_visits"] + 2
+    assert any("7th visit" in f for f in gw["summary_facts"])
+    assert any("R3 85 had already beaten" in f for f in gw["summary_facts"])
+
+    r4 = build_player_course_history(18, through_round=4)
+    assert r4["David Mullin"][course]["this_teg_best_round"] == 4
+    assert r4["Gregg Williams"][course]["visit_count_through_this_teg"] == (
+        r4["Gregg Williams"][course]["n_prior_visits"] + 1)
