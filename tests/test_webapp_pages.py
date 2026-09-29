@@ -1216,7 +1216,7 @@ def test_contents_panel_route_real_data(client):
     # label) and a gross-competition summary line.
     resp = client.get("/contents/panel", params={"teg": 18, "state": "in_progress", "rounds": 4})
     _assert_ok_no_error(resp)
-    assert '<button type="button" class="pane-tab is-active"' in resp.text  # Standings pane first
+    assert '<button type="button" class="tab-underline tab-underline--active"' in resp.text  # Standings pane first
     assert ">Round 4</button>" in resp.text
     assert "col-round" not in resp.text  # round columns dropped -- Total only
     assert "Green Jacket (gross)" in resp.text
@@ -1487,7 +1487,7 @@ def test_contents_pane_switches_in_place(client):
         resp = client.get("/contents/pane", params={"teg": 18, "rounds": 4, "view": view})
         _assert_ok_no_error(resp)
         assert marker in resp.text and link in resp.text, view
-        assert resp.text.count('class="pane-tab is-active"') == 1
+        assert resp.text.count('tab-underline--active') == 1
         assert 'hx-target="#contents-pane" hx-swap="outerHTML"' in resp.text
     # No expand toggle: its script lives on /latest-round only.
     resp = client.get("/contents/pane", params={"teg": 18, "rounds": 4, "view": "round"})
@@ -1501,7 +1501,7 @@ def test_contents_round_pane_score_type(client):
     # the pane, and the onward link carries the chosen metric.
     resp = client.get("/contents/pane", params={"teg": 18, "rounds": 4, "view": "round"})
     _assert_ok_no_error(resp)
-    assert 'class="metric-tab is-active"\n                aria-pressed="true"\n                hx-get="/contents/pane?view=round&metric=Stableford' in resp.text
+    assert 'class="seg-option"\n                aria-pressed="true"\n                hx-get="/contents/pane?view=round&metric=Stableford' in resp.text
     assert "&metric=Stableford\">Round 4 in context" in resp.text
     resp = client.get("/contents/pane", params={"teg": 18, "rounds": 4, "view": "round", "metric": "GrossVP"})
     assert "view=round&metric=GrossVP&teg=18&rounds=4\"\n                hx-target" in resp.text

@@ -298,36 +298,16 @@
         color: var(--green);
         margin: 0 0 var(--sp-4, 14px) 0;
     }
-    /* In-progress pane switcher: kicker type, so it lines up with the
-       report kicker opposite. Active is green and underlined; the others
-       are muted until hovered. Slashes match the page's separators. */
+    /* In-progress pane: the site's view tabs and measure control (base-vars
+       .tab-underline / .segmented). Tabs sit on a hairline so the row reads
+       as a tab bar; the underline is flush with the column edge. */
     .pane-switch {
-        display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px var(--sp-2, 8px);
-        margin: 0 0 var(--sp-4, 14px) 0;
+        display: flex; flex-wrap: wrap; gap: 0 var(--sp-5, 24px);
+        border-bottom: 1px solid var(--rule-color);
+        margin: 0 0 var(--sp-4, 16px) 0;
     }
-    .pane-tab {
-        font-family: var(--font-sans);
-        font-size: var(--fs-200, 12px);
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: var(--text-muted);
-        background: none; border: 0; padding: 0; cursor: pointer;
-        text-decoration: underline 2px transparent;
-        text-underline-offset: 6px;
-    }
-    .pane-tab:hover { color: var(--text-primary); }
-    .pane-tab.is-active { color: var(--green); text-decoration-color: currentColor; cursor: default; }
-    .pane-sep { font-family: var(--font-sans); font-size: var(--fs-200, 12px); color: var(--text-muted); }
-    /* Round-pane score type: a quieter second row -- sentence case, ink
-       when active -- so it reads as a filter under the pane switcher. */
-    .metric-switch { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px var(--sp-2, 8px); margin: 0 0 var(--sp-2, 8px) 0; }
-    .metric-tab {
-        font-family: var(--font-sans); font-size: var(--fs-300, 14px);
-        color: var(--text-muted); background: none; border: 0; padding: 0; cursor: pointer;
-    }
-    .metric-tab:hover { color: var(--text-primary); }
-    .metric-tab.is-active { color: var(--text-primary); font-weight: 600; cursor: default; }
+    .pane-switch .tab-underline { padding: 0 0 6px 0; margin-bottom: -1px; }
+    .metric-switch { align-self: flex-start; margin: 0 0 var(--sp-3, 12px) 0; }
     .contents-pane .pane-body { flex: 1; }
     .contents-pane.htmx-request .pane-body { opacity: 0.5; transition: opacity 150ms; }
     .pane-link { display: inline-block; margin-top: var(--sp-4, 16px); }
