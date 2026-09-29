@@ -6,7 +6,7 @@ Current state and next priorities. Instructions and architecture live in `CLAUDE
 
 ## 2026-09-29 — Open in-progress Contents panel
 
-The in-progress Contents panel drops its boxes too, matching the completed state. The site-contents chevron is larger and points right when closed, down when open.
+The in-progress Contents panel drops its boxes too, matching the completed state. The site-contents chevron is larger and points right when closed, down when open. Site-contents groups sit under a hairline instead of in boxes. `.claude/settings.local.json` is now gitignored.
 
 ## 2026-09-29 — Lighter completed Contents panel
 
