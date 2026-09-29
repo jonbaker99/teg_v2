@@ -2,7 +2,18 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-29 (Next TEG tab on Contents)
+**Last updated:** 2026-09-29 (TEG 19 post-completion fixes)
+
+## 2026-09-29 — TEG 19 post-completion fixes (Batch 1A)
+
+The dry run found four bugs that hit every visitor once TEG 19 completes. All four are fixed, with a regression test each.
+
+- **Winners are saved on completion.** A new winners cache step writes `teg_winners.csv` on every add or delete, so the home page shows the Champion, Jacket and Spoon.
+- **Non-players keep a handicap.** TEG setup no longer saves 0 for a player sitting out. It saves their calculated handicap (the 36-point rule) and records who plays in the new `teg_rosters.csv`. SN's TEG 19 handicap is repaired to 27. `/handicaps` leaves out any player missing one of the two TEGs instead of crashing.
+- **Next TEG survives a missing TEG row.** It shows TBC when TEG 20 has no rounds or future-TEG entry.
+- **Final standings show without a report.** The headlines column appears only once the tournament report exists.
+
+Batches 1B to 4 are in `TEG19_FIX_PLAN.md`.
 
 ## 2026-09-29 — Next TEG tab on Contents
 
