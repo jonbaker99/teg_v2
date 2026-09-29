@@ -140,7 +140,8 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
   (editable scorecard grid + conflicts + finalize), `/admin/live-round/{token}/edit`
   (bulk admin edit — a plain form POST that redirects back to review),
   `/admin/live-round/{token}/resolve`, `/admin/live-round/{token}/finalize`,
-  `/admin/live-round/{token}/cancel` (the rest HTMX).
+  `/admin/live-round/{token}/cancel` (HTMX), `/admin/live-round/{token}/random-fill`
+  (test only, plain form POST).
 - **Purpose:** start a live, multi-device round-entry session for an already-set-up
   round, hand out its shareable link, and review/finalize once everyone's done.
   The score-entry link isn't a one-shot: every **active** round shows its full
@@ -158,6 +159,22 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
   and finalizes. Admin edits go through `live_round.apply_admin_edits`, which is
   authoritative: an admin value overwrites a player entry and clears any conflict flag,
   and only cells whose value actually changed are written (a re-save is a no-op).
+  **Finalise feedback:** finalise takes about 40 seconds (it runs the full data update
+  in the request). While it runs, an indicator says so and Finalise, Cancel and Save are
+  disabled. On success the route answers with `HX-Redirect` back to the review page
+  (`?finalized=1`, plus `cache_errors=` naming any failed cache step), so the
+  confirmation lands at the top. Cancel does the same with `?cancelled=1`.
+  **Read-only once done:** a finalised or cancelled round's review page shows the
+  scorecard as plain values, with no Save, resolve, Finalise or Cancel. A finalised
+  round's status card offers **View leaderboard** (`/leaderboard`) and **Generate round
+  report** (`/admin/reports?teg=N&round=R`).
+  **Random fill (test only):** on an active round the review page offers "Fill empty
+  cells with random scores" for dry runs. `live_round.fill_random_scores` fills only
+  empty cells (par −2 to par +3, never below 1, weighted to par and bogey) through
+  `apply_admin_edits`, so normal validation applies. It's on only when
+  `RAILWAY_ENVIRONMENT_NAME` (or its older alias `RAILWAY_ENVIRONMENT`) isn't
+  `production`, so local runs and PR environments have it. On production the button is
+  hidden and the route returns 403.
   Finalizing runs the staged scores through the *existing* `execute_data_update`
   pipeline exactly as "Add a round" does — one GitHub commit, every derived cache
   regenerated. See the player-facing side below and
@@ -350,7 +367,10 @@ don't need the link sent to them.
   (reusing `data_update.process_round_for_all_scores`, so gross/net/Stableford match
   the eventual finalized round), shows both competitions (TEG Trophy = net, Green Jacket
   = gross) with a "scoring in progress" banner until all 18 holes are in for everyone,
-  and polls every 10s. It reads **only staging** — a live round isn't on the main-site
+  and polls every 10s. Once all scores are in, its banner says an admin finalises the
+  round. The app bar's **Enter scores** link goes back to entry. Both pages follow the
+  phone's light/dark setting (`prefers-color-scheme`); the mock-up's fixed Light / Dark
+  toggle was removed because it covered that link. It reads **only staging** — a live round isn't on the main-site
   `/leaderboard` or `/results` until it's finalized.
 - **Page:** a standalone page (does **not** extend `base.html`'s desktop site
   chrome) styled like `webapp/mobile_mockups/round_entry_grid.html`, which it's
