@@ -46,6 +46,7 @@ disagreement the flag exists to surface.
 """
 
 import logging
+import random
 import secrets
 import threading
 from datetime import datetime, timezone
@@ -523,6 +524,53 @@ def resolve_conflict(token: str, hole: int, player: str, chosen_value: int, reso
     return apply_admin_edits(
         token, [{"hole": hole, "player": player, "value": chosen_value}], resolved_by
     )
+
+
+# Score offsets vs par for fill_random_scores, eagle .. triple bogey, weighted
+# towards par and bogey like a mid-handicap society round.
+RANDOM_FILL_OFFSETS = (-2, -1, 0, 1, 2, 3)
+RANDOM_FILL_WEIGHTS = (1, 8, 40, 32, 13, 6)
+
+
+def fill_random_scores(token: str, rng: random.Random | None = None) -> dict:
+    """Test-only: fill every EMPTY staged cell with a random score.
+
+    Never overwrites an existing score (conflicted cells included). All cells
+    go through one apply_admin_edits call, so roster, range and finalizing-lock
+    validation still apply. Read-then-write is not atomic: a score entered in
+    between is overwritten (acceptable for a test tool). The webapp only
+    exposes this outside production.
+
+    Returns {"written": <count>}.
+    """
+    rng = rng or random.Random()
+    ctx = get_live_round_context(token)
+    if ctx is None:
+        raise LiveRoundNotFoundError(token)
+    if ctx["status"] != "active":
+        raise LiveRoundInactiveError(f"Live round {token} is {ctx['status']}, not active.")
+
+    staging = _read_staging(token)
+    filled = {
+        (int(r["Hole"]), r["Pl"])
+        for _, r in staging.iterrows()
+        if not pd.isna(r["Score"])
+    }
+
+    cells = []
+    for h in ctx["holes"]:
+        for player in ctx["players"]:
+            if (int(h["hole"]), player) in filled:
+                continue
+            offset = rng.choices(RANDOM_FILL_OFFSETS, weights=RANDOM_FILL_WEIGHTS)[0]
+            cells.append({
+                "hole": int(h["hole"]), "player": player,
+                "value": max(1, int(h["par"]) + offset),
+            })
+
+    if not cells:
+        return {"written": 0}
+    return {"written": apply_admin_edits(token, cells, "Random fill")["written"]}
 
 
 # ---------------------------------------------------------------------------
