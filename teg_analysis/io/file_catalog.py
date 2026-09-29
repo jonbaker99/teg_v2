@@ -67,6 +67,19 @@ DATA_FILE_CATALOG: list[dict] = [
         "edit_slug": "handicaps",
     },
     {
+        "name": "teg_rosters.csv",
+        "path": "data/teg_rosters.csv",
+        "category": CATEGORY_METADATA,
+        "importance": 4,
+        "format": "csv",
+        "role": "Who plays each TEG (TEGNum, Pl, Playing). A player who sits a TEG "
+                "out still has a handicap in handicaps.csv, so this file, not the "
+                "handicap, says whether they play. TEGs without rows use the older "
+                "rule that a 0/blank handicap means not playing.",
+        "updated_by": "TEG setup page.",
+        "edit_slug": None,
+    },
+    {
         "name": "players.csv",
         "path": "data/players.csv",
         "category": CATEGORY_METADATA,

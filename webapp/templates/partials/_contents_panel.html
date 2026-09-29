@@ -25,20 +25,19 @@
     {% endif %}
 </div>
 {% else %}
-<div class="panel-grid two-col equal-col" id="contents-panel">
+<div class="panel-grid{% if panel.report_summary %} two-col equal-col{% endif %}" id="contents-panel">
     <div class="surface surface-open">
         <p class="standings-heading"><a class="heading-link" href="/results?teg={{ panel.teg_num }}">Final Standings ↗</a></p>
         <div style="overflow-x:auto;">{% with standings = panel.standings %}{% include "partials/_standings_table.html" %}{% endwith %}</div>
     </div>
-    <div class="surface surface-open headlines-pane{% if panel.report_summary and panel.report_summary.other_articles | length >= 4 %} headlines-compact{% endif %}">
-        {% if panel.report_summary %}
+    {% if panel.report_summary %}
+    <div class="surface surface-open headlines-pane{% if panel.report_summary.other_articles | length >= 4 %} headlines-compact{% endif %}">
         <p class="kicker"><a class="heading-link" href="{{ panel.report_summary.link }}">TEG {{ panel.teg_num }} headlines ↗</a></p>
         <a class="lead-teaser" href="{{ panel.report_summary.lead_link | default(panel.report_summary.link) }}">
             <span class="hl-kicker">{% with honours = ("trophy",), decorative = true %}{% include "partials/_honour_icons.html" %}{% endwith %}The Champion</span>
             <span class="teaser-headline">{{ panel.report_summary.headline }}</span>
         </a>
-        {% endif %}
-        {% if panel.report_summary and panel.report_summary.other_articles %}
+        {% if panel.report_summary.other_articles %}
         <ul class="headline-list">
             {% for a in panel.report_summary.other_articles %}
             <li><a href="{{ a.link }}"><span class="hl-kicker">{{ a.kicker | replace(" | ", " / ") }}</span><span class="hl-headline">{{ a.headline }}</span></a></li>
@@ -46,5 +45,6 @@
         </ul>
         {% endif %}
     </div>
+    {% endif %}
 </div>
 {% endif %}

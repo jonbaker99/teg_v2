@@ -2,15 +2,26 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-29 (Leaderboard Reports tab)
+**Last updated:** 2026-09-29 (Leaderboard Reports tab; TEG 19 post-completion fixes)
 
 ## 2026-09-29 — Leaderboard Reports tab
 
 `/leaderboard` has a Reports tab for every TEG, including one in progress. It lists each round with its report's lead headline, linking to that round's report. Rounds without a report show "Pending", or "No report" once the TEG is complete. A completed TEG also shows its tournament report headline, and the hero "View tournament report" link is unchanged (TEG 19 dry-run issue 12).
 
+## 2026-09-29 — TEG 19 post-completion fixes (Batch 1A)
+
+The dry run found four bugs that hit every visitor once TEG 19 completes. All four are fixed, with a regression test each.
+
+- **Winners are saved on completion.** A new winners cache step writes `teg_winners.csv` on every add or delete, so the home page shows the Champion, Jacket and Spoon.
+- **Non-players keep a handicap.** TEG setup no longer saves 0 for a player sitting out. It saves their calculated handicap (the 36-point rule) and records who plays in the new `teg_rosters.csv`. SN's TEG 19 handicap is repaired to 27. `/handicaps` leaves out any player missing one of the two TEGs instead of crashing.
+- **Next TEG survives a missing TEG row.** It shows TBC when TEG 20 has no rounds or future-TEG entry.
+- **Final standings show without a report.** The headlines column appears only once the tournament report exists.
+
+Batches 1B to 4 are in `TEG19_FIX_PLAN.md`.
 ## 2026-09-29 — Live round entry links
 
 Active live rounds now show their full score-entry link, with a Copy link button, in the admin live-round table and on the review page. A new admin switch, off by default, adds an "Enter scores" banner to every public page while a round is active, so players can find it without an admin.
+
 
 ## 2026-09-29 — Next TEG tab on Contents
 
