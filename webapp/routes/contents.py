@@ -128,17 +128,8 @@ ROUND_METRICS = (("Stableford", "Points"), ("GrossVP", "Gross"), ("Sc", "Score")
 
 
 def _standings_pane(teg_num: int) -> dict:
-    """Standings + a compact gross-competition line."""
-    rd = cached_round_data()
-    teg_rd = rd[rd['TEGNum'] == teg_num]
-
-    gross_lb = create_leaderboard(teg_rd, 'GrossVP', ascending=True)
-    gross_leader = None
-    if not gross_lb.empty:
-        top_total = gross_lb.iloc[0]['Total']
-        names = gross_lb.loc[gross_lb['Total'] == top_total, PLAYER_COLUMN].tolist()
-        gross_leader = {"names": names, "total": format_value(top_total, 'GrossVP')}
-    return {"gross_leader": gross_leader, **_standings_table_context(teg_num)}
+    """Standings (net, with a Gross column -- no separate gross line)."""
+    return _standings_table_context(teg_num)
 
 
 def _pane_context(view: str, teg_num: int, rounds_played: int, metric: str = "Stableford") -> dict:

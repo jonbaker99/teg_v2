@@ -43,9 +43,6 @@
 
     {% else %}
     <div class="pane-body">
-        {% if panel.gross_leader %}
-        <p class="gross-line">Green Jacket (gross) — <b>{{ panel.gross_leader.names | join(", ") }}</b> {{ panel.gross_leader.total }}</p>
-        {% endif %}
         <div style="overflow-x:auto;">{% with standings = panel.standings %}{% include "partials/_standings_table.html" %}{% endwith %}</div>
     </div>
     <a class="teaser-link pane-link" href="/leaderboard?teg={{ teg_num }}">Full leaderboard ↗</a>

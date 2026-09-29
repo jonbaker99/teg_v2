@@ -305,7 +305,18 @@
         display: flex; flex-wrap: wrap; gap: 0 var(--sp-5, 24px);
         margin: 0 0 var(--sp-3, 12px) 0;
     }
+    /* Idle tabs: grey with a dotted underline (echoing the dotted lead
+       rules) so they read as clickable; active is the solid green bar. */
     .pane-switch .tab-underline { padding: 0 0 4px 0; }
+    .pane-switch .tab-underline:not(.tab-underline--active) {
+        color: var(--text-muted);
+        border-bottom: 1px dotted var(--text-muted);
+        padding-bottom: 5px;
+    }
+    .pane-switch .tab-underline:not(.tab-underline--active):hover {
+        color: var(--text-primary);
+        border-bottom-color: var(--text-primary);
+    }
     /* Compact form of .segmented: a quiet filter, not a primary control. */
     .metric-switch { align-self: flex-start; margin: 0 0 var(--sp-2, 8px) 0; }
     .metric-switch .seg-option { font-size: var(--fs-200, 12px); padding: 3px 10px; min-height: 26px; }

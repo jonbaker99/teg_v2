@@ -1222,7 +1222,7 @@ def test_contents_panel_route_real_data(client):
     assert 'class="lead-teaser"' in resp.text and 'class="headline-list"' in resp.text
     assert "Round 4 headlines" in resp.text
     assert "col-round" not in resp.text  # round columns dropped -- Total only
-    assert "Green Jacket (gross)" in resp.text
+    assert "Green Jacket (gross)" not in resp.text  # Gross column covers it
     assert ">Points</th>" in resp.text  # unit-aware header, Stableford era
     assert ">Gross</th>" in resp.text
 
