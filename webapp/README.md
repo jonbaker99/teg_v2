@@ -177,7 +177,8 @@ background task in `webapp/report_generation.py`.
 - **Running reports panel:** sits above the pickers, so it shows every report in flight whichever
   TEG and round is selected, each with its phases marked done / in progress / to do. It also keeps
   runs that ended in the last 15 minutes, with their outcome. It polls every 3s only while a run is
-  active, and a successful Generate refreshes it at once (`HX-Trigger: report-started`).
+  active, and a successful Generate refreshes it at once (`HX-Trigger: report-started`). A run with
+  no update for 30 minutes (`STALE_AFTER_SECONDS`) shows as stopped responding.
 - **Confirm before Generate:** `generate` without `confirm=1` first asks
   `report_generation.confirmation_needed()`. A running report shows when it started and its
   phase, with no way to start a second run. A report finished in the last 6 hours

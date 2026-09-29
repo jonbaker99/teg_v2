@@ -4,6 +4,7 @@ No real LLM or GitHub calls: the pipeline modules are replaced by fakes in
 sys.modules and the status directory is redirected into tmp_path.
 """
 
+import json
 import sys
 import types
 from datetime import datetime, timedelta, timezone
@@ -142,6 +143,27 @@ def test_running_reports_window_and_order(store):
     assert not by["TEG 18 R1"]["active"] and not by["TEG 18 R1"]["stale"]
     assert [r["state"] for r in by["TEG 19 R2"]["phases"]] == [
         "done", "active", "todo", "todo", "todo"]
+
+
+def test_running_reports_shows_recently_stale_run(store):
+    # Last update 35 min ago: stale for 5 min, so still shown as stopped.
+    _write_raw(17, 3, state="running", phase="voice", started_at=_iso(2400),
+               updated_at=_iso(35 * 60))
+    # Last update 50 min ago: stale for 20 min, past the visible window.
+    _write_raw(17, 4, state="running", phase="draft", started_at=_iso(3600),
+               updated_at=_iso(50 * 60))
+    # A file with no TEG is skipped, not a crash.
+    _write_raw(17, 1, state="running", started_at=_iso(60))
+    path = rg.status_path(17, 1)
+    raw = json.loads(path.read_text())
+    raw.pop("teg")
+    path.write_text(json.dumps(raw))
+
+    rows = rg.running_reports(now=NOW)
+    assert [(r["teg"], r["round"]) for r in rows] == [(17, 3)]
+    assert rows[0]["stale"] and not rows[0]["active"]
+    assert [r["state"] for r in rows[0]["phases"]] == [
+        "done", "done", "failed", "todo", "todo"]
 
 
 def test_running_reports_missing_dir(store):

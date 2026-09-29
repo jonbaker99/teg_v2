@@ -7,18 +7,6 @@
   <h1 class="page-title">Generate reports</h1>
 </div>
 
-<script>
-(function () {
-  function localise() {
-    document.querySelectorAll('time[data-local]').forEach(function (t) {
-      var d = new Date(t.getAttribute('datetime'));
-      if (!isNaN(d)) t.textContent = d.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
-    });
-  }
-  document.addEventListener('htmx:afterSwap', localise);
-  localise();
-})();
-</script>
 {% endblock %}
 
 {% block extra_head %}

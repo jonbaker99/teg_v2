@@ -30,6 +30,7 @@ from __future__ import annotations
 import json
 import logging
 import shutil
+import threading
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -66,7 +67,8 @@ STALE_AFTER_SECONDS = 1800  # 30 min
 
 
 def _now() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    # Whole seconds: older iOS Safari can't parse microseconds in `new Date()`.
+    return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
 def _store_path(rel: str) -> Path:
@@ -192,10 +194,15 @@ def running_reports(now: Optional[datetime] = None) -> list[dict]:
         active = is_active(s, now)
         stale = not active and s.get("state") in ACTIVE_STATES
         if not active:
-            # Stale runs have no finished_at; their last sign of life is updated_at.
+            # A stale run has no finished_at: it "ended" when it went stale,
+            # STALE_AFTER_SECONDS after its last sign of life (updated_at).
             age = _age_seconds(s.get("updated_at") if stale else s.get("finished_at"), now)
+            if age is not None and stale:
+                age -= STALE_AFTER_SECONDS
             if age is None or age > ENDED_VISIBLE_SECONDS:
                 continue
+        if s.get("teg") is None:  # malformed file: skip rather than 500 the page
+            continue
         out.append({**s, "label": report_label(s["teg"], s.get("round")), "active": active,
                     "stale": stale, "phases": phase_rows(s, now),
                     "phase_label": phase_label(s.get("phase"))})
@@ -223,9 +230,12 @@ def confirmation_needed(teg: int, round_num: Optional[int],
 def fmt_hhmm(iso: Optional[str]) -> str:
     """"HH:MM" (UTC) from an ISO timestamp; "?" if missing or unparseable."""
     try:
-        return datetime.fromisoformat(iso).astimezone(timezone.utc).strftime("%H:%M")
+        dt = datetime.fromisoformat(iso)
     except (TypeError, ValueError):
         return "?"
+    if dt.tzinfo is None:  # naive = UTC, as in _age_seconds
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(timezone.utc).strftime("%H:%M")
 
 
 def artefact_names(teg: int, round_num: Optional[int]) -> list[str]:
@@ -238,18 +248,26 @@ def artefact_names(teg: int, round_num: Optional[int]) -> list[str]:
             f"{stem}_verify.json"]
 
 
+_claim_lock = threading.Lock()
+
+
 def claim(teg: int, round_num: Optional[int]) -> Optional[str]:
     """Reserve (teg, round_num) for a new run.
 
     Returns an error message (and touches nothing) if a run is already active
     for this key; otherwise writes a fresh `queued` status and returns None.
     """
-    existing = read_status(teg, round_num)
-    if is_active(existing):
-        label = report_label(teg, round_num)
-        return f"A report for {label} is already generating (started {existing.get('started_at', '?')})."
-    write_status(teg, round_num, state="queued", phase=None, message="Queued.", error=None,
-                files=[], committed=False, started_at=_now(), finished_at=None)
+    # Sync route handlers run concurrently in the threadpool, so the
+    # read-then-write must not interleave. Railway runs one process, so a
+    # process-wide lock is enough.
+    with _claim_lock:
+        existing = read_status(teg, round_num)
+        if is_active(existing):
+            label = report_label(teg, round_num)
+            return (f"A report for {label} is already generating "
+                    f"(started {fmt_hhmm(existing.get('started_at'))} UTC).")
+        write_status(teg, round_num, state="queued", phase=None, message="Queued.", error=None,
+                    files=[], committed=False, started_at=_now(), finished_at=None)
     return None
 
 
@@ -355,7 +373,7 @@ def generate_report(teg: int, round_num: Optional[int]) -> None:
     write_status(teg, round_num, state="pushing", phase="push",
                 message="Committing to GitHub...", files=staged)
 
-    commit_message = f"Add {kind} report for {label.replace(' tournament', '')}"
+    commit_message = f"Add {kind} report for TEG {teg}" + (f" R{round_num}" if round_num else "")
     try:
         outcome = push_files("data/commentary", staged, commit_message=commit_message)
         if outcome["failed"]:
