@@ -88,7 +88,7 @@ def _metadata_done(teg_num: int, round_num: int) -> tuple[bool, str | None]:
 
 def _roster_done(teg_num: int) -> tuple[bool, int | None]:
     """Whether TEG ``teg_num`` has a confirmed handicaps.csv row, and how many
-    players it lists as playing (a non-zero handicap cell)."""
+    players it lists as playing (per `get_teg_roster_form`)."""
     from teg_analysis.analysis.teg_setup import get_teg_roster_form
 
     try:

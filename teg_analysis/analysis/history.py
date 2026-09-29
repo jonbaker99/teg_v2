@@ -218,9 +218,13 @@ def get_future_tegs() -> pd.DataFrame:
     try:
         future = read_file('data/future_tegs.csv')
         future['Year'] = future['Year'].astype(int)
-        return future[['TEG', 'Year', 'Area']].sort_values('Year')
+        if 'TEGNum' in future.columns:
+            future['TEGNum'] = future['TEGNum'].astype(int)
+        else:
+            future['TEGNum'] = future['TEG'].map(_extract_teg_num)
+        return future[['TEGNum', 'TEG', 'Year', 'Area']].sort_values('Year')
     except Exception:
-        return pd.DataFrame(columns=['TEG', 'Year', 'Area'])
+        return pd.DataFrame(columns=['TEGNum', 'TEG', 'Year', 'Area'])
 
 
 # === HISTORY TABLE ASSEMBLY ===
@@ -292,55 +296,81 @@ def check_winner_completeness() -> set:
         return set()
 
 
-def calculate_and_save_missing_winners(missing_teg_nums: set) -> dict:
-    """Calculate and cache winners for missing TEGs.
+WINNERS_FILE = 'data/teg_winners.csv'
+_WINNERS_COLUMNS = ['TEG', 'Year', 'Area', 'TEG Trophy', 'Green Jacket', 'HMM Wooden Spoon']
 
-    Returns dict with keys: new_winners, errors, warnings, cache_clear_needed.
+
+def _teg_num(label) -> int | None:
+    m = re.search(r'TEG (\d+)', str(label))
+    return int(m.group(1)) if m else None
+
+
+def update_winners_cache(all_data: pd.DataFrame, defer_github: bool = False):
+    """Sync ``data/teg_winners.csv`` to ``data/completed_tegs.csv``.
+
+    Drops rows for TEGs that are no longer complete (e.g. after a deletion) and
+    computes rows for completed TEGs that have none. Rows for TEGs that are
+    still complete are never rewritten (they may carry manual history). TEG 50
+    (the test TEG) is ignored.
+
+    Args:
+        all_data: Hole-level data already loaded by the caller.
+        defer_github: If True, defer the GitHub push for a batch commit.
+
+    Returns:
+        File info dict if ``defer_github`` and a write happened, else None.
+        Nothing is written when the cache is already in sync.
+
+    Raises on any failure so a stale cache can never be reported as success.
     """
-    from ..io.file_operations import read_file, write_file
-    from ..core.data_loader import load_all_data
+    from teg_analysis.io import read_file, write_file
 
-    all_data = load_all_data()
-    if all_data.empty:
-        raise ValueError("No data available to calculate winners")
+    completed = read_file('data/completed_tegs.csv')
+    completed_nums = ({int(n) for n in completed['TEGNum']} - {50}) if not completed.empty else set()
+    if not completed_nums:
+        # An empty status file means something upstream broke, not that
+        # history vanished: never let it wipe every winners row.
+        raise ValueError("completed_tegs.csv lists no completed TEGs; refusing to rewrite teg_winners.csv")
 
     try:
-        cached = read_file('data/teg_winners.csv')
-    except Exception:
-        cached = pd.DataFrame(columns=['TEG', 'Year', 'Area', 'TEG Trophy', 'Green Jacket', 'HMM Wooden Spoon'])
+        cached = read_file(WINNERS_FILE)
+    except FileNotFoundError:
+        cached = pd.DataFrame(columns=_WINNERS_COLUMNS)
+    cached = cached.copy()
+    cached_nums = cached['TEG'].map(_teg_num)
 
-    new_winners, errors, warnings = [], [], []
+    keep = cached_nums.isin(completed_nums)
+    changed = not keep.all()
+    kept = cached[keep]
+    for teg in cached.loc[~keep, 'TEG']:
+        logger.warning("Dropping winners row for %s: no longer complete", teg)
+    missing = sorted(completed_nums - {n for n in cached_nums[keep] if n is not None})
 
-    for teg_num in missing_teg_nums:
-        try:
-            teg_data = all_data[all_data['TEGNum'] == teg_num]
-            if teg_data.empty:
-                warnings.append(f"No data found for TEG {teg_num}")
-                continue
-            info = teg_data.iloc[0]
-            winners_df = get_teg_winners(teg_data)
-            if not winners_df.empty:
-                teg_winners = winners_df[winners_df['TEG'] == info['TEG']]
-                if not teg_winners.empty:
-                    row = teg_winners.iloc[0]
-                    new_winners.append({
-                        'TEG': info['TEG'], 'Year': info['Year'],
-                        'Area': info.get('Area', 'Unknown'),
-                        'TEG Trophy': row.get('TEG Trophy', 'Unknown'),
-                        'Green Jacket': row.get('Green Jacket', 'Unknown'),
-                        'HMM Wooden Spoon': row.get('HMM Wooden Spoon', 'Unknown'),
-                    })
-        except Exception as e:
-            errors.append({'teg': teg_num, 'error': str(e)})
+    new_rows = []
+    for teg_num in missing:
+        teg_data = all_data[all_data['TEGNum'] == teg_num]
+        if teg_data.empty:
+            raise ValueError(f"TEG {teg_num} is complete but has no rows in all_data")
+        w = get_teg_winners(teg_data).iloc[0]
+        new_rows.append({
+            'TEG': f"TEG {teg_num}", 'Year': int(w['Year']),
+            'Area': teg_data['Area'].iloc[0],
+            'TEG Trophy': w['TEG Trophy'], 'Green Jacket': w['Green Jacket'],
+            'HMM Wooden Spoon': w['HMM Wooden Spoon'],
+        })
 
-    if new_winners:
-        updated = pd.concat([cached, pd.DataFrame(new_winners)], ignore_index=True)
-        updated = updated.sort_values('Year')
-        write_file('data/teg_winners.csv', updated)
-        return {'new_winners': new_winners, 'errors': errors, 'warnings': warnings, 'cache_clear_needed': True}
+    if not (changed or new_rows):
+        return None
 
-    warnings.append("No winners could be calculated for the missing TEGs")
-    return {'new_winners': [], 'errors': errors, 'warnings': warnings, 'cache_clear_needed': False}
+    frames = [f for f in (kept, pd.DataFrame(new_rows, columns=_WINNERS_COLUMNS)) if not f.empty]
+    updated = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame(columns=_WINNERS_COLUMNS)
+    updated['_n'] = updated['TEG'].map(_teg_num)
+    updated = updated.sort_values('_n').drop(columns='_n').reset_index(drop=True)
+    updated['Year'] = updated['Year'].astype(int)
+
+    file_info = write_file(WINNERS_FILE, updated, "Update TEG winners cache", defer_github=defer_github)
+    logger.info("TEG winners cache updated: +%d, -%d", len(new_rows), int((~keep).sum()))
+    return file_info
 
 
 def load_cached_winners() -> tuple:

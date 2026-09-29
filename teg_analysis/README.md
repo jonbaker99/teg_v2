@@ -54,7 +54,7 @@ teg_analysis/
     scoring.py       Par-related scoring analysis
     records.py       Personal bests, worsts, records
     streaks.py       Build and calculate streaks
-    history.py       Tournament winners, eagles, historical summaries
+    history.py       Tournament winners (update_winners_cache syncs teg_winners.csv), eagles, historical summaries
     performance.py   Performance measure tables
     leaderboards.py  Leaderboard generation
     bestball.py      Best-ball / worst-ball competition format
@@ -69,8 +69,9 @@ teg_analysis/
                      edit metadata CSVs (EDITABLE_DATA_FILES/save_data_file/regenerate_status_files)
     round_setup.py   Pre-round Par/SI confirmation (round_pars.csv, confirmed by an admin
                      before a round is played) — get_round_setup_form/save_round_setup
-    teg_setup.py     Pre-TEG roster + handicap confirmation (handicaps.csv) — not every
-                     player plays every TEG — get_teg_roster_form/save_teg_roster
+    teg_setup.py     Pre-TEG roster + handicap confirmation (handicaps.csv + who plays in
+                     teg_rosters.csv) — not every player plays every TEG —
+                     get_teg_roster_form/save_teg_roster
     live_round.py    Multi-device live round entry: registry + per-round staging CSVs,
                      server-ordered writes, conflict flagging, live leaderboard from
                      staging, finalize into execute_data_update —
