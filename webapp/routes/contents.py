@@ -6,6 +6,7 @@ completed TEG, or an honest no-data message, chosen by
 beneath it, with labels and links suited to the current tournament state.
 """
 
+from datetime import datetime
 from pathlib import Path
 
 from fastapi import APIRouter, Request, Query
@@ -23,7 +24,9 @@ from webapp.deps import (
 from webapp.routes.history import _standings_rows
 from teg_analysis.analysis.handicaps import get_next_teg_and_check_if_in_progress_fast
 from webapp.routes.latest import _current_handicap_tiles, _round_scoreboard_html
+from teg_analysis.analysis.history import get_future_tegs
 from teg_analysis.reporting.newspaper_edition import available_rounds, get_edition_summary
+from teg_analysis.reporting.venue import build_venue_context
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
@@ -163,6 +166,55 @@ def _in_progress_panel(teg_num: int) -> dict:
     }
 
 
+# Complete-state left-column panes, switched in place by /contents/complete-pane.
+COMPLETE_PANES = ("standings", "next")
+
+
+def _format_round_date(date_str: str) -> str:
+    """'10/10/2026' -> 'Sat 10 Oct 2026'; unparseable dates pass through."""
+    try:
+        return datetime.strptime(str(date_str).strip(), "%d/%m/%Y").strftime("%a %-d %b %Y")
+    except (ValueError, TypeError):
+        return str(date_str or "")
+
+
+def _next_teg_pane() -> dict:
+    """The next TEG: area, round-by-round dates and courses (from
+    round_info.csv, once the rounds are set up) and its handicaps. The area
+    falls back to future_tegs.csv when no rounds are scheduled yet."""
+    _last, next_tegnum, _in_progress = get_next_teg_and_check_if_in_progress_fast()
+    area, year, rounds = "", "", []
+    try:
+        venue = build_venue_context(next_tegnum)
+        area, year = venue["area"], venue["year"] or ""
+        rounds = [{
+            "round": r["round"],
+            "date": _format_round_date(r["date"]),
+            "course": r["full_name"] or r["course"],
+            "location": r["location"] or "",
+        } for r in venue["rounds"]]
+    except ValueError:
+        pass  # no round_info rows yet -- rounds show as TBC
+    if not area:
+        future = get_future_tegs()
+        row = future[future["TEGNum"] == next_tegnum] if not future.empty else future
+        if not row.empty:
+            area, year = row.iloc[0]["Area"], int(row.iloc[0]["Year"])
+    return {
+        "next_teg_num": next_tegnum,
+        "area": area,
+        "year": year,
+        "rounds": rounds,
+        "handicaps": _current_handicap_tiles(next_tegnum),
+    }
+
+
+def _complete_pane_context(view: str, teg_num: int) -> dict:
+    if view == "next":
+        return _next_teg_pane()
+    return _standings_table_context(teg_num, _honours_by_player(teg_num))
+
+
 def _complete_panel(teg_num: int) -> dict:
     """Complete-state rich content: final standings (left) + "Also in this
     report" secondary headlines (right). Winners (Trophy/Jacket/spoon)
@@ -172,7 +224,7 @@ def _complete_panel(teg_num: int) -> dict:
         "state": "complete",
         "teg_num": teg_num,
         "report_summary": get_edition_summary(teg_num),
-        **_standings_table_context(teg_num, _honours_by_player(teg_num)),
+        **_complete_pane_context("standings", teg_num),
     }
 
 
@@ -208,4 +260,18 @@ def contents_pane(request: Request, teg: int = Query(...), rounds: int = Query(.
         "teg_num": teg,
         "rounds_played": rounds,
         "panel": _pane_context(view, teg, rounds, metric),
+    })
+
+
+@router.get("/contents/complete-pane")
+def contents_complete_pane(request: Request, teg: int = Query(...),
+                           view: str = Query("standings")):
+    # Complete state only: swaps the left column between the final standings
+    # and the next TEG (dates, courses, handicaps) without leaving Contents.
+    view = view if view in COMPLETE_PANES else "standings"
+    return templates.TemplateResponse("partials/_contents_complete_pane.html", {
+        "request": request,
+        "pane": view,
+        "teg_num": teg,
+        "panel": _complete_pane_context(view, teg),
     })

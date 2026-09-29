@@ -1331,6 +1331,41 @@ def test_contents_complete_panel_marks_recorded_honours_only(client, monkeypatch
     assert 'aria-label="Trophy"' not in jon_row
 
 
+def test_contents_complete_next_teg_pane(client, monkeypatch):
+    # Between TEGs, the "Next TEG" tab shows the area, each round's date and
+    # course from round_info.csv, and the next TEG's handicaps.
+    import pandas as pd
+    monkeypatch.setattr(contents_route, "get_next_teg_and_check_if_in_progress_fast",
+                        lambda: (18, 19, False))
+    monkeypatch.setattr(contents_route, "build_venue_context", lambda teg: {
+        "area": "Algarve, Portugal", "year": 2026,
+        "rounds": [{"round": 1, "date": "10/10/2026", "course": "Monte Rei",
+                    "full_name": None, "location": "Vila Nova de Cacela"}],
+    })
+    monkeypatch.setattr(contents_route, "_current_handicap_tiles", lambda teg: {
+        "is_draft": False, "next_teg_label": f"TEG {teg} Handicaps",
+        "tiles": [{"name_parts": ["Jon", "BAKER"], "value": 21,
+                   "delta_dir": "up", "delta_arrow": "↑", "delta_text": "3"}],
+    })
+
+    resp = client.get("/contents/complete-pane", params={"teg": 18, "view": "next"})
+    _assert_ok_no_error(resp)
+    assert "TEG 19" in resp.text and "Algarve, Portugal / 2026" in resp.text
+    assert "Sat 10 Oct 2026" in resp.text and "Monte Rei" in resp.text
+    assert "Vila Nova de Cacela" in resp.text
+    assert "Jon BAKER" in resp.text and ">21<" in resp.text
+
+    # No rounds scheduled yet: area comes from future_tegs.csv, rounds TBC.
+    def _no_rounds(teg):
+        raise ValueError("No round_info")
+    monkeypatch.setattr(contents_route, "build_venue_context", _no_rounds)
+    monkeypatch.setattr(contents_route, "get_future_tegs", lambda: pd.DataFrame(
+        {"TEGNum": [19], "TEG": ["TEG 19"], "Year": [2026], "Area": ["Somewhere"]}))
+    resp = client.get("/contents/complete-pane", params={"teg": 18, "view": "next"})
+    _assert_ok_no_error(resp)
+    assert "Somewhere / 2026" in resp.text and "Dates and courses TBC" in resp.text
+
+
 def test_contents_in_progress_panel_has_no_honour_icons(client, monkeypatch):
     import pandas as pd
     fake_rd = pd.DataFrame({
@@ -1364,7 +1399,7 @@ def test_contents_panel_complete_state_real_data(client):
     # a "View full report" link.
     resp = client.get("/contents/panel", params={"teg": 18, "state": "complete"})
     _assert_ok_no_error(resp)
-    assert "Final Standings" in resp.text
+    assert "Final standings" in resp.text and "Next TEG" in resp.text
     assert "Green Jacket (gross)" not in resp.text  # not repeated -- honours line owns this
     assert "TEG 18 headlines" in resp.text
     assert 'class="lead-teaser" href="/teg-reports?teg=18#story/0"' in resp.text
@@ -1380,7 +1415,7 @@ def test_contents_panel_complete_state_real_data(client):
     assert resp.text.count("<li>") == 4  # capped, TEG 18 has 5 non-lead articles
     assert 'href="/results?teg=18"' in resp.text
     assert "View full report" not in resp.text  # card titles carry the links now
-    assert 'href="/results?teg=18">Final Standings ↗' in resp.text
+    assert 'href="/results?teg=18">Full results ↗' in resp.text
     assert 'class="panel-grid two-col equal-col"' in resp.text
 
 
@@ -1414,8 +1449,9 @@ def test_contents_state_complete_with_report_leads_with_headline(client, monkeyp
     assert 'hx-get="/contents/panel?teg=18&state=complete"' in resp.text
     # Owner decision: Full Results only appears inside the deferred panel
     # now (moved below the standings table), not as a page-level action.
-    assert "Next: TEG 19 / Algarve, Portugal / 2026" in resp.text
-    assert "TEG 19 Handicaps" in resp.text
+    # The next TEG (area, dates, handicaps) moved into the panel's
+    # "Next TEG" tab, so the page-level line and link are gone.
+    assert "Next: TEG 19" not in resp.text
     assert "TEG 18 Handicaps" not in resp.text
 
 

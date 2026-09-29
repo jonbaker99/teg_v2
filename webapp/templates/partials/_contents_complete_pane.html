@@ -1,0 +1,55 @@
+{# Complete-state Contents left column. The view tabs swap this whole block
+   in place via GET /contents/complete-pane (outerHTML), mirroring the
+   in-progress _contents_pane.html. Each pane ends with a link to its full
+   page. #}
+<div class="surface surface-open contents-pane" id="contents-pane">
+    <div class="pane-switch" role="group" aria-label="Show">
+        {% for key, label in [("standings", "Final standings"), ("next", "Next TEG")] %}
+        <button type="button" class="tab-underline{% if key == pane %} tab-underline--active{% endif %}"
+                aria-pressed="{{ 'true' if key == pane else 'false' }}"
+                hx-get="/contents/complete-pane?view={{ key }}&teg={{ teg_num }}"
+                hx-target="#contents-pane" hx-swap="outerHTML">{{ label }}</button>
+        {% endfor %}
+    </div>
+
+    {% if pane == "next" %}
+    <div class="pane-body">
+        <p class="next-teg-title">TEG {{ panel.next_teg_num }}</p>
+        <p class="state-context next-teg-area">{{ panel.area or "Venue TBC" }}{% if panel.year %} / {{ panel.year }}{% endif %}</p>
+
+        <p class="standings-heading next-teg-subhead">Rounds</p>
+        {% if panel.rounds %}
+        <table class="hc-list next-teg-rounds">
+            {% for r in panel.rounds %}
+            <tr>
+                <td class="next-teg-round">R{{ r.round }}</td>
+                <td class="next-teg-date">{{ r.date }}</td>
+                <td class="next-teg-course">{{ r.course }}{% if r.location %}<span class="next-teg-location">{{ r.location }}</span>{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p class="gross-line">Dates and courses TBC</p>
+        {% endif %}
+
+        <p class="standings-heading next-teg-subhead">Handicaps</p>
+        {% if panel.handicaps.is_draft %}<p class="gross-line">Draft, subject to final review</p>{% endif %}
+        <table class="hc-list">
+            {% for t in panel.handicaps.tiles %}
+            <tr>
+                <td class="hc-list-name">{{ t.name_parts | join(' ') }}</td>
+                <td class="hc-list-value">{{ t.value }}</td>
+                <td class="hc-list-delta hc-delta--{{ t.delta_dir }}">{{ t.delta_arrow }} {{ t.delta_text }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <a class="teaser-link pane-link" href="/handicaps">{{ panel.handicaps.next_teg_label | replace(" (Draft)", "") }} ↗</a>
+
+    {% else %}
+    <div class="pane-body">
+        <div style="overflow-x:auto;">{% with standings = panel.standings %}{% include "partials/_standings_table.html" %}{% endwith %}</div>
+    </div>
+    <a class="teaser-link pane-link" href="/results?teg={{ teg_num }}">Full results ↗</a>
+    {% endif %}
+</div>

@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-29 (In-progress Contents pane switcher)
+**Last updated:** 2026-09-29 (Next TEG tab on Contents)
+
+## 2026-09-29 — Next TEG tab on Contents
+
+Between tournaments, the completed Contents panel's left column switches between Final standings and Next TEG. Next TEG shows the area and year, each round's date and course, and the next TEG's handicaps. Rounds come from `round_info.csv` once set up; before that the area comes from `future_tegs.csv` and rounds show as TBC. Course locations show when `course_info.csv` has the course. The old "Next:" line and handicap link under the panel are gone; the tab covers both.
 
 ## 2026-09-29 — In-progress Contents pane switcher
 
