@@ -15,7 +15,9 @@ data/
   all-scores.parquet      ← 17-col hole-level data — the raw master (written directly by add/delete)
   all-data.parquet        ← 53-col hole-level data — fully regenerated from all-scores on every add/delete
   round_info.csv          ← course / date / area metadata per TEG+Round
-  handicaps.csv           ← player handicaps per TEG
+  handicaps.csv           ← player handicaps per TEG; a non-player keeps a handicap (36-point rule), never 0
+  teg_rosters.csv         ← who plays each TEG (TEGNum, Pl, Playing), written by TEG setup; TEGs without rows fall back to "non-zero handicap = playing"
+  teg_winners.csv         ← Trophy / Jacket / Spoon per completed TEG; synced to completed_tegs.csv on every add/delete
   players.csv             ← player identity (Code, Name) — writable source of truth; seeded from the legacy PLAYER_DICT
   course_pars.csv         ← hole-level Par/SI per course, backfilled from history (scripts/backfill_course_pars.py)
   round_pars.csv          ← hole-level Par/SI per *specific* TEG+Round, set up by an admin before the round is played
@@ -88,7 +90,7 @@ headless add / edit / delete flows:
 - **Add:** `process_google_sheets_data` → `find_duplicate_keys` → `execute_data_update`,
   which takes a **timestamped backup** of `all-scores`/`all-data` under `data/backups/`,
   writes `all-scores`/`all-data`, regenerates the streaks / commentary / bestball /
-  TEG-status caches, and batch-commits to GitHub.
+  winners / TEG-status caches, and batch-commits to GitHub.
 - **Delete:** `preview_deletion_data` → `execute_data_deletion`, which takes the same
   **timestamped backup** of `all-scores`/`all-data` under `data/backups/`, removes
   the selected TEG/rounds from `all-scores`/`all-data`, and rebuilds the same derived
