@@ -310,14 +310,29 @@
     // .section-nav sits as a sibling of its hx-target content div, not
     // inside it (see the click handler above), so a swapped-root-scoped
     // query would never find it.
+    //
+    // Scrolls the tab row itself (scrollLeft), never the page:
+    // scrollIntoView also scrolls every scrollable ancestor, so on a page that
+    // polls (finalise progress, /admin/reports) each settle yanked the window
+    // back up to the nav. Only re-centres when the active tab has changed, so
+    // a poll doesn't undo the user's own swipe along the row either.
     function scrollActiveTabIntoView() {
         if (!window.matchMedia('(max-width: 640px)').matches) return;
         document.querySelectorAll('.section-nav').forEach(function(nav) {
             var active = nav.querySelector('.tab-underline--active, .tab-underline.active');
-            if (active) active.scrollIntoView({ inline: 'center', block: 'nearest' });
+            if (!active || nav._centredTab === active) return;
+            var n = nav.getBoundingClientRect(), a = active.getBoundingClientRect();
+            if (!n.width) return;  // hidden row: measure again next time
+            nav._centredTab = active;
+            nav.scrollLeft += (a.left + a.width / 2) - (n.left + n.width / 2);
         });
     }
     document.addEventListener('DOMContentLoaded', scrollActiveTabIntoView);
+    // Web fonts can change tab widths after DOMContentLoaded: measure once more.
+    window.addEventListener('load', function() {
+        document.querySelectorAll('.section-nav').forEach(function(nav) { nav._centredTab = null; });
+        scrollActiveTabIntoView();
+    });
     document.addEventListener('htmx:afterSettle', scrollActiveTabIntoView);
     // Nav-cue prototype (design lab: /design/headers, body.nc-arrows /
     // body.nc-chevron; nc-off is the untouched default and does nothing

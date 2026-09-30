@@ -2,7 +2,14 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-30 (TEG 19 second dry run)
+**Last updated:** 2026-09-30 (Batch 5 PR A: issues 18 and 20)
+
+## 2026-09-30 — Finalise progress stays put on phones; Go live shows the link at once (Batch 5, PR A)
+
+Fixes the two must-ship dry-run 2 issues.
+
+- **18:** the admin tab row centres its active tab by scrolling itself, not the page. Polling pages (finalise progress, `/admin/reports`) no longer jump to the top every 2s on a phone.
+- **20:** Go live redirects to the new round's review page, with the entry link and Copy at the top. A second tap goes to the live round instead of showing "already active".
 
 ## 2026-09-30 — TEG 19 second dry run passes; five small issues left
 

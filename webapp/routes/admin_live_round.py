@@ -9,7 +9,7 @@ resolving, finalizing, cancelling a round) are admin-only.
 Flow:
   GET  /admin/live-round                        -> list every live round + status
   POST /admin/live-round/public-link             -> switch the public "Enter scores" banner on/off
-  POST /admin/live-round/start                   -> start one (HTMX, from a set-up round)
+  POST /admin/live-round/start                   -> start one (HTMX); HX-Redirects to its review page
   GET  /admin/live-round/{token}/review           -> conflicts + finalize/cancel controls
   POST /admin/live-round/{token}/resolve          -> pick a value for one conflicted cell
   POST /admin/live-round/{token}/random-fill      -> test only: fill empty cells with random scores (off on production)
@@ -151,13 +151,20 @@ def admin_live_round_start(request: Request, teg_num: str = Form(""), round_num:
         start_live_round, RoundParsNotConfirmedError, LiveRoundAlreadyActiveError,
     )
 
+    # Success (or a second tap on a round that's already live) redirects to the
+    # round's review page, which renders the entry link with Copy at the top.
+    # Answering with a fragment put the link in a row below the fold and left
+    # "Every live round" stale, so admins tapped again (TEG 19 dry run 2, #20).
     ctx = {"request": request}
     try:
         row = start_live_round(int(teg_num), int(round_num))
         deps.clear_public_live_rounds_cache()
-        ctx["result"] = row
-        ctx["link"] = _entry_url(request, row["Token"])
-    except (RoundParsNotConfirmedError, LiveRoundAlreadyActiveError) as e:
+        return HTMLResponse("", headers={"HX-Redirect": f"/admin/live-round/{row['Token']}/review?started=1"})
+    except LiveRoundAlreadyActiveError as e:
+        if getattr(e, "token", None):
+            return HTMLResponse("", headers={"HX-Redirect": f"/admin/live-round/{e.token}/review?started=already"})
+        ctx["error"] = str(e)
+    except RoundParsNotConfirmedError as e:
         ctx["error"] = str(e)
     except Exception as e:  # noqa: BLE001
         logger.error(f"Live round start failed: {e}", exc_info=True)
@@ -178,6 +185,7 @@ def admin_live_round_review(request: Request, token: str):
         "saved": request.query_params.get("saved"),
         "error": request.query_params.get("error"),
         "finalized": request.query_params.get("finalized"),
+        "started": request.query_params.get("started"),
         "cancelled": request.query_params.get("cancelled"),
         "cache_errors": [
             c for c in (request.query_params.get("cache_errors") or "").split(",") if c

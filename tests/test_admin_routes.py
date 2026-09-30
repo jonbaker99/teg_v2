@@ -656,8 +656,63 @@ def test_live_round_start_success(client, monkeypatch):
     _login(client)
     resp = client.post("/admin/live-round/start", data={"teg_num": "19", "round_num": "1"})
     assert resp.status_code == 200
-    assert "newtoken" in resp.text
+    # Issue 20: redirect to the review page, where the link and Copy render,
+    # instead of a fragment in a row below the fold.
+    assert resp.headers["HX-Redirect"] == "/admin/live-round/newtoken/review?started=1"
+
+
+def test_live_round_start_second_tap_redirects_to_active_round(client, monkeypatch):
+    """Issue 20 regression: a second Go live tap must lead to the live round's
+    link, not replace it with an "already active" error."""
+    import teg_analysis.analysis.live_round as lrmod
+
+    def fake_start(teg_num, round_num):
+        err = lrmod.LiveRoundAlreadyActiveError("already active")
+        err.token = "livetok"
+        raise err
+
+    monkeypatch.setattr(lrmod, "start_live_round", fake_start)
+
+    _login(client)
+    resp = client.post("/admin/live-round/start", data={"teg_num": "19", "round_num": "1"})
+    assert resp.status_code == 200
+    assert resp.headers["HX-Redirect"] == "/admin/live-round/livetok/review?started=already"
+    assert "already active" not in resp.text
+
+
+def test_live_round_start_already_active_without_token_shows_error(client, monkeypatch):
+    import teg_analysis.analysis.live_round as lrmod
+
+    def fake_start(teg_num, round_num):
+        raise lrmod.LiveRoundAlreadyActiveError("already active")
+
+    monkeypatch.setattr(lrmod, "start_live_round", fake_start)
+
+    _login(client)
+    resp = client.post("/admin/live-round/start", data={"teg_num": "19", "round_num": "1"})
+    assert "HX-Redirect" not in resp.headers
+    assert "already active" in resp.text
+
+
+def test_live_round_review_after_go_live_shows_link_and_copy(client, monkeypatch):
+    """Issue 20 regression: the page Go live lands on shows the full entry
+    link with Copy, with no reload."""
+    import teg_analysis.analysis.live_round as lrmod
+
+    monkeypatch.setattr(lrmod, "get_live_round_context", lambda token: {
+        "token": token, "teg_num": 19, "round_num": 1, "status": "active", "course": "Ashdown",
+        "players": ["DM"], "player_names": {"DM": "David MULLIN"},
+        "holes": [{"hole": h, "par": 4, "si": h} for h in range(1, 19)],
+    })
+    monkeypatch.setattr(lrmod, "get_scores_since",
+                        lambda token, since_seq=0: {"seq": 0, "status": "active", "cells": []})
+
+    _login(client)
+    resp = client.get("/admin/live-round/newtoken/review?started=1")
+    assert resp.status_code == 200
+    assert "ready for scores" in resp.text
     assert "/live-round/newtoken" in resp.text
+    assert "Copy link" in resp.text
 
 
 def test_live_round_start_rejects_unconfirmed_pars(client, monkeypatch):
