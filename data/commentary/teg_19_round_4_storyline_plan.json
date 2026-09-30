@@ -1,0 +1,112 @@
+{
+  "title": "Sixteen Clear and Two to Spare",
+  "title_candidates": [
+    "Sixteen Clear and Two to Spare",
+    "Monte Rei Closes the Book",
+    "Three Verdicts on a Tuesday",
+    "Never Headed Since Saturday Morning"
+  ],
+  "theme": "A Trophy that stopped being a contest on the fourth hole of the week, decided on the same afternoon as a Green Jacket settled by two shots and a Wooden Spoon settled by three holes.",
+  "tone": "Subverted gravitas: a procession reported with the solemnity of a state occasion, while the genuine tension sits two shots away in the Jacket and, further down, in a Spoon duel between two men who began the day dead level.",
+  "opening_hook": "Monte Rei on a Tuesday, only the third TEG round ever played on Nicklaus's Algarve showpiece, with water in play on eleven holes and three competitions requiring an answer before dark — one of which had quietly stopped asking the question on the fourth hole of Saturday morning.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "ensemble",
+    "catalogue"
+  ],
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "records",
+  "is_final_round": true,
+  "round_story": {
+    "subject": "David Mullin's career-best 49 points and 78 gross at Monte Rei, the best round of the day on both counts",
+    "why_it_matters": "In 71 TEG rounds David Mullin had never scored 49 points, and he had never broken 80 at Monte Rei; he produced both on the last day, from a standing start level with Gregg Williams at the foot of the Trophy table on 126.",
+    "shape": "Mullin opens with eight holes without dropping a gross shot — 26 points, birdies at the 6th and 8th, five straight pars before them — and is playing a different course from everyone else. The turn is the short 9th, a triple bogey that ends the run and costs him three shots in a single swing of the pencil. He gathers himself, takes nine points from the 11th to the 13th and nine more from the 16th to the 18th in unbroken pars, and signs for 49 points and 78 gross: a personal best on the points, his second-best gross round in 71, and seven shots better than anything he had previously managed at Monte Rei.",
+    "beat_ids": [
+      "r4_b01",
+      "r4_b02",
+      "r4_b03",
+      "r4_b14",
+      "r4_b08",
+      "r4_b13"
+    ],
+    "headline_candidates": [
+      "David Mullin's Best Round Yet",
+      "Twenty-Six Points Before The Turn",
+      "Seventy-Eight At The Third Attempt"
+    ],
+    "chosen_headline": "David Mullin's Best Round Yet",
+    "standfirst": "Eight holes without a dropped gross shot, then the easiest hole on the card took three of them back in one go.",
+    "compelling_score": 8,
+    "humour_score": 6,
+    "descriptor": "DAVID MULLIN"
+  },
+  "race_story": {
+    "subject": "Alex Baker takes the TEG 19 Trophy by 16, Jon Baker holds the TEG 19 Green Jacket by two, and Gregg Williams collects the TEG 19 Wooden Spoon",
+    "why_it_matters": "This is the day all three competitions were settled, and they were settled in three entirely different registers: a procession, a two-shot squeeze, and a seven-point drift.",
+    "shape": "Alex Baker began the final round 14 clear of John Patterson, having led the Trophy since the fourth hole of round one, so the only real question was the size of the margin. The turn is that nobody laid a finger on him: 15 points in the first four holes, triple bogeys at the 5th and 6th survived, a birdie at the last, and 52 points — the best score of the day and the third-best round in TEG history to date — widening the gap to 16. He finishes on 213 to John Patterson's 197; behind him the Green Jacket came down to two shots, Jon Baker holding on at +43 from David Mullin and Gregg Williams on +45 despite Alex Baker himself sliding from second after round one to last of five in the gross at +55, while Gregg Williams took the Wooden Spoon seven adrift of David Mullin.",
+    "beat_ids": [
+      "r4_b19",
+      "r4_b21",
+      "r4_b25",
+      "r4_b31",
+      "r4_b18",
+      "r4_b30",
+      "r4_b26"
+    ],
+    "headline_candidates": [
+      "Alex Baker Home By Sixteen",
+      "Fifty-Two To Finish The Job",
+      "Jon Baker Holds On By Two"
+    ],
+    "chosen_headline": "Alex Baker Home By Sixteen",
+    "standfirst": "The Trophy had been his since the fourth hole of the opening round, but the Green Jacket needed all 72 holes and still only separated Jon Baker from David Mullin by two.",
+    "compelling_score": 8,
+    "humour_score": 6,
+    "descriptor": "TROPHY"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "The Wooden Spoon changed hands three times in the first three holes at Monte Rei and then never moved again",
+      "why_it_matters": "Gregg Williams and David Mullin started the last day locked together on 126, the closest thing TEG 19 had to a straight 18-hole duel, and it was effectively over before either had reached the fourth tee.",
+      "shape": "Gregg Williams bogeys the 1st and drops to the bottom on his own; David Mullin pars the 2nd and joins him there anyway; then Gregg Williams double-bogeys the 3rd, the hardest hole on the card, and takes sole possession for the rest of the afternoon. From there David Mullin went on to the best round of the day and Gregg Williams to 42 points, and the gap that had been nothing at breakfast was seven by the time they shook hands.",
+      "beat_ids": [
+        "r4_b06",
+        "r4_b05",
+        "r4_b04"
+      ],
+      "headline_candidates": [
+        "Settled Before The Fourth Tee",
+        "Level At Dawn, Seven Adrift",
+        "Three Holes Decide The Spoon"
+      ],
+      "chosen_headline": "Settled Before The Fourth Tee",
+      "standfirst": "Gregg Williams and David Mullin began the day tied on 126, and the bottom of the table swapped occupant twice before the argument resolved itself for good on the third green.",
+      "compelling_score": 7,
+      "humour_score": 8,
+      "descriptor": "WOODEN SPOON | GREGG WILLIAMS"
+    },
+    {
+      "subject": "Four triple bogeys around Monte Rei, two of them on the 9th, the shortest hole and the easiest on the card",
+      "why_it_matters": "On a Nicklaus course with water on eleven holes, the damage was done almost entirely on dry land and, twice over, on the hole the card rates as stroke index 18.",
+      "shape": "Alex Baker gets his in early and in pairs, a triple at the par-three 5th followed by an eight at the par-five 6th, before stopping the rot with a birdie at the 7th. The 9th then claims two victims in the same afternoon: David Mullin's eight-hole run of pars and birdies ends there with a six, and John Patterson's four-hole run of pars and birdies ends there with the same number. Jon Baker, having gone nine to twelve without dropping a gross shot, saved his for the 13th, a seven at a par four — and still won the Green Jacket by two.",
+      "beat_ids": [
+        "r4_b23",
+        "r4_b10",
+        "r4_b11",
+        "r4_b28"
+      ],
+      "headline_candidates": [
+        "The Ninth Takes Two Scalps",
+        "Four Triples On Nicklaus's Card",
+        "Stroke Index Eighteen Does The Damage"
+      ],
+      "chosen_headline": "The Ninth Takes Two Scalps",
+      "standfirst": "A par three rated the easiest hole at Monte Rei ended two long par-or-better runs, while Alex Baker found his trouble four holes earlier and Jon Baker his four holes later.",
+      "compelling_score": 6,
+      "humour_score": 8,
+      "descriptor": "MONTE REI'S NINTH"
+    }
+  ],
+  "race_state_note": "What the final table cannot show: Alex Baker took the Trophy lead at the 4th hole of round one and was never headed again, while the Green Jacket lead changed hands six times before Jon Baker took it for good at the 12th in round three — Gregg Williams having led it by five as late as the 8th that same afternoon. Alex Baker won the Trophy and finished last of five in the gross at +55; the two competitions measure different things.",
+  "storyline_note": ""
+}
