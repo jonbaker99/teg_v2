@@ -378,6 +378,7 @@
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
+    align-items: flex-end;
     margin-bottom: 1rem;
 }
 .admin-nav .admin-nav-logout {
@@ -440,21 +441,30 @@
    Admin pages must fit 390px with no sideways page scroll. All phone-only
    rules live here. */
 @media (max-width: 640px) {
-    /* 12 nav links: tight gaps and padding so they take few rows,
-       while keeping ~32px tap targets. */
+    /* Sub-nav: one sideways-scrolling row, not five wrapped rows. The nav also
+       carries .section-nav, so mobile.css supplies the scroll, edge fade and
+       44px tabs, and base.html scrolls the active tab into view. These rules
+       only undo .admin-nav's desktop wrap and gap, which load later and win. */
     .admin-nav {
-        gap: 0 0.9rem;
+        flex-wrap: nowrap;
+        gap: 0;
+        align-items: stretch;
+        margin-bottom: 12px;
     }
+    /* Public pages get border-box from elsewhere; without it the padding
+       stacks on mobile.css's 44px height and the underline drifts down. */
     .admin-nav .tab-underline {
         box-sizing: border-box;
-        height: auto;
-        padding: 0.3rem 0;
-        min-height: 44px;  /* touch floor, design_principles.md → Hit areas */
-        display: inline-flex;
-        align-items: center;
     }
     .admin-nav .admin-nav-logout {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
         margin-left: 0;
+        padding: 0 12px;
+        font-size: 0.8125rem;
+        white-space: nowrap;
     }
 
     /* Settings tables: narrower label column, allow wrapping, inputs may shrink. */
