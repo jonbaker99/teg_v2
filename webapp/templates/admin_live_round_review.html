@@ -70,6 +70,10 @@
           <a href="/admin/reports?teg={{ live.teg_num }}&amp;round={{ live.round_num }}" class="btn-action">Generate round report</a>
         {% endif %}
       </div>
+    {% elif live.status == 'deleted' %}
+      <h2 class="card-header">Round deleted</h2>
+      <p style="margin:.5rem 0;">This round was finalised, then deleted from the permanent record on the Delete rounds page. Its reports were archived.</p>
+      <p style="margin:.5rem 0 0;"><a href="/admin/live-round" class="text-link">Back to all live rounds</a></p>
     {% else %}
       <h2 class="card-header">Round cancelled</h2>
       <p style="margin:.5rem 0;">Round cancelled. Nothing was written to the permanent record.</p>

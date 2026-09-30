@@ -111,7 +111,7 @@ function render() {
     banner.className = 'statusbanner done';
     banner.textContent = board.status === 'finalized'
       ? '✅ Round finalised. These scores are now in the record.'
-      : '⚪ This round was cancelled.';
+      : board.status === 'deleted' ? '⚪ This round was deleted.' : '⚪ This round was cancelled.';
   } else if (board.in_progress) {
     banner.className = 'statusbanner';
     banner.textContent = `⏳ Scoring in progress — ${board.filled} of ${board.total} holes in`;

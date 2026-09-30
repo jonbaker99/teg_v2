@@ -2,7 +2,14 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-30 (TEG 19 second dry run)
+**Last updated:** 2026-09-30 (Batch 5 PR B: issues 21 and 22)
+
+## 2026-09-30 — Deleting a round shows progress and archives its reports (Batch 5, PR B)
+
+Fixes the two should-ship dry-run 2 issues.
+
+- **21:** Delete rounds shows "Deleting… about a minute" under Confirm while it runs.
+- **22:** the deletion commit also moves the round's reports and the TEG's tournament report to `data/commentary/archive/`, and marks the round's live round Deleted. Reports for a deleted round are blocked until it has data again.
 
 ## 2026-09-30 — TEG 19 second dry run passes; five small issues left
 

@@ -96,6 +96,7 @@
             <td>
               {% if r.Status == 'active' %}🟢 Active
               {% elif r.Status == 'finalized' %}✅ Finalized
+              {% elif r.Status == 'deleted' %}🗑 Deleted
               {% else %}⚪ Cancelled{% endif %}
             </td>
             <td class="admin-wrap-anywhere"><time class="lr-started" datetime="{{ r.CreatedAt }}">{{ started.get(r.Token, r.CreatedAt) }}</time></td>

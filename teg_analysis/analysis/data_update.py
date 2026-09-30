@@ -772,6 +772,96 @@ def create_timestamped_backups(
     return scores_backup_path, data_backup_path
 
 
+COMMENTARY_DIR = "data/commentary"
+COMMENTARY_ARCHIVE_DIR = "data/commentary/archive"
+
+
+def report_files_for_deletion(names, teg_num: int, rounds: list) -> list[str]:
+    """The report artefacts a deletion makes stale, from ``names`` in ``data/commentary``.
+
+    Each deleted round's files (``teg_{N}_round_{R}_*``) plus every
+    tournament-level file for the TEG (``teg_{N}_*`` but not ``_round_``),
+    since the tournament report describes the deleted rounds too. The trailing
+    underscore keeps TEG 1 from matching TEG 10.
+    """
+    round_prefixes = tuple(f"teg_{int(teg_num)}_round_{int(r)}_" for r in rounds)
+    teg_prefix, any_round = f"teg_{int(teg_num)}_", f"teg_{int(teg_num)}_round_"
+    return sorted(
+        n for n in set(names)
+        if n.startswith(round_prefixes) or (n.startswith(teg_prefix) and not n.startswith(any_round))
+    )
+
+
+def _github_commentary_names() -> set[str]:
+    """Filenames directly under ``data/commentary`` on GitHub.
+
+    Raises on any API error, unlike ``sync.list_github_entries``: an empty
+    answer here would leave stale originals on GitHub to be re-cached.
+    """
+    from teg_analysis.io.sync import _repo
+
+    repo, branch = _repo()
+    contents = repo.get_contents(COMMENTARY_DIR, ref=branch)
+    if not isinstance(contents, list):
+        contents = [contents]
+    return {item.name for item in contents if item.type == "file"}
+
+
+def archive_report_files(teg_num: int, rounds: list, *, defer_github: bool) -> dict:
+    """Copy a deletion's stale reports into ``data/commentary/archive/``.
+
+    Files land in one folder per deletion,
+    ``archive/teg_{N}_deleted_{YYYYmmdd_HHMMSS}/``, so deleting the same round
+    twice never overwrites an earlier archive. Every source is read before
+    anything is written, so a failed read changes nothing. The archive copies
+    are written to the store now; the originals are **not** removed here. The
+    caller removes them from the store (``remove_store_files``) only once the
+    commit has landed, so a failed commit leaves every report where it was.
+
+    On Railway (``defer_github``) the returned ``files`` hold the archive copies
+    plus a ``{'delete': True}`` entry for each original that exists on GitHub,
+    for the caller's single batch commit. PDFs are left alone: they are built
+    offline and are only reachable from the report page.
+
+    Returns ``{"archived": [names], "archive_dir": str|None, "files":
+    [file-info], "originals": [store paths to remove]}``.
+    """
+    from datetime import datetime
+    from teg_analysis.io import read_text_file, write_text_file
+    from teg_analysis.io.sync import list_store_files
+
+    store_names = set(list_store_files(COMMENTARY_DIR))
+    github_names = _github_commentary_names() if defer_github else set()
+    names = report_files_for_deletion(store_names | github_names, teg_num, rounds)
+    if not names:
+        return {"archived": [], "archive_dir": None, "files": [], "originals": []}
+
+    stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    archive_dir = f"{COMMENTARY_ARCHIVE_DIR}/teg_{int(teg_num)}_deleted_{stamp}"
+    contents = {name: read_text_file(f"{COMMENTARY_DIR}/{name}") for name in names}
+
+    files = []
+    for name, content in contents.items():
+        dest = f"{archive_dir}/{name}"
+        write_text_file(dest, content, f"Archive {name}", defer_github=True)
+        if defer_github:
+            files.append({"file_path": dest, "data": content})
+            if name in github_names:
+                files.append({"file_path": f"{COMMENTARY_DIR}/{name}", "data": None, "delete": True})
+    return {"archived": names, "archive_dir": archive_dir, "files": files,
+            "originals": [f"{COMMENTARY_DIR}/{name}" for name in names]}
+
+
+def remove_store_files(paths: list) -> None:
+    """Delete these repo-relative files from the store (volume or local), if present."""
+    from teg_analysis.io.sync import _store_path
+
+    for rel in paths:
+        path = _store_path(rel)
+        if path.exists():
+            path.unlink()
+
+
 def execute_data_deletion(
     selected_teg: int,
     selected_rounds: list,
@@ -782,8 +872,10 @@ def execute_data_deletion(
 
     Creates timestamped backups, removes the matching rows from ``all-scores``
     and ``all-data`` (plus the CSV mirror), regenerates every derived dataset
-    (TEG status, streaks, commentary, bestball) and, on Railway, commits the
-    lot in a single batch.
+    (TEG status, streaks, commentary, bestball), archives the now-stale round
+    and tournament reports (:func:`archive_report_files`), marks the rounds'
+    ``finalized`` live-round rows ``deleted`` and, on Railway, commits the lot
+    in a single batch.
 
     Non-blocking: raises :class:`UpdateInProgressError` immediately if an
     add/delete is already running, instead of queuing or interleaving writes.
@@ -797,7 +889,8 @@ def execute_data_deletion(
 
     Returns:
         Summary dict: ``rows_deleted``, ``teg``, ``rounds``, ``backups``
-        (list of paths), ``committed`` (bool), ``files_committed`` (int).
+        (list of paths), ``committed`` (bool), ``files_committed`` (int),
+        ``cache_errors``, ``reports_archived`` (filenames) and ``archive_dir``.
     """
     if not _update_lock.acquire(blocking=False):
         raise UpdateInProgressError(
@@ -905,10 +998,27 @@ def _execute_data_deletion_locked(
     if winners_file:
         batch_files.append(winners_file)
 
+    # Stale reports and the live-round registry join the same commit (#22).
+    archive = _run_cache_step(
+        cache_errors, 'reports_archive',
+        lambda: archive_report_files(selected_teg, selected_rounds, defer_github=defer_github),
+    ) or {"archived": [], "archive_dir": None, "files": [], "originals": []}
+    batch_files.extend(archive["files"])
+
+    from teg_analysis.analysis.live_round import mark_rounds_deleted
+    registry_file = _run_cache_step(
+        cache_errors, 'live_rounds_registry',
+        lambda: mark_rounds_deleted(selected_teg, selected_rounds, defer_github=defer_github),
+    )
+    if registry_file:
+        batch_files.append(registry_file)
+
     committed = False
     if defer_github and batch_files:
         batch_commit_to_github(batch_files, deletion_message)
         committed = True
+    # Only now: had the commit failed, the reports would still be readable.
+    remove_store_files(archive["originals"])
 
     logger.info(
         f"Deletion complete: {rows_deleted} rows, {len(batch_files)} files, "
@@ -922,6 +1032,8 @@ def _execute_data_deletion_locked(
         'committed': committed,
         'files_committed': len(batch_files),
         'cache_errors': cache_errors,
+        'reports_archived': archive["archived"],
+        'archive_dir': archive["archive_dir"],
     }
 
 

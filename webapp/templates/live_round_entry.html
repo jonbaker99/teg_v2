@@ -838,7 +838,7 @@ function applyStatus() {
   banner.hidden = false;
   banner.textContent = liveStatus === 'finalized'
     ? '✅ This round has been finalised. Scores are locked.'
-    : '⚪ This round was cancelled.';
+    : liveStatus === 'deleted' ? '⚪ This round was deleted.' : '⚪ This round was cancelled.';
   active = null;
   document.getElementById('keypad').innerHTML = '';
   document.getElementById('voice-btn').disabled = true;

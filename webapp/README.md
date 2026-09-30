@@ -291,7 +291,13 @@ real Live round use; not triggered yet.
   entire tournament — → preview the exact rows → confirm → `execute_data_deletion`
   takes a **timestamped backup** first, removes the rows from `all-scores`/`all-data`
   and rebuilds every derived cache (status, streaks, commentary, bestball),
-  batch-committing on Railway.
+  batch-committing on Railway. It also archives the deleted rounds' reports and the
+  TEG's tournament report to `data/commentary/archive/`, and marks their live rounds
+  **Deleted** (list, review page and player banners show it), in the same commit.
+- **Progress:** the run takes about a minute in one request. While it runs, an
+  `htmx-indicator` under Confirm says "Deleting…". The result lists archived reports
+  and any failed step. A background job like finalise's is the better long-term fix
+  (`webapp/TODOS.md`).
 
 **GitHub ↔ store sync** — templates `admin_volume_sync.html`,
 `partials/admin_sync_body.html`, `partials/admin_sync_preview.html`,
