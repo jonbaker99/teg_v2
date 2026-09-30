@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="/static/admin.css">
+<link rel="stylesheet" href="/static/admin.css?v=3">
 {% endblock %}
 
 {% block content %}
@@ -17,9 +17,9 @@
 {% include "partials/admin_nav.html" %}
 
 <div class="section-panel">
-  <p style="margin-bottom:1rem;">
+  <p style="margin-bottom:1rem;display:flex;gap:.5rem 1.25rem;flex-wrap:wrap;">
     <a href="/admin/live-round" class="text-link">← All live rounds</a>
-    {% if live %}<a href="/live-round/{{ token }}/leaderboard" class="text-link" target="_blank" style="margin-left:1.25rem;">Live leaderboard ↗</a>{% endif %}
+    {% if live %}<a href="/live-round/{{ token }}/leaderboard" class="text-link" target="_blank">Live leaderboard ↗</a>{% endif %}
   </p>
 
   {% if error %}
@@ -89,7 +89,7 @@
       <strong>Save edits</strong> — admin edits are authoritative (they overwrite player entries and
       clear any conflict). Leave a cell blank to clear it. Scores may be any value 1–20.</p>{% endif %}
     {% if not read_only %}<form method="post" action="/admin/live-round/{{ token }}/edit">{% endif %}
-      <div style="overflow-x:auto;">
+      <div class="admin-table-wrap">
         <table class="admin-settings-table live-edit-grid">
           <thead>
             <tr>
@@ -108,7 +108,7 @@
                   {% if read_only %}{{ cell.value if cell and cell.value is not none else '' }}{% else %}
                   <input type="number" name="score-{{ h.hole }}-{{ p }}" min="1" max="20"
                          value="{{ cell.value if cell and cell.value is not none else '' }}"
-                         style="width:3.2rem;text-align:center;{% if cell and cell.conflict %}border-color:#d99a1f;{% endif %}"
+                         class="live-edit-input{% if cell and cell.conflict %} live-edit-input--conflict{% endif %}"
                          {% if cell and cell.conflict %}title="Conflicted — two devices disagreed; saving your value here resolves it"{% endif %}>
                   {% endif %}
                 </td>
@@ -147,6 +147,7 @@
     {% else %}
       <p style="color:#8a6100;">⚠️ {{ conflicts | length }} cell{{ 's' if conflicts | length != 1 }} disagree between
         devices. Pick the correct value for each before finalizing.</p>
+      <div class="admin-table-wrap">
       <table class="admin-settings-table">
         <thead><tr><th>Hole</th><th>Player</th><th>Current</th><th>Previous</th><th>Resolve</th></tr></thead>
         <tbody>
@@ -170,6 +171,7 @@
           {% endfor %}
         </tbody>
       </table>
+      </div>
     {% endif %}
   </div>
 
