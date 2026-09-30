@@ -1,0 +1,204 @@
+{
+  "title": "Never Headed: Alex Baker's Record 213",
+  "title_candidates": [
+    "Never Headed: Alex Baker's Record 213",
+    "The Record Book Did Not Survive the Algarve",
+    "Sixty-Two, and the Rest Was Admin",
+    "Three Spoons, Then a Record Total"
+  ],
+  "theme": "Two courses nobody had seen before gave up everything they had — seven eagles, four personal-best gross totals, the best rounds TEG has ever recorded, a gross-round record broken twice inside two days — and the record book still could not disguise the fact that the TEG 19 Trophy was decided at the 4th hole of R1, because Alex Baker, a man with three Wooden Spoons on his CV, took the biggest pen to the ledger and then simply refused to give the lead back.",
+  "tone": "House voice: faithful, tongue-in-cheek, British English; subverted gravitas — record-breaking golf reported with the solemnity of a constitutional crisis, rotating restraint-and-exact-detail, a sustained comic image, cool deference and farcical escalation.",
+  "opening_hook": "Open on the record book rather than the trophy: the all-time TEG list that had to be rewritten in nearly every column across four rounds in the Algarve — best round, best gross round (twice), most eagles, most birdies, most pars, four personal-best gross totals. Then reveal that the man who did most of the damage was the one who used to collect Wooden Spoons, and that he had the Trophy effectively won by the 4th hole of R1 — so the question the report answers is why, not when.",
+  "narrative_vehicles": [
+    "hero_arc",
+    "motif",
+    "ensemble"
+  ],
+  "competitions": [
+    {
+      "name": "Trophy (Stableford)",
+      "winner_or_loser": "Alex Baker"
+    },
+    {
+      "name": "Green Jacket (Gross)",
+      "winner_or_loser": "Jon Baker"
+    },
+    {
+      "name": "Wooden Spoon",
+      "winner_or_loser": "Gregg Williams"
+    }
+  ],
+  "trophy_storyline": {
+    "subject": "Alex Baker turns a record 62-point opening round at Quinta da Ria into a wire-to-wire, 16-point Trophy win and the highest total TEG has recorded",
+    "why_it_matters": "The defending champion — a man with three prior Wooden Spoons who has climbed 6th, 5th, 3rd, 1st across his last four TEGs — now owns the highest Trophy total in TEG history and a third Trophy, and he built the margin rather than inheriting it.",
+    "shape": "Setup: Alex Baker arrives as defending Trophy champion but with three Wooden Spoons behind him and a finishing ladder (6th, 5th, 3rd, 1st) that reads like a man learning the game in public. Turn: at Quinta da Ria he posts 62 points (b16) — the highest round TEG has recorded — off a gross +5 (b33) and an eagle at the 14th (b68), piling up 29 points over holes 10-16 (b41), taking the lead at the 4th and standing 15 clear of John Patterson after one round; a flat 49 at Monte Rei in R2, despite an eagle at the 2nd (b66), is the only round he finishes worse than first. Resolution: he wins R3 and R4 outright, closes with 52 points (b75), finishes on 213 (b01) by 16 with the Jacket lead in his brother's hands (b34), and leaves holding the all-time records for eagles (sc01) and birdies-or-better (sc04) in a TEG plus a personal-best gross total of +55 (b47).",
+    "beat_ids": [
+      "b01",
+      "b16",
+      "b41",
+      "b68",
+      "b33",
+      "b66",
+      "b75",
+      "sc01",
+      "sc04",
+      "b47",
+      "b34"
+    ],
+    "headline_candidates": [
+      "Alex Baker Wins It On Day One",
+      "Sixty-Two, and the Chase Never Started",
+      "Three Spoons, Now a Record 213"
+    ],
+    "chosen_headline": "Alex Baker Wins It On Day One",
+    "standfirst": "Fifteen points clear of John Patterson after a single round at Quinta da Ria, the defending champion never surrendered the lead he took at the 4th — and the man who owns three Wooden Spoons now owns the highest Trophy total TEG has recorded.",
+    "compelling_score": 8,
+    "humour_score": 5,
+    "descriptor": "TROPHY"
+  },
+  "jacket_storyline": {
+    "subject": "Jon Baker, the reigning Wooden Spoon holder, records the lowest Gross total in TEG history and survives David Mullin's closing charge by two",
+    "why_it_matters": "The man who finished last on the Trophy metric in TEG 18 came back to win the Green Jacket with +43, the lowest Gross total TEG has recorded, having had his own gross-round record taken off him inside 24 hours.",
+    "shape": "Setup: Jon Baker opens at Quinta da Ria with +4 gross (b17) — the best gross round TEG had ever recorded — alongside 53 points (b26) and an eagle at the 11th (b32); the record survives one night, until Gregg Williams goes +3 at Monte Rei (b06). Turn: Gregg Williams led the Jacket by five as late as the 8th in R3 and lost it, Jon Baker taking the lead back at the 12th on the back of four holes of pars and a birdie from the 10th (b39, b45) before a double bogey at the 14th (b40) reminded everyone whose round it was. Resolution: a ragged +15 in R4 — including a triple bogey at the 13th — let David Mullin close from eleven back to two (b38) on a personal-best 49 points (b02), a record-tying eight holes of pars or better from the 1st (sr02) and a personal-best gross total of +45 (b48), Mullin's own triple bogey at the par-3 9th (b19) costing him the two he needed; Jon Baker held on at +43 (b04) with 41 pars-or-better, an all-time TEG record (sc06).",
+    "beat_ids": [
+      "b04",
+      "b17",
+      "b26",
+      "b32",
+      "sc06",
+      "b06",
+      "b39",
+      "b45",
+      "b40",
+      "b38",
+      "b02",
+      "sr02",
+      "b48",
+      "b19"
+    ],
+    "headline_candidates": [
+      "Jon Baker Holds On By Two Shots",
+      "From Spoon Holder to Jacket Winner",
+      "Jon Baker Survives David Mullin's Charge"
+    ],
+    "chosen_headline": "Jon Baker Holds On By Two Shots",
+    "standfirst": "A year after finishing last, Jon Baker posted the lowest Gross total in TEG history — and then spent Tuesday at Monte Rei watching David Mullin eat eleven shots of it.",
+    "compelling_score": 8,
+    "humour_score": 4,
+    "descriptor": "GREEN JACKET"
+  },
+  "spoon_storyline": {
+    "subject": "Gregg Williams plays the best gross round in TEG history on Sunday and still collects the TEG 19 Wooden Spoon by seven",
+    "why_it_matters": "A four-time Trophy winner and three-time Jacket winner finished last despite setting an all-time gross-round record and a personal-best gross total — the gap between one round and four has rarely been funnier.",
+    "shape": "Setup: Gregg Williams arrives with four prior Trophy wins and three prior Jackets, opens with an eagle at the 16th at Quinta da Ria (b25) but props up the field after R1, then on Sunday at Monte Rei plays the best gross round TEG has recorded, +3 (b06), with an eagle at the 6th (b13), 18 points across holes 4-8 (b46, b44) and a personal-best 50 points (b14). Turn: R3 dismantles him — bogey, bogey, double from the 4th before a birdie at the 7th stops the bleeding (b42), then triple bogeys at the 15th, the hardest hole on the course, and the 16th (b28, b23) drop him to the bottom on 35 points. Resolution: a bogey at the 1st and a double bogey at the 3rd in R4 put him back on the floor for good (b10, b08), and 168 points (b52) left him seven adrift of David Mullin — with a personal-best gross total of +45 (b49) and a share of the all-time records for eagles (sc02) and birdies-or-better (sc05) as consolation prizes nobody wants.",
+    "beat_ids": [
+      "b52",
+      "b06",
+      "b14",
+      "b13",
+      "b25",
+      "sc02",
+      "sc05",
+      "b49",
+      "b28",
+      "b23",
+      "b42",
+      "b10",
+      "b08",
+      "b46",
+      "b44"
+    ],
+    "headline_candidates": [
+      "Gregg Williams Sets a Record, Takes the Spoon",
+      "Two Triple Bogeys and a Record Round",
+      "Best Round Ever, Last Place Anyway"
+    ],
+    "chosen_headline": "Gregg Williams Sets a Record, Takes the Spoon",
+    "standfirst": "The finest gross round in TEG history arrived on Sunday at Monte Rei; by Tuesday afternoon its author was seven points adrift of the next-worst man, having tripled the two hardest holes he could find.",
+    "compelling_score": 8,
+    "humour_score": 8,
+    "descriptor": "WOODEN SPOON"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Two new Algarve courses surrender the TEG record book: seven eagles, four personal-best gross totals, and the gross-round record broken twice in two days",
+      "why_it_matters": "Every player in the field set or tied an all-time TEG mark, which makes TEG 19 the most comprehensively rewritten record page in the competition's history and gives the whole tournament its running image.",
+      "shape": "Setup: TEG arrives at Quinta da Ria and Monte Rei, neither of them seen before, and the first day alone produces the best round ever recorded (b16), the second-best (b26), the best gross round ever recorded (b17), the third-best gross round (b33) and eagles from David Mullin at the 1st (b35), Jon Baker at the 11th (b32) and John Patterson at the 18th (b22). Turn: Monte Rei then removes the gross-round record from Jon Baker within a day, Gregg Williams going +3 (b06), while John Patterson posts 51 points (b21) on a personal-best +10 gross (b31) with an eagle at the par-4 15th (b07) and Gregg Williams eagles the 6th (b13); by R4 David Mullin has tied the all-time eight-hole pars-or-better streak (sr02) and John Patterson the all-time birdie streak (sr01). Resolution: seven eagles across the field (b62), three players tied on the all-time TEG eagle record (sc01, sc02, sc03), two on the birdies-or-better record (sc04, sc05), Jon Baker alone on 41 pars-or-better (sc06), and personal-best gross totals for Alex Baker (b47), David Mullin (b48), Gregg Williams (b49) and John Patterson (b50) — with one man still winning by 16.",
+      "beat_ids": [
+        "b62",
+        "sc01",
+        "sc02",
+        "sc03",
+        "sc04",
+        "sc05",
+        "sc06",
+        "sr01",
+        "sr02",
+        "b16",
+        "b26",
+        "b17",
+        "b33",
+        "b06",
+        "b21",
+        "b31",
+        "b07",
+        "b13",
+        "b22",
+        "b32",
+        "b35",
+        "b47",
+        "b48",
+        "b49",
+        "b50"
+      ],
+      "headline_candidates": [
+        "The Record Book Did Not Survive",
+        "Seven Eagles and a Rewritten Ledger",
+        "Everybody's Best Golf, All At Once"
+      ],
+      "chosen_headline": "The Record Book Did Not Survive",
+      "standfirst": "Seven eagles, four personal-best gross totals, the two best rounds TEG has ever recorded and a gross-round record broken twice inside two days — at courses none of the five had played before.",
+      "compelling_score": 8,
+      "humour_score": 6,
+      "descriptor": "THE RECORD BOOK"
+    },
+    {
+      "subject": "John Patterson plays the best scoring golf of his TEG career — personal bests, a record-tying birdie streak, two eagles — and is beaten by 16",
+      "why_it_matters": "Runner-up in TEG 18 and runner-up again here, Patterson produced career-best numbers in every column that matters to him and was still never within touching distance of Alex Baker.",
+      "shape": "Setup: John Patterson comes in having finished 4th, 3rd, 4th and 2nd in his last four TEGs and 4th in the Jacket in each of the last three, and rescues R1 at Quinta da Ria with an eagle at the 18th (b22). Turn: at Monte Rei he posts 51 points (b21) on a personal-best +10 gross round (b31) with an eagle at the par-4 15th, the hardest hole on the card (b07), then grinds out 21 points across holes 4-10 in R3 (b12) and birdies the 6th and 7th in R4 to tie the all-time TEG birdie streak (sr01), 15 points in four holes (b11, b24). Resolution: a triple bogey at the par-3 9th — the easiest hole on the course — ends the run stone dead (b20), and a personal-best gross total of +47 (b50) with a share of the eagle record (sc03) buys him second place and nothing else.",
+      "beat_ids": [
+        "b22",
+        "b21",
+        "b31",
+        "b07",
+        "b12",
+        "sr01",
+        "b11",
+        "b24",
+        "b20",
+        "b50",
+        "sc03"
+      ],
+      "headline_candidates": [
+        "John Patterson's Best Is Still Second",
+        "Career Bests, Sixteen Points Adrift",
+        "Two Birdies, One Record, No Trophy"
+      ],
+      "chosen_headline": "John Patterson's Best Is Still Second",
+      "standfirst": "The runner-up produced the best scoring of his TEG career at Monte Rei, tied an all-time record on the way round, and was never once close to the man in front of him.",
+      "compelling_score": 7,
+      "humour_score": 5,
+      "descriptor": "JOHN PATTERSON"
+    }
+  ],
+  "body_fallback": "none",
+  "prominent_vehicle": "hero_arc",
+  "prominent_palette": "records",
+  "vehicle_fit_response": {
+    "top_scored_vehicle": "hero_arc",
+    "taken_up": true,
+    "note": "Taken up: the climb from three Wooden Spoons through 6th, 5th, 3rd and 1st to back-to-back Trophies and the highest total TEG has recorded is genuinely the spine, with motif (the record book) and ensemble (five players, five sets of records) carrying the texture around it."
+  },
+  "why_the_champion_won": "Alex Baker built it and built it early — 62 points at Quinta da Ria left him 15 clear of John Patterson in that round alone, and he was then best in the field in R3 and R4 as well: three round wins from four, never worse than 3rd of 5, and even had John Patterson swapped his worst round for an ordinary one he would still have lost.",
+  "storyline_note": ""
+}
