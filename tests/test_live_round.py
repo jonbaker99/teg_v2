@@ -101,9 +101,10 @@ def test_start_live_round_rejects_unconfirmed_pars(store, monkeypatch):
 
 
 def test_start_live_round_rejects_duplicate_active(store):
-    lr.start_live_round(10, 1)
-    with pytest.raises(lr.LiveRoundAlreadyActiveError):
+    row = lr.start_live_round(10, 1)
+    with pytest.raises(lr.LiveRoundAlreadyActiveError) as exc:
         lr.start_live_round(10, 1)
+    assert exc.value.token == row["Token"]  # the route redirects to it (issue 20)
 
 
 def test_apply_score_writes_basic(store):

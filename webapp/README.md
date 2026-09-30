@@ -63,7 +63,7 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
 - The live-round review grid (`.live-edit-grid`, inputs `.live-edit-input`) is compact enough for five players at 390px, with a sticky Hole column when it has to scroll.
 - `.admin-settings-table` gives its wide min-width to text inputs only; number inputs keep their own width.
 - Admin inputs (including `#edit-grid`) are 16px on phones, so iOS doesn't zoom on focus.
-- The sub-nav (`.admin-nav`) also carries `.section-nav`, so on phones it is one 44px row that scrolls sideways, like the public tab rows. `base.html` scrolls the active page into view. Desktop keeps the wrapped layout.
+- The sub-nav (`.admin-nav`) also carries `.section-nav`, so on phones it is one 44px row that scrolls sideways, like the public tab rows. `base.html` (`scrollActiveTabIntoView`) centres the active tab by setting the row's own `scrollLeft`, and only when the active tab changes. Never use `scrollIntoView` there: it also scrolls the page, so every 2s poll (finalise progress, `/admin/reports`) yanked a phone back to the top. Desktop keeps the wrapped layout.
 - `admin.css` is linked as `admin.css?v=N` in every admin template. Bump `N` in all of them when templates start depending on new classes.
 - Check with a Playwright screenshot at 390px and `document.documentElement.scrollWidth == 390`.
 
@@ -159,7 +159,10 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
   round, hand out its shareable link, and review/finalize once everyone's done.
   The score-entry link isn't a one-shot: every **active** round shows its full
   absolute URL with a **Copy link** button, both in the "Every live round" table and
-  on the review page (`partials/live_round_entry_link.html`). The URL is built per
+  on the review page (`partials/live_round_entry_link.html`). **Go live** answers
+  with `HX-Redirect` to the new round's review page (`?started=1`), so the link and
+  Copy show at once with no reload. A second tap on a round that's already live
+  redirects to that round instead (`?started=already`). The URL is built per
   request by `_entry_url` in the route (`url_for` plus the proxy's
   `X-Forwarded-Proto`), so it's right on any host, PR previews included.
   A **Public entry link** switch (`POST /admin/live-round/public-link`, off by
