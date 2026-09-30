@@ -41,7 +41,8 @@ disagreement the flag exists to surface.
         -> apply_score_writes()       player: write N cells, get the new seq
         -> get_scores_since()         player: poll for changes since a seq
         -> resolve_conflict()         admin: pick a value, clear the flag
-        -> finalize_live_round()      admin: staging -> execute_data_update()
+        -> finalize_live_round()      admin: staging -> execute_data_update(); one
+                                      GitHub commit (data + caches + backups + registry)
         -> cancel_live_round()        admin: abandon without touching all-scores
 """
 
@@ -76,9 +77,9 @@ _STAGING_COLUMNS = [
 # lock-per-token map.
 _lock = threading.Lock()
 
-# Tokens currently inside finalize_live_round's GitHub-commit phase. That
-# commit (execute_data_update) is seconds of network I/O and is deliberately
-# run WITHOUT _lock so it never blocks other tokens' writes (T8). This
+# Tokens currently being finalized. The slow data update (~40 s) runs WITHOUT
+# _lock so it never blocks other tokens' writes (T8); only the final registry
+# flip plus the single GitHub commit holds _lock (a few seconds). This
 # in-process set -- added under _lock before the commit, checked under _lock in
 # every write path, removed under _lock after -- is what stops a score from
 # being appended to staging mid-commit and then silently excluded from the
@@ -167,10 +168,11 @@ def _read_registry() -> pd.DataFrame:
         return pd.DataFrame(columns=_REGISTRY_COLUMNS)
 
 
-def _write_registry(df: pd.DataFrame) -> None:
+def _write_registry(df: pd.DataFrame, defer_github: bool = False) -> None:
     from teg_analysis.io import write_file
 
-    write_file(LIVE_ROUNDS_REGISTRY_CSV, df, "Update live rounds registry")
+    write_file(LIVE_ROUNDS_REGISTRY_CSV, df, "Update live rounds registry",
+               defer_github=defer_github)
 
 
 def _get_registry_row(token: str) -> dict | None:
@@ -340,8 +342,14 @@ def start_live_round(teg_num: int, round_num: int) -> dict:
 
 
 def cancel_live_round(token: str) -> dict:
-    """Abandon a live round without ever touching all-scores."""
+    """Abandon a live round without ever touching all-scores.
+
+    Refused while the round is being finalized, so a cancel can't race the
+    background finalise (which commits the registry itself).
+    """
     with _lock:
+        if token in _finalizing:
+            raise LiveRoundInactiveError(f"Live round {token} is being finalized.")
         reg = _get_registry_row(token)
         if reg is None:
             raise LiveRoundNotFoundError(token)
@@ -351,7 +359,27 @@ def cancel_live_round(token: str) -> dict:
     return {"token": token, "status": "cancelled"}
 
 
-def finalize_live_round(token: str) -> dict:
+def _finalize_steps() -> tuple[tuple[str, str], ...]:
+    from teg_analysis.analysis.data_update import DATA_UPDATE_STEPS
+
+    return (("validate", "Check the scores"),) + DATA_UPDATE_STEPS + (
+        ("commit", "Commit to GitHub"),
+    )
+
+
+#: Every step of a finalise, in run order: (key, label). ``finalize_live_round``
+#: reports each through its ``progress`` callback.
+FINALIZE_STEPS: tuple[tuple[str, str], ...] = _finalize_steps()
+
+#: Finalise steps a round or tournament report depends on. The report pipeline
+#: (``teg_analysis/reporting/``) reads ``all-data.parquet`` via
+#: ``load_all_data`` and lists reports from ``completed_tegs.csv`` /
+#: ``in_progress_tegs.csv``; it computes commentary, streaks and winners in
+#: memory rather than reading those caches, so their failure doesn't block it.
+REPORT_REQUIRED_STEPS: tuple[str, ...] = ("validate", "scores", "all_data", "status")
+
+
+def finalize_live_round(token: str, progress=None) -> dict:
     """Write a live round's staged scores into the permanent record.
 
     Refuses while any cell is still flagged Conflict=True. Only complete
@@ -361,31 +389,133 @@ def finalize_live_round(token: str) -> dict:
     exactly as the "add a round" flow does: one GitHub commit, every derived
     cache regenerated.
 
-    Locking / ordering (T8): the module ``_lock`` is held only for the fast
-    read-validate phase and, separately, for the final status flip -- NOT for
-    execute_data_update's GitHub commit, which is seconds of network I/O and
-    would otherwise block every other token's writes for that whole time. The
-    sequence is:
+    Commit discipline: finalising makes exactly ONE GitHub commit on Railway --
+    backups, data, caches and the registry flip travel together in a single
+    ``batch_commit_to_github``.
+
+    Locking / ordering (T8): the module ``_lock`` is held for the fast
+    read-validate phase, released for the slow data-update work, then held again
+    for the whole registry-flip-and-commit step. The sequence is:
 
       1. (locked) validate -- round active, no conflicts, roster confirmed --
          build the 18-hole frame, add the token to ``_finalizing``, release.
-      2. (unlocked) execute_data_update commits to GitHub. Other tokens'
-         writes proceed normally. A write to *this* token, arriving mid-commit,
-         acquires the lock, sees the token in ``_finalizing``, and is rejected
-         with LiveRoundInactiveError (a 409 the entry page ignores, resyncing
-         on its next poll) rather than being appended to staging and then
-         silently dropped from the frame already being committed -- a score the
-         player believes they saved must never vanish.
-      3. (locked) flip Status active -> 'finalized', archive staging, drop the
-         token from ``_finalizing``.
+      2. (unlocked) execute_data_update(commit=False) does the 30-40s of work
+         (volume writes, cache regeneration) and returns the uncommitted file
+         infos. Other tokens' writes proceed normally. A write to *this* token,
+         arriving mid-finalise, sees the token in ``_finalizing`` and is
+         rejected with LiveRoundInactiveError (a 409 the entry page ignores,
+         resyncing on its next poll) rather than being appended to staging and
+         then silently dropped from the frame already being committed. Cancel
+         of this token is likewise refused.
+      3. (locked, including the commit) re-read the registry, set this token's
+         Status to 'finalized', add the registry to the pending files and make
+         the single batch commit; only after it succeeds is the registry written
+         to the volume. The lock is held across the commit because the registry
+         blob is the whole CSV: a snapshot built outside the lock could clobber
+         a concurrent start/cancel commit of another round. Then archive
+         staging and drop the token from ``_finalizing``.
 
-    If the commit fails, the token is removed from ``_finalizing`` and Status is
-    left 'active', so writes resume and the admin can retry. Status is only ever
-    active/finalized/cancelled -- no half-way state is persisted, so a crash
-    mid-commit just leaves an 'active' round to re-finalize.
+    If step 2 or 3 fails, the token is removed from ``_finalizing`` and the
+    registry is left 'active' (on the volume and on GitHub), so writes resume
+    and the admin can retry. Status is only ever active/finalized/cancelled --
+    no half-way state is persisted.
+
+    The finalized registry row also records ``FinalizedAt`` and ``FailedSteps``
+    (comma-separated failed cache steps), in the same commit, so
+    :func:`report_readiness` can tell later whether the report's inputs exist.
+
+    ``progress(step, state, error)``, if given, hears each ``FINALIZE_STEPS``
+    step move to running / done / failed / skipped.
+    """
+    from teg_analysis.io import write_file, batch_commit_to_github, _is_railway
+    from teg_analysis.analysis.data_update import execute_data_update
+
+    from teg_analysis.analysis.data_update import _notify
+
+    _notify(progress, "validate", "running")
+    try:
+        teg_num, round_num, long_df = _claim_for_finalize(token)
+    except Exception as e:
+        _notify(progress, "validate", "failed", str(e))
+        raise
+    _notify(progress, "validate", "done")
+
+    defer = bool(_is_railway())
+
+    # The slow data update runs WITHOUT the lock; it commits nothing itself.
+    try:
+        # overwrite=True: the staged scores are authoritative for this round.
+        # A retry after a failed commit therefore rewrites (and recommits)
+        # all-scores rather than finding every row already on the volume,
+        # adding nothing and committing only the registry.
+        result = execute_data_update(
+            long_df, overwrite=True, defer_github=defer, commit=False,
+            progress=progress,
+        )
+        pending = result.pop('pending_files', [])
+    except Exception:
+        with _lock:
+            _finalizing.discard(token)
+        raise
+
+    failed_steps = ",".join(
+        str(ce.get("step", "")) for ce in result.get("cache_errors") or [] if ce.get("step")
+    )
+
+    # Lock held for the whole step, commit included (see docstring).
+    with _lock:
+        try:
+            registry = _read_registry()
+            for col in ("FinalizedAt", "FailedSteps"):
+                if col not in registry.columns:
+                    registry[col] = pd.Series([None] * len(registry), dtype="object")
+                else:
+                    registry[col] = registry[col].astype("object")
+            mask = registry["Token"] == token
+            registry.loc[mask, "Status"] = "finalized"
+            registry.loc[mask, "FinalizedAt"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+            registry.loc[mask, "FailedSteps"] = failed_steps
+            if defer:
+                pending.append({'file_path': LIVE_ROUNDS_REGISTRY_CSV, 'data': registry})
+                _notify(progress, "commit", "running")
+                try:
+                    batch_commit_to_github(
+                        pending,
+                        f"Finalise live round TEG {teg_num} Round {round_num}: "
+                        f"{result.get('records_added', 0)} records + caches",
+                    )
+                except Exception as e:
+                    _notify(progress, "commit", "failed", str(e))
+                    raise
+                _notify(progress, "commit", "done")
+                # Only after the commit succeeds does the volume registry flip.
+                write_file(LIVE_ROUNDS_REGISTRY_CSV, registry,
+                           "Update live rounds registry", defer_github=True)
+                result['committed'] = True
+                result['files_committed'] = len(pending)
+            else:
+                _notify(progress, "commit", "skipped")
+                _write_registry(registry)
+        except Exception:
+            _finalizing.discard(token)
+            raise
+        _finalizing.discard(token)
+        # The round is committed by now, so a failed archive copy must not
+        # turn a successful finalise into a reported failure.
+        try:
+            _archive_staging(token)
+        except Exception as e:  # noqa: BLE001
+            logger.error("Archiving staging for %s failed: %s", token, e, exc_info=True)
+
+    return {"token": token, "teg_num": teg_num, "round_num": round_num, **result}
+
+
+def _claim_for_finalize(token: str):
+    """Finalise step 1: validate under ``_lock`` and claim the token.
+
+    Returns ``(teg_num, round_num, long_df)``; raises on any refusal.
     """
     from teg_analysis.io import read_file
-    from teg_analysis.analysis.data_update import execute_data_update
     from teg_analysis.constants import HANDICAPS_CSV
 
     with _lock:
@@ -435,20 +565,57 @@ def finalize_live_round(token: str) -> dict:
         # commit below are now rejected instead of silently excluded.
         _finalizing.add(token)
 
-    # GitHub commit runs WITHOUT the lock (see docstring's ordering note).
+    return teg_num, round_num, long_df
+
+
+def _round_has_data(teg_num: int, round_num: int) -> bool:
+    from teg_analysis.io import read_file
+    from teg_analysis.constants import ALL_DATA_PARQUET
+
     try:
-        result = execute_data_update(long_df, new_data_only=True)
-    except Exception:
-        with _lock:
-            _finalizing.discard(token)
-        raise
+        df = read_file(ALL_DATA_PARQUET)
+    except FileNotFoundError:
+        return False
+    return bool(((df["TEGNum"] == teg_num) & (df["Round"] == round_num)).any())
 
-    with _lock:
-        _set_registry_status(token, "finalized")
-        _archive_staging(token)
-        _finalizing.discard(token)
 
-    return {"token": token, "teg_num": teg_num, "round_num": round_num, **result}
+def report_readiness(teg_num: int, round_num: int | None = None) -> dict:
+    """Whether a report's input data is in place, judged from the registry.
+
+    For a round (``round_num`` given) this checks that round's live round; for
+    the tournament (``round_num=None``) every live round of the TEG. Cancelled
+    rounds are ignored, and a round with no live round at all (added by sheet
+    import) counts as ready. Deliberately independent of any webapp job file:
+    a ``finalized`` row is only written once every REPORT_REQUIRED_STEPS step
+    has succeeded (they raise on failure, so a finalized row implies them) and
+    the commit has landed. Failed cache steps are recorded in ``FailedSteps``
+    for display; none of them is a report input.
+
+    Returns ``{"ready", "state", "reason", "token", "round"}``; ``state`` is
+    ready / processing (finalise running now) / failed (a finalise wrote data
+    but didn't finish) / not_finalised.
+    """
+    teg_num = int(teg_num)
+    registry = _read_registry()
+    rows = registry[(registry["TEGNum"] == teg_num) & (registry["Status"] != "cancelled")]
+    if round_num is not None:
+        rows = rows[rows["Round"] == int(round_num)]
+
+    for _, row in rows.sort_values("Round").iterrows():
+        token, rnd = row["Token"], int(row["Round"])
+        base = {"ready": False, "token": token, "round": rnd}
+        if row["Status"] == "finalized":
+            continue
+        if token in _finalizing:
+            return {**base, "state": "processing",
+                    "reason": f"Round {rnd} data still being processed."}
+        if _round_has_data(teg_num, rnd):
+            return {**base, "state": "failed",
+                    "reason": f"Round {rnd} finalise didn't finish. Retry it from the review page, "
+                              "or cancel the live round if the round was loaded another way."}
+        return {**base, "state": "not_finalised",
+                "reason": f"Round {rnd} hasn't been finalised yet."}
+    return {"ready": True, "state": "ready", "reason": None, "token": None, "round": None}
 
 
 def _archive_staging(token: str) -> None:

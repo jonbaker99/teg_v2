@@ -1,0 +1,21 @@
+{# In-flight finalise: polls itself until the job ends. Success redirects via HX-Redirect,
+   failure swaps in the error partial. Buttons stay disabled while it runs. #}
+<div id="finalize-progress" role="status"
+     hx-get="/admin/live-round/{{ token }}/finalize-status" hx-trigger="every 2s" hx-swap="outerHTML">
+  {% if note %}<p style="margin:0 0 .5rem;color:#8a6100;">{{ note }}</p>{% endif %}
+  {% set cur = finalize_current_step(status) %}
+  <p style="margin:0;font-weight:600;">⏳ {% if cur %}Step {{ cur.index }} of {{ cur.total }}: {{ cur.label }}{% else %}{{ (status and status.message) or "Finalising…" }}{% endif %}</p>
+  {% include "partials/admin_live_round_finalize_steps.html" %}
+  <p style="margin:.25rem 0 0;font-size:.9rem;color:#555;">
+    Started {{ fmt_hhmm(status.started_at if status else None) }} UTC. This takes about a minute.
+    You can leave this page; come back to it to check progress.</p>
+<script>
+  (function () {
+    function lock() {
+      document.querySelectorAll('#finalize-btn, #cancel-btn, #save-btn').forEach(function (b) { b.disabled = true; });
+    }
+    lock();
+    setTimeout(lock, 50);  // htmx re-enables the form's buttons as the POST settles
+  })();
+</script>
+</div>

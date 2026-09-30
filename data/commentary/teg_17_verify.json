@@ -1,191 +1,16 @@
 {
   "teg": 17,
   "round": null,
-  "label": "storylinefirst",
-  "errors": 0,
-  "warnings": 2,
+  "label": "unittest_tmp",
+  "errors": 1,
+  "warnings": 26,
   "findings": [
     {
-      "rule": "claim_lead_event",
-      "severity": "unchecked",
-      "detail": "lead_event claim missing player/round/hole/competition",
-      "excerpt": "He opened with a 96 at Praia D'El Rey, good enough to lead the Trophy race",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_lead_event",
-      "severity": "unchecked",
-      "detail": "lead_event claim missing player/round/hole/competition",
-      "excerpt": "He recovered the lead and then extended it",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_margin",
-      "severity": "unchecked",
-      "detail": "claim type 'margin' has no checker yet",
-      "excerpt": "Jon Baker won the TEG 17 Trophy with 166 Stableford points, 18 clear of runner-up David Mullin.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_margin",
-      "severity": "unchecked",
-      "detail": "claim type 'margin' has no checker yet",
-      "excerpt": "After two rounds Baker sat on top of the Stableford table, two points clear, and level with Mullin for the TEG 17 Green Jacket on gross.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_margin",
-      "severity": "unchecked",
-      "detail": "claim type 'margin' has no checker yet",
-      "excerpt": "Jon Baker won the TEG 17 Green Jacket at +67 gross, 13 clear of David Mullin.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_margin",
-      "severity": "unchecked",
-      "detail": "claim type 'margin' has no checker yet",
-      "excerpt": "Mullin held the Jacket outright for two single holes, the 1st and the 6th of Round 3, and finished 13 back.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_rank_change",
-      "severity": "unchecked",
-      "detail": "rank_change claim missing player/round/hole/competition/value",
-      "excerpt": "The triple bogey at the 10th dropped him to the bottom of the TEG 17 Wooden Spoon race.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "It is the highest Trophy total of his career.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "Baker went round Seve Ballesteros's parkland course in 86 gross, a new course record.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "It was also a personal best there by three shots, and eight better than his last time out on the course.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "Baker birdied the fourth and fifth holes back to back, a two-hole birdie streak that equals the all-time TEG record.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "Mullin, whose own 82 at West Cliffs was a course personal best, could not close the gap.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "His opening 114 at Praia D'El Rey is the highest gross round ever recorded at the course, beating the previous worst of 110 set across 24 prior visits.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "His 105 there is a personal best at West Cliffs, five shots better than his only previous visit",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "David Mullin shot 82 gross, a new West Cliffs course record.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "It was also comfortably his own best at the course: he had gone round in 94 on his only previous visit, in TEG 15, so this was twelve strokes better.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "His 116 gross set a new course worst, one shot beyond the previous high of 115, and at +44 it was the worst gross round of his career.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "then went to West Cliffs and signed for 116: a gross round of +44, the worst of his career to date",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "That 11, six over par, is the worst score relative to par he has recorded on any hole in TEG.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "his 94 was a course personal best, seven strokes better than his previous visit there.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "It is the third-best gross total of Baker's career.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "his 82 gross at West Cliffs in Round 2 is a new course record there, beating the previous mark of 88 set across six prior visits",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "86 at West Cliffs, 15 strokes better than his previous visit and a course personal best",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "86 at Royal \u00d3bidos, also a course best, three better than his previous mark there",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "Gregg Williams, the back-to-back Jacket champion, a man with four Trophy wins already in the cabinet, finished TEG 17 on 123 Stableford points.",
-      "source": "claim"
-    },
-    {
-      "rule": "claim_record",
-      "severity": "unchecked",
-      "detail": "claim type 'record' has no checker yet",
-      "excerpt": "his 93 in round one was seven strokes better than his last visit, and matched his best gross at Praia D'El Rey.",
-      "source": "claim"
+      "rule": "not_a_week",
+      "severity": "error",
+      "detail": "'all week' \u2014 a TEG is 4 consecutive days",
+      "excerpt": "ed a third straight Spoon.  They played well all week.",
+      "source": "mechanical"
     },
     {
       "rule": "missed_fact",
@@ -198,7 +23,175 @@
       "rule": "no_em_dashes",
       "severity": "warning",
       "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
-      "excerpt": "John Patterson sets a new course-record high \u2014 the field's two extremes on the same course,",
+      "excerpt": "rse record on Seve Ballesteros' final design \u2014 the previous best across 18 prior visits was",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "ho had not won one since TEG 13.  ## Round 1 \u2014 Praia D'El Rey Sees Something It Has Never S",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "uple bogey at the par-4 4th, a 10 at the 5th \u2014 SI 2, one of the hardest holes on the course",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "SI 2, one of the hardest holes on the course \u2014 and a quintuple bogey to close at the 18th.",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "lin took 16 points from the 12th to the 16th \u2014 par, birdie, par, bogey, par \u2014 and signed fo",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "h to the 16th \u2014 par, birdie, par, bogey, par \u2014 and signed for 33 points and +24. The Trophy",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "times and settled on Alex Baker.  ## Round 2 \u2014 Eighty-Two and One-Sixteen: West Cliffs Brea",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "nd rather more permanent. He bogeyed the 1st \u2014 SI 17, one of the easiest holes on the cours",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "I 17, one of the easiest holes on the course \u2014 and that was enough to take the Trophy lead",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "8th and led the Jacket by three.  ## Round 3 \u2014 One Hole: Mullin's Green Jacket Reign in Ful",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "11th, bogey at the 12th, birdie at the 13th \u2014 SI 18, the easiest hole on the course \u2014 and",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "13th \u2014 SI 18, the easiest hole on the course \u2014 and pars at the 14th, 15th and 16th. The 86",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "ints from the 12th to the 15th and posted 94 \u2014 a personal best at the venue, seven better t",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "re anyone reached the clubhouse.  ## Round 4 \u2014 Baker Wins the Lot Despite Two Nines  Back t",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "e took nine points from the 14th to the 16th \u2014 par, bogey, par \u2014 and promptly made another",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "from the 14th to the 16th \u2014 par, bogey, par \u2014 and promptly made another 9 at the 17th, the",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "uple bogey at the 1st, a 9 at the par-3 14th \u2014 SI 17, one of the easiest \u2014 a 10 at the 15th",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "t the par-3 14th \u2014 SI 17, one of the easiest \u2014 a 10 at the 15th, which is SI 3 and at least",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "## Player-by-player summary  - **Jon Baker** \u2014 Rounds of 38, 44, 44 and 40 for 166 points,",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "d won by daylight anyway. - **David Mullin** \u2014 Nine Green Jackets already, and the best gol",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "dos. Runner-up in both. - **Gregg Williams** \u2014 Arrived holding the Green Jacket back-to-bac",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "t in climbing back out. - **John Patterson** \u2014 Led the Trophy after Round 1 and was bottom",
+      "source": "mechanical"
+    },
+    {
+      "rule": "no_em_dashes",
+      "severity": "warning",
+      "detail": "em-dash in prose; the voice rules ban them outright, split the sentence instead",
+      "excerpt": "at Praia with a 9 and a 10. - **Alex Baker** \u2014 Opened with 114 at Praia D'El Rey, worse tha",
+      "source": "mechanical"
+    },
+    {
+      "rule": "teg_references",
+      "severity": "warning",
+      "detail": "names the TEG 15 competition in a TEG 17 report: a mislabel unless it's genuinely about TEG 15",
+      "excerpt": "n arriving with back-to-back Jackets and the TEG 15 Trophy was no more than the natural order.",
+      "source": "mechanical"
+    },
+    {
+      "rule": "teg_references",
+      "severity": "warning",
+      "detail": "names the TEG 15 competition in a TEG 17 report: a mislabel unless it's genuinely about TEG 15",
+      "excerpt": "olding the Green Jacket back-to-back and the TEG 15 Trophy, and led the Jacket after Round 1. Fi",
       "source": "mechanical"
     }
   ]

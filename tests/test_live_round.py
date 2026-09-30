@@ -338,7 +338,7 @@ def test_finalize_only_includes_complete_18_hole_rounds(store, monkeypatch):
     long_df = captured["long_df"]
     assert set(long_df["Pl"].unique()) == {"DM"}
     assert len(long_df) == 18
-    assert captured["kwargs"] == {"new_data_only": True}
+    assert {k: captured["kwargs"][k] for k in ("overwrite", "defer_github", "commit")} == {"overwrite": True, "defer_github": False, "commit": False}
     assert (long_df["Par"] == 4).all() and (long_df["TEGNum"] == 10).all() and (long_df["Round"] == 1).all()
     assert result["teg_num"] == 10 and result["round_num"] == 1
 

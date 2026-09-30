@@ -5,7 +5,7 @@
 {% if error_message %}
   <div class="admin-callout admin-callout--warning">
     <div class="admin-callout-title">⚠️ Can't start</div>
-    <div class="admin-callout-detail">{{ error_message }}</div>
+    <div class="admin-callout-detail">{{ error_message }}{% if error_link %} <a href="{{ error_link }}" class="text-link">See finalise progress</a>{% endif %}</div>
   </div>
 {% elif started %}
   <div class="admin-callout admin-callout--live">

@@ -152,6 +152,7 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
   (editable scorecard grid + conflicts + finalize), `/admin/live-round/{token}/edit`
   (bulk admin edit — a plain form POST that redirects back to review),
   `/admin/live-round/{token}/resolve`, `/admin/live-round/{token}/finalize`,
+  `/admin/live-round/{token}/finalize-status` (HTMX poll),
   `/admin/live-round/{token}/cancel` (HTMX), `/admin/live-round/{token}/random-fill`
   (test only, plain form POST).
 - **Purpose:** start a live, multi-device round-entry session for an already-set-up
@@ -171,11 +172,31 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
   and finalizes. Admin edits go through `live_round.apply_admin_edits`, which is
   authoritative: an admin value overwrites a player entry and clears any conflict flag,
   and only cells whose value actually changed are written (a re-save is a no-op).
-  **Finalise feedback:** finalise takes about 40 seconds (it runs the full data update
-  in the request). While it runs, an indicator says so and Finalise, Cancel and Save are
-  disabled. On success the route answers with `HX-Redirect` back to the review page
-  (`?finalized=1`, plus `cache_errors=` naming any failed cache step), so the
-  confirmation lands at the top. Cancel does the same with `?cancelled=1`.
+  **Finalise is a background job** (`webapp/finalize_jobs.py`, TEG 19 dry-run issue 10).
+  It follows the report-generation pattern: a JSON status file per token at
+  `data/live_rounds/_finalize_status/{token}.json` (never synced; `SYNC_FOLDERS` only
+  lists files directly under their folders), a single-flight `claim()` under a lock, and
+  a 10-minute stale timeout (a status left active by a dead worker, e.g. after a
+  redeploy, reads as interrupted and can be retried). `POST .../finalize` claims and
+  returns at once; a second tap while it runs shows "Already finalising", not an error.
+  The progress partial polls `GET .../finalize-status` every 2s and keeps Finalise,
+  Cancel and Save disabled. It shows a **step checklist** from
+  `live_round.FINALIZE_STEPS` (validate, backup, scores, all-data, TEG status, the four
+  cache steps, commit), fed by `finalize_live_round`'s `progress` callback and stored in
+  the status file, so it survives a reload or a locked phone. A failed step shows its
+  error; steps never reached show "not run". On success the poll answers with
+  `HX-Redirect` to the review page (`?finalized=1`, plus `cache_errors=` naming any
+  failed cache step). The finalised card then lists what happens next: pages reload the
+  data on their next view (no warm-up job), the GitHub sync was the single commit, and
+  the round report and PDFs aren't started automatically. Cancel still answers directly
+  with `?cancelled=1`, and the core refuses a cancel while a finalise is in flight.
+  **Report readiness:** "Generate round report" shows only once
+  `live_round.report_readiness(teg, round)` is ready, i.e. the round's registry row is
+  `finalized` (written in the same commit as the data, after the steps the report reads:
+  scores, all-data, TEG status). `/admin/reports` disables Generate with the same reason
+  and a link to the finalise progress (`finalize_jobs.report_block`), and
+  `POST /admin/reports/generate` refuses with that message. The tournament report is
+  gated on every live round of the TEG.
   **Read-only once done:** a finalised or cancelled round's review page shows the
   scorecard as plain values, with no Save, resolve, Finalise or Cancel. A finalised
   round's status card offers **View leaderboard** (`/leaderboard`) and **Generate round
@@ -189,8 +210,12 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
   `production`, so local runs and PR environments have it. On production the button is
   hidden and the route returns 403.
   Finalizing runs the staged scores through the *existing* `execute_data_update`
-  pipeline exactly as "Add a round" does — one GitHub commit, every derived cache
-  regenerated. See the player-facing side below and
+  pipeline exactly as "Add a round" does, with every derived cache regenerated. It
+  passes `overwrite=True` (staged scores are authoritative, so a retry after a failed
+  commit recommits the round rather than adding nothing) and `commit=False`, and adds
+  the registry flip, so backups, data, caches and
+  registry land in **one** GitHub commit (TEG 19 dry-run issue 11: quick successive
+  data commits can trigger a Railway redeploy). See the player-facing side below and
   `DATA_STORAGE_INGESTION_PLAN.md`'s "Phase 3.4 design" for the full model.
 
 **Reports** — templates `admin_reports.html`, `partials/admin_report_panel.html`,
@@ -420,10 +445,11 @@ don't need the link sent to them.
   `DATA_STORAGE_INGESTION_PLAN.md`'s "Phase 3.4 design" for the full model.
 - **Device identity:** a `localStorage` UUID plus a self-declared display name
   (asked once, on first load) — enough for conflict attribution, no new auth.
-- **Finalize ordering:** `finalize_live_round` holds the module `_lock` only for
-  the fast read-validate phase and the terminal status flip; the slow
-  `execute_data_update` GitHub commit runs *outside* the lock so it never blocks
-  other tokens' writes. A per-token in-process `_finalizing` set (checked under
+- **Finalize ordering:** `finalize_live_round` holds the module `_lock` for the
+  fast read-validate phase and again for the registry flip plus the single GitHub
+  commit (the registry blob is the whole CSV, so building it outside the lock could
+  clobber another round's start/cancel). The slow `execute_data_update` work runs
+  *outside* the lock so it never blocks other tokens' writes. A per-token in-process `_finalizing` set (checked under
   `_lock` in every write path) rejects a score that arrives during the commit
   window with a 409 instead of appending it to staging and then silently
   dropping it from the frame already being committed; a failed commit rolls the

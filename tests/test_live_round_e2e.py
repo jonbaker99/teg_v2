@@ -134,7 +134,10 @@ def test_full_lifecycle_two_devices_conflict_and_finalize(admin, scratch_repo):
     assert "disagree" in review.text.lower()
 
     # Finalize refuses while the conflict is unresolved.
-    blocked = admin.post(f"/admin/live-round/{token}/finalize")
+    # Finalize runs as a background job (TestClient runs it after the response);
+    # the refusal surfaces through the status poll.
+    admin.post(f"/admin/live-round/{token}/finalize")
+    blocked = admin.get(f"/admin/live-round/{token}/finalize-status")
     assert "resolve every conflicted cell" in blocked.text.lower()
 
     # Admin resolves the conflict.
@@ -148,7 +151,8 @@ def test_full_lifecycle_two_devices_conflict_and_finalize(admin, scratch_repo):
     remaining = [{"hole": h, "player": "DM", "value": 4} for h in range(2, 19)]
     device_a.post(f"/api/live-round/{token}/scores", json={"device_id": "dev-A", "device_name": "Jon", "cells": remaining})
 
-    finalize_resp = admin.post(f"/admin/live-round/{token}/finalize")
+    admin.post(f"/admin/live-round/{token}/finalize")
+    finalize_resp = admin.get(f"/admin/live-round/{token}/finalize-status")
     assert finalize_resp.headers.get("HX-Redirect") == f"/admin/live-round/{token}/review?finalized=1", finalize_resp.text
 
     # The real pipeline actually wrote to all-scores.parquet in the scratch repo.

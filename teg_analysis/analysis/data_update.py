@@ -27,6 +27,13 @@ The "edit metadata CSV" flow:
         -> save_data_file()                     write the edited frame + commit
         -> regenerate_status_files()            (status files only) rebuild from raw data
 
+Commit discipline: each admin action makes exactly ONE GitHub commit. On Railway
+the timestamped backups are deferred (``backup_file(..., defer_github=True)``)
+and go, first, into the same ``batch_commit_to_github`` as the data and cache
+files. ``execute_data_update(commit=False)`` hands the uncommitted file infos
+back as ``pending_files`` so a caller (``finalize_live_round``) can add its own
+files to that one commit.
+
 ``execute_data_update`` / ``execute_data_deletion`` reuse the existing building
 blocks in ``teg_analysis.analysis.pipeline`` (``update_all_data``,
 ``update_streaks_cache``, ``update_commentary_caches``, ``update_bestball_cache``, ``history.update_winners_cache``,
@@ -65,7 +72,47 @@ class UpdateInProgressError(RuntimeError):
     """Raised when an add/delete is attempted while another is already running."""
 
 
-def _run_cache_step(cache_errors: list, label: str, fn):
+#: The data-update pipeline's steps, in run order: (key, label). A caller can
+#: pass ``progress(key, state, error=None)`` to :func:`execute_data_update` to
+#: hear each one move through running -> done | failed | skipped. Live-round
+#: finalise wraps these with its own ``validate`` and ``commit`` steps
+#: (``live_round.FINALIZE_STEPS``).
+DATA_UPDATE_STEPS: tuple[tuple[str, str], ...] = (
+    ("backup", "Back up scores and data"),
+    ("scores", "Write the scores"),
+    ("all_data", "Rebuild all-data"),
+    ("status", "Update TEG status"),
+    ("streaks", "Streaks cache"),
+    ("commentary", "Commentary cache"),
+    ("bestball", "Best-ball cache"),
+    ("winners", "Winners cache"),
+)
+
+
+def _notify(progress, key: str, state: str, error: str = None) -> None:
+    """Report a step's state to an optional progress callback. A broken
+    callback must never break the pipeline, so its errors are only logged."""
+    if progress is None:
+        return
+    try:
+        progress(key, state, error)
+    except Exception as e:  # noqa: BLE001
+        logger.warning("Progress callback failed for step %r: %s", key, e)
+
+
+def _run_step(progress, key: str, fn):
+    """Run a primary (must-succeed) step, reporting it. Failures re-raise."""
+    _notify(progress, key, "running")
+    try:
+        out = fn()
+    except Exception as e:
+        _notify(progress, key, "failed", str(e))
+        raise
+    _notify(progress, key, "done")
+    return out
+
+
+def _run_cache_step(cache_errors: list, label: str, fn, progress=None):
     """Run a derived-cache regeneration step, collecting any failure.
 
     The primary all-scores/all-data write has already landed (or is queued for
@@ -77,12 +124,16 @@ def _run_cache_step(cache_errors: list, label: str, fn):
 
     Returns the step's file-info result, or None if it raised.
     """
+    _notify(progress, label, "running")
     try:
-        return fn()
+        out = fn()
     except Exception as e:  # noqa: BLE001
         logger.error("Cache regeneration step %r failed: %s", label, e, exc_info=True)
         cache_errors.append({"step": label, "error": str(e)})
+        _notify(progress, label, "failed", str(e))
         return None
+    _notify(progress, label, "done")
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -399,6 +450,8 @@ def execute_data_update(
     overwrite: bool = False,
     new_data_only: bool = False,
     defer_github: bool = None,
+    commit: bool = True,
+    progress=None,
 ) -> dict:
     """Apply a processed round update end-to-end.
 
@@ -426,10 +479,21 @@ def execute_data_update(
         defer_github: Override the commit strategy. Defaults to ``True`` on
             Railway (volume write now, single GitHub batch commit at the end)
             and ``False`` locally (direct filesystem writes).
+        commit: If False, skip the GitHub batch commit and return the
+            uncommitted file infos as ``pending_files`` so the caller can add
+            its own files and make one combined commit (used by
+            ``finalize_live_round``). Only meaningful when deferring.
+        progress: Optional ``progress(step, state, error)`` callback, called
+            as each :data:`DATA_UPDATE_STEPS` step (plus ``commit`` when this
+            call commits) moves to running / done / failed / skipped. A
+            failed primary step re-raises; a failed cache step is reported and
+            the pipeline carries on (see :func:`_run_cache_step`).
 
     Returns:
         Summary dict: ``records_added``, ``changed_rounds`` ({teg: [rounds]}),
-        ``backups`` (list of paths), ``committed`` (bool), ``files_committed`` (int).
+        ``backups`` (list of paths), ``committed`` (bool), ``files_committed`` (int),
+        ``cache_errors``; plus ``pending_files`` (backups first) only when
+        ``commit=False``.
     """
     if not _update_lock.acquire(blocking=False):
         raise UpdateInProgressError(
@@ -441,6 +505,8 @@ def execute_data_update(
             overwrite=overwrite,
             new_data_only=new_data_only,
             defer_github=defer_github,
+            commit=commit,
+            progress=progress,
         )
     finally:
         _update_lock.release()
@@ -452,6 +518,8 @@ def _execute_data_update_locked(
     overwrite: bool = False,
     new_data_only: bool = False,
     defer_github: bool = None,
+    commit: bool = True,
+    progress=None,
 ) -> dict:
     """Implementation for :func:`execute_data_update` (runs under the lock)."""
     from teg_analysis.io import read_file, write_file, batch_commit_to_github, _is_railway
@@ -498,7 +566,9 @@ def _execute_data_update_locked(
 
     if processed_rounds.empty:
         logger.warning("No new records to append.")
-        return {
+        for key, _ in DATA_UPDATE_STEPS:
+            _notify(progress, key, "skipped")
+        empty = {
             'records_added': 0,
             'changed_rounds': changed_rounds,
             'backups': [],
@@ -506,6 +576,9 @@ def _execute_data_update_locked(
             'files_committed': 0,
             'cache_errors': [],
         }
+        if not commit:
+            empty['pending_files'] = []
+        return empty
 
     # Align dtypes before concatenating.
     for col in ['TEGNum', 'Round']:
@@ -516,30 +589,34 @@ def _execute_data_update_locked(
     final_df = pd.concat([existing_df, processed_rounds], ignore_index=True)
 
     # Safety backups before touching the canonical files (matches execute_data_deletion).
-    backups = create_timestamped_backups()
+    # Deferred backups join the single batch commit (backups first).
+    batch_files = []
+    backups = _run_step(progress, 'backup', lambda: create_timestamped_backups(
+        defer_github=defer_github, batch_files=batch_files
+    ))
     logger.info(f"Backups created: {backups}")
 
-    batch_files = []
-
-    file_info = write_file(
+    file_info = _run_step(progress, 'scores', lambda: write_file(
         ALL_SCORES_PARQUET, final_df,
         f"Updated data with {len(processed_rounds)} new records",
         defer_github=defer_github,
-    )
+    ))
     if file_info:
         batch_files.append(file_info)
 
     # all-data parquet, regenerated wholesale from all-scores.
-    update_files = update_all_data(
+    update_files = _run_step(progress, 'all_data', lambda: update_all_data(
         ALL_SCORES_PARQUET, ALL_DATA_PARQUET, defer_github=defer_github
-    )
+    ))
     if update_files:
         batch_files.extend(update_files)
 
     # TEG status, then the derived caches. On Railway each write lands on the
     # volume immediately (GitHub deferred), so these regen steps read the fresh
     # data even before the batch commit.
-    status_files = update_teg_status_files(defer_github=defer_github)
+    status_files = _run_step(
+        progress, 'status', lambda: update_teg_status_files(defer_github=defer_github)
+    )
     if status_files:
         batch_files.extend(status_files)
 
@@ -552,6 +629,7 @@ def _execute_data_update_locked(
     streaks_file = _run_cache_step(
         cache_errors, 'streaks',
         lambda: update_streaks_cache(all_data, defer_github=defer_github),
+        progress=progress,
     )
     if streaks_file:
         batch_files.append(streaks_file)
@@ -559,6 +637,7 @@ def _execute_data_update_locked(
     commentary_files = _run_cache_step(
         cache_errors, 'commentary',
         lambda: update_commentary_caches(all_data, defer_github=defer_github),
+        progress=progress,
     )
     if commentary_files:
         batch_files.extend(commentary_files)
@@ -566,6 +645,7 @@ def _execute_data_update_locked(
     bestball_file = _run_cache_step(
         cache_errors, 'bestball',
         lambda: update_bestball_cache(all_data, defer_github=defer_github),
+        progress=progress,
     )
     if bestball_file:
         batch_files.append(bestball_file)
@@ -575,16 +655,17 @@ def _execute_data_update_locked(
     winners_file = _run_cache_step(
         cache_errors, 'winners',
         lambda: update_winners_cache(all_data, defer_github=defer_github),
+        progress=progress,
     )
     if winners_file:
         batch_files.append(winners_file)
 
     committed = False
-    if defer_github and batch_files:
-        batch_commit_to_github(
+    if commit and defer_github and batch_files:
+        _run_step(progress, 'commit', lambda: batch_commit_to_github(
             batch_files,
             f"Data update: {len(processed_rounds)} new records + cache updates",
-        )
+        ))
         committed = True
 
     logger.info(
@@ -592,7 +673,7 @@ def _execute_data_update_locked(
         f"{len(batch_files)} files, committed={committed}, "
         f"cache_errors={len(cache_errors)}"
     )
-    return {
+    result = {
         'records_added': len(processed_rounds),
         'changed_rounds': changed_rounds,
         'backups': list(backups),
@@ -600,6 +681,9 @@ def _execute_data_update_locked(
         'files_committed': len(batch_files),
         'cache_errors': cache_errors,
     }
+    if not commit:
+        result['pending_files'] = batch_files
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -651,8 +735,18 @@ def preview_deletion_data(
     return scores_df[deletion_filter]
 
 
-def create_timestamped_backups() -> tuple[str, str]:
-    """Back up all-scores and all-data parquet files before a deletion.
+def create_timestamped_backups(
+    defer_github: bool = False,
+    batch_files: list | None = None,
+) -> tuple[str, str]:
+    """Back up all-scores and all-data parquet files before an update/deletion.
+
+    Args:
+        defer_github: If True, on Railway the backups are not pushed to GitHub
+            individually; their file infos are appended to ``batch_files`` so the
+            caller commits them in its single batch commit.
+        batch_files: List to receive the deferred backup file infos. Required
+            when ``defer_github`` is True.
 
     Returns:
         ``(scores_backup_path, data_backup_path)``.
@@ -660,13 +754,20 @@ def create_timestamped_backups() -> tuple[str, str]:
     from datetime import datetime
     from teg_analysis.io import backup_file
 
+    if defer_github and batch_files is None:
+        raise ValueError("batch_files is required when defer_github=True")
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
     scores_backup_path = f"data/backups/all_scores_backup_{timestamp}.parquet"
-    backup_file(ALL_SCORES_PARQUET, scores_backup_path)
-
     data_backup_path = f"data/backups/all_data_backup_{timestamp}.parquet"
-    backup_file(ALL_DATA_PARQUET, data_backup_path)
+    for source, target in (
+        (ALL_SCORES_PARQUET, scores_backup_path),
+        (ALL_DATA_PARQUET, data_backup_path),
+    ):
+        file_info = backup_file(source, target, defer_github=defer_github)
+        if file_info:
+            batch_files.append(file_info)
 
     return scores_backup_path, data_backup_path
 
@@ -733,7 +834,11 @@ def _execute_data_deletion_locked(
     selected_rounds = [int(r) for r in selected_rounds]
 
     # Safety backups first (no point continuing if these fail).
-    backups = create_timestamped_backups()
+    # Deferred backups join the single batch commit (backups first).
+    batch_files = []
+    backups = create_timestamped_backups(
+        defer_github=defer_github, batch_files=batch_files
+    )
     logger.info(f"Backups created: {backups}")
 
     scores_df = read_file(ALL_SCORES_PARQUET)
@@ -752,7 +857,6 @@ def _execute_data_deletion_locked(
 
     deletion_message = f"Deleted TEG {selected_teg}, Rounds {selected_rounds}"
 
-    batch_files = []
     for path, frame, msg in (
         (ALL_SCORES_PARQUET, filtered_scores_df, deletion_message),
         (ALL_DATA_PARQUET, filtered_data_df, deletion_message),

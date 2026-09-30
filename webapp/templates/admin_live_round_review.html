@@ -41,9 +41,34 @@
           Parts of the site may show <strong>stale data</strong> until re-run; check the server logs.</p>
       </div>
       {% endif %}
-      <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-top:.75rem;">
+      {% if job_steps %}
+      <details style="margin:.75rem 0;"{% if cache_errors or job.cache_errors %} open{% endif %}>
+        <summary style="cursor:pointer;font-weight:600;">Finalise steps</summary>
+        {% with status=job %}{% include "partials/admin_live_round_finalize_steps.html" %}{% endwith %}
+      </details>
+      {% endif %}
+      {% if job_done %}
+      <div style="margin:.75rem 0;">
+        <p style="margin:0 0 .25rem;font-weight:600;">What happens next</p>
+        <ul style="margin:.25rem 0;padding-left:1.25rem;font-size:.9rem;">
+          <li><strong>Done.</strong> Site pages reload the new data on their next view. Nothing to wait for.</li>
+          {% if job_committed %}
+          <li><strong>Done.</strong> The GitHub sync is already done: everything went in one commit.</li>
+          {% else %}
+          <li><strong>Done.</strong> Local run: nothing was sent to GitHub.</li>
+          {% endif %}
+          <li><strong>Not started.</strong> The round report doesn't start by itself. Use Generate round report below.</li>
+          <li><strong>Not started.</strong> Report PDFs aren't built automatically (see webapp/TODOS.md).</li>
+        </ul>
+      </div>
+      {% endif %}
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-top:.75rem;align-items:center;">
         <a href="/leaderboard" class="btn-action">View leaderboard</a>
-        <a href="/admin/reports?teg={{ live.teg_num }}&amp;round={{ live.round_num }}" class="btn-action">Generate round report</a>
+        {% if report_block %}
+          <span style="color:#8a6100;font-size:.9rem;">Round report not ready: {{ report_block.message }}</span>
+        {% else %}
+          <a href="/admin/reports?teg={{ live.teg_num }}&amp;round={{ live.round_num }}" class="btn-action">Generate round report</a>
+        {% endif %}
       </div>
     {% else %}
       <h2 class="card-header">Round cancelled</h2>
@@ -192,10 +217,10 @@
             hx-on::after-request="if (event.detail.xhr.getResponseHeader('HX-Redirect')) document.querySelectorAll('#finalize-btn, #cancel-btn, #save-btn').forEach(function (b) { b.disabled = true; })"
             hx-confirm="Write TEG {{ live.teg_num }} Round {{ live.round_num }} to the permanent record?"
             style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;">
-        <button type="submit" id="finalize-btn" class="btn-action" {% if conflicts %}disabled{% endif %}>
+        <button type="submit" id="finalize-btn" class="btn-action" {% if conflicts %}disabled data-conflicts="1"{% endif %}>
           ✅ Finalise — write to permanent record
         </button>
-        <span class="htmx-indicator" role="status">Finalising. This takes about a minute. Keep this page open.</span>
+        <span class="htmx-indicator" role="status">Starting the finalise…</span>
       </form>
       <form hx-post="/admin/live-round/{{ token }}/cancel" hx-target="#finalize-result" hx-swap="innerHTML"
             hx-disabled-elt="{% if not conflicts %}#finalize-btn, {% endif %}#cancel-btn, #save-btn"
@@ -207,7 +232,11 @@
     {% if conflicts %}
       <p style="margin-top:.5rem;color:#8a6100;">Resolve every conflict above before Finalize will run.</p>
     {% endif %}
-    <div id="finalize-result" style="margin-top:1rem;"></div>
+    <div id="finalize-result" style="margin-top:1rem;">
+      {# A finalise already running (or failed) for this round: resume polling / show why. #}
+      {% if finalize_job %}{% with token=token, status=finalize_job %}{% include "partials/admin_live_round_finalize_progress.html" %}{% endwith %}
+      {% elif finalize_error %}{% with error=finalize_error, status=finalize_status %}{% include "partials/admin_live_round_finalize_result.html" %}{% endwith %}{% endif %}
+    </div>
   </div>
   {% endif %}
 

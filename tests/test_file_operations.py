@@ -144,3 +144,44 @@ def test_read_file_railway_other_github_errors_propagate(monkeypatch, tmp_path):
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
+
+
+def test_backup_file_railway_defer_github_returns_file_info(monkeypatch, tmp_path):
+    """With defer_github=True on Railway, backup_file pushes nothing and returns
+    the snapshot as a batch-commit file info."""
+    monkeypatch.setenv("RAILWAY_ENVIRONMENT", "true")
+
+    volume_file = tmp_path / "data" / "all-scores.parquet"
+    volume_file.parent.mkdir(parents=True)
+    current_df = pd.DataFrame({"a": [1, 2, 3]})
+    current_df.to_parquet(volume_file, index=False)
+
+    monkeypatch.setattr(
+        file_operations.volume_operations, "_get_volume_path", lambda path: str(tmp_path / path)
+    )
+
+    def fail_write(*a, **k):
+        raise AssertionError("deferred backup must not push to GitHub")
+
+    monkeypatch.setattr(file_operations, "write_to_github", fail_write)
+
+    info = file_operations.backup_file(
+        "data/all-scores.parquet", "data/backups/x.parquet", defer_github=True
+    )
+
+    assert info["file_path"] == "data/backups/x.parquet"
+    pd.testing.assert_frame_equal(info["data"].reset_index(drop=True), current_df)
+
+
+def test_backup_file_local_defer_github_returns_none(monkeypatch, tmp_path):
+    """Locally defer_github is ignored: plain copy, returns None."""
+    import teg_analysis.io.volume_operations as vo
+    monkeypatch.delenv("RAILWAY_ENVIRONMENT", raising=False)
+    monkeypatch.setattr(vo, "_REPO_ROOT", tmp_path)
+    (tmp_path / "data").mkdir()
+    pd.DataFrame({"a": [1]}).to_parquet(tmp_path / "data" / "all-scores.parquet", index=False)
+
+    assert file_operations.backup_file(
+        "data/all-scores.parquet", "data/backups/x.parquet", defer_github=True
+    ) is None
+    assert (tmp_path / "data" / "backups" / "x.parquet").exists()
