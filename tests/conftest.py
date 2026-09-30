@@ -145,3 +145,36 @@ def temp_parquet_file(temp_data_dir, sample_all_data):
     parquet_path = temp_data_dir / "test_scores.parquet"
     sample_all_data.to_parquet(parquet_path)
     return parquet_path
+
+
+def _snapshot_tree(root):
+    """{relative path: bytes} for every file under root (empty if absent)."""
+    root = Path(root)
+    return {str(f.relative_to(root)): f.read_bytes()
+            for f in sorted(root.rglob("*")) if f.is_file()}
+
+
+@pytest.fixture
+def isolated_report_dir(tmp_path, monkeypatch):
+    """Point the report pipeline's output dir at a temp dir.
+
+    `paths.output_dir()` reads `CANONICAL_OUTPUT_DIR` per call, so patching it
+    redirects every `*_report_*.md` / `*_verify.json` write. On teardown it
+    asserts the real `data/commentary/` is byte-for-byte unchanged, so a test
+    that still writes there fails instead of silently dirtying a tracked file.
+    Returns the temp dir path as a str.
+    """
+    from teg_analysis.reporting import paths
+
+    real = project_root / "data" / "commentary"
+    before = _snapshot_tree(real)
+    out = tmp_path / "commentary"
+    out.mkdir()
+    monkeypatch.setattr(paths, "CANONICAL_OUTPUT_DIR", str(out))
+    monkeypatch.delenv(paths.ENV_VARIANT, raising=False)
+    yield str(out)
+    after = _snapshot_tree(real)
+    assert after == before, (
+        "test modified data/commentary: "
+        f"{sorted(k for k in set(before) | set(after) if before.get(k) != after.get(k))}"
+    )

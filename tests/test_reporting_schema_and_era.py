@@ -625,7 +625,7 @@ def test_prompts_never_reference_a_plan_field_that_does_not_exist():
 # ---------------------------------------------------------------------------
 # restyle_voice — the voice A/B lever
 # ---------------------------------------------------------------------------
-def test_restyle_voice_composes_guardrails_from_the_shared_constant():
+def test_restyle_voice_composes_guardrails_from_the_shared_constant(isolated_report_dir):
     """A variant's voice prompt must not be able to shed the faithfulness rules.
 
     The guardrails come from `WRITER_FAITHFULNESS` — the same constant the main
@@ -635,6 +635,8 @@ def test_restyle_voice_composes_guardrails_from_the_shared_constant():
     from teg_analysis.reporting import authoring
 
     src = open("data/commentary/archive 2026 v3/teg_17_report_final.md").read()
+    with open(f"{isolated_report_dir}/teg_17_report_storylinedraft.md", "w") as f:
+        f.write(src)
     with patch.object(authoring.llm, "generate_text", return_value=(src, {})) as m:
         authoring.restyle_voice(17, "VOICE: drier.", "unittest_tmp",
                                 source_label="storylinedraft", style=False, verify=False)
@@ -646,9 +648,6 @@ def test_restyle_voice_composes_guardrails_from_the_shared_constant():
     from teg_analysis.reporting import prompts
     assert prompts.SENTENCE_DISCIPLINE in system        # em-dash ban, not shed by the voice
 
-    import os
-    os.remove("data/commentary/teg_17_report_unittest_tmp.md")
-
 
 def test_restyle_voice_refuses_to_overwrite_canonical_artefacts():
     from teg_analysis.reporting.authoring import restyle_voice
@@ -657,7 +656,7 @@ def test_restyle_voice_refuses_to_overwrite_canonical_artefacts():
             restyle_voice(17, "VOICE: x", label)
 
 
-def test_restyle_voice_blames_only_faults_it_introduced():
+def test_restyle_voice_blames_only_faults_it_introduced(isolated_report_dir):
     """Inherited faults are not the pass's doing; a new one is.
 
     This is the guard against the failure that got the critique-revise variant
@@ -676,8 +675,8 @@ def test_restyle_voice_blames_only_faults_it_introduced():
     base = open("data/commentary/archive 2026 v3/teg_17_report_final.md").read()
     # 'all week' trips the not_a_week check — a TEG is four consecutive days.
     src = base + "\n\nThey played well all week.\n"
-    src_path = "data/commentary/teg_17_report_unittest_src.md"
-    out_path = "data/commentary/teg_17_report_unittest_tmp.md"
+    src_path = f"{isolated_report_dir}/teg_17_report_unittest_src.md"
+    out_path = f"{isolated_report_dir}/teg_17_report_unittest_tmp.md"
     with open(src_path, "w") as f:
         f.write(src)
 

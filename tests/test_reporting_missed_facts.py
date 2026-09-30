@@ -143,16 +143,15 @@ def test_verify_report_surfaces_a_failed_missed_check_as_a_warning(monkeypatch):
     assert len(failed) == 1 and failed[0].severity == "warning"
 
 
-def test_voice_pass_reports_missed_facts_even_when_inherited(monkeypatch):
+def test_voice_pass_reports_missed_facts_even_when_inherited(monkeypatch, isolated_report_dir):
     """A fact the draft never carried is inherited by the voice pass, so it is
     not a NEW finding, but `restyle_voice` must still report it."""
     import os
     from unittest.mock import patch
     from teg_analysis.reporting import authoring, verify
 
-    monkeypatch.setattr(verify, "write_findings", lambda *a, **k: None)  # keep real _verify.json
-    src_path = "data/commentary/teg_18_round_4_report_unittest_src.md"
-    out_path = "data/commentary/teg_18_round_4_report_unittest_tmp.md"
+    src_path = f"{isolated_report_dir}/teg_18_round_4_report_unittest_src.md"
+    out_path = f"{isolated_report_dir}/teg_18_round_4_report_unittest_tmp.md"
     with open(src_path, "w") as f:
         f.write(OMITS)
     try:
