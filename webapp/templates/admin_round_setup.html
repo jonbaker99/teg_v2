@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="/static/admin.css">
+<link rel="stylesheet" href="/static/admin.css?v=3">
 {% endblock %}
 
 {% block content %}
@@ -33,6 +33,7 @@
       of time and it'll show up here to set up before anyone plays.</p>
   {% else %}
   <div class="data-card">
+    <div class="admin-table-wrap">
     <table class="teg-table">
       <thead>
         <tr><th>TEG</th><th>Round</th><th>Course</th><th>Date</th><th>Status</th><th></th></tr>
@@ -52,6 +53,7 @@
         {% endfor %}
       </tbody>
     </table>
+    </div>
   </div>
   {% endif %}
 </div>

@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="/static/admin.css">
+<link rel="stylesheet" href="/static/admin.css?v=3">
 {% endblock %}
 
 {% block content %}
@@ -54,6 +54,7 @@
       <p>No rounds are ready to go live — a round needs confirmed Par/SI first (see
         <a href="/admin/round-setup" class="text-link">Round setup</a>).</p>
     {% else %}
+      <div class="admin-table-wrap">
       <table class="teg-table">
         <thead><tr><th>TEG</th><th>Round</th><th>Course</th><th>Date</th><th></th></tr></thead>
         <tbody>
@@ -75,6 +76,7 @@
           {% endfor %}
         </tbody>
       </table>
+      </div>
     {% endif %}
   </div>
 
@@ -83,6 +85,7 @@
     {% if not live_rounds %}
       <p>None started yet.</p>
     {% else %}
+      <div class="admin-table-wrap">
       <table class="teg-table">
         <thead><tr><th>TEG</th><th>Round</th><th>Status</th><th>Started</th><th></th></tr></thead>
         <tbody>
@@ -95,7 +98,7 @@
               {% elif r.Status == 'finalized' %}✅ Finalized
               {% else %}⚪ Cancelled{% endif %}
             </td>
-            <td><time class="lr-started" datetime="{{ r.CreatedAt }}">{{ started.get(r.Token, r.CreatedAt) }}</time></td>
+            <td class="admin-wrap-anywhere"><time class="lr-started" datetime="{{ r.CreatedAt }}">{{ started.get(r.Token, r.CreatedAt) }}</time></td>
             <td><a href="/admin/live-round/{{ r.Token }}/review" class="text-link">
               {{ 'Review & Finalize' if r.Status == 'active' else 'View' }} →
             </a></td>
@@ -111,6 +114,7 @@
           {% endfor %}
         </tbody>
       </table>
+      </div>
     {% endif %}
   </div>
 </div>

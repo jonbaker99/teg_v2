@@ -1,5 +1,5 @@
 {# Shared admin sub-nav. `admin_active` names the current page. #}
-<nav class="section-controls" style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;">
+<nav class="section-nav admin-nav" aria-label="Admin pages">
   <a href="/admin/new-round" class="tab-underline{% if admin_active == 'new-round' %} tab-underline--active{% endif %}">➕ New round</a>
   <a href="/admin/round-setup" class="tab-underline{% if admin_active == 'round-setup' %} tab-underline--active{% endif %}">Round setup</a>
   <a href="/admin/teg-setup" class="tab-underline{% if admin_active == 'teg-setup' %} tab-underline--active{% endif %}">TEG setup</a>
@@ -12,5 +12,5 @@
   <a href="/admin/volume-sync" class="tab-underline{% if admin_active == 'sync' %} tab-underline--active{% endif %}">GitHub sync</a>
   <a href="/admin/backups" class="tab-underline{% if admin_active == 'backups' %} tab-underline--active{% endif %}">Backups</a>
   <a href="/admin/file-guide" class="tab-underline{% if admin_active == 'guide' %} tab-underline--active{% endif %}">File guide</a>
-  <a href="/admin/logout" class="text-link" style="margin-left:auto;">Log out</a>
+  <a href="/admin/logout" class="text-link admin-nav-logout">Log out</a>
 </nav>
