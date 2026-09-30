@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-30 (Finalise: one commit, background job, report readiness)
+**Last updated:** 2026-09-30 (TEG 19 second dry run)
+
+## 2026-09-30 — TEG 19 second dry run passes; five small issues left
+
+A full TEG 19 run in a Railway PR preview (PR #150, closed unmerged) re-tested every dry-run fix: Batches 1A–4b, Batch 2 and #141. All passed on data and flow: winners, standings, handicaps, one commit per finalise and delete, reports running across a finalise, and deletion clearing and restoring the winners. It found issues 18–22 (`TEST_TOURNAMENT_ISSUES.md`). Two must ship before the 8 October freeze: finalise progress jumping to the top on phones (18), and Go live needing a reload to show the link (20). Plan: `TEG19_FIX_PLAN.md` → Batch 5.
 
 ## 2026-09-30 — Finalise makes one commit and runs in the background (Batch 2)
 
