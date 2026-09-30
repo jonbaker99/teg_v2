@@ -87,7 +87,7 @@ def test_in_progress_lists_all_rounds(client, patched):
     assert section.count("lb-report-pending") == 2
     assert section.count("Pending") == 2
     assert "No report" not in section
-    assert "lead-teaser" not in section
+    assert "lb-report-tournament" not in section
     assert MIDDLE_DOT not in section
     # pending rounds are not links
     for block in re.findall(r'<div class="lb-report-pending".*?</div>', section, re.S):
@@ -101,7 +101,7 @@ def test_complete_shows_no_report_and_tournament_teaser(client, patched):
     section = _reports_section(resp.text)
     assert "No report" in section
     assert "Pending" not in section
-    assert "lead-teaser" in section
+    assert "lb-report-tournament" in section
     assert f'href="/teg-reports?teg={TEG}"' in section
     assert "Tournament report" in section
     assert MIDDLE_DOT not in section
@@ -251,3 +251,11 @@ def test_no_view_state_key_anywhere(client, patched):
     page = client.get(f"/leaderboard?teg={TEG}&tab=reports").text
     assert re.search(r'data-public-state-keys="[^"]*"', page).group(0) == \
         'data-public-state-keys="teg,tab,chart_variant,type,round,player"'
+
+
+def test_each_report_has_its_own_heading(client, patched):
+    patched(complete=True)
+    section = _reports_section(client.get(f"/leaderboard/table?teg={TEG}&tab=reports").text)
+    headings = re.findall(r'<h3 class="section-title lb-report-heading">([^<]+)</h3>', section)
+    assert headings == ["Tournament report", "Round 1", "Round 2", "Round 3", "Round 4"]
+    assert section.count('<li class="lb-report">') == 4
