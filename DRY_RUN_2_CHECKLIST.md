@@ -35,7 +35,7 @@ Issues 1–17 are in `TEST_TOURNAMENT_ISSUES.md`. New problems found in this run
 | B7 | While finalising: `/admin/reports` disables Generate for this round, with a reason | Batch 2 | | | |
 | B8 | When done: confirmation at top with leaderboard link; review page read-only; "Generate round report" appears only now | 4, 5, 7 | | | |
 | B9 | Exactly one data commit for the finalise; no redeploy | 11 | Half: one commit (`9bd6b9e`, 13 data files) but Railway started a redeploy (issue 19) | | |
-| B10 | Round report: `/admin/reports` shows phases whichever TEG/round is selected; Generate again asks before overwriting | 8, 9 | | | |
+| B10 | Round report: `/admin/reports` shows phases whichever TEG/round is selected; Generate again asks before overwriting | 8, 9 | Phases: pass (all five shown, then "Ready. View it"). Other-selection and re-Generate prompt: to check | | |
 | B11 | `/leaderboard` Reports tab: headline per round, "pending" without a report, headline opens the report | 12 | | | |
 
 ## C. Round 4 and completion
@@ -75,7 +75,9 @@ Round 4 section B results:
 | Action | Commits | Redeploy? | Notes |
 |---|---|---|---|
 | Public link on (R1) | 1 (`98f44ba`) | No (skipped) | |
-| Finalise R1 | 1 (`9bd6b9e`) | **Yes**: deployment `b57b758b` BUILDING, stuck on "failed to fetch snapshot" | Only `data/**` changed |
+| Finalise R1 | 1 (`9bd6b9e`) | **Yes**: deployment `b57b758b` built, then superseded (REMOVED) before going live | Only `data/**` changed |
+| (my checklist push) | merge `69b1fb9` | Yes, went live 20:49:08Z | My error: merge commit carried the data diff. Not an app issue. Now rebasing before each push |
+| R1 round report | 1 (`43da2f1`, 5 files under `data/commentary/`) | No (skipped) | Committed 20:48:57Z, 11s before the redeploy went live, so it survived by luck |
 
 ## E. Wrap-up
 
