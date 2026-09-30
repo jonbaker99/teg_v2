@@ -17,10 +17,10 @@ Issues 1–17 are in `TEST_TOURNAMENT_ISSUES.md`. New problems found in this run
 
 | # | Check | Issue | Result |
 |---|---|---|---|
-| A1 | Home page Next TEG tab shows the TEG 19 schedule and handicaps | 15 | |
-| A2 | `/handicaps` shows TEG 19 handicaps, SN at 27, HM and GP not listed | 14 | |
-| A3 | Production (read-only): `/handicaps` shows SN at 27. If not, `handicaps.csv` isn't pulled onto the production volume yet | 14 | |
-| A4 | Production (read-only): admin live-round review page has no random-fill button | 17 | |
+| A1 | Home page Next TEG tab shows the TEG 19 schedule and handicaps | 15 | Pass |
+| A2 | `/handicaps` shows TEG 19 handicaps, SN at 27, HM and GP not listed | 14 | Pass |
+| A3 | Production (read-only): `/handicaps` shows SN at 27. If not, `handicaps.csv` isn't pulled onto the production volume yet | 14 | Pass |
+| A4 | Production (read-only): admin live-round review page has no random-fill button | 17 | Pass (by code: button hidden and route 403 when `RAILWAY_ENVIRONMENT_NAME` is `production`; no active round on production to view) |
 
 ## B. Rounds 1–3
 
@@ -67,8 +67,8 @@ Round 4 section B results:
 
 | # | Check | Issue | Result |
 |---|---|---|---|
-| D1 | Delete Round 4 (Admin → Delete rounds): exactly one commit, no redeploy; home page back to in progress; winners cleared | 13, Batch 2 | |
-| D2 | Re-enter Round 4 with random fill and finalise: winners and standings return | 13 | |
+| D1 | Delete Round 4 (Admin → Delete rounds): exactly one commit, no redeploy; home page back to in progress; winners cleared | 13, Batch 2 | Pass on data: one commit (`057947d`), deploy skipped, TEG 19 winners row removed, TEG back to in progress. Fail on UX: no feedback while it runs (issue 21). Round 4 and tournament reports left behind (issue 22) |
+| D2 | Re-enter Round 4 with random fill and finalise: winners and standings return | 13 | Pass: one commit (`978d5bb`), deploy skipped, winners row rewritten (Spoon now David MULLIN, as the random scores changed) |
 
 ## Finalise and delete log
 
@@ -86,6 +86,9 @@ Round 4 section B results:
 | Finalise R4 (TEG complete) | 1 (`58a60da`, only `data/**`) | No: BUILDING 22s, then SKIPPED | Writes TEG 19 winners row: Trophy Alex BAKER, Jacket Jon BAKER, Spoon Gregg WILLIAMS; TEG 19 moved to `completed_tegs.csv` |
 | R4 round report (C3) | 1 (`a49958d`, 5 files) | No (skipped) | Ran alongside the tournament report |
 | Tournament report (C3) | 1 (`375537c`, 5 files) | No (skipped) | |
+| Delete R4 (D1) | 1 (`057947d`, only `data/**`) | No (skipped) | Removes TEG 19 from `teg_winners.csv` and `completed_tegs.csv`. Doesn't touch `data/commentary/` or `live_rounds.csv` |
+| Go live R4 again | 1 (`7ae1c0f`) | No (skipped) | Old finalised R4 row `SpX4p0V-Sq0` still in registry beside the new one |
+| Re-finalise R4 (D2) | 1 (`978d5bb`) | No: BUILDING 21s, then SKIPPED | Winners restored |
 | R2 round report | 1 (`23b40c8`, 5 files under `data/commentary/`) | No (skipped) | Ran across the R3 finalise without harm |
 | R1 round report | 1 (`43da2f1`, 5 files under `data/commentary/`) | No (skipped) | Committed 20:48:57Z, 11s before the redeploy went live, so it survived by luck |
 
@@ -93,7 +96,7 @@ Round 4 section B results:
 
 | # | Item | Result |
 |---|---|---|
-| E1 | Pass/fail summary; anything to fix before the 8 October code freeze | |
+| E1 | Pass/fail summary; anything to fix before the 8 October code freeze | See below |
 | E2 | Close this PR without merging, delete the branch, close PR #140 if still open | |
 
 ## New issues
@@ -103,3 +106,20 @@ Round 4 section B results:
 | 18 | Admin / finalise progress (phone) | While finalise runs, the page jumps to the top every 2s, so the step checklist can't be watched. | `base.html` `scrollActiveTabIntoView` runs on every `htmx:afterSettle`. At ≤640px it calls `scrollIntoView({block: 'nearest'})` on the active tab of every `.section-nav`. Admin pages include `partials/admin_nav.html`, a `.section-nav` at the top. The finalise progress partial polls every 2s (`hx-trigger="every 2s"`), so each poll scrolls the page back up to the admin nav. Expect the same on `/admin/reports` while its running panel polls. Fix direction: only scroll the tab row horizontally (set `nav.scrollLeft`), or skip when the swap didn't touch the nav. | Open |
 | 19 | Deploy / Railway (**affects production**, issue 11 not fixed) | Finalise R1 made one commit, as intended, but Railway still started a redeploy. | Not confirmed. The commit touches only `data/**`, which the watch patterns exclude (`!/data/**`). The previous data-only commit (`98f44ba`, one CSV) was skipped. Production on 29 Sept shows the same mix: single-CSV commits under `data/` both skipped and deployed. So it isn't the file set or commit count. Railway's skip decision looks unreliable. Update: R2 finalise (`c666bec`) showed BUILDING for 15s then SKIPPED, so BUILDING alone doesn't mean a redeploy. R1's (`b57b758b`) differed: it logged "scheduling build on Metal builder" then "failed to fetch snapshot" for 5 minutes, and was REMOVED when my merge commit superseded it. So R1 may be a Railway snapshot fault rather than a watch-path miss. Keep watching R3, R4 and D1. Build log shows repeated "failed to fetch snapshot"; the old deployment keeps serving while it builds. The mitigation already planned (auto-deploy off 9–13 Oct, `TEG19_FIX_PLAN.md` decision 3) is the reliable guard; confirm it's actually off before the 10th. | Open |
 | 20 | Admin / Go live | After tapping Go live on `/admin/live-round`, the entry link doesn't appear usably, and the round isn't added to the "Every live round" table below. A reload is needed to get the link. | `admin_live_round_start` returns `partials/admin_live_round_start_result.html` into a hidden `<tr><td colspan="5">` under that round in the "Start a live round" table (`admin_live_round.html:68–75`). Three gaps: (a) the "Every live round" table is server-rendered and never refreshed, so the new round only shows after a reload; (b) the result partial is a bare link, not the shared `live_round_entry_link.html` with Copy, so it doesn't match what #141 added elsewhere; (c) HTTP log shows two `POST /admin/live-round/start` 2s apart (20:51:15, 20:51:17). The second hits `LiveRoundAlreadyActiveError` and its error message replaces the link from the first. `hx-disabled-elt="this"` only covers the in-flight request. Fix direction: after a successful start, answer with `HX-Redirect` to `/admin/live-round` (or the new round's review page), where the link and Copy button already render. | Open |
+| 21 | Admin / delete rounds | After confirming a deletion, nothing shows it's working until it finishes. It took about 35–40s (backup 21:13:43, commit 21:14:19 UTC). Same shape as issue 4 was for finalise. | `admin_delete_preview.html` posts to `/admin/delete-data/execute`, which runs `execute_data_deletion` synchronously in the request (backup, delete, every cache step, one commit). The only feedback is `hx-disabled-elt` greying the button. Fix direction: minimum is an `hx-indicator` "Deleting… takes about a minute" message. Better: reuse the finalise background-job pattern (`webapp/finalize_jobs.py`) with a step checklist. | Open |
+| 22 | Admin / delete rounds → reports | Deleting a round leaves its round report and the tournament report in place. They describe scores that no longer exist and still show on the site. | `execute_data_deletion` (`teg_analysis/analysis/data_update.py`) deletes score rows and reruns the caches, but never touches `data/commentary/teg_{N}_round_{R}_*` or `teg_{N}_report_*`. It also leaves the round's `finalized` row in `data/live_rounds.csv` (`SpX4p0V-Sq0` survived D1), so `report_readiness` would call a deleted round ready for a report. Fix direction: on deletion, move that round's report files and the TEG's tournament report to an archive folder (e.g. `data/commentary/archive/`) in the same commit, and mark the registry row as deleted. | Open |
+
+## E1 summary
+
+**Everything passed on data and flow.** Isolation held: every write landed on this branch, and main only changed through unrelated PRs #151 and #152. Every Batch 1A/1B/2/3/4a/4b fix worked: winners, standings, Next TEG, handicaps, random fill, finalise job, single commits, report readiness, report progress and confirm, the leaderboard Reports tab and mobile admin.
+
+**Fix before the 8 October code freeze:**
+- **Issue 18:** finalise progress jumps to the top on phones. Small fix in `base.html`, and the phone is how it'll be used on the day.
+- **Issue 20:** Go live link needs a reload. Small fix: redirect after start.
+
+**Should fix, or have a workaround ready:**
+- **Issue 21:** delete gives no feedback. Workaround: wait about a minute, then reload.
+- **Issue 22:** deleted rounds leave reports behind. Only matters if a round is deleted; workaround is to regenerate the reports after re-entering.
+
+**Watch, don't fix:**
+- **Issue 19:** one unexplained redeploy on the R1 finalise; the next 5 finalise/delete commits all skipped. Keep auto-deploy off from 9 to 13 October (`TEG19_FIX_PLAN.md` decision 3), and confirm it's off before the 10th.
