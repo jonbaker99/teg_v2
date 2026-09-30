@@ -43,9 +43,9 @@ Issues 1–17 are in `TEST_TOURNAMENT_ISSUES.md`. New problems found in this run
 | # | Check | Issue | Result |
 |---|---|---|---|
 | C1 | Round 4 passes section B (see R4 below) | | Pass apart from issues 18 and 20 |
-| C2 | Before the tournament report: home page shows winners (Champion, Jacket, Spoon) and final standings; Next TEG tab loads; `/handicaps` shows TEG 20 draft handicaps without crashing, applying the 36-point rule | 13, 14, 15, 16 | |
-| C3 | Round 4 report and tournament report generated at the same time: both show progress and both finish | 8 | |
-| C4 | After the tournament report: home page adds the headlines; standings and winners unchanged | 16 | |
+| C2 | Before the tournament report: home page shows winners (Champion, Jacket, Spoon) and final standings; Next TEG tab loads; `/handicaps` shows TEG 20 draft handicaps without crashing, applying the 36-point rule | 13, 14, 15, 16 | Pass (plus extras: leaderboard, no banner, tournament Generate enabled, honours) |
+| C3 | Round 4 report and tournament report generated at the same time: both show progress and both finish | 8 | Pass: R4 `a49958d`, tournament `375537c`, both deploys skipped |
+| C4 | After the tournament report: home page adds the headlines; standings and winners unchanged | 16 | Pass |
 
 Round 4 section B results:
 
@@ -60,8 +60,8 @@ Round 4 section B results:
 | B7 | Pass |
 | B8 | Pass |
 | B9 | Pass: one commit (`58a60da`, 15 files incl. `teg_winners.csv`, `completed_tegs.csv`), deploy skipped |
-| B10 | Pending (C3) |
-| B11 | Pending (C3) |
+| B10 | Pass |
+| B11 | Pass |
 
 ## D. Deletion
 
@@ -84,6 +84,8 @@ Round 4 section B results:
 | R3 round report | 1 (`67ab4fe`) | No (two SKIPPED records) | |
 | Go live R4 | 1 (`6f48b3c`, registry) | No (skipped) | |
 | Finalise R4 (TEG complete) | 1 (`58a60da`, only `data/**`) | No: BUILDING 22s, then SKIPPED | Writes TEG 19 winners row: Trophy Alex BAKER, Jacket Jon BAKER, Spoon Gregg WILLIAMS; TEG 19 moved to `completed_tegs.csv` |
+| R4 round report (C3) | 1 (`a49958d`, 5 files) | No (skipped) | Ran alongside the tournament report |
+| Tournament report (C3) | 1 (`375537c`, 5 files) | No (skipped) | |
 | R2 round report | 1 (`23b40c8`, 5 files under `data/commentary/`) | No (skipped) | Ran across the R3 finalise without harm |
 | R1 round report | 1 (`43da2f1`, 5 files under `data/commentary/`) | No (skipped) | Committed 20:48:57Z, 11s before the redeploy went live, so it survived by luck |
 
