@@ -11,14 +11,14 @@ TEG 19 starts on **10 October 2026**. Everything except Batch 2 ships before the
 - **Wave 1, starting now, in parallel:** Batch 1A (post-completion crashes), Batch 1B (live-round day flow and the random score fill), Batch 3 (report admin) and Batch 4a (the leaderboard reports tab).
 - **Wave 2, once 1B and 3 are merged:** Batch 4b (admin pages on mobile). It restyles the pages those two batches change.
 - **Then** a second dry run of the whole flow.
-- **After the tournament:** Batch 2 (finalise reliability).
+- **Batch 2 (finalise reliability):** pulled forward and done on 30 September (see Decision 2).
 
 Evidence for every item is in `TEST_TOURNAMENT_ISSUES.md` on the dry-run branch (PR #140). Issue numbers below match that log.
 
 ## Decisions (settled)
 
 1. **Handicaps for players who miss a TEG (issue 14): they're assumed to score 36 points a round.** The calculation already does this (`fillna(36)` in `get_hc`), so a missed TEG counts as that TEG's handicap. That only works if a handicap is saved for the missed TEG. Past TEGs followed that convention: SN sat out TEGs 11, 13, 14, 17 and 18, and JP sat out 14 and 16, yet each had a handicap saved. TEG setup (`save_teg_roster`) now writes `0` for anyone not playing, which breaks it: SN's TEG 19 handicap is 0, so SN's TEG 20 figure comes out wrong.
-2. **Batch 2 waits until after the tournament.** With auto-deploy off, the redeploy risk (issue 11) goes away. With Batch 1B's feedback, a 40-second finalise is tolerable. Batch 2 changes the shared data pipeline, which is the wrong thing to change a week before the tournament.
+2. **Batch 2 waits until after the tournament.** With auto-deploy off, the redeploy risk (issue 11) goes away. With Batch 1B's feedback, a 40-second finalise is tolerable. Batch 2 changes the shared data pipeline, which is the wrong thing to change a week before the tournament. **Overridden 2026-09-30:** Jon asked for Batch 2 before the tournament; it is done (below). Keep auto-deploy off over the tournament anyway.
 3. **Auto-deploy is off from 9 to 13 October.** Deploy fixes by hand (below), and only when no finalise or report is running. Turn it back on afterwards, or it's easy to merge a fix that never goes live.
 
 **Deploying by hand:** in the Railway dashboard, open the project, press Cmd+K and choose *Deploy Latest Commit*. That deploys the newest commit on `main`. A Claude session with the Railway connector can also trigger it for you.
@@ -52,7 +52,9 @@ All four are silent until the last round is finalised, then they hit every visit
 
 **Acceptance:** on a phone, a player can move between entry and leaderboard both ways. An admin can find any active round's link, finalise once with clear feedback, and move on to the report. On the PR preview, the random-fill button fills a round in one tap; on production, it's absent and its route refuses.
 
-### Batch 2: finalise reliability (after the tournament)
+### Batch 2: finalise reliability (done, 2026-09-30)
+
+**Done:** pulled forward at Jon's request. Finalise, sheet import and round deletion each make one GitHub commit. Finalise runs as a background job with a step checklist, and report Generate waits until the round's data is ready. Detail: `webapp/README.md` → Live round and `DATA_FLOW.md` → Write pipeline.
 
 | # | Problem | Proposed fix |
 |---|---|---|

@@ -2,7 +2,15 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-30 (Leaderboard Reports: per-round more stories expand)
+**Last updated:** 2026-09-30 (Finalise: one commit, background job, report readiness)
+
+## 2026-09-30 — Finalise makes one commit and runs in the background (Batch 2)
+
+Fixes TEG 19 dry-run issues 10 and 11.
+
+- **One commit per admin action.** Live-round finalise, sheet import and round deletion each write backups, data, caches and (for finalise) the live-round registry in a single GitHub commit. Finalise used to make four, and quick successive data commits have triggered full Railway redeploys.
+- **Finalise runs as a background job.** The review page shows a step checklist that survives a reload. A second tap says "Already finalising". When it finishes, the page lists what happens next.
+- **Reports wait for the data.** Generate round report, and Generate on `/admin/reports`, stay off until the round is finalised, and the server refuses a direct request with the same reason.
 
 ## 2026-09-30 — Leaderboard Reports: per-round more stories expand
 

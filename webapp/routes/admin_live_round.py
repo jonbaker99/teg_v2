@@ -13,12 +13,16 @@ Flow:
   GET  /admin/live-round/{token}/review           -> conflicts + finalize/cancel controls
   POST /admin/live-round/{token}/resolve          -> pick a value for one conflicted cell
   POST /admin/live-round/{token}/random-fill      -> test only: fill empty cells with random scores (off on production)
-  POST /admin/live-round/{token}/finalize         -> write to all-scores via execute_data_update
+  POST /admin/live-round/{token}/finalize         -> start the background finalise (webapp/finalize_jobs.py)
+  GET  /admin/live-round/{token}/finalize-status  -> polled: progress, or HX-Redirect when done
   POST /admin/live-round/{token}/cancel           -> abandon without touching all-scores
 
-Finalize and cancel succeed with an empty 200 + HX-Redirect back to the review
-page (?finalized=1 / ?cancelled=1), which then renders read-only with a status
-card at the top; errors render into #finalize-result instead.
+Finalize takes ~40 s, so the POST only claims a job and returns a self-polling
+progress partial; the job runs as a BackgroundTask and its state lives in a
+status file (survives a reload; the admin can leave the page). When the poll
+sees "done" it answers with an empty 200 + HX-Redirect to the review page
+(?finalized=1), as cancel does (?cancelled=1); the page then renders read-only
+with a status card at the top. Errors render into #finalize-result instead.
 """
 
 import logging
@@ -26,18 +30,22 @@ import os
 from pathlib import Path
 from urllib.parse import quote
 
-from fastapi import APIRouter, Request, Form
+from fastapi import APIRouter, BackgroundTasks, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from starlette.concurrency import run_in_threadpool
 
 from webapp.admin_auth import is_authed
-from webapp import deps
+from webapp import deps, finalize_jobs
+from webapp.report_generation import fmt_hhmm
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
+templates.env.globals["fmt_hhmm"] = fmt_hhmm
+templates.env.globals["finalize_step_rows"] = finalize_jobs.step_rows
+templates.env.globals["finalize_current_step"] = finalize_jobs.current_step
 
 
 def _entry_url(request: Request, token: str) -> str:
@@ -205,6 +213,27 @@ def admin_live_round_review(request: Request, token: str):
         logger.error(f"Live round review failed: {e}", exc_info=True)
         ctx["error"] = f"Could not load review: {e}"
 
+    # A finalise started earlier (or by another phone): resume its progress,
+    # or show why it failed. Only while the round is still active.
+    if ctx.get("live") and not ctx["read_only"]:
+        job = finalize_jobs.read_status(token)
+        if finalize_jobs.is_active(job):
+            ctx["finalize_job"] = job
+        else:
+            ctx["finalize_error"] = finalize_jobs.error_message(job)
+            ctx["finalize_status"] = job
+
+    # The finalised card: the latest job's checklist (cache failures and their
+    # errors), what happens next, and whether a report can be generated yet.
+    if ctx.get("live") and ctx["live"]["status"] == "finalized":
+        job = finalize_jobs.read_status(token)
+        ctx["job"] = job
+        ctx["job_steps"] = bool(job and job.get("steps"))
+        ctx["job_done"] = bool(job and job.get("state") == "done")
+        ctx["job_committed"] = bool(job and job.get("committed"))
+        ctx["report_block"] = finalize_jobs.report_block(
+            int(ctx["live"]["teg_num"]), int(ctx["live"]["round_num"]))
+
     return templates.TemplateResponse("admin_live_round_review.html", ctx)
 
 
@@ -306,34 +335,43 @@ def admin_live_round_resolve(request: Request, token: str, hole: str = Form(""),
 
 
 @router.post("/admin/live-round/{token}/finalize", response_class=HTMLResponse)
-def admin_live_round_finalize(request: Request, token: str):
+def admin_live_round_finalize(request: Request, token: str, background_tasks: BackgroundTasks):
     if not is_authed(request):
         return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
 
-    from teg_analysis.analysis.live_round import (
-        finalize_live_round, ConflictsUnresolvedError, LiveRoundInactiveError, LiveRoundNotFoundError,
-    )
+    ctx = {"request": request, "token": token}
+    active = finalize_jobs.claim(token)
+    if active and active.get("state") == "done":
+        return HTMLResponse("", headers={"HX-Redirect": f"/admin/live-round/{token}/review?finalized=1"})
+    if active:
+        ctx["status"] = active
+        ctx["note"] = f"Already finalising (started {fmt_hhmm(active.get('started_at'))} UTC)."
+    else:
+        background_tasks.add_task(finalize_jobs.run_finalize, token)
+        ctx["status"] = finalize_jobs.read_status(token)
+    return templates.TemplateResponse("partials/admin_live_round_finalize_progress.html", ctx)
+
+
+@router.get("/admin/live-round/{token}/finalize-status", response_class=HTMLResponse)
+def admin_live_round_finalize_status(request: Request, token: str):
+    """Polled by the progress partial: keep polling, redirect on done, else show the error."""
+    if not is_authed(request):
+        # htmx ignores a 4xx swap, so a 401 would leave the poll running forever.
+        return HTMLResponse("", headers={"HX-Redirect": "/admin/login"})
 
     ctx = {"request": request, "token": token}
-    try:
-        result = finalize_live_round(token)
-        deps.clear_all_data_caches()
+    status = finalize_jobs.read_status(token)
+    if finalize_jobs.is_active(status):
+        ctx["status"] = status
+        return templates.TemplateResponse("partials/admin_live_round_finalize_progress.html", ctx)
+    if status and status.get("state") == "done":
         url = f"/admin/live-round/{token}/review?finalized=1"
-        steps = [str(ce.get("step", "")) for ce in (result.get("cache_errors") or [])]
-        steps = [x for x in steps if x]
-        if result.get("cache_errors") and not steps:
-            steps = ["unknown"]
+        steps = status.get("cache_errors") or []
         if steps:
             url += "&cache_errors=" + quote(",".join(steps), safe="")
         return HTMLResponse("", headers={"HX-Redirect": url})
-    except ConflictsUnresolvedError as e:
-        ctx["error"] = str(e)
-    except (LiveRoundInactiveError, LiveRoundNotFoundError, ValueError) as e:
-        ctx["error"] = str(e)
-    except Exception as e:  # noqa: BLE001
-        logger.error(f"Live round finalize failed: {e}", exc_info=True)
-        ctx["error"] = f"Finalize failed: {e}"
-
+    ctx["status"] = status
+    ctx["error"] = finalize_jobs.error_message(status) or "No finalise run found for this round."
     return templates.TemplateResponse("partials/admin_live_round_finalize_result.html", ctx)
 
 

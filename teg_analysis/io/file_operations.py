@@ -322,7 +322,7 @@ def write_text_file(file_path: str, content: str, commit_message: str = "Update 
 
 
 
-def backup_file(source_path: str, backup_path: str):
+def backup_file(source_path: str, backup_path: str, defer_github: bool = False):
     """Creates a backup of a file.
 
     This function creates a backup of a file by copying it to a new location.
@@ -336,6 +336,14 @@ def backup_file(source_path: str, backup_path: str):
     Args:
         source_path (str): The path to the source file.
         backup_path (str): The path to the backup file.
+        defer_github (bool): On Railway, don't push the backup to GitHub;
+            return ``{'file_path': backup_path, 'data': snapshot}`` so the
+            caller can include it in a single ``batch_commit_to_github``.
+            Ignored locally.
+
+    Returns:
+        dict | None: The deferred file info on Railway with ``defer_github``;
+        otherwise None.
     """
     if os.getenv('RAILWAY_ENVIRONMENT'):
         volume_path = volume_operations._get_volume_path(source_path)
@@ -352,6 +360,9 @@ def backup_file(source_path: str, backup_path: str):
                 f"{source_path} not found on volume; backing up the last GitHub commit instead"
             )
             data = read_from_github(source_path)
+
+        if defer_github:
+            return {'file_path': backup_path, 'data': data}
 
         # Push the snapshot to GitHub as the backup copy.
         write_to_github(backup_path, data, f"Backup of {source_path}")

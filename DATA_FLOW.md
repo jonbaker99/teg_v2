@@ -70,7 +70,7 @@ decide whether to show a Download PDF button. Built offline by `scripts/build_re
 (headless Chromium via Playwright, a dev-only dependency — deliberately never a Railway one); the
 webapp only ever serves the bytes. See [§10](#10-report-build--scores--published-report) below.
 
-`live_rounds.csv` / `live_rounds/{token}.csv` back multi-device live round entry (`teg_analysis/analysis/live_round.py`, `/live-round/{token}`) — an admin starts a live round for an already-set-up TEG+Round, gets a shareable link, and players enter scores from their own phones with the server (not client clocks) arbitrating write order and flagging genuine conflicts. The per-round staging file is written `defer_github=True` on every score entry (volume-only, never committed — it's a staging area, not the record) and is archived once finalized, at which point its scores are converted to the same long-format shape the "add a round" flow uses and written via the existing `execute_data_update` — one GitHub commit, same as any other round addition. See `DATA_STORAGE_INGESTION_PLAN.md`, "Phase 3.4 design", for the full model (conflict resolution, polling, device identity).
+`live_rounds.csv` / `live_rounds/{token}.csv` back multi-device live round entry (`teg_analysis/analysis/live_round.py`, `/live-round/{token}`) — an admin starts a live round for an already-set-up TEG+Round, gets a shareable link, and players enter scores from their own phones with the server (not client clocks) arbitrating write order and flagging genuine conflicts. The per-round staging file is written `defer_github=True` on every score entry (volume-only, never committed — it's a staging area, not the record) and is archived once finalized, at which point its scores are converted to the same long-format shape the "add a round" flow uses and written via the existing `execute_data_update`. Backups, data, caches and the registry flip land in one GitHub commit. The admin page runs finalise as a background job (`webapp/finalize_jobs.py`). See `DATA_STORAGE_INGESTION_PLAN.md`, "Phase 3.4 design", for the full model (conflict resolution, polling, device identity).
 
 ---
 
@@ -100,8 +100,16 @@ headless add / edit / delete flows:
   an edited metadata CSV) and `regenerate_status_files` (rebuild completed/in-progress
   status from raw data).
 
-On Railway each flow writes to the volume first then makes a single GitHub batch
-commit; locally it writes straight to `data/`. The legacy Streamlit data-admin pages
+On Railway each flow writes to the volume first then makes **one** GitHub batch
+commit per admin action: the timestamped backups, `all-scores`/`all-data`, the status
+files and every regenerated cache all go in the same commit (`backup_file(...,
+defer_github=True)` returns the backup for the batch instead of pushing it). Live-round
+finalise adds the `live_rounds.csv` registry flip to that same commit
+(`execute_data_update(..., commit=False)` hands back `pending_files`, and
+`finalize_live_round` commits them with the registry). One commit matters because
+several quick data-only commits have triggered full Railway redeploys despite the
+`data/**` watch pattern (TEG 19 dry-run issue 11). A failed commit raises; it is never
+reported as success. Locally each flow writes straight to `data/`. The legacy Streamlit data-admin pages
 and the webapp admin pages (`webapp/routes/admin.py`) drive this same pipeline (so it
 is no longer Streamlit-only).
 

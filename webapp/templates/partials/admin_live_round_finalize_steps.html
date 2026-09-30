@@ -1,0 +1,27 @@
+{# Step checklist for a finalise run. Needs `status` (the job's status dict).
+   Rows come from finalize_jobs.step_rows; the spinner is CSS only. #}
+<style>
+  .fin-steps { list-style: none; margin: .5rem 0 0; padding: 0; font-size: .9rem; }
+  .fin-steps li { display: flex; gap: .5rem; align-items: baseline; margin: .2rem 0; }
+  .fin-steps .fin-mark { flex: none; width: 1.1rem; text-align: center; }
+  .fin-steps .fin-muted { color: #777; }
+  .fin-steps .fin-err { color: #b00020; }
+  .fin-spin { display: inline-block; width: .8rem; height: .8rem; border: 2px solid #bbb;
+              border-top-color: #2f6b34; border-radius: 50%; animation: fin-spin .8s linear infinite;
+              vertical-align: middle; }
+  @keyframes fin-spin { to { transform: rotate(360deg); } }
+</style>
+<ol class="fin-steps" aria-label="Finalise steps">
+  {% for r in finalize_step_rows(status) %}
+  <li>
+    <span class="fin-mark" aria-hidden="true">
+      {% if r.state == 'done' %}✓{% elif r.state == 'running' %}<span class="fin-spin"></span>{% elif r.state == 'failed' %}✗{% elif r.state == 'todo' %}☐{% else %}–{% endif %}
+    </span>
+    <span{% if r.state in ('skipped', 'notrun') %} class="fin-muted"{% elif r.state == 'failed' %} class="fin-err"{% endif %}>
+      {{ r.label }}
+      {% if r.state == 'skipped' %}(skipped){% elif r.state == 'notrun' %}(not run){% elif r.state == 'running' %}(running){% endif %}
+      {% if r.state == 'failed' %}<strong>Failed.</strong>{% if r.error %} {{ r.error }}{% endif %}{% endif %}
+    </span>
+  </li>
+  {% endfor %}
+</ol>

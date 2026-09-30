@@ -23,7 +23,7 @@ from fastapi import APIRouter, BackgroundTasks, Form, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from webapp import deps, report_generation
+from webapp import deps, finalize_jobs, report_generation
 from webapp.admin_auth import is_authed
 
 logger = logging.getLogger(__name__)
@@ -82,6 +82,9 @@ def _panel_ctx(request: Request, teg: int, round_num: int) -> dict:
         "rounds_with_reports": rounds_with_reports,
         "round_status": round_status,
         "tournament_status": tournament_status,
+        # Why a report can't be generated yet (None when it can); see finalize_jobs.report_block.
+        "round_block": finalize_jobs.report_block(teg, round_num) if round_num else None,
+        "tournament_block": finalize_jobs.report_block(teg, None),
         "status": None,
         "teg": teg,
         "error_message": None,
@@ -133,10 +136,17 @@ def admin_reports_generate(request: Request, background_tasks: BackgroundTasks,
     round_num = None if kind == "tournament" else round
 
     error_message = None
+    error_link = None
     if kind == "round" and round_num not in deps.get_rounds_for_teg(teg):
         error_message = f"TEG {teg} has no round {round_num}."
     elif kind == "tournament" and not _teg_is_complete(teg):
         error_message = f"TEG {teg} is still in progress — the tournament report needs the final round in first."
+
+    if error_message is None:
+        block = finalize_jobs.report_block(teg, round_num)
+        if block:
+            error_message = block["message"]
+            error_link = block["link"]
 
     if error_message is None and not confirm:
         pending = report_generation.confirmation_needed(teg, round_num)
@@ -156,7 +166,7 @@ def admin_reports_generate(request: Request, background_tasks: BackgroundTasks,
     response = templates.TemplateResponse("partials/admin_report_status.html", {
         "request": request, "teg": teg, "round": round_num, "kind": kind,
         "status": report_generation.read_status(teg, round_num),
-        "error_message": error_message, "started": started,
+        "error_message": error_message, "error_link": error_link, "started": started,
     })
     if started:
         response.headers["HX-Trigger"] = "report-started"

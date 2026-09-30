@@ -28,9 +28,14 @@
   <div style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;margin-bottom:.5rem;">
     <button type="button" class="btn-action"
             hx-post="/admin/reports/generate" hx-vals='{"kind": "round"}'
-            hx-target="#report-status" hx-swap="innerHTML" hx-include="closest form">
+            hx-target="#report-status" hx-swap="innerHTML" hx-include="closest form"
+            {% if round_block %}disabled{% endif %}>
       Generate round report
     </button>
+    {% if round_block %}
+      <span class="text-sm" style="color:#8a6100;">{{ round_block.message }}
+        {% if round_block.link %}<a href="{{ round_block.link }}" class="text-link">See finalise progress</a>{% endif %}</span>
+    {% endif %}
     {% if round_status and round_status.state not in ("queued", "running", "pushing") %}
       <span class="text-muted text-sm">Last run: {{ round_status.state }}{% if round_status.finished_at %} (<time datetime="{{ round_status.finished_at }}" data-local>{{ fmt_hhmm(round_status.finished_at) }} UTC</time>){% endif %}</span>
     {% endif %}
@@ -38,9 +43,13 @@
     <button type="button" class="btn-secondary"
             hx-post="/admin/reports/generate" hx-vals='{"kind": "tournament"}'
             hx-target="#report-status" hx-swap="innerHTML" hx-include="closest form"
-            {% if not teg_complete %}disabled title="TEG {{ selected_teg }} is still in progress — the tournament report can only be written once the final round is in."{% endif %}>
+            {% if not teg_complete %}disabled title="TEG {{ selected_teg }} is still in progress — the tournament report can only be written once the final round is in."{% elif tournament_block %}disabled{% endif %}>
       Generate tournament report
     </button>
+    {% if teg_complete and tournament_block %}
+      <span class="text-sm" style="color:#8a6100;">{{ tournament_block.message }}
+        {% if tournament_block.link %}<a href="{{ tournament_block.link }}" class="text-link">See finalise progress</a>{% endif %}</span>
+    {% endif %}
     {% if tournament_status and tournament_status.state not in ("queued", "running", "pushing") %}
       <span class="text-muted text-sm">Last run: {{ tournament_status.state }}{% if tournament_status.finished_at %} (<time datetime="{{ tournament_status.finished_at }}" data-local>{{ fmt_hhmm(tournament_status.finished_at) }} UTC</time>){% endif %}</span>
     {% endif %}

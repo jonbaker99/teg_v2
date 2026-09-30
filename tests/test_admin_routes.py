@@ -743,49 +743,111 @@ def test_live_round_resolve(client, monkeypatch):
     assert "confirmed" in resp.text.lower()
 
 
-def test_live_round_finalize_success(client, monkeypatch):
+@pytest.fixture
+def finalize_store(tmp_path, monkeypatch):
+    """Keep finalise status files out of the real store."""
+    from webapp import finalize_jobs
+    monkeypatch.setattr(finalize_jobs, "_store_path", lambda rel: tmp_path / rel)
+    return finalize_jobs
+
+
+def _fake_finalize(monkeypatch, calls=None, **extra):
     import teg_analysis.analysis.live_round as lrmod
     from webapp import deps
 
-    monkeypatch.setattr(lrmod, "finalize_live_round", lambda token: {
-        "token": token, "teg_num": 19, "round_num": 1, "records_added": 18,
-        "changed_rounds": {}, "backups": [], "committed": True, "files_committed": 1,
-    })
+    def fake(token, progress=None):
+        if calls is not None:
+            calls.append(token)
+        return {"token": token, "teg_num": 19, "round_num": 1, "records_added": 18,
+                "committed": True, **extra}
+    monkeypatch.setattr(lrmod, "finalize_live_round", fake)
+    monkeypatch.setattr(deps, "clear_all_data_caches", lambda: None)
+
+
+def test_live_round_finalize_starts_job_then_redirects(client, monkeypatch, finalize_store):
+    calls = []
+    _fake_finalize(monkeypatch, calls)
 
     _login(client)
-    monkeypatch.setattr(deps, "clear_all_data_caches", lambda: None)
     resp = client.post("/admin/live-round/tok123/finalize")
+    assert resp.status_code == 200
+    assert "finalize-status" in resp.text  # progress partial, polling itself
+    assert "HX-Redirect" not in resp.headers
+    assert calls == ["tok123"]  # TestClient ran the background task
+
+    resp = client.get("/admin/live-round/tok123/finalize-status")
     assert resp.status_code == 200
     assert resp.text == ""
     assert resp.headers["HX-Redirect"] == "/admin/live-round/tok123/review?finalized=1"
 
 
-def test_live_round_finalize_success_passes_cache_errors(client, monkeypatch):
-    import teg_analysis.analysis.live_round as lrmod
-    from webapp import deps
-
-    monkeypatch.setattr(lrmod, "finalize_live_round", lambda token: {
-        "token": token, "teg_num": 19, "round_num": 1, "records_added": 18,
-        "cache_errors": [{"step": "streaks", "error": "x"}, {"step": "records", "error": "y"}],
-    })
-    monkeypatch.setattr(deps, "clear_all_data_caches", lambda: None)
+def test_live_round_finalize_status_passes_cache_errors(client, monkeypatch, finalize_store):
+    _fake_finalize(monkeypatch, cache_errors=[{"step": "streaks", "error": "x"}, {"step": "records", "error": "y"}])
     _login(client)
-    resp = client.post("/admin/live-round/tok123/finalize")
+    client.post("/admin/live-round/tok123/finalize")
+    resp = client.get("/admin/live-round/tok123/finalize-status")
     assert resp.headers["HX-Redirect"] == "/admin/live-round/tok123/review?finalized=1&cache_errors=streaks%2Crecords"
 
 
-def test_live_round_finalize_blocked_by_conflicts(client, monkeypatch):
+def test_live_round_finalize_while_active_shows_note_and_starts_nothing(client, monkeypatch, finalize_store):
+    calls = []
+    _fake_finalize(monkeypatch, calls)
+    finalize_store.claim("tok123")  # a run is already in flight
+
+    _login(client)
+    resp = client.post("/admin/live-round/tok123/finalize")
+    assert resp.status_code == 200
+    assert "Already finalising" in resp.text
+    assert "finalize-status" in resp.text
+    assert calls == []
+    assert finalize_store.read_status("tok123")["state"] == "queued"
+
+
+def test_live_round_finalize_blocked_by_conflicts(client, monkeypatch, finalize_store):
     import teg_analysis.analysis.live_round as lrmod
 
-    def fake_finalize(token):
+    def fake_finalize(token, progress=None):
         raise lrmod.ConflictsUnresolvedError("Resolve every conflicted cell before finalizing this round.")
 
     monkeypatch.setattr(lrmod, "finalize_live_round", fake_finalize)
 
     _login(client)
-    resp = client.post("/admin/live-round/tok123/finalize")
+    assert client.post("/admin/live-round/tok123/finalize").status_code == 200
+    resp = client.get("/admin/live-round/tok123/finalize-status")
     assert resp.status_code == 200
+    assert "HX-Redirect" not in resp.headers
     assert "resolve every conflicted cell" in resp.text.lower()
+
+
+def test_live_round_finalize_status_without_run(client, finalize_store):
+    _login(client)
+    resp = client.get("/admin/live-round/tok123/finalize-status")
+    assert resp.status_code == 200
+    assert "No finalise run found" in resp.text
+
+
+def test_live_round_finalize_status_requires_auth(client, finalize_store):
+    resp = client.get("/admin/live-round/tok123/finalize-status")
+    assert resp.headers.get("HX-Redirect") == "/admin/login"  # htmx ignores a 401, so redirect
+
+
+def test_review_resumes_active_finalize(client, monkeypatch, finalize_store):
+    _review_setup(monkeypatch, "active")
+    finalize_store.claim("tok123")
+    _login(client)
+    resp = client.get("/admin/live-round/tok123/review")
+    assert resp.status_code == 200
+    assert "/admin/live-round/tok123/finalize-status" in resp.text
+
+
+def test_review_shows_failed_finalize_error(client, monkeypatch, finalize_store):
+    _review_setup(monkeypatch, "active")
+    finalize_store.claim("tok123")
+    finalize_store.write_status("tok123", state="error", error="Finalize failed: push failed")
+    _login(client)
+    resp = client.get("/admin/live-round/tok123/review")
+    assert "Finalize failed: push failed" in resp.text
+    assert "/finalize-status" not in resp.text
 
 
 def test_live_round_cancel(client, monkeypatch):
@@ -894,7 +956,10 @@ def test_review_random_fill_button_visibility(client, monkeypatch):
 def test_review_finalized_is_read_only(client, monkeypatch):
     monkeypatch.delenv("RAILWAY_ENVIRONMENT", raising=False)
     monkeypatch.setenv("RAILWAY_ENVIRONMENT_NAME", "pr-150")
+    import teg_analysis.analysis.live_round as lrmod
     _review_setup(monkeypatch, "finalized")
+    monkeypatch.setattr(lrmod, "report_readiness", lambda t, r=None: {
+        "ready": True, "state": "ready", "reason": None, "token": None, "round": None})
     _login(client)
     resp = client.get("/admin/live-round/tok123/review")
     assert resp.status_code == 200
@@ -1092,3 +1157,63 @@ def test_generate_rejects_tournament_for_in_progress_teg(client, monkeypatch, tm
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
+
+
+def test_progress_partial_shows_step_header_and_checklist(client, monkeypatch, finalize_store):
+    from teg_analysis.analysis.live_round import FINALIZE_STEPS
+    finalize_store.claim("tok123")
+    finalize_store.write_status("tok123", state="running", step="scores",
+                                steps={"validate": {"state": "done", "error": None},
+                                       "backup": {"state": "done", "error": None},
+                                       "scores": {"state": "running", "error": None}})
+    _login(client)
+    resp = client.get("/admin/live-round/tok123/finalize-status")
+    assert f"Step 3 of {len(FINALIZE_STEPS)}: {FINALIZE_STEPS[2][1]}" in resp.text
+    assert "fin-spin" in resp.text
+    assert FINALIZE_STEPS[-1][1] in resp.text  # to-do steps are listed too
+
+
+def test_error_partial_shows_failed_step_and_not_run(client, finalize_store):
+    finalize_store.claim("tok123")
+    finalize_store.write_status("tok123", state="error", error="Finalize failed: disk full",
+                                steps={"validate": {"state": "done", "error": None},
+                                       "scores": {"state": "failed", "error": "disk full"}})
+    _login(client)
+    resp = client.get("/admin/live-round/tok123/finalize-status")
+    assert "disk full" in resp.text
+    assert "(not run)" in resp.text
+    assert "Failed." in resp.text
+
+
+def test_finalised_review_shows_next_steps_checklist_and_gates_report(client, monkeypatch, finalize_store):
+    import teg_analysis.analysis.live_round as lrmod
+    _fake_review_ctx(monkeypatch, "finalized")
+    finalize_store.write_status("tok123", state="done", committed=True, cache_errors=["streaks"],
+                                steps={"streaks": {"state": "failed", "error": "bad streaks"}})
+    monkeypatch.setattr(lrmod, "report_readiness", lambda t, r=None: {
+        "ready": True, "state": "ready", "reason": None, "token": None, "round": None})
+    _login(client)
+    resp = client.get("/admin/live-round/tok123/review?finalized=1")
+    assert "What happens next" in resp.text
+    assert "everything went in one commit" in resp.text
+    assert "Report PDFs aren't built automatically" in resp.text
+    assert "bad streaks" in resp.text
+    assert "Generate round report" in resp.text and "/admin/reports?teg=19" in resp.text
+
+    monkeypatch.setattr(lrmod, "report_readiness", lambda t, r=None: {
+        "ready": False, "state": "failed", "reason": "Round 1 finalise failed at scores.",
+        "token": "tok123", "round": 1})
+    resp = client.get("/admin/live-round/tok123/review?finalized=1")
+    assert "Round 1 finalise failed at scores." in resp.text
+    assert "/admin/reports?teg=19" not in resp.text
+
+
+def test_finalised_review_local_run_message(client, monkeypatch, finalize_store):
+    import teg_analysis.analysis.live_round as lrmod
+    _fake_review_ctx(monkeypatch, "finalized")
+    finalize_store.write_status("tok123", state="done", committed=False)
+    monkeypatch.setattr(lrmod, "report_readiness", lambda t, r=None: {
+        "ready": True, "state": "ready", "reason": None, "token": None, "round": None})
+    _login(client)
+    resp = client.get("/admin/live-round/tok123/review?finalized=1")
+    assert "Local run: nothing was sent to GitHub." in resp.text

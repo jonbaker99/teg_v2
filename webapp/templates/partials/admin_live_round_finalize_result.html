@@ -1,4 +1,12 @@
 {# Error case only: success redirects to the review page via HX-Redirect. #}
 {% if error %}
   <p class="error" style="color:#b00020;">{{ error }}</p>
+  {% if status and status.steps %}{% include "partials/admin_live_round_finalize_steps.html" %}{% endif %}
+  <script>
+    /* Let the admin retry (or cancel); finalise stays off while conflicts remain. */
+    document.querySelectorAll('#finalize-btn, #cancel-btn, #save-btn').forEach(function (b) {
+      if (b.dataset.conflicts) return;
+      b.disabled = false;
+    });
+  </script>
 {% endif %}
