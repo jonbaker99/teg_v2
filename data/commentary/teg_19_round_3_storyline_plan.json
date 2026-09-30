@@ -1,0 +1,97 @@
+{
+  "title": "Monte Rei Asks the Same Question Twice",
+  "title_candidates": [
+    "Monte Rei Asks the Same Question Twice",
+    "The Same Course, A Different Answer",
+    "Sixteen Shots in Three Days"
+  ],
+  "theme": "Back at Monte Rei two days on, the same eighteen holes handed Alex Baker a personal course best and Gregg Williams a course worst, and rearranged two of the three races in the process.",
+  "tone": "house",
+  "opening_hook": "On Sunday Gregg Williams went round Monte Rei in 75 gross, the best gross round in TEG history to that point. On Monday, on the same Jack Nicklaus parkland with water on eleven holes, he went round in 91 — a new Monte Rei course worst — and finished the evening leading nothing at all.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "tragic_arc",
+    "motif"
+  ],
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "course_history",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Alex Baker's 50 points, the best round of the day and the third-best of his 51 TEG rounds, assembled out of two brilliant stretches and four consecutive double bogeys",
+    "why_it_matters": "It is the best round of the day, it extends his TEG 19 Trophy lead to 14 with one round to play, and it is his personal best at Monte Rei — 89 gross, one better than the 90 he posted here in Round 2 — despite a back nine that briefly fell apart entirely.",
+    "shape": "Setup: 14 points from the first four holes, three of them without dropping a gross shot, and a double bogey at the par-three 5th as the only blemish on the front. Turn: from the 11th to the 14th he drops eight gross shots in four holes, four doubles in a row, the Green Jacket slipping from his grasp for good. Resolution: 11 points from the 15th, 16th and 17th rescue a 50 and a new course best of 89, the best anyone managed on the day.",
+    "beat_ids": [
+      "r3_b11",
+      "r3_b19",
+      "r3_b18",
+      "r3_b15",
+      "r3_b13",
+      "r3_b06",
+      "r3_b08"
+    ],
+    "headline_candidates": [
+      "Fifty Points and Four Straight Doubles",
+      "Alex Baker Survives His Own Back Nine",
+      "A Personal Best Built From Rubble"
+    ],
+    "chosen_headline": "Fifty Points and Four Straight Doubles",
+    "standfirst": "The Trophy leader's 89 gross is his best at Monte Rei by a single shot, which rather undersells the four holes in the middle of it.",
+    "compelling_score": 8,
+    "humour_score": 7,
+    "descriptor": "ALEX BAKER"
+  },
+  "race_story": {
+    "subject": "Gregg Williams loses the TEG 19 Green Jacket lead and falls level at the bottom of the Wooden Spoon race on the day he sets a Monte Rei course worst",
+    "why_it_matters": "The only lead to change hands all day was the Jacket, and it changed because the man holding it went from 75 gross at Monte Rei on Sunday to 91 on Monday; the same collapse dragged him level with David Mullin at the foot of the Spoon race on 126 points.",
+    "shape": "Setup: Gregg Williams takes the Jacket lead outright at the 3rd, having arrived as leader on 15 over par, and birdies the 7th and 8th. Turn: Jon Baker draws level at the 11th and goes ahead at the 12th with a birdie, then Gregg Williams takes a triple bogey at the par-four 15th and another at the par-five 16th and drops to the bottom of the Spoon race. Resolution: 91 gross, a new Monte Rei course worst and 16 shots worse than his last visit; Jon Baker leads the Jacket by six on 28 over par, and David Mullin's double bogey at the last only levels the Spoon race at 126 rather than escaping it.",
+    "beat_ids": [
+      "cr01",
+      "r3_b14",
+      "r3_b12",
+      "r3_b17",
+      "r3_b26",
+      "r3_b28",
+      "r3_b24",
+      "r3_b04",
+      "r3_b03",
+      "r3_b05",
+      "r3_b01",
+      "r3_b09"
+    ],
+    "headline_candidates": [
+      "Sixteen Shots Worse in Two Days",
+      "Two Triples Cost Gregg Williams Everything",
+      "The Jacket Changes Hands at Monte Rei"
+    ],
+    "chosen_headline": "Sixteen Shots Worse in Two Days",
+    "standfirst": "Jon Baker's 45 points, the third-best round of his 70, carried him into a six-shot Jacket lead, while the Spoon race enters the final round dead level on 126.",
+    "compelling_score": 9,
+    "humour_score": 8,
+    "descriptor": "JACKET AND SPOON"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "John Patterson's 49 points, the second-best round of his 35, built on 21 points across seven holes from the 4th to the 10th",
+      "why_it_matters": "It is the second-best round of his career and his second-best gross round too, and it consolidates second place in the TEG 19 Trophy — yet he still finishes the day one point further from Alex Baker than he started it.",
+      "shape": "Setup: pars at the 1st and 2nd, neither costing a gross shot, set an unfussy tone. Turn: from the 4th to the 10th he takes 21 points in seven holes, three of them — the 7th, 8th and 9th — without dropping a shot to par. Resolution: 49 points and 84 gross, clear of Jon Baker in the Trophy but 14 behind a leader who scored one more.",
+      "beat_ids": [
+        "r3_b02",
+        "r3_b16",
+        "r3_b23",
+        "r3_b25"
+      ],
+      "headline_candidates": [
+        "Twenty-One Points in Seven Holes",
+        "John Patterson's Best Work Goes Unrewarded",
+        "Second Place, Firmly Held"
+      ],
+      "chosen_headline": "Twenty-One Points in Seven Holes",
+      "standfirst": "The second-best round of his TEG career, and the gap to the leader still grew by one.",
+      "compelling_score": 7,
+      "humour_score": 5,
+      "descriptor": "JOHN PATTERSON"
+    }
+  ],
+  "race_state_note": "Three rounds gone, one to play: Alex Baker leads the Trophy by 14, trails the Green Jacket in last place on 40 over par, and the Wooden Spoon is exactly level between Gregg Williams and David Mullin on 126 — with no countback of any kind to separate them.",
+  "storyline_note": ""
+}
