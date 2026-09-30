@@ -10,13 +10,28 @@
         {% for b in result.backups %}<li><code>{{ b }}</code></li>{% endfor %}
       </ul>
     </li>
+    {% if result.reports_archived %}
+      <li>{{ result.reports_archived | length }} report file(s) archived to <code>{{ result.archive_dir }}</code></li>
+    {% else %}
+      <li>No reports to archive</li>
+    {% endif %}
     {% if result.committed %}
       <li>{{ result.files_committed }} file(s) committed to GitHub</li>
     {% else %}
       <li>Written locally (no GitHub commit — not running on Railway)</li>
     {% endif %}
   </ul>
+  {% if result.cache_errors %}
+  <div style="border:1px solid #b00020;border-radius:8px;padding:.6rem .9rem;margin-top:1rem;">
+    <p style="margin:0 0 .25rem;font-weight:600;color:#b00020;">Some steps failed</p>
+    <ul style="margin:.25rem 0 0 1rem;">
+      {% for e in result.cache_errors %}<li><strong>{{ e.step }}</strong>: {{ e.error }}</li>{% endfor %}
+    </ul>
+  </div>
+  <p style="margin-top:1rem;"><a href="/leaderboard" class="text-link">View leaderboard →</a></p>
+  {% else %}
   <p style="margin-top:1rem;">All derived caches were rebuilt. <a href="/leaderboard" class="text-link">View leaderboard →</a></p>
+  {% endif %}
 </div>
 {% else %}
 <div class="data-card"><h2 class="card-header">Nothing deleted</h2></div>

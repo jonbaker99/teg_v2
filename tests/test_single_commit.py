@@ -119,6 +119,96 @@ def test_execute_data_deletion_one_commit(railway):
     _assert_single_commit(railway, result)
 
 
+def test_deletion_archives_reports_and_marks_registry_in_one_commit(railway, monkeypatch):
+    """Issue 22 regression: deleting a finalised round moves its round report
+    and the TEG's tournament report to data/commentary/archive/ and flips its
+    registry row to 'deleted', all in the deletion's one commit."""
+    import teg_analysis.analysis.data_update as du
+
+    execute_data_update(process_google_sheets_data(_wide_round()), overwrite=True)
+    commentary = railway.root / "data" / "commentary"
+    stale = ["teg_50_round_1_report_storylinefirst_styled.md", "teg_50_round_1_claims.json",
+             "teg_50_report_storylinefirst_styled.md"]
+    kept = ["teg_50_round_2_report_storylinefirst_styled.md", "teg_5_round_1_claims.json"]
+    for name in stale + kept:
+        (commentary / name).write_text(f"report {name}")
+    registry = lr._read_registry()
+    registry = pd.concat([registry, pd.DataFrame([{
+        "Token": "tok50", "TEGNum": 50, "Round": 1, "CreatedAt": "2026-09-30T00:00:00+00:00",
+        "Status": "finalized",
+    }])], ignore_index=True)
+    lr._write_registry(registry)
+    # Everything but one round-1 file is already on GitHub.
+    monkeypatch.setattr(du, "_github_commentary_names", lambda: set(stale[1:] + kept))
+
+    railway.go_railway()
+    railway.batches.clear()
+    result = execute_data_deletion(50, [1])
+
+    assert result["cache_errors"] == []
+    assert result["reports_archived"] == sorted(stale)
+    archive_dir = result["archive_dir"]
+    assert archive_dir.startswith("data/commentary/archive/teg_50_deleted_")
+
+    assert len(railway.batches) == 1 and railway.single == []
+    paths, data, _ = railway.batches[0]
+    for name in stale:
+        assert f"{archive_dir}/{name}" in paths
+        assert data[f"{archive_dir}/{name}"] == f"report {name}"
+        assert not (commentary / name).exists()
+        assert (railway.root / archive_dir / name).exists()
+    # Removals only for files GitHub has.
+    assert f"data/commentary/{stale[0]}" not in paths
+    for name in stale[1:]:
+        assert f"data/commentary/{name}" in paths
+    for name in kept:
+        assert (commentary / name).exists()
+        assert f"data/commentary/{name}" not in paths
+
+    assert "data/live_rounds.csv" in paths
+    row = lr._read_registry().set_index("Token").loc["tok50"]
+    assert row["Status"] == "deleted"
+    readiness = lr.report_readiness(50, 1)
+    assert readiness["ready"] is False and readiness["state"] == "deleted"
+
+
+def _stale_report(railway):
+    execute_data_update(process_google_sheets_data(_wide_round()), overwrite=True)
+    report = railway.root / "data" / "commentary" / "teg_50_round_1_report_storylinefirst_styled.md"
+    report.write_text("stale")
+    return report
+
+
+def test_deletion_commit_failure_keeps_reports(railway, monkeypatch):
+    """Reports leave the store only once the commit lands."""
+    import teg_analysis.analysis.data_update as du
+
+    report = _stale_report(railway)
+    monkeypatch.setattr(du, "_github_commentary_names", lambda: {report.name})
+    railway.go_railway()
+    railway.fail_batch = True
+    with pytest.raises(RuntimeError):
+        execute_data_deletion(50, [1])
+    assert report.exists()
+
+
+def test_deletion_github_listing_failure_keeps_reports(railway, monkeypatch):
+    """A failed GitHub listing must not read as "nothing on GitHub"."""
+    import teg_analysis.analysis.data_update as du
+
+    report = _stale_report(railway)
+
+    def boom():
+        raise RuntimeError("github listing down")
+
+    monkeypatch.setattr(du, "_github_commentary_names", boom)
+    railway.go_railway()
+    result = execute_data_deletion(50, [1])
+    assert [e["step"] for e in result["cache_errors"]] == ["reports_archive"]
+    assert result["reports_archived"] == []
+    assert report.exists()
+
+
 def test_update_batch_failure_still_raises(railway):
     railway.go_railway()
     railway.fail_batch = True

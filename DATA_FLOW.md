@@ -95,7 +95,13 @@ headless add / edit / delete flows:
 - **Delete:** `preview_deletion_data` → `execute_data_deletion`, which takes the same
   **timestamped backup** of `all-scores`/`all-data` under `data/backups/`, removes
   the selected TEG/rounds from `all-scores`/`all-data`, and rebuilds the same derived
-  caches.
+  caches. It then moves the stale reports (each deleted round's `teg_N_round_R_*` and
+  the TEG's `teg_N_*` tournament files) to
+  `data/commentary/archive/teg_N_deleted_<timestamp>/`, and flips the rounds'
+  `finalized` rows in `data/live_rounds.csv` to `deleted`. All in the one commit;
+  the removals ride in it as `{'delete': True}` entries to `batch_commit_to_github`.
+  The store originals are removed only after the commit lands, so a failed commit
+  leaves every report readable. PDFs under `data/commentary/pdfs/` are not moved.
 - **Edit:** `EDITABLE_DATA_FILES` registry + `save_data_file` (single-file commit of
   an edited metadata CSV) and `regenerate_status_files` (rebuild completed/in-progress
   status from raw data).

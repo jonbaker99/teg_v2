@@ -181,9 +181,9 @@
       </p>
     {% elif status.ready_to_go_live %}
       <h2 class="card-header">Go live</h2>
-      {% if status.live and status.live.status == 'cancelled' %}
+      {% if status.live and status.live.status in ('cancelled', 'deleted') %}
         <p style="margin:.25rem 0 1rem;color:#8a6100;">
-          ⚠️ A previous live round for this TEG/Round was cancelled — going live again starts a
+          ⚠️ A previous live round for this TEG/Round was {{ status.live.status }} — going live again starts a
           fresh one with a new link.
         </p>
       {% endif %}

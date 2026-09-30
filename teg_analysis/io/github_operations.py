@@ -197,6 +197,8 @@ def batch_commit_to_github(files_data: list, commit_message: str = "Batch update
         files_data (list): A list of dictionaries, where each dictionary
             contains the `file_path` and `data` for a file to be committed.
             Example: `[{'file_path': 'data/file.csv', 'data': df}, ...]`.
+            An entry with `'delete': True` removes that path instead (it
+            must exist on the branch); its `data` is ignored.
         commit_message (str, optional): The commit message for the batch
             update. Defaults to "Batch update data".
     """
@@ -213,6 +215,12 @@ def batch_commit_to_github(files_data: list, commit_message: str = "Batch update
     tree_elements = []
     for file_info in files_data:
         file_path = file_info['file_path']
+        if file_info.get('delete'):
+            # A null SHA removes the path from the new tree.
+            tree_elements.append(
+                InputGitTreeElement(path=file_path, mode='100644', type='blob', sha=None)
+            )
+            continue
         data = file_info['data']
 
         # Prepare content based on file type

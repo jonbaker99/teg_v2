@@ -581,13 +581,46 @@ def _round_has_data(teg_num: int, round_num: int) -> bool:
     return bool(((df["TEGNum"] == teg_num) & (df["Round"] == round_num)).any())
 
 
+def mark_rounds_deleted(teg_num: int, rounds: list, defer_github: bool = False) -> dict | None:
+    """Flip the ``finalized`` registry rows of deleted rounds to ``deleted``.
+
+    Called by ``data_update.execute_data_deletion`` so a deleted round's
+    finalise can't vouch for data that is gone (``report_readiness``).
+    Active and cancelled rows are left alone. Writes the volume/local copy
+    now; with ``defer_github`` returns the file-info for the caller's single
+    batch commit. Returns None when no row changed.
+    """
+    teg_num = int(teg_num)
+    rounds = [int(r) for r in rounds]
+    with _lock:
+        registry = _read_registry()
+        mask = (
+            (registry["TEGNum"] == teg_num)
+            & (registry["Round"].isin(rounds))
+            & (registry["Status"] == "finalized")
+        )
+        if not mask.any():
+            return None
+        if "DeletedAt" not in registry.columns:
+            registry["DeletedAt"] = pd.Series([None] * len(registry), dtype="object")
+        else:
+            registry["DeletedAt"] = registry["DeletedAt"].astype("object")
+        registry.loc[mask, "Status"] = "deleted"
+        registry.loc[mask, "DeletedAt"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        _write_registry(registry, defer_github=defer_github)
+    if defer_github:
+        return {"file_path": LIVE_ROUNDS_REGISTRY_CSV, "data": registry}
+    return None
+
+
 def report_readiness(teg_num: int, round_num: int | None = None) -> dict:
     """Whether a report's input data is in place, judged from the registry.
 
     For a round (``round_num`` given) this checks that round's live round; for
     the tournament (``round_num=None``) every live round of the TEG. Cancelled
     rounds are ignored, and a round with no live round at all (added by sheet
-    import) counts as ready. Deliberately independent of any webapp job file:
+    import) counts as ready. A ``deleted`` row (its round was deleted after
+    finalising) blocks until the round has data again. Deliberately independent of any webapp job file:
     a ``finalized`` row is only written once every REPORT_REQUIRED_STEPS step
     has succeeded (they raise on failure, so a finalized row implies them) and
     the commit has landed. Failed cache steps are recorded in ``FailedSteps``
@@ -595,7 +628,7 @@ def report_readiness(teg_num: int, round_num: int | None = None) -> dict:
 
     Returns ``{"ready", "state", "reason", "token", "round"}``; ``state`` is
     ready / processing (finalise running now) / failed (a finalise wrote data
-    but didn't finish) / not_finalised.
+    but didn't finish) / not_finalised / deleted.
     """
     teg_num = int(teg_num)
     registry = _read_registry()
@@ -608,6 +641,12 @@ def report_readiness(teg_num: int, round_num: int | None = None) -> dict:
         base = {"ready": False, "token": token, "round": rnd}
         if row["Status"] == "finalized":
             continue
+        if row["Status"] == "deleted":
+            re_entered = ((rows["Round"] == rnd) & (rows["Status"] != "deleted")).any()
+            if re_entered or _round_has_data(teg_num, rnd):
+                continue  # a newer live round (or a sheet import) speaks for it
+            return {**base, "state": "deleted",
+                    "reason": f"Round {rnd} was deleted. Re-enter it before generating a report."}
         if token in _finalizing:
             return {**base, "state": "processing",
                     "reason": f"Round {rnd} data still being processed."}

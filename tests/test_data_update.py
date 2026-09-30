@@ -18,6 +18,7 @@ from teg_analysis.analysis.data_update import (
     summarise_round_scores,
     get_available_tegs_and_rounds,
     validate_deletion_selection,
+    report_files_for_deletion,
     preview_deletion_data,
     find_tegs_missing_round_info,
     analyze_teg_completion,
@@ -415,6 +416,24 @@ def test_execute_data_deletion_reports_winners_failure(scratch_repo, monkeypatch
     result = execute_data_deletion(50, [1])
     assert [e['step'] for e in result['cache_errors']] == ['winners']
 
+def test_report_files_for_deletion_picks_round_and_tournament_files():
+    """Issue 22: a round's files plus the TEG's tournament files; never another
+    round's, and TEG 1 never matches TEG 10."""
+    names = [
+        "teg_1_round_2_report_storylinefirst_styled.md", "teg_1_round_2_claims.json",
+        "teg_1_round_3_report_storylinefirst_styled.md",
+        "teg_1_report_storylinefirst_styled.md", "teg_1_verify.json",
+        "teg_10_round_2_claims.json", "teg_10_report_storylinefirst.md",
+    ]
+    assert report_files_for_deletion(names, 1, [2]) == [
+        "teg_1_report_storylinefirst_styled.md",
+        "teg_1_round_2_claims.json",
+        "teg_1_round_2_report_storylinefirst_styled.md",
+        "teg_1_verify.json",
+    ]
+
+
 
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])
+
