@@ -1,0 +1,145 @@
+{
+  "title": "Records Fall at Quinta da Ria",
+  "title_candidates": [
+    "Records Fall at Quinta da Ria",
+    "Two Bakers, Two Records",
+    "Sixty-Two Points and Seventy-Six Shots"
+  ],
+  "theme": "TEG's first day at Quinta da Ria produced the highest Stableford round and the lowest gross round in the competition's 360-round history, and both came from the same pairing of Bakers.",
+  "tone": "house",
+  "opening_hook": "TEG had never set foot on Quinta da Ria before Saturday morning, and by the evening the course had handed over the best Stableford round in TEG history, the best gross round in TEG history, an albatross at the 1st and an eagle for every man in the field.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "ensemble",
+    "catalogue"
+  ],
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "records",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Alex Baker's 62 points at Quinta da Ria, the highest Stableford round in TEG's 360 rounds, built on a fast start and a devastating run from the 10th to the 16th",
+    "why_it_matters": "This is rank one outright: the best Trophy round TEG has recorded to date, and also Alex Baker's own career-best Stableford round and career-best gross (77, +5, the third-best gross round in TEG history to date). It is the headline fact of the day and it arrived on a course nobody in the field had ever played.",
+    "shape": "Setup: Alex Baker opens with 23 points in the first six holes on an unseen course, birdies the 4th to take the TEG 19 Trophy lead, and holds it for the rest of the day. Turn: from the 10th to the 16th he gathers 29 points, the eagle two at the par-four 14th the centrepiece, and for three holes from the 14th he drops no gross shot at all. Resolution: a double bogey at the short 17th ends the run and costs him the gross lead, but 62 points is the highest round in TEG history to date and 77 his own lowest ever.",
+    "beat_ids": [
+      "r1_b33",
+      "r1_b14",
+      "r1_b36",
+      "r1_b03",
+      "r1_b04",
+      "r1_b12",
+      "r1_b40",
+      "r1_b08"
+    ],
+    "headline_candidates": [
+      "Alex Baker Rewrites the Record Book",
+      "Sixty-Two Points and a New Record",
+      "The Best Round TEG Has Seen"
+    ],
+    "chosen_headline": "Alex Baker Rewrites the Record Book",
+    "standfirst": "Twenty-nine points in seven holes from the 10th carried him past every one of the 360 rounds TEG has played, on a course he had never seen before Saturday.",
+    "compelling_score": 9,
+    "humour_score": 5,
+    "descriptor": "ALEX BAKER"
+  },
+  "race_story": {
+    "subject": "Alex Baker led the gross count from the 4th hole to the 17th and lost the TEG 19 Green Jacket lead on the final green to Jon Baker, whose 76 is the lowest gross round in TEG history",
+    "why_it_matters": "The Jacket race is the tightest of the three after one round — one shot — and it turned on the very last hole of the day, with Alex Baker the man who surrendered it. Jon Baker's +4 is rank one all time on gross and his own career-best Stableford round too, yet it leaves him nine points behind in the Trophy.",
+    "shape": "Setup: Alex Baker draws level for the gross lead at the 4th and holds it outright through the turn, while Jon Baker chips away, drawing level at the 11th with an eagle three at the par-five and again at the 13th. Turn: Jon Baker gathers 11 points over the last three holes without dropping a gross shot, and a par at the 18th takes the Jacket lead outright by one. Resolution: 76 to 77 in the TEG 19 Green Jacket, 62 to 53 in the TEG 19 Trophy, and Gregg Williams left holding the TEG 19 Wooden Spoon by a single point with three rounds to play.",
+    "beat_ids": [
+      "r1_b39",
+      "r1_b16",
+      "r1_b23",
+      "r1_b52",
+      "r1_b07",
+      "r1_b10",
+      "r1_b45",
+      "r1_b34",
+      "r1_b38",
+      "r1_b44",
+      "r1_b53"
+    ],
+    "headline_candidates": [
+      "Jon Baker Takes the Jacket by One",
+      "One Shot Decides the Jacket Lead",
+      "Fourteen Holes in Front, Then Nothing"
+    ],
+    "chosen_headline": "Jon Baker Takes the Jacket by One",
+    "standfirst": "Alex Baker held the gross lead from the 4th until the 17th and finished a stroke adrift, while Gregg Williams props up the Spoon by a point.",
+    "compelling_score": 8,
+    "humour_score": 6,
+    "descriptor": "GREEN JACKET"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Every player in the field made an eagle or better, five different holes, from David Mullin's two at the par-five 1st to John Patterson's two at the par-four 18th",
+      "why_it_matters": "A clean sweep of the field by eagles is a genuine curiosity, and Mullin's two at the par-five 1st was a three-under albatross struck before the round had properly begun. It also explains the record scoring: the day's totals were not accumulated quietly.",
+      "shape": "Setup: David Mullin holes out for a two at the par-five 1st, three under par, and leads both races after one hole. Turn: Jon Baker's eagle three at the par-five 11th, Alex Baker's two at the par-four 14th and Gregg Williams's three at the par-five 16th follow, each worth five or six Stableford points. Resolution: John Patterson completes the set with a two at the par-four 18th, the last shot of the day and the fifth eagle-or-better of it.",
+      "beat_ids": [
+        "r1_b11",
+        "r1_b05",
+        "r1_b04",
+        "r1_b02",
+        "r1_b01"
+      ],
+      "headline_candidates": [
+        "An Eagle for Every Man",
+        "Five Holes Gave Up Eagles",
+        "A Two at the Very First"
+      ],
+      "chosen_headline": "An Eagle for Every Man",
+      "standfirst": "David Mullin's went one better than the rest, a two at the par-five 1st for a three-under albatross before anyone had found a rhythm.",
+      "compelling_score": 8,
+      "humour_score": 7,
+      "descriptor": "THE EAGLE COUNT"
+    },
+    {
+      "subject": "John Patterson bled seven gross shots in three holes from the 3rd, dropped to the bottom of the Wooden Spoon race at the 4th, and finished with an eagle two at the 18th for 47 points",
+      "why_it_matters": "47 points is the third-best Stableford round of Patterson's 33 TEG rounds and his 86 the second-lowest gross he has managed, which on this particular Saturday put him third. The shape of it — triple bogey, bottom of the Spoon, then a two at the last — is the day's most eventful individual round.",
+      "shape": "Setup: Patterson pars the first two holes, then goes three holes without a net par from the 3rd, seven gross shots gone, the triple bogey at the 4th dropping him to the bottom of the Spoon race. Turn: he steadies with 13 points across the 6th to the 9th and two clean holes at the 11th and 12th. Resolution: after bogey, bogey, double bogey from the 15th he holes out for a two at the par-four 18th, six points, and a total that stands third among his 33 TEG rounds.",
+      "beat_ids": [
+        "r1_b35",
+        "r1_b37",
+        "r1_b26",
+        "r1_b17",
+        "r1_b31",
+        "r1_b06",
+        "r1_b01"
+      ],
+      "headline_candidates": [
+        "Patterson Signs Off With an Eagle",
+        "A Triple, Then a Two",
+        "Seven Shots Gone in Three Holes"
+      ],
+      "chosen_headline": "Patterson Signs Off With an Eagle",
+      "standfirst": "Seven gross shots disappeared in three early holes, and he still walked off with the third-best Stableford round of his 33 TEG appearances.",
+      "compelling_score": 7,
+      "humour_score": 7,
+      "descriptor": "JOHN PATTERSON"
+    },
+    {
+      "subject": "Gregg Williams's 84 was the third-lowest gross round of his 68 TEG appearances and still left him bottom of the Wooden Spoon race by a single point",
+      "why_it_matters": "On any ordinary day 84 would not have him last; on this one it did, which is the clearest illustration of what the field did to Quinta da Ria. He also reached the bottom of the Spoon race twice, at the 2nd and again at the 9th.",
+      "shape": "Setup: a bogey at the short 2nd drops Williams to the bottom of the Spoon race inside two holes, and three straight bogeys from the 7th plus a triple bogey seven at the stroke-index-one 10th deepen it. Turn: a birdie at the 11th steadies him, and after four more dropped holes he holes out for an eagle three at the par-five 16th. Resolution: 84 gross, the third-lowest of his 68 TEG rounds, and 41 points — last of five, one behind David Mullin.",
+      "beat_ids": [
+        "r1_b28",
+        "r1_b41",
+        "r1_b15",
+        "r1_b20",
+        "r1_b02",
+        "r1_b44"
+      ],
+      "headline_candidates": [
+        "Eighty-Four and Last of Five",
+        "A Career Gross and the Spoon",
+        "Williams Eagles and Still Trails"
+      ],
+      "chosen_headline": "Eighty-Four and Last of Five",
+      "standfirst": "His third-lowest gross in 68 TEG rounds was not enough to lift him off the bottom of the Spoon race, which tells you most of what you need to know about Saturday.",
+      "compelling_score": 6,
+      "humour_score": 7,
+      "descriptor": "GREGG WILLIAMS"
+    }
+  ],
+  "race_state_note": "Round one only, nothing decided: the nine-point Trophy gap is the largest of the three margins, the Jacket sits at one stroke and the Spoon at one point, with three rounds to play.",
+  "storyline_note": ""
+}
