@@ -176,8 +176,7 @@ def test_all_view_lists_every_story_and_pending_panels(client, patched):
         assert f"Round {r} headlines" in section
         assert f'href="/teg-reports?teg={TEG}&amp;round={r}#story/0"' in section
     assert "KICK 1 / Sub" in section
-    assert section.count("hl-pending") == 2
-    assert "Pending" in section
+    assert section.count('<p class="hl-pending">Pending</p>') == 2
     assert MIDDLE_DOT not in section
 
 
@@ -193,7 +192,10 @@ def test_bogus_view_falls_back_to_lead(client, patched):
     patched(complete=False)
     section = _all(client, f"/leaderboard/table?teg={TEG}&tab=reports&view=bogus")
     assert "lb-reports-grid" not in section
-    assert 'aria-pressed="true"' in section
+    lead = re.search(r'<button[^>]*data-public-state-value="lead"[^>]*>', section, re.S)
+    assert lead and 'aria-pressed="true"' in lead.group(0)
+    html = client.get(f"/leaderboard?teg={TEG}&tab=reports&view=bogus").text
+    assert '<input type="hidden" id="lb-reports-view" name="view" value="lead">' in html
 
 
 def test_full_page_all_view_marks_toggle_and_hidden_input(client, patched):
@@ -202,14 +204,14 @@ def test_full_page_all_view_marks_toggle_and_hidden_input(client, patched):
     assert re.search(r'<input type="hidden" id="lb-reports-view" name="view" value="all">', html)
     button = re.search(r'<button[^>]*data-public-state-value="all"[^>]*>', html, re.S)
     assert button and 'aria-pressed="true"' in button.group(0)
-    assert "#lb-reports-view" in html
+    assert re.search(r'hx-include="[^"]*#lb-reports-view', html)
 
 
 def test_complete_all_view_has_tournament_panel_first(client, patched):
     patched(complete=True)
     section = _all(client, f"/leaderboard/table?teg={TEG}&tab=reports&view=all")
-    assert section.count('<article class="lb-report-panel">') == 5
-    assert section.index("Tournament report") < section.index("Round 1")
-    assert "lb-report-wide" in section
+    assert section.count('<article class="lb-report-panel">') == 4
+    assert section.index('<article class="lb-report-panel lb-report-wide">') < section.index("Round 1")
+    assert f"TEG {TEG} headlines" in section
     assert f'href="/teg-reports?teg={TEG}"' in section
     assert "Other T-6" in section

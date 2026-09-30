@@ -23,8 +23,8 @@
                          htmx.trigger(document.getElementById('lb-teg-select'), 'change')">All stories</button>
     </div>
     {% if all_view %}
-    {% macro story_panel(summary, heading, course=none) %}
-    <article class="lb-report-panel">
+    {% macro story_panel(summary, heading, course=none, wide=false) %}
+    <article class="lb-report-panel{% if wide %} lb-report-wide{% endif %}">
         <p class="kicker"><a class="heading-link" href="{{ summary.link }}">{{ heading }} &#8599;</a></p>
         {% if course %}<p class="lb-report-course">{{ course }}</p>{% endif %}
         <a class="lead-teaser" href="{{ summary.lead_link | default(summary.link) }}">
@@ -42,7 +42,7 @@
     {% endmacro %}
     <div class="lb-reports-grid">
         {% if tournament_summary %}
-        <div class="lb-report-wide">{{ story_panel(tournament_summary, "Tournament report") }}</div>
+        {{ story_panel(tournament_summary, "TEG " ~ selected_teg ~ " headlines", wide=true) }}
         {% endif %}
         {% for r in rounds %}
         {% if r.summary %}

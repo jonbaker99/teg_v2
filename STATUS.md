@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-29 (Leaderboard Reports tab; report admin; TEG 19 post-completion fixes)
+**Last updated:** 2026-09-30 (Leaderboard Reports: All stories view)
+
+## 2026-09-30 — Leaderboard Reports: All stories view
+
+The Reports tab on `/leaderboard` has a Lead stories / All stories toggle. All stories lays each round out like the home page: the lead story, then every other headline in that report. Two panels per row on desktop, stacked on phones. A completed TEG's tournament report gets a full-width panel on top.
 
 ## 2026-09-29 — Leaderboard Reports tab
 

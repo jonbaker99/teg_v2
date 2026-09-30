@@ -267,7 +267,6 @@ def _report_teg_candidates(path: str) -> set[int]:
     return candidates
 
 
-@lru_cache(maxsize=32)
 def get_edition_summary(teg: int, round_num: int | None = None,
                         max_others: int | None = 4) -> dict[str, Any] | None:
     """A small, cheap-after-first-call summary of one edition's lead story —
@@ -281,8 +280,19 @@ def get_edition_summary(teg: int, round_num: int | None = None,
     cleanly instead of showing a dead link.
 
     `max_others` caps `other_articles`; `None` returns every non-lead article
-    (the leaderboard "All stories" view).
+    (the leaderboard "All stories" view). The cap is applied on read, so
+    capped and uncapped callers share one cached summary (and one
+    `build_edition` call) per edition.
     """
+    summary = _edition_summary(teg, round_num)
+    if summary is None or max_others is None:
+        return summary
+    return {**summary, "other_articles": summary["other_articles"][:max_others]}
+
+
+@lru_cache(maxsize=32)
+def _edition_summary(teg: int, round_num: int | None = None) -> dict[str, Any] | None:
+    """Uncapped, memoised body of `get_edition_summary`."""
     try:
         edition = build_edition(teg, round_num)
         lead = next(a for a in edition["articles"] if a["is_lead"])
@@ -295,9 +305,10 @@ def get_edition_summary(teg: int, round_num: int | None = None,
     # non-lead articles in their source-edition order. The desktop layout may
     # rearrange those articles to balance rows, but its anchors keep this
     # stable mobile-routing order.
-    # Capped at `max_others` (default 4) -- a report can carry several
-    # sidebars (TEG 18 has 5 non-lead articles); the home-page teaser is a
-    # pointer into the report, not a full table of contents. None = no cap.
+    # Uncapped here; `get_edition_summary` applies `max_others` (default 4)
+    # on read -- a report can carry several sidebars (TEG 18 has 5 non-lead
+    # articles); the home-page teaser is a pointer into the report, not a
+    # full table of contents.
     other_articles = [
         {
             "kicker": a.get("descriptor") or a.get("kicker"),
@@ -306,8 +317,6 @@ def get_edition_summary(teg: int, round_num: int | None = None,
         }
         for story_index, a in enumerate((a for a in edition["articles"] if not a["is_lead"]), start=1)
     ]
-    if max_others is not None:
-        other_articles = other_articles[:max_others]
     return {
         "teg": teg,
         "round": round_num,
@@ -327,7 +336,11 @@ def clear_edition_caches() -> None:
     available_tegs.cache_clear()
     available_rounds.cache_clear()
     available_report_tegs.cache_clear()
-    get_edition_summary.cache_clear()
+    _edition_summary.cache_clear()
+
+
+# Callers and tests clear the summary cache through the public name.
+get_edition_summary.cache_clear = _edition_summary.cache_clear
 
 # Priority order for combining kickers on a merged (" / "-joined) heading.
 _KICKER_PRIORITY = ["TROPHY", "GREEN JACKET", "WOODEN SPOON", "SIDEBAR"]
