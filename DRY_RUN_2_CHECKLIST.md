@@ -60,8 +60,8 @@ Round 4 section B results:
 | B7 | Pass |
 | B8 | Pass |
 | B9 | Pass: one commit (`58a60da`, 15 files incl. `teg_winners.csv`, `completed_tegs.csv`), deploy skipped |
-| B10 | Pass |
-| B11 | Pass |
+| B10 | Pending (C3) |
+| B11 | Pending (C3) |
 
 ## D. Deletion
 
