@@ -95,7 +95,7 @@
               {% elif r.Status == 'finalized' %}✅ Finalized
               {% else %}⚪ Cancelled{% endif %}
             </td>
-            <td>{{ r.CreatedAt }}</td>
+            <td><time class="lr-started" datetime="{{ r.CreatedAt }}">{{ started.get(r.Token, r.CreatedAt) }}</time></td>
             <td><a href="/admin/live-round/{{ r.Token }}/review" class="text-link">
               {{ 'Review & Finalize' if r.Status == 'active' else 'View' }} →
             </a></td>
@@ -114,4 +114,14 @@
     {% endif %}
   </div>
 </div>
+<script>
+  // Show start times in the viewer's own time zone (the server renders UTC).
+  document.querySelectorAll('time.lr-started').forEach(function (t) {
+    var d = new Date(t.getAttribute('datetime').replace(/\.\d+/, ''));  // iOS Safari rejects microseconds
+    if (isNaN(d)) return;
+    t.textContent = d.toLocaleString('en-GB', {
+      day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+  });
+</script>
 {% endblock %}
