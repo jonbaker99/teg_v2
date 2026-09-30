@@ -99,6 +99,9 @@ teg_analysis/
     report_pdf.py    Offline stage: renders the styled report to a single-page A4 PDF via
                      headless Chromium — free, no LLM call. See reporting/README.md →
                      Pre-render to PDF
+    newspaper_edition.py  `get_edition_summary(teg, round_num=None, max_others=4)`: cached lead +
+                     secondary headlines for teasers; `max_others=None` returns every
+                     non-lead article (the /leaderboard "All stories" view)
     llm.py           Thin Anthropic wrapper (key resolution, prompt caching)
     scoring.py       3-axis combination + mode weights
 

@@ -22,7 +22,13 @@ def client():
     return TestClient(app)
 
 
-def _fake_summary(teg, round_num=None):
+def _others(teg, round_num):
+    base = f"/teg-reports?teg={teg}" + (f"&round={round_num}" if round_num else "")
+    return [{"kicker": f"KICK {i} | Sub", "headline": f"Other {round_num or 'T'}-{i}",
+             "link": f"{base}#story/{i}"} for i in range(1, 7)]
+
+
+def _fake_summary(teg, round_num=None, max_others=4):
     if round_num == 2 or round_num == 4:
         return {
             "teg": teg,
@@ -33,7 +39,7 @@ def _fake_summary(teg, round_num=None):
             "standfirst": "A standfirst.",
             "link": f"/teg-reports?teg={teg}&round={round_num}",
             "lead_link": f"/teg-reports?teg={teg}&round={round_num}#story/0",
-            "other_articles": [],
+            "other_articles": _others(teg, round_num)[:max_others],
         }
     if round_num is None:
         return {
@@ -44,7 +50,7 @@ def _fake_summary(teg, round_num=None):
             "headline": "Tournament headline",
             "standfirst": "A standfirst.",
             "link": f"/teg-reports?teg={teg}",
-            "other_articles": [],
+            "other_articles": _others(teg, round_num)[:max_others],
         }
     return None
 
@@ -153,3 +159,57 @@ def test_real_data_smoke(client):
     resp = client.get(f"/leaderboard/table?teg={TEG}&tab=reports")
     assert resp.status_code == 200
     assert "hl-headline" in resp.text
+
+
+def _all(client, path):
+    return _reports_section(client.get(path).text)
+
+
+def test_all_view_lists_every_story_and_pending_panels(client, patched):
+    patched(complete=False)
+    section = _all(client, f"/leaderboard/table?teg={TEG}&tab=reports&view=all")
+    assert section.count('class="lb-reports-grid"') == 1
+    assert section.count('<article class="lb-report-panel">') == 4
+    for r in (2, 4):
+        for i in range(1, 7):
+            assert f"Other {r}-{i}" in section
+        assert f"Round {r} headlines" in section
+        assert f'href="/teg-reports?teg={TEG}&amp;round={r}#story/0"' in section
+    assert "KICK 1 / Sub" in section
+    assert section.count("hl-pending") == 2
+    assert "Pending" in section
+    assert MIDDLE_DOT not in section
+
+
+def test_lead_view_unchanged_without_grid(client, patched):
+    patched(complete=False)
+    section = _all(client, f"/leaderboard/table?teg={TEG}&tab=reports")
+    assert "lb-reports-grid" not in section
+    assert "Other 2-1" not in section
+    assert section.count("lb-report-pending") == 2
+
+
+def test_bogus_view_falls_back_to_lead(client, patched):
+    patched(complete=False)
+    section = _all(client, f"/leaderboard/table?teg={TEG}&tab=reports&view=bogus")
+    assert "lb-reports-grid" not in section
+    assert 'aria-pressed="true"' in section
+
+
+def test_full_page_all_view_marks_toggle_and_hidden_input(client, patched):
+    patched(complete=False)
+    html = client.get(f"/leaderboard?teg={TEG}&tab=reports&view=all").text
+    assert re.search(r'<input type="hidden" id="lb-reports-view" name="view" value="all">', html)
+    button = re.search(r'<button[^>]*data-public-state-value="all"[^>]*>', html, re.S)
+    assert button and 'aria-pressed="true"' in button.group(0)
+    assert "#lb-reports-view" in html
+
+
+def test_complete_all_view_has_tournament_panel_first(client, patched):
+    patched(complete=True)
+    section = _all(client, f"/leaderboard/table?teg={TEG}&tab=reports&view=all")
+    assert section.count('<article class="lb-report-panel">') == 5
+    assert section.index("Tournament report") < section.index("Round 1")
+    assert "lb-report-wide" in section
+    assert f'href="/teg-reports?teg={TEG}"' in section
+    assert "Other T-6" in section

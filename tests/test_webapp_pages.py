@@ -709,7 +709,7 @@ def test_latest_teg_tab_partials_render(client, tab):
 
 @pytest.mark.parametrize(("url", "markers"), [
     ("/leaderboard?teg=7&tab=gross&chart_variant=ranking", (
-        'data-public-state-keys="teg,tab,chart_variant,type,round,player"',
+        'data-public-state-keys="teg,tab,chart_variant,type,round,player,view"',
         'id="lb-tab-input" name="tab" value="gross"',
         'id="lb-chart-variant" name="chart_variant" value="ranking"',
     )),

@@ -611,6 +611,24 @@ def test_edition_summary_story_links_include_round_url(monkeypatch):
         ne.get_edition_summary.cache_clear()
 
 
+def test_edition_summary_max_others_caps_or_returns_all(monkeypatch):
+    from teg_analysis.reporting import newspaper_edition as ne
+
+    monkeypatch.setattr(ne, "build_edition", lambda teg, round_num: {
+        "title": "Round report",
+        "articles": [_render_article("Lead", is_lead=True)]
+        + [_render_article(f"Sub {i}") for i in range(6)],
+    })
+    ne.get_edition_summary.cache_clear()
+    try:
+        assert len(ne.get_edition_summary(18, 2)["other_articles"]) == 4
+        everything = ne.get_edition_summary(18, 2, max_others=None)["other_articles"]
+        assert [a["headline"] for a in everything] == [f"Sub {i}" for i in range(6)]
+        assert everything[5]["link"] == "/teg-reports?teg=18&round=2#story/6"
+    finally:
+        ne.get_edition_summary.cache_clear()
+
+
 # ---------------------------------------------------------------------------
 # Round editions — generalised from the tournament-only functions above.
 # Synthetic plan/markdown only; the real end-to-end path (assemble ->

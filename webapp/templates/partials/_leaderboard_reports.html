@@ -11,6 +11,53 @@
 {% include "partials/_public_response_error.html" %}
 {% else %}
 <section class="lb-reports">
+    {% set all_view = reports_view_mode == 'all' %}
+    <div class="segmented lb-reports-toggle" role="group" aria-label="Report view">
+        <button type="button" class="seg-option" aria-pressed="{{ 'false' if all_view else 'true' }}"
+                data-public-state-key="view" data-public-state-value="lead"
+                onclick="document.getElementById('lb-reports-view').value='lead';
+                         htmx.trigger(document.getElementById('lb-teg-select'), 'change')">Lead stories</button>
+        <button type="button" class="seg-option" aria-pressed="{{ 'true' if all_view else 'false' }}"
+                data-public-state-key="view" data-public-state-value="all"
+                onclick="document.getElementById('lb-reports-view').value='all';
+                         htmx.trigger(document.getElementById('lb-teg-select'), 'change')">All stories</button>
+    </div>
+    {% if all_view %}
+    {% macro story_panel(summary, heading, course=none) %}
+    <article class="lb-report-panel">
+        <p class="kicker"><a class="heading-link" href="{{ summary.link }}">{{ heading }} &#8599;</a></p>
+        {% if course %}<p class="lb-report-course">{{ course }}</p>{% endif %}
+        <a class="lead-teaser" href="{{ summary.lead_link | default(summary.link) }}">
+            {% if summary.kicker %}<span class="hl-kicker">{{ summary.kicker | replace(' | ', ' / ') }}</span>{% endif %}
+            <span class="teaser-headline">{{ summary.headline }}</span>
+        </a>
+        {% if summary.other_articles %}
+        <ul class="headline-list">
+            {% for a in summary.other_articles %}
+            <li><a href="{{ a.link }}">{% if a.kicker %}<span class="hl-kicker">{{ a.kicker | replace(' | ', ' / ') }}</span>{% endif %}<span class="hl-headline">{{ a.headline }}</span></a></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </article>
+    {% endmacro %}
+    <div class="lb-reports-grid">
+        {% if tournament_summary %}
+        <div class="lb-report-wide">{{ story_panel(tournament_summary, "Tournament report") }}</div>
+        {% endif %}
+        {% for r in rounds %}
+        {% if r.summary %}
+        {{ story_panel(r.summary, "Round " ~ r.round ~ " headlines", r.course) }}
+        {% else %}
+        <article class="lb-report-panel">
+            <p class="kicker">Round {{ r.round }}</p>
+            {% if r.course %}<p class="lb-report-course">{{ r.course }}</p>{% endif %}
+            <p class="hl-pending">{{ pending_label }}</p>
+        </article>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% if not rounds %}<p class="hl-pending">No rounds scheduled yet</p>{% endif %}
+    {% else %}
     {% if tournament_summary %}
     <a class="lead-teaser" href="{{ tournament_summary.link }}">
         <span class="hl-kicker">Tournament report</span>
@@ -37,6 +84,7 @@
     </ul>
     {% else %}
     <p class="hl-pending">No rounds scheduled yet</p>
+    {% endif %}
     {% endif %}
 </section>
 {% endif %}

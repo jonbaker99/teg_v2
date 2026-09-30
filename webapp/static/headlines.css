@@ -70,9 +70,49 @@
     display: block;
 }
 
+/* All stories view: open panels like the landing page, one column on phones,
+   two equal columns from 900px. */
+.lb-reports .lb-reports-toggle { margin-bottom: var(--sp-4, 16px); }
+.lb-reports .lb-reports-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-6, 32px) var(--sp-7, 48px);
+}
+.lb-reports .lb-report-panel {
+    min-width: 0;
+    padding-top: var(--sp-4, 16px);
+    border-top: 1px solid var(--border, var(--text-muted));
+}
+.lb-reports .lb-report-panel .lead-teaser { margin-top: var(--sp-3, 12px); }
+.lb-reports .lb-report-course {
+    margin: calc(-1 * var(--sp-3, 12px)) 0 var(--sp-3, 12px) 0;
+    font-family: var(--font-sans);
+    font-size: var(--fs-200, 12px);
+    color: var(--text-muted);
+}
+.lb-reports .kicker {
+    font-family: var(--font-sans);
+    font-size: var(--fs-200, 12px);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--green);
+    margin: 0 0 var(--sp-4, 14px) 0;
+}
+.lb-reports .heading-link { color: inherit; text-decoration: none; }
+.lb-reports .heading-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+@media (min-width: 900px) {
+    .lb-reports .lb-reports-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .lb-reports .lb-report-wide { grid-column: 1 / -1; }
+}
+
 /* Row links meet the 44px touch floor on phones and touch screens
    (design_principles.md, Hit areas). */
 @media (max-width: 640px), (pointer: coarse) {
     .lb-reports .headline-list a,
-    .lb-reports .lead-teaser { min-height: 44px; }
+    .lb-reports .lead-teaser,
+    .lb-reports .heading-link {
+        min-height: 44px;
+    }
+    .lb-reports .heading-link { display: inline-block; }
 }
