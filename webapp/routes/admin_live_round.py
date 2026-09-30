@@ -60,6 +60,19 @@ def _random_fill_enabled() -> bool:
     return name.strip().lower() != "production"
 
 
+def _fmt_started(iso: str) -> str:
+    """"29 Sep 2026, 19:32" (UTC) from a registry CreatedAt; the page's script
+    swaps it for the viewer's local time. Unparseable values pass through."""
+    from datetime import datetime, timezone
+    try:
+        dt = datetime.fromisoformat(str(iso))
+    except ValueError:
+        return str(iso)
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(timezone.utc).strftime("%-d %b %Y, %H:%M")
+
+
 def _redirect(url: str):
     from fastapi.responses import RedirectResponse
     return RedirectResponse(url, status_code=303)
@@ -78,6 +91,7 @@ def admin_live_round_list(request: Request):
         from teg_analysis.analysis.live_round import get_public_entry_enabled
         ctx["public_link_on"] = get_public_entry_enabled()
         ctx["live_rounds"] = list_live_rounds()
+        ctx["started"] = {r["Token"]: _fmt_started(r["CreatedAt"]) for r in ctx["live_rounds"]}
         # Entry link per active round, so it's never lost after "Go live".
         ctx["entry_urls"] = {
             r["Token"]: _entry_url(request, r["Token"])
@@ -96,6 +110,7 @@ def admin_live_round_list(request: Request):
         ctx["live_rounds"] = []
         ctx["public_link_on"] = False
         ctx["entry_urls"] = {}
+        ctx["started"] = {}
         ctx["startable_rounds"] = []
 
     return templates.TemplateResponse("admin_live_round.html", ctx)

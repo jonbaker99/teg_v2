@@ -572,6 +572,7 @@ def test_live_round_list_renders(client, monkeypatch):
     assert resp.status_code == 200
     assert "abc123" in resp.text
     assert "🟢" in resp.text or "Active" in resp.text
+    assert ">8 Jul 2026, 10:00</time>" in resp.text  # start time, not the raw ISO stamp
     # Round 2 is set up and not live -> startable. Round 3 isn't set up -> not offered.
     assert 'value="2"' in resp.text
     assert 'value="3"' not in resp.text
