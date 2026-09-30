@@ -1,0 +1,102 @@
+{
+  "title": "Records Fall on a New Course",
+  "title_candidates": [
+    "Records Fall on a New Course",
+    "Monte Rei Offers No Resistance",
+    "The Sunday the Numbers Broke"
+  ],
+  "theme": "On TEG's first visit to Monte Rei the field posted the two lowest gross and two of the highest points totals in TEG history, and the only man whose lead grew was the one having an off day.",
+  "tone": "house",
+  "opening_hook": "Jack Nicklaus put water in play on eleven holes at Monte Rei, and on Sunday 11 October 2026 the field walked round all eleven of them and returned the best gross round TEG has ever recorded, a 51-point round third-best in TEG history, and two personal bests — on a course none of the five had previously seen.",
+  "narrative_vehicles": [
+    "ensemble",
+    "inversion",
+    "hero_arc"
+  ],
+  "prominent_vehicle": "ensemble",
+  "prominent_palette": "records",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Gregg Williams's +3 gross at Monte Rei is the lowest gross round in TEG history to date, paired with a personal-best 50 points and a birdie at the 16th that took him to the top of the Green Jacket standings",
+    "why_it_matters": "This is a rank-one fact in the strictest sense: of the 365 rounds played in TEG to date, nobody has gone round in fewer gross shots, and Williams did it on a Nicklaus course he had never stood on before, having gone to bed on Saturday night bottom of the Trophy table and holding the Wooden Spoon.",
+    "shape": "Setup: after round one Gregg Williams was last of five on 41 points and carrying the Wooden Spoon, and Monte Rei was a first visit for every player in the field. Turn: he played the 4th to the 9th in six holes without dropping a gross shot, eagling the par-5 6th from three shots, then closed with four more clean holes from the 13th, the birdie at the par-5 16th moving him past Jon Baker to the head of the Green Jacket. Resolution: +3 gross, the lowest round anyone has returned in TEG, and 50 points, the best of his own 69 rounds — his Spoon handed on and a one-shot Jacket lead to defend over two rounds.",
+    "beat_ids": [
+      "r2_b01",
+      "r2_b05",
+      "r2_b06",
+      "r2_b11",
+      "r2_b14",
+      "r2_b10",
+      "r2_b12",
+      "r2_b13"
+    ],
+    "headline_candidates": [
+      "Williams Rewrites TEG's Gross Record",
+      "Three Over and Nothing Better Recorded",
+      "Williams Goes Lowest in TEG History"
+    ],
+    "chosen_headline": "Williams Rewrites TEG's Gross Record",
+    "standfirst": "Bottom of the table and holding the Wooden Spoon on Saturday night, Gregg Williams answered with the lowest gross round of the 365 played in TEG to date, on a course he had never seen.",
+    "compelling_score": 9,
+    "humour_score": 5,
+    "descriptor": "GREGG WILLIAMS"
+  },
+  "race_story": {
+    "subject": "What Monte Rei did to the three chasing positions: Jon Baker surrendered the Green Jacket lead by a single shot, David Mullin fell to the bottom of the Wooden Spoon race, and Alex Baker's worst day of the week still widened his Trophy lead from nine to thirteen",
+    "why_it_matters": "All three competitions moved, two of them changed hands, and the one that did not — the TEG 19 Trophy — got further out of reach on a day its leader played badly by his own standards. That is the arithmetic of a five-man field scoring heavily: 49 points can be a bad round and a gain at the same time.",
+    "shape": "Setup: Jon Baker went into Sunday holding the Green Jacket on four over, one clear of Alex Baker, with Alex Baker nine points up on the Trophy and David Mullin one point clear of the Spoon. Turn: Alex Baker eagled the par-5 2nd to take the gross lead, Jon Baker levelled at the 3rd and reclaimed it with a birdie at the 5th, and David Mullin's seven at the 2nd dropped him to the foot of the Spoon table; then Alex Baker went double bogey, double bogey, double bogey from the 13th to the 15th, bleeding six shots, and Gregg Williams birdied the 16th to take the Jacket. Resolution: the Jacket now sits with Williams on fifteen over, Jon Baker one behind on sixteen; David Mullin trails the Spoon field by seven despite fourteen points from the last four holes; and Alex Baker, thirteen points worse than Saturday, leads the Trophy by thirteen.",
+    "beat_ids": [
+      "r2_b08",
+      "r2_b29",
+      "r2_b32",
+      "r2_b26",
+      "r2_b25",
+      "r2_b34",
+      "r2_b36",
+      "r2_b33",
+      "r2_b35",
+      "r2_b07",
+      "r2_b09",
+      "r2_b16"
+    ],
+    "headline_candidates": [
+      "Jon Baker Cedes the Jacket Lead",
+      "A Bad Day Worth Four Points",
+      "Mullin Slides as the Lead Grows"
+    ],
+    "chosen_headline": "Jon Baker Cedes the Jacket Lead",
+    "standfirst": "Alex Baker dropped thirteen points on his Saturday total and stretched his Trophy lead anyway, while David Mullin's seven at the 2nd left him seven adrift at the bottom.",
+    "compelling_score": 8,
+    "humour_score": 7,
+    "descriptor": "THE THREE RACES"
+  },
+  "discovered_storylines": [
+    {
+      "subject": "John Patterson's 51 points, the third-best round in TEG history and the best of his own 34, built on an eagle two at the par-4 15th, Monte Rei's stroke index 1",
+      "why_it_matters": "Patterson beat everyone in the field on the Trophy metric and posted personal bests on both counts — 51 points and +10 gross — and still finished the day as the second story, which is its own kind of distinction. He has also now eagled a par 4 in consecutive rounds, having holed the 18th at the previous course.",
+      "shape": "Setup: Patterson opened with three pars from the 2nd for eleven points before a double bogey at the short 5th ended the run. Turn: he answered with eleven points from the 10th to the 12th and then drove the green — or near enough — at the par-4 15th, the hardest hole on the card, for a two and six points. Resolution: 51 points, the third-highest round total in TEG history to date and his own best, plus a personal-best +10 gross, lifting him level with Jon Baker on 98 in second place.",
+      "beat_ids": [
+        "r2_b02",
+        "r2_b03",
+        "r2_b04",
+        "r2_b19",
+        "r2_b17",
+        "r2_b27",
+        "r2_b22",
+        "r2_b21"
+      ],
+      "headline_candidates": [
+        "Patterson Eagles the Hardest Hole",
+        "Fifty-One Points and Still Overshadowed",
+        "Patterson's Two at the Fifteenth"
+      ],
+      "chosen_headline": "Patterson Eagles the Hardest Hole",
+      "standfirst": "Fifty-one points is the best round of John Patterson's thirty-four and the third-highest total in TEG history, and it was only the second-best round on the course that afternoon.",
+      "compelling_score": 8,
+      "humour_score": 6,
+      "descriptor": "JOHN PATTERSON"
+    }
+  ],
+  "race_state_note": "Jon Baker and John Patterson are exactly level on 98 points for second in the Trophy; TEG has no countback and no tiebreak, so the tie simply stands into round three. Gregg Williams's Jacket lead is one gross shot over Jon Baker with two rounds left, and Alex Baker's 49 points — his supposed off day — was the third-best round of his own fifty.",
+  "storyline_note": "round_story leads. Note the deliberate split: on the Trophy metric John Patterson's 51 edged Gregg Williams's 50, but Williams's +3 is the lowest gross round in TEG history and carried the Jacket lead change, so it takes the lead slot and Patterson's round runs as its own section. race_story is written from the vantage of those who lost ground (Jon Baker, David Mullin, Alex Baker) to avoid retelling the Williams round."
+}
