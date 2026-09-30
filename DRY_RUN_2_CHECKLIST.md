@@ -8,9 +8,9 @@ Issues 1–17 are in `TEST_TOURNAMENT_ISSUES.md`. New problems found in this run
 
 | Check | Result |
 |---|---|
-| PR environment deploys this branch | Pending |
-| PR volume is a few MB (production ~230 MB) | Pending |
-| Preview URL | Pending |
+| PR environment deploys this branch | Pass: `teg_v2-pr-150` deploys `claude/keen-fermi-abmt7t` @ `6094206` |
+| PR volume is a few MB (production ~230 MB) | Pass: own volume, 0 MB at start, 83 MB after first page loads (files are cached lazily from this branch on first read); production 227 MB |
+| Preview URL | https://teg-test2.up.railway.app |
 | First write commits to this branch, not `main` | Pending |
 
 ## A. Before any rounds
