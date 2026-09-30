@@ -1242,7 +1242,7 @@ def _current_handicap_tiles(next_tegnum: int) -> dict:
             "value": int(row[next_teg_str]),
             "delta_dir": delta_dir,
             "delta_arrow": arrow,
-            "delta_text": str(change) if change != 0 else "–",
+            "delta_text": str(abs(change)) if change != 0 else "–",
         })
 
     return {
