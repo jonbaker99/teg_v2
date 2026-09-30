@@ -12,6 +12,7 @@ TEG 19 starts on **10 October 2026**. Everything except Batch 2 ships before the
 - **Wave 2, once 1B and 3 are merged:** Batch 4b (admin pages on mobile). It restyles the pages those two batches change.
 - **Then** a second dry run of the whole flow.
 - **Batch 2 (finalise reliability):** pulled forward and done on 30 September (see Decision 2).
+- **Second dry run: done 30 September (PR #150).** Every fix passed on data and flow. It found five new issues (18–22). **Batch 5** fixes the two that matter on the day before the 8 October freeze.
 
 Evidence for every item is in `TEST_TOURNAMENT_ISSUES.md` on the dry-run branch (PR #140). Issue numbers below match that log.
 
@@ -94,6 +95,22 @@ Main files: `webapp/routes/leaderboard.py` and its templates. Don't touch the ho
 
 **Acceptance:** at 390px wide, every admin page used on the day works with no sideways page scroll, and the review grid fits or scrolls within its own box.
 
+### Batch 5: dry-run 2 fixes (before 8 October)
+
+Evidence and root causes: `TEST_TOURNAMENT_ISSUES.md`, issues 18–22.
+
+| # | Priority | Problem | Proposed fix | Main files |
+|---|---|---|---|---|
+| 18 | **Must** | On a phone, the finalise progress page jumps to the top every 2s. `scrollActiveTabIntoView` runs on every HTMX settle and scrolls the admin tab bar into view. | Scroll the tab row horizontally only (set the nav's `scrollLeft`), never the page. Check `/admin/reports` polling too. | `webapp/templates/base.html` |
+| 20 | **Must** | After Go live, the link lands in a hidden row, the live-rounds table isn't refreshed, and a second tap replaces the link with "already active". | On success, answer with `HX-Redirect` to `/admin/live-round` (or the new round's review page), where the link and Copy already render. | `webapp/routes/admin_live_round.py`, `templates/admin_live_round.html`, `partials/admin_live_round_start_result.html` |
+| 21 | Should | Delete rounds shows no progress for ~40s. | At least an `hx-indicator` message. Better: run it as a background job like finalise. | `webapp/routes/admin.py`, `partials/admin_delete_preview.html`, `webapp/finalize_jobs.py` |
+| 22 | Should | Deleting a round leaves its report, the tournament report and its `finalized` registry row. | In the same commit, move the round's and the TEG's report files to `data/commentary/archive/`, and mark the registry row deleted. | `teg_analysis/analysis/data_update.py`, `analysis/live_round.py` |
+| 19 | Watch | One of eight data commits in dry run 2 redeployed (a Railway build fault, it seems). | No code change. Keep auto-deploy off 9–13 October, and confirm it's off before the 10th. | none |
+
+**Acceptance:** on a phone in a PR preview, finalise progress stays in place while it polls, and Go live shows the copyable link at once with no reload. For 21 and 22, deleting a round shows progress and archives its reports in the one deletion commit.
+
+If 21 or 22 isn't done by 8 October, leave it: the workaround is to wait a minute after a delete, then reload, and to regenerate reports after re-entering a round.
+
 ### Housekeeping (with Batch 1A)
 
 - **CLAUDE.md is out of date.** It says the webapp "only reads finished reports; it never generates them", but `/admin/reports` generates them. Correct the Architecture line.
@@ -123,15 +140,16 @@ Each batch is one task: its own branch and worktree, and one PR against `main` w
 |---|---|
 | now to 3 Oct | Wave 1: Batches 1A, 1B, 3 and 4a, in parallel |
 | 3 to 5 Oct | Wave 2: Batch 4b |
-| 6 to 7 Oct | Second dry run on a fresh PR environment (below). Fix only what it finds. |
-| 8 Oct | Code freeze. Close PR #140 and delete its branch. |
+| 30 Sep | Second dry run (PR #150): done. Found issues 18–22 (Batch 5). |
+| 1 to 7 Oct | Batch 5: 18 and 20 must ship; 21 and 22 if time allows. |
+| 8 Oct | Code freeze. (PR #140 and #150 are closed.) |
 | 9 Oct | Turn auto-deploy off. |
 | 10 to 13 Oct | TEG 19 |
-| after | Batch 2. Then turn auto-deploy back on. |
+| after | Turn auto-deploy back on. |
 
 If a batch slips past 5 October, drop it rather than squeeze it in: 1A and 1B are the only must-haves. Anything merged late gets only a partial rehearsal.
 
-## Second dry run: the same flow, checking the fixes
+## Second dry run: the same flow, checking the fixes (done 30 September)
 
 Branch fresh from `main`, open a draft PR, and use its Railway environment. First, confirm its disk usage is separate from production's.
 
@@ -145,3 +163,9 @@ Branch fresh from `main`, open a draft PR, and use its Railway environment. Firs
 8. Check the Railway deploy list for any redeploys triggered by data commits.
 
 Log anything new in the same way. Close the PR afterwards.
+
+**Lessons from dry run 2, for any future dry run:**
+
+- The PR environment writes to its own branch (`RAILWAY_GIT_BRANCH`) and has its own volume, filled lazily from that branch on first read. Main is never touched.
+- Railway lists every data commit as BUILDING for about 20 seconds while it checks watch paths. Only call it a redeploy if it reaches DEPLOYING or SUCCESS.
+- Rebase before pushing anything else to the test branch. A merge commit carries the app's data diff, and Railway deploys it, killing any report in flight.
