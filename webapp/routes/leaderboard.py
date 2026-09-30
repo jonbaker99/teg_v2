@@ -13,6 +13,11 @@ also shows the tournament headline on top. The hero "View tournament report"
 link to /teg-reports is separate (a plain link, not an HTMX swap) and hidden
 unless the selected TEG has an edition; `available_tegs()` only considers TEGs
 in completed_tegs.csv, so an in-progress TEG never shows one.
+
+Each round row shows its lead headline; the report's other stories are
+fetched with `max_others=None` and rendered in a native `<details>` "N more
+stories" expand under the row (no JS, not part of URL state). There is no
+`view` param: a stray `view=` in the URL is ignored.
 """
 
 import logging
@@ -73,14 +78,14 @@ def _reports_context(teg_num: int) -> dict:
     state), not an error: a Retry could never fix it."""
     from webapp.routes.latest import _teg_context_header  # avoid import cycle
     complete = _teg_is_complete(teg_num)
-    tournament = (get_edition_summary(teg_num)
+    tournament = (get_edition_summary(teg_num, max_others=None)
                   if complete and teg_num in available_tegs() else None)
     return {
         "reports_view": True,
         "teg_complete": complete,
         "context_header": _teg_context_header(teg_num),
         "tournament_summary": tournament,
-        "rounds": [{**r, "summary": get_edition_summary(teg_num, r["round"])}
+        "rounds": [{**r, "summary": get_edition_summary(teg_num, r["round"], max_others=None)}
                    for r in _round_rows(teg_num)],
         "pending_label": "No report" if complete else "Pending",
     }

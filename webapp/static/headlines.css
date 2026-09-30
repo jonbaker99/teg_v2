@@ -70,9 +70,105 @@
     display: block;
 }
 
+/* Rows: more space between rounds than inside one. */
+.lb-reports .lb-report-rounds {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+/* One block per report: a small-caps Lora heading (the site's section-title
+   role) names the round, so reports separate at a glance; a solid rule and
+   generous padding mark where each one starts. */
+.lb-reports .lb-report {
+    padding: var(--sp-5, 24px) 0;
+    border-top: 1px solid var(--rule-color);
+}
+.lb-reports > .lb-report:first-child,
+.lb-reports > .lb-report-rounds:first-child > .lb-report:first-child {
+    border-top: none;
+    padding-top: 0;
+}
+.lb-reports .lb-report-heading { margin: 0; }
+.lb-reports .lb-report-course {
+    margin: 2px 0 0 0;
+    font-family: var(--font-sans);
+    font-size: var(--fs-200, 12px);
+    color: var(--text-secondary);
+}
+.lb-reports .lb-report-lead {
+    display: block;
+    margin-top: var(--sp-3, 12px);
+    text-decoration: none;
+    color: var(--text-primary);
+}
+.lb-reports .lb-report-lead:hover .hl-headline {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+.lb-reports .lb-report-pending { margin-top: var(--sp-2, 8px); }
+
+/* Per-round expand: native details, no JS. */
+.lb-reports .lb-report-more { margin-top: var(--sp-2, 8px); }
+.lb-reports .lb-report-more summary {
+    font-family: var(--font-sans);
+    font-size: var(--fs-200, 12px);
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    list-style: none;
+}
+.lb-reports .lb-report-more summary::-webkit-details-marker { display: none; }
+.lb-reports .lb-report-more summary::before {
+    content: "\203A";
+    display: inline-block;
+    margin-right: var(--sp-1, 4px);
+    transition: transform 0.15s ease;
+}
+.lb-reports .lb-report-more[open] summary::before { transform: rotate(90deg); }
+.lb-reports .lb-report-more summary:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+.lb-reports .lb-more-list {
+    list-style: none;
+    margin: var(--sp-2, 8px) 0 0 0;
+    padding: 0 0 0 var(--sp-3, 12px);
+    border-left: 1px solid var(--rule-color);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3, 12px);
+}
+.lb-reports .lb-more-list a {
+    display: block;
+    text-decoration: none;
+    color: var(--text-primary);
+}
+.lb-reports .lb-more-headline {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--text-primary);
+    overflow-wrap: anywhere;
+}
+.lb-reports .lb-more-list a:hover .lb-more-headline {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
 /* Row links meet the 44px touch floor on phones and touch screens
    (design_principles.md, Hit areas). */
 @media (max-width: 640px), (pointer: coarse) {
     .lb-reports .headline-list a,
-    .lb-reports .lead-teaser { min-height: 44px; }
+    .lb-reports .lb-more-list a,
+    .lb-reports .lb-report-lead,
+    .lb-reports .lead-teaser {
+        min-height: 44px;
+    }
+    .lb-reports .lb-report-more summary {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+    }
 }

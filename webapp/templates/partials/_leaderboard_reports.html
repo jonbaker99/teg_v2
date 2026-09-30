@@ -11,26 +11,46 @@
 {% include "partials/_public_response_error.html" %}
 {% else %}
 <section class="lb-reports">
-    {% if tournament_summary %}
-    <a class="lead-teaser" href="{{ tournament_summary.link }}">
-        <span class="hl-kicker">Tournament report</span>
-        <span class="teaser-headline">{{ tournament_summary.headline }}</span>
+    {% macro report_heading(title, course=none) %}
+    <h3 class="section-title lb-report-heading">{{ title }}</h3>
+    {% if course %}<p class="lb-report-course">{{ course }}</p>{% endif %}
+    {% endmacro %}
+    {% macro lead_link(summary) %}
+    <a class="lb-report-lead" href="{{ summary.link }}">
+        {% if summary.kicker %}<span class="hl-kicker">{{ summary.kicker | replace(' | ', ' / ') }}</span>{% endif %}
+        <span class="hl-headline">{{ summary.headline }}</span>
     </a>
+    {% endmacro %}
+    {% macro more_stories(summary) %}
+    {% set n = summary.other_articles | length %}
+    {% if n %}
+    <details class="lb-report-more">
+        <summary>{{ n }} more {{ 'story' if n == 1 else 'stories' }}</summary>
+        <ul class="lb-more-list">
+            {% for a in summary.other_articles %}
+            <li><a href="{{ a.link }}">{% if a.kicker %}<span class="hl-kicker">{{ a.kicker | replace(' | ', ' / ') }}</span>{% endif %}<span class="lb-more-headline">{{ a.headline }}</span></a></li>
+            {% endfor %}
+        </ul>
+    </details>
+    {% endif %}
+    {% endmacro %}
+    {% if tournament_summary %}
+    <div class="lb-report lb-report-tournament">
+        {{ report_heading("Tournament report") }}
+        {{ lead_link(tournament_summary) }}
+        {{ more_stories(tournament_summary) }}
+    </div>
     {% endif %}
     {% if rounds %}
-    <ul class="headline-list lb-report-rounds">
+    <ul class="lb-report-rounds">
         {% for r in rounds %}
-        <li>
+        <li class="lb-report">
+            {{ report_heading("Round " ~ r.round, r.course) }}
             {% if r.summary %}
-            <a href="{{ r.summary.link }}">
-                <span class="hl-kicker">Round {{ r.round }}{% if r.course %} / {{ r.course }}{% endif %}</span>
-                <span class="hl-headline">{{ r.summary.headline }}</span>
-            </a>
+            {{ lead_link(r.summary) }}
+            {{ more_stories(r.summary) }}
             {% else %}
-            <div class="lb-report-pending">
-                <span class="hl-kicker">Round {{ r.round }}{% if r.course %} / {{ r.course }}{% endif %}</span>
-                <span class="hl-pending">{{ pending_label }}</span>
-            </div>
+            <div class="lb-report-pending"><span class="hl-pending">{{ pending_label }}</span></div>
             {% endif %}
         </li>
         {% endfor %}

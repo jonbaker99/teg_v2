@@ -611,6 +611,46 @@ def test_edition_summary_story_links_include_round_url(monkeypatch):
         ne.get_edition_summary.cache_clear()
 
 
+def test_edition_summary_max_others_caps_or_returns_all(monkeypatch):
+    from teg_analysis.reporting import newspaper_edition as ne
+
+    monkeypatch.setattr(ne, "build_edition", lambda teg, round_num: {
+        "title": "Round report",
+        "articles": [_render_article("Lead", is_lead=True)]
+        + [_render_article(f"Sub {i}") for i in range(6)],
+    })
+    ne.get_edition_summary.cache_clear()
+    try:
+        assert len(ne.get_edition_summary(18, 2)["other_articles"]) == 4
+        everything = ne.get_edition_summary(18, 2, max_others=None)["other_articles"]
+        assert [a["headline"] for a in everything] == [f"Sub {i}" for i in range(6)]
+        assert everything[5]["link"] == "/teg-reports?teg=18&round=2#story/6"
+    finally:
+        ne.get_edition_summary.cache_clear()
+
+
+def test_edition_summary_capped_and_uncapped_share_one_build(monkeypatch):
+    from teg_analysis.reporting import newspaper_edition as ne
+
+    calls = []
+
+    def fake_build(teg, round_num):
+        calls.append((teg, round_num))
+        return {"title": "R", "articles": [_render_article("Lead", is_lead=True)]
+                + [_render_article(f"Sub {i}") for i in range(6)]}
+
+    monkeypatch.setattr(ne, "build_edition", fake_build)
+    ne.clear_edition_caches()
+    try:
+        ne.get_edition_summary(18, 2)
+        ne.get_edition_summary(18, 2, max_others=None)
+        assert calls == [(18, 2)]
+        # Capping on read must not truncate the shared cached copy.
+        assert len(ne.get_edition_summary(18, 2, max_others=None)["other_articles"]) == 6
+    finally:
+        ne.clear_edition_caches()
+
+
 # ---------------------------------------------------------------------------
 # Round editions — generalised from the tournament-only functions above.
 # Synthetic plan/markdown only; the real end-to-end path (assemble ->

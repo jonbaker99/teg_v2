@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-29 (Leaderboard Reports tab; report admin; TEG 19 post-completion fixes)
+**Last updated:** 2026-09-30 (Leaderboard Reports: per-round more stories expand)
+
+## 2026-09-30 — Leaderboard Reports: per-round more stories expand
+
+The Reports tab on `/leaderboard` shows one lead headline per round, with the kicker above it. Each round with other stories has a "N more stories" expand in place (native `<details>`, no JS) listing them smaller. A completed TEG's tournament teaser has the same expand. The old global Lead/All toggle and `view` param are gone.
 
 ## 2026-09-29 — Leaderboard Reports tab
 
