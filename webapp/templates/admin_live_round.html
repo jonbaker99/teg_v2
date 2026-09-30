@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="/static/admin.css">
+<link rel="stylesheet" href="/static/admin.css?v=2">
 {% endblock %}
 
 {% block content %}
@@ -98,7 +98,7 @@
               {% elif r.Status == 'finalized' %}✅ Finalized
               {% else %}⚪ Cancelled{% endif %}
             </td>
-            <td style="word-break:break-all;">{{ r.CreatedAt }}</td>
+            <td class="admin-wrap-anywhere">{{ r.CreatedAt }}</td>
             <td><a href="/admin/live-round/{{ r.Token }}/review" class="text-link">
               {{ 'Review & Finalize' if r.Status == 'active' else 'View' }} →
             </a></td>

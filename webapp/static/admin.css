@@ -64,7 +64,8 @@
 }
 /* min-width is for text-like inputs only: number/checkbox/radio inputs (score
    grid, Par/SI form, handicap form) must stay narrow or they force sideways scroll. */
-.admin-settings-table td input:not([type="number"]):not([type="checkbox"]):not([type="radio"]):not([type="hidden"]) {
+/* :where() keeps specificity low so the phone rule below can override it. */
+.admin-settings-table td input:where(:not([type="number"]):not([type="checkbox"]):not([type="radio"]):not([type="hidden"])) {
     min-width: 14rem;
 }
 
@@ -383,6 +384,11 @@
     margin-left: auto;
 }
 
+/* Long unbroken values (ISO timestamps) may break anywhere rather than widen a table. */
+.admin-wrap-anywhere {
+    overflow-wrap: anywhere;
+}
+
 /* ── Wide-table wrapper ──
    Lets a table wider than the viewport scroll inside its own box instead of
    making the whole page scroll sideways. */
@@ -404,9 +410,6 @@
     padding: 0.25rem 0.2rem;
     text-align: center;
 }
-.live-edit-grid th {
-    padding-right: 0.2rem;
-}
 .live-edit-grid th:first-child,
 .live-edit-grid td:first-child {
     position: sticky;
@@ -414,11 +417,20 @@
     z-index: 1;
     background: var(--bg-card, var(--bg-page, #fff));
 }
-.live-edit-grid .live-edit-input {
+/* .main-content prefix outranks the generic bordered-input rule's padding. */
+.main-content .live-edit-grid .live-edit-input {
     width: 2.8rem;
     min-width: 0;
     padding: 0.35rem 0.15rem;
     text-align: center;
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+/* No spinner arrows: they eat the narrow cell and clip two-digit scores. */
+.live-edit-input::-webkit-inner-spin-button,
+.live-edit-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 .live-edit-input--conflict {
     border-color: #d99a1f;
@@ -431,13 +443,13 @@
     /* 12 nav links: tight gaps and padding so they take few rows,
        while keeping ~32px tap targets. */
     .admin-nav {
-        gap: 0.15rem 0.9rem;
+        gap: 0 0.9rem;
     }
     .admin-nav .tab-underline {
         box-sizing: border-box;
         height: auto;
         padding: 0.3rem 0;
-        min-height: 32px;
+        min-height: 44px;  /* touch floor, design_principles.md → Hit areas */
         display: inline-flex;
         align-items: center;
     }
@@ -448,6 +460,9 @@
     /* Settings tables: narrower label column, allow wrapping, inputs may shrink. */
     .admin-settings-table th {
         padding-right: 0.6rem;
+    }
+    .live-edit-grid th {
+        padding-right: 0.2rem;
     }
     .admin-settings-table th,
     .admin-settings-table td {
@@ -472,7 +487,8 @@
     /* 16px stops iOS Safari zooming the page on input focus. */
     .main-content input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
     .main-content select,
-    .live-edit-grid .live-edit-input {
+    .main-content .live-edit-grid .live-edit-input,
+    #edit-grid td input {
         font-size: 16px;
     }
 
