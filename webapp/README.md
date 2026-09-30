@@ -58,6 +58,14 @@ padding than the site default — scoped to `.main-content` so it only affects
 admin pages (data density matters more than editorial spacing here). The same
 compactness applies to the inline edit grid (`#edit-grid` cells).
 
+**Admin on a phone (390px).** Every admin page must work at phone width with no sideways page scroll. Phone rules live in one `@media (max-width: 640px)` block at the end of `admin.css`. The patterns:
+- Wrap any table that can be wider than the screen in `<div class="admin-table-wrap">`, so it scrolls inside its own box, not the page.
+- The live-round review grid (`.live-edit-grid`, inputs `.live-edit-input`) is compact enough for five players at 390px, with a sticky Hole column when it has to scroll.
+- `.admin-settings-table` gives its wide min-width to text inputs only; number inputs keep their own width.
+- Admin inputs are 16px on phones, so iOS doesn't zoom on focus.
+- The sub-nav (`.admin-nav`) wraps with tight gaps rather than scrolling, so the active page stays visible.
+- Check with a Playwright screenshot at 390px and `document.documentElement.scrollWidth == 390`.
+
 **New round (guided wizard)** — templates `admin_new_round.html` (landing),
 `admin_new_round_wizard.html`; route `webapp/routes/admin_new_round.py`; logic
 `teg_analysis.analysis.round_wizard`.

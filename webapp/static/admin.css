@@ -62,7 +62,9 @@
     padding: 0.25rem 0;
     vertical-align: middle;
 }
-.admin-settings-table td input {
+/* min-width is for text-like inputs only: number/checkbox/radio inputs (score
+   grid, Par/SI form, handicap form) must stay narrow or they force sideways scroll. */
+.admin-settings-table td input:not([type="number"]):not([type="checkbox"]):not([type="radio"]):not([type="hidden"]) {
     min-width: 14rem;
 }
 
@@ -366,4 +368,123 @@
 #edit-grid td:last-child {
     padding: 0.5rem 0.75rem;
     vertical-align: middle;
+}
+
+/* ── Admin sub-nav ──
+   Replaces the old inline flex style. Logout is pushed to the far right on
+   desktop; on phones it simply wraps with the rest (see the mobile block). */
+.admin-nav {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+.admin-nav .admin-nav-logout {
+    margin-left: auto;
+}
+
+/* ── Wide-table wrapper ──
+   Lets a table wider than the viewport scroll inside its own box instead of
+   making the whole page scroll sideways. */
+.admin-table-wrap {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+/* ── Live-round review grid ──
+   Hole | Par | one column per player. Compact so ~5 players fit in ~320px;
+   more than that scrolls inside .admin-table-wrap. The Hole column is sticky
+   so it stays visible while scrolling. Conflict cells (never column 1) keep
+   their own amber background. */
+.live-edit-grid {
+    border-collapse: collapse;
+}
+.live-edit-grid th,
+.live-edit-grid td {
+    padding: 0.25rem 0.2rem;
+    text-align: center;
+}
+.live-edit-grid th {
+    padding-right: 0.2rem;
+}
+.live-edit-grid th:first-child,
+.live-edit-grid td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: var(--bg-card, var(--bg-page, #fff));
+}
+.live-edit-grid .live-edit-input {
+    width: 2.8rem;
+    min-width: 0;
+    padding: 0.35rem 0.15rem;
+    text-align: center;
+}
+.live-edit-input--conflict {
+    border-color: #d99a1f;
+}
+
+/* ── Phone layout (≤640px, the site's mobile breakpoint) ──
+   Admin pages must fit 390px with no sideways page scroll. All phone-only
+   rules live here. */
+@media (max-width: 640px) {
+    /* 12 nav links: tight gaps and padding so they take few rows,
+       while keeping ~32px tap targets. */
+    .admin-nav {
+        gap: 0.15rem 0.9rem;
+    }
+    .admin-nav .tab-underline {
+        box-sizing: border-box;
+        height: auto;
+        padding: 0.3rem 0;
+        min-height: 32px;
+        display: inline-flex;
+        align-items: center;
+    }
+    .admin-nav .admin-nav-logout {
+        margin-left: 0;
+    }
+
+    /* Settings tables: narrower label column, allow wrapping, inputs may shrink. */
+    .admin-settings-table th {
+        padding-right: 0.6rem;
+    }
+    .admin-settings-table th,
+    .admin-settings-table td {
+        white-space: normal;
+    }
+    .admin-settings-table td input {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    /* Simple list tables: let text wrap; .admin-table-wrap catches the rest. */
+    .main-content .teg-table th,
+    .main-content .teg-table td {
+        white-space: normal;
+    }
+    .main-content .teg-table thead th,
+    .main-content .teg-table tbody td {
+        padding-left: 0.3rem;
+        padding-right: 0.3rem;
+    }
+
+    /* 16px stops iOS Safari zooming the page on input focus. */
+    .main-content input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+    .main-content select,
+    .live-edit-grid .live-edit-input {
+        font-size: 16px;
+    }
+
+    /* Long button labels wrap rather than force width. */
+    .btn-action,
+    .btn-secondary {
+        white-space: normal;
+        max-width: 100%;
+    }
+    /* ...but a button inside a table row stays on one line ("Go live"). */
+    .main-content .teg-table .btn-action,
+    .main-content .teg-table .btn-secondary {
+        white-space: nowrap;
+    }
 }
