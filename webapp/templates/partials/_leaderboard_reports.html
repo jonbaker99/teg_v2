@@ -11,58 +11,25 @@
 {% include "partials/_public_response_error.html" %}
 {% else %}
 <section class="lb-reports">
-    {% set all_view = reports_view_mode == 'all' %}
-    <div class="segmented lb-reports-toggle" role="group" aria-label="Report view">
-        <button type="button" class="seg-option" aria-pressed="{{ 'false' if all_view else 'true' }}"
-                data-public-state-key="view" data-public-state-value="lead"
-                onclick="document.getElementById('lb-reports-view').value='lead';
-                         htmx.trigger(document.getElementById('lb-teg-select'), 'change')">Lead stories</button>
-        <button type="button" class="seg-option" aria-pressed="{{ 'true' if all_view else 'false' }}"
-                data-public-state-key="view" data-public-state-value="all"
-                onclick="document.getElementById('lb-reports-view').value='all';
-                         htmx.trigger(document.getElementById('lb-teg-select'), 'change')">All stories</button>
-    </div>
-    {% if all_view %}
-    {% macro story_panel(summary, heading, course=none, wide=false) %}
-    <article class="lb-report-panel{% if wide %} lb-report-wide{% endif %}">
-        <p class="kicker"><a class="heading-link" href="{{ summary.link }}">{{ heading }} &#8599;</a></p>
-        {% if course %}<p class="lb-report-course">{{ course }}</p>{% endif %}
-        <a class="lead-teaser" href="{{ summary.lead_link | default(summary.link) }}">
-            {% if summary.kicker %}<span class="hl-kicker">{{ summary.kicker | replace(' | ', ' / ') }}</span>{% endif %}
-            <span class="teaser-headline">{{ summary.headline }}</span>
-        </a>
-        {% if summary.other_articles %}
-        <ul class="headline-list">
+    {% macro more_stories(summary) %}
+    {% set n = summary.other_articles | length %}
+    {% if n %}
+    <details class="lb-report-more">
+        <summary>{{ n }} more {{ 'story' if n == 1 else 'stories' }}</summary>
+        <ul class="lb-more-list">
             {% for a in summary.other_articles %}
-            <li><a href="{{ a.link }}">{% if a.kicker %}<span class="hl-kicker">{{ a.kicker | replace(' | ', ' / ') }}</span>{% endif %}<span class="hl-headline">{{ a.headline }}</span></a></li>
+            <li><a href="{{ a.link }}">{% if a.kicker %}<span class="hl-kicker">{{ a.kicker | replace(' | ', ' / ') }}</span>{% endif %}<span class="lb-more-headline">{{ a.headline }}</span></a></li>
             {% endfor %}
         </ul>
-        {% endif %}
-    </article>
+    </details>
+    {% endif %}
     {% endmacro %}
-    <div class="lb-reports-grid">
-        {% if tournament_summary %}
-        {{ story_panel(tournament_summary, "TEG " ~ selected_teg ~ " headlines", wide=true) }}
-        {% endif %}
-        {% for r in rounds %}
-        {% if r.summary %}
-        {{ story_panel(r.summary, "Round " ~ r.round ~ " headlines", r.course) }}
-        {% else %}
-        <article class="lb-report-panel">
-            <p class="kicker">Round {{ r.round }}</p>
-            {% if r.course %}<p class="lb-report-course">{{ r.course }}</p>{% endif %}
-            <p class="hl-pending">{{ pending_label }}</p>
-        </article>
-        {% endif %}
-        {% endfor %}
-    </div>
-    {% if not rounds %}<p class="hl-pending">No rounds scheduled yet</p>{% endif %}
-    {% else %}
     {% if tournament_summary %}
     <a class="lead-teaser" href="{{ tournament_summary.link }}">
         <span class="hl-kicker">Tournament report</span>
         <span class="teaser-headline">{{ tournament_summary.headline }}</span>
     </a>
+    {{ more_stories(tournament_summary) }}
     {% endif %}
     {% if rounds %}
     <ul class="headline-list lb-report-rounds">
@@ -73,6 +40,7 @@
                 <span class="hl-kicker">Round {{ r.round }}{% if r.course %} / {{ r.course }}{% endif %}</span>
                 <span class="hl-headline">{{ r.summary.headline }}</span>
             </a>
+            {{ more_stories(r.summary) }}
             {% else %}
             <div class="lb-report-pending">
                 <span class="hl-kicker">Round {{ r.round }}{% if r.course %} / {{ r.course }}{% endif %}</span>
@@ -84,7 +52,6 @@
     </ul>
     {% else %}
     <p class="hl-pending">No rounds scheduled yet</p>
-    {% endif %}
     {% endif %}
 </section>
 {% endif %}

@@ -165,53 +165,89 @@ def _all(client, path):
     return _reports_section(client.get(path).text)
 
 
-def test_all_view_lists_every_story_and_pending_panels(client, patched):
+def _details(section):
+    return re.findall(r'<details class="lb-report-more">.*?</details>', section, re.S)
+
+
+def test_reported_rounds_have_more_stories_expand(client, patched):
     patched(complete=False)
-    section = _all(client, f"/leaderboard/table?teg={TEG}&tab=reports&view=all")
-    assert section.count('class="lb-reports-grid"') == 1
-    assert section.count('<article class="lb-report-panel">') == 4
-    for r in (2, 4):
+    section = _all(client, f"/leaderboard/table?teg={TEG}&tab=reports")
+    blocks = _details(section)
+    assert len(blocks) == 2
+    for block, r in zip(blocks, (2, 4)):
+        assert "<summary>6 more stories</summary>" in block
         for i in range(1, 7):
-            assert f"Other {r}-{i}" in section
-        assert f"Round {r} headlines" in section
-        assert f'href="/teg-reports?teg={TEG}&amp;round={r}#story/0"' in section
-    assert "KICK 1 / Sub" in section
-    assert section.count('<p class="hl-pending">Pending</p>') == 2
+            assert f"Other {r}-{i}" in block
+            assert f'href="/teg-reports?teg={TEG}&amp;round={r}#story/{i}"' in block
+        assert "KICK 1 / Sub" in block
+    assert "lb-reports-grid" not in section
     assert MIDDLE_DOT not in section
 
 
-def test_lead_view_unchanged_without_grid(client, patched):
+def test_single_other_story_is_singular(client, patched, monkeypatch):
+    patched(complete=False)
+
+    def one(teg, round_num=None, max_others=4):
+        s = _fake_summary(teg, round_num, max_others)
+        if s:
+            s["other_articles"] = s["other_articles"][:1]
+        return s
+
+    monkeypatch.setattr(lb, "get_edition_summary", one)
+    section = _all(client, f"/leaderboard/table?teg={TEG}&tab=reports")
+    assert section.count("<summary>1 more story</summary>") == 2
+
+
+def test_round_without_other_articles_has_no_details(client, patched, monkeypatch):
+    patched(complete=False)
+
+    def none(teg, round_num=None, max_others=4):
+        s = _fake_summary(teg, round_num, max_others)
+        if s:
+            s["other_articles"] = []
+        return s
+
+    monkeypatch.setattr(lb, "get_edition_summary", none)
+    section = _all(client, f"/leaderboard/table?teg={TEG}&tab=reports")
+    assert "<details" not in section
+    assert "Headline for round 2" in section
+
+
+def test_pending_rows_have_no_details(client, patched):
     patched(complete=False)
     section = _all(client, f"/leaderboard/table?teg={TEG}&tab=reports")
-    assert "lb-reports-grid" not in section
-    assert "Other 2-1" not in section
-    assert section.count("lb-report-pending") == 2
+    for block in re.findall(r'<div class="lb-report-pending".*?</div>', section, re.S):
+        assert "<details" not in block
 
 
-def test_bogus_view_falls_back_to_lead(client, patched):
-    patched(complete=False)
-    section = _all(client, f"/leaderboard/table?teg={TEG}&tab=reports&view=bogus")
-    assert "lb-reports-grid" not in section
-    lead = re.search(r'<button[^>]*data-public-state-value="lead"[^>]*>', section, re.S)
-    assert lead and 'aria-pressed="true"' in lead.group(0)
-    html = client.get(f"/leaderboard?teg={TEG}&tab=reports&view=bogus").text
-    assert '<input type="hidden" id="lb-reports-view" name="view" value="lead">' in html
-
-
-def test_full_page_all_view_marks_toggle_and_hidden_input(client, patched):
-    patched(complete=False)
-    html = client.get(f"/leaderboard?teg={TEG}&tab=reports&view=all").text
-    assert re.search(r'<input type="hidden" id="lb-reports-view" name="view" value="all">', html)
-    button = re.search(r'<button[^>]*data-public-state-value="all"[^>]*>', html, re.S)
-    assert button and 'aria-pressed="true"' in button.group(0)
-    assert re.search(r'hx-include="[^"]*#lb-reports-view', html)
-
-
-def test_complete_all_view_has_tournament_panel_first(client, patched):
+def test_complete_tournament_teaser_has_own_details(client, patched):
     patched(complete=True)
-    section = _all(client, f"/leaderboard/table?teg={TEG}&tab=reports&view=all")
-    assert section.count('<article class="lb-report-panel">') == 4
-    assert section.index('<article class="lb-report-panel lb-report-wide">') < section.index("Round 1")
-    assert f"TEG {TEG} headlines" in section
-    assert f'href="/teg-reports?teg={TEG}"' in section
-    assert "Other T-6" in section
+    section = _all(client, f"/leaderboard/table?teg={TEG}&tab=reports")
+    blocks = _details(section)
+    assert len(blocks) == 3
+    assert section.index("Tournament headline") < section.index(blocks[0]) < section.index("Round 1")
+    assert "<summary>6 more stories</summary>" in blocks[0]
+    assert "Other T-6" in blocks[0]
+
+
+def test_view_param_is_ignored(client, patched):
+    patched(complete=False)
+    resp = client.get(f"/leaderboard/table?teg={TEG}&tab=reports&view=all")
+    assert resp.status_code == 200
+    section = _reports_section(resp.text)
+    assert "segmented" not in section
+    assert "lb-reports-toggle" not in section
+    assert "lb-reports-grid" not in section
+    page = client.get(f"/leaderboard?teg={TEG}&tab=reports&view=all")
+    assert page.status_code == 200
+
+
+def test_no_view_state_key_anywhere(client, patched):
+    patched(complete=False)
+    for path in (f"/leaderboard?teg={TEG}&tab=reports", f"/leaderboard/table?teg={TEG}&tab=reports"):
+        html = client.get(path).text
+        assert 'data-public-state-key="view"' not in html
+        assert "lb-reports-view" not in html
+    page = client.get(f"/leaderboard?teg={TEG}&tab=reports").text
+    assert re.search(r'data-public-state-keys="[^"]*"', page).group(0) == \
+        'data-public-state-keys="teg,tab,chart_variant,type,round,player"'

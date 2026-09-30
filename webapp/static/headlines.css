@@ -70,50 +70,70 @@
     display: block;
 }
 
-/* All stories view: open panels like the landing page, one column on phones,
-   two equal columns from 900px. */
-.lb-reports .lb-reports-toggle { margin-bottom: var(--sp-4, 16px); }
-.lb-reports .lb-reports-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--sp-6, 32px) var(--sp-7, 48px);
-}
-.lb-reports .lb-report-panel {
-    min-width: 0;
-    padding-top: var(--sp-4, 16px);
-    border-top: 1px solid var(--rule-color);
-}
-.lb-reports .lb-report-panel .lead-teaser { margin-top: var(--sp-3, 12px); }
-.lb-reports .lb-report-panel .kicker { margin-bottom: 2px; }
-.lb-reports .lb-report-course {
-    margin: 0 0 var(--sp-3, 12px) 0;
+/* Rows: more space between rounds than inside one. */
+.lb-reports .lb-report-rounds { gap: var(--sp-6, 32px); }
+
+/* Per-round expand: native details, no JS. */
+.lb-reports .lb-report-more { margin-top: var(--sp-2, 8px); }
+.lb-reports .lb-report-more summary {
     font-family: var(--font-sans);
     font-size: var(--fs-200, 12px);
-    color: var(--text-muted);
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    list-style: none;
 }
-.lb-reports .kicker {
-    font-family: var(--font-sans);
-    font-size: var(--fs-200, 12px);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--green);
-    margin: 0 0 var(--sp-4, 16px) 0;
+.lb-reports .lb-report-more summary::-webkit-details-marker { display: none; }
+.lb-reports .lb-report-more summary::before {
+    content: "\203A";
+    display: inline-block;
+    margin-right: var(--sp-1, 4px);
+    transition: transform 0.15s ease;
 }
-.lb-reports .heading-link { color: inherit; text-decoration: none; }
-.lb-reports .heading-link:hover { text-decoration: underline; text-underline-offset: 3px; }
-@media (min-width: 900px) {
-    .lb-reports .lb-reports-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .lb-reports .lb-report-panel.lb-report-wide { grid-column: 1 / -1; }
+.lb-reports .lb-report-more[open] summary::before { transform: rotate(90deg); }
+.lb-reports .lb-report-more summary:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+.lb-reports .lb-more-list {
+    list-style: none;
+    margin: var(--sp-2, 8px) 0 0 0;
+    padding: 0 0 0 var(--sp-3, 12px);
+    border-left: 1px solid var(--rule-color);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3, 12px);
+}
+.lb-reports .lb-more-list a {
+    display: block;
+    text-decoration: none;
+    color: var(--text-primary);
+}
+.lb-reports .lb-more-headline {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--text-primary);
+    overflow-wrap: anywhere;
+}
+.lb-reports .lb-more-list a:hover .lb-more-headline {
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }
 
 /* Row links meet the 44px touch floor on phones and touch screens
    (design_principles.md, Hit areas). */
 @media (max-width: 640px), (pointer: coarse) {
     .lb-reports .headline-list a,
-    .lb-reports .lead-teaser,
-    .lb-reports .heading-link {
+    .lb-reports .lb-more-list a,
+    .lb-reports .lead-teaser {
         min-height: 44px;
     }
-    .lb-reports .heading-link { display: inline-flex; align-items: center; }
+    .lb-reports .lb-report-more summary {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+    }
 }

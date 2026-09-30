@@ -14,9 +14,10 @@ link to /teg-reports is separate (a plain link, not an HTMX swap) and hidden
 unless the selected TEG has an edition; `available_tegs()` only considers TEGs
 in completed_tegs.csv, so an in-progress TEG never shows one.
 
-The Reports tab has a `view` param: `lead` (default, one lead headline per
-round) or `all` (every headline of each report, laid out like the home page
-panels, fetched with `max_others=None`). Anything else normalises to `lead`.
+Each round row shows its lead headline; the report's other stories are
+fetched with `max_others=None` and rendered in a native `<details>` "N more
+stories" expand under the row (no JS, not part of URL state). There is no
+`view` param: a stray `view=` in the URL is ignored.
 """
 
 import logging
@@ -39,7 +40,6 @@ router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
 LB_TABS = ("net", "gross", "scorecards", "reports")
-REPORT_VIEWS = ("lead", "all")
 
 
 def _round_rows(teg_num: int) -> list[dict]:
@@ -71,37 +71,34 @@ def _round_rows(teg_num: int) -> list[dict]:
     return [{"round": r, "course": None} for r in range(1, total + 1)]
 
 
-def _reports_context(teg_num: int, view: str = "lead") -> dict:
+def _reports_context(teg_num: int) -> dict:
     """Context for the Reports tab: round report headlines for one TEG.
 
     A TEG with no rounds set up yet gets an empty list (an honest empty
     state), not an error: a Retry could never fix it."""
     from webapp.routes.latest import _teg_context_header  # avoid import cycle
     complete = _teg_is_complete(teg_num)
-    kwargs = {"max_others": None} if view == "all" else {}
-    tournament = (get_edition_summary(teg_num, **kwargs)
+    tournament = (get_edition_summary(teg_num, max_others=None)
                   if complete and teg_num in available_tegs() else None)
     return {
         "reports_view": True,
         "teg_complete": complete,
         "context_header": _teg_context_header(teg_num),
         "tournament_summary": tournament,
-        "rounds": [{**r, "summary": get_edition_summary(teg_num, r["round"], **kwargs)}
+        "rounds": [{**r, "summary": get_edition_summary(teg_num, r["round"], max_others=None)}
                    for r in _round_rows(teg_num)],
         "pending_label": "No report" if complete else "Pending",
-        "reports_view_mode": view,
     }
 
 
 def _lb_context(teg_num: int, tab: str, chart_variant: str,
                 scorecard_type: str = "one_round_all_players",
                 scorecard_round: int | None = None,
-                scorecard_player: str | None = None,
-                view: str = "lead") -> dict:
+                scorecard_player: str | None = None) -> dict:
     """Same content as /results, plus a link to the full Scorecard page on the
     scorecards tab (the leaderboard shows scorecards inline as well)."""
     if tab == "reports":
-        return _reports_context(teg_num, view)
+        return _reports_context(teg_num)
     ctx = _results_context(teg_num, tab, chart_variant, scorecard_type=scorecard_type,
                            scorecard_round=scorecard_round, scorecard_player=scorecard_player)
     if tab == "scorecards" and "error" not in ctx:
@@ -121,7 +118,6 @@ def leaderboard_page(
     type: str = Query("one_round_all_players"),
     round: str | None = Query(None),
     player: str | None = Query(None),
-    view: str = Query("lead"),
 ):
     teg_numbers = get_available_teg_numbers()
     teg_num = teg if teg in teg_numbers else get_default_teg_num()
@@ -129,8 +125,7 @@ def leaderboard_page(
     chart_variant = (chart_variant if chart_variant in {value for value, _label in RESULTS_CHART_TYPES}
                      else "adjusted")
     selected_round = parse_scorecard_round(round)
-    view = view if view in REPORT_VIEWS else "lead"
-    ctx = _lb_context(teg_num, tab, chart_variant, type, selected_round, player, view)
+    ctx = _lb_context(teg_num, tab, chart_variant, type, selected_round, player)
     return templates.TemplateResponse("leaderboard.html", {
         "request": request,
         "active_page": "leaderboard",
@@ -142,7 +137,6 @@ def leaderboard_page(
         "sc_saved_round": ctx.get("selected_round", selected_round),
         "sc_saved_player": ctx.get("selected_player", player),
         "report_tegs": list(available_tegs()),
-        "reports_view_mode": view,
         **ctx,
     })
 
@@ -156,11 +150,9 @@ def leaderboard_table(
     type: str = Query("one_round_all_players"),
     round: str | None = Query(None),
     player: str | None = Query(None),
-    view: str = Query("lead"),
 ):
     tab = tab if tab in LB_TABS else "net"
-    view = view if view in REPORT_VIEWS else "lead"
-    ctx = _lb_context(teg, tab, chart_variant, type, parse_scorecard_round(round), player, view)
+    ctx = _lb_context(teg, tab, chart_variant, type, parse_scorecard_round(round), player)
     return templates.TemplateResponse("partials/leaderboard_table.html", {
         "request": request,
         "selected_teg": teg,

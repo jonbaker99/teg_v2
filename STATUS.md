@@ -2,11 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-30 (Leaderboard Reports: All stories view)
+**Last updated:** 2026-09-30 (Leaderboard Reports: per-round more stories expand)
 
-## 2026-09-30 — Leaderboard Reports: All stories view
+## 2026-09-30 — Leaderboard Reports: per-round more stories expand
 
-The Reports tab on `/leaderboard` has a Lead stories / All stories toggle. All stories lays each round out like the home page: the lead story, then every other headline in that report. Two panels per row on desktop, stacked on phones. A completed TEG's tournament report gets a full-width panel on top.
+The Reports tab on `/leaderboard` shows one lead headline per round, with the kicker above it. Each round with other stories has a "N more stories" expand in place (native `<details>`, no JS) listing them smaller. A completed TEG's tournament teaser has the same expand. The old global Lead/All toggle and `view` param are gone.
 
 ## 2026-09-29 — Leaderboard Reports tab
 
