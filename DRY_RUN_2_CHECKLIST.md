@@ -81,6 +81,7 @@ Round 4 section B results:
 | Finalise R2 | 1 (`c666bec`, only `data/**`), ~35s | No: `51599e47` showed BUILDING for 15s, then SKIPPED | Railway lists a commit as BUILDING while it checks watch paths |
 | Go live R3 | 1 (`d2efa97`, registry) | No (skipped) | |
 | Finalise R3 | 1 (`5a4b908`, only `data/**`) | No: BUILDING 19s, then SKIPPED | R2 report running at the time |
+| R2 round report | 1 (`23b40c8`, 5 files under `data/commentary/`) | No (skipped) | Ran across the R3 finalise without harm |
 | R1 round report | 1 (`43da2f1`, 5 files under `data/commentary/`) | No (skipped) | Committed 20:48:57Z, 11s before the redeploy went live, so it survived by luck |
 
 ## E. Wrap-up
