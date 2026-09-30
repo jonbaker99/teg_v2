@@ -247,11 +247,6 @@
      here as the shipped default; picking ts-m1/ts-m2/ts-m3 there no
      longer changes anything for the brand (the option is kept for A/B
      reference against the other bands, not because it's still opt-in). */
-  .nav-brand {
-    font-size: 1rem;
-    font-weight: 500;
-    opacity: 0.65;
-  }
   /* M1: band the title area in the accent green, like the existing
      desktop-only ts-c1/ts-f1 "card" styles, so it reads as its own
      distinct block under the plain-text nav bar instead of a second
@@ -1143,8 +1138,8 @@
     color: var(--text-primary);
   }
   .hc-list-delta {
-    width: 30%;
-    text-align: right;
+    width: 28%;
+    text-align: left;
     font-family: var(--font-table), sans-serif;
     font-size: 0.8125rem;
     font-weight: 600;
@@ -1153,7 +1148,7 @@
   .hc-list-delta.hc-delta--up,
   .hc-list-delta.hc-delta--none {
     background: none;
-    padding: 10px 4px;
+    padding: 10px 4px 10px 12px;
     border-radius: 0;
   }
 
