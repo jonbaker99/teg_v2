@@ -321,10 +321,12 @@ def start_live_round(teg_num: int, round_num: int) -> dict:
             & (registry["Status"] == "active")
         ]
         if not active_dupe.empty:
-            raise LiveRoundAlreadyActiveError(
+            err = LiveRoundAlreadyActiveError(
                 f"TEG {teg_num} Round {round_num} already has an active live round "
                 f"(token {active_dupe.iloc[0]['Token']})."
             )
+            err.token = active_dupe.iloc[0]['Token']  # lets the caller link to it
+            raise err
 
         token = generate_token()
         new_row = {

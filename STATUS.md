@@ -2,7 +2,7 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-30 (Batch 5 PR B: issues 21 and 22)
+**Last updated:** 2026-09-30 (Batch 5: issues 18, 20, 21 and 22)
 
 ## 2026-09-30 — Deleting a round shows progress and archives its reports (Batch 5, PR B)
 
@@ -10,6 +10,13 @@ Fixes the two should-ship dry-run 2 issues.
 
 - **21:** Delete rounds shows "Deleting… about a minute" under Confirm while it runs.
 - **22:** the deletion commit also moves the round's reports and the TEG's tournament report to `data/commentary/archive/`, and marks the round's live round Deleted. Reports for a deleted round are blocked until it has data again.
+
+## 2026-09-30 — Finalise progress stays put on phones; Go live shows the link at once (Batch 5, PR A)
+
+Fixes the two must-ship dry-run 2 issues.
+
+- **18:** the admin tab row centres its active tab by scrolling itself, not the page. Polling pages (finalise progress, `/admin/reports`) no longer jump to the top every 2s on a phone.
+- **20:** Go live redirects to the new round's review page, with the entry link and Copy at the top. A second tap goes to the live round instead of showing "already active".
 
 ## 2026-09-30 — TEG 19 second dry run passes; five small issues left
 

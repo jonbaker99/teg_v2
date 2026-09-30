@@ -101,8 +101,8 @@ Evidence and root causes: `TEST_TOURNAMENT_ISSUES.md`, issues 18–22.
 
 | # | Priority | Problem | Proposed fix | Main files |
 |---|---|---|---|---|
-| 18 | **Must** | On a phone, the finalise progress page jumps to the top every 2s. `scrollActiveTabIntoView` runs on every HTMX settle and scrolls the admin tab bar into view. | Scroll the tab row horizontally only (set the nav's `scrollLeft`), never the page. Check `/admin/reports` polling too. | `webapp/templates/base.html` |
-| 20 | **Must** | After Go live, the link lands in a hidden row, the live-rounds table isn't refreshed, and a second tap replaces the link with "already active". | On success, answer with `HX-Redirect` to `/admin/live-round` (or the new round's review page), where the link and Copy already render. | `webapp/routes/admin_live_round.py`, `templates/admin_live_round.html`, `partials/admin_live_round_start_result.html` |
+| 18 | **Must**, fixed (PR A) | On a phone, the finalise progress page jumps to the top every 2s. `scrollActiveTabIntoView` runs on every HTMX settle and scrolls the admin tab bar into view. | Scroll the tab row horizontally only (set the nav's `scrollLeft`), never the page. Check `/admin/reports` polling too. | `webapp/templates/base.html` |
+| 20 | **Must**, fixed (PR A) | After Go live, the link lands in a hidden row, the live-rounds table isn't refreshed, and a second tap replaces the link with "already active". | On success, answer with `HX-Redirect` to `/admin/live-round` (or the new round's review page), where the link and Copy already render. | `webapp/routes/admin_live_round.py`, `templates/admin_live_round.html`, `partials/admin_live_round_start_result.html` |
 | 21 | Should, fixed (PR B) | Delete rounds shows no progress for ~40s. | At least an `hx-indicator` message. Better: run it as a background job like finalise. | `webapp/routes/admin.py`, `partials/admin_delete_preview.html`, `webapp/finalize_jobs.py` |
 | 22 | Should, fixed (PR B) | Deleting a round leaves its report, the tournament report and its `finalized` registry row. | In the same commit, move the round's and the TEG's report files to `data/commentary/archive/`, and mark the registry row deleted. | `teg_analysis/analysis/data_update.py`, `analysis/live_round.py` |
 | 19 | Watch | One of eight data commits in dry run 2 redeployed (a Railway build fault, it seems). | No code change. Keep auto-deploy off 9–13 October, and confirm it's off before the 10th. | none |
@@ -141,7 +141,7 @@ Each batch is one task: its own branch and worktree, and one PR against `main` w
 | now to 3 Oct | Wave 1: Batches 1A, 1B, 3 and 4a, in parallel |
 | 3 to 5 Oct | Wave 2: Batch 4b |
 | 30 Sep | Second dry run (PR #150): done. Found issues 18–22 (Batch 5). |
-| 1 to 7 Oct | Batch 5: 18 and 20 must ship; 21 and 22 if time allows. |
+| 1 to 7 Oct | Batch 5: 18 and 20 must ship (PR A); 21 and 22 if time allows (PR B). |
 | 8 Oct | Code freeze. (PR #140 and #150 are closed.) |
 | 9 Oct | Turn auto-deploy off. |
 | 10 to 13 Oct | TEG 19 |

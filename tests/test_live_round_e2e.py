@@ -72,10 +72,15 @@ def admin(scratch_repo, monkeypatch):
 def _start_live_round(admin):
     resp = admin.post("/admin/live-round/start", data={"teg_num": "999", "round_num": "1"})
     assert resp.status_code == 200
-    assert "TEG 999" in resp.text
-    match = __import__("re").search(r"/live-round/([\w-]+)", resp.text)
-    assert match, resp.text
-    return match.group(1)
+    match = __import__("re").fullmatch(r"/admin/live-round/([\w-]+)/review\?started=1",
+                                       resp.headers.get("HX-Redirect", ""))
+    assert match, resp.headers
+    token = match.group(1)
+    # The page it lands on shows the entry link (issue 20).
+    page = admin.get(resp.headers["HX-Redirect"])
+    assert "TEG 999 Round 1 is ready for scores" in page.text
+    assert f"/live-round/{token}" in page.text
+    return token
 
 
 def test_full_lifecycle_two_devices_conflict_and_finalize(admin, scratch_repo):

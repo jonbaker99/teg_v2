@@ -84,8 +84,13 @@
 
   {% if entry_url %}
   <div class="data-card" style="margin-bottom:1rem;">
+    {% if started %}
+      <p style="background:#eef4ee;border:1px solid #cfe0cf;color:#2f6b34;padding:.6rem .9rem;border-radius:8px;margin:0 0 .75rem;font-weight:600;">
+        {% if started == 'already' %}This round was already live. Here is its link.{% else %}Live. TEG {{ live.teg_num }} Round {{ live.round_num }} is ready for scores.{% endif %}
+      </p>
+    {% endif %}
     <h2 class="card-header">Score-entry link</h2>
-    <p style="margin:.5rem 0;">Anyone with this link can enter scores for this round.</p>
+    <p style="margin:.5rem 0;">Anyone with this link can enter scores for this round. Share it with the group.</p>
     {% with url = entry_url %}{% include "partials/live_round_entry_link.html" %}{% endwith %}
   </div>
   {% endif %}
