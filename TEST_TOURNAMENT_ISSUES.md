@@ -5,6 +5,7 @@ Temporary working log for the TEG 19 dry runs. Delete once every issue below is 
 - **Dry run 1:** PR #140, 29 September. Found issues 1–17.
 - **Dry run 2:** PR #150, 30 September, re-tested every fix from Batches 1A–4b and #141. All passed on data and flow. Found issues 18–22. Fix plan: `TEG19_FIX_PLAN.md` → Batch 5.
 - **Dry run 3:** PR #157, 1 October. Found issues 23–26. Fix plan: `TEG19_FIX_PLAN.md` → Batch 6.
+- **Batch 6 phone check:** a test-only PR environment (never merged) to re-test issues 23–26 on a phone.
 
 | # | Area | Issue | Status |
 |---|---|---|---|
