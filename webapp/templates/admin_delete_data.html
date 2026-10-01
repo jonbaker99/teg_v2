@@ -68,7 +68,10 @@
     </button>
   </form>
 
-  <div id="delete-preview" style="margin-top:1.5rem;"></div>
+  <div id="delete-preview" style="margin-top:1.5rem;">
+    {# A deletion already running (reload / locked phone): resume its progress. #}
+    {% if status %}{% include "partials/admin_delete_progress.html" %}{% endif %}
+  </div>
 
   <script>
   function tegVisibleRounds() {

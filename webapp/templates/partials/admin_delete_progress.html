@@ -1,0 +1,11 @@
+{# In-flight deletion: polls itself until the job ends, then the status route swaps in
+   the result card (or the error). Needs status, rows, cur, started; optional note. #}
+<div id="delete-progress" role="status"
+     hx-get="/admin/delete-data/status" hx-trigger="every 2s" hx-swap="outerHTML">
+  {% if note %}<p style="margin:0 0 .5rem;color:#8a6100;">{{ note }}</p>{% endif %}
+  <p style="margin:0;font-weight:600;">⏳ {% if cur %}Step {{ cur.index }} of {{ cur.total }}: {{ cur.label }}{% else %}{{ (status and status.message) or "Deleting…" }}{% endif %}</p>
+  {% with steps_label="Deletion steps" %}{% include "partials/admin_live_round_finalize_steps.html" %}{% endwith %}
+  <p style="margin:.25rem 0 0;font-size:.9rem;color:#555;">
+    Started {{ started }} UTC. This takes about a minute.
+    You can leave this page; come back to it to check progress.</p>
+</div>

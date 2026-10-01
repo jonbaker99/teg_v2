@@ -120,7 +120,7 @@ Evidence: `TEST_TOURNAMENT_ISSUES.md`, issues 23–26. Two PRs, so the low-risk 
 | 23 | Should, fixed (PR A) | The score entry page has no way back to the site. | Slim site strip (brand, Leaderboard) above the app bar on the entry and live-leaderboard pages. | `templates/live_round_entry.html`, `live_round_leaderboard.html`, `routes/live_round.py` |
 | 24 | Should, fixed (PR A) | No link from score entry to the admin review page. | "Review & finalise" in the strip, admin cookie only. | same as 23 |
 | 25 | Should, fixed (PR A) | The Enter scores banner stayed up after finalise. | The banner follows the round's state: live → Enter scores; else latest finalised round → "results are in", for 7 days. | `analysis/live_round.py`, `webapp/deps.py`, `base.html` |
-| 26 | Should (PR B) | Deleting rounds shows no step-by-step progress. | Run deletion as a background job with the finalise-style step checklist. | `webapp/delete_jobs.py`, `analysis/data_update.py`, `routes/admin.py` |
+| 26 | Should, fixed (PR B) | Deleting rounds shows no step-by-step progress. | Run deletion as a background job with the finalise-style step checklist. | `webapp/delete_jobs.py`, `analysis/data_update.py`, `routes/admin.py` |
 
 **Pre-tournament action for Jon (not code):** production's `data/live_rounds.csv` still holds an `active` row from 29 September (`jyQz-lkfbVs`, TEG 19 R1). Turning the public link on would advertise it, and Go live for R1 would redirect to it. Cancel it before 10 October: Admin → Live round → that row → Cancel round.
 

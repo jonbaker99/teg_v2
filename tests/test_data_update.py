@@ -376,6 +376,67 @@ def test_execute_data_deletion_reports_cache_failure(scratch_repo, monkeypatch):
     assert result['cache_errors'][0]['step'] == 'bestball'
 
 
+def test_execute_data_deletion_progress_hears_every_step_in_order(scratch_repo, monkeypatch):
+    """The progress callback hears each DELETION_STEPS key in order; a failing
+    cache step reports failed and the run carries on to the later steps."""
+    import teg_analysis.analysis.pipeline as pipeline
+    from teg_analysis.analysis.data_update import (
+        DELETION_STEPS, execute_data_update, execute_data_deletion,
+    )
+
+    execute_data_update(process_google_sheets_data(_fake_wide_round()), overwrite=True)
+
+    def _boom(all_data, defer_github=False):
+        raise RuntimeError("bestball blew up")
+
+    monkeypatch.setattr(pipeline, 'update_bestball_cache', _boom)
+
+    events = []
+    result = execute_data_deletion(
+        50, [1], progress=lambda key, state, error=None: events.append((key, state, error)))
+
+    first_seen = list(dict.fromkeys(k for k, _, _ in events))
+    assert first_seen == [k for k, _ in DELETION_STEPS]
+    states = {}
+    for key, state, error in events:
+        states[key] = (state, error)
+    assert states['bestball'][0] == 'failed' and 'bestball blew up' in states['bestball'][1]
+    assert states['winners'][0] == 'done'
+    assert states['backup'][0] == states['delete'][0] == 'done'
+    assert states['commit'][0] == 'skipped'  # not deferring: local run
+    assert [e['step'] for e in result['cache_errors']] == ['bestball']
+
+
+def test_execute_data_deletion_deferred_commit_reports_and_commits_once(scratch_repo, monkeypatch):
+    """Deferred (Railway-style) run: exactly one batch commit with the usual
+    message, and the commit step reports running then done."""
+    import teg_analysis.io as tio
+    from teg_analysis.analysis.data_update import execute_data_update, execute_data_deletion
+
+    execute_data_update(process_google_sheets_data(_fake_wide_round()), overwrite=True)
+
+    real_write = tio.write_file
+
+    def deferred_write(path, df, msg="Update data", defer_github=False, **kw):
+        real_write(path, df, msg, defer_github=defer_github, **kw)
+        return {'file_path': path, 'data': df} if defer_github else None
+
+    commits = []
+    monkeypatch.setattr(tio, 'write_file', deferred_write)
+    monkeypatch.setattr(tio, 'batch_commit_to_github',
+                        lambda files, message: commits.append((len(files), message)))
+
+    events = []
+    result = execute_data_deletion(
+        50, [1], defer_github=True,
+        progress=lambda key, state, error=None: events.append((key, state)))
+
+    assert len(commits) == 1 and commits[0][0] > 0
+    assert commits[0][1] == "Deleted TEG 50, Rounds [1]"
+    assert result['committed'] is True
+    assert [st for k, st in events if k == 'commit'] == ['running', 'done']
+
+
 def test_execute_data_update_runs_winners_step_and_reports_failure(scratch_repo, monkeypatch):
     """The winners step runs after the status files, and a failure lands in
     cache_errors under 'winners' without losing the write."""

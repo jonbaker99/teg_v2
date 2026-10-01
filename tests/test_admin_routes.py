@@ -9,6 +9,7 @@ import pytest
 from starlette.testclient import TestClient
 
 from webapp.app import app
+from webapp import deps
 
 
 @pytest.fixture(autouse=True)
@@ -295,6 +296,71 @@ def test_delete_preview_validates_empty_selection(client):
     resp = client.post("/admin/delete-data/preview", data={"teg": "10"})
     assert resp.status_code == 200
     assert "at least one round" in resp.text.lower()
+
+
+@pytest.fixture
+def delete_store(tmp_path, monkeypatch):
+    """Point the delete job's status file at a temp dir (never the real store)."""
+    from webapp import delete_jobs
+    monkeypatch.setattr(delete_jobs, "_store_path", lambda rel: tmp_path / rel)
+    return delete_jobs
+
+
+def test_delete_execute_runs_job_and_status_shows_result(client, delete_store, monkeypatch):
+    import teg_analysis.analysis.data_update as du
+    calls = []
+
+    def fake(teg, rounds, progress=None):
+        calls.append((teg, rounds))
+        return {"rows_deleted": 72, "teg": teg, "rounds": rounds, "backups": ["b.parquet"],
+                "committed": True, "files_committed": 9, "cache_errors": [],
+                "reports_archived": [], "archive_dir": None}
+    monkeypatch.setattr(du, "execute_data_deletion", fake)
+    monkeypatch.setattr(deps, "clear_all_data_caches", lambda: None)
+
+    _login(client)
+    resp = client.post("/admin/delete-data/execute", data={"teg": "19", "rounds": ["1", "2"]})
+    assert resp.status_code == 200
+    assert 'hx-get="/admin/delete-data/status"' in resp.text  # progress partial, polling
+    assert calls == [(19, [1, 2])]  # TestClient ran the background task
+
+    resp = client.get("/admin/delete-data/status")
+    assert "Deletion complete" in resp.text
+    assert "<strong>72</strong> hole score(s) deleted from TEG 19 (Round 1, 2)" in resp.text
+    assert "9 file(s) committed to GitHub" in resp.text
+
+
+def test_delete_execute_while_running_starts_nothing(client, delete_store, monkeypatch):
+    import teg_analysis.analysis.data_update as du
+    monkeypatch.setattr(du, "execute_data_deletion",
+                        lambda *a, **k: pytest.fail("must not start a second deletion"))
+    delete_store.claim(19, [1])
+    _login(client)
+    resp = client.post("/admin/delete-data/execute", data={"teg": "19", "rounds": "2"})
+    assert "already running" in resp.text
+    assert 'hx-get="/admin/delete-data/status"' in resp.text
+    assert delete_store.read_status()["rounds"] == [1]
+    # A reload resumes the progress inside #delete-preview.
+    page = client.get("/admin/delete-data")
+    assert 'id="delete-progress"' in page.text
+
+
+def test_delete_status_shows_interrupted_and_requires_auth(client, delete_store):
+    resp = client.get("/admin/delete-data/status")
+    assert resp.headers.get("hx-redirect") == "/admin/login"
+    delete_store.claim(19, [1])
+    import json
+    path = delete_store.status_path()
+    data = json.loads(path.read_text())
+    data["boot_id"] = "old-boot"
+    data["steps"] = {"backup": {"state": "done", "error": None},
+                     "delete": {"state": "running", "error": None}}
+    path.write_text(json.dumps(data))
+    _login(client)
+    resp = client.get("/admin/delete-data/status")
+    assert "The deletion was interrupted." in resp.text
+    # The checklist shows how far it got.
+    assert "fin-steps" in resp.text and "Back up scores and data" in resp.text
 
 
 def test_edit_save_rejects_unknown_file(client):

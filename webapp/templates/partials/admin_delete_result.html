@@ -1,5 +1,6 @@
 {% if error %}
   <p class="error" style="color:#b00020;">{{ error }}</p>
+  {% if rows %}{% include "partials/admin_live_round_finalize_steps.html" %}{% endif %}
 {% elif result %}
 <div class="data-card">
   <h2 class="card-header">✅ Deletion complete</h2>

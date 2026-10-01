@@ -1,5 +1,6 @@
-{# Step checklist for a finalise run. Needs `status` (the job's status dict).
-   Rows come from finalize_jobs.step_rows; the spinner is CSS only. #}
+{# Step checklist. Finalise: needs `status` (rows come from finalize_jobs.step_rows).
+   Other jobs (delete): pass `rows` (and optionally `steps_label`) instead.
+   The spinner is CSS only. #}
 <style>
   .fin-steps { list-style: none; margin: .5rem 0 0; padding: 0; font-size: .9rem; }
   .fin-steps li { display: flex; gap: .5rem; align-items: baseline; margin: .2rem 0; }
@@ -11,8 +12,8 @@
               vertical-align: middle; }
   @keyframes fin-spin { to { transform: rotate(360deg); } }
 </style>
-<ol class="fin-steps" aria-label="Finalise steps">
-  {% for r in finalize_step_rows(status) %}
+<ol class="fin-steps" aria-label="{{ steps_label if steps_label is defined else 'Finalise steps' }}">
+  {% for r in (rows if rows is defined else finalize_step_rows(status)) %}
   <li>
     <span class="fin-mark" aria-hidden="true">
       {% if r.state == 'done' %}✓{% elif r.state == 'running' %}<span class="fin-spin"></span>{% elif r.state == 'failed' %}✗{% elif r.state == 'todo' %}☐{% else %}–{% endif %}
