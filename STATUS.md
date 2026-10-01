@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-30 (Batch 5: issues 18, 20, 21 and 22)
+**Last updated:** 2026-10-01 (Batch 6 PR B: issue 26)
+
+## 2026-10-01 — Deleting rounds shows a step checklist (Batch 6, PR B)
+
+Fixes dry-run 3 issue 26. Delete rounds runs as a background job, like finalise. The page ticks through each step (backup, delete, caches, archive, registry, save), survives a reload and refuses a second start. Still one commit per deletion.
 
 ## 2026-09-30 — Deleting a round shows progress and archives its reports (Batch 5, PR B)
 

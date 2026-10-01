@@ -289,7 +289,8 @@ real Live round use; not triggered yet.
 **Delete rounds** — templates `admin_delete_data.html`,
 `partials/admin_delete_{preview,result}.html`. **This is the primary data-admin flow.**
 - **Routes:** `/admin/delete-data` (select TEG + rounds),
-  `/admin/delete-data/preview`, `/admin/delete-data/execute` (HTMX).
+  `/admin/delete-data/preview`, `/admin/delete-data/execute`,
+  `/admin/delete-data/status` (HTMX).
 - **Flow:** pick a TEG and rounds — or tick **Whole TEG (all rounds)** to delete an
   entire tournament — → preview the exact rows → confirm → `execute_data_deletion`
   takes a **timestamped backup** first, removes the rows from `all-scores`/`all-data`
@@ -297,10 +298,17 @@ real Live round use; not triggered yet.
   batch-committing on Railway. It also archives the deleted rounds' reports and the
   TEG's tournament report to `data/commentary/archive/`, and marks their live rounds
   **Deleted** (list, review page and player banners show it), in the same commit.
-- **Progress:** the run takes about a minute in one request. While it runs, an
-  `htmx-indicator` under Confirm says "Deleting…". The result lists archived reports
-  and any failed step. A background job like finalise's is the better long-term fix
-  (`webapp/TODOS.md`).
+- **Deletion is a background job** (`webapp/delete_jobs.py`, dry-run issue 26),
+  mirroring finalise's (below). Confirm claims the single job and returns
+  `partials/admin_delete_progress.html`, which polls `/admin/delete-data/status`
+  every 2s and ticks through `data_update.DELETION_STEPS` (the checklist partial
+  is shared with finalise, passed `rows`). One status file,
+  `data/_delete_status/current.json`, outside `SYNC_FOLDERS`. Reloading
+  `/admin/delete-data` resumes the progress; a second Confirm shows the running job
+  and starts nothing. A finished job never blocks the next deletion. A job left
+  running by a redeploy reads as interrupted ("Check the round is gone on the site,
+  then retry if needed"); retrying is safe. The result card lists archived reports
+  and any failed step.
 
 **GitHub ↔ store sync** — templates `admin_volume_sync.html`,
 `partials/admin_sync_body.html`, `partials/admin_sync_preview.html`,

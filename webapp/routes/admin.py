@@ -24,7 +24,8 @@ from fastapi.templating import Jinja2Templates
 from starlette.concurrency import run_in_threadpool
 
 from webapp.admin_auth import is_authed, check_password, set_auth_cookie, clear_auth_cookie
-from webapp import deps
+from webapp import deps, delete_jobs
+from webapp.report_generation import fmt_hhmm
 
 logger = logging.getLogger(__name__)
 
@@ -351,6 +352,16 @@ def admin_edit_regenerate_status(request: Request):
 
 # --- Delete rounds ------------------------------------------------------------
 
+def _delete_progress_ctx(status: dict, note: str = "") -> dict:
+    """Template context for partials/admin_delete_progress.html."""
+    return {
+        "status": status, "note": note,
+        "rows": delete_jobs.step_rows(status),
+        "cur": delete_jobs.current_step(status),
+        "started": fmt_hhmm(status.get("started_at")),
+    }
+
+
 @router.get("/admin/delete-data")
 def admin_delete_data(request: Request):
     if not is_authed(request):
@@ -361,6 +372,10 @@ def admin_delete_data(request: Request):
     from teg_analysis.constants import ALL_SCORES_PARQUET
 
     ctx = {"request": request, "active_page": None}
+    # A deletion still running (reload, locked phone): resume its progress.
+    job = delete_jobs.read_status()
+    if delete_jobs.is_active(job):
+        ctx.update(_delete_progress_ctx(job))
     try:
         scores = read_file(ALL_SCORES_PARQUET)
         ctx["tegs"] = get_available_tegs_and_rounds(scores)
@@ -404,13 +419,15 @@ def admin_delete_data_preview(request: Request, teg: str = Form(""), rounds: lis
 
 
 @router.post("/admin/delete-data/execute", response_class=HTMLResponse)
-def admin_delete_data_execute(request: Request, teg: str = Form(""), rounds: list[str] = Form([])):
+def admin_delete_data_execute(request: Request, background_tasks: BackgroundTasks,
+                              teg: str = Form(""), rounds: list[str] = Form([])):
+    """Claim the deletion slot and run it as a BackgroundTask (~40 s), returning a
+    self-polling progress partial. One job at a time: a second Confirm while one
+    runs shows the running job and starts nothing."""
     if not is_authed(request):
         return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
 
-    from teg_analysis.analysis.data_update import (
-        execute_data_deletion, validate_deletion_selection,
-    )
+    from teg_analysis.analysis.data_update import validate_deletion_selection
 
     ctx = {"request": request}
 
@@ -419,15 +436,38 @@ def admin_delete_data_execute(request: Request, teg: str = Form(""), rounds: lis
         return templates.TemplateResponse("partials/admin_delete_result.html", ctx)
 
     try:
-        # Re-fetch happens inside execute_data_deletion (reads the live files).
-        result = execute_data_deletion(int(teg), [int(r) for r in rounds])
-        deps.clear_all_data_caches()
-    except Exception as e:  # noqa: BLE001
-        logger.error(f"Deletion failed: {e}", exc_info=True)
-        ctx["error"] = f"Deletion failed: {e}"
+        teg_num, round_nums = int(teg), [int(r) for r in rounds]
+    except ValueError:
+        ctx["error"] = "Select a TEG and at least one round to delete."
         return templates.TemplateResponse("partials/admin_delete_result.html", ctx)
 
-    ctx["result"] = result
+    active = delete_jobs.claim(teg_num, round_nums)
+    if active:
+        ctx.update(_delete_progress_ctx(
+            active, note=f"A deletion is already running (started {fmt_hhmm(active.get('started_at'))} UTC)."))
+        return templates.TemplateResponse("partials/admin_delete_progress.html", ctx)
+
+    background_tasks.add_task(delete_jobs.run_deletion, teg_num, round_nums)
+    ctx.update(_delete_progress_ctx(delete_jobs.read_status()))
+    return templates.TemplateResponse("partials/admin_delete_progress.html", ctx)
+
+
+@router.get("/admin/delete-data/status", response_class=HTMLResponse)
+def admin_delete_data_status(request: Request):
+    """Polled by the progress partial: keep polling while active, else the result card."""
+    if not is_authed(request):
+        # htmx ignores a 4xx swap, so a 401 would leave the poll running forever.
+        return HTMLResponse("", headers={"HX-Redirect": "/admin/login"})
+
+    ctx = {"request": request}
+    status = delete_jobs.read_status()
+    if delete_jobs.is_active(status):
+        ctx.update(_delete_progress_ctx(status))
+        return templates.TemplateResponse("partials/admin_delete_progress.html", ctx)
+    if status and status.get("state") == "done" and status.get("result"):
+        ctx["result"] = status["result"]
+        return templates.TemplateResponse("partials/admin_delete_result.html", ctx)
+    ctx["error"] = delete_jobs.error_message(status) or "No deletion run found."
     return templates.TemplateResponse("partials/admin_delete_result.html", ctx)
 
 

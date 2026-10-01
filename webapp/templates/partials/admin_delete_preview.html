@@ -18,11 +18,6 @@
     <button type="submit" class="btn-action">
       ✅ Confirm deletion
     </button>
-    {# Shown by htmx while the POST runs (~40s: backup, caches, one commit). #}
-    <p class="htmx-indicator" role="status"
-       style="margin:.75rem 0 0;padding:.6rem .9rem;border:1px solid #cfe0cf;background:#eef4ee;color:#2f6b34;border-radius:8px;font-weight:600;">
-      Deleting… this takes about a minute. Don't tap again or leave the page.
-    </p>
   </form>
 </div>
 {% endif %}

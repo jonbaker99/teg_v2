@@ -88,6 +88,24 @@ DATA_UPDATE_STEPS: tuple[tuple[str, str], ...] = (
     ("winners", "Winners cache"),
 )
 
+#: The deletion pipeline's steps, in run order: (key, label). Pass
+#: ``progress(key, state, error=None)`` to :func:`execute_data_deletion` to hear
+#: each one move through running -> done | failed | skipped. Cache-step keys
+#: equal the labels ``_run_cache_step`` is given; ``commit`` is skipped when the
+#: GitHub push is not deferred (local runs).
+DELETION_STEPS: tuple[tuple[str, str], ...] = (
+    ("backup", "Back up scores and data"),
+    ("delete", "Remove the rounds"),
+    ("status", "Update TEG status"),
+    ("streaks", "Streaks cache"),
+    ("commentary", "Commentary cache"),
+    ("bestball", "Best-ball cache"),
+    ("winners", "Winners cache"),
+    ("reports_archive", "Archive the round's reports"),
+    ("live_rounds_registry", "Update the live-round registry"),
+    ("commit", "Save to GitHub"),
+)
+
 
 def _notify(progress, key: str, state: str, error: str = None) -> None:
     """Report a step's state to an optional progress callback. A broken
@@ -867,6 +885,7 @@ def execute_data_deletion(
     selected_rounds: list,
     *,
     defer_github: bool = None,
+    progress=None,
 ) -> dict:
     """Delete the selected TEG/rounds end-to-end.
 
@@ -886,6 +905,9 @@ def execute_data_deletion(
         defer_github: Override the commit strategy. Defaults to ``True`` on
             Railway (volume write now, single GitHub batch commit at the end)
             and ``False`` locally.
+        progress: Optional ``progress(key, state, error=None)`` callback, told
+            about each :data:`DELETION_STEPS` step. Omit for identical
+            behaviour without reporting.
 
     Returns:
         Summary dict: ``rows_deleted``, ``teg``, ``rounds``, ``backups``
@@ -899,6 +921,7 @@ def execute_data_deletion(
     try:
         return _execute_data_deletion_locked(
             selected_teg, selected_rounds, defer_github=defer_github,
+            progress=progress,
         )
     finally:
         _update_lock.release()
@@ -909,6 +932,7 @@ def _execute_data_deletion_locked(
     selected_rounds: list,
     *,
     defer_github: bool = None,
+    progress=None,
 ) -> dict:
     """Implementation for :func:`execute_data_deletion` (runs under the lock)."""
     from teg_analysis.io import read_file, write_file, batch_commit_to_github, _is_railway
@@ -929,37 +953,42 @@ def _execute_data_deletion_locked(
     # Safety backups first (no point continuing if these fail).
     # Deferred backups join the single batch commit (backups first).
     batch_files = []
-    backups = create_timestamped_backups(
+    backups = _run_step(progress, 'backup', lambda: create_timestamped_backups(
         defer_github=defer_github, batch_files=batch_files
-    )
+    ))
     logger.info(f"Backups created: {backups}")
-
-    scores_df = read_file(ALL_SCORES_PARQUET)
-    data_df = read_file(ALL_DATA_PARQUET)
-
-    scores_filter = (
-        (scores_df['TEGNum'] == selected_teg) & (scores_df['Round'].isin(selected_rounds))
-    )
-    data_filter = (
-        (data_df['TEGNum'] == selected_teg) & (data_df['Round'].isin(selected_rounds))
-    )
-    rows_deleted = int(scores_filter.sum())
-
-    filtered_scores_df = scores_df[~scores_filter]
-    filtered_data_df = data_df[~data_filter]
 
     deletion_message = f"Deleted TEG {selected_teg}, Rounds {selected_rounds}"
 
-    for path, frame, msg in (
-        (ALL_SCORES_PARQUET, filtered_scores_df, deletion_message),
-        (ALL_DATA_PARQUET, filtered_data_df, deletion_message),
-    ):
-        file_info = write_file(path, frame, msg, defer_github=defer_github)
-        if file_info:
-            batch_files.append(file_info)
+    def _remove_rows() -> int:
+        scores_df = read_file(ALL_SCORES_PARQUET)
+        data_df = read_file(ALL_DATA_PARQUET)
+
+        scores_filter = (
+            (scores_df['TEGNum'] == selected_teg) & (scores_df['Round'].isin(selected_rounds))
+        )
+        data_filter = (
+            (data_df['TEGNum'] == selected_teg) & (data_df['Round'].isin(selected_rounds))
+        )
+
+        filtered_scores_df = scores_df[~scores_filter]
+        filtered_data_df = data_df[~data_filter]
+
+        for path, frame, msg in (
+            (ALL_SCORES_PARQUET, filtered_scores_df, deletion_message),
+            (ALL_DATA_PARQUET, filtered_data_df, deletion_message),
+        ):
+            file_info = write_file(path, frame, msg, defer_github=defer_github)
+            if file_info:
+                batch_files.append(file_info)
+        return int(scores_filter.sum())
+
+    rows_deleted = _run_step(progress, 'delete', _remove_rows)
 
     # Regenerate every derived file so the site never shows stale data.
-    status_files = update_teg_status_files(defer_github=defer_github)
+    status_files = _run_step(
+        progress, 'status', lambda: update_teg_status_files(defer_github=defer_github)
+    )
     if status_files:
         batch_files.extend(status_files)
 
@@ -971,6 +1000,7 @@ def _execute_data_deletion_locked(
     streaks_file = _run_cache_step(
         cache_errors, 'streaks',
         lambda: update_streaks_cache(all_data, defer_github=defer_github),
+        progress=progress,
     )
     if streaks_file:
         batch_files.append(streaks_file)
@@ -978,6 +1008,7 @@ def _execute_data_deletion_locked(
     commentary_files = _run_cache_step(
         cache_errors, 'commentary',
         lambda: update_commentary_caches(all_data, defer_github=defer_github),
+        progress=progress,
     )
     if commentary_files:
         batch_files.extend(commentary_files)
@@ -985,6 +1016,7 @@ def _execute_data_deletion_locked(
     bestball_file = _run_cache_step(
         cache_errors, 'bestball',
         lambda: update_bestball_cache(all_data, defer_github=defer_github),
+        progress=progress,
     )
     if bestball_file:
         batch_files.append(bestball_file)
@@ -994,6 +1026,7 @@ def _execute_data_deletion_locked(
     winners_file = _run_cache_step(
         cache_errors, 'winners',
         lambda: update_winners_cache(all_data, defer_github=defer_github),
+        progress=progress,
     )
     if winners_file:
         batch_files.append(winners_file)
@@ -1002,6 +1035,7 @@ def _execute_data_deletion_locked(
     archive = _run_cache_step(
         cache_errors, 'reports_archive',
         lambda: archive_report_files(selected_teg, selected_rounds, defer_github=defer_github),
+        progress=progress,
     ) or {"archived": [], "archive_dir": None, "files": [], "originals": []}
     batch_files.extend(archive["files"])
 
@@ -1009,14 +1043,18 @@ def _execute_data_deletion_locked(
     registry_file = _run_cache_step(
         cache_errors, 'live_rounds_registry',
         lambda: mark_rounds_deleted(selected_teg, selected_rounds, defer_github=defer_github),
+        progress=progress,
     )
     if registry_file:
         batch_files.append(registry_file)
 
     committed = False
     if defer_github and batch_files:
-        batch_commit_to_github(batch_files, deletion_message)
+        _run_step(progress, 'commit',
+                  lambda: batch_commit_to_github(batch_files, deletion_message))
         committed = True
+    else:
+        _notify(progress, 'commit', 'skipped')
     # Only now: had the commit failed, the reports would still be readable.
     remove_store_files(archive["originals"])
 
