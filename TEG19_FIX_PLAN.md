@@ -169,3 +169,11 @@ Log anything new in the same way. Close the PR afterwards.
 - The PR environment writes to its own branch (`RAILWAY_GIT_BRANCH`) and has its own volume, filled lazily from that branch on first read. Main is never touched.
 - Railway lists every data commit as BUILDING for about 20 seconds while it checks watch paths. Only call it a redeploy if it reaches DEPLOYING or SUCCESS.
 - Rebase before pushing anything else to the test branch. A merge commit carries the app's data diff, and Railway deploys it, killing any report in flight.
+
+## Third dry run: test the new webapp functionality (draft PR)
+
+Draft PR from this branch, used only for its Railway PR environment. Do not merge it. Close it when testing is done.
+
+- The PR environment writes to its own branch (`RAILWAY_GIT_BRANCH`) and its own volume. Production data and `main` are untouched.
+- Use TEG 50 or a dummy TEG for test rounds. Delete them with `/admin/delete-data` when finished.
+- Only push rebased commits to this branch, not merge commits (see lessons above).
