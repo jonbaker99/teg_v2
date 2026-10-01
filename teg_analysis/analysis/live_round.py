@@ -327,7 +327,9 @@ def get_public_round_banners(now: datetime | None = None) -> list[dict]:
     """
     if not get_public_entry_enabled():
         return []
-    rows = list_live_rounds()
+    # A malformed row (blank TEGNum/Round) is skipped, not allowed to hide every banner.
+    rows = [r for r in list_live_rounds()
+            if not pd.isna(r.get("TEGNum")) and not pd.isna(r.get("Round"))]
     live = [
         {"kind": "live", "token": r["Token"], "teg_num": int(r["TEGNum"]), "round_num": int(r["Round"])}
         for r in rows if r.get("Status") == "active"

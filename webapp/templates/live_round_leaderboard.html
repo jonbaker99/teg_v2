@@ -36,11 +36,12 @@ body { font-family:var(--font-body); background:var(--bg); color:var(--text); -w
 .errpage { padding:40px 20px; text-align:center; }
 .errpage p { color:var(--text-2); font-size:15px; line-height:1.6; max-width:26em; margin:0 auto; }
 
-.sitestrip { flex:0 0 auto; position:sticky; top:0; z-index:31; background:var(--bar); border-bottom:1px solid var(--bar-line);
+.sitestrip { position:sticky; top:0; z-index:31; background:var(--bar); border-bottom:1px solid var(--bar-line);
   padding:env(safe-area-inset-top,0) 14px 0; display:flex; align-items:center; justify-content:space-between; gap:10px; }
-.sitestrip .links { display:flex; align-items:center; gap:4px; }
+.sitestrip .links { display:flex; align-items:center; gap:4px; flex:0 0 auto; white-space:nowrap; }
 .sitestrip a { display:inline-flex; align-items:center; gap:3px; min-height:32px; text-decoration:none; }
-.sitestrip .brand { font-family:var(--font-body); font-weight:700; font-size:14px; color:var(--text); }
+.sitestrip .brand { font-family:var(--font-body); font-weight:700; font-size:14px; color:var(--text);
+  min-width:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; display:block; line-height:32px; }
 .sitestrip .links a { font-family:var(--font-data); font-size:11px; font-weight:600; color:var(--accent-text); padding:0 8px; }
 .sitestrip .links a.adminlink { color:var(--text-muted); }
 .sitestrip .links a:last-child { padding-right:0; }

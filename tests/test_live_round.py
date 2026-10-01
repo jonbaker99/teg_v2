@@ -699,6 +699,15 @@ def test_banners_results_handles_missing_finalized_at_column(store):
     assert lr.get_public_round_banners(now=NOW) == [{"kind": "results", "teg_num": 19, "round_num": 1}]
 
 
+def test_banners_skip_a_malformed_row_instead_of_hiding_all(store):
+    lr.set_public_entry_enabled(True)
+    _registry(store,
+              ("a", 19, 1, "active", "2026-10-09T10:00:00+00:00", None),
+              ("bad", None, None, "active", "2026-10-09T11:00:00+00:00", None))
+    assert lr.get_public_round_banners(now=NOW) == [
+        {"kind": "live", "token": "a", "teg_num": 19, "round_num": 1}]
+
+
 def test_banners_ignore_cancelled_and_deleted(store):
     lr.set_public_entry_enabled(True)
     _registry(store,
