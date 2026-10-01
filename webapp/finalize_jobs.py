@@ -254,6 +254,7 @@ def run_finalize(token: str) -> None:
                      cache_errors=steps, finished_at=_now())
     except (ConflictsUnresolvedError, LiveRoundInactiveError, LiveRoundNotFoundError, ValueError) as e:
         write_status(token, state="error", error=str(e), message=None, finished_at=_now())
+        _clear_site_caches()  # e.g. a ValueError from the commit: see below
     except Exception as e:  # noqa: BLE001
         logger.error(f"Live round finalize failed: {e}", exc_info=True)
         try:

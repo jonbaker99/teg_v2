@@ -237,3 +237,31 @@ def test_banners_switch_to_results_while_syncing(monkeypatch):
     published.clear()
     assert deps._with_results_published([live("a", 1)]) == [live("a", 1)]
     assert deps._with_results_published([]) == []
+
+
+def test_commit_valueerror_also_unpublishes_and_clears(monkeypatch):
+    clears = []
+    monkeypatch.setattr(deps, "clear_all_data_caches", lambda: clears.append(1))
+
+    def fake(token, progress=None):
+        progress("commit", "running")
+        raise ValueError("bad batch")
+
+    monkeypatch.setattr(lrmod, "finalize_live_round", fake)
+    finalize_jobs.claim("tok")
+    finalize_jobs.run_finalize("tok")
+    assert finalize_jobs.read_status("tok")["state"] == "error"
+    assert finalize_jobs.results_published("tok") is False
+    assert len(clears) == 2
+
+
+def test_skipped_commit_is_not_published(monkeypatch):
+    def fake(token, progress=None):
+        progress("commit", "skipped")
+        assert finalize_jobs.results_published(token) is False
+        return {"teg_num": 19, "round_num": 1, "records_added": 1, "committed": False}
+
+    monkeypatch.setattr(lrmod, "finalize_live_round", fake)
+    finalize_jobs.claim("tok")
+    finalize_jobs.run_finalize("tok")
+    assert finalize_jobs.read_status("tok")["state"] == "done"
