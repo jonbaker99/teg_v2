@@ -197,12 +197,29 @@ def get_public_round_banners_cached() -> list[dict]:
     if now - _public_banners_cache["at"] < _PUBLIC_BANNERS_TTL_SECONDS:
         return _public_banners_cache["rounds"]
     try:
-        rounds = get_public_round_banners()
+        rounds = _with_results_published(get_public_round_banners())
     except Exception as e:  # noqa: BLE001
         logger.warning(f"Public round-banner lookup failed: {e}")
         rounds = []
     _public_banners_cache.update(at=now, rounds=rounds)
     return rounds
+
+
+def _with_results_published(banners: list[dict]) -> list[dict]:
+    """Turn a live banner into "results are in" once its finalise has written
+    the results and is only syncing to GitHub (finalize_jobs.results_published).
+
+    Another round still live keeps the live banners only, as the registry does.
+    """
+    from webapp import finalize_jobs
+
+    live, published = [], []
+    for b in banners:
+        if b.get("kind") == "live" and finalize_jobs.results_published(b["token"]):
+            published.append({"kind": "results", "teg_num": b["teg_num"], "round_num": b["round_num"]})
+        else:
+            live.append(b)
+    return live or published[-1:]
 
 
 def clear_public_round_banners_cache() -> None:
