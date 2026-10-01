@@ -50,7 +50,7 @@ import logging
 import random
 import secrets
 import threading
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 import pandas as pd
 
@@ -292,6 +292,65 @@ def get_public_live_rounds() -> list[dict]:
         {"token": r["Token"], "teg_num": int(r["TEGNum"]), "round_num": int(r["Round"])}
         for r in list_live_rounds() if r["Status"] == "active"
     ]
+
+
+# A finalized round's "results are in" banner is hidden after this many days,
+# so a forgotten switch doesn't advertise an old round forever.
+RESULTS_BANNER_MAX_AGE_DAYS = 7
+
+
+def _parse_registry_time(value) -> datetime | None:
+    """Parse an ISO timestamp from the registry; None if blank/NaN/unparseable.
+
+    Naive values are taken as UTC (the code always writes UTC).
+    """
+    if value is None or (not isinstance(value, str) and pd.isna(value)):
+        return None
+    text = str(value).strip()
+    if not text:
+        return None
+    try:
+        parsed = datetime.fromisoformat(text)
+    except ValueError:
+        return None
+    return parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
+
+
+def get_public_round_banners(now: datetime | None = None) -> list[dict]:
+    """Banners for the public site; [] when the admin switch is off.
+
+    Active rounds each give ``{"kind": "live", token, teg_num, round_num}``.
+    With none active, the most recently finalized round (by FinalizedAt,
+    falling back to CreatedAt) gives one ``{"kind": "results", teg_num,
+    round_num}`` banner, unless that time is over RESULTS_BANNER_MAX_AGE_DAYS
+    old. Cancelled and deleted rounds never show. ``now`` is injectable for tests.
+    """
+    if not get_public_entry_enabled():
+        return []
+    rows = list_live_rounds()
+    live = [
+        {"kind": "live", "token": r["Token"], "teg_num": int(r["TEGNum"]), "round_num": int(r["Round"])}
+        for r in rows if r.get("Status") == "active"
+    ]
+    if live:
+        return live
+
+    latest = None  # (when, row)
+    for r in rows:
+        if r.get("Status") != "finalized":
+            continue
+        when = _parse_registry_time(r.get("FinalizedAt")) or _parse_registry_time(r.get("CreatedAt"))
+        if when is None:
+            continue
+        if latest is None or when > latest[0]:
+            latest = (when, r)
+    if latest is None:
+        return []
+    now = now or datetime.now(timezone.utc)
+    if now - latest[0] > timedelta(days=RESULTS_BANNER_MAX_AGE_DAYS):
+        return []
+    r = latest[1]
+    return [{"kind": "results", "teg_num": int(r["TEGNum"]), "round_num": int(r["Round"])}]
 
 
 def start_live_round(teg_num: int, round_num: int) -> dict:

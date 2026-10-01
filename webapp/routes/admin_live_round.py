@@ -138,7 +138,7 @@ def admin_live_round_public_link(request: Request, enabled: str = Form("")):
     except Exception as e:  # noqa: BLE001
         logger.error(f"Public link switch failed: {e}", exc_info=True)
         return _redirect("/admin/live-round?saved=error")
-    deps.clear_public_live_rounds_cache()
+    deps.clear_public_round_banners_cache()
     return _redirect(f"/admin/live-round?saved={'on' if on else 'off'}")
 
 
@@ -158,7 +158,7 @@ def admin_live_round_start(request: Request, teg_num: str = Form(""), round_num:
     ctx = {"request": request}
     try:
         row = start_live_round(int(teg_num), int(round_num))
-        deps.clear_public_live_rounds_cache()
+        deps.clear_public_round_banners_cache()
         return HTMLResponse("", headers={"HX-Redirect": f"/admin/live-round/{row['Token']}/review?started=1"})
     except LiveRoundAlreadyActiveError as e:
         if getattr(e, "token", None):
@@ -393,7 +393,7 @@ def admin_live_round_cancel(request: Request, token: str):
     ctx = {"request": request, "token": token}
     try:
         cancel_live_round(token)
-        deps.clear_public_live_rounds_cache()
+        deps.clear_public_round_banners_cache()
         return HTMLResponse("", headers={"HX-Redirect": f"/admin/live-round/{token}/review?cancelled=1"})
     except LiveRoundNotFoundError:
         ctx["error"] = "Live round not found."

@@ -83,6 +83,13 @@ body.ts-a .page-title-area { padding-inline: 2.5rem; }
     text-transform: uppercase;
     letter-spacing: 0.04em;
 }
+/* Results variant: calmer than live. Neutral label, no green. */
+.live-entry-banner--results .live-entry-label {
+    color: var(--text-secondary, var(--text-primary));
+}
+.live-entry-banner--results {
+    font-size: 0.8125rem;
+}
 .live-entry-link {
     color: var(--text-primary);
     font-weight: 600;

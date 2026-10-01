@@ -111,6 +111,19 @@ Evidence and root causes: `TEST_TOURNAMENT_ISSUES.md`, issues 18–22.
 
 If 21 or 22 isn't done by 8 October, leave it: the workaround is to wait a minute after a delete, then reload, and to regenerate reports after re-entering a round.
 
+### Batch 6: dry-run 3 fixes (before 8 October)
+
+Evidence: `TEST_TOURNAMENT_ISSUES.md`, issues 23–26. Two PRs, so the low-risk fixes can ship even if 26 slips.
+
+| # | Priority | Problem | Fix | Main files |
+|---|---|---|---|---|
+| 23 | Should, fixed (PR A) | The score entry page has no way back to the site. | Slim site strip (brand, Leaderboard) above the app bar on the entry and live-leaderboard pages. | `templates/live_round_entry.html`, `live_round_leaderboard.html`, `routes/live_round.py` |
+| 24 | Should, fixed (PR A) | No link from score entry to the admin review page. | "Review & finalise" in the strip, admin cookie only. | same as 23 |
+| 25 | Should, fixed (PR A) | The Enter scores banner stayed up after finalise. | The banner follows the round's state: live → Enter scores; else latest finalised round → "results are in", for 7 days. | `analysis/live_round.py`, `webapp/deps.py`, `base.html` |
+| 26 | Should (PR B) | Deleting rounds shows no step-by-step progress. | Run deletion as a background job with the finalise-style step checklist. | `webapp/delete_jobs.py`, `analysis/data_update.py`, `routes/admin.py` |
+
+**Pre-tournament action for Jon (not code):** production's `data/live_rounds.csv` still holds an `active` row from 29 September (`jyQz-lkfbVs`, TEG 19 R1). Turning the public link on would advertise it, and Go live for R1 would redirect to it. Cancel it before 10 October: Admin → Live round → that row → Cancel round.
+
 ### Housekeeping (with Batch 1A)
 
 - **CLAUDE.md is out of date.** It says the webapp "only reads finished reports; it never generates them", but `/admin/reports` generates them. Correct the Architecture line.
@@ -142,6 +155,8 @@ Each batch is one task: its own branch and worktree, and one PR against `main` w
 | 3 to 5 Oct | Wave 2: Batch 4b |
 | 30 Sep | Second dry run (PR #150): done. Found issues 18–22 (Batch 5). |
 | 1 to 7 Oct | Batch 5: 18 and 20 must ship (PR A); 21 and 22 if time allows (PR B). |
+| 1 Oct | Third dry run (PR #157). Found issues 23–26 (Batch 6). |
+| 1 to 7 Oct | Batch 6: 23–25 (PR A); 26 (PR B). Cancel the stale production live round. |
 | 8 Oct | Code freeze. (PR #140 and #150 are closed.) |
 | 9 Oct | Turn auto-deploy off. |
 | 10 to 13 Oct | TEG 19 |

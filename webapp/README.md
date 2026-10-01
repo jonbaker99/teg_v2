@@ -167,8 +167,10 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
   `X-Forwarded-Proto`), so it's right on any host, PR previews included.
   A **Public entry link** switch (`POST /admin/live-round/public-link`, off by
   default) shows an "Enter scores" banner on every `base.html` page for each active
-  round. Stored in `data/live_round_settings.csv`; read via
-  `deps.get_public_live_rounds_cached` (30s TTL, cleared on switch, start, cancel
+  round; with none active it shows a calmer "results are in" banner (link to
+  the leaderboard, hidden on `/leaderboard`) for the latest finalized round,
+  for 7 days. Stored in `data/live_round_settings.csv`; read via
+  `deps.get_public_round_banners_cached` (30s TTL, cleared on switch, start, cancel
   and finalize) so the per-request middleware stays cheap.
   The review page shows the **full staged scorecard as an editable grid** — the admin
   can correct any cell (not just flagged conflicts), links out to the live leaderboard,
@@ -434,6 +436,12 @@ don't need the link sent to them.
   phone's light/dark setting (`prefers-color-scheme`); the mock-up's fixed Light / Dark
   toggle was removed because it covered that link. It reads **only staging** — a live round isn't on the main-site
   `/leaderboard` or `/results` until it's finalized.
+- **Site strip:** both pages (entry and live leaderboard) carry a slim strip above
+  the app bar: "The El Golfo" brand to `/` and **Leaderboard** to
+  `/leaderboard?teg=N`. With a valid admin cookie it adds **Review & finalise**
+  (`is_admin`, from `admin_auth.is_authed`; false on any error). It is not
+  `base.html`'s nav: its sticky header and bottom tab bar would cost the grid and
+  cover the keypad. The error page gets the brand link only.
 - **Page:** a standalone page (does **not** extend `base.html`'s desktop site
   chrome) styled like `webapp/mobile_mockups/round_entry_grid.html`, which it's
   ported from almost verbatim — same grid/keypad/voice-entry/player-group-chips

@@ -127,5 +127,121 @@ def test_api_write_scores_clear_cell_null_value(client, monkeypatch):
     assert captured["cells"][0]["value"] is None
 
 
+# --- Site strip (snags 23, 24) ---
+
+_CTX = {
+    "token": "tok123", "teg_num": 19, "round_num": 1, "status": "active", "course": "Ashdown",
+    "players": ["DM", "GW"], "player_names": {"DM": "David MULLIN", "GW": "Gregg WILLIAMS"},
+    "holes": [{"hole": h, "par": 4, "si": h} for h in range(1, 19)],
+}
+_REVIEW = "/admin/live-round/tok123/review"
+
+
+def _strip_pages(client, monkeypatch, admin: bool):
+    import teg_analysis.analysis.live_round as lrmod
+    monkeypatch.setattr(lrmod, "get_live_round_context", lambda token: dict(_CTX, token=token))
+    monkeypatch.setattr(lrmod, "get_live_leaderboard", lambda token: {
+        "token": token, "teg_num": 19, "round_num": 1, "course": "Ashdown", "status": "active",
+    })
+    if admin:
+        from webapp.admin_auth import COOKIE_NAME, _expected_token
+        client.cookies.set(COOKIE_NAME, _expected_token())
+    return [client.get("/live-round/tok123").text, client.get("/live-round/tok123/leaderboard").text]
+
+
+def test_site_strip_brand_and_leaderboard_links_on_both_pages(client, monkeypatch):
+    for text in _strip_pages(client, monkeypatch, admin=False):
+        assert 'href="/">The El Golfo</a>' in text
+        assert 'href="/leaderboard?teg=19"' in text
+
+
+def test_site_strip_admin_link_hidden_without_cookie(client, monkeypatch):
+    for text in _strip_pages(client, monkeypatch, admin=False):
+        assert _REVIEW not in text
+        assert "admin_panel_settings" not in text
+
+
+def test_site_strip_admin_link_shown_with_cookie(client, monkeypatch):
+    for text in _strip_pages(client, monkeypatch, admin=True):
+        assert f'href="{_REVIEW}"' in text
+
+
+def test_site_strip_error_page_has_brand_link_only(client):
+    for path in ("/live-round/does-not-exist", "/live-round/does-not-exist/leaderboard"):
+        text = client.get(path).text
+        assert 'href="/">The El Golfo</a>' in text
+        assert "/leaderboard?teg=" not in text
+        assert "/review" not in text
+
+
+# --- Banner state (snag 25) ---
+
+def _set_banner_rows(monkeypatch, rows, enabled=True):
+    import teg_analysis.analysis.live_round as lrmod
+    from webapp import deps
+
+    monkeypatch.setattr(lrmod, "get_public_entry_enabled", lambda: enabled)
+    monkeypatch.setattr(lrmod, "list_live_rounds", lambda: rows)
+    deps.clear_public_round_banners_cache()
+
+
+def _banner_row(status, token="tok1", teg=19, rnd=2):
+    from datetime import datetime, timezone
+    now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    return {"Token": token, "TEGNum": teg, "Round": rnd, "CreatedAt": now,
+            "Status": status, "FinalizedAt": now if status == "finalized" else None}
+
+
+def test_banner_live_for_active_round(client, monkeypatch):
+    from webapp import deps
+    _set_banner_rows(monkeypatch, [_banner_row("active")])
+    try:
+        resp = client.get("/", follow_redirects=True)
+        assert "live-entry-banner" in resp.text
+        assert "Enter scores" in resp.text
+        assert 'href="/live-round/tok1"' in resp.text
+        assert "results are in" not in resp.text
+    finally:
+        deps.clear_public_round_banners_cache()
+
+
+def test_banner_becomes_results_after_finalize(client, monkeypatch):
+    from webapp import deps
+    _set_banner_rows(monkeypatch, [_banner_row("active")])
+    assert "Enter scores" in client.get("/", follow_redirects=True).text
+    _set_banner_rows(monkeypatch, [_banner_row("finalized")])
+    deps.clear_all_data_caches()
+    try:
+        text = client.get("/", follow_redirects=True).text
+        assert "Enter scores" not in text
+        assert "TEG 19 Round 2 results are in." in text
+        assert 'href="/leaderboard?teg=19"' in text
+        assert "live-entry-banner--results" in text
+    finally:
+        deps.clear_public_round_banners_cache()
+
+
+def test_banner_results_hidden_on_leaderboard_page_but_live_shown(client, monkeypatch):
+    from webapp import deps
+    try:
+        _set_banner_rows(monkeypatch, [_banner_row("finalized")])
+        resp = client.get("/leaderboard")
+        assert "results are in" not in resp.text
+        _set_banner_rows(monkeypatch, [_banner_row("active")])
+        resp = client.get("/leaderboard")
+        assert "Enter scores" in resp.text
+    finally:
+        deps.clear_public_round_banners_cache()
+
+
+def test_banner_absent_when_switch_off(client, monkeypatch):
+    from webapp import deps
+    _set_banner_rows(monkeypatch, [_banner_row("active")], enabled=False)
+    try:
+        assert "live-entry-banner" not in client.get("/", follow_redirects=True).text
+    finally:
+        deps.clear_public_round_banners_cache()
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
