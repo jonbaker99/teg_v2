@@ -78,8 +78,9 @@ teg_analysis/
                      start_live_round/apply_score_writes/get_scores_since/
                      apply_admin_edits (authoritative bulk edit; resolve_conflict wraps
                      it)/get_live_leaderboard/finalize_live_round;
-                     get/set_public_entry_enabled + get_public_live_rounds (the
-                     admin switch for the public "Enter scores" banner)
+                     get/set_public_entry_enabled + get_public_round_banners (the
+                     admin switch and state for the public live / "results are in"
+                     banner; get_public_live_rounds = active rounds only)
 
   reporting/         LLM tournament-report pipeline (scored beats → story plan → authoring →
                      styled MD → optional offline PDF render)

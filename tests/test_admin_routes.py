@@ -696,19 +696,19 @@ def test_public_banner_shows_only_when_switched_on(client, monkeypatch):
     _login(client)
 
     monkeypatch.setattr(lrmod, "get_public_entry_enabled", lambda: False)
-    deps.clear_public_live_rounds_cache()
+    deps.clear_public_round_banners_cache()
     resp = client.get("/admin/live-round")
     assert "live-entry-banner" not in resp.text
     assert "Turn on" in resp.text
 
     monkeypatch.setattr(lrmod, "get_public_entry_enabled", lambda: True)
-    deps.clear_public_live_rounds_cache()
+    deps.clear_public_round_banners_cache()
     resp = client.get("/admin/live-round")
     assert "live-entry-banner" in resp.text
     assert 'href="/live-round/livetok"' in resp.text
     assert "TEG 19 Round 2" in resp.text
     assert "Turn off" in resp.text
-    deps.clear_public_live_rounds_cache()
+    deps.clear_public_round_banners_cache()
 
 
 def test_live_round_start_success(client, monkeypatch):
