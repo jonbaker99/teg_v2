@@ -178,19 +178,33 @@ def run_deletion(teg, rounds) -> None:
     from teg_analysis.analysis.data_update import UpdateInProgressError, execute_data_deletion
     from webapp import deps
 
+    def _record_error(error: str) -> None:
+        try:
+            write_status(state="error", error=error, message=None, finished_at=_now())
+        except Exception:  # noqa: BLE001 -- status store itself is broken; nothing left to do
+            logger.error("Could not record deletion failure", exc_info=True)
+
     try:
         write_status(state="running", message="Removing the rounds and rebuilding the site's stats…")
         result = execute_data_deletion(int(teg), [int(r) for r in rounds],
                                        progress=_progress_recorder())
-        deps.clear_all_data_caches()
-        write_status(state="done", message="Deleted.", error=None,
-                     result=_json_safe(result), finished_at=_now())
     except UpdateInProgressError:
-        write_status(state="error", error=BUSY_MESSAGE, message=None, finished_at=_now())
+        _record_error(BUSY_MESSAGE)
+        return
     except Exception as e:  # noqa: BLE001
         logger.error(f"Deletion failed: {e}", exc_info=True)
-        try:
-            write_status(state="error", error=f"Deletion failed: {e}", message=None,
-                         finished_at=_now())
-        except Exception:  # noqa: BLE001 -- status store itself is broken; nothing left to do
-            logger.error("Could not record deletion failure", exc_info=True)
+        _record_error(f"Deletion failed: {e}")
+        return
+
+    # The rounds are gone and committed by now: a cache-clear failure must not
+    # report the deletion itself as failed.
+    try:
+        deps.clear_all_data_caches()
+    except Exception:  # noqa: BLE001
+        logger.error("Cache clear after deletion failed", exc_info=True)
+    try:
+        write_status(state="done", message="Deleted.", error=None,
+                     result=_json_safe(result), finished_at=_now())
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Could not record deletion result: {e}", exc_info=True)
+        _record_error(f"Deleted, but the result could not be recorded: {e}")

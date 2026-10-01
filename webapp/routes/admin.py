@@ -468,6 +468,9 @@ def admin_delete_data_status(request: Request):
         ctx["result"] = status["result"]
         return templates.TemplateResponse("partials/admin_delete_result.html", ctx)
     ctx["error"] = delete_jobs.error_message(status) or "No deletion run found."
+    if status and status.get("steps"):
+        # Show how far it got (e.g. whether the commit ran) beside the error.
+        ctx["rows"] = delete_jobs.step_rows(status)
     return templates.TemplateResponse("partials/admin_delete_result.html", ctx)
 
 

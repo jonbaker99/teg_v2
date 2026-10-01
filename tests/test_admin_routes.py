@@ -353,10 +353,14 @@ def test_delete_status_shows_interrupted_and_requires_auth(client, delete_store)
     path = delete_store.status_path()
     data = json.loads(path.read_text())
     data["boot_id"] = "old-boot"
+    data["steps"] = {"backup": {"state": "done", "error": None},
+                     "delete": {"state": "running", "error": None}}
     path.write_text(json.dumps(data))
     _login(client)
     resp = client.get("/admin/delete-data/status")
     assert "The deletion was interrupted." in resp.text
+    # The checklist shows how far it got.
+    assert "fin-steps" in resp.text and "Back up scores and data" in resp.text
 
 
 def test_edit_save_rejects_unknown_file(client):
