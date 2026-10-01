@@ -177,39 +177,39 @@ def clear_all_data_caches() -> None:
         clear_fn()
 
 
-# --- Public live-round entry link ---------------------------------------------
+# --- Public round banners (live entry link / results) ------------------------
 
 # Every page renders this banner, so read the switch + registry at most once
 # per TTL rather than per request. Admin changes clear it immediately.
-_PUBLIC_LIVE_TTL_SECONDS = 30
-_public_live_cache: dict = {"at": 0.0, "rounds": []}
+_PUBLIC_BANNERS_TTL_SECONDS = 30
+_public_banners_cache: dict = {"at": 0.0, "rounds": []}
 
 
-def get_public_live_rounds_cached() -> list[dict]:
-    """Active rounds the public site may link to; [] when the admin switch is off.
+def get_public_round_banners_cached() -> list[dict]:
+    """Banners (live / results) for the public site; [] when the admin switch is off.
 
     Never raises: a read failure hides the banner rather than breaking every page.
     """
     import time
-    from teg_analysis.analysis.live_round import get_public_live_rounds
+    from teg_analysis.analysis.live_round import get_public_round_banners
 
     now = time.monotonic()
-    if now - _public_live_cache["at"] < _PUBLIC_LIVE_TTL_SECONDS:
-        return _public_live_cache["rounds"]
+    if now - _public_banners_cache["at"] < _PUBLIC_BANNERS_TTL_SECONDS:
+        return _public_banners_cache["rounds"]
     try:
-        rounds = get_public_live_rounds()
+        rounds = get_public_round_banners()
     except Exception as e:  # noqa: BLE001
-        logger.warning(f"Public live-round lookup failed: {e}")
+        logger.warning(f"Public round-banner lookup failed: {e}")
         rounds = []
-    _public_live_cache.update(at=now, rounds=rounds)
+    _public_banners_cache.update(at=now, rounds=rounds)
     return rounds
 
 
-def clear_public_live_rounds_cache() -> None:
-    _public_live_cache.update(at=0.0, rounds=[])
+def clear_public_round_banners_cache() -> None:
+    _public_banners_cache.update(at=0.0, rounds=[])
 
 
-register_cache_clearer(clear_public_live_rounds_cache)
+register_cache_clearer(clear_public_round_banners_cache)
 
 
 # --- Leaderboard logic (from streamlit/leaderboard_utils.py) ------------------

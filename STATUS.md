@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-30 (Batch 5: issues 18, 20, 21 and 22)
+**Last updated:** 2026-10-01 (Batch 6 PR A: issues 23–25)
+
+## 2026-10-01 — Score entry links back to the site; the banner follows the round (Batch 6, PR A)
+
+Fixes dry-run 3 issues 23–25. Score entry and the live leaderboard gain a slim site strip (brand, Leaderboard, and Review & finalise for admins). The public banner says "results are in" once a round is finalised, for 7 days. Before 10 October, cancel production's stale 29 September live round (`TEG19_FIX_PLAN.md` → Batch 6).
 
 ## 2026-09-30 — Deleting a round shows progress and archives its reports (Batch 5, PR B)
 

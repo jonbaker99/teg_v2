@@ -178,12 +178,20 @@
     <!-- Main content -->
     <div class="page-container">
         {#- Admin-switched link into live score entry (Admin > Live round). -#}
-        {% for lr in request.state.public_live_rounds or [] %}
+        {% for b in request.state.public_round_banners or [] %}
+        {% if b.kind == "live" %}
         <div class="live-entry-banner" role="status">
             <span class="live-entry-label">Live</span>
-            <span>TEG {{ lr.teg_num }} Round {{ lr.round_num }} is in play.</span>
-            <a href="/live-round/{{ lr.token }}" class="live-entry-link">Enter scores →</a>
+            <span>TEG {{ b.teg_num }} Round {{ b.round_num }} is in play.</span>
+            <a href="/live-round/{{ b.token }}" class="live-entry-link">Enter scores →</a>
         </div>
+        {% elif b.kind == "results" and request.url.path != "/leaderboard" %}
+        <div class="live-entry-banner live-entry-banner--results" role="status">
+            <span class="live-entry-label">Results</span>
+            <span>TEG {{ b.teg_num }} Round {{ b.round_num }} results are in.</span>
+            <a href="/leaderboard?teg={{ b.teg_num }}" class="live-entry-link">Leaderboard →</a>
+        </div>
+        {% endif %}
         {% endfor %}
         <div class="page-title-outer">
             {% block page_title %}{% endblock %}

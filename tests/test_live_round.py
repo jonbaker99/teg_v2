@@ -643,6 +643,100 @@ def test_public_entry_link_lists_only_active_rounds_when_on(store):
     assert lr.get_public_live_rounds() == []
 
 
+# --- Public round banners (snag 25) ---
+
+def _registry(store, *rows):
+    """Write registry rows straight into the store: (token, teg, round, status, created, finalized)."""
+    store[lr.LIVE_ROUNDS_REGISTRY_CSV] = pd.DataFrame([
+        {"Token": t, "TEGNum": teg, "Round": rnd, "CreatedAt": created,
+         "Status": status, "FinalizedAt": fin}
+        for (t, teg, rnd, status, created, fin) in rows
+    ])
+
+
+NOW = lr.datetime(2026, 10, 10, 12, 0, tzinfo=lr.timezone.utc)
+
+
+def test_banners_empty_when_switch_off(store):
+    _registry(store, ("a", 19, 1, "active", "2026-10-09T10:00:00+00:00", None))
+    assert lr.get_public_round_banners(now=NOW) == []
+
+
+def test_banners_live_for_each_active_row(store):
+    lr.set_public_entry_enabled(True)
+    _registry(store,
+              ("a", 19, 1, "active", "2026-10-09T10:00:00+00:00", None),
+              ("b", 19, 2, "active", "2026-10-09T11:00:00+00:00", None),
+              ("c", 19, 3, "finalized", "2026-10-09T09:00:00+00:00", "2026-10-09T12:00:00+00:00"))
+    banners = lr.get_public_round_banners(now=NOW)
+    assert {b["token"] for b in banners} == {"a", "b"}
+    assert all(b["kind"] == "live" for b in banners)
+    assert {(b["teg_num"], b["round_num"]) for b in banners} == {(19, 1), (19, 2)}
+
+
+def test_banners_latest_finalized_by_finalized_at_when_none_active(store):
+    lr.set_public_entry_enabled(True)
+    _registry(store,
+              # Created later but finalized earlier: FinalizedAt wins.
+              ("a", 19, 2, "finalized", "2026-10-09T10:00:00+00:00", "2026-10-09T11:00:00+00:00"),
+              ("b", 19, 1, "finalized", "2026-10-08T10:00:00+00:00", "2026-10-09T15:00:00+00:00"))
+    assert lr.get_public_round_banners(now=NOW) == [{"kind": "results", "teg_num": 19, "round_num": 1}]
+
+
+def test_banners_results_falls_back_to_created_at_when_finalized_at_blank(store):
+    lr.set_public_entry_enabled(True)
+    _registry(store,
+              ("a", 19, 1, "finalized", "2026-10-08T10:00:00+00:00", None),
+              ("b", 19, 2, "finalized", "2026-10-09T10:00:00+00:00", "not a date"))
+    assert lr.get_public_round_banners(now=NOW) == [{"kind": "results", "teg_num": 19, "round_num": 2}]
+
+
+def test_banners_results_handles_missing_finalized_at_column(store):
+    lr.set_public_entry_enabled(True)
+    store[lr.LIVE_ROUNDS_REGISTRY_CSV] = pd.DataFrame([
+        {"Token": "a", "TEGNum": 19, "Round": 1, "CreatedAt": "2026-10-09T10:00:00+00:00", "Status": "finalized"},
+    ])
+    assert lr.get_public_round_banners(now=NOW) == [{"kind": "results", "teg_num": 19, "round_num": 1}]
+
+
+def test_banners_skip_a_malformed_row_instead_of_hiding_all(store):
+    lr.set_public_entry_enabled(True)
+    _registry(store,
+              ("a", 19, 1, "active", "2026-10-09T10:00:00+00:00", None),
+              ("bad", None, None, "active", "2026-10-09T11:00:00+00:00", None))
+    assert lr.get_public_round_banners(now=NOW) == [
+        {"kind": "live", "token": "a", "teg_num": 19, "round_num": 1}]
+
+
+def test_banners_ignore_cancelled_and_deleted(store):
+    lr.set_public_entry_enabled(True)
+    _registry(store,
+              ("a", 19, 1, "cancelled", "2026-10-09T10:00:00+00:00", None),
+              ("b", 19, 2, "deleted", "2026-10-09T11:00:00+00:00", "2026-10-09T12:00:00+00:00"))
+    assert lr.get_public_round_banners(now=NOW) == []
+
+
+def test_banners_results_hidden_after_seven_days(store):
+    lr.set_public_entry_enabled(True)
+    _registry(store, ("a", 19, 1, "finalized", "2026-10-01T10:00:00+00:00", "2026-10-03T12:00:00+00:00"))
+    days = lr.RESULTS_BANNER_MAX_AGE_DAYS
+    fin = lr.datetime(2026, 10, 3, 12, 0, tzinfo=lr.timezone.utc)
+    inside = fin + lr.timedelta(days=days) - lr.timedelta(minutes=1)
+    outside = fin + lr.timedelta(days=days) + lr.timedelta(minutes=1)
+    assert lr.get_public_round_banners(now=inside) != []
+    assert lr.get_public_round_banners(now=outside) == []
+
+
+def test_banners_live_suppresses_results(store):
+    lr.set_public_entry_enabled(True)
+    _registry(store,
+              ("a", 19, 1, "finalized", "2026-10-09T10:00:00+00:00", "2026-10-09T12:00:00+00:00"),
+              ("b", 19, 2, "active", "2026-10-10T09:00:00+00:00", None))
+    banners = lr.get_public_round_banners(now=NOW)
+    assert [b["kind"] for b in banners] == ["live"]
+    assert banners[0]["round_num"] == 2
+
+
 def test_apply_admin_edits_refuses_inactive_round(store):
     token = lr.start_live_round(10, 1)["Token"]
     lr.cancel_live_round(token)

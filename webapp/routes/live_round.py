@@ -42,6 +42,15 @@ class ScoreWriteRequest(BaseModel):
     cells: list[ScoreCell]
 
 
+def _is_admin(request: Request) -> bool:
+    """Admin cookie present? Never lets a cookie-check failure break a player page."""
+    try:
+        from webapp.admin_auth import is_authed
+        return bool(is_authed(request))
+    except Exception:  # noqa: BLE001
+        return False
+
+
 @router.get("/live-round/{token}", name="live_round_page")
 def live_round_page(request: Request, token: str):
     from teg_analysis.analysis.live_round import get_live_round_context, MAX_SCORE
@@ -61,6 +70,7 @@ def live_round_page(request: Request, token: str):
     else:
         ctx["live"] = live_ctx
 
+    ctx["is_admin"] = _is_admin(request)
     return templates.TemplateResponse("live_round_entry.html", ctx)
 
 
@@ -81,6 +91,7 @@ def live_round_leaderboard_page(request: Request, token: str):
     else:
         ctx["board"] = board
 
+    ctx["is_admin"] = _is_admin(request)
     return templates.TemplateResponse("live_round_leaderboard.html", ctx)
 
 
