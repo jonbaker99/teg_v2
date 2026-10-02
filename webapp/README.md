@@ -535,19 +535,23 @@ All data comes from `teg_analysis/`. The webapp never calculates anything — it
 
 ## Player profiles
 
-The `/player` roster keeps its existing card layout. `/player/{code}` is an
+The `/player` roster (in the nav under TEG History) is a two-line list on the site's white panel: one row per player, ranked by silverware then TEGs played. A "Click a player" line sits above the list (no section title; the page title says it). The whole row links to the profile, and names and footer links carry the site's ↗ link arrow. Each row shows name, career span, gold/green stars, then avg gross vs par, avg Stableford and Wooden Spoons as value over all-time rank ("1st / 7"). Above 640px one header row labels the stat columns (the per-row labels stay for screen readers); on phones each row keeps its own labels, since a header would scroll out of view. Between 641px and 860px the stars move under the name. It is built by `_build_roster()` (ranks from the same `_metric_specs` the profile uses; asterisked wins count) and styled by the `pr-` rules in `player-profile.css`. On phones each player stacks: name, stars, career line, then gross / Stableford / spoons. `/player/{code}` is an
 almanac page (`player-profile.css`, `player-profile.js`): Lora for the name and
 section headings, Inter for the rest, thin rules and no card boxes. The header
 shows gold stars (TEG Trophies) then green stars (Green Jackets). Tabs:
 Overview, Career record, Rounds, Scoring, Records & Streaks (HTMX partials at
-`/player/{code}/tab/{tab}`).
+`/player/{code}/tab/{tab}`). Footer links under each section end in the
+site's ↗ link arrow.
 
 Overview, in order: Honours / Averages / Counting columns with all-time ranks
 (`_metric_specs` / `_metric_columns`; fewer is better for triples); Finishing
 position; Gross vs par per round (server-rendered HTML/CSS bars, not Plotly);
 Records and personal bests. Finishing position and the chart are each one
 Jinja loop that CSS reflows from desktop columns to phone rows (newest first),
-so there is no second rendering to drift. Spoon red is the theme `--failure`.
+so there is no second rendering to drift. In the chart, best/worst round dots are
+centred on each bar, and the TEG average sits beside the TEG label (under it on
+desktop) rather than in the bar, so dots and values never collide. Spoon red is
+the theme `--failure`.
 
 Winners marked `*` in the winners table (an off-course decision) are matched
 with the asterisk stripped. The winner's gross or net position, and anyone else

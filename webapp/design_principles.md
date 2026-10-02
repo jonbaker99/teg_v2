@@ -8,8 +8,9 @@ The webapp should feel **lo-fi and data-forward** — like a well-kept scorecard
  further down for the full role table. This replaces both an earlier
  "mono-first" direction and, before that, a "serif-first" one; where a page
  still doesn't match, treat it as *not yet converted*, not as the target.
- The `/player` roster is the reference implementation for the rest of the
- vibe (surfaces, restraint, no decorative chrome).
+ The `/player` roster (a two-line list: value over muted label, thin rules,
+ Lora names, no card boxes) is the reference implementation for the rest of the
+ vibe (restraint, no decorative chrome).
 
 ## Design vibe
 
@@ -60,7 +61,7 @@ vibe conversion for one page:
  ```text
  Apply our **Design vibe** to the `[PAGE — e.g. /player/{code} profile, or /teg-history]` page.
 
- First read `webapp/design_principles.md` — start with the **Design vibe** section (the lo-fi / mono-first direction + checklist). That's the target; the `/player` roster (`webapp/templates/player_index.html`) is the reference implementation to match.
+ First read `webapp/design_principles.md` — start with the **Design vibe** section (the lo-fi / mono-first direction + checklist). That's the target; the `/player` roster (`webapp/templates/player_index.html`, a two-line list) is the reference implementation to match.
 
  Then:
  1. Look at the page as it renders now (route + template + the CSS it uses) and tell me, briefly, where it currently breaks the vibe — serif where it should be mono, decorative chrome, redundant CTAs, marketing-y copy, misused accent colour, boxed/heavy surfaces, edge alignment.

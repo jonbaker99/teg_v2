@@ -381,6 +381,38 @@ def test_teg_reports_keeps_requested_in_progress_round_edition(client, monkeypat
 def test_player_index_renders(client):
     resp = client.get("/player")
     _assert_ok_no_error(resp)
+    assert "pick a card" not in resp.text
+    assert "pp-sec" not in resp.text  # no section title; page title suffices
+    assert "Click a player to open their profile." in resp.text
+    # Whole row links to the profile; no handicap column.
+    assert 'class="pr-row" href="/player/' in resp.text
+    assert "pr-hc" not in resp.text
+    assert 'class="pr-row pr-head"' in resp.text  # stat labels once, in a header
+    # Nav links Player Profiles (TEG History section).
+    assert 'href="/player"' in resp.text and "Player Profiles" in resp.text
+
+
+def test_player_roster_counts_asterisked_wins_orders_and_ranks(client):
+    from webapp.routes.player import _build_roster
+
+    rows, n_ranked = _build_roster()
+    by_name = {r["name"]: r for r in rows}
+    sn = by_name["Stuart NEUMANN"]
+    assert (sn["trophy_count"], sn["jacket_count"]) == (1, 1)
+    assert sn["stars_label"] == "1 TEG Trophy, 1 Green Jacket"
+    order = [r["name"] for r in rows]
+    key = [(-r["total_trophies"], -r["n_tegs"], r["name"]) for r in rows]
+    assert key == sorted(key)
+    assert order[0] == "David MULLIN"
+    assert n_ranked == len(rows)
+    for r in rows:
+        assert r["last_year"] >= r["since_year"]
+        assert r["gvp_rank"][0].isdigit() and r["stab_rank"][0].isdigit()
+    resp = client.get("/player")
+    assert "Avg gross" in resp.text and "Avg Stableford" in resp.text
+    assert f"1st / {n_ranked}" in resp.text
+    assert 'aria-label="1 TEG Trophy, 1 Green Jacket"' in resp.text
+    assert "trophy-star--green" in resp.text
 
 
 def test_player_page_renders(client):
@@ -1227,8 +1259,7 @@ def test_contents_all_nav_links_present(client):
     urls = [url for section in resp.context["sections"] for (_t, url, _k, _i) in section["pages"]]
     for url in urls:
         assert f'href="{url}"' in resp.text, f"missing sitemap link {url!r}"
-    # Player Profiles stay deliberately unlinked from nav (2026-09-18).
-    assert 'href="/player"' not in resp.text
+    assert 'href="/player"' in resp.text
 
 
 def test_contents_state_in_progress(client, monkeypatch):
