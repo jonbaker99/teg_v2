@@ -601,6 +601,12 @@ table.leaderboard td:nth-child(2) {
     .records-page .records-list--stacked .rec-whens { font-size: 0.8125rem; }
 }
 
+/* Screen-reader-only marker on new-record holder rows (records.py). */
+.rec-sr-only {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
 .records-table {
     /* Content-sized like the Streamlit datawrapper tables (not stretched to 100%) */
     width: auto;

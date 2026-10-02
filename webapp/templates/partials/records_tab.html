@@ -5,6 +5,19 @@
    partial renders standalone via HTMX tab switches too, so the class lives
    here rather than only on the top-level records.html wrapper. #}
 <div class="records-page">
+    {% if new_banner %}
+    {# Prototype only (/design/new-records): hidden unless the lab's banner toggle is on. #}
+    <div class="new-banner" role="status">
+        <p class="new-banner-title">
+            {% if new_banner.in_progress %}New records so far in TEG {{ new_banner.teg }}{% else %}TEG {{ new_banner.teg }} set {{ new_banner.count }} new record{{ '' if new_banner.count == 1 else 's' }}{% endif %}
+        </p>
+        <ul class="new-banner-list">
+            {% for label, player in new_banner.entries %}
+            <li><span class="new-banner-label">{{ label }}</span> / <span class="new-banner-player">{{ player }}</span></li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
     {% for section in sections %}
     {% if not loop.first %}
     <hr class="divider--dotted">

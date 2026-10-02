@@ -6,6 +6,7 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 ## IN PROGRESS
 
+- [ ] **Choose how /records marks new records (2026-10-02).** Compare styles at `/design/new-records` (`?teg=17` or `10` shows older TEGs). Then move the chosen CSS from `webapp/static/new-records-lab.css` into production `/records` and delete the lab (`webapp/routes/new_records_lab.py`, its template and CSS).
 - [ ] **TEG 19 dry-run fixes, Batches 1B to 4 (2026-09-29).** Batch 1A (post-completion crashes, issues 13 to 16) is done. Before 10 October: wave 1 (Batches 1B, 3 and 4a) runs in parallel now, then wave 2 (Batch 4b, admin pages on mobile) once 1B and 3 merge. Batch 2 (finalise reliability) was pulled forward (PR #149). Plan, root causes and acceptance criteria: `TEG19_FIX_PLAN.md`; evidence: `TEST_TOURNAMENT_ISSUES.md`. Delete both once every item is fixed or moved here.
 - [x] **Run round deletion as a background job (2026-09-30; done 2026-10-01, Batch 6 PR B).** `webapp/delete_jobs.py` mirrors `finalize_jobs.py`: a step checklist that survives a reload or a locked phone.
 - [ ] **Deleted reports keep their PDFs (2026-09-30).** Round deletion archives report markdown/JSON but leaves `data/commentary/pdfs/teg_N*.pdf` and their manifest entries. Harmless while PDFs are only linked from the report page; revisit if PDFs get built automatically.

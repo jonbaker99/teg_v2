@@ -16,6 +16,8 @@ from webapp.deps import (
     cached_round_data,
     cached_9_data,
     get_filtered_teg_data,
+    get_current_in_progress_teg_fast,
+    get_last_completed_teg_fast,
 )
 from teg_analysis.display.scorecards import _player_name_spans
 from teg_analysis.display.formatters import (
@@ -244,7 +246,32 @@ def _stacked_value_threshold(value: str) -> int:
     return int(match.group()) if match else 0
 
 
-def _build_stacked_records_list(holders: list, min_value: int | None = _STACKED_MIN_VALUE) -> str:
+_TEG_IN_WHEN_RE = re.compile(r'TEG\s*(\d+)')
+
+
+def _record_teg(when) -> int | None:
+    """TEG number a record occasion was set in: the LAST "TEG N" in ``when``.
+    A streak can span TEGs ("TEG 7, R1 H8 to R2 H12"); the record was reached
+    in the final one. None if the string names no TEG."""
+    matches = _TEG_IN_WHEN_RE.findall(str(when or ""))
+    return int(matches[-1]) if matches else None
+
+
+def new_record_teg() -> int | None:
+    """The TEG whose records count as "new": the in-progress TEG if there is
+    one, else the last completed TEG, else None."""
+    in_progress, _ = get_current_in_progress_teg_fast()
+    if in_progress:
+        return int(in_progress)
+    completed, _ = get_last_completed_teg_fast()
+    return int(completed) if completed else None
+
+
+def _build_stacked_records_list(
+    holders: list,
+    min_value: int | None = _STACKED_MIN_VALUE,
+    new_teg: int | None = None,
+) -> str:
     """Mobile-only stacked list for Score Counts and Streaks: one group per
     record (label + value on top), then one row per holder -- full player
     name with the occasion(s) beside it in muted text. ui-polish.js drops
@@ -253,36 +280,58 @@ def _build_stacked_records_list(holders: list, min_value: int | None = _STACKED_
     Holdings arrive one per occasion (score_count_record_holders); a player
     holding a record more than once gets one row listing each occasion.
     Records below ``min_value`` are left out (None keeps every record --
-    TEG/Round/9-Hole values are scores, not counts)."""
+    TEG/Round/9-Hole values are scores, not counts).
+    ``new_teg`` marks records set in that TEG: ``rec-when--new`` on the
+    occasion, ``rec-holder--new`` on the holder row, ``rec-group--new`` on the
+    group. Unstyled in production; see /design/new-records."""
+    return _stacked_records_html(holders, min_value, new_teg)[0]
+
+
+def _stacked_records_html(holders: list, min_value: int | None, new_teg: int | None) -> tuple[str, list]:
+    """(html, new_holders) for _build_stacked_records_list. new_holders is
+    a list of (label, player name) taken after the min_value filter, so it
+    matches what is shown."""
     names = get_player_dict()
     if min_value is not None:
         holders = [h for h in holders if _stacked_value_threshold(h['value']) >= min_value]
     if not holders:
-        return "<p class='text-muted text-sm'>No records.</p>"
+        return "<p class='text-muted text-sm'>No records.</p>", []
+    new_holders: list = []
     parts = ["<div class='records-list records-list--stacked'>"]
     for label in dict.fromkeys(h['label'] for h in holders):
         group = [h for h in holders if h['label'] == label]
         by_player: dict = {}
         for h in group:
             by_player.setdefault(h['player'], []).append(h['when'])
+        group_new = new_teg is not None and any(
+            _record_teg(w) == new_teg for whens in by_player.values() for w in whens
+        )
         parts.append(
-            "<div class='rec-group'>"
+            f"<div class='rec-group{' rec-group--new' if group_new else ''}'>"
             "<div class='rec-group-head'>"
             f"<span class='rec-label'>{escape(label)}</span>"
             f"<span class='rec-value'>{escape(group[0]['value'])}</span>"
             "</div>"
         )
         for code, whens in by_player.items():
-            when_html = "".join(f"<span class='rec-when'>{escape(w)}</span>" for w in whens)
+            flags = [new_teg is not None and _record_teg(w) == new_teg for w in whens]
+            holder_new = any(flags)
+            if holder_new:
+                new_holders.append((label, names.get(code, code)))
+            when_html = "".join(
+                f"<span class='rec-when{' rec-when--new' if is_new else ''}'>{escape(w)}</span>"
+                for w, is_new in zip(whens, flags)
+            )
+            sr = "<span class='rec-sr-only'> (new record)</span>" if holder_new else ""
             parts.append(
-                "<div class='rec-holder'>"
-                f"<span class='rec-identity'>{escape(names.get(code, code))}</span>"
+                f"<div class='rec-holder{' rec-holder--new' if holder_new else ''}'>"
+                f"<span class='rec-identity'>{escape(names.get(code, code))}{sr}</span>"
                 f"<span class='rec-whens'>{when_html}</span>"
                 "</div>"
             )
         parts.append("</div>")
     parts.append("</div>")
-    return "".join(parts)
+    return "".join(parts), new_holders
 
 
 def _looks_numeric(df: pd.DataFrame, col: str) -> bool:
@@ -323,17 +372,26 @@ def _streak_holders(df: pd.DataFrame) -> list:
     ]
 
 
-def _section(title: str, holders: list, min_value: int | None = _STACKED_MIN_VALUE) -> dict:
+def _section(
+    title: str,
+    holders: list,
+    min_value: int | None = _STACKED_MIN_VALUE,
+    new_teg: int | None = None,
+) -> dict:
     """Build a section dict: title plus the stacked list, which /records
-    shows at every width (the old table is gone)."""
+    shows at every width (the old table is gone). ``new_count`` is the number
+    of holder rows set in ``new_teg``."""
+    table_html, new_holders = _stacked_records_html(holders, min_value, new_teg)
     return {
         "title": title,
-        "table_html": _build_stacked_records_list(holders, min_value=min_value),
+        "table_html": table_html,
         "record_count": len(holders),
+        "new_count": len(new_holders),
+        "new_holders": new_holders,
     }
 
 
-def _tab_context(tab_name: str) -> dict:
+def _tab_context(tab_name: str, new_teg: int | None = None) -> dict:
     """Build context for a records tab."""
     try:
         sections = []
@@ -348,32 +406,56 @@ def _tab_context(tab_name: str) -> dict:
                           "Best 9-Hole Scores", "Worst 9-Hole Scores"),
             }[tab_name]
             best = prepare_records_table(ranked(), scope)
-            sections.append(_section(best_title, _score_record_holders(best), min_value=None))
+            sections.append(_section(best_title, _score_record_holders(best), min_value=None, new_teg=new_teg))
             worst = prepare_worst_records_table(worst_data(), scope)
-            sections.append(_section(worst_title, _score_record_holders(worst), min_value=None))
+            sections.append(_section(worst_title, _score_record_holders(worst), min_value=None, new_teg=new_teg))
 
         elif tab_name == "streaks":
             all_data = cached_load_all_data()
-            sections.append(_section("Best Streaks", _streak_holders(prepare_record_best_streaks_data(all_data))))
-            sections.append(_section("Worst Streaks", _streak_holders(prepare_record_worst_streaks_data(all_data))))
+            sections.append(_section("Best Streaks", _streak_holders(prepare_record_best_streaks_data(all_data)), new_teg=new_teg))
+            sections.append(_section("Worst Streaks", _streak_holders(prepare_record_worst_streaks_data(all_data)), new_teg=new_teg))
             caption = "* and counting..."
 
         elif tab_name == "score_counts":
             holders = score_count_record_holders(cached_load_all_data())
-            sections.append(_section("Best Score Counts", [h for h in holders if h['best']]))
-            sections.append(_section("Worst Score Counts", [h for h in holders if not h['best']]))
+            sections.append(_section("Best Score Counts", [h for h in holders if h['best']], new_teg=new_teg))
+            sections.append(_section("Worst Score Counts", [h for h in holders if not h['best']], new_teg=new_teg))
             caption = "Eagles, Birdies and Pars also include better scores"
 
-        return {"sections": sections, "caption": caption}
+        return {
+            "sections": sections,
+            "caption": caption,
+            "new_count": sum(sec["new_count"] for sec in sections),
+            # Labels lose their Best/Worst prefix in the list; restore it from
+            # the section title so the banner can tell them apart.
+            "new_holders": [
+                (f"{sec['title'].split()[0]} {label}", who)
+                for sec in sections for label, who in sec["new_holders"]
+            ],
+        }
 
     except Exception as e:
         return {"error": str(e)}
 
 
+def _new_banner(ctx: dict, new_teg: int | None) -> dict | None:
+    """Summary banner data for the /design/new-records prototype (never
+    emitted on production /records): None when there is nothing new."""
+    if new_teg is None or not ctx.get("new_count"):
+        return None
+    in_progress, _ = get_current_in_progress_teg_fast()
+    return {
+        "teg": new_teg,
+        "count": ctx["new_count"],
+        "in_progress": bool(in_progress) and int(in_progress) == new_teg,
+        "entries": ctx["new_holders"],
+    }
+
+
 @router.get("/records")
 def records_page(request: Request, tab: str = Query("teg")):
     tab = tab if tab in {tab_id for tab_id, _label in TABS} else "teg"
-    ctx = _tab_context(tab)
+    ctx = _tab_context(tab, new_teg=new_record_teg())
     return templates.TemplateResponse("records.html", {
         "request": request,
         "active_page": "records",
@@ -384,9 +466,13 @@ def records_page(request: Request, tab: str = Query("teg")):
 
 
 @router.get("/records/tab/{tab_name}")
-def records_tab(request: Request, tab_name: str):
-    ctx = _tab_context(tab_name)
+def records_tab(request: Request, tab_name: str, new_teg: int | None = None, banner: int = 0):
+    """``new_teg`` overrides detection and ``banner=1`` adds the summary
+    banner (both used by the /design/new-records prototype's tab loads)."""
+    new_teg = new_teg if new_teg is not None else new_record_teg()
+    ctx = _tab_context(tab_name, new_teg=new_teg)
     return templates.TemplateResponse("partials/records_tab.html", {
         "request": request,
+        "new_banner": _new_banner(ctx, new_teg) if banner else None,
         **ctx,
     })
