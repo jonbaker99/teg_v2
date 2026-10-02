@@ -384,6 +384,7 @@ def test_player_index_renders(client):
     # Whole row links to the profile; no handicap column.
     assert 'class="pr-row" href="/player/' in resp.text
     assert "pr-hc" not in resp.text
+    assert 'class="pr-row pr-head"' in resp.text  # stat labels once, in a header
     # Nav links Player Profiles (TEG History section).
     assert 'href="/player"' in resp.text and "Player Profiles" in resp.text
 

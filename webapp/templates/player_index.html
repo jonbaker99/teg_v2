@@ -2,7 +2,7 @@
 {% block title_suffix %} — Player Profiles{% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="/static/player-profile.css?v=12">
+<link rel="stylesheet" href="/static/player-profile.css?v=13">
 {% endblock %}
 
 {% block page_title %}
@@ -16,11 +16,17 @@
 {% macro rank(r) %}{% if r and r != "–" %}{{ r }} / {{ n_ranked }}{% else %}&nbsp;{% endif %}{% endmacro %}
 <div class="pr-roster">
     <p class="pr-intro">Click a player to open their profile.</p>
+    <div class="pr-row pr-head" aria-hidden="true">
+        <span></span><span></span>
+        <span class="pr-num pr-sub">Avg gross</span>
+        <span class="pr-num pr-sub">Avg Stableford</span>
+        <span class="pr-num pr-sub">Wooden Spoons</span>
+    </div>
     <ul class="pr-list">
         {% for p in roster %}
         <li class="pr-item"><a class="pr-row" href="/player/{{ p.code }}">
             <div class="pr-cell pr-id">
-                <span class="pr-name">{{ p.name }}<span class="pr-arrow" aria-hidden="true"> ↗</span></span>
+                {% set parts = p.name.rsplit(" ", 1) %}<span class="pr-name">{% if parts|length == 2 %}{{ parts[0] }} {% endif %}<span class="pr-name-end">{{ parts[-1] }}<span class="pr-arrow" aria-hidden="true"> ↗</span></span></span>
                 <span class="pr-sub pr-meta">{{ p.n_tegs }} TEGs / {{ p.since_year }}&ndash;{{ p.last_year }}</span>
             </div>
             <div class="pr-cell pr-honours">
