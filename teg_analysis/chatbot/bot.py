@@ -28,7 +28,8 @@ MAX_TOOL_ROUNDS = 8
 MAX_TOKENS = 4000
 MAX_QUESTION_CHARS = 500
 MAX_HISTORY_TURNS = 6
-MAX_HISTORY_CHARS = 8000
+MAX_HISTORY_CHARS = 16000
+MAX_METHOD_CHARS = 2500
 #: Anthropic's sandbox: the model's pandas runs there, never on our server.
 CODE_TOOL = {"type": "code_execution_20260521", "name": "code_execution"}
 
@@ -58,6 +59,28 @@ class Answer:
     tool_calls: list[ToolCall] = field(default_factory=list)
     usage: dict = field(default_factory=dict)
     model: str = ""
+
+    @property
+    def method_note(self) -> str:
+        """Compact record of how the answer was reached, carried into the next turn so
+        follow-ups reuse the same method instead of inventing a new one."""
+        parts = []
+        for call in self.tool_calls:
+            if call.name == "code":
+                code = call.input.get("command") or call.input.get("file_text") or ""
+                parts.append(f"code: {code.strip()}")
+            else:
+                parts.append(f"lookup {call.name}({json.dumps(call.input, default=str)})")
+        note = "\n".join(parts)
+        if len(note) > MAX_METHOD_CHARS:
+            note = note[:MAX_METHOD_CHARS] + "\n…(truncated)"
+        return note
+
+    def history_text(self) -> str:
+        """The assistant turn as replayed in later requests: answer plus method note."""
+        if not self.method_note:
+            return self.text
+        return f"{self.text}\n\n[Method used for this answer, not shown to the user]\n{self.method_note}"
 
     @property
     def cost_usd(self) -> float:
@@ -92,7 +115,7 @@ def clean_history(history: Any) -> list[dict]:
     for item in history:
         if (isinstance(item, dict) and item.get("role") in ("user", "assistant")
                 and isinstance(item.get("content"), str) and item["content"].strip()):
-            turns.append({"role": item["role"], "content": item["content"][:4000]})
+            turns.append({"role": item["role"], "content": item["content"][:6000]})
     turns = turns[-2 * MAX_HISTORY_TURNS:]
     while turns and turns[0]["role"] != "user":
         turns.pop(0)

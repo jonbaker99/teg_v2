@@ -254,6 +254,25 @@ def test_ask_handles_refusal(data):
     assert "can't help" in bot.ask("q", data, client=client).text
 
 
+def test_history_text_carries_method_note():
+    answer = bot.Answer("JP tanks most.", [
+        bot.ToolCall("code", {"command": "python3 -c 'print(1)'"}, {"stdout": "1"}),
+        bot.ToolCall("get_records", {"scope": "round"}, {}),
+    ])
+    text = answer.history_text()
+    assert text.startswith("JP tanks most.")
+    assert "python3 -c 'print(1)'" in text and 'get_records({"scope": "round"})' in text
+    assert bot.Answer("plain").history_text() == "plain"
+
+
+def test_system_prompt_scopes_topic_and_hides_unplayed_players(data):
+    players = {**PLAYERS, "ZZ": "Zed ZULU"}
+    text = "\n".join(b["text"] for b in build_system(data.holes(), data.complete(), players))
+    assert "only answer TEG questions" in text
+    assert "Registered, no rounds in the data yet: Zed ZULU" in text
+    assert "ZZ: Zed ZULU" not in text
+
+
 def test_clean_history_keeps_alternating_text_turns():
     history = [
         {"role": "assistant", "content": "stray"},

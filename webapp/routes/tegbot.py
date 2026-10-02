@@ -190,7 +190,7 @@ def tegbot_ask(request: Request, question: str = Form(""), history: str = Form("
         answer.cost_usd, answer.usage,
     )
     return _reply(
-        answer_text=answer.text,
+        answer_text=answer.history_text(),
         answer_html=render_answer_html(answer.text),
         tool_calls=[_working(c) for c in answer.tool_calls],
     )

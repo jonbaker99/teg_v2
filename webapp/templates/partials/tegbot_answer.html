@@ -1,7 +1,7 @@
 <div class="tb-turn" data-question="{{ question }}"{% if answer_text %} data-answer="{{ answer_text }}"{% endif %}>
     <div class="tb-q" style="margin-left:auto; width:fit-content;">{{ question }}</div>
     <div class="tb-a" style="margin-top: 8px;">
-        <div class="data-card">
+        <div class="tb-answer">
             {% if error %}
             <p class="tb-error">{{ error }}</p>
             {% else %}
