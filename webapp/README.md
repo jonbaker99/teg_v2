@@ -548,7 +548,10 @@ Overview, in order: Honours / Averages / Counting columns with all-time ranks
 position; Gross vs par per round (server-rendered HTML/CSS bars, not Plotly);
 Records and personal bests. Finishing position and the chart are each one
 Jinja loop that CSS reflows from desktop columns to phone rows (newest first),
-so there is no second rendering to drift. Spoon red is the theme `--failure`.
+so there is no second rendering to drift. In the chart, best/worst round dots are
+centred on each bar, and the TEG average sits beside the TEG label (under it on
+desktop) rather than in the bar, so dots and values never collide. Spoon red is
+the theme `--failure`.
 
 Winners marked `*` in the winners table (an off-course decision) are matched
 with the asterisk stripped. The winner's gross or net position, and anyone else

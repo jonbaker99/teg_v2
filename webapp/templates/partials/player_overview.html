@@ -61,13 +61,12 @@
                 <span class="pp-gcareer-label" aria-hidden="true">career {{ round_chart.career_label }}</span>
                 <ol class="pp-gcols">
                     {% for c in round_chart.cols %}
-                    <li class="pp-gcol{% if c.jacket %} pp-gcol--jacket{% endif %}{% if c.short %} pp-gcol--short{% endif %}" title="{{ c.aria }}" aria-label="{{ c.aria }}" style="--bar: {{ c.bar }}%; --lo: {{ c.lo }}%; --hi: {{ c.hi }}%; --span: {{ c.span }}%">
-                        <span class="pp-gteg" aria-hidden="true"><span class="pp-fp-word">TEG </span>{{ c.teg }}</span>
+                    <li class="pp-gcol{% if c.jacket %} pp-gcol--jacket{% endif %}" title="{{ c.aria }}" aria-label="{{ c.aria }}" style="--bar: {{ c.bar }}%; --lo: {{ c.lo }}%; --hi: {{ c.hi }}%; --span: {{ c.span }}%">
+                        <span class="pp-gteg" aria-hidden="true"><span class="pp-gteg-n"><span class="pp-fp-word">TEG </span>{{ c.teg }}</span><span class="pp-gval">{{ c.avg_label }}</span></span>
                         <span class="pp-gtrack" aria-hidden="true">
                             <span class="pp-gbar"></span>
                             <span class="pp-gmark pp-gmark--best"></span>
                             <span class="pp-gmark pp-gmark--worst"></span>
-                            <span class="pp-gval">{{ c.avg_label }}</span>
                         </span>
                     </li>
                     {% endfor %}

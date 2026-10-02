@@ -715,7 +715,6 @@ def _build_round_chart(name: str, rd_data: pd.DataFrame, rows: list[dict],
             "avg_label": signed(avg, 1),
             "bar": pct(avg), "lo": pct(lo), "hi": pct(hi), "span": round(pct(hi) - pct(lo), 2),
             "jacket": teg in jackets,
-            "short": pct(avg) < 12,
             "aria": (f"TEG {teg}: {signed(avg, 1)} a round, "
                      f"best {signed(lo)}, worst {signed(hi)}"),
         })
