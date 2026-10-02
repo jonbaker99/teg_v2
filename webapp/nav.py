@@ -30,12 +30,11 @@ NAV_SECTIONS = [
     },
     {
         "label": "Latest TEG",
-        "active": {"leaderboard", "latest-round", "latest-teg", "handicaps", "simulation"},
+        "active": {"leaderboard", "latest-round", "latest-teg", "handicaps"},
         "pages": [
             ("Latest Leaderboard", "/leaderboard", "leaderboard", "leaderboard"),
             ("Latest Round in context", "/latest-round", "latest-round", "sports_golf"),
             ("Latest TEG in context", "/latest-teg", "latest-teg", "sports_golf"),
-            ("Simulator", "/simulation", "simulation", "casino"),
             ("Handicaps", "/handicaps", "handicaps", "accessible"),
         ],
     },
@@ -50,7 +49,7 @@ NAV_SECTIONS = [
     },
     {
         "label": "Scoring analysis",
-        "active": {"scoring"},
+        "active": {"scoring", "simulation"},
         "pages": [
             ("Eagles / Birdies / Pars", "/scoring/birdies", "scoring", "strategy"),
             ("Streaks", "/scoring/streaks", "scoring", "trending_up"),
@@ -64,6 +63,7 @@ NAV_SECTIONS = [
             ("Changes vs previous round", "/scoring/changes", "scoring", "strategy"),
             ("Heatmap (WIP)", "/scoring/heatmap", "scoring", "strategy"),
             ("Final Round Comebacks", "/scoring/comebacks", "scoring", "trending_up"),
+            ("Simulation", "/simulation", "simulation", "casino"),
         ],
     },
     {

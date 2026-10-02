@@ -259,10 +259,10 @@ def _status_notes(tgt) -> list[str]:
 
 # --- distributions -----------------------------------------------------------
 
-def _shade(frac: float, max_pct: int = 55) -> str:
-    """Theme-aware tint: accent colour mixed into transparent."""
-    pct = int(round(max(0.0, min(1.0, frac)) * max_pct))
-    return f"background: color-mix(in srgb, var(--accent) {pct}%, transparent);"
+def _shade(frac: float, max_frac: float = 1.0) -> str:
+    """Heat intensity 0-1 as ``--heat``; simulation.css turns it into a theme-aware tint."""
+    heat = max(0.0, min(1.0, frac)) * max_frac
+    return f"--heat: {heat:.3f};"
 
 
 def _distribution_rows(dists: "sim.ScoreDistributions", player: str, used=frozenset()) -> list[dict]:
@@ -372,7 +372,7 @@ def _grid_rows(res, measure: str) -> tuple[list[int], list[dict]]:
     rows = []
     for name, vals in grid.iterrows():
         rows.append({"name_html": _wrap_player_name(name), "cells": [
-            {"text": f"{v * 100:.1f}%", "zero": v < 0.0005, "style": _shade(v / vmax, 60)}
+            {"text": f"{v * 100:.1f}%", "zero": v < 0.0005, "style": _shade(v / vmax)}
             for v in vals]})
     return list(grid.columns), rows
 
@@ -393,8 +393,8 @@ def _chart_json(res, measure: str) -> str:
     fig.update_layout(
         xaxis_title="Total gross strokes" if measure == "gross" else "Total Stableford points",
         yaxis_title="% of simulations", hovermode="x unified",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
-        margin=dict(r=20, t=10, b=40, l=50))
+        legend=dict(orientation="h", yanchor="top", y=-0.18, xanchor="left", x=0, title_text=""),
+        margin=dict(r=12, t=10, b=40, l=44))
     fig.layout.xaxis.fixedrange = True
     fig.layout.yaxis.fixedrange = True
     fig.update_layout(**get_chart_style("streamlit"))
