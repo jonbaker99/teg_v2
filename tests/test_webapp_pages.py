@@ -448,6 +448,21 @@ def test_player_records_tags_follow_canonical_records(client):
         "Stableford" in r["label"] for r in ctx["records_board"] if r["best"] and r["best"]["tag"])
 
 
+def test_player_profile_links_point_at_real_pages(client):
+    from urllib.parse import quote_plus
+
+    overview = client.get("/player/DM").text
+    assert 'href="/results?teg=10"' in overview
+    assert 'href="/scorecard?teg=10&amp;round=1&amp;player=DM&amp;type=one_round_one_player"' in overview
+    assert 'href="/player-rankings"' in overview and 'href="/scoring/by-teg"' in overview
+    rounds = client.get("/player/DM/tab/rounds").text
+    assert f'href="/scoring/all-rounds?player={quote_plus("David MULLIN")}"' in rounds
+    assert 'href="/scoring/streaks?tab=detail&amp;d_player=DM"' in client.get("/player/DM/tab/records").text
+    assert 'href="/results?teg=18"' in client.get("/player/DM/tab/career").text
+    for url in ("/results?teg=10", "/scoring/streaks?tab=detail&d_player=DM", "/scoring/all-rounds?player=David+MULLIN"):
+        _assert_ok_no_error(client.get(url))
+
+
 def test_player_career_tab_lists_every_teg_newest_first(client):
     resp = client.get("/player/DM/tab/career")
     _assert_ok_no_error(resp)
@@ -465,13 +480,14 @@ def test_player_records_tab_keeps_every_held_record_and_worst(client):
     ctx = {"records_held": _records_held("Jon BAKER"), "worsts_held": _worsts_held("Jon BAKER")}
     resp = client.get("/player/JB/tab/records")
     _assert_ok_no_error(resp)
-    assert "All-time records and worsts held" in resp.text
+    assert "All-time records held" in resp.text and "All-time worsts held" in resp.text
     for record in ctx["records_held"] + ctx["worsts_held"]:
         assert escape(record["label"]) in resp.text
         assert escape(str(record["value"])) in resp.text
         if record.get("detail"):
             assert escape(record["detail"]) in resp.text
-    assert "Personal Bests" in resp.text
+    # Personal bests and worsts live on the Overview records board only.
+    assert "Personal Bests" not in resp.text and "Personal Worsts" not in resp.text
     assert "Streaks" in resp.text
 
 
@@ -512,7 +528,7 @@ def test_player_rounds_chart_direction_copy_and_no_inline_height(client):
     # The inline height style was moved to CSS (player-profile.css) so the
     # <=640px breakpoint can override it -- an inline style would win over
     # any CSS rule and silently defeat that.
-    chart_div = resp.text.split('class="chart-container pp-rounds-chart"', 1)[1].split(">", 1)[0]
+    chart_div = resp.text.split('class="chart-container pp-chart pp-rounds-chart"', 1)[1].split(">", 1)[0]
     assert "style=" not in chart_div
 
 

@@ -1,7 +1,8 @@
-<div class="pp-career">
+<div class="pp-tab">
+    <section class="pp-section">
     <h2 class="section-title pp-sec">Career record</h2>
     {% if career_rows %}
-    <div class="pp-career-wrap">
+    <div class="data-card"><div class="table-wrapper table-wrapper--no-pin">
         <table class="teg-table pp-career-table">
             <thead><tr>
                 <th class="col-player">TEG</th><th class="col-player pp-hide-phone">Year</th>{% if has_hc %}<th class="col-num pp-hide-phone">HC</th>{% endif %}
@@ -12,7 +13,7 @@
             <tbody>
             {% for r in career_rows %}
             <tr>
-                <td class="col-player pp-strong">{{ r.teg }}</td>
+                <td class="col-player pp-strong"><a class="text-link pp-a" href="{{ r.results_url }}">{{ r.teg }}</a></td>
                 <td class="col-player pp-dim pp-hide-phone">{{ r.year }}</td>
                 {% if has_hc %}<td class="col-num pp-dim pp-hide-phone">{{ r.hc }}</td>{% endif %}
                 <td class="col-num">{{ r.gross_total }}</td>
@@ -24,9 +25,11 @@
             {% endfor %}
             </tbody>
         </table>
-    </div>
-    <p class="pp-note">Net is vs par to TEG {{ stableford_era - 1 }}, Stableford points from TEG {{ stableford_era }}.{% for n in career_short_notes %} {{ n }}{% endfor %}{% for n in career_notes %} * {{ n }}.{% endfor %}</p>
+    </div></div>
+    <p class="pp-note pp-foot"><span>Net is vs par to TEG {{ stableford_era - 1 }}, Stableford points from TEG {{ stableford_era }}.{% for n in career_short_notes %} {{ n }}{% endfor %}{% for n in career_notes %} * {{ n }}.{% endfor %}</span>
+        {% if has_hc %}<span class="pp-foot-links"><a class="text-link pp-a" href="/handicaps">Handicaps</a></span>{% endif %}</p>
     {% else %}
     <p class="pp-note">No TEG data.</p>
     {% endif %}
+    </section>
 </div>

@@ -18,7 +18,8 @@
         </section>
         {% endfor %}
     </div>
-    <p class="pp-note">Ranks are all-time, out of {{ n_ranked }} players. Fewer is better for triples.</p>
+    <p class="pp-note pp-foot"><span>Ranks are all-time, out of {{ n_ranked }} players. Fewer is better for triples.</span>
+        <span class="pp-foot-links"><a class="text-link pp-a" href="{{ main_links.honours }}">Honours</a><span aria-hidden="true"> / </span><a class="text-link pp-a" href="{{ main_links.by_par }}">By par</a><span aria-hidden="true"> / </span><a class="text-link pp-a" href="{{ main_links.birdies }}">Birdies</a></span></p>
 
     <section class="pp-section">
         <h2 class="section-title pp-sec">Finishing position</h2>
@@ -29,7 +30,7 @@
                 </div>
                 {% for row in finish_rows %}
                 <div class="pp-fp-teg" role="row">
-                    <div class="pp-fp-head" role="rowheader"><span class="pp-fp-n"><span class="pp-fp-word">TEG </span>{{ row.teg }}</span>{% if row.year %}<span class="pp-fp-yr"><span class="pp-fp-yr-long">{{ row.year }}</span><span class="pp-fp-yr-short">{{ row.yy }}</span></span>{% endif %}</div>
+                    <div class="pp-fp-head" role="rowheader"><span class="pp-fp-n"><a class="text-link pp-a" href="{{ row.results_url }}"><span class="pp-fp-word">TEG </span>{{ row.teg }}</a></span>{% if row.year %}<span class="pp-fp-yr"><span class="pp-fp-yr-long">{{ row.year }}</span><span class="pp-fp-yr-short">{{ row.yy }}</span></span>{% endif %}</div>
                     <div class="pp-fp-pair{% if row.double %} pp-double{% endif %}">
                         <span class="pp-fp-cell{{ fin_cell_cls(row, 'gross') }}" role="cell">{{ row.gross_pos }}</span>
                         <span class="pp-fp-cell{{ fin_cell_cls(row, 'net') }}" role="cell">{{ row.net_pos }}</span>
@@ -43,7 +44,8 @@
             <span><b class="pp-spoon">5th</b> Wooden Spoon</span>
             <span><span class="pp-legend-box" aria-hidden="true"></span>double</span>
         </p>
-        <p class="pp-note">Net is vs par to TEG {{ stableford_era - 1 }}, Stableford from TEG {{ stableford_era }}.{% for n in finish_notes %} * {{ n }}.{% endfor %}</p>
+        <p class="pp-note pp-foot"><span>Net is vs par to TEG {{ stableford_era - 1 }}, Stableford from TEG {{ stableford_era }}.{% for n in finish_notes %} * {{ n }}.{% endfor %}</span>
+            <span class="pp-foot-links"><a class="text-link pp-a" href="/player-rankings">Player rankings</a></span></p>
     </section>
 
     {% if round_chart %}
@@ -59,21 +61,22 @@
                 <span class="pp-gcareer-label" aria-hidden="true">career {{ round_chart.career_label }}</span>
                 <ol class="pp-gcols">
                     {% for c in round_chart.cols %}
-                    <li class="pp-gcol{% if c.jacket %} pp-gcol--jacket{% endif %}" title="{{ c.aria }}" aria-label="{{ c.aria }}" style="--bar: {{ c.bar }}%; --lo: {{ c.lo }}%; --hi: {{ c.hi }}%; --span: {{ c.span }}%">
+                    <li class="pp-gcol{% if c.jacket %} pp-gcol--jacket{% endif %}{% if c.short %} pp-gcol--short{% endif %}" title="{{ c.aria }}" aria-label="{{ c.aria }}" style="--bar: {{ c.bar }}%; --lo: {{ c.lo }}%; --hi: {{ c.hi }}%; --span: {{ c.span }}%">
                         <span class="pp-gteg" aria-hidden="true"><span class="pp-fp-word">TEG </span>{{ c.teg }}</span>
                         <span class="pp-gtrack" aria-hidden="true">
                             <span class="pp-gbar"></span>
                             <span class="pp-grange"></span>
                             <span class="pp-gcap pp-gcap--lo"></span>
                             <span class="pp-gcap pp-gcap--hi"></span>
+                            <span class="pp-gval">{{ c.avg_label }}</span>
                         </span>
-                        <span class="pp-gval" aria-hidden="true">{{ c.avg_label }}</span>
                     </li>
                     {% endfor %}
                 </ol>
             </div>
         </div>
-        <p class="pp-note">Bar is the TEG average a round. Line runs from best to worst round. <span class="pp-note-phone">Career {{ round_chart.career_label }}.</span></p>
+        <p class="pp-note pp-foot"><span>Bar is the TEG average a round. Line runs from best to worst round. <span class="pp-note-phone">Career {{ round_chart.career_label }}.</span></span>
+            <span class="pp-foot-links"><a class="text-link pp-a" href="/scoring/by-teg">Scoring by TEG</a></span></p>
     </section>
     {% endif %}
 
@@ -88,7 +91,7 @@
                 {% if cell %}
                 <span class="pp-pb-kind">{{ key }}</span>
                 <b>{{ cell.value }}</b>{% if cell.tag %}<span class="pp-rec">{{ cell.tag }}</span>{% endif %}
-                <small>{{ cell.where }}</small>
+                <small>{% for pl in cell.places %}{% if not loop.first %}; {% endif %}<a class="text-link pp-a" href="{{ pl.url }}">{{ pl.lead }}</a>{{ pl.rest }}{% endfor %}{% if cell.more %}; and {{ cell.more }} more{% endif %}{% if not cell.places %}{{ cell.where }}{% endif %}</small>
                 {% else %}<span class="pp-pb-kind">{{ key }}</span><b class="pp-none">–</b>{% endif %}
             </span>
             {% endfor %}
@@ -96,7 +99,7 @@
         {% endfor %}
         <div class="pp-pb-foot">
             {% if records_note %}<span>{{ records_note }}</span>{% endif %}
-            <button type="button" class="pp-link" data-open-profile-records>Records &amp; streaks</button>
+            <span class="pp-foot-links"><button type="button" class="pp-link" data-open-profile-records>Records &amp; streaks</button><span aria-hidden="true"> / </span><a class="text-link pp-a" href="/records">All-time records</a><span aria-hidden="true"> / </span><a class="text-link pp-a" href="/personal-bests">Personal bests</a></span>
         </div>
     </section>
     {% else %}

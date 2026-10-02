@@ -558,6 +558,13 @@ with every player's figure for the same measure (9-hole records pool front and
 back nines; Stableford rows use TEG 8 onwards). The Career record tab lists
 every TEG newest first.
 
+Rounds, Scoring and Records & Streaks use the site's standard `.section-title`, `.data-card` and `.teg-table` pieces (PB rows carry a bold value plus a small PB tag; Records & Streaks lists the held records and worsts and the streaks table, since the Overview board covers personal bests).
+
+Links stay quiet: TEG numbers link to `/results?teg=N`, round references to that
+player's `/scorecard`, in the text colour (underline on hover only; green is for
+honours). Each section has at most one right-aligned muted footer line of plain
+links to the matching main-site page (built with `_url`, which encodes queries).
+
 ## Theme system
 
 One Clean theme family uses the shared variables and rules in `base-vars.css` and `clean.css`. **Clean Page** is the active layout. `theme.py` still registers Clean Layered, but it is mothballed. Routine verification scope is defined in [Design principles — Themes and layouts](design_principles.md#themes-and-layouts).

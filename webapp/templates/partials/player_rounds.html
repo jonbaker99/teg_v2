@@ -1,16 +1,42 @@
-<div>
+<div class="pp-tab">
     {% if rounds_chart_json %}
-    <h2 class="section-title">Gross vs Par by Round</h2>
-    <p class="text-sm text-secondary mb-3">Each bar is one round, coloured by score (green = better) and grouped by TEG.</p>
-    <div class="data-card data-card--padded mb-6">
-        <div class="chart-container pp-rounds-chart" data-figure="{{ rounds_chart_json }}"></div>
-        <p class="pp-chart-direction">Lower = better</p>
-    </div>
+    <section class="pp-section">
+        <h2 class="section-title pp-sec">Gross vs par by round</h2>
+        <div class="data-card">
+            <div class="chart-container pp-chart pp-rounds-chart" data-figure="{{ rounds_chart_json }}"></div>
+            <p class="pp-chart-direction">Lower = better</p>
+        </div>
+        <p class="pp-note">Each bar is one round, grouped by TEG. Green = a Green Jacket TEG. Lower is better.</p>
+    </section>
     {% endif %}
-
-    <h2 class="section-title">All Rounds</h2>
-    <p class="text-sm text-secondary mb-3">* = personal best</p>
-    <div class="data-card"><div class="overflow-x-auto">
-        {{ rounds_table_html | safe }}
-    </div></div>
+    <section class="pp-section">
+        <h2 class="section-title pp-sec">All rounds</h2>
+        {% if rounds_rows %}
+        <div class="data-card"><div class="table-wrapper table-wrapper--no-pin">
+            <table class="teg-table pp-rounds-table">
+                <colgroup><col class="pp-c-teg"><col class="pp-c-rd"><col class="pp-c-course"><col class="pp-c-num"><col class="pp-c-num"><col class="pp-c-num"></colgroup>
+                <thead><tr>
+                    <th class="col-player">TEG</th><th class="col-num">Rd</th><th class="col-player">Course</th>
+                    <th class="col-num">Score</th><th class="col-num">vs Par</th><th class="col-num">Pts</th>
+                </tr></thead>
+                <tbody>
+                {% for r in rounds_rows %}
+                <tr>
+                    <td class="col-player pp-strong"><a class="text-link pp-a" href="{{ r.url }}">{{ r.teg }}</a></td>
+                    <td class="col-num">{{ r.rd }}</td>
+                    <td class="col-player pp-course">{{ r.course }}</td>
+                    <td class="col-num">{{ r.score }}</td>
+                    <td class="col-num">{% if r.pb_gross %}<b>{{ r.gross }}</b> <span class="pp-pb-tag">PB</span>{% else %}{{ r.gross }}{% endif %}</td>
+                    <td class="col-num">{% if r.pb_stab %}<b>{{ r.stab }}</b> <span class="pp-pb-tag">PB</span>{% else %}{{ r.stab }}{% endif %}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div></div>
+        <p class="pp-note pp-foot"><span>PB marks the player's best round by gross vs par and by Stableford points.</span>
+        <span class="pp-foot-links"><a class="text-link pp-a" href="{{ all_rounds_url }}">All rounds</a></span></p>
+        {% else %}
+        <p class="pp-note">No round data.</p>
+        {% endif %}
+    </section>
 </div>
