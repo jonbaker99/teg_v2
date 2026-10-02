@@ -115,10 +115,12 @@
     .tb-answer a.tb-page-link::after { content: "\2197"; display: inline-block; margin-left: 2px; font-size: 0.85em; text-decoration: none; }
 
     /* "How I worked this out": small print under a terminal-style rule. */
-    .tb-how { margin-top: 0.9em; font-size: 0.74rem; line-height: 1.5; }
+    .tb-how { --tb-how-ink: #555555; margin-top: 0.9em; font-size: 0.74rem; line-height: 1.5; color: var(--tb-how-ink); }
+    html[data-mode="dark"] .tb-how { --tb-how-ink: #9a9a9a; }
+    .tb-how strong, .tb-how a { color: var(--tb-how-ink); }
     .tb-how::before {
         content: "================================================================================";
-        display: block; overflow: hidden; white-space: nowrap; color: var(--tb-green);
+        display: block; overflow: hidden; white-space: nowrap; color: var(--tb-how-ink);
         letter-spacing: 0.05em; margin-bottom: 0.5em; font-size: 0.8rem; line-height: 1;
     }
     .tb-how p { margin: 0 0 0.4em; }
