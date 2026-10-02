@@ -998,11 +998,27 @@ def test_standings_round_strip_matches_round_cells(client):
     rows = _standings_tbody_rows(table)
     assert rows
     for row in rows:
-        cell_values = re.findall(r'<td class="col-num col-round">([^<]*)</td>', row)
-        strip = re.search(r'<span class="standings-rounds">(.*?)</span>', row, re.S)
+        # Values may sit inside a best/worst .rd-mark box in either copy.
+        cell_values = [re.sub(r"<[^>]+>", "", c).strip() for c in
+                       re.findall(r'<td class="col-num col-round">(.*?)</td>', row, re.S)]
+        strip = re.search(r'<span class="standings-rounds">(.*?)</span>\s*</td>', row, re.S)
         assert strip, "row missing .standings-rounds"
-        strip_values = re.findall(r"<b>([^<]*)</b>", strip.group(1))
+        strip_values = re.findall(r"<b[^>]*>([^<]*)</b>", strip.group(1))
         assert cell_values == strip_values
+
+
+def test_standings_box_best_and_worst_rounds(client):
+    # TEG 18 gross: best round +12 (Mullin R3, Williams R4), worst +36
+    # (Alex Baker R4) -- same source as /latest-teg's Best & Worst Rounds.
+    # Both copies (desktop cell + phone strip) are boxed, plus the key.
+    resp = client.get("/results/table", params={"teg": 18, "tab": "gross"})
+    table = _standings_table_html(resp.text)
+    best = re.findall(r'<span class="rd-mark rd-mark--best"[^>]*>([^<]*)</span>', table)
+    worst = re.findall(r'<span class="rd-mark rd-mark--worst"[^>]*>([^<]*)</span>', table)
+    strip_best = re.findall(r'<b class="rd-mark rd-mark--best"[^>]*>([^<]*)</b>', table)
+    assert best == strip_best == ["+12", "+12"]
+    assert worst == ["+36"]
+    assert "rd-mark-key" in resp.text
 
 
 def test_standings_ties_share_rank_and_leader_treatment():

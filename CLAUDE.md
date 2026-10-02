@@ -252,7 +252,7 @@ Enforced by a test guard. `teg_analysis/` must import cleanly with no UI package
 
 ### Table presentation
 
-Before changing table layout or player-name rendering, read `webapp/design_principles.md` → **Tables** and follow its player-name wrapping rule.
+Before changing table layout or player-name rendering, read `webapp/design_principles.md` → **Tables** and follow its player-name wrapping rule. Player names are always full ("David MULLIN"), wrapped onto two lines if needed, with every name in the table or list wrapping together. Never abbreviate ("D.MULLIN"); initials only when even a wrapped full name cannot fit.
 
 ### Webapp route handlers are sync `def`
 

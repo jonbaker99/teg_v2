@@ -30,6 +30,7 @@ from teg_analysis.analysis.records import (
     identify_9hole_records_and_pbs,
     identify_streak_records,
     identify_score_count_records,
+    get_teg_round_extremes,
 )
 from teg_analysis.analysis.scoring import format_vs_par
 from teg_analysis.analysis.handicaps import (
@@ -433,22 +434,49 @@ def _records_df(rows: list) -> pd.DataFrame:
     return pd.DataFrame(rows, columns=['title', '', ' '])
 
 
-def _render_records_summary(rd: dict, page_type: str = 'TEG') -> str:
+_EXTREME_LABELS = {'GrossVP': 'gross', 'Stableford': 'Stableford', 'NetVP': 'net'}
+
+
+def _round_extremes_df(extremes: list) -> pd.DataFrame:
+    """The TEG's best and worst single rounds (gross and Trophy metric) as a
+    4-column _build_records_html frame: label, value, player, and "R2 /
+    Course" as the tap-to-reveal detail. A tied extreme gets one row per
+    holder, which _build_records_html collapses under a single label."""
+    from html import escape
+    rows = []
+    for e in extremes:
+        label = f"{e['kind'].capitalize()} {_EXTREME_LABELS[e['metric']]}"
+        value = _fmt_record_value(e['value'], e['metric'])
+        for h in e['holders']:
+            rows.append((label, value, h['player'], f"R{h['round']} / {escape(h['course'])}"))
+    if not rows:
+        return pd.DataFrame()
+    return pd.DataFrame(rows, columns=['title', '', ' ', '  '])
+
+
+def _render_records_summary(rd: dict, page_type: str = 'TEG', extremes: Optional[list] = None) -> str:
     """Render the records/PBs dict as HTML, reusing the same dual
     table/tap-to-reveal-list markup and .records-page CSS toggle as the
     /records page (_build_records_html in webapp/routes/records.py) --
     rather than the plain <ul> this used to emit, which collided with
     mobile.css's global `.records-list { display: none; }` hook and was
-    never shown at any screen width."""
+    never shown at any screen width.
+
+    ``extremes`` (get_teg_round_extremes) adds a "Best & Worst Rounds"
+    section first; it always has rows for a TEG with a complete round."""
     from collections import defaultdict
+    extremes_df = _round_extremes_df(extremes or [])
 
     total = sum(len(rd.get(k, [])) for k in (
         'aggregate_records', 'aggregate_pbs', 'aggregate_worsts', 'all_time_worsts',
         '9hole_records', '9hole_pbs', 'streak_records', 'best_score_counts', 'worst_score_counts'))
-    if total == 0:
+    if total == 0 and extremes_df.empty:
         return f"<p class='text-muted text-sm'>No records or personal bests for this {page_type.lower()}.</p>"
 
+    # (title, df, identity_is_player, detail_col)
     sections = []
+    if not extremes_df.empty:
+        sections.append(("Best &amp; Worst Rounds", extremes_df, True, 3))
 
     # --- All-time records (bests) ---
     bests = []
@@ -461,7 +489,7 @@ def _render_records_summary(rd: dict, page_type: str = 'TEG') -> str:
     for r in rd.get('best_score_counts', []):
         bests.append((f"Most {r['score_type']}", str(r['count']), r['player']))
     if bests:
-        sections.append(("All-Time Records (Bests)", _records_df(bests), True))
+        sections.append(("All-Time Records (Bests)", _records_df(bests), True, None))
 
     # --- All-time records (worsts) ---
     worsts = []
@@ -470,7 +498,7 @@ def _render_records_summary(rd: dict, page_type: str = 'TEG') -> str:
     for r in rd.get('worst_score_counts', []):
         worsts.append((f"Most {r['score_type']}", str(r['count']), r['player']))
     if worsts:
-        sections.append(("All-Time Records (Worsts)", _records_df(worsts), True))
+        sections.append(("All-Time Records (Worsts)", _records_df(worsts), True, None))
 
     # --- Personal bests (grouped by player -- player is the title column,
     # so consecutive entries for the same player collapse to one label,
@@ -482,7 +510,7 @@ def _render_records_summary(rd: dict, page_type: str = 'TEG') -> str:
         pbs.append((pb['player'], _fmt_record_value(pb['value'], pb['metric']), f"{pb['segment']} 9 - {pb['friendly_name']}"))
     pbs.sort(key=lambda row: row[0])
     if pbs:
-        sections.append(("Personal Bests", _records_df(pbs), False))
+        sections.append(("Personal Bests", _records_df(pbs), False, None))
 
     # --- Personal worsts (grouped by player) ---
     worsts_pb = []
@@ -490,16 +518,16 @@ def _render_records_summary(rd: dict, page_type: str = 'TEG') -> str:
         worsts_pb.append((w['player'], _fmt_record_value(w['value'], w['metric']), w['friendly_name']))
     worsts_pb.sort(key=lambda row: row[0])
     if worsts_pb:
-        sections.append(("Personal Worsts", _records_df(worsts_pb), False))
+        sections.append(("Personal Worsts", _records_df(worsts_pb), False, None))
 
     out = ["<div class='records-page'>"]
-    for i, (title, df, identity_is_player) in enumerate(sections):
+    for i, (title, df, identity_is_player, detail_col) in enumerate(sections):
         if i > 0:
             out.append("<hr class='divider--dotted'>")
         out.append(
             f"<div><h2 class='section-title'>{title}</h2>"
             f"<div class='data-card'><div class='overflow-x-auto'>"
-            f"{_build_records_html(df, identity_is_player=identity_is_player)}</div></div></div>"
+            f"{_build_records_html(df, identity_is_player=identity_is_player, detail_col=detail_col)}</div></div></div>"
         )
     out.append("</div>")
     return "".join(out)
@@ -1158,7 +1186,8 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
                     'best_score_counts': counts['best_score_counts'],
                     'worst_score_counts': counts['worst_score_counts'],
                 }
-                sections.append({"title": None, "table_html": _render_records_summary(rd_dict, 'TEG'), "raw": True})
+                extremes = get_teg_round_extremes(all_data, teg_num)
+                sections.append({"title": None, "table_html": _render_records_summary(rd_dict, 'TEG', extremes), "raw": True})
             except Exception as e:
                 logger.exception("_latest_teg_tab_context failed")
                 sections.append({"title": "Records & PBs", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})

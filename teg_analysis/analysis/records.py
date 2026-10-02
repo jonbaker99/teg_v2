@@ -496,3 +496,46 @@ def get_all_time_score_count_record(all_data: pd.DataFrame, category: str, score
     except Exception:
         return 0
 
+
+
+def get_teg_round_extremes(all_data: pd.DataFrame, teg_num: int) -> list:
+    """Best and worst single rounds within one TEG, gross and Trophy metric.
+
+    The Trophy metric follows the era rule: Stableford from TEG 8 (higher is
+    better), net vs par before (lower is better). Only full 18-hole rounds
+    count, so a round still in play never shows as a "best" round.
+
+    Returns a list of four dicts, in display order — best gross, worst gross,
+    best Trophy, worst Trophy — each with ``kind`` ('best'/'worst'),
+    ``metric`` ('GrossVP'/'Stableford'/'NetVP'), ``value`` and ``holders``: a
+    list of ``{'player', 'pl', 'round', 'course'}`` dicts, more than one on a
+    tie, in round order. Empty list when the TEG has no complete round.
+    """
+    from teg_analysis.analysis.aggregation import STABLEFORD_ERA_TEG
+
+    teg_data = all_data[all_data['TEGNum'] == teg_num]
+    if teg_data.empty:
+        return []
+    rounds = (teg_data.groupby(['Pl', 'Player', 'Round', 'Course'], as_index=False)
+              .agg(GrossVP=('GrossVP', 'sum'), NetVP=('NetVP', 'sum'),
+                   Stableford=('Stableford', 'sum'), Holes=('Hole', 'count')))
+    rounds = rounds[rounds['Holes'] == 18]
+    if rounds.empty:
+        return []
+
+    trophy = 'Stableford' if teg_num >= STABLEFORD_ERA_TEG else 'NetVP'
+    out = []
+    for metric in ('GrossVP', trophy):
+        higher_is_better = metric == 'Stableford'
+        for kind in ('best', 'worst'):
+            want_max = higher_is_better == (kind == 'best')
+            value = rounds[metric].max() if want_max else rounds[metric].min()
+            hits = rounds[rounds[metric] == value].sort_values(['Round', 'Player'])
+            out.append({
+                'kind': kind,
+                'metric': metric,
+                'value': int(value),
+                'holders': [{'player': r.Player, 'pl': r.Pl, 'round': int(r.Round),
+                             'course': r.Course} for r in hits.itertuples()],
+            })
+    return out

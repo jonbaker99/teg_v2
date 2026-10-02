@@ -9,7 +9,9 @@
     `standings.total_label` overrides the "Total" header text (e.g.
     Contents' unit-aware "Points"/"vs Par") without affecting callers that
     don't set it. Contents also opts into an optional GrossVP column via
-    `standings.show_gross`; other shared callers retain their existing shape. -#}
+    `standings.show_gross`; other shared callers retain their existing shape.
+    Optional `r.marks` ({"R2": "best"}) boxes the TEG's best/worst round
+    values, in both copies; callers without it render unchanged. -#}
 {% if not standings.rows %}
 <p class="text-muted text-sm">No data available.</p>
 {% else %}
@@ -39,10 +41,11 @@
         {# Phone-only round strip: same values as the .col-round cells
            below, hidden above 640px (base-vars.css) and revealed in place
            of the round columns at 640px and under (mobile.css). #}
-        <span class="standings-rounds">{% for label, val in r.rounds %}{{ label }} <b>{{ val }}</b>{% if not loop.last %} &middot; {% endif %}{% endfor %}</span>
+        <span class="standings-rounds">{% for label, val in r.rounds %}{% set mark = (r.marks or {}).get(label) %}<span class="standings-round">{{ label }} <b{% if mark %} class="rd-mark rd-mark--{{ mark }}" title="{{ mark | capitalize }} round"{% endif %}>{{ val }}</b></span>{% if not loop.last %} &middot; {% endif %}{% endfor %}</span>
       </td>
       {% for label, val in r.rounds %}
-      <td class="col-num col-round">{{ val }}</td>
+      {% set mark = (r.marks or {}).get(label) %}
+      <td class="col-num col-round">{% if mark %}<span class="rd-mark rd-mark--{{ mark }}" title="{{ mark | capitalize }} round">{{ val }}</span>{% else %}{{ val }}{% endif %}</td>
       {% endfor %}
       <td class="col-num total col-total">{{ r.total }}</td>
       {% if standings.show_gross %}<td class="col-gross col-num">{{ r.gross }}</td>{% endif %}
