@@ -167,16 +167,20 @@ def _dataset_file_ids(client: Any, data: ChatData) -> list[str]:
         return _uploads[digest]
 
 
-def _record_sandbox_calls(content: list, calls: list[ToolCall]) -> None:
-    """Add the sandbox's code and output to the workings shown under the answer."""
-    pending: dict[str, ToolCall] = {}
+def _record_sandbox_calls(content: list, calls: list[ToolCall],
+                          pending: Optional[dict] = None) -> None:
+    """Add the sandbox's code and output to the workings shown under the answer.
+
+    ``pending`` persists across responses: when the model runs code and calls a
+    lookup in the same step, the code's result only arrives in the next response."""
+    pending = {} if pending is None else pending
     for block in content:
         if block.type == "server_tool_use":
             call = ToolCall("code", dict(block.input or {}), {})
             pending[block.id] = call
             calls.append(call)
         elif block.type.endswith("code_execution_tool_result"):
-            call = pending.get(getattr(block, "tool_use_id", None))
+            call = pending.pop(getattr(block, "tool_use_id", None), None)
             if call is None:
                 continue
             result = block.content
@@ -255,6 +259,7 @@ def ask(question: str, data: ChatData, history: Optional[list] = None,
     calls: list[ToolCall] = []
     usage: dict = {}
     container = None
+    open_code: dict[str, ToolCall] = {}
 
     for attempt in range(MAX_TOOL_ROUNDS + 1):
         last = attempt == MAX_TOOL_ROUNDS
@@ -273,7 +278,7 @@ def ask(question: str, data: ChatData, history: Optional[list] = None,
         )
         _add_usage(usage, response.usage)
         container = getattr(getattr(response, "container", None), "id", None) or container
-        _record_sandbox_calls(response.content, calls)
+        _record_sandbox_calls(response.content, calls, open_code)
 
         if response.stop_reason == "refusal":
             return Answer("Sorry, I can't help with that one.", calls, usage, model)

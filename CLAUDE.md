@@ -195,6 +195,7 @@ streamlit run streamlit/nav.py       # legacy Streamlit app — frozen, rarely n
 pip install -r requirements-dev.txt          # dev-only extras (Playwright, for the PDF build)
 python scripts/build_report_pdfs.py --all    # rebuild the downloadable report PDFs
 python scripts/build_report_pdfs.py --check --all  # exit 1 if any PDF is out of date
+python scripts/tegbot_eval.py                # TEGBot answer test: ~30 live questions, ~30p a run
 ```
 
 The report PDFs (`data/commentary/pdfs/`) are a build artefact of the report

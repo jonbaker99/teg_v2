@@ -73,6 +73,7 @@
     // One id per chat, so the shared log can show follow-ups with their thread.
     var conv = (window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2))
         .replace(/[^0-9a-f]/gi, '').toLowerCase().slice(0, 32);
+    // One style per wait, chosen at random and never the same as the last one.
     var ticker = null, lastVariant = null;
     // Short, quiet lines for the text style of the waiting indicator.
     var SAY = ["looking it up", "running the numbers", "checking for ties", "reading the scorecards",
@@ -101,13 +102,6 @@
         ticker = setInterval(function () {
             var secs = Math.floor((Date.now() - started) / 1000);
             timer.textContent = secs + 's';
-            // Long waits drift between styles every few seconds, so nothing loops for too long.
-            if (secs > 0 && secs % 4 === 0 && node.dataset.at !== String(secs)) {
-                node.dataset.at = String(secs);
-                current = pickVariant(variants, current);
-                if (current === 'text') say.textContent = words[w++ % words.length];
-                show(variants, current);
-            }
         }, 250);
     }
     function stopPending() {

@@ -508,3 +508,13 @@ def test_method_note_is_boxed():
     assert out.rstrip().endswith("</ul></div>") or out.rstrip().endswith("</div>")
     assert '<div class="tb-how">' in render_answer_html("A.\n\nHow this was worked out: x")
     assert "tb-how" not in render_answer_html("Just an answer.")
+
+
+def test_sandbox_result_in_a_later_response_is_still_recorded():
+    calls, pending = [], {}
+    code = SimpleNamespace(type="server_tool_use", id="s9", input={"command": "print(126)"})
+    bot._record_sandbox_calls([code], calls, pending)
+    result = SimpleNamespace(type="bash_code_execution_tool_result", tool_use_id="s9",
+                             content=SimpleNamespace(stdout="126", stderr="", return_code=0))
+    bot._record_sandbox_calls([result], calls, pending)
+    assert calls[0].output == {"stdout": "126", "return_code": 0} and not pending
