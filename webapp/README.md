@@ -540,7 +540,8 @@ almanac page (`player-profile.css`, `player-profile.js`): Lora for the name and
 section headings, Inter for the rest, thin rules and no card boxes. The header
 shows gold stars (TEG Trophies) then green stars (Green Jackets). Tabs:
 Overview, Career record, Rounds, Scoring, Records & Streaks (HTMX partials at
-`/player/{code}/tab/{tab}`).
+`/player/{code}/tab/{tab}`). Footer links under each section end in the
+site's ↗ link arrow.
 
 Overview, in order: Honours / Averages / Counting columns with all-time ranks
 (`_metric_specs` / `_metric_columns`; fewer is better for triples); Finishing
