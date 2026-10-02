@@ -184,6 +184,12 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
   a 10-minute stale timeout (a status left active by a dead worker, e.g. after a
   redeploy, reads as interrupted and can be retried). `POST .../finalize` claims and
   returns at once; a second tap while it runs shows "Already finalising", not an error.
+  **Results show before the GitHub sync.** When the run reaches its commit step,
+  the scores and caches are already on the volume, so `finalize_jobs` clears the
+  site caches then. `deps` shows that round's banner as "results are in" while
+  `finalize_jobs.results_published(token)` holds, even though the registry still
+  says `active` until the commit succeeds (so a failed commit can be retried). A
+  failed commit clears the caches again and the round shows as live.
   The progress partial polls `GET .../finalize-status` every 2s and keeps Finalise,
   Cancel and Save disabled. It shows a **step checklist** from
   `live_round.FINALIZE_STEPS` (validate, backup, scores, all-data, TEG status, the four

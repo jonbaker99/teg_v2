@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-10-01 (Batch 6: issues 23–26)
+**Last updated:** 2026-10-01 (results banner before the GitHub sync)
+
+## 2026-10-01 — Finalise shows the results before the GitHub sync
+
+From the Batch 6 phone check. Once finalise reaches its slow GitHub commit, the site's caches are cleared and the banner says "results are in". It no longer waits for the commit. A failed commit puts the round back to live.
 
 ## 2026-10-01 — Deleting rounds shows a step checklist (Batch 6, PR B)
 

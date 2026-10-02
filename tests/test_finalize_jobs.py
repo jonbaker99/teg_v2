@@ -183,3 +183,85 @@ def test_active_status_from_another_process_is_stale(tmp_path, monkeypatch):
     monkeypatch.setattr(finalize_jobs, "BOOT_ID", "a-new-process")
     assert not finalize_jobs.is_active(finalize_jobs.read_status("tokB"))
     assert finalize_jobs.claim("tokB") is None  # retry allowed at once
+
+
+# --- Results show before the GitHub sync -------------------------------------
+
+def test_commit_start_clears_caches_and_publishes_results(monkeypatch):
+    clears, seen = [], {}
+    monkeypatch.setattr(deps, "clear_all_data_caches", lambda: clears.append(1))
+
+    def fake(token, progress=None):
+        progress("validate", "done")
+        seen["before"] = finalize_jobs.results_published(token)
+        progress("commit", "running")
+        seen["during"] = finalize_jobs.results_published(token)
+        seen["clears_during"] = len(clears)
+        progress("commit", "done")
+        return {"teg_num": 19, "round_num": 1, "records_added": 1, "committed": True}
+
+    monkeypatch.setattr(lrmod, "finalize_live_round", fake)
+    finalize_jobs.claim("tok")
+    finalize_jobs.run_finalize("tok")
+    assert seen == {"before": False, "during": True, "clears_during": 1}
+    # Done: the registry now says finalized, so the job no longer needs to.
+    assert finalize_jobs.results_published("tok") is False
+
+
+def test_failed_commit_unpublishes_and_clears_caches(monkeypatch):
+    clears = []
+    monkeypatch.setattr(deps, "clear_all_data_caches", lambda: clears.append(1))
+
+    def fake(token, progress=None):
+        progress("commit", "running")
+        progress("commit", "failed", "GitHub down")
+        raise RuntimeError("GitHub down")
+
+    monkeypatch.setattr(lrmod, "finalize_live_round", fake)
+    finalize_jobs.claim("tok")
+    finalize_jobs.run_finalize("tok")
+    assert finalize_jobs.read_status("tok")["state"] == "error"
+    assert finalize_jobs.results_published("tok") is False
+    assert len(clears) == 2  # at commit start, and again after the failure
+
+
+def test_banners_switch_to_results_while_syncing(monkeypatch):
+    live = lambda tok, r: {"kind": "live", "token": tok, "teg_num": 19, "round_num": r}
+    published = {"a"}
+    monkeypatch.setattr(finalize_jobs, "results_published", lambda tok: tok in published)
+
+    assert deps._with_results_published([live("a", 1)]) == [
+        {"kind": "results", "teg_num": 19, "round_num": 1}]
+    # Another round still live: live banners only, as the registry does.
+    assert deps._with_results_published([live("a", 1), live("b", 2)]) == [live("b", 2)]
+    published.clear()
+    assert deps._with_results_published([live("a", 1)]) == [live("a", 1)]
+    assert deps._with_results_published([]) == []
+
+
+def test_commit_valueerror_also_unpublishes_and_clears(monkeypatch):
+    clears = []
+    monkeypatch.setattr(deps, "clear_all_data_caches", lambda: clears.append(1))
+
+    def fake(token, progress=None):
+        progress("commit", "running")
+        raise ValueError("bad batch")
+
+    monkeypatch.setattr(lrmod, "finalize_live_round", fake)
+    finalize_jobs.claim("tok")
+    finalize_jobs.run_finalize("tok")
+    assert finalize_jobs.read_status("tok")["state"] == "error"
+    assert finalize_jobs.results_published("tok") is False
+    assert len(clears) == 2
+
+
+def test_skipped_commit_is_not_published(monkeypatch):
+    def fake(token, progress=None):
+        progress("commit", "skipped")
+        assert finalize_jobs.results_published(token) is False
+        return {"teg_num": 19, "round_num": 1, "records_added": 1, "committed": False}
+
+    monkeypatch.setattr(lrmod, "finalize_live_round", fake)
+    finalize_jobs.claim("tok")
+    finalize_jobs.run_finalize("tok")
+    assert finalize_jobs.read_status("tok")["state"] == "done"

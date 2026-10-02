@@ -133,8 +133,37 @@ def _progress_recorder(token: str):
         if state == "running":
             fields["step"] = step
         write_status(token, **fields)
+        if step == "commit" and state == "running":
+            # Scores and caches are on the volume now; only the slow GitHub
+            # sync is left. Let the site show the results (and the "results
+            # are in" banner, see results_published) without waiting for it.
+            _clear_site_caches()
 
     return record
+
+
+def _clear_site_caches() -> None:
+    """Clear the webapp's data and banner caches. Never raises."""
+    from webapp import deps
+
+    try:
+        deps.clear_all_data_caches()
+    except Exception:  # noqa: BLE001
+        logger.error("Cache clear during finalize failed", exc_info=True)
+
+
+def results_published(token: str) -> bool:
+    """Whether a finalise in flight has written the round's results to the volume.
+
+    True once the run reaches its GitHub commit. The registry still says
+    `active` until that commit succeeds (so a failed commit can be retried),
+    but the site already shows the results, so the banner can say so.
+    """
+    status = read_status(token)
+    if not is_active(status):
+        return False
+    commit = (status.get("steps") or {}).get("commit") or {}
+    return commit.get("state") in ("running", "done")
 
 
 def step_rows(status: Optional[dict]) -> list[dict]:
@@ -225,6 +254,7 @@ def run_finalize(token: str) -> None:
                      cache_errors=steps, finished_at=_now())
     except (ConflictsUnresolvedError, LiveRoundInactiveError, LiveRoundNotFoundError, ValueError) as e:
         write_status(token, state="error", error=str(e), message=None, finished_at=_now())
+        _clear_site_caches()  # e.g. a ValueError from the commit: see below
     except Exception as e:  # noqa: BLE001
         logger.error(f"Live round finalize failed: {e}", exc_info=True)
         try:
@@ -232,3 +262,6 @@ def run_finalize(token: str) -> None:
                          finished_at=_now())
         except Exception:  # noqa: BLE001 -- status store itself is broken; nothing left to do
             logger.error("Could not record finalize failure", exc_info=True)
+        # A failed commit leaves the round active: drop any early "results are
+        # in" banner so the site shows it as in play again.
+        _clear_site_caches()
