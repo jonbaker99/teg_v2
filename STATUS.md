@@ -2,7 +2,13 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-10-01 (results banner before the GitHub sync)
+**Last updated:** 2026-10-02 (best and worst rounds per TEG)
+
+## 2026-10-02 — Each TEG shows its best and worst rounds
+
+`/latest-teg` → Records & PBs opens with a "Best & Worst Rounds" section: best and worst gross round, and best and worst Trophy round (Stableford from TEG 8, net before). Same table/tap-to-reveal styling as the sections below it; round and course sit in the reveal on phones. Tournament reports now list the same four lines first in the records appendix. Existing reports and PDFs change only when re-styled and rebuilt.
+
+`/leaderboard` and `/results` box the best round(s) green and the worst red on the competition shown, in both the desktop columns and the phone round strip, with a key under the table. The records lists on phones now show full player names, wrapping together when one needs two lines, instead of "D.MULLIN". The rule is now explicit in `CLAUDE.md` and `webapp/design_principles.md`; the remaining abbreviating pages are in `webapp/TODOS.md`.
 
 ## 2026-10-01 — Finalise shows the results before the GitHub sync
 

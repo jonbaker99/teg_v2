@@ -40,6 +40,7 @@
 <div class="data-card lb-table-card">
     <div class="table-wrapper table-wrapper--no-pin">{% include "partials/_standings_table.html" %}</div>
 </div>
+{% if standings.has_marks %}<p class="caption rd-mark-key"><span class="rd-mark rd-mark--best">&nbsp;</span> Best round / <span class="rd-mark rd-mark--worst">&nbsp;</span> Worst round</p>{% endif %}
 
 <h3 class="chart-title">{{ chart_title }}</h3>
 <p class="chart-description">{{ chart_subtitle }}</p>

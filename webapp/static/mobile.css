@@ -627,11 +627,16 @@
     min-width: 0;
     text-align: left;
     font-size: 13px;
+    line-height: 1.25;
     color: var(--text-secondary, #555555);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
+  /* Full player names, never abbreviated or truncated: first/last wrap
+     onto two lines when the row is too narrow, and base.html's
+     names-break check stacks every name in the list once one wraps, so
+     rows never mix one- and two-line names (design_principles.md). */
+  .records-page .records-list .player-name { display: inline-block; }
+  .records-page .records-list.names-break .player-name .first,
+  .records-page .records-list.names-break .player-name .last { display: block; }
   .records-page .rec-chevron {
     flex: 0 0 auto;
     width: 1em;

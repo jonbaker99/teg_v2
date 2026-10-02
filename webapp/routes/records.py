@@ -3,11 +3,13 @@
 import re
 from html import escape
 from pathlib import Path
+from typing import Optional
 
 import pandas as pd
 from fastapi import APIRouter, Request, Query
 from fastapi.templating import Jinja2Templates
 
+from webapp.routes.history import _wrap_player_name
 from webapp.deps import (
     cached_load_all_data,
     cached_ranked_teg_data,
@@ -17,7 +19,6 @@ from webapp.deps import (
     cached_9_data,
     get_filtered_teg_data,
 )
-from teg_analysis.display.scorecards import _player_name_spans
 from teg_analysis.display.formatters import (
     prepare_records_table,
     prepare_worst_records_table,
@@ -94,6 +95,7 @@ _LABEL_PREFIX_RE = re.compile(r'^(Best|Worst)\s+')
 def _build_records_html(
     df: pd.DataFrame,
     identity_is_player: bool = True,
+    detail_col: Optional[int] = None,
 ) -> str:
     """Convert a records DataFrame to a styled HTML table (desktop/iPad,
     unchanged) plus a mobile-only tap-to-reveal list of the same rows.
@@ -107,8 +109,12 @@ def _build_records_html(
     full/short-name-span treatment applies there). Callers whose identity
     column holds something else -- e.g. latest.py's Personal Bests/Worsts
     sections, where it's a metric's friendly name -- pass False so that
-    value is rendered as-is instead of being run through _player_name_spans
-    (which would otherwise abbreviate it, e.g. "Gross vs Par" -> "G.Par")."""
+    value is rendered as-is instead of being split into first/last
+    player-name spans.
+
+    detail_col: column index to treat as the tap-to-reveal detail, for a
+    caller whose detail can be shorter than its player names (so the
+    average-length pick in _pick_detail_col_idx would get it backwards)."""
     if df is None or df.empty:
         return "<p class='text-muted text-sm'>No data available.</p>"
 
@@ -129,7 +135,10 @@ def _build_records_html(
     # empty (but present) detail panel, rather than risk the length
     # heuristic below misreading an always-empty filler column as identity.
     other_idx = [i for i in range(1, len(cols)) if i != value_col_idx]
-    detail_col_idx = _pick_detail_col_idx(df, cols, other_idx) if len(other_idx) == 2 else None
+    if detail_col is not None and detail_col in other_idx and len(other_idx) == 2:
+        detail_col_idx = detail_col
+    else:
+        detail_col_idx = _pick_detail_col_idx(df, cols, other_idx) if len(other_idx) == 2 else None
     identity_col_idx = None
     if detail_col_idx is not None:
         identity_col_idx = [i for i in other_idx if i != detail_col_idx][0]
@@ -182,14 +191,13 @@ def _build_records_html(
                 id_val = raw_id_val
             # A genuine single-player identity (not a "(N times)"/"->"
             # placeholder swapped for an initials list, see
-            # _is_placeholder_identity) is a real "First Last" name -- narrow
-            # enough at 320-390px that .rec-identity's nowrap+ellipsis
-            # (mobile.css) truncates it unreadably (e.g. "John PATTER...").
-            # Emit the full/short pair so CSS can swap to "J.PATTERSON"
-            # there instead of truncating. Swapped-in initials lists ("AB /
-            # HM") are already short -- left untouched.
+            # _is_placeholder_identity) is a real "First Last" name, shown in
+            # full: first/last spans that wrap onto two lines when the row is
+            # too narrow, and base.html's names-break check stacks every name
+            # in the list once one wraps (design_principles.md -> Tables).
+            # Swapped-in initials lists ("AB / HM") are left untouched.
             id_html = (
-                _player_name_spans(id_val)
+                _wrap_player_name(id_val)
                 if identity_is_player and not is_placeholder and id_val not in (None, "")
                 else id_val
             )

@@ -1851,6 +1851,41 @@ body.layout-wide .content-wrapper {
     display: none;
 }
 
+/* Best/worst round boxes (_standings_table.html, /leaderboard + /results):
+   the TEG's best round(s) boxed green, worst boxed red, on the competition
+   shown. A border only -- no fill -- so the leader-row tint and hover still
+   read through. The negative margin cancels the padding + border, so a
+   boxed value takes the same width as an unboxed one and columns don't
+   shift. dark.css re-points both tokens. */
+:root {
+    --rd-best: var(--green, forestgreen);
+    --rd-worst: #b91c1c;
+}
+.rd-mark {
+    display: inline-block;
+    padding: 0 4px;
+    margin: 0 -5px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    line-height: 1.35;
+}
+.rd-mark--best { border-color: var(--rd-best); }
+.rd-mark--worst { border-color: var(--rd-worst); }
+/* Phone round strip: keep each "R2 +14" together so a line never ends
+   on a bare round label. */
+.standings-round { white-space: nowrap; }
+/* Phone round strip: inline text, so no negative margin (it would overlap
+   the "R2" label before it). */
+.standings-rounds .rd-mark { margin: 0; padding: 0 3px; }
+/* Key under the table: small empty swatches. */
+.rd-mark-key .rd-mark {
+    width: 0.9em;
+    height: 0.9em;
+    margin: 0 0.2em 0 0;
+    padding: 0;
+    vertical-align: -0.1em;
+}
+
 /* ── Leader row — L2, the owner-selected fix (C3) ──
    The bug (C1-handoff.md §1): --table-hover-bg and --table-toprank-bg are
    both #F3F7F3, so the leader row and a hovered row are pixel-identical.
