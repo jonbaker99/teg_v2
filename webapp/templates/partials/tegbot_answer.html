@@ -1,0 +1,22 @@
+<div class="tb-turn" data-question="{{ question }}"{% if answer_text %} data-answer="{{ answer_text }}"{% endif %}>
+    <div class="tb-q" style="margin-left:auto; width:fit-content;">{{ question }}</div>
+    <div class="tb-a" style="margin-top: 8px;">
+        <div class="data-card">
+            {% if error %}
+            <p class="tb-error">{{ error }}</p>
+            {% else %}
+            {{ answer_html | safe }}
+            {% if tool_calls %}
+            <details class="tb-workings">
+                <summary>Show the workings ({{ tool_calls | length }} lookup{{ 's' if tool_calls | length != 1 }})</summary>
+                {% for c in tool_calls %}
+                <div><strong>{{ c.name }}</strong></div>
+                <pre>Asked: {{ c.input }}</pre>
+                <pre>Got: {{ c.output }}</pre>
+                {% endfor %}
+            </details>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>

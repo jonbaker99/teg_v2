@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-10-02 (player profile redesign)
+**Last updated:** 2026-10-02 (TEGBot 5000)
+
+## 2026-10-02 — TEGBot 5000: ask the stats in plain English
+
+New `/tegbot` page, in the nav as "Ask TEGBot". Claude (Sonnet) picks from four deterministic tools: honours, streaks, bounce-back, and `query_scores`, a validated filter/group/aggregate query over hole, round and TEG data with finishing positions. All numbers come from code. Answers state assumptions and sample sizes, link to the matching site page, and show their workings. Follow-up questions keep context. Live tests: about 6 seconds and 1–2¢ a question. New stat: bounce-back rate (`teg_analysis/analysis/bounceback.py`), not yet on its own page. Package: `teg_analysis/chatbot/`; page notes: `webapp/README.md` → TEGBot 5000.
 
 ## 2026-10-02 — Player profile redesigned as an almanac page
 

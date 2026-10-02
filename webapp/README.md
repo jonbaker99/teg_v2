@@ -487,6 +487,16 @@ don't need the link sent to them.
   set back and leaves the round `active` to retry. Full ordering rationale is in
   the `finalize_live_round` docstring.
 
+## TEGBot 5000 (`/tegbot`)
+
+A chat page for stat questions. `routes/tegbot.py` posts each question (plus earlier turns, as text, held in the page) to `teg_analysis.chatbot.bot.ask`, which runs a Claude tool-use loop over the deterministic tools in `teg_analysis/chatbot/tools.py`. The model never calculates: it chooses tools and words the answer, linking only to `SITE_PAGES` paths. Each answer has a folded "Show the workings" block listing every tool call and its raw result.
+
+- **Cost guard:** 20 questions per visitor per hour and `TEGBOT_DAILY_LIMIT` (default 200) site-wide per UTC day. Both are in-process and reset on restart. Typical cost is 1–2¢ a question on Sonnet.
+- **Switches:** `TEGBOT_ENABLED=0` turns it off; `TEGBOT_MODEL` overrides the model. With no Anthropic key the page says it is off.
+- **Answer HTML:** model text is HTML-escaped, rendered as Markdown, and any link not starting with `/` loses its `href`.
+- **Logs:** each answer logs question, tools, seconds, cost and token usage at INFO.
+- **To answer a new kind of question:** add a tool (or a field to `query_scores`) in `tools.py`, with a test in `tests/test_tegbot.py`. Don't loosen the "no arithmetic" rule in `prompt.py`.
+
 ## Architecture
 
 ### Tech stack

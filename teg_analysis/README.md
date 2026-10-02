@@ -58,6 +58,8 @@ teg_analysis/
     performance.py   Performance measure tables
     leaderboards.py  Leaderboard generation
     bestball.py      Best-ball / worst-ball competition format
+    bounceback.py    Bounce-back rate (par or better on the hole after a bogey+) vs each
+                     player's own par-or-better baseline — bounce_back_stats
     eclectic.py      Eclectic (best score per hole across rounds) — by-dimension
                      pivots, per-player-per-TEG totals (eclectic_player_teg_totals),
                      all-time + own-history ranking (rank_teg_eclectics) and
@@ -106,7 +108,14 @@ teg_analysis/
     llm.py           Thin Anthropic wrapper (key resolution, prompt caching)
     scoring.py       3-axis combination + mode weights
 
-  
+  chatbot/           TEGBot 5000 — answers stat questions in plain English
+    tools.py         Deterministic tools (honours, streaks, bounce-back, query_scores — a
+                     validated filter/group/aggregate query over hole/round/TEG data) and
+                     their Anthropic tool schemas; ChatData takes the caller's cached loaders
+    prompt.py        System prompt + SITE_PAGES, the only links the bot may give
+    bot.py           ask(): the Claude tool-use loop (lazy SDK import, Sonnet by default,
+                     TEGBOT_MODEL to override); returns text, tool calls and token usage
+
   display/           Formatting and output
     formatters.py    Format data for display (HTML, styled tables)
     html_tables.py   Generate styled HTML tables

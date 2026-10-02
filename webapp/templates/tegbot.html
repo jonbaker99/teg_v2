@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title_suffix %} — TEGBot 5000{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+    <span class="page-label">Ask the stats</span>
+    <h1 class="page-title">TEGBot 5000</h1>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+    .tb-intro { color: var(--text-secondary); margin: 0 0 var(--sp-4, 16px); max-width: 46rem; }
+    .tb-thread { display: flex; flex-direction: column; gap: var(--sp-4, 16px); margin-bottom: var(--sp-4, 16px); }
+    .tb-q {
+        align-self: flex-end; max-width: 85%;
+        background: var(--btn-active-bg); color: var(--btn-active-text);
+        padding: 8px 12px; border-radius: 12px 12px 2px 12px;
+        overflow-wrap: anywhere;
+    }
+    .tb-a { max-width: 46rem; }
+    .tb-a .data-card { padding: var(--sp-3, 12px) var(--sp-4, 16px); }
+    .tb-a p { margin: 0 0 0.6em; }
+    .tb-a ul, .tb-a ol { margin: 0 0 0.6em 1.2em; list-style: disc; }
+    .tb-a a { color: var(--accent); text-decoration: underline; }
+    .tb-a table { border-collapse: collapse; margin: 0.4em 0 0.8em; font-family: var(--font-table); font-size: var(--table-font-size, 14px); display: block; overflow-x: auto; }
+    .tb-a th, .tb-a td { border-bottom: 1px solid var(--table-cell-border, #ddd); padding: 4px 10px 4px 0; text-align: left; }
+    .tb-a th { color: var(--text-secondary); font-weight: 600; }
+    .tb-error { color: var(--text-secondary); font-style: italic; }
+    .tb-workings { margin-top: 0.4em; font-size: var(--fs-200, 12px); color: var(--text-muted); }
+    .tb-workings summary { cursor: pointer; }
+    .tb-workings pre {
+        white-space: pre-wrap; overflow-wrap: anywhere; max-height: 18rem; overflow: auto;
+        background: var(--table-stripe-bg, rgba(0,0,0,0.04)); padding: 8px; margin: 6px 0;
+        font-family: var(--font-mono, monospace); font-size: 11px;
+    }
+    .tb-form { display: flex; gap: 8px; align-items: flex-end; max-width: 46rem; }
+    .tb-form textarea {
+        flex: 1; min-height: 2.8rem; resize: vertical; padding: 8px 10px;
+        border: 1px solid var(--select-border, #ccc); border-radius: 8px;
+        background: var(--select-bg, var(--bg-card)); color: var(--text-primary); font: inherit;
+    }
+    .tb-form button {
+        padding: 10px 16px; border-radius: 8px; border: 0; font-weight: 600;
+        background: var(--btn-active-bg); color: var(--btn-active-text); cursor: pointer;
+    }
+    .tb-form button[disabled] { opacity: 0.5; cursor: default; }
+    .tb-examples { display: flex; flex-wrap: wrap; gap: 6px; margin: var(--sp-3, 12px) 0 0; max-width: 46rem; }
+    .tb-examples button {
+        border: 1px solid var(--select-border, #ccc); background: transparent; color: var(--text-secondary);
+        border-radius: 999px; padding: 4px 10px; font-size: var(--fs-200, 13px); cursor: pointer;
+    }
+    .tb-thinking { display: none; color: var(--text-muted); font-style: italic; margin-bottom: var(--sp-3, 12px); }
+    .htmx-request .tb-thinking, .htmx-request.tb-thinking { display: block; }
+    .tb-footnote { margin-top: var(--sp-4, 16px); font-size: var(--fs-200, 12px); color: var(--text-muted); max-width: 46rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<p class="tb-intro">
+    Ask anything about TEG players, scores and history. TEGBot 5000 looks up the numbers
+    and works them out with the site's own data. It never guesses, and it shows its workings.
+</p>
+
+{% if not enabled %}
+<div class="data-card"><p class="tb-error">TEGBot is switched off at the moment.</p></div>
+{% else %}
+<div id="tb-thread" class="tb-thread" aria-live="polite"></div>
+<div id="tb-thinking" class="tb-thinking">TEGBot is crunching the numbers…</div>
+
+<form id="tb-form" class="tb-form"
+      hx-post="/tegbot/ask" hx-target="#tb-thread" hx-swap="beforeend"
+      hx-indicator="#tb-thinking" hx-disabled-elt="#tb-send">
+    <textarea name="question" id="tb-question" maxlength="{{ max_chars }}" rows="2"
+              placeholder="e.g. Who bounces back best from bogeys?" required></textarea>
+    <button id="tb-send" type="submit">Ask</button>
+</form>
+
+<div class="tb-examples" id="tb-examples">
+    {% for q in examples %}
+    <button type="button" data-q="{{ q }}">{{ q }}</button>
+    {% endfor %}
+</div>
+
+<p class="tb-footnote">
+    Answers come from an AI model reading the TEG data, so check anything important against
+    the linked pages. Each question costs a few pence, so there's a daily limit.
+</p>
+
+<script>
+(function () {
+    var form = document.getElementById('tb-form');
+    var box = document.getElementById('tb-question');
+
+    document.getElementById('tb-examples').addEventListener('click', function (e) {
+        var q = e.target.getAttribute('data-q');
+        if (q) { box.value = q; form.requestSubmit(); }
+    });
+    box.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); }
+    });
+    // Earlier answered turns ride along as text so follow-ups have context.
+    form.addEventListener('htmx:configRequest', function (e) {
+        var turns = [];
+        document.querySelectorAll('#tb-thread .tb-turn[data-answer]').forEach(function (t) {
+            turns.push({role: 'user', content: t.dataset.question});
+            turns.push({role: 'assistant', content: t.dataset.answer});
+        });
+        e.detail.parameters.history = JSON.stringify(turns.slice(-12));
+    });
+    document.body.addEventListener('htmx:afterSwap', function (e) {
+        if (e.detail.target.id !== 'tb-thread') return;
+        box.value = '';
+        var last = document.querySelector('#tb-thread .tb-turn:last-child');
+        if (last) last.scrollIntoView({behavior: 'smooth', block: 'start'});
+    });
+})();
+</script>
+{% endif %}
+{% endblock %}
