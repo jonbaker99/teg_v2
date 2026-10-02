@@ -334,16 +334,13 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
   `teg_analysis/reporting/`.
 
 ## PLAYER PROFILES
-- [ ] **Align career-average definitions** — during the profile design review,
-  Jon's headline gross average rendered `+20.5`, while the chart reference line
-  rendered `+20.7` (Stableford: `36.1` versus `36.0`). `_metric_specs` weights each round equally; `_trend_fig`
-  averages the per-TEG bars equally. Agree the intended definition and label or
-  align the reference line. Keep this separate from the layout change.
+- [x] **Align career-average definitions** — resolved 2026-10-02: the Overview chart's
+  dashed line and the Averages "Gross vs par / round" are both the mean of round GrossVP.
 - [x] **Grouped player-detail layout** — approved interactive direction implemented
   2026-09-13. Compact player picker, grouped glance/cabinet blocks, four neutral
   Career Highlights cards, trend before expandable results and complete held
   records on Records & Streaks. The liked roster is unchanged.
-- [ ] **Less generic player-detail aesthetic** — revisit the approved structure
+- [x] **Less generic player-detail aesthetic** — done 2026-10-02 (almanac redesign: Lora headings, no cards, Career record tab; see `README.md` → Player profiles). Original notes: revisit the approved structure
   after the wider UI work, not as the next task (decision 2026-09-13). Reconfirmed
   2026-09-16 (Jon, reviewing the mobile rollout): individual player pages still read
   as too much mono font — matches the "no definition/structure" rejection reasoning

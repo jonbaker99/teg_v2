@@ -385,37 +385,84 @@ def test_player_page_renders(client):
     _assert_ok_no_error(resp)
 
 
-def test_player_grouped_overview_preserves_full_history_and_landmarks(client):
-    from webapp.routes.player import _build_overview_context, _build_roster
+def test_player_overview_has_ranked_metrics_and_finishing_position(client):
+    from webapp.routes.player import _build_overview_context
 
-    ctx = _build_overview_context("JB")
-    assert [card["label"] for card in ctx["glance"]] == [
-        "TEGs played", "Current handicap", "Avg gross / round", "Avg Stableford",
-    ]
-    roster = next(player for player in _build_roster() if player["code"] == "JB")
-    assert ctx["glance"][1]["value"] == roster["handicap"]
-    assert [card["label"] for card in ctx["landmarks"]] == ["Holes in One", "Eagles", "Birdies"]
-    assert [item["label"] for item in ctx["highlights"]] == [
-        "Best Round", "Best TEG", "Best Course", "Worst Course",
-    ]
-    assert ctx["teg_result_count"] == 17
-    # Collapsing is progressive enhancement: the complete table remains in HTML.
-    assert ctx["teg_table_html"].count("<tr>") == 18
-    resp = client.get("/player/JB")
+    ctx = _build_overview_context("DM")
+    cols = {c["title"]: {m["label"]: m for m in c["rows"]} for c in ctx["metric_columns"]}
+    assert list(cols) == ["Honours", "Averages", "Counting"]
+    assert (cols["Honours"]["Green Jackets"]["value"], cols["Honours"]["Green Jackets"]["rank"]) == ("9", "1st")
+    assert cols["Honours"]["Doubles"]["rank"] == "1st="
+    assert cols["Averages"]["Gross vs par / round"]["value"] == "+18.7"
+    assert cols["Counting"]["Holes played"]["value"] == "1,206"
+    # Fewer triples is better.
+    assert cols["Counting"]["Triple bogey or worse"]["rank"] == "2nd"
+    assert len(ctx["finish_rows"]) == 17
+    resp = client.get("/player/DM")
     _assert_ok_no_error(resp)
-    assert 'class="pp-overview-grid"' in resp.text
-    assert 'data-result-count="17"' in resp.text
-    assert resp.text.index("Career Highlights") < resp.text.index("Career Trend") < resp.text.index("TEG Results")
+    assert 'class="pp-gchart"' in resp.text
+    assert "1st*" in resp.text
+    assert "TEG 5 Green Jacket awarded to Stuart NEUMANN." in resp.text
+    assert "3 TEG Trophies, 9 Green Jackets" in resp.text
+    assert resp.text.index("Honours") < resp.text.index("Finishing position") < resp.text.index("Records and personal bests")
+    for gone in ("Career Highlights", "Career Trend", "Trophy Cabinet", "data-expand-profile-results"):
+        assert gone not in resp.text
     assert 'data-player-switch' in resp.text
-    assert 'title-stars' not in resp.text
-    assert 'player_pills' not in resp.text
+
+
+def test_player_asterisked_jacket_counts_as_a_win(client):
+    from webapp import deps
+    from webapp.routes.player import _teg_result_flags
+
+    flags = _teg_result_flags(deps.cached_winners(), "Stuart NEUMANN", 5)
+    assert flags["jacket"] is True
+    resp = client.get("/player/SN")
+    _assert_ok_no_error(resp)
+    assert "TEG 5 Green Jacket is an asterisked result" in resp.text
+
+
+def test_player_records_board_excludes_short_teg_from_teg_level_worsts():
+    from webapp.routes.player import _build_overview_context
+
+    board = {r["label"]: r for r in _build_overview_context("DM")["records_board"]}
+    # TEG 2 was three rounds, so it cannot be the worst Stableford TEG.
+    assert "TEG 2" not in board["TEG, Stableford"]["worst"]["where"]
+    assert board["Round, gross"]["best"]["tag"] == "TEG record"
+    assert board["Round, gross"]["best"]["value"] == "75 (+4)"
+
+
+def test_player_records_tags_follow_canonical_records(client):
+    from webapp.routes.player import _build_overview_context, _records_held, _worsts_held
+
+    sn = {r["label"]: r for r in _build_overview_context("SN")["records_board"]}
+    # SN's 100 pts is not the all-time worst Stableford TEG (HM's TEG 2 is).
+    assert sn["TEG, Stableford"]["worst"]["value"] == "100 pts"
+    assert sn["TEG, Stableford"]["worst"]["tag"] == ""
+    ctx = _build_overview_context("HM")
+    tagged_or_noted = " ".join(
+        [c["tag"] for r in ctx["records_board"] for c in (r["best"], r["worst"]) if c] + [ctx["records_note"]])
+    for rec in _records_held("Henry MELLER") + _worsts_held("Henry MELLER"):
+        if "Stableford" in rec["label"]:
+            assert rec["label"][0].lower() + rec["label"][1:] in ctx["records_note"] or "TEG" in tagged_or_noted
+    assert "stableford" in ctx["records_note"].lower() or any(
+        "Stableford" in r["label"] for r in ctx["records_board"] if r["best"] and r["best"]["tag"])
+
+
+def test_player_career_tab_lists_every_teg_newest_first(client):
+    resp = client.get("/player/DM/tab/career")
+    _assert_ok_no_error(resp)
+    assert resp.text.count("<tr>") == 18
+    assert "TEG 2 was three rounds" in resp.text
+    resp = client.get("/player/DM?tab=career")
+    _assert_ok_no_error(resp)
+    assert "pp-career-table" in resp.text
 
 
 def test_player_records_tab_keeps_every_held_record_and_worst(client):
     from markupsafe import escape
-    from webapp.routes.player import _build_overview_context
+    from webapp.routes.player import _records_held, _worsts_held
 
-    ctx = _build_overview_context("JB")
+    ctx = {"records_held": _records_held("Jon BAKER"), "worsts_held": _worsts_held("Jon BAKER")}
     resp = client.get("/player/JB/tab/records")
     _assert_ok_no_error(resp)
     assert "All-time records and worsts held" in resp.text
@@ -437,49 +484,25 @@ def test_player_with_no_scores_has_honest_empty_state(client, monkeypatch):
     _assert_ok_no_error(resp)
     assert "No TEG data" in resp.text
     assert "No silverware yet" in resp.text
-    assert "No outright TEG records held" in resp.text
-    assert 'data-expand-profile-results' not in resp.text
+    for tab in ("career", "rounds", "scoring"):
+        _assert_ok_no_error(client.get(f"/player/ZZ/tab/{tab}"))
     resp = client.get("/player/ZZ/tab/records")
     _assert_ok_no_error(resp)
     assert "No outright TEG worsts held" in resp.text
 
 
-def test_player_missing_handicap_is_unranked(client, monkeypatch):
-    from webapp.routes import player
-
-    monkeypatch.setattr(player, "_current_playing_handicaps", lambda: {})
-    glance = player._build_overview_context("JB")["glance"]
-    assert glance[1] == {"label": "Current handicap", "value": "–", "rank": "–"}
-
-
-@pytest.mark.parametrize("tab", ["overview", "rounds", "scoring", "records"])
+@pytest.mark.parametrize("tab", ["overview", "career", "rounds", "scoring", "records"])
 def test_player_tab_partials_render(client, tab):
     resp = client.get(f"/player/{REAL_PLAYER_CODE}/tab/{tab}")
     _assert_ok_no_error(resp)
 
 
 # ---------------------------------------------------------------------------
-# Player profile progression charts (R4.2): Career Trend (Overview) and
+# Player profile progression charts (R4.2): the Rounds chart and
 # Gross vs Par by Round (Rounds) must state their measure/direction and stay
 # readable at phone widths, reusing player-profile.js's existing tick-
 # thinning/theme-adaptation pattern rather than a second chart system.
 # ---------------------------------------------------------------------------
-
-def test_player_overview_trend_panels_state_direction_without_hover(client):
-    # DM has both a gross and a Stableford trend chart (see
-    # test_player_grouped_overview_preserves_full_history_and_landmarks for
-    # JB's equivalent gross-only/Stableford-only edge cases) -- each panel
-    # must carry its own static direction copy, not rely on a shared caption
-    # or a hover tooltip a touch device can't trigger.
-    resp = client.get(f"/player/{REAL_PLAYER_CODE}/tab/overview")
-    _assert_ok_no_error(resp)
-    gross_panel = resp.text.split('id="chart-gross"', 1)[1].split("</div></div>", 1)[0]
-    stab_panel = resp.text.split('id="chart-stableford"', 1)[1].split("</div></div>", 1)[0]
-    assert "Lower = better" in gross_panel
-    assert "Higher = better" in stab_panel
-    # Lowercase per the established aria-pressed contract (R3.4 fix).
-    assert 'aria-pressed="True"' not in resp.text and 'aria-pressed="False"' not in resp.text
-
 
 def test_player_rounds_chart_direction_copy_and_no_inline_height(client):
     resp = client.get(f"/player/{REAL_PLAYER_CODE}/tab/rounds")

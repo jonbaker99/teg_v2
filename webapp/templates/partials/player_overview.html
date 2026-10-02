@@ -1,81 +1,106 @@
-{% macro stats(cards) %}
-<dl class="pp-stats">
-    {% for card in cards %}
-    <div>
-        <dt class="pp-label">{{ card.label }}</dt>
-        <dd class="pp-stat-value">{{ card.value }}</dd>
-        {% if card.rank != '–' %}<dd class="pp-context">{{ card.rank.replace(' =', ' (joint)') }} all-time</dd>{% endif %}
-        {% if card.tooltip %}<dd class="pp-context">{{ card.tooltip }}</dd>{% endif %}
-    </div>
-    {% endfor %}
-</dl>
-{% endmacro %}
+{% macro fin_cell_cls(row, which) -%}
+{%- if which == 'gross' -%}{% if row.jacket %} pp-win{% endif %}
+{%- else -%}{% if row.trophy %} pp-win{% elif row.spoon %} pp-spoon{% endif %}{% endif %}
+{%- endmacro %}
 <div class="pp-overview">
-    <div class="pp-overview-grid">
-        <section class="pp-block">
-            <h2 class="pp-section-title">At a glance</h2>
-            {{ stats(glance) }}
-            <details class="pp-landmarks">
-                <summary>Scoring landmarks</summary>
-                {{ stats(landmarks) }}
-            </details>
-        </section>
-        {% if trophy %}
-        <section class="pp-block pp-cabinet">
-            <h2 class="pp-section-title">Trophy Cabinet</h2>
-            {% for label, count, rank, star_class in [
-                ('TEG Trophies', trophy.trophies, trophy.trophy_rank, 'trophy-star--gold'),
-                ('Green Jackets', trophy.jackets, trophy.jacket_rank, 'trophy-star--green'),
-                ('Wooden Spoons', trophy.spoons, trophy.spoon_rank, '')] %}
-            <div class="pp-honour-row">
-                <span>{{ label }}</span>
-                <strong>{{ count }}</strong>
-                <span class="pp-honour-stars" aria-hidden="true">{% if star_class %}{% for i in range(count) %}<span class="trophy-star {{ star_class }}">★</span>{% endfor %}{% endif %}</span>
-                {% if rank %}<span class="pp-honour-rank pp-context">{{ rank.replace(' =', ' (joint)') }} all-time</span>{% endif %}
+    {% if finish_rows %}
+    <div class="pp-metrics">
+        {% for col in metric_columns %}
+        <section class="pp-metric-col">
+            <h2 class="section-title pp-sec">{{ col.title }}</h2>
+            {% for m in col.rows %}
+            <div class="pp-li">
+                <span class="pp-li-label{% if m.accent %} pp-li-accent{% endif %}">{{ m.label }}</span>
+                <b class="pp-li-value{% if m.accent %} pp-li-accent{% endif %}">{{ m.value }}</b>
+                <i class="pp-li-rank">{{ m.rank }}</i>
             </div>
             {% endfor %}
-            {% if not trophy.trophies and not trophy.jackets %}<p class="pp-context">No silverware yet.</p>{% endif %}
-            {% if trophy.doubles %}<p class="pp-cabinet-note pp-context">{{ trophy.doubles }} Trophy / Jacket double{{ 's' if trophy.doubles != 1 else '' }}{% if trophy.doubles_rank %} · {{ trophy.doubles_rank.replace(' =', ' (joint)') }} all-time{% endif %}</p>{% endif %}
         </section>
-        {% endif %}
+        {% endfor %}
     </div>
-    {% if highlights %}
-    <section class="pp-highlights">
-        <h2 class="pp-section-title">Career Highlights</h2>
-        <div class="pp-highlight-grid">
-            {% for h in highlights %}
-            <article class="pp-highlight">
-                <h3 class="pp-label">{{ h.label }}{% if h.label in ['Best Round', 'Best TEG'] %} · Gross vs par{% endif %}</h3>
-                <strong class="pp-highlight-value{% if h.label in ['Best Course', 'Worst Course'] %} pp-highlight-value--course{% endif %}">{{ h.value }}</strong>
-                {% if h.detail %}<p class="pp-context">{{ h.detail }}</p>{% endif %}
-            </article>
-            {% endfor %}
-        </div>
-    </section>
-    {% endif %}
-    {% if chart_gross_json or chart_stab_json %}
-    <section class="pp-block pp-trend chart-switch">
-        <div class="pp-section-head">
-            <h2 class="pp-section-title">Career Trend</h2>
-            <div class="pp-chart-controls pill-group">
-                {% if chart_gross_json %}<button type="button" class="pill pill--active chart-pill" aria-pressed="true" data-chart-target="#chart-gross">Gross vs Par</button>{% endif %}
-                {% if chart_stab_json %}<button type="button" class="pill{% if not chart_gross_json %} pill--active{% endif %} chart-pill" aria-pressed="{{ 'false' if chart_gross_json else 'true' }}" data-chart-target="#chart-stableford">Stableford</button>{% endif %}
+    <p class="pp-note">Ranks are all-time, out of {{ n_ranked }} players. Fewer is better for triples.</p>
+
+    <section class="pp-section">
+        <h2 class="section-title pp-sec">Finishing position</h2>
+        <div class="pp-fp-wrap">
+            <div class="pp-fp" role="table" aria-label="Finishing position by TEG">
+                <div class="pp-fp-key" role="row" aria-hidden="true">
+                    <span class="pp-fp-key-teg">TEG</span><span class="pp-fp-key-gross">Gross</span><span class="pp-fp-key-net">Net</span>
+                </div>
+                {% for row in finish_rows %}
+                <div class="pp-fp-teg" role="row">
+                    <div class="pp-fp-head" role="rowheader"><span class="pp-fp-n"><span class="pp-fp-word">TEG </span>{{ row.teg }}</span>{% if row.year %}<span class="pp-fp-yr"><span class="pp-fp-yr-long">{{ row.year }}</span><span class="pp-fp-yr-short">{{ row.yy }}</span></span>{% endif %}</div>
+                    <div class="pp-fp-pair{% if row.double %} pp-double{% endif %}">
+                        <span class="pp-fp-cell{{ fin_cell_cls(row, 'gross') }}" role="cell">{{ row.gross_pos }}</span>
+                        <span class="pp-fp-cell{{ fin_cell_cls(row, 'net') }}" role="cell">{{ row.net_pos }}</span>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
         </div>
-        {% if chart_gross_json %}<div id="chart-gross" class="chart-panel"><div class="chart-container pp-trend-chart" data-figure="{{ chart_gross_json }}"></div><p class="pp-chart-direction">Lower = better</p></div>{% endif %}
-        {% if chart_stab_json %}<div id="chart-stableford" class="chart-panel{% if chart_gross_json %} hidden{% endif %}"><div class="chart-container pp-trend-chart" data-figure="{{ chart_stab_json }}"></div><p class="pp-chart-direction">Higher = better</p></div>{% endif %}
+        <p class="pp-legend">
+            <span><b class="pp-win">1st</b> won</span>
+            <span><b class="pp-spoon">5th</b> Wooden Spoon</span>
+            <span><span class="pp-legend-box" aria-hidden="true"></span>double</span>
+        </p>
+        <p class="pp-note">Net is vs par to TEG {{ stableford_era - 1 }}, Stableford from TEG {{ stableford_era }}.{% for n in finish_notes %} * {{ n }}.{% endfor %}</p>
+    </section>
+
+    {% if round_chart %}
+    <section class="pp-section">
+        <div class="pp-sec-row">
+            <h2 class="section-title pp-sec">Gross vs par, per round</h2>
+            <span class="pp-sec-aside">Lower is better / green = Green Jacket</span>
+        </div>
+        <div class="pp-gchart" style="--career: {{ round_chart.career }}%; --career-frac: {{ round_chart.career_frac }}">
+            <div class="pp-gaxis" aria-hidden="true">{% for t in round_chart.ticks %}<span style="--pos: {{ t.pos }}%">{{ t.label }}</span>{% endfor %}</div>
+            <div class="pp-gplot">
+                <div class="pp-gcareer" aria-hidden="true"></div>
+                <span class="pp-gcareer-label" aria-hidden="true">career {{ round_chart.career_label }}</span>
+                <ol class="pp-gcols">
+                    {% for c in round_chart.cols %}
+                    <li class="pp-gcol{% if c.jacket %} pp-gcol--jacket{% endif %}" title="{{ c.aria }}" aria-label="{{ c.aria }}" style="--bar: {{ c.bar }}%; --lo: {{ c.lo }}%; --hi: {{ c.hi }}%; --span: {{ c.span }}%">
+                        <span class="pp-gteg" aria-hidden="true"><span class="pp-fp-word">TEG </span>{{ c.teg }}</span>
+                        <span class="pp-gtrack" aria-hidden="true">
+                            <span class="pp-gbar"></span>
+                            <span class="pp-grange"></span>
+                            <span class="pp-gcap pp-gcap--lo"></span>
+                            <span class="pp-gcap pp-gcap--hi"></span>
+                        </span>
+                        <span class="pp-gval" aria-hidden="true">{{ c.avg_label }}</span>
+                    </li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+        <p class="pp-note">Bar is the TEG average a round. Line runs from best to worst round. <span class="pp-note-phone">Career {{ round_chart.career_label }}.</span></p>
     </section>
     {% endif %}
-    <section class="pp-block">
-        <div class="pp-section-head"><h2 class="pp-section-title">All-time records held</h2><button type="button" class="pp-link" data-open-profile-records>View records &amp; streaks →</button></div>
-        <dl class="pp-record-teasers">
-            {% for r in records_held[:3] %}<div><dt>{{ r.label }}{% if r.shared %} · shared{% endif %}</dt><dd>{{ r.value }}</dd></div>{% endfor %}
-        </dl>
-        {% if not records_held %}<p class="pp-context">No outright TEG records held.</p>{% endif %}
-        {% if worsts_held %}<p class="pp-context">{{ worsts_held | length }} TEG worst{{ 's' if worsts_held | length != 1 else '' }} held · full details in Records &amp; Streaks.</p>{% endif %}
+
+    <section class="pp-section">
+        <h2 class="section-title pp-sec">Records and personal bests</h2>
+        <div class="pp-pb pp-pb-head" aria-hidden="true"><span></span><span>Best</span><span>Worst</span></div>
+        {% for row in records_board %}
+        <div class="pp-pb">
+            <span class="pp-pb-label">{{ row.label }}</span>
+            {% for key, cell in (('Best', row.best), ('Worst', row.worst)) %}
+            <span class="pp-pb-cell">
+                {% if cell %}
+                <span class="pp-pb-kind">{{ key }}</span>
+                <b>{{ cell.value }}</b>{% if cell.tag %}<span class="pp-rec">{{ cell.tag }}</span>{% endif %}
+                <small>{{ cell.where }}</small>
+                {% else %}<span class="pp-pb-kind">{{ key }}</span><b class="pp-none">–</b>{% endif %}
+            </span>
+            {% endfor %}
+        </div>
+        {% endfor %}
+        <div class="pp-pb-foot">
+            {% if records_note %}<span>{{ records_note }}</span>{% endif %}
+            <button type="button" class="pp-link" data-open-profile-records>Records &amp; streaks</button>
+        </div>
     </section>
-    <section class="pp-block pp-results" data-profile-results>
-        <div class="pp-section-head"><h2 class="pp-section-title">TEG Results</h2>{% if teg_result_count > 3 %}<button type="button" class="pp-link" data-expand-profile-results data-result-count="{{ teg_result_count }}" aria-expanded="false" hidden>Show all {{ teg_result_count }} TEGs</button>{% endif %}</div>
-        <div class="pp-table-wrap">{{ teg_table_html | safe }}</div>
-    </section>
+    {% else %}
+    <p class="pp-note">No TEG data.</p>
+    <button type="button" class="pp-link" data-open-profile-records>Records &amp; streaks</button>
+    {% endif %}
 </div>
