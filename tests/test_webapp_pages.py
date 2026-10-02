@@ -379,7 +379,11 @@ def test_player_index_renders(client):
     resp = client.get("/player")
     _assert_ok_no_error(resp)
     assert "pick a card" not in resp.text
-    assert "Ranked by silverware" in resp.text
+    assert "All player profiles" in resp.text
+    assert "Click a player to open their profile." in resp.text
+    # Whole row links to the profile; no handicap column.
+    assert 'class="pr-row" href="/player/' in resp.text
+    assert "pr-hc" not in resp.text
     # Nav links Player Profiles (TEG History section).
     assert 'href="/player"' in resp.text and "Player Profiles" in resp.text
 
@@ -401,7 +405,8 @@ def test_player_roster_counts_asterisked_wins_orders_and_ranks(client):
         assert r["last_year"] >= r["since_year"]
         assert r["gvp_rank"][0].isdigit() and r["stab_rank"][0].isdigit()
     resp = client.get("/player")
-    assert "1st gross" in resp.text and "Stableford" in resp.text
+    assert "Avg gross" in resp.text and "Avg Stableford" in resp.text
+    assert f"1st / {n_ranked}" in resp.text
     assert 'aria-label="1 TEG Trophy, 1 Green Jacket"' in resp.text
     assert "trophy-star--green" in resp.text
 

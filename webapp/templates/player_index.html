@@ -2,7 +2,7 @@
 {% block title_suffix %} — Player Profiles{% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="/static/player-profile.css?v=10">
+<link rel="stylesheet" href="/static/player-profile.css?v=11">
 {% endblock %}
 
 {% block page_title %}
@@ -13,13 +13,15 @@
 {% endblock %}
 
 {% block content %}
+{% macro rank(r) %}{% if r and r != "–" %}{{ r }} / {{ n_ranked }}{% else %}&nbsp;{% endif %}{% endmacro %}
 <div class="pr-roster">
-    <h2 class="section-title pp-sec">Ranked by silverware</h2>
+    <h2 class="section-title pp-sec">All player profiles</h2>
+    <p class="pr-intro">Click a player to open their profile.</p>
     <ul class="pr-list">
         {% for p in roster %}
-        <li class="pr-row">
+        <li class="pr-item"><a class="pr-row" href="/player/{{ p.code }}">
             <div class="pr-cell pr-id">
-                <a class="pr-name" href="/player/{{ p.code }}">{{ p.name }}</a>
+                <span class="pr-name">{{ p.name }}</span>
                 <span class="pr-sub pr-meta">{{ p.n_tegs }} TEGs / {{ p.since_year }}&ndash;{{ p.last_year }}</span>
             </div>
             <div class="pr-cell pr-honours">
@@ -33,24 +35,24 @@
             </div>
             <div class="pr-cell pr-num pr-gross">
                 <span class="pr-val">{{ p.avg_gvp }}</span>
-                <span class="pr-sub">{{ p.gvp_rank }} gross<span class="pr-per"> / round</span></span>
+                <span class="pr-sub">Avg gross</span>
+                <span class="pr-rank">{{ rank(p.gvp_rank) }}</span>
             </div>
             <div class="pr-cell pr-num pr-stab">
                 <span class="pr-val">{{ p.avg_stab }}</span>
-                <span class="pr-sub">{{ p.stab_rank }} Stableford<span class="pr-per"> / round</span></span>
+                <span class="pr-sub">Avg Stableford</span>
+                <span class="pr-rank">{{ rank(p.stab_rank) }}</span>
             </div>
             <div class="pr-cell pr-num pr-spoon">
                 {% if p.spoon_count %}<span class="pr-val pr-val--spoon">{{ p.spoon_count }}</span>{% else %}<span class="pr-val pr-val--none">&ndash;</span>{% endif %}
                 <span class="pr-sub">Wooden Spoon{{ "" if p.spoon_count == 1 else "s" }}</span>
+                <span class="pr-rank">{{ rank(p.spoon_rank) }}</span>
             </div>
-            <div class="pr-cell pr-num pr-hc">
-                <span class="pr-val">{{ p.handicap if p.handicap is not none else "–" }}</span>
-                <span class="pr-sub">Handicap</span>
-            </div>
+        </a>
         </li>
         {% endfor %}
     </ul>
-    <p class="pp-note pp-foot pr-foot"><span>Then by TEGs played. Ranks are all-time, out of {{ n_ranked }} players.</span>
+    <p class="pp-note pp-foot pr-foot"><span>Ordered by silverware, then TEGs played. Ranks are all-time.</span>
         <span class="pp-foot-links"><a class="text-link pp-a" href="/honours">Honours</a><span aria-hidden="true"> / </span><a class="text-link pp-a" href="/player-rankings">Player rankings</a></span></p>
 </div>
 {% endblock %}

@@ -32,10 +32,6 @@ from teg_analysis.analysis.streaks import (
     prepare_record_best_streaks_data,
     prepare_record_worst_streaks_data,
 )
-from teg_analysis.analysis.handicaps import (
-    get_current_handicaps_formatted,
-    get_next_teg_and_check_if_in_progress_fast,
-)
 from teg_analysis.display.formatters import (
     prepare_records_table,
     prepare_worst_records_table,
@@ -1165,18 +1161,6 @@ def _build_records_context(player_code: str) -> dict:
     }
 
 
-def _current_playing_handicaps() -> dict:
-    """Use the same next/in-progress TEG handicap on roster and detail pages."""
-    try:
-        _, next_tegnum, _ = get_next_teg_and_check_if_in_progress_fast()
-        hc_df, _ = get_current_handicaps_formatted(next_tegnum - 1, next_tegnum)
-        hc_col = f"TEG {next_tegnum}"
-        return dict(zip(hc_df["Handicap"], hc_df[hc_col].astype(int)))
-    except Exception:
-        logger.exception("Could not load current handicaps for player profiles")
-        return {}
-
-
 # ---------------------------------------------------------------------------
 # Roster (landing page cards)
 # ---------------------------------------------------------------------------
@@ -1190,9 +1174,9 @@ def _build_roster() -> tuple[list[dict], int]:
 
     One dict per player who has played: identity (code/name), career span
     (n_tegs, since_year, last_year), gold/green star counts with an aria label
-    and an honours line, Wooden Spoon count, current handicap, and avg gross vs
-    par / avg Stableford per round with their all-time ranks (the same ranks the
-    profile shows, via _metric_specs). Asterisked wins count (_strip_star).
+    and an honours line, and avg gross vs par / avg Stableford per round and
+    Wooden Spoon count, each with its all-time rank (the same ranks the profile
+    shows, via _metric_specs). Asterisked wins count (_strip_star).
     Sorted by total silverware desc, then TEGs played desc, then name.
     """
     all_data = cached_load_all_data()
@@ -1200,10 +1184,6 @@ def _build_roster() -> tuple[list[dict], int]:
     winners = deps.cached_winners()
     specs = _metric_specs(all_data, rd_data, winners)
     n_ranked = len(specs[0][1].dropna()) if specs else 0
-
-    # Current playing handicap = each player's HC for the next (or in-progress)
-    # TEG. Map name → HC; players absent from the table just show "–".
-    current_hc = _current_playing_handicaps()
 
     trophy_w = winners["TEG Trophy"].map(_strip_star)
     jacket_w = winners["Green Jacket"].map(_strip_star)
@@ -1227,6 +1207,7 @@ def _build_roster() -> tuple[list[dict], int]:
 
         gvp, gvp_rank, _ = _metric_cell(specs, name, "Avg Gross vs Par")
         stab, stab_rank, _ = _metric_cell(specs, name, "Avg Stableford")
+        _, spoon_rank, _ = _metric_cell(specs, name, "Wooden Spoons")
 
         rows.append({
             "code": code,
@@ -1240,11 +1221,11 @@ def _build_roster() -> tuple[list[dict], int]:
             "stars_label": star_line["label"],
             "honours_text": " / ".join(honours),
             "spoon_count": int((spoon_w == name).sum()),
-            "handicap": current_hc.get(name),
             "avg_gvp": gvp,
             "gvp_rank": gvp_rank,
             "avg_stab": stab,
             "stab_rank": stab_rank,
+            "spoon_rank": spoon_rank,
         })
 
     rows.sort(key=lambda c: (-c["total_trophies"], -c["n_tegs"], c["name"]))
