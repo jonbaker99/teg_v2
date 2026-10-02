@@ -98,3 +98,18 @@
     .sim-weights-wrap { max-height: 16rem; }
     .sim-chart { height: 340px !important; }
 }
+
+/* Sampling distributions: collapsed by default, with a clear Show / Hide control. */
+.sim-disclosure > summary {
+    list-style: none; cursor: pointer; display: flex; align-items: center;
+    justify-content: space-between; gap: 1rem; min-height: 44px;
+    border-bottom: 1px solid var(--table-cell-border);
+}
+.sim-disclosure > summary::-webkit-details-marker { display: none; }
+.sim-disclosure > summary .section-title { margin: 0; }
+.sim-toggle-hint::after {
+    content: "Show \25BE"; font-size: 0.875rem; color: var(--text-secondary); white-space: nowrap;
+}
+.sim-disclosure[open] .sim-toggle-hint::after { content: "Hide \25B4"; }
+.sim-disclosure > summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.sim-disclosure > .caption { margin-top: 0.75rem; }

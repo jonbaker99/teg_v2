@@ -31,7 +31,7 @@
         <table class="teg-table sim-summary">
             <thead><tr>
                 <th class="sim-left">Player</th><th>HC</th>
-                <th>Gross</th><th>vs par</th><th>Gross 10-90</th>
+                <th>Gross vs par</th><th>Gross 10-90</th>
                 <th>Stableford</th><th>Stab 10-90</th>
                 <th>Win % gross</th><th>Win % stab</th>
                 <th><abbr title="Chance of at least one eagle or better over the TEG">Eagle %</abbr></th>
@@ -41,7 +41,7 @@
             {% for r in m.summary %}
             <tr>
                 <td class="sim-left">{{ r.name_html | safe }}</td><td>{{ r.hc }}</td>
-                <td>{{ r.gross }}</td><td>{{ r.gross_vp }}</td><td>{{ r.gross_range }}</td>
+                <td>{{ r.gross_vp }}</td><td>{{ r.gross_range }}</td>
                 <td>{{ r.stab }}</td><td>{{ r.stab_range }}</td>
                 <td>{{ r.win_gross }}</td><td>{{ r.win_stab }}</td>
                 <td>{{ r.eagle }}</td><td>{{ r.blobs }}</td>
@@ -66,7 +66,7 @@
         </table>
         </div></div>
 
-        <h3 class="chart-title">Distribution of total {{ 'gross strokes' if m.key == 'gross' else 'Stableford points' }}</h3>
+        <h3 class="chart-title">Distribution of {{ 'gross vs par' if m.key == 'gross' else 'total Stableford points' }}</h3>
         <div class="data-card data-card--padded">
             <div class="chart-container sim-chart" data-figure="{{ m.chart_json }}" style="height:400px;"></div>
         </div>

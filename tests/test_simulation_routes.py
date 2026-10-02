@@ -215,3 +215,12 @@ def test_run_with_one_sim_renders(client):
     r = client.get("/simulation/run?n_sims=1&seed=1")
     assert r.status_code == 200
     assert "Couldn" not in r.text
+
+
+def test_gross_shown_vs_par_and_sampling_collapsed(client):
+    page = client.get("/simulation").text
+    assert '<details class="sim-disclosure" id="sim-dists-box">' in page  # closed by default
+    r = client.get("/simulation/run?n_sims=500&seed=1").text
+    assert "Gross vs par" in r
+    assert "Total gross strokes" not in r
+    assert "<th>Gross</th>" not in r

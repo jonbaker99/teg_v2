@@ -130,8 +130,11 @@
 </form>
 
 <section class="section-gap">
-    <h2 class="section-title">Sampling distributions</h2>
-    <div id="sim-dists">{% include "partials/simulation_distributions.html" %}</div>
+    <details class="sim-disclosure" id="sim-dists-box">
+        <summary><span class="section-title">Sampling distributions</span><span class="sim-toggle-hint" aria-hidden="true"></span></summary>
+        <p class="caption">What each player's hole scores are drawn from, by par and stroke index.</p>
+        <div id="sim-dists">{% include "partials/simulation_distributions.html" %}</div>
+    </details>
 </section>
 
 <section class="section-gap">

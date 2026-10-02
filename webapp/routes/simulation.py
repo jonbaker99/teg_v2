@@ -344,8 +344,8 @@ def _summary_rows(res, measure: str) -> list[dict]:
                         kind="stable").reset_index(drop=True)
     return [{
         "name_html": _wrap_player_name(r.Player), "hc": r.Handicap,
-        "gross": f"{r.MeanGross:.1f}", "gross_vp": f"{r.MeanGrossVP:+.1f}",
-        "gross_range": f"{r.P10Gross:.0f}-{r.P90Gross:.0f}",
+        "gross_vp": f"{r.MeanGrossVP:+.1f}",
+        "gross_range": f"{r.P10Gross - res.par_total:+.0f} to {r.P90Gross - res.par_total:+.0f}",
         "stab": f"{r.MeanStableford:.1f}",
         "stab_range": f"{r.P10Stableford:.0f}-{r.P90Stableford:.0f}",
         "win_gross": f"{r.WinGross * 100:.1f}%", "win_stab": f"{r.WinStableford * 100:.1f}%",
@@ -384,14 +384,15 @@ def _chart_json(res, measure: str) -> str:
     dist = sim.total_distribution(res, measure, smooth=True)
     palette = px.colors.qualitative.Plotly
     fig = go.Figure()
+    offset = res.par_total if measure == "gross" else 0  # gross is shown vs par
     for i, (name, g) in enumerate(dist.groupby("Player", sort=False)):
         g = g.sort_values("Total")
         fig.add_trace(go.Scatter(
-            x=g["Total"], y=(g["Fraction"] * 100).round(2), mode="lines", name=name,
+            x=g["Total"] - offset, y=(g["Fraction"] * 100).round(2), mode="lines", name=name,
             line=dict(color=palette[i % len(palette)], width=2),
-            hovertemplate="%{x}: %{y:.1f}%<extra>" + name + "</extra>"))
+            hovertemplate=("%{x:+d}" if measure == "gross" else "%{x}") + ": %{y:.1f}%<extra>" + name + "</extra>"))
     fig.update_layout(
-        xaxis_title="Total gross strokes" if measure == "gross" else "Total Stableford points",
+        xaxis_title="Gross vs par" if measure == "gross" else "Total Stableford points",
         yaxis_title="% of simulations", hovermode="x unified",
         legend=dict(orientation="h", yanchor="top", y=-0.18, xanchor="left", x=0, title_text=""),
         margin=dict(r=12, t=10, b=40, l=44))
