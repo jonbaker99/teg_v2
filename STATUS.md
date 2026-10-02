@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-10-01 (results banner before the GitHub sync)
+**Last updated:** 2026-10-02 (new-record markers on /records)
+
+## 2026-10-02 — /records marks new records and gains a New Records tab
+
+Records set in the in-progress (else last completed) TEG show a NEW pill on their row. Tabs holding any show a dot. A new first tab lists them with that TEG's personal bests. Dev lab removed.
 
 ## 2026-10-01 — Finalise shows the results before the GitHub sync
 

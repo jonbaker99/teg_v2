@@ -18,6 +18,7 @@ from webapp.deps import (
     get_filtered_teg_data,
     get_current_in_progress_teg_fast,
     get_last_completed_teg_fast,
+    register_cache_clearer,
 )
 from teg_analysis.display.scorecards import _player_name_spans
 from teg_analysis.display.formatters import (
@@ -26,6 +27,10 @@ from teg_analysis.display.formatters import (
     score_count_record_holders,
 )
 from teg_analysis.core.players import get_player_dict
+from teg_analysis.analysis.records import (
+    identify_aggregate_records_and_pbs,
+    identify_9hole_records_and_pbs,
+)
 from teg_analysis.analysis.streaks import (
     prepare_record_best_streaks_data,
     prepare_record_worst_streaks_data,
@@ -35,6 +40,7 @@ router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
 TABS = [
+    ("new", "New Records"),
     ("teg", "TEG Records"),
     ("round", "Round Records"),
     ("9hole", "9-Hole Records"),
@@ -282,18 +288,36 @@ def _build_stacked_records_list(
     Records below ``min_value`` are left out (None keeps every record --
     TEG/Round/9-Hole values are scores, not counts).
     ``new_teg`` marks records set in that TEG: ``rec-when--new`` on the
-    occasion, ``rec-holder--new`` on the holder row, ``rec-group--new`` on the
-    group. Unstyled in production; see /design/new-records."""
+    occasion, ``rec-holder--new`` on the holder row (styled as a NEW pill in
+    base-vars.css), ``rec-group--new`` on the group."""
     return _stacked_records_html(holders, min_value, new_teg)[0]
 
 
-def _stacked_records_html(holders: list, min_value: int | None, new_teg: int | None) -> tuple[str, list]:
+def _new_holders_only(holders: list, min_value: int | None, new_teg: int | None) -> list:
+    """Holdings set in ``new_teg``, after the same min_value filter the
+    source tab applies, so the New tab matches the tab dots."""
+    if min_value is not None:
+        holders = [h for h in holders if _stacked_value_threshold(h['value']) >= min_value]
+    return [h for h in holders if new_teg is not None and _record_teg(h['when']) == new_teg]
+
+
+def _stacked_records_html(
+    holders: list,
+    min_value: int | None,
+    new_teg: int | None,
+    only_new: bool = False,
+) -> tuple[str, list]:
     """(html, new_holders) for _build_stacked_records_list. new_holders is
     a list of (label, player name) taken after the min_value filter, so it
-    matches what is shown."""
+    matches what is shown. ``only_new`` keeps just the holdings set in
+    ``new_teg`` (the New Records tab) and then omits the NEW markers, since
+    everything left is new."""
     names = get_player_dict()
     if min_value is not None:
         holders = [h for h in holders if _stacked_value_threshold(h['value']) >= min_value]
+    if only_new:
+        holders = _new_holders_only(holders, None, new_teg)
+        new_teg = None
     if not holders:
         return "<p class='text-muted text-sm'>No records.</p>", []
     new_holders: list = []
@@ -387,13 +411,132 @@ def _section(
         "table_html": table_html,
         "record_count": len(holders),
         "new_count": len(new_holders),
-        "new_holders": new_holders,
+        # Kept so the New Records tab can re-render just the new holdings.
+        "holders": holders,
+        "min_value": min_value,
     }
 
 
 def _tab_context(tab_name: str, new_teg: int | None = None) -> dict:
+    """Context for a records tab, cached per (tab, new_teg). Errors are not
+    cached. Cleared by deps.clear_all_data_caches (registered below)."""
+    key = (tab_name, new_teg)
+    ctx = _TAB_CTX_CACHE.get(key)
+    if ctx is None:
+        ctx = _build_tab_context(tab_name, new_teg)
+        if "error" not in ctx:
+            if len(_TAB_CTX_CACHE) >= _TAB_CTX_CACHE_MAX:
+                _TAB_CTX_CACHE.clear()  # ?new_teg= is user-supplied; bound growth
+            _TAB_CTX_CACHE[key] = ctx
+    return ctx
+
+
+_TAB_CTX_CACHE: dict = {}
+_TAB_CTX_CACHE_MAX = 64
+register_cache_clearer(_TAB_CTX_CACHE.clear)
+
+
+def _pb_occasion_label(occasion: str, friendly_name: str) -> str:
+    return f"{occasion} {'Gross' if friendly_name == 'Score' else friendly_name}"
+
+
+def _new_personal_bests(new_teg: int) -> dict:
+    """Personal bests set in TEG ``new_teg``: {player name: [(label, value)]}
+    in occasion order (TEG, then each round, its nines after it). Ties and
+    first-ever appearances count (rank 1 within the player's history); a PB
+    that is also an all-time record is skipped, since the New records
+    section already lists it."""
+    # Local import: latest.py imports this module.
+    from webapp.routes.latest import _fmt_record_value
+
+    teg_str = f"TEG {new_teg}"
+    rounds_df = cached_ranked_round_data()
+    rounds = sorted(int(r) for r in rounds_df.loc[rounds_df['TEG'] == teg_str, 'Round'].unique())
+
+    def keep(result: dict, occasion: str, segment: bool = False) -> list:
+        record_keys = {(r['player'], r['metric'], r.get('segment')) for r in result['records']}
+        out = []
+        for pb in result['personal_bests']:
+            if (pb['player'], pb['metric'], pb.get('segment')) in record_keys:
+                continue
+            occ = f"{occasion} {pb['segment']} 9" if segment else occasion
+            out.append((pb['player'], _pb_occasion_label(occ, pb['friendly_name']),
+                        _fmt_record_value(pb['value'], pb['metric'])))
+        return out
+
+    rows = keep(identify_aggregate_records_and_pbs(cached_ranked_teg_data(), teg_str), "TEG")
+    for r in rounds:
+        rows += keep(identify_aggregate_records_and_pbs(rounds_df, teg_str, r), f"Round {r}")
+        rows += keep(identify_9hole_records_and_pbs(teg_str, r, cached_ranked_frontback_data()),
+                     f"Round {r}", segment=True)
+    by_player: dict = {}
+    for player, label, value in rows:
+        by_player.setdefault(player, []).append((label, value))
+    return dict(sorted(by_player.items()))
+
+
+def _personal_bests_html(by_player: dict) -> str:
+    parts = ["<div class='records-list records-list--stacked'>"]
+    for player, items in by_player.items():
+        parts.append(
+            "<div class='rec-group'><div class='rec-group-head'>"
+            f"<span class='rec-label'>{escape(player)}</span></div>"
+        )
+        for label, value in items:
+            parts.append(
+                "<div class='rec-holder'>"
+                f"<span class='rec-identity'>{escape(label)}</span>"
+                f"<span class='rec-whens'><span class='rec-when'>{escape(value)}</span></span>"
+                "</div>"
+            )
+        parts.append("</div>")
+    parts.append("</div>")
+    return "".join(parts)
+
+
+def _new_tab_context(new_teg: int | None) -> dict:
+    """The New Records tab: every holder set in ``new_teg`` across the other
+    tabs (grouped by source section), then the PBs set in it."""
+    if new_teg is None:
+        return {"sections": [], "intro": "No TEG to report on yet."}
+    in_progress, _ = get_current_in_progress_teg_fast()
+    live = bool(in_progress) and int(in_progress) == new_teg
+    intro = f"Set so far in TEG {new_teg}" if live else f"Set in TEG {new_teg}"
+
+    groups = []
+    new_count = 0
+    for tab_id, _label in TABS:
+        if tab_id == "new":
+            continue
+        ctx = _tab_context(tab_id, new_teg)
+        if "error" in ctx:
+            return ctx
+        for sec in ctx["sections"]:
+            if sec["new_count"]:
+                html, _ = _stacked_records_html(sec["holders"], sec["min_value"], new_teg, only_new=True)
+                groups.append(f"<h3 class='rec-subhead'>{escape(sec['title'])}</h3>{html}")
+                new_count += sec["new_count"]
+    records_html = "".join(groups) or f"<p class='text-muted text-sm'>No new records set in TEG {new_teg}.</p>"
+
+    pbs = _new_personal_bests(new_teg)
+    pbs_html = _personal_bests_html(pbs) if pbs else (
+        f"<p class='text-muted text-sm'>No new personal bests in TEG {new_teg}.</p>")
+    return {
+        "intro": intro,
+        "sections": [
+            {"title": "New records", "table_html": records_html},
+            {"title": "New personal bests", "table_html": pbs_html},
+        ],
+        "new_count": new_count,
+        "pb_count": len(pbs),
+    }
+
+
+def _build_tab_context(tab_name: str, new_teg: int | None = None) -> dict:
     """Build context for a records tab."""
     try:
+        if tab_name == "new":
+            return _new_tab_context(new_teg)
         sections = []
         caption = None
 
@@ -426,53 +569,43 @@ def _tab_context(tab_name: str, new_teg: int | None = None) -> dict:
             "sections": sections,
             "caption": caption,
             "new_count": sum(sec["new_count"] for sec in sections),
-            # Labels lose their Best/Worst prefix in the list; restore it from
-            # the section title so the banner can tell them apart.
-            "new_holders": [
-                (f"{sec['title'].split()[0]} {label}", who)
-                for sec in sections for label, who in sec["new_holders"]
-            ],
         }
 
     except Exception as e:
         return {"error": str(e)}
 
 
-def _new_banner(ctx: dict, new_teg: int | None) -> dict | None:
-    """Summary banner data for the /design/new-records prototype (never
-    emitted on production /records): None when there is nothing new."""
-    if new_teg is None or not ctx.get("new_count"):
-        return None
-    in_progress, _ = get_current_in_progress_teg_fast()
-    return {
-        "teg": new_teg,
-        "count": ctx["new_count"],
-        "in_progress": bool(in_progress) and int(in_progress) == new_teg,
-        "entries": ctx["new_holders"],
-    }
-
-
 @router.get("/records")
-def records_page(request: Request, tab: str = Query("teg")):
+def records_page(request: Request, tab: str = Query("teg"), new_teg: int | None = None):
+    """``new_teg`` overrides the detected TEG (preview; carried through the
+    tab buttons so it survives tab switches)."""
     tab = tab if tab in {tab_id for tab_id, _label in TABS} else "teg"
-    ctx = _tab_context(tab, new_teg=new_record_teg())
+    target = new_teg if new_teg is not None else new_record_teg()
+    ctx = _tab_context(tab, new_teg=target)
+    tab_counts = {
+        tab_id: _tab_context(tab_id, new_teg=target).get("new_count", 0)
+        for tab_id, _label in TABS if tab_id != "new"
+    }
+    # The New tab gets a dot for any new record or personal best.
+    new_ctx = _tab_context("new", new_teg=target)
+    tab_counts["new"] = new_ctx.get("new_count", 0) + new_ctx.get("pb_count", 0)
     return templates.TemplateResponse("records.html", {
         "request": request,
         "active_page": "records",
         "tabs": TABS,
         "active_tab": tab,
+        "tab_counts": tab_counts,
+        "new_teg_param": new_teg,
         **ctx,
     })
 
 
 @router.get("/records/tab/{tab_name}")
-def records_tab(request: Request, tab_name: str, new_teg: int | None = None, banner: int = 0):
-    """``new_teg`` overrides detection and ``banner=1`` adds the summary
-    banner (both used by the /design/new-records prototype's tab loads)."""
+def records_tab(request: Request, tab_name: str, new_teg: int | None = None):
+    """``new_teg`` overrides detection (used for previews)."""
     new_teg = new_teg if new_teg is not None else new_record_teg()
     ctx = _tab_context(tab_name, new_teg=new_teg)
     return templates.TemplateResponse("partials/records_tab.html", {
         "request": request,
-        "new_banner": _new_banner(ctx, new_teg) if banner else None,
         **ctx,
     })

@@ -16,7 +16,7 @@ from webapp.routes import (
     history, latest, performance, scoring, scorecards,
     eclectic, reports, contents,
     admin, admin_round_setup, admin_teg_setup, admin_live_round, live_round,
-    admin_new_round, admin_reports, design_lab, font_lab, new_records_lab,
+    admin_new_round, admin_reports, design_lab, font_lab,
 )
 import webapp.deps as deps
 from teg_analysis.reporting import newspaper_edition
@@ -126,7 +126,6 @@ app.include_router(live_round.router)
 app.include_router(admin_reports.router)
 app.include_router(design_lab.router)
 app.include_router(font_lab.router)
-app.include_router(new_records_lab.router)
 
 
 @app.get("/")
