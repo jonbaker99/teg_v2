@@ -72,6 +72,11 @@ teg_analysis/
     teg_setup.py     Pre-TEG roster + handicap confirmation (handicaps.csv + who plays in
                      teg_rosters.csv) — not every player plays every TEG —
                      get_teg_roster_form/save_teg_roster
+    simulation.py    Monte Carlo prediction of an upcoming TEG: per-player GrossVP
+                     distributions by par x SI band (recency-weighted by TEG, shrunk
+                     to par level when thin) — build_distributions; sampled on the
+                     target TEG's round_pars/roster/handicaps — load_target_tournament/
+                     run_simulation; summary_table/position_grid/total_distribution
     live_round.py    Multi-device live round entry: registry + per-round staging CSVs,
                      server-ordered writes, conflict flagging, live leaderboard from
                      staging, finalize into execute_data_update —

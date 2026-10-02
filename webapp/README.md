@@ -565,6 +565,10 @@ player's `/scorecard`, in the text colour (underline on hover only; green is for
 honours). Each section has at most one right-aligned muted footer line of plain
 links to the matching main-site page (built with `_url`, which encodes queries).
 
+## Simulator
+
+`/simulation` (`webapp/routes/simulation.py`) is a Monte Carlo dashboard for the next TEG, built on `teg_analysis.analysis.simulation`. Controls are one GET form: target TEG, per-TEG weights (`w_<TEGNum>`, default 50/35/15 on the three latest), SI band preset or custom boundaries, shrinkage k, sims and seed. Changing a control re-renders the sampling distributions (`/simulation/distributions`); **Run** renders results (`/simulation/run`): summary table, finishing-position grid and total-score chart, with a client-side Gross / Stableford toggle. Sims are capped at `MAX_SIMS` (100k, ~2s).
+
 ## Theme system
 
 One Clean theme family uses the shared variables and rules in `base-vars.css` and `clean.css`. **Clean Page** is the active layout. `theme.py` still registers Clean Layered, but it is mothballed. Routine verification scope is defined in [Design principles — Themes and layouts](design_principles.md#themes-and-layouts).

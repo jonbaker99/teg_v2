@@ -4,6 +4,12 @@ Analysis package todos. Commentary/reporting pipeline tracked separately in [`re
 
 ---
 
+## TEG simulator (`analysis/simulation.py`)
+
+- [ ] **Rare and unseen outcomes.** A player can only score what they have scored on that par/SI band in the weighted TEGs (plus par-level shrinkage), so a first-ever eagle on a par 5 has zero chance. Option: blend a small weight of the field-level distribution (all players, all TEGs) into every cell, adjusted for the player's mean.
+- [ ] **Condition on holes already played.** During an in-progress TEG, use actual scores for played holes and simulate only the rest, for live win probabilities.
+- [ ] **SI shrinkage target.** Thin SI bands shrink to the player's whole-par distribution, which slightly flattens the hard/easy SI effect (~0.3-0.5 strokes all-time). Consider shifting the prior by the field's band effect.
+
 ## TEG Reports
 
 Full detail — including the report-by-report inventory and pipeline vintages — in

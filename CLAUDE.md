@@ -215,7 +215,7 @@ Two distinct phases. **Streamlit is the original architecture** — self-contain
    - `constants.py` — file paths, tournament metadata (see [Player identity](#player-identity) for the players caveat)
    - `io/` — file I/O (`read_file`/`write_file`), GitHub API (`GITHUB_TOKEN`), Railway volume management
    - `core/` — data loading (`load_all_data`) and transformation
-   - `analysis/` — scoring, rankings, aggregation, streaks, records, eclectic, handicaps, commentary, pipeline, data_update, history, performance, leaderboards, bestball, live_round, round_setup, round_wizard
+   - `analysis/` — scoring, rankings, aggregation, streaks, records, eclectic, handicaps, commentary, pipeline, data_update, history, performance, leaderboards, bestball, live_round, round_setup, round_wizard, simulation
    - `display/` — formatting, HTML tables, scorecards, nav utilities. Returns HTML strings; never calls `st.write`
    - `reporting/` — LLM-powered tournament reports, plus a free, non-LLM PDF-rendering stage (`report_pdf.py`)
    - `api/` — placeholder for the REST API layer
