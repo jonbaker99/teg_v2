@@ -82,7 +82,7 @@
 /* Gross vs par per round: bar = TEG average a round, thin line = best to
    worst round. Desktop columns; phone rows (newest first). */
 .pp-gaxis { display: none; }
-.pp-gplot { position: relative; height: 240px; border-bottom: 1px solid var(--pp-ink); margin-bottom: 30px; }
+.pp-gplot { position: relative; height: 240px; border-bottom: 1px solid var(--pp-ink); margin-bottom: 44px; }
 .pp-gcareer { position: absolute; left: 0; right: 0; bottom: var(--career); border-top: 1px dashed var(--pp-dim); }
 .pp-gcareer-label { position: absolute; z-index: 2; right: 0; bottom: var(--career); margin-bottom: 4px; padding-left: 6px; font-size: 11px; color: var(--pp-dim); background: var(--bg-card); }
 .pp-gcols { position: absolute; inset: 0 76px 0 0; margin: 0; padding: 0; list-style: none; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0 10px; }
@@ -90,20 +90,16 @@
 .pp-gtrack { position: absolute; inset: 0; }
 .pp-gbar { position: absolute; left: 0; right: 0; bottom: 0; height: var(--bar); background: var(--pp-bar); border-radius: 2px 2px 0 0; }
 .pp-gcol--jacket .pp-gbar { background: var(--accent); }
-/* Range line sits right of the bar label so the two never collide. */
 /* Best and worst round markers: a filled dot (best) and a hollow dot (worst),
-   on the bar's right edge so they never sit on the average label. */
-.pp-gmark { position: absolute; left: 90%; width: 8px; height: 8px; margin: 0 0 -4px -4px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid var(--pp-ink); background: var(--pp-ink); z-index: 1; }
+   centred on the bar. The average value sits under the TEG label instead of
+   in the bar, so the two can never collide. */
+.pp-gmark { position: absolute; left: 50%; width: 8px; height: 8px; margin: 0 0 -4px -4px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid var(--pp-ink); background: var(--pp-ink); z-index: 1; }
 .pp-gmark--best { bottom: var(--lo); }
 .pp-gmark--worst { bottom: var(--hi); background: var(--bg-card); }
 .pp-gkey { display: inline-block; width: 8px; height: 8px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid var(--pp-ink); background: var(--pp-ink); vertical-align: 0; margin-left: 4px; }
 .pp-gkey--worst { background: transparent; }
-/* Average label inside the top of the bar; outside it when the bar is too short. */
-.pp-gval { position: absolute; left: 3px; bottom: calc(var(--bar) - 17px); font-size: 10.5px; line-height: 14px; color: var(--text-primary); white-space: nowrap; }
-.pp-gcol--jacket .pp-gval { color: var(--badge-text, #fff); }
-.pp-gcol--short .pp-gval,
-.pp-gcol--jacket.pp-gcol--short .pp-gval { bottom: calc(var(--bar) + 3px); color: var(--text-secondary); }
-.pp-gteg { position: absolute; left: 0; right: 0; top: 100%; margin-top: 6px; text-align: center; font-size: 11px; color: var(--pp-dim); }
+.pp-gteg { position: absolute; left: 0; right: 0; top: 100%; margin-top: 6px; display: flex; flex-direction: column; align-items: center; font-size: 11px; line-height: 15px; color: var(--pp-dim); }
+.pp-gval { color: var(--text-primary); font-size: 10.5px; white-space: nowrap; }
 
 /* Records and personal bests */
 .pp-pb { display: grid; grid-template-columns: 150px minmax(0, 1fr) minmax(0, 1fr); gap: 0 20px; padding: 9px 0; border-bottom: 1px solid var(--pp-rule); font-size: 14px; align-items: baseline; }
@@ -185,24 +181,24 @@
     .pp-legend { border-top: 0; padding-top: 0; margin-top: 10px; }
 
     /* Gross vs par: one row per TEG, bars run left to right. */
-    .pp-gaxis { display: block; position: relative; height: 18px; margin: 0 0 0 44px; font-size: 11px; color: var(--pp-dim); }
+    .pp-gchart { --pp-glab: 92px; }
+    .pp-gaxis { display: block; position: relative; height: 18px; margin: 0 0 0 var(--pp-glab); font-size: 11px; color: var(--pp-dim); }
     .pp-gaxis span { position: absolute; left: var(--pos); transform: translateX(-50%); }
     .pp-gaxis span:first-child { transform: none; }
     .pp-gaxis span:last-child { transform: translateX(-100%); }
     .pp-gplot { height: auto; border-bottom: 0; margin-bottom: 0; }
-    .pp-gcareer { top: 0; bottom: 0; right: auto; left: calc(44px + (100% - 44px) * var(--career-frac)); border-top: 0; border-left: 1px dashed var(--pp-dim); }
+    .pp-gcareer { top: 0; bottom: 0; right: auto; left: calc(var(--pp-glab) + (100% - var(--pp-glab)) * var(--career-frac)); border-top: 0; border-left: 1px dashed var(--pp-dim); }
     .pp-gcareer-label { display: none; }
     .pp-gcols { position: static; inset: auto; display: flex; flex-direction: column-reverse; }
-    .pp-gcol { display: grid; grid-template-columns: 44px 1fr; align-items: center; height: 30px; font-size: 12px; }
-    .pp-gteg { position: static; margin: 0; text-align: left; font-size: 12px; color: var(--text-secondary); }
+    .pp-gcol { display: grid; grid-template-columns: var(--pp-glab) 1fr; align-items: center; height: 30px; font-size: 12px; }
+    .pp-gteg { position: static; margin: 0; flex-direction: row; justify-content: space-between; padding-right: 10px; font-size: 12px; color: var(--text-secondary); }
+    .pp-gval { font-size: 12px; }
     .pp-gtrack { position: relative; inset: auto; height: 30px; border-left: 1px solid var(--pp-ink); }
     .pp-gbar { left: 0; right: auto; bottom: auto; top: 2px; height: 16px; width: var(--bar); border-radius: 0 2px 2px 0; }
-    /* Best and worst markers sit just under the bar so they never cover the label. */
-    .pp-gmark { top: 20px; bottom: auto; margin: 0 0 0 -4px; }
+    /* Markers centred on the bar vertically. */
+    .pp-gmark { top: 10px; bottom: auto; margin: -4px 0 0 -4px; }
     .pp-gmark--best { left: var(--lo); }
     .pp-gmark--worst { left: var(--hi); }
-    .pp-gval { left: auto; right: calc(100% - var(--bar)); bottom: auto; top: 2px; padding-right: 4px; line-height: 16px; font-size: 11px; }
-    .pp-gcol--short .pp-gval, .pp-gcol--jacket.pp-gcol--short .pp-gval { right: auto; left: calc(var(--bar) + 4px); bottom: auto; padding-right: 0; }
 
     /* Records: label over a Best line and a Worst line. */
     .pp-pb.pp-pb-head { display: none; }
@@ -333,4 +329,9 @@
     .pr-honours-text, .pr-foot, .pr-roster .pr-head { display: none; }
     .pr-row .pr-num .pr-sub { position: static; width: auto; height: auto; overflow: visible; clip: auto; clip-path: none; white-space: normal; }
     .pr-stars--empty { display: none; }
+}
+
+@media (max-width: 360px) {
+    /* Narrow phones: every other axis tick, so the labels don't run together. */
+    .pp-gaxis span:nth-child(even) { display: none; }
 }
