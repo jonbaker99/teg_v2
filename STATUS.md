@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-10-02 (best and worst rounds per TEG)
+**Last updated:** 2026-10-02 (player profile redesign)
+
+## 2026-10-02 — Player profile redesigned as an almanac page
+
+`/player/{code}` drops the card blocks: Lora name and headings, silverware stars, ranked Honours/Averages/Counting, finishing position by TEG, a gross-vs-par bar chart with best and worst round markers, and records with "TEG record" tags. A new Career record tab holds the full results table. Asterisked results (TEG 5 Green Jacket) now count as wins and are footnoted. Overview no longer shows holes in one or current handicap.
 
 ## 2026-10-02 — Each TEG shows its best and worst rounds
 

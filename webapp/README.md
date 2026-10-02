@@ -535,25 +535,35 @@ All data comes from `teg_analysis/`. The webapp never calculates anything — it
 
 ## Player profiles
 
-The `/player` roster keeps its existing card layout. `/player/{code}` uses
-page-only `player-profile.css` and `player-profile.js`: bounded At a glance
-and Trophy Cabinet blocks sit side by side on desktop, then stack below
-800px. Career Highlights remain cards. The player picker replaces the long
-detail-page pill list; the four existing section endpoints remain unchanged.
+The `/player` roster keeps its existing card layout. `/player/{code}` is an
+almanac page (`player-profile.css`, `player-profile.js`): Lora for the name and
+section headings, Inter for the rest, thin rules and no card boxes. The header
+shows gold stars (TEG Trophies) then green stars (Green Jackets). Tabs:
+Overview, Career record, Rounds, Scoring, Records & Streaks (HTMX partials at
+`/player/{code}/tab/{tab}`).
 
-Current handicap uses `_current_playing_handicaps()`, shared with the roster:
-the next/in-progress TEG's playing handicap, not the latest historical score.
-Scoring landmarks retain counts, ranks and location details in a disclosure.
-The overview previews held records; Records & Streaks contains their complete
-details, all worsts, personal bests/worsts and existing streak tables.
+Overview, in order: Honours / Averages / Counting columns with all-time ranks
+(`_metric_specs` / `_metric_columns`; fewer is better for triples); Finishing
+position; Gross vs par per round (server-rendered HTML/CSS bars, not Plotly);
+Records and personal bests. Finishing position and the chart are each one
+Jinja loop that CSS reflows from desktop columns to phone rows (newest first),
+so there is no second rendering to drift. Spoon red is the theme `--failure`.
 
-Career Trend precedes the results table. Its local presentation uses theme
-colours and fewer phone ticks; crossing the phone breakpoint restores desktop
-rank annotations. Calculations and average weighting are unchanged. Long
-result histories initially show three recent TEGs with an expansion control;
-without JavaScript, the complete table remains visible. Profile identity,
-headings and data use the site's standard sans/tabular typography, same as
-every other data page.
+Winners marked `*` in the winners table (an off-course decision) are matched
+with the asterisk stripped. The winner's gross or net position, and anyone else
+who finished 1st, gets `*` plus a footnote. TEG-level personal bests only use
+TEGs the player played in full, and only TEGs of the usual length, so the
+three-round TEG 2 cannot be a "worst". "TEG record" / "TEG worst" tags compare
+with every player's figure for the same measure (9-hole records pool front and
+back nines; Stableford rows use TEG 8 onwards). The Career record tab lists
+every TEG newest first.
+
+Rounds, Scoring and Records & Streaks use the site's standard `.section-title`, `.data-card` and `.teg-table` pieces (PB rows carry a bold value plus a small PB tag; Records & Streaks lists the held records and worsts and the streaks table, since the Overview board covers personal bests).
+
+Links stay quiet: TEG numbers link to `/results?teg=N`, round references to that
+player's `/scorecard`, in the text colour (underline on hover only; green is for
+honours). Each section has at most one right-aligned muted footer line of plain
+links to the matching main-site page (built with `_url`, which encodes queries).
 
 ## Theme system
 

@@ -3,8 +3,8 @@
 {% block title_suffix %} — {{ player_name }}{% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="/static/player-profile.css?v=5">
-<script src="/static/player-profile.js?v=4" defer></script>
+<link rel="stylesheet" href="/static/player-profile.css?v=9">
+<script src="/static/player-profile.js?v=6" defer></script>
 {% endblock %}
 
 {% block page_title %}
@@ -15,18 +15,19 @@
 
 {% block content %}
 <div id="player-profile" class="pp-profile">
-<a class="pp-back" href="/player">← All players</a>
-<div class="pp-identity">
-    <div>
-        <h1 class="pp-name">{{ player_name }}</h1>
-        <p class="pp-meta">{{ subtitle }}</p>
-    </div>
-    <label class="pp-player-switch" for="pp-player">Player
+<div class="pp-top">
+    <a class="pp-back" href="/player">← All players</a>
+    <label class="pp-player-switch" for="pp-player"><span class="pp-switch-text">Player</span>
         <select id="pp-player" class="theme-select" data-player-switch>
             {% for code, name in player_list %}<option value="/player/{{ code }}"{% if code == player_code %} selected{% endif %}>{{ name }}</option>{% endfor %}
         </select>
     </label>
 </div>
+<header class="pp-identity">
+    <h1 class="pp-name">{{ player_name }}</h1>
+    {% if stars.label %}<p class="pp-stars" aria-label="{{ stars.label }}"><span aria-hidden="true">{% for i in range(stars.trophies) %}<span class="trophy-star trophy-star--gold">★</span>{% endfor %}{% if stars.trophies and stars.jackets %}<span class="pp-stars-gap"></span>{% endif %}{% for i in range(stars.jackets) %}<span class="trophy-star trophy-star--green">★</span>{% endfor %}</span></p>
+    {% else %}<p class="pp-meta">No silverware yet</p>{% endif %}
+</header>
 <nav class="section-nav pp-tabs" aria-label="Profile sections">
     {% for tab_id, tab_label in tabs %}
     <button type="button" class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
