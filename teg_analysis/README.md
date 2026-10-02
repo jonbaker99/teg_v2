@@ -74,6 +74,18 @@ teg_analysis/
     teg_setup.py     Pre-TEG roster + handicap confirmation (handicaps.csv + who plays in
                      teg_rosters.csv) — not every player plays every TEG —
                      get_teg_roster_form/save_teg_roster
+    simulation.py    Monte Carlo prediction of an upcoming TEG: per-player GrossVP
+                     distributions by par x SI (default: rolling window over SI pairs
+                     widened to a min hole count; or fixed SI bands shrunk to par
+                     level), recency-weighted by TEG with optional per-player weight
+                     overrides, blended towards the field (field_alpha, tuned by
+                     backtest_field_alpha) so rare events stay possible —
+                     build_distributions; the target is default_target_teg()
+                     (in-progress, else last completed + 1): roster/handicaps (saved,
+                     else draft) and scorecards, with random par-72 courses from
+                     course_pars.csv for rounds without one — load_target_tournament/
+                     run_simulation (also eagles/blobs per sim);
+                     summary_table/position_grid/total_distribution (optionally smoothed)
     live_round.py    Multi-device live round entry: registry + per-round staging CSVs,
                      server-ordered writes, conflict flagging, live leaderboard from
                      staging, finalize into execute_data_update —

@@ -2,11 +2,27 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-10-02 (TEGBot 5000)
+**Last updated:** 2026-10-02 (TEGBot 5000; TEG simulator odds; player roster redesign)
 
 ## 2026-10-02 — TEGBot 5000: ask the stats in plain English
 
 New `/tegbot` page, in the nav as "Ask TEGBot". Lookups first: honours, records (every tied holder), streaks and bounce-back, using the site's own definitions. Anything else, Claude (Sonnet) writes pandas that runs in Anthropic's code sandbox against uploaded hole, round, TEG and winner CSVs. Model code never runs on our server. Answers state assumptions and sample sizes, link the matching page, and show their workings, including the code. Follow-ups keep context and reuse the earlier method, so answers don't flip-flop. Off-topic questions get a one-line refusal. The page has a lo-fi retro look (green pixel robot, black or white with forest green, grey chat area), a small waiting indicator that varies between pixel animations and a quiet status line, bold key facts, ↗ links to the matching site page, judgement about comparing players with their own normal standard, and a small-print "How I worked this out" under a terminal-style ====== rule, and randomised example questions. Every question and answer is logged on the volume and shown on `/tegbot/asked` ("What others asked"), grouped by chat or by theme. The bot tags each question with a theme and links up to 3 similar past questions under its answer ("Others asked"). Admins can delete entries and re-sort the log into themes with one AI call at `/admin/tegbot`. Live tests: 3–13 seconds and 1–3p a question. New stat: bounce-back rate (`teg_analysis/analysis/bounceback.py`), not yet on its own page. A 30-question answer test (`scripts/tegbot_eval.py`) passes 30/30. Package: `teg_analysis/chatbot/`; page notes: `webapp/README.md` → TEGBot 5000.
+
+## 2026-10-02 — Simulator shows betting odds
+
+`/simulation` opens on Stableford and leads its results with fair fractional odds (no bookmaker's margin) for the TEG Trophy, Green Jacket and Wooden Spoon, snapped to the traditional price ladder (Evens, 11/8, 9/2 …).
+
+## 2026-10-02 — Simulator rolls on to the next TEG and allows first-ever eagles
+
+`/simulation` now targets the TEG after the last completed one. Without a saved scorecard, each simulation draws a random par-72 course from those on file (`course_pars.csv`). Without saved handicaps it uses the draft calculation. Players can be added or removed. A small blend of the whole group's scores, matched to each player's average, lets unseen results happen (eagle chance about 1-2% per player per TEG, in line with history). The total-score chart is smoothed. The summary adds eagle chance and expected blobs.
+
+## 2026-10-02 — TEG simulator predicts the next TEG
+
+New `/simulation` page (Scoring analysis menu, "Simulation") runs a Monte Carlo of TEG 19 on its real scorecard, roster and handicaps. Each hole is sampled from the player's past scores on holes of that par, weighted by TEG (default 50/35/15 on TEGs 18/17/16). By default a rolling window around the hole's SI pair (1-2, 3-4 …) widens until it holds 20 holes, weighting the exact pair most; fixed SI bands with shrinkage remain an option. Each player's TEG weights can be overridden, e.g. to skip an injury year. All-history data: SI 1-6 plays about 0.35 strokes harder than SI 7-18, with no clear trend inside 9-18. Output: average scores (gross shown vs par), a score-distribution chart and a finishing-position grid, gross or Stableford. The sampling table is collapsed behind Show / Hide. In-play conditioning is in `teg_analysis/TODOS.md`.
+
+## 2026-10-02 — Player roster is a two-line list, back in the nav
+
+`/player` drops the boxed cards for one row per player on the normal white panel: name, career span, gold and green stars, avg gross, avg Stableford and Wooden Spoons, each with its all-time rank ("1st / 7"). The whole row links to the profile. Phones stack each player. Asterisked wins (Stuart NEUMANN's TEG 5 Green Jacket) now count. "Player Profiles" is back in the TEG History nav.
 
 ## 2026-10-02 — Player profile redesigned as an almanac page
 

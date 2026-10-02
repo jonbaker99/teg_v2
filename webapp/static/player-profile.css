@@ -82,7 +82,7 @@
 /* Gross vs par per round: bar = TEG average a round, thin line = best to
    worst round. Desktop columns; phone rows (newest first). */
 .pp-gaxis { display: none; }
-.pp-gplot { position: relative; height: 240px; border-bottom: 1px solid var(--pp-ink); margin-bottom: 30px; }
+.pp-gplot { position: relative; height: 240px; border-bottom: 1px solid var(--pp-ink); margin-bottom: 44px; }
 .pp-gcareer { position: absolute; left: 0; right: 0; bottom: var(--career); border-top: 1px dashed var(--pp-dim); }
 .pp-gcareer-label { position: absolute; z-index: 2; right: 0; bottom: var(--career); margin-bottom: 4px; padding-left: 6px; font-size: 11px; color: var(--pp-dim); background: var(--bg-card); }
 .pp-gcols { position: absolute; inset: 0 76px 0 0; margin: 0; padding: 0; list-style: none; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0 10px; }
@@ -90,20 +90,16 @@
 .pp-gtrack { position: absolute; inset: 0; }
 .pp-gbar { position: absolute; left: 0; right: 0; bottom: 0; height: var(--bar); background: var(--pp-bar); border-radius: 2px 2px 0 0; }
 .pp-gcol--jacket .pp-gbar { background: var(--accent); }
-/* Range line sits right of the bar label so the two never collide. */
 /* Best and worst round markers: a filled dot (best) and a hollow dot (worst),
-   on the bar's right edge so they never sit on the average label. */
-.pp-gmark { position: absolute; left: 90%; width: 8px; height: 8px; margin: 0 0 -4px -4px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid var(--pp-ink); background: var(--pp-ink); z-index: 1; }
+   centred on the bar. The average value sits under the TEG label instead of
+   in the bar, so the two can never collide. */
+.pp-gmark { position: absolute; left: 50%; width: 8px; height: 8px; margin: 0 0 -4px -4px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid var(--pp-ink); background: var(--pp-ink); z-index: 1; }
 .pp-gmark--best { bottom: var(--lo); }
 .pp-gmark--worst { bottom: var(--hi); background: var(--bg-card); }
 .pp-gkey { display: inline-block; width: 8px; height: 8px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid var(--pp-ink); background: var(--pp-ink); vertical-align: 0; margin-left: 4px; }
 .pp-gkey--worst { background: transparent; }
-/* Average label inside the top of the bar; outside it when the bar is too short. */
-.pp-gval { position: absolute; left: 3px; bottom: calc(var(--bar) - 17px); font-size: 10.5px; line-height: 14px; color: var(--text-primary); white-space: nowrap; }
-.pp-gcol--jacket .pp-gval { color: var(--badge-text, #fff); }
-.pp-gcol--short .pp-gval,
-.pp-gcol--jacket.pp-gcol--short .pp-gval { bottom: calc(var(--bar) + 3px); color: var(--text-secondary); }
-.pp-gteg { position: absolute; left: 0; right: 0; top: 100%; margin-top: 6px; text-align: center; font-size: 11px; color: var(--pp-dim); }
+.pp-gteg { position: absolute; left: 0; right: 0; top: 100%; margin-top: 6px; display: flex; flex-direction: column; align-items: center; font-size: 11px; line-height: 15px; color: var(--pp-dim); }
+.pp-gval { color: var(--text-primary); font-size: 10.5px; white-space: nowrap; }
 
 /* Records and personal bests */
 .pp-pb { display: grid; grid-template-columns: 150px minmax(0, 1fr) minmax(0, 1fr); gap: 0 20px; padding: 9px 0; border-bottom: 1px solid var(--pp-rule); font-size: 14px; align-items: baseline; }
@@ -185,24 +181,24 @@
     .pp-legend { border-top: 0; padding-top: 0; margin-top: 10px; }
 
     /* Gross vs par: one row per TEG, bars run left to right. */
-    .pp-gaxis { display: block; position: relative; height: 18px; margin: 0 0 0 44px; font-size: 11px; color: var(--pp-dim); }
+    .pp-gchart { --pp-glab: 92px; }
+    .pp-gaxis { display: block; position: relative; height: 18px; margin: 0 0 0 var(--pp-glab); font-size: 11px; color: var(--pp-dim); }
     .pp-gaxis span { position: absolute; left: var(--pos); transform: translateX(-50%); }
     .pp-gaxis span:first-child { transform: none; }
     .pp-gaxis span:last-child { transform: translateX(-100%); }
     .pp-gplot { height: auto; border-bottom: 0; margin-bottom: 0; }
-    .pp-gcareer { top: 0; bottom: 0; right: auto; left: calc(44px + (100% - 44px) * var(--career-frac)); border-top: 0; border-left: 1px dashed var(--pp-dim); }
+    .pp-gcareer { top: 0; bottom: 0; right: auto; left: calc(var(--pp-glab) + (100% - var(--pp-glab)) * var(--career-frac)); border-top: 0; border-left: 1px dashed var(--pp-dim); }
     .pp-gcareer-label { display: none; }
     .pp-gcols { position: static; inset: auto; display: flex; flex-direction: column-reverse; }
-    .pp-gcol { display: grid; grid-template-columns: 44px 1fr; align-items: center; height: 30px; font-size: 12px; }
-    .pp-gteg { position: static; margin: 0; text-align: left; font-size: 12px; color: var(--text-secondary); }
+    .pp-gcol { display: grid; grid-template-columns: var(--pp-glab) 1fr; align-items: center; height: 30px; font-size: 12px; }
+    .pp-gteg { position: static; margin: 0; flex-direction: row; justify-content: space-between; padding-right: 10px; font-size: 12px; color: var(--text-secondary); }
+    .pp-gval { font-size: 12px; }
     .pp-gtrack { position: relative; inset: auto; height: 30px; border-left: 1px solid var(--pp-ink); }
     .pp-gbar { left: 0; right: auto; bottom: auto; top: 2px; height: 16px; width: var(--bar); border-radius: 0 2px 2px 0; }
-    /* Best and worst markers sit just under the bar so they never cover the label. */
-    .pp-gmark { top: 20px; bottom: auto; margin: 0 0 0 -4px; }
+    /* Markers centred on the bar vertically. */
+    .pp-gmark { top: 10px; bottom: auto; margin: -4px 0 0 -4px; }
     .pp-gmark--best { left: var(--lo); }
     .pp-gmark--worst { left: var(--hi); }
-    .pp-gval { left: auto; right: calc(100% - var(--bar)); bottom: auto; top: 2px; padding-right: 4px; line-height: 16px; font-size: 11px; }
-    .pp-gcol--short .pp-gval, .pp-gcol--jacket.pp-gcol--short .pp-gval { right: auto; left: calc(var(--bar) + 4px); bottom: auto; padding-right: 0; }
 
     /* Records: label over a Best line and a Worst line. */
     .pp-pb.pp-pb-head { display: none; }
@@ -231,4 +227,111 @@
     .pp-chart-direction { display: block; font: 700 0.7rem/1.4 var(--font-sans), sans-serif; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 0.5rem; }
     .pp-rounds-chart { height: 260px; }
     .pp-dist-chart { height: 260px; }
+}
+
+/* Player roster (/player): a two-line list, one row per player. Each cell is a
+   value over a small muted label. Reuses the profile's variables, defined here
+   as the roster has no .pp-profile wrapper. */
+.pr-roster {
+    font-family: var(--font-sans), system-ui, sans-serif;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums lining-nums;
+    --pp-rule: var(--table-cell-border);
+    --pp-ink: var(--ink, var(--text-primary));
+    --pp-dim: var(--ink-muted, var(--text-secondary));
+    padding-block: 1rem 1.5rem;
+}
+.pr-intro { margin: 0 0 10px; font-size: 14px; color: var(--pp-ink); }
+.pr-roster a.pp-a { color: inherit; text-decoration: none; }
+.pr-roster a.pp-a:hover, .pr-roster a.pp-a:focus-visible { text-decoration: underline; }
+.pr-list { list-style: none; margin: 0; padding: 0; }
+.pr-item { border-bottom: 1px solid var(--pp-rule); }
+/* The whole row is the link to the profile. It bleeds 8px either side so the
+   hover tint has some air, while the rule on .pr-item keeps the text edge. */
+.pr-roster .pr-row {
+    display: grid;
+    grid-template-columns: 190px minmax(0, 1fr) 110px 120px 120px;
+    gap: 14px;
+    align-items: start;
+    padding: 14px 8px;
+    margin-inline: -8px;
+    border-radius: 4px;
+    color: inherit;
+    text-decoration: none;
+}
+.pr-roster a.pr-row:hover { background: var(--table-hover-bg); }
+/* Desktop: the stat labels sit once in a header row; each row shows value
+   over rank. The per-row labels stay for screen readers and come back on
+   phone, where a header would scroll out of view. */
+.pr-roster .pr-head { margin-inline: 0; padding: 0 0 6px; border-bottom: 1px solid var(--pp-rule); }
+.pr-head .pr-sub { white-space: nowrap; }
+.pr-row .pr-num .pr-sub {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+}
+.pr-roster a.pr-row:hover .pr-name, .pr-roster a.pr-row:focus-visible .pr-name { text-decoration: underline; text-underline-offset: 3px; }
+.pr-cell { position: relative; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.pr-num { text-align: right; }
+.pr-num .pr-sub { white-space: nowrap; }
+.pr-val { font-size: 15px; font-weight: 600; line-height: 1.3; color: var(--pp-ink); }
+.pr-val--spoon { color: var(--failure); }
+.pr-val--none { color: var(--pp-dim); font-weight: 400; }
+.pr-sub { font-size: 12px; line-height: 1.4; color: var(--pp-dim); }
+.pr-rank { font-size: 12px; line-height: 1.4; color: var(--pp-dim); }
+.pr-name {
+    font-family: var(--font-serif), Georgia, serif;
+    font-size: 19px; font-weight: 600; line-height: 1.3;
+    color: var(--pp-ink);
+}
+.pr-name-end { white-space: nowrap; }
+.pr-arrow { font-family: var(--font-sans), system-ui, sans-serif; font-size: 0.8em; font-weight: 400; color: var(--pp-dim); }
+.pr-stars { white-space: nowrap; font-size: 16px; line-height: 1.3; letter-spacing: 1px; min-height: 1.3em; }
+.pr-grp { display: inline-block; white-space: nowrap; }
+.pr-grp + .pr-grp { margin-left: 0.5em; }
+.pr-foot { margin-top: 12px; }
+
+@media (min-width: 641px) and (max-width: 860px) {
+    /* Not enough width for a stars column: stars move under the name, and
+       the stats sit beside the three-line identity block. */
+    .pr-roster .pr-row { grid-template-columns: minmax(0, 1fr) 72px 100px 100px; gap: 2px 12px; }
+    .pr-roster a.pr-row { grid-template-areas: "name g s p" "stars g s p" "meta g s p"; }
+    .pr-roster .pr-head > span:nth-child(2) { display: none; }
+    .pr-id { display: contents; }
+    .pr-name { grid-area: name; font-size: 17px; }
+    .pr-meta { grid-area: meta; }
+    .pr-honours { grid-area: stars; }
+    .pr-gross { grid-area: g; }
+    .pr-stab { grid-area: s; }
+    .pr-spoon { grid-area: p; }
+    .pr-honours-text, .pr-stars--empty { display: none; }
+    .pr-stars { white-space: normal; }
+}
+@media (max-width: 640px) {
+    .pr-roster { padding-inline: 0.75rem; }
+    /* One stack per player: name, stars, career line, then a three-column
+       stats row. The id cell dissolves so its two lines can sit either side
+       of the stars. */
+    .pr-roster a.pr-row {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-areas: "name name name" "stars stars stars" "meta meta meta" "g s p";
+        gap: 4px 12px;
+        padding: 20px 8px;
+    }
+    .pr-id { display: contents; }
+    .pr-name { grid-area: name; font-size: 18px; }
+    .pr-meta { grid-area: meta; margin-bottom: 8px; }
+    .pr-honours { grid-area: stars; }
+    .pr-gross { grid-area: g; }
+    .pr-stab { grid-area: s; }
+    .pr-spoon { grid-area: p; }
+    .pr-stars { white-space: normal; }
+    .pr-num { text-align: left; }
+    .pr-honours-text, .pr-foot, .pr-roster .pr-head { display: none; }
+    .pr-row .pr-num .pr-sub { position: static; width: auto; height: auto; overflow: visible; clip: auto; clip-path: none; white-space: normal; }
+    .pr-stars--empty { display: none; }
+}
+
+@media (max-width: 360px) {
+    /* Narrow phones: every other axis tick, so the labels don't run together. */
+    .pp-gaxis span:nth-child(even) { display: none; }
 }
