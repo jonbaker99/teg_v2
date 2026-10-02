@@ -214,6 +214,7 @@ Cache is in-process (`@lru_cache`). Cleared manually after data updates.
 - `get_teg_placings(df, teg_num)` — Full best-to-worst order for one TEG's Trophy/Green Jacket, override-aware like `get_teg_winners`
 - `calculate_par_performance_matrix()` — Score distribution by par type
 - `prepare_comeback_data()` — Comeback/improvement records
+- `get_teg_round_extremes(all_data, teg_num)` — One TEG's best and worst single rounds, gross and era Trophy metric (full 18-hole rounds only; ties listed)
 
 ### Display formatting
 - `prepare_record_table(all_data, ...)` — Format records for display

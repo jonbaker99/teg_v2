@@ -3,6 +3,7 @@
 import re
 from html import escape
 from pathlib import Path
+from typing import Optional
 
 import pandas as pd
 from fastapi import APIRouter, Request, Query
@@ -94,6 +95,7 @@ _LABEL_PREFIX_RE = re.compile(r'^(Best|Worst)\s+')
 def _build_records_html(
     df: pd.DataFrame,
     identity_is_player: bool = True,
+    detail_col: Optional[int] = None,
 ) -> str:
     """Convert a records DataFrame to a styled HTML table (desktop/iPad,
     unchanged) plus a mobile-only tap-to-reveal list of the same rows.
@@ -108,7 +110,11 @@ def _build_records_html(
     column holds something else -- e.g. latest.py's Personal Bests/Worsts
     sections, where it's a metric's friendly name -- pass False so that
     value is rendered as-is instead of being run through _player_name_spans
-    (which would otherwise abbreviate it, e.g. "Gross vs Par" -> "G.Par")."""
+    (which would otherwise abbreviate it, e.g. "Gross vs Par" -> "G.Par").
+
+    detail_col: column index to treat as the tap-to-reveal detail, for a
+    caller whose detail can be shorter than its player names (so the
+    average-length pick in _pick_detail_col_idx would get it backwards)."""
     if df is None or df.empty:
         return "<p class='text-muted text-sm'>No data available.</p>"
 
@@ -129,7 +135,10 @@ def _build_records_html(
     # empty (but present) detail panel, rather than risk the length
     # heuristic below misreading an always-empty filler column as identity.
     other_idx = [i for i in range(1, len(cols)) if i != value_col_idx]
-    detail_col_idx = _pick_detail_col_idx(df, cols, other_idx) if len(other_idx) == 2 else None
+    if detail_col is not None and detail_col in other_idx and len(other_idx) == 2:
+        detail_col_idx = detail_col
+    else:
+        detail_col_idx = _pick_detail_col_idx(df, cols, other_idx) if len(other_idx) == 2 else None
     identity_col_idx = None
     if detail_col_idx is not None:
         identity_col_idx = [i for i in other_idx if i != detail_col_idx][0]
