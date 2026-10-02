@@ -54,6 +54,9 @@ def test_records_tab_section_uses_round_and_course_as_detail():
     assert "Best &amp; Worst Rounds" in html
     assert "<div class='rec-detail'>R1 / Links</div>" in html
     assert "No records or personal bests" not in html
+    # Full names (first/last spans that wrap together), never "A.PLAYER".
+    assert "<span class='first'>AA</span> <span class='last'>PLAYER</span>" in html
+    assert "bw-name-short" not in html
 
 
 def test_report_appendix_lists_best_and_worst_rounds():
