@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-10-02 (player profile redesign)
+**Last updated:** 2026-10-02 (player roster redesign)
+
+## 2026-10-02 — Player roster is a two-line list, back in the nav
+
+`/player` drops the boxed cards for one row per player on the normal white panel: name, career span, gold and green stars, avg gross and Stableford with all-time ranks, Wooden Spoons and handicap. Phones stack each player. Asterisked wins (Stuart NEUMANN's TEG 5 Green Jacket) now count. "Player Profiles" is back in the TEG History nav.
 
 ## 2026-10-02 — Player profile redesigned as an almanac page
 

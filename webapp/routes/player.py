@@ -1181,63 +1181,74 @@ def _current_playing_handicaps() -> dict:
 # Roster (landing page cards)
 # ---------------------------------------------------------------------------
 
-def _build_roster() -> list[dict]:
-    """Build roster card data for every player, ordered by honours then name.
+def _plural(n: int, one: str, many: str) -> str:
+    return f"{n} {one if n == 1 else many}"
 
-    Each card carries identity (code/name/initials), a one-line career summary
-    and three headline stats, plus trophy/jacket/spoon badges.
+
+def _build_roster() -> tuple[list[dict], int]:
+    """Build the roster rows and the ranked-player count.
+
+    One dict per player who has played: identity (code/name), career span
+    (n_tegs, since_year, last_year), gold/green star counts with an aria label
+    and an honours line, Wooden Spoon count, current handicap, and avg gross vs
+    par / avg Stableford per round with their all-time ranks (the same ranks the
+    profile shows, via _metric_specs). Asterisked wins count (_strip_star).
+    Sorted by total silverware desc, then TEGs played desc, then name.
     """
     all_data = cached_load_all_data()
     rd_data = cached_round_data()
     winners = deps.cached_winners()
+    specs = _metric_specs(all_data, rd_data, winners)
+    n_ranked = len(specs[0][1].dropna()) if specs else 0
 
     # Current playing handicap = each player's HC for the next (or in-progress)
     # TEG. Map name → HC; players absent from the table just show "–".
     current_hc = _current_playing_handicaps()
 
-    cards = []
+    trophy_w = winners["TEG Trophy"].map(_strip_star)
+    jacket_w = winners["Green Jacket"].map(_strip_star)
+    spoon_w = winners["HMM Wooden Spoon"].map(_strip_star)
+
+    rows = []
     for code, name in get_player_dict().items():
         player_data = all_data[all_data['Player'] == name]
         if player_data.empty:
             continue
 
         teg_info = player_data[['TEGNum', 'Year']].drop_duplicates().sort_values('TEGNum')
-        n_tegs = len(teg_info)
-        since_year = int(teg_info.iloc[0]['Year'])
+        trophies = int((trophy_w == name).sum())
+        jackets = int((jacket_w == name).sum())
+        star_line = _star_line(trophies, jackets)
+        honours = []
+        if trophies:
+            honours.append(_plural(trophies, "TEG Trophy", "TEG Trophies"))
+        if jackets:
+            honours.append(_plural(jackets, "Green Jacket", "Green Jackets"))
 
-        player_rds = rd_data[rd_data['Player'] == name]
-        avg_gvp = player_rds['GrossVP'].mean() if not player_rds.empty else None
-        avg_stab = player_rds['Stableford'].mean() if not player_rds.empty else None
+        gvp, gvp_rank, _ = _metric_cell(specs, name, "Avg Gross vs Par")
+        stab, stab_rank, _ = _metric_cell(specs, name, "Avg Stableford")
 
-        trophy_count = int((winners['TEG Trophy'] == name).sum())
-        jacket_count = int((winners['Green Jacket'] == name).sum())
-        spoon_count = int((winners['HMM Wooden Spoon'] == name).sum())
-        total_trophies = trophy_count + jacket_count
-
-        badges = []
-        if trophy_count:
-            badges.append({"text": f"Trophy ×{trophy_count}", "style": "accent"})
-        if jacket_count:
-            badges.append({"text": f"Jacket ×{jacket_count}", "style": "accent"})
-        if spoon_count:
-            badges.append({"text": f"Spoon ×{spoon_count}", "style": "muted"})
-
-        cards.append({
+        rows.append({
             "code": code,
             "name": name,
-            "n_tegs": n_tegs,
-            "since_year": since_year,
-            "avg_gvp": f"{avg_gvp:+.1f}" if avg_gvp is not None else "–",
-            "avg_stab": f"{avg_stab:.1f}" if avg_stab is not None else "–",
+            "n_tegs": len(teg_info),
+            "since_year": int(teg_info.iloc[0]['Year']),
+            "last_year": int(teg_info.iloc[-1]['Year']),
+            "trophy_count": trophies,
+            "jacket_count": jackets,
+            "total_trophies": trophies + jackets,
+            "stars_label": star_line["label"],
+            "honours_text": " / ".join(honours),
+            "spoon_count": int((spoon_w == name).sum()),
             "handicap": current_hc.get(name),
-            "total_trophies": total_trophies,
-            "trophy_count": trophy_count,
-            "jacket_count": jacket_count,
-            "badges": badges,
+            "avg_gvp": gvp,
+            "gvp_rank": gvp_rank,
+            "avg_stab": stab,
+            "stab_rank": stab_rank,
         })
 
-    cards.sort(key=lambda c: (-c["total_trophies"], -c["n_tegs"], c["name"]))
-    return cards
+    rows.sort(key=lambda c: (-c["total_trophies"], -c["n_tegs"], c["name"]))
+    return rows, n_ranked
 
 
 # ---------------------------------------------------------------------------
@@ -1246,11 +1257,13 @@ def _build_roster() -> list[dict]:
 
 @router.get("/player")
 def player_index(request: Request):
+    roster, n_ranked = _build_roster()
     return templates.TemplateResponse("player_index.html", {
         "request": request,
         "active_page": "player",
         "player_list": _get_player_list(),
-        "roster": _build_roster(),
+        "roster": roster,
+        "n_ranked": n_ranked,
     })
 
 

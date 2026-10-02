@@ -232,3 +232,80 @@
     .pp-rounds-chart { height: 260px; }
     .pp-dist-chart { height: 260px; }
 }
+
+/* Player roster (/player): a two-line list, one row per player. Each cell is a
+   value over a small muted label. Reuses the profile's variables, defined here
+   as the roster has no .pp-profile wrapper. */
+.pr-roster {
+    font-family: var(--font-sans), system-ui, sans-serif;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums lining-nums;
+    --pp-rule: var(--table-cell-border);
+    --pp-ink: var(--ink, var(--text-primary));
+    --pp-dim: var(--ink-muted, var(--text-secondary));
+    padding-block: 0.5rem 1.5rem;
+}
+.pr-roster .pp-sec { margin: 0 0 6px; padding-left: 0; border: 0; }
+.pr-roster a.pp-a { color: inherit; text-decoration: none; }
+.pr-roster a.pp-a:hover, .pr-roster a.pp-a:focus-visible { text-decoration: underline; }
+.pr-list { list-style: none; margin: 0; padding: 0; }
+.pr-row {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr) 110px 135px 95px 62px;
+    gap: 14px;
+    align-items: start;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--pp-rule);
+}
+.pr-cell { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.pr-num { text-align: right; }
+.pr-num .pr-sub { white-space: nowrap; }
+.pr-val { font-size: 15px; font-weight: 600; line-height: 1.3; color: var(--pp-ink); }
+.pr-val--spoon { color: var(--failure); }
+.pr-val--none { color: var(--pp-dim); font-weight: 400; }
+.pr-sub { font-size: 12px; line-height: 1.4; color: var(--pp-dim); }
+.pr-roster a.pr-name {
+    font-family: var(--font-serif), Georgia, serif;
+    font-size: 19px; font-weight: 600; line-height: 1.3;
+    color: var(--pp-ink); text-decoration: none;
+}
+.pr-roster a.pr-name:hover, .pr-roster a.pr-name:focus-visible { text-decoration: underline; }
+.pr-stars { white-space: nowrap; font-size: 16px; line-height: 1.3; letter-spacing: 1px; min-height: 1.3em; }
+.pr-grp { display: inline-block; white-space: nowrap; }
+.pr-grp + .pr-grp { margin-left: 0.5em; }
+.pr-foot { margin-top: 12px; }
+
+@media (min-width: 641px) and (max-width: 980px) {
+    .pr-row { grid-template-columns: 170px minmax(0, 1fr) 70px 105px 95px 60px; }
+    .pr-per { display: none; }
+}
+@media (min-width: 641px) and (max-width: 860px) {
+    .pr-row { grid-template-columns: 170px minmax(0, 1fr) 70px 105px 95px; }
+    .pr-hc, .pr-honours-text { display: none; }
+    .pr-stars { white-space: normal; }
+}
+@media (max-width: 640px) {
+    .pr-roster { padding-inline: 0.75rem; }
+    /* One stack per player: name, stars, career line, then a three-column
+       stats row. The id cell dissolves so its two lines can sit either side
+       of the stars. */
+    .pr-row {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-areas: "name name name" "stars stars stars" "meta meta meta" "g s p";
+        gap: 4px 12px;
+        padding: 20px 0;
+    }
+    .pr-id { display: contents; }
+    .pr-name { grid-area: name; }
+    .pr-meta { grid-area: meta; margin-bottom: 8px; }
+    .pr-honours { grid-area: stars; }
+    .pr-gross { grid-area: g; }
+    .pr-stab { grid-area: s; }
+    .pr-spoon { grid-area: p; }
+    .pr-stars { white-space: normal; }
+    .pr-num { text-align: left; }
+    .pr-num .pr-sub { white-space: normal; }
+    .pr-hc, .pr-per, .pr-honours-text, .pr-foot { display: none; }
+    .pr-stars--empty { display: none; }
+    .pr-roster a.pr-name { font-size: 18px; }
+}
