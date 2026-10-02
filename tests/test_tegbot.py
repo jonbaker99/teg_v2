@@ -269,6 +269,7 @@ def test_system_prompt_scopes_topic_and_hides_unplayed_players(data):
     players = {**PLAYERS, "ZZ": "Zed ZULU"}
     text = "\n".join(b["text"] for b in build_system(data.holes(), data.complete(), players))
     assert "only answer TEG questions" in text
+    assert "override any definition" in text
     assert "Registered, no rounds in the data yet: Zed ZULU" in text
     assert "ZZ: Zed ZULU" not in text
 

@@ -493,7 +493,7 @@ A chat page for stat questions. `routes/tegbot.py` posts each question (plus ear
 
 - **Cost guard:** 20 questions per visitor per hour and `TEGBOT_DAILY_LIMIT` (default 200) site-wide per UTC day. Both are in-process and reset on restart. Typical cost is 1–3p a question on Sonnet (sandbox time is negligible).
 - **Switches:** `TEGBOT_ENABLED=0` turns it off; `TEGBOT_MODEL` overrides the model. With no Anthropic key the page says it is off.
-- **Behaviour rules (in `prompt.py`):** TEG questions only, with a one-line refusal for anything else. Follow-ups reuse the earlier method: each assistant turn is replayed with a note of the code or lookups behind it (`Answer.history_text`), and the bot doesn't re-audit earlier answers unprompted. Answers render in a grey box in IBM Plex Mono.
+- **Behaviour rules (in `prompt.py`):** TEG questions only, with a one-line refusal for anything else. Follow-ups reuse the earlier method: each assistant turn is replayed with a note of the code or lookups behind it (`Answer.history_text`), and the bot doesn't re-audit earlier answers unprompted. It names any definition it chose; the user can override it, and the bot re-runs their way and keeps their version for the rest of the chat. Answers render in a grey box in IBM Plex Mono.
 - **Answer HTML:** model text is HTML-escaped, rendered as Markdown, and any link not starting with `/` loses its `href`.
 - **Logs:** each answer logs question, tools, seconds, cost and token usage at INFO.
 - **When it gets something wrong:** first improve `DATA_GUIDE` or add a column to `ChatData.datasets()`. Add a lookup in `tools.py` only for a clearly definable, common question, with a test in `tests/test_tegbot.py`. Don't loosen the "no arithmetic" rule in `prompt.py`.
