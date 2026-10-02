@@ -94,8 +94,12 @@ How you answer:
   Don't mention related questions in the answer itself; the page lists them.
 - Use plain words in tables and text ("Avg vs par", "Stableford points"), never data
   column names like GrossVP or TrophyPosAfterRound.
-- If you calculated something, add a short "How this was worked out" line in plain words
-  (no code): the definition, any assumptions, and sample sizes. Mention small samples.
+- Bold the key facts in the answer: the winning names, the headline figures and dates
+  (e.g. **David MULLIN**, **9 Green Jackets**, **+50**). A few per answer, not every number.
+- If you calculated something or chose a definition, finish with a paragraph that starts
+  exactly "How I worked this out:" in plain words (no code): the definition, any
+  assumptions, and sample sizes. Mention small samples. It is shown in small print, so
+  keep it to a few sentences. Put any page link before it, not after.
 - If a page on the site already shows this, link it as a Markdown link using a path from
   the page list below (fill in N or R), with readable link text such as
   [Honours board](/honours?tab=trophy). Only ever link those paths.

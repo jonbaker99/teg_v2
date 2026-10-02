@@ -31,12 +31,10 @@
         <div class="tb-q"></div>
         <div class="tb-a">
             {{ robot(28, busy=True) }}
-            <div class="tb-term" role="status">
-                <div class="tb-term-line"><span class="tb-term-text">Reading the question</span><span class="tb-cursor"></span></div>
-                <div class="tb-term-foot">
-                    <span class="tb-blocks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
-                    <span class="tb-timer">00:00</span>
-                </div>
+            <div class="tb-working" role="status" aria-label="TEGBot is working">
+                <span class="tb-green-track" aria-hidden="true"><i class="tb-ball"></i><i class="tb-hole"></i></span>
+                <span class="tb-chase" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                <span class="tb-timer">0s</span>
             </div>
         </div>
     </div>
@@ -73,11 +71,6 @@
     // One id per chat, so the shared log can show follow-ups with their thread.
     var conv = (window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2))
         .replace(/[^0-9a-f]/gi, '').toLowerCase().slice(0, 32);
-    // What the little terminal says while TEGBot works. First line is fixed; the rest shuffle.
-    var LINES = ["Pulling the scorecards", "Checking the record books", "Running the numbers",
-                 "Counting the triple bogeys", "Consulting the Honours board", "Looking for ties",
-                 "Double-checking the maths", "Raking the bunkers", "Replacing the divots",
-                 "Asking the data nicely", "Totting up the Stableford", "Polishing the answer"];
     var ticker = null;
 
     function startPending(question) {
@@ -85,17 +78,10 @@
         node.querySelector('.tb-q').textContent = question;
         thread.appendChild(node);
         node.scrollIntoView({behavior: 'smooth', block: 'start'});
-        var text = node.querySelector('.tb-term-text'), timer = node.querySelector('.tb-timer');
-        var order = LINES.slice().sort(function () { return Math.random() - 0.5; });
-        var started = Date.now(), i = 0;
+        var timer = node.querySelector('.tb-timer'), started = Date.now();
         ticker = setInterval(function () {
-            var secs = Math.floor((Date.now() - started) / 1000);
-            timer.textContent = ('0' + Math.floor(secs / 60)).slice(-2) + ':' + ('0' + secs % 60).slice(-2);
-            if (secs > 0 && secs % 2 === 0 && text.dataset.at !== String(secs)) {
-                text.dataset.at = String(secs);
-                text.textContent = order[i++ % order.length];
-            }
-        }, 250);
+            timer.textContent = Math.floor((Date.now() - started) / 1000) + 's';
+        }, 500);
     }
     function stopPending() {
         clearInterval(ticker);

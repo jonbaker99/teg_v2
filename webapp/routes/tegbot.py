@@ -138,7 +138,20 @@ def render_answer_html(text: str) -> str:
             return f'<a href="{href}"'
         return "<a"
     out = _IMG.sub("", out)  # no external images (tracking pixels)
-    return _HREF.sub(_keep_local, out)
+    return _box_method(_HREF.sub(_keep_local, out))
+
+
+_METHOD_START = re.compile(r"<p>(?:<(?:strong|em)>)?\s*How (?:I worked this out|this was worked out)\b",
+                           re.IGNORECASE)
+
+
+def _box_method(out: str) -> str:
+    """Put the "How I worked this out" note, and anything after it, in a small box."""
+    m = _METHOD_START.search(out)
+    if not m:
+        return out
+    return f'{out[:m.start()]}<div class="tb-how">{out[m.start():]}</div>'
+
 
 
 def _working(call: "bot.ToolCall") -> dict:

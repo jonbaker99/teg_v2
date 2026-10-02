@@ -499,3 +499,12 @@ def test_admin_tegbot_needs_login_and_deletes(client):
     assert "Delete me" in page.text and "TEGBot log" in page.text
     client.post("/admin/tegbot/delete", data={"ids": entry["id"]})
     assert qa_log.read_entries() == []
+
+
+def test_method_note_is_boxed():
+    from webapp.routes.tegbot import render_answer_html
+    out = render_answer_html("**Jon** wins.\n\n**How I worked this out:** counted wins.\n\n- n = 17")
+    assert out.index('<div class="tb-how">') > out.index("wins.</p>")
+    assert out.rstrip().endswith("</ul></div>") or out.rstrip().endswith("</div>")
+    assert '<div class="tb-how">' in render_answer_html("A.\n\nHow this was worked out: x")
+    assert "tb-how" not in render_answer_html("Just an answer.")
