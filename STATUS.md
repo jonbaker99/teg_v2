@@ -2,7 +2,19 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-10-02 (player roster redesign)
+**Last updated:** 2026-10-02 (TEG simulator odds; player roster redesign)
+
+## 2026-10-02 — Simulator shows betting odds
+
+`/simulation` opens on Stableford and leads its results with fair fractional odds (no bookmaker's margin) for the TEG Trophy, Green Jacket and Wooden Spoon, snapped to the traditional price ladder (Evens, 11/8, 9/2 …).
+
+## 2026-10-02 — Simulator rolls on to the next TEG and allows first-ever eagles
+
+`/simulation` now targets the TEG after the last completed one. Without a saved scorecard, each simulation draws a random par-72 course from those on file (`course_pars.csv`). Without saved handicaps it uses the draft calculation. Players can be added or removed. A small blend of the whole group's scores, matched to each player's average, lets unseen results happen (eagle chance about 1-2% per player per TEG, in line with history). The total-score chart is smoothed. The summary adds eagle chance and expected blobs.
+
+## 2026-10-02 — TEG simulator predicts the next TEG
+
+New `/simulation` page (Scoring analysis menu, "Simulation") runs a Monte Carlo of TEG 19 on its real scorecard, roster and handicaps. Each hole is sampled from the player's past scores on holes of that par, weighted by TEG (default 50/35/15 on TEGs 18/17/16). By default a rolling window around the hole's SI pair (1-2, 3-4 …) widens until it holds 20 holes, weighting the exact pair most; fixed SI bands with shrinkage remain an option. Each player's TEG weights can be overridden, e.g. to skip an injury year. All-history data: SI 1-6 plays about 0.35 strokes harder than SI 7-18, with no clear trend inside 9-18. Output: average scores (gross shown vs par), a score-distribution chart and a finishing-position grid, gross or Stableford. The sampling table is collapsed behind Show / Hide. In-play conditioning is in `teg_analysis/TODOS.md`.
 
 ## 2026-10-02 — Player roster is a two-line list, back in the nav
 

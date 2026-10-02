@@ -217,6 +217,9 @@ def test_navigation_report_link_follows_tournament_status(
         ("Latest TEG in context", "/latest-teg", "latest-teg", "sports_golf"),
         ("Handicaps", "/handicaps", "handicaps", "accessible"),
     ]
+    scoring = next(sec for sec in NAV_SECTIONS if sec["label"] == "Scoring analysis")
+    assert scoring["pages"][-1] == ("Simulation", "/simulation", "simulation", "casino")
+    assert "simulation" in scoring["active"]
 
 
 def test_handicaps_eyebrow_uses_current_navigation_label(client, monkeypatch):

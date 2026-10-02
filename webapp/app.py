@@ -14,7 +14,7 @@ from starlette.concurrency import run_in_threadpool
 from webapp.routes import (
     leaderboard, charts, records, player, scorecard,
     history, latest, performance, scoring, scorecards,
-    eclectic, reports, contents,
+    eclectic, reports, contents, simulation,
     admin, admin_round_setup, admin_teg_setup, admin_live_round, live_round,
     admin_new_round, admin_reports, design_lab, font_lab,
 )
@@ -114,6 +114,7 @@ app.include_router(history.router)
 app.include_router(latest.router)
 app.include_router(performance.router)
 app.include_router(scoring.router)
+app.include_router(simulation.router)
 app.include_router(scorecards.router)
 app.include_router(reports.router)
 app.include_router(contents.router)

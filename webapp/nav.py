@@ -48,7 +48,7 @@ NAV_SECTIONS = [
     },
     {
         "label": "Scoring analysis",
-        "active": {"scoring"},
+        "active": {"scoring", "simulation"},
         "pages": [
             ("Eagles / Birdies / Pars", "/scoring/birdies", "scoring", "strategy"),
             ("Streaks", "/scoring/streaks", "scoring", "trending_up"),
@@ -62,6 +62,7 @@ NAV_SECTIONS = [
             ("Changes vs previous round", "/scoring/changes", "scoring", "strategy"),
             ("Heatmap (WIP)", "/scoring/heatmap", "scoring", "strategy"),
             ("Final Round Comebacks", "/scoring/comebacks", "scoring", "trending_up"),
+            ("Simulation", "/simulation", "simulation", "casino"),
         ],
     },
     {
