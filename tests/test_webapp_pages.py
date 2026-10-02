@@ -379,7 +379,7 @@ def test_player_index_renders(client):
     resp = client.get("/player")
     _assert_ok_no_error(resp)
     assert "pick a card" not in resp.text
-    assert "All player profiles" in resp.text
+    assert "pp-sec" not in resp.text  # no section title; page title suffices
     assert "Click a player to open their profile." in resp.text
     # Whole row links to the profile; no handicap column.
     assert 'class="pr-row" href="/player/' in resp.text

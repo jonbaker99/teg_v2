@@ -8,7 +8,7 @@
     --pp-rule: var(--table-cell-border);
     --pp-ink: var(--ink, var(--text-primary));
     --pp-dim: var(--ink-muted, var(--text-secondary));
-    padding-block: 0.5rem 1.5rem;
+    padding-block: 1rem 1.5rem;
     --pp-bar: color-mix(in srgb, var(--text-muted) 60%, var(--bg-card));
 }
 .pp-back, .pp-link { color: var(--text-secondary); font: inherit; font-size: 0.8125rem; text-decoration: none; }
@@ -243,10 +243,9 @@
     --pp-rule: var(--table-cell-border);
     --pp-ink: var(--ink, var(--text-primary));
     --pp-dim: var(--ink-muted, var(--text-secondary));
-    padding-block: 0.5rem 1.5rem;
+    padding-block: 1rem 1.5rem;
 }
-.pr-roster .pp-sec { margin: 0; padding-left: 0; border: 0; }
-.pr-intro { margin: 4px 0 10px; font-size: 14px; color: var(--pp-ink); }
+.pr-intro { margin: 0 0 10px; font-size: 14px; color: var(--pp-ink); }
 .pr-roster a.pp-a { color: inherit; text-decoration: none; }
 .pr-roster a.pp-a:hover, .pr-roster a.pp-a:focus-visible { text-decoration: underline; }
 .pr-list { list-style: none; margin: 0; padding: 0; }
@@ -279,6 +278,7 @@
     font-size: 19px; font-weight: 600; line-height: 1.3;
     color: var(--pp-ink);
 }
+.pr-arrow { font-family: var(--font-sans), system-ui, sans-serif; font-size: 0.8em; font-weight: 400; color: var(--pp-dim); }
 .pr-stars { white-space: nowrap; font-size: 16px; line-height: 1.3; letter-spacing: 1px; min-height: 1.3em; }
 .pr-grp { display: inline-block; white-space: nowrap; }
 .pr-grp + .pr-grp { margin-left: 0.5em; }
