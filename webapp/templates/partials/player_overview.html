@@ -65,9 +65,8 @@
                         <span class="pp-gteg" aria-hidden="true"><span class="pp-fp-word">TEG </span>{{ c.teg }}</span>
                         <span class="pp-gtrack" aria-hidden="true">
                             <span class="pp-gbar"></span>
-                            <span class="pp-grange"></span>
-                            <span class="pp-gcap pp-gcap--lo"></span>
-                            <span class="pp-gcap pp-gcap--hi"></span>
+                            <span class="pp-gmark pp-gmark--best"></span>
+                            <span class="pp-gmark pp-gmark--worst"></span>
                             <span class="pp-gval">{{ c.avg_label }}</span>
                         </span>
                     </li>
@@ -75,7 +74,7 @@
                 </ol>
             </div>
         </div>
-        <p class="pp-note pp-foot"><span>Bar is the TEG average a round. Line runs from best to worst round. <span class="pp-note-phone">Career {{ round_chart.career_label }}.</span></span>
+        <p class="pp-note pp-foot"><span>Bar is the TEG average a round. <span class="pp-gkey pp-gkey--best"></span> best round <span class="pp-gkey pp-gkey--worst"></span> worst round. <span class="pp-note-phone">Career {{ round_chart.career_label }}.</span></span>
             <span class="pp-foot-links"><a class="text-link pp-a" href="/scoring/by-teg">Scoring by TEG</a></span></p>
     </section>
     {% endif %}

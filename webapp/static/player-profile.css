@@ -35,10 +35,10 @@
 }
 @media (min-width: 641px) { .pp-profile .pp-tabs .tab-underline { padding-inline: 0; } }
 
-/* Section headings: the site's .section-title (Lora small caps, green) over a
-   2px ink rule. */
-.pp-profile .pp-sec { margin: 0 0 10px; padding-bottom: 8px; border-bottom: 2px solid var(--pp-ink); }
-.pp-sec-row { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem 1rem; flex-wrap: wrap; border-bottom: 2px solid var(--pp-ink); margin-bottom: 10px; }
+/* Section headings: the site's .section-title (Lora small caps, green), no
+   extra rule, matching the rest of the site. */
+.pp-profile .pp-sec { margin: 0 0 10px; }
+.pp-sec-row { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem 1rem; flex-wrap: wrap; margin-bottom: 10px; }
 .pp-profile .pp-sec-row .pp-sec { border-bottom: 0; margin-bottom: 0; }
 .pp-sec-aside { font-size: 12px; color: var(--pp-dim); }
 .pp-section { margin-top: 44px; }
@@ -91,10 +91,13 @@
 .pp-gbar { position: absolute; left: 0; right: 0; bottom: 0; height: var(--bar); background: var(--pp-bar); border-radius: 2px 2px 0 0; }
 .pp-gcol--jacket .pp-gbar { background: var(--accent); }
 /* Range line sits right of the bar label so the two never collide. */
-.pp-grange { position: absolute; left: 90%; width: 1.5px; margin-left: -0.75px; bottom: var(--lo); height: var(--span); background: var(--pp-ink); }
-.pp-gcap { position: absolute; left: 78%; right: 2%; height: 1.5px; background: var(--pp-ink); }
-.pp-gcap--lo { bottom: var(--lo); }
-.pp-gcap--hi { bottom: var(--hi); }
+/* Best and worst round markers: a filled dot (best) and a hollow dot (worst),
+   on the bar's right edge so they never sit on the average label. */
+.pp-gmark { position: absolute; left: 90%; width: 8px; height: 8px; margin: 0 0 -4px -4px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid var(--pp-ink); background: var(--pp-ink); z-index: 1; }
+.pp-gmark--best { bottom: var(--lo); }
+.pp-gmark--worst { bottom: var(--hi); background: var(--bg-card); }
+.pp-gkey { display: inline-block; width: 8px; height: 8px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid var(--pp-ink); background: var(--pp-ink); vertical-align: 0; margin-left: 4px; }
+.pp-gkey--worst { background: transparent; }
 /* Average label inside the top of the bar; outside it when the bar is too short. */
 .pp-gval { position: absolute; left: 3px; bottom: calc(var(--bar) - 17px); font-size: 10.5px; line-height: 14px; color: var(--text-primary); white-space: nowrap; }
 .pp-gcol--jacket .pp-gval { color: var(--badge-text, #fff); }
@@ -194,11 +197,10 @@
     .pp-gteg { position: static; margin: 0; text-align: left; font-size: 12px; color: var(--text-secondary); }
     .pp-gtrack { position: relative; inset: auto; height: 30px; border-left: 1px solid var(--pp-ink); }
     .pp-gbar { left: 0; right: auto; bottom: auto; top: 2px; height: 16px; width: var(--bar); border-radius: 0 2px 2px 0; }
-    /* Range runs on its own thin line under the bar so it never crosses the label. */
-    .pp-grange { left: var(--lo); top: 24px; bottom: auto; margin: 0; width: var(--span); height: 1.5px; }
-    .pp-gcap { right: auto; bottom: auto; top: 20px; width: 1.5px; height: 9px; }
-    .pp-gcap--lo { left: var(--lo); }
-    .pp-gcap--hi { left: var(--hi); }
+    /* Best and worst markers sit just under the bar so they never cover the label. */
+    .pp-gmark { top: 20px; bottom: auto; margin: 0 0 0 -4px; }
+    .pp-gmark--best { left: var(--lo); }
+    .pp-gmark--worst { left: var(--hi); }
     .pp-gval { left: auto; right: calc(100% - var(--bar)); bottom: auto; top: 2px; padding-right: 4px; line-height: 16px; font-size: 11px; }
     .pp-gcol--short .pp-gval, .pp-gcol--jacket.pp-gcol--short .pp-gval { right: auto; left: calc(var(--bar) + 4px); bottom: auto; padding-right: 0; }
 

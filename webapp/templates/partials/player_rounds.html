@@ -1,7 +1,7 @@
 <div class="pp-tab">
     {% if rounds_chart_json %}
     <section class="pp-section">
-        <h2 class="section-title pp-sec">Gross vs par by round</h2>
+        <h2 class="section-title">Gross vs par by round</h2>
         <div class="data-card">
             <div class="chart-container pp-chart pp-rounds-chart" data-figure="{{ rounds_chart_json }}"></div>
             <p class="pp-chart-direction">Lower = better</p>
@@ -10,7 +10,7 @@
     </section>
     {% endif %}
     <section class="pp-section">
-        <h2 class="section-title pp-sec">All rounds</h2>
+        <h2 class="section-title">All rounds</h2>
         {% if rounds_rows %}
         <div class="data-card"><div class="table-wrapper table-wrapper--no-pin">
             <table class="teg-table pp-rounds-table">

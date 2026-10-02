@@ -690,7 +690,7 @@ def _build_round_chart(name: str, rd_data: pd.DataFrame, rows: list[dict],
     """Server-rendered 'Gross vs par per round' columns, oldest TEG first.
 
     Per TEG: the average gross vs par a round (bar), and the best and worst
-    round (range line). Positions are percentages of one shared scale; values
+    round (best and worst markers). Positions are percentages of one shared scale; values
     below zero are clamped to the baseline for drawing but kept in the text.
     """
     player_rd = rd_data[rd_data["Player"] == name]

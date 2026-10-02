@@ -1,7 +1,7 @@
 <div class="pp-tab">
     {% for section in sections %}
     <section class="pp-section">
-        <h2 class="section-title pp-sec">{{ section.title }}</h2>
+        <h2 class="section-title">{{ section.title }}</h2>
         {% if section.table_html %}
         <div class="data-card"><div class="table-wrapper table-wrapper--no-pin">{{ section.table_html | safe }}</div></div>
         {% if section.link %}<p class="pp-note pp-foot"><span></span><span class="pp-foot-links"><a class="text-link pp-a" href="{{ section.link[0] }}">{{ section.link[1] }}</a></span></p>{% endif %}

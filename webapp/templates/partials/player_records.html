@@ -16,24 +16,24 @@
 {% endmacro %}
 <div class="pp-tab">
     <section class="pp-section">
-        <h2 class="section-title pp-sec">All-time records held</h2>
+        <h2 class="section-title">All-time records held</h2>
         {% if records_held %}{{ held_table(records_held) }}{% else %}<p class="pp-note">No outright TEG records held.</p>{% endif %}
     </section>
     <section class="pp-section">
-        <h2 class="section-title pp-sec">All-time worsts held</h2>
+        <h2 class="section-title">All-time worsts held</h2>
         {% if worsts_held %}{{ held_table(worsts_held) }}{% else %}<p class="pp-note">No outright TEG worsts held.</p>{% endif %}
         <p class="pp-note pp-foot"><span></span><span class="pp-foot-links"><a class="text-link pp-a" href="/records">All-time records</a></span></p>
     </section>
     {% for section in sections %}
     <section class="pp-section">
-        <h2 class="section-title pp-sec">{{ section.title }}</h2>
+        <h2 class="section-title">{{ section.title }}</h2>
         <div class="data-card"><div class="table-wrapper table-wrapper--no-pin">{{ section.table_html | safe }}</div></div>
         <p class="pp-note pp-foot"><span></span><span class="pp-foot-links"><a class="text-link pp-a" href="{{ streaks_url }}">Streaks</a></span></p>
     </section>
     {% endfor %}
     {% if not sections %}
     <section class="pp-section">
-        <h2 class="section-title pp-sec">Streaks</h2>
+        <h2 class="section-title">Streaks</h2>
         <p class="pp-note">No streak data.</p>
     </section>
     {% endif %}
