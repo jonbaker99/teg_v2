@@ -92,78 +92,32 @@ def test_honours_counts_strip_footnote_and_combine(data):
     assert out["page"] == "/honours"
 
 
-def test_query_scores_grouped_share(data):
-    out = run_tool("query_scores", {
-        "level": "hole", "group_by": ["Player"],
-        "aggregations": [{"func": "share", "where": {"field": "GrossVP", "op": "<=", "value": -1},
-                          "label": "birdie_pct"}],
-        "sort_by": "birdie_pct", "descending": True,
-    }, data)
-    assert out["result"][0] == {"Player": "Alan ALPHA", "n": 36, "birdie_pct": pytest.approx(2.78)}
-    assert any("birdie_pct" in step for step in out["calculation"])
-
-
-def test_query_scores_teg_positions_follow_era(data):
-    out = run_tool("query_scores", {
-        "level": "teg", "filters": [{"field": "TEGNum", "op": "==", "value": 8}],
-        "columns": ["Player", "Stableford", "TrophyPosition", "JacketPosition"],
-        "sort_by": "TrophyPosition",
-    }, data)
-    # TEG 8 is Stableford era: most points wins the Trophy.
-    assert out["result"][0]["Player"] == "Bob CHARLIE"
-    assert out["result"][0]["TrophyPosition"] == 1
-
-
-def test_query_scores_player_filter_resolves_names(data):
-    out = run_tool("query_scores", {
-        "level": "round", "filters": [{"field": "Player", "op": "==", "value": "alpha"}],
-        "aggregations": [{"func": "min", "field": "GrossVP", "label": "best"}],
-    }, data)
-    assert out["result"] == [{"n": 2, "best": -1}]
-
-
-@pytest.mark.parametrize("tool_input, message", [
-    ({"level": "hole", "filters": [{"field": "Bogus", "op": "==", "value": 1}]}, "Unknown field"),
-    ({"level": "hole", "filters": [{"field": "Hole", "op": "~", "value": 1}]}, "Unknown op"),
-    ({"level": "galaxy"}, "level must be"),
-    ({"level": "hole", "aggregations": [{"func": "share"}]}, "needs a 'where'"),
-    ({"level": "hole", "group_by": ["Sc"]}, "Cannot group by"),
-    ({"level": "hole", "nonsense": 1}, "Bad arguments"),
-    ({"level": "hole", "filters": [{"field": "Hole", "op": "==", "value": [1, 2]}]}, "Bad input"),
-    ({"level": "hole", "group_by": ["Player"],
-      "aggregations": [{"func": "mean", "field": "Sc", "label": "Player"}]}, "clashes"),
-    ({"level": "hole", "limit": "abc"}, "whole number"),
-    ({"level": "hole", "aggregations": [{"func": "sum", "field": "Player"}]}, "numeric measure"),
-])
-def test_query_scores_bad_input_returns_error(data, tool_input, message):
-    out = run_tool("query_scores", tool_input, data)
-    assert message in out["error"]
-
-
-def test_query_scores_where_sum_is_zero_not_null(data):
-    out = run_tool("query_scores", {
-        "level": "hole", "group_by": ["Player"],
-        "aggregations": [{"func": "sum", "field": "Sc", "label": "s",
-                          "where": {"field": "TEGNum", "op": "==", "value": 99}}],
-    }, data)
-    assert {r["s"] for r in out["result"]} == {0}
-
-
-def test_query_scores_complete_accepts_string_bool(data):
-    out = run_tool("query_scores", {
-        "level": "teg", "filters": [{"field": "Complete", "op": "==", "value": "true"}],
-        "aggregations": [{"func": "count", "label": "c"}],
-    }, data)
-    assert out["result"][0]["c"] == 5
-
-
-def test_positions_blank_for_teg_in_progress(data):
+def test_datasets_positions_follow_era_and_blank_in_progress(data):
     data.completed_tegs = lambda: {8}
-    out = run_tool("query_scores", {
-        "level": "teg", "filters": [{"field": "TEGNum", "op": "==", "value": 9}],
-        "columns": ["Player", "TrophyPosition"],
-    }, data)
-    assert all(r["TrophyPosition"] is None for r in out["result"])
+    ds = data.datasets()
+    assert set(ds) == {"holes.csv", "rounds.csv", "tegs.csv", "winners.csv"}
+    tegs = ds["tegs.csv"].set_index(["TEGNum", "Player"])
+    # TEG 8 is Stableford era: most points (Bob CHARLIE, all pars) wins the Trophy.
+    assert tegs.loc[(8, "Bob CHARLIE"), "TrophyPosition"] == 1
+    assert tegs.loc[(8, "Bob BRAVO"), "JacketPosition"] == 3
+    assert tegs.loc[[9], "TrophyPosition"].isna().all()  # TEG 9 in progress
+    rounds = ds["rounds.csv"].set_index(["TEGNum", "Round", "Player"])
+    assert rounds.loc[(9, 1, "Alan ALPHA"), "RoundJacketPos"] == 1
+    assert rounds.loc[(9, 1, "Alan ALPHA"), "TrophyPosAfterRound"] == 1
+
+
+def test_records_lists_every_tied_holder(data, monkeypatch):
+    import teg_analysis.display.formatters as fmt
+    monkeypatch.setattr(fmt, "prepare_records_table", lambda df, scope: pd.DataFrame(
+        [["Best Stableford", "51", "Alan ALPHA", "TEG 8 Rd 1"],
+         ["Best Stableford", "51", "Bob BRAVO", "TEG 9 Rd 1"]]))
+    monkeypatch.setattr(fmt, "prepare_worst_records_table", lambda df, scope: pd.DataFrame(
+        [["Worst Gross", "+40", "Bob BRAVO", "TEG 8 Rd 1"]]))
+    data.ranked = lambda scope: data.holes()
+    out = run_tool("get_records", {"scope": "round"}, data)
+    assert [r["player"] for r in out["best"]] == ["Alan ALPHA", "Bob BRAVO"]
+    assert out["page"] == "/records?tab=round"
+    assert "scope must be" in run_tool("get_records", {"scope": "year"}, data)["error"]
 
 
 def test_bounce_back_bad_teg(data):
@@ -201,12 +155,62 @@ def _resp(content, stop):
 class FakeClient:
     def __init__(self, responses):
         self.calls = []
+        self.uploads = []
         self._responses = iter(responses)
         self.beta = SimpleNamespace(messages=SimpleNamespace(create=self._create))
+        self.files = SimpleNamespace(upload=self._upload, delete=lambda fid: None)
+
+    def _upload(self, file):
+        self.uploads.append(file[0])
+        return SimpleNamespace(id=f"file_{len(self.uploads)}")
 
     def _create(self, **kwargs):
         self.calls.append(kwargs)
         return next(self._responses)
+
+
+@pytest.fixture(autouse=True)
+def _fresh_uploads(monkeypatch):
+    monkeypatch.setattr(bot, "_uploads", {})
+
+
+def test_ask_uploads_datasets_once_and_attaches_them(data):
+    done = _resp([SimpleNamespace(type="text", text="ok")], "end_turn")
+    client = FakeClient([done, done])
+    bot.ask("q1", data, client=client)
+    bot.ask("q2", data, client=client)
+    assert sorted(client.uploads) == ["holes.csv", "rounds.csv", "tegs.csv", "winners.csv"]
+    content = client.calls[0]["messages"][-1]["content"]
+    assert [b["type"] for b in content] == ["text"] + ["container_upload"] * 4
+    assert {"type": "code_execution_20260521", "name": "code_execution"} in client.calls[0]["tools"]
+
+
+def test_ask_records_sandbox_code_and_reuses_container(data):
+    code = SimpleNamespace(type="server_tool_use", id="s1", name="bash_code_execution",
+                           input={"command": "python3 -c 'print(1)'"})
+    result = SimpleNamespace(type="bash_code_execution_tool_result", tool_use_id="s1",
+                             content=SimpleNamespace(stdout="1\n", stderr="", return_code=0))
+    lookup = SimpleNamespace(type="tool_use", id="t1", name="get_honours", input={})
+    first = _resp([SimpleNamespace(type="text", text="Checking."), code, result, lookup], "tool_use")
+    first.container = SimpleNamespace(id="cont_1")
+    paused = _resp([SimpleNamespace(type="text", text="still going")], "pause_turn")
+    final = _resp([SimpleNamespace(type="text", text="Answer is 1.")], "end_turn")
+    client = FakeClient([first, paused, final])
+    answer = bot.ask("q", data, client=client)
+    assert answer.text == "Answer is 1."
+    assert [c.name for c in answer.tool_calls] == ["code", "get_honours"]
+    assert answer.tool_calls[0].output == {"stdout": "1\n", "return_code": 0}
+    assert "container" not in client.calls[0]
+    assert client.calls[1]["container"] == client.calls[2]["container"] == "cont_1"
+    # pause_turn resends with the paused assistant turn last, no new user message
+    assert client.calls[2]["messages"][-1]["role"] == "assistant"
+
+
+def test_final_text_skips_narration_before_tools():
+    blocks = [SimpleNamespace(type="text", text="Let me look."),
+              SimpleNamespace(type="server_tool_use", id="s", input={}),
+              SimpleNamespace(type="text", text="The answer.")]
+    assert bot._final_text(blocks) == "The answer."
 
 
 def test_ask_runs_tools_then_answers(data):
@@ -227,7 +231,7 @@ def test_ask_runs_tools_then_answers(data):
 
 
 def test_ask_flags_tool_errors_to_model(data):
-    tool_use = SimpleNamespace(type="tool_use", id="t1", name="query_scores", input={"level": "x"})
+    tool_use = SimpleNamespace(type="tool_use", id="t1", name="get_records", input={"scope": "x"})
     client = FakeClient([
         _resp([tool_use], "tool_use"),
         _resp([SimpleNamespace(type="text", text="ok")], "end_turn"),
@@ -307,7 +311,7 @@ def test_ask_route_renders_answer_and_workings(client):
     assert resp.status_code == 200
     assert "<strong>Who won?</strong>" in resp.text
     assert 'href="/honours"' in resp.text
-    assert "Show the workings (1 lookup)" in resp.text
+    assert "Show the workings (1 step)" in resp.text
 
 
 def test_ask_route_rate_limits(client, monkeypatch):

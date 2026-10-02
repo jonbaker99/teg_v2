@@ -120,7 +120,7 @@ teg_analysis/
                      eclectic, pipeline, data update, live round, leaderboards
   display/           Formatting, HTML tables, scorecards, navigation utilities
   reporting/         LLM-powered tournament reports
-  chatbot/           TEGBot 5000: Claude tool-use loop over deterministic stat tools
+  chatbot/           TEGBot 5000: lookups first, else pandas in Anthropic's code sandbox
   api/               (Placeholder for REST API endpoints)
 ```
 

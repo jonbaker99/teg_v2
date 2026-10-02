@@ -126,8 +126,23 @@ def render_answer_html(text: str) -> str:
     return _HREF.sub(_keep_local, out)
 
 
+def _working(call: "bot.ToolCall") -> dict:
+    """One entry in "Show the workings": code as code, lookups as JSON."""
+    if call.name == "code":
+        shown_in = call.input.get("command") or call.input.get("file_text") or json.dumps(call.input)
+        shown_out = call.output.get("stdout", "") + call.output.get("stderr", "")
+        return {"name": "Code run in the sandbox", "input": shown_in[:6000],
+                "output": (shown_out or json.dumps(call.output))[:6000]}
+    return {"name": f"Lookup: {call.name}",
+            "input": json.dumps(call.input, indent=1, default=str),
+            "output": json.dumps(call.output, indent=1, default=str)[:6000]}
+
+
 def _chat_data() -> ChatData:
-    return ChatData(all_data=deps.cached_load_all_data, winners=deps.cached_winners)
+    ranked = {"teg": deps.cached_ranked_teg_data, "round": deps.cached_ranked_round_data,
+              "frontback": deps.cached_ranked_frontback_data}
+    return ChatData(all_data=deps.cached_load_all_data, winners=deps.cached_winners,
+                    ranked=lambda scope: ranked[scope]())
 
 
 @router.get("/tegbot")
@@ -177,10 +192,5 @@ def tegbot_ask(request: Request, question: str = Form(""), history: str = Form("
     return _reply(
         answer_text=answer.text,
         answer_html=render_answer_html(answer.text),
-        tool_calls=[
-            {"name": c.name,
-             "input": json.dumps(c.input, indent=1, default=str),
-             "output": json.dumps(c.output, indent=1, default=str)[:6000]}
-            for c in answer.tool_calls
-        ],
+        tool_calls=[_working(c) for c in answer.tool_calls],
     )

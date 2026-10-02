@@ -1,11 +1,14 @@
-"""Deterministic tools TEGBot calls. The model picks a tool; this code does the maths.
+"""TEGBot's lookups, and the data it gives the code sandbox.
 
-Every tool returns a plain JSON-able dict with:
+Two ways to an answer, lookups first:
 
-- the numbers (never computed by the model),
-- ``definition`` / ``assumptions`` where a choice was made, so the answer can
-  state them,
-- ``page`` — the site page that already shows this data, when one exists.
+- **Lookups** (this module) answer well-defined questions with the site's own
+  definitions: honours, records, streaks, bounce-back. Each returns its full
+  result, ties included, never a cut-off list, plus ``definition`` /
+  ``notes`` and the ``page`` that shows the same data.
+- **Code** for everything else. The bot writes pandas in Anthropic's sandbox
+  against the CSVs ``ChatData.datasets()`` builds (documented in
+  ``prompt.DATA_GUIDE``). That code runs on Anthropic's servers, never here.
 
 Bad input never raises out of ``run_tool``: it comes back as ``{"error": ...}``
 so the model can correct itself and retry.
@@ -22,7 +25,6 @@ from teg_analysis.analysis.bounceback import (
     BASIS_COLUMNS, GROUPINGS, TRIGGER_THRESHOLDS, bounce_back_stats,
 )
 
-MAX_ROWS = 40
 
 
 # ---------------------------------------------------------------------------
@@ -43,6 +45,15 @@ def _default_completed() -> set[int]:
     return set(read_file("data/completed_tegs.csv")["TEGNum"].astype(int))
 
 
+def _default_ranked(scope: str) -> pd.DataFrame:
+    from teg_analysis.analysis import rankings
+    return {
+        "teg": rankings.get_ranked_teg_data,
+        "round": rankings.get_ranked_round_data,
+        "frontback": rankings.get_ranked_frontback_data,
+    }[scope]()
+
+
 def _default_players() -> dict[str, str]:
     from teg_analysis.core.players import get_player_dict
     return get_player_dict()
@@ -56,6 +67,8 @@ class ChatData:
     winners: Optional[Callable[[], pd.DataFrame]] = None
     completed_tegs: Callable[[], set[int]] = _default_completed
     players: Callable[[], dict[str, str]] = _default_players
+    #: scope ("teg" | "round" | "frontback") -> ranked frame, as /records uses.
+    ranked: Callable[[str], pd.DataFrame] = None  # type: ignore[assignment]
     _memo: dict = field(default_factory=dict, repr=False)
 
     def _get(self, key: str, fn: Callable[[], Any]) -> Any:
@@ -71,6 +84,9 @@ class ChatData:
             return self._get("winners", self.winners)
         return self._get("winners", lambda: _default_winners(self.holes()))
 
+    def ranked_df(self, scope: str) -> pd.DataFrame:
+        return self._get(f"ranked_{scope}", lambda: (self.ranked or _default_ranked)(scope))
+
     def complete(self) -> set[int]:
         return self._get("complete", lambda: {int(t) for t in self.completed_tegs()})
 
@@ -81,17 +97,28 @@ class ChatData:
         return self._get("tegs", self._build_tegs)
 
     def _build_rounds(self) -> pd.DataFrame:
+        holes = self.holes()
         keys = ["Player", "Pl", "TEGNum", "Year", "Round", "Course"]
-        if "Area" in self.holes().columns:
-            keys.append("Area")
-        df = self.holes().groupby(keys, as_index=False).agg(
+        keys += [c for c in ("Area", "Date") if c in holes.columns]
+        df = holes.groupby(keys, as_index=False).agg(
             Sc=("Sc", "sum"), GrossVP=("GrossVP", "sum"), NetVP=("NetVP", "sum"),
             Stableford=("Stableford", "sum"), HC=("HC", "first"), Holes=("Hole", "size"),
         )
-        return df.sort_values(["TEGNum", "Round", "Player"]).reset_index(drop=True)
+        if "Date" in df.columns:
+            df["Date"] = pd.to_datetime(df["Date"], format="%d/%m/%Y", errors="coerce").dt.date
+        df = df.sort_values(["TEGNum", "Round", "Player"]).reset_index(drop=True)
+        # Position in this round alone, and in the TEG standings after this round.
+        df["RoundJacketPos"] = df.groupby(["TEGNum", "Round"])["GrossVP"].rank(method="min")
+        df["RoundTrophyPos"] = _trophy_rank(df, ["TEGNum", "Round"])
+        cum = df.groupby(["TEGNum", "Player"])[["GrossVP", "NetVP", "Stableford"]].cumsum()
+        after = df[["TEGNum", "Round"]].join(cum)
+        df["JacketPosAfterRound"] = after.groupby(["TEGNum", "Round"])["GrossVP"].rank(method="min")
+        df["TrophyPosAfterRound"] = _trophy_rank(after, ["TEGNum", "Round"])
+        for col in ("RoundJacketPos", "RoundTrophyPos", "JacketPosAfterRound", "TrophyPosAfterRound"):
+            df[col] = df[col].astype("Int64")
+        return df
 
     def _build_tegs(self) -> pd.DataFrame:
-        from teg_analysis.analysis.scoring import get_net_competition_measure
         keys = ["Player", "Pl", "TEGNum", "Year"]
         if "Area" in self.holes().columns:
             keys.append("Area")
@@ -101,19 +128,39 @@ class ChatData:
             Rounds=("Round", "nunique"), Holes=("Hole", "size"),
         )
         df["Complete"] = df["TEGNum"].isin(self.complete())
-        df["JacketPosition"] = df.groupby("TEGNum")["GrossVP"].rank(method="min").astype(int)
-        net_pos = []
-        for teg_num, grp in df.groupby("TEGNum"):
-            if get_net_competition_measure(int(teg_num)) == "NetVP":
-                net_pos.append(grp["NetVP"].rank(method="min"))
-            else:
-                net_pos.append(grp["Stableford"].rank(method="min", ascending=False))
-        df["TrophyPosition"] = pd.concat(net_pos).astype(int)
+        df["JacketPosition"] = df.groupby("TEGNum")["GrossVP"].rank(method="min")
+        df["TrophyPosition"] = _trophy_rank(df, ["TEGNum"])
         df["FieldSize"] = df.groupby("TEGNum")["Player"].transform("size")
         # A TEG in progress has partial totals; a position from them isn't a finish.
         for col in ("JacketPosition", "TrophyPosition"):
             df[col] = df[col].astype("Int64").where(df["Complete"])
         return df.sort_values(["TEGNum", "TrophyPosition"]).reset_index(drop=True)
+
+
+    def datasets(self) -> dict[str, pd.DataFrame]:
+        """The CSVs uploaded to the code sandbox. Columns: see prompt.DATA_GUIDE."""
+        hole_cols = ["Player", "Pl", "TEGNum", "Year", "Area", "Course", "Date", "Round",
+                     "Hole", "FrontBack", "PAR", "SI", "HC", "HCStrokes", "Sc", "GrossVP",
+                     "NetVP", "Stableford"]
+        holes = self.holes()[[c for c in hole_cols if c in self.holes().columns]].copy()
+        if "Date" in holes.columns:
+            holes["Date"] = pd.to_datetime(holes["Date"], format="%d/%m/%Y", errors="coerce").dt.date
+        winners = self.winners_df().copy()
+        return {
+            "holes.csv": holes.sort_values(["TEGNum", "Round", "Player", "Hole"]),
+            "rounds.csv": self.rounds(),
+            "tegs.csv": self.tegs(),
+            "winners.csv": winners,
+        }
+
+
+def _trophy_rank(df: pd.DataFrame, keys: list[str]) -> pd.Series:
+    """Rank in the net competition: lowest NetVP up to TEG 7, most Stableford from TEG 8."""
+    from teg_analysis.analysis.scoring import get_net_competition_measure
+    by_net = df.groupby(keys)["NetVP"].rank(method="min")
+    by_stab = df.groupby(keys)["Stableford"].rank(method="min", ascending=False)
+    net_era = df["TEGNum"].map(lambda t: get_net_competition_measure(int(t)) == "NetVP")
+    return by_net.where(net_era, by_stab)
 
 
 # ---------------------------------------------------------------------------
@@ -153,8 +200,10 @@ def resolve_player(value: str, players: dict[str, str]) -> str:
     raise ToolInputError(f"No player called '{text}'. Players: {', '.join(names)}.")
 
 
-def _records(df: pd.DataFrame, limit: int = MAX_ROWS) -> tuple[list[dict], bool]:
-    out = df.head(limit).copy()
+def _records(df: pd.DataFrame) -> list[dict]:
+    """Every row, JSON-safe. Lookups never truncate: small data, and a cut-off
+    list can hide a tie."""
+    out = df.copy()
     for col in out.columns:
         if pd.api.types.is_float_dtype(out[col]):
             out[col] = out[col].round(2)
@@ -164,7 +213,7 @@ def _records(df: pd.DataFrame, limit: int = MAX_ROWS) -> tuple[list[dict], bool]
         {k: (None if pd.isna(v) else (v.item() if hasattr(v, "item") else v)) for k, v in r.items()}
         for r in out.to_dict(orient="records")
     ]
-    return rows, len(df) > limit
+    return rows
 
 
 # ---------------------------------------------------------------------------
@@ -184,7 +233,7 @@ def get_honours(data: ChatData, competition: str = "all") -> dict:
     winners = data.winners_df()
     complete = data.complete()
     winners = winners[winners["TEG"].map(lambda t: int(str(t).split()[-1]) in complete)]
-    result: dict[str, Any] = {"winners_by_teg": _records(winners)[0], "counts": {}}
+    result: dict[str, Any] = {"winners_by_teg": _records(winners), "counts": {}}
     for comp in comps:
         col, _ = COMPETITIONS[comp]
         # "Stuart NEUMANN*" marks the TEG 5 jacket footnote; count it as his win.
@@ -215,8 +264,8 @@ def get_streak_records(data: ChatData, direction: str = "good") -> dict:
     holes = data.holes()
     return {
         "direction": direction,
-        "longest_streak_per_player": _records(prepare_streaks_data(holes, direction))[0],
-        "all_time_records": _records(prepare_record_streaks_data(holes, direction))[0],
+        "longest_streak_per_player": _records(prepare_streaks_data(holes, direction)),
+        "all_time_records": _records(prepare_record_streaks_data(holes, direction)),
         "definition": (
             "Streaks run across consecutive holes played, including across rounds and TEGs. "
             "Good: consecutive birdies, pars or better, holes without a double bogey or worse (+2s), "
@@ -245,11 +294,9 @@ def get_bounce_back(data: ChatData, basis: str = "gross", trigger: str = "bogey_
         raise ToolInputError(str(exc)) from exc
     if player:
         df = df[df["Player"] == resolve_player(player, data.players())]
-    rows, truncated = _records(df)
     trig_text = "bogey or worse" if trigger == "bogey_or_worse" else "double bogey or worse"
     return {
-        "result": rows,
-        "truncated": truncated,
+        "result": _records(df),
         "definition": (
             f"Trigger: a hole at {trig_text} ({basis} vs par). Bounce-back: the next hole in the "
             f"same round at par or better ({basis}). Rate = bounce-backs / triggers, as a %. "
@@ -265,197 +312,81 @@ def get_bounce_back(data: ChatData, basis: str = "gross", trigger: str = "bogey_
         "page": None,
     }
 
-
 # ---------------------------------------------------------------------------
-# Tool: query_scores — a constrained, validated query language
+# Tool: records — the /records page's own holders, every tie included
 # ---------------------------------------------------------------------------
-DIMENSIONS = {
-    "hole": ["Player", "Pl", "TEGNum", "Year", "Round", "Hole", "PAR", "SI", "Course", "Area", "FrontBack"],
-    "round": ["Player", "Pl", "TEGNum", "Year", "Round", "Course", "Area"],
-    "teg": ["Player", "Pl", "TEGNum", "Year", "Area", "Complete"],
-}
-MEASURES = {
-    "hole": ["Sc", "GrossVP", "NetVP", "Stableford", "HC", "HCStrokes"],
-    "round": ["Sc", "GrossVP", "NetVP", "Stableford", "HC", "Holes"],
-    "teg": ["Sc", "GrossVP", "NetVP", "Stableford", "HC", "Rounds", "Holes",
-            "TrophyPosition", "JacketPosition", "FieldSize"],
-}
-OPS = {
-    "==": lambda s, v: s == v, "!=": lambda s, v: s != v,
-    "<": lambda s, v: s < v, "<=": lambda s, v: s <= v,
-    ">": lambda s, v: s > v, ">=": lambda s, v: s >= v,
-    "in": lambda s, v: s.isin(v), "not_in": lambda s, v: ~s.isin(v),
-}
-AGG_FUNCS = ("count", "share", "sum", "mean", "median", "min", "max", "nunique")
+RECORD_SCOPES = {"teg": "teg", "round": "round", "nine": "frontback"}
 
 
-def _level_frame(data: ChatData, level: str) -> pd.DataFrame:
-    if level == "hole":
-        return data.holes()
-    if level == "round":
-        return data.rounds()
+def get_records(data: ChatData, scope: str = "round") -> dict:
+    from teg_analysis.display.formatters import (
+        prepare_records_table, prepare_worst_records_table, score_count_record_holders,
+    )
+    if scope == "score_counts":
+        holders = score_count_record_holders(data.holes())
+        players = data.players()
+        for h in holders:
+            h["player"] = players.get(h["player"], h["player"])
+        return {
+            "scope": scope, "records": holders,
+            "notes": ["Eagles, birdies and pars counts include better scores."],
+            "page": "/records?tab=score_counts",
+        }
+    if scope not in RECORD_SCOPES:
+        raise ToolInputError(f"scope must be one of {[*RECORD_SCOPES, 'score_counts']}")
+    level = RECORD_SCOPES[scope]
+    ranked = data.ranked_df(level)
     if level == "teg":
-        return data.tegs()
-    raise ToolInputError("level must be 'hole', 'round' or 'teg'")
-
-
-def _normalise_value(field_name: str, value: Any, data: ChatData) -> Any:
-    if field_name == "Player":
-        if isinstance(value, list):
-            return [resolve_player(v, data.players()) for v in value]
-        return resolve_player(value, data.players())
-    if field_name == "Complete" and isinstance(value, str):
-        return value.strip().lower() in ("true", "1", "yes")
-    if field_name == "Pl":
-        return [str(v).upper() for v in value] if isinstance(value, list) else str(value).upper()
-    return value
-
-
-def _mask(df: pd.DataFrame, cond: dict, allowed: list[str], data: ChatData) -> pd.Series:
-    if not isinstance(cond, dict):
-        raise ToolInputError("Each filter must be an object with field, op, value.")
-    fld, op, val = cond.get("field"), cond.get("op"), cond.get("value")
-    if fld not in allowed or fld not in df.columns:
-        raise ToolInputError(f"Unknown field '{fld}'. Allowed here: {allowed}")
-    if op not in OPS:
-        raise ToolInputError(f"Unknown op '{op}'. Allowed: {list(OPS)}")
-    if op in ("in", "not_in") and not isinstance(val, list):
-        raise ToolInputError(f"op '{op}' needs a list value.")
-    return OPS[op](df[fld], _normalise_value(fld, val, data))
-
-
-def _describe_cond(cond: dict) -> str:
-    return f"{cond.get('field')} {cond.get('op')} {cond.get('value')}"
-
-
-def query_scores(data: ChatData, level: str, filters: Optional[list] = None,
-                 group_by: Optional[list] = None, aggregations: Optional[list] = None,
-                 columns: Optional[list] = None, sort_by: Optional[str] = None,
-                 descending: bool = False, limit: int = 20,
-                 min_count: Optional[int] = None) -> dict:
-    df = _level_frame(data, level)
-    dims = [c for c in DIMENSIONS[level] if c in df.columns]
-    allowed = dims + [c for c in MEASURES[level] if c in df.columns]
-    filters = filters or []
-    group_by = group_by or []
-    aggregations = aggregations or []
-    limit = max(1, min(_as_int(limit or 20, "limit"), MAX_ROWS))
-
-    mask = pd.Series(True, index=df.index)
-    for cond in filters:
-        mask &= _mask(df, cond, allowed, data)
-    work = df[mask]
-    steps = [f"Level: {level} ({len(df)} rows total)."]
-    if filters:
-        steps.append("Filters: " + "; ".join(_describe_cond(c) for c in filters) + f" → {len(work)} rows.")
-
-    if aggregations or group_by:
-        bad = [g for g in group_by if g not in dims]
-        if bad:
-            raise ToolInputError(f"Cannot group by {bad}. Allowed: {dims}")
-        if not aggregations:
-            aggregations = [{"func": "count", "label": "n"}]
-        keys = group_by or None
-        grouped = work.groupby(keys) if keys else None
-        out = (work[group_by].drop_duplicates().set_index(group_by) if keys
-               else pd.DataFrame(index=[0]))
-        out["n"] = grouped.size() if keys else len(work)
-        for agg in aggregations:
-            if not isinstance(agg, dict):
-                raise ToolInputError("Each aggregation must be an object.")
-            func = agg.get("func")
-            fld = agg.get("field")
-            where = agg.get("where")
-            label = str(agg.get("label") or f"{func}_{fld or 'rows'}")
-            if func not in AGG_FUNCS:
-                raise ToolInputError(f"Unknown func '{func}'. Allowed: {list(AGG_FUNCS)}")
-            if label in out.columns or label in group_by:
-                raise ToolInputError(f"Label '{label}' clashes with another output column.")
-            if func in ("count", "share"):
-                if func == "share" and not where:
-                    raise ToolInputError("'share' needs a 'where' condition.")
-                hit = _mask(work, where, allowed, data) if where else pd.Series(True, index=work.index)
-                if keys:
-                    series = hit.groupby([work[k] for k in group_by]).sum() if func == "count" \
-                        else 100 * hit.groupby([work[k] for k in group_by]).mean()
-                    out[label] = series.fillna(0) if func == "count" else series
-                else:
-                    out[label] = hit.sum() if func == "count" else (100 * hit.mean() if len(hit) else None)
-                desc = f"{label} = {'count' if func == 'count' else '% of rows'}"
-                steps.append(desc + (f" where {_describe_cond(where)}" if where else "") + ".")
-            else:
-                measures = [c for c in MEASURES[level] if c in work.columns]
-                if func in ("nunique", "min", "max"):
-                    if fld not in allowed or fld not in work.columns:
-                        raise ToolInputError(f"Unknown field '{fld}'. Allowed: {allowed}")
-                elif fld not in measures:
-                    raise ToolInputError(f"'{func}' needs a numeric measure: {measures}")
-                if where:
-                    sub = work[_mask(work, where, allowed, data)]
-                else:
-                    sub = work
-                if keys:
-                    out[label] = sub.groupby(group_by)[fld].agg(func)
-                    if func in ("sum", "nunique"):
-                        out[label] = out[label].fillna(0)
-                else:
-                    out[label] = sub[fld].agg(func) if len(sub) or func in ("sum", "nunique") else None
-                steps.append(f"{label} = {func} of {fld}"
-                             + (f" where {_describe_cond(where)}" if where else "") + ".")
-        out = out.reset_index() if keys else out
-        if min_count:
-            min_count = _as_int(min_count, "min_count")
-            out = out[out["n"] >= min_count]
-            steps.append(f"Groups with fewer than {min_count} rows dropped.")
-        if group_by:
-            steps.append("Grouped by " + ", ".join(group_by) + "; n = rows per group.")
+        worst_src = ranked[ranked["TEGNum"] != 2]  # TEG 2 had 3 rounds
     else:
-        cols = columns or [c for c in dims + MEASURES[level] if c in work.columns and c != "Pl"]
-        bad = [c for c in cols if c not in allowed]
-        if bad:
-            raise ToolInputError(f"Unknown columns {bad}. Allowed: {allowed}")
-        out = work[cols]
+        worst_src = ranked
+    best = prepare_records_table(ranked, level)
+    worst = prepare_worst_records_table(worst_src, level)
 
-    if sort_by:
-        if sort_by not in out.columns:
-            raise ToolInputError(f"sort_by '{sort_by}' is not an output column: {list(out.columns)}")
-        out = out.sort_values(sort_by, ascending=not descending, kind="stable")
-        steps.append(f"Sorted by {sort_by} ({'high→low' if descending else 'low→high'}).")
-    rows, truncated = _records(out, limit)
+    def rows(df: pd.DataFrame) -> list[dict]:
+        return [{"record": str(r.iloc[0]), "value": str(r.iloc[1]),
+                 "player": str(r.iloc[2]), "when": str(r.iloc[3])} for _, r in df.iterrows()]
+    tab = {"teg": "teg", "round": "round", "nine": "9hole"}[scope]
     return {
-        "level": level,
-        "rows_matched": int(len(work)),
-        "result": rows,
-        "truncated": truncated,
-        "calculation": steps,
+        "scope": scope,
+        "best": rows(best),
+        "worst": rows(worst),
+        "notes": [
+            "Every record holder is listed; several rows for one record means a tie.",
+            "TEG records count completed TEGs only; worst TEGs exclude TEG 2 (3 rounds).",
+        ],
+        "page": f"/records?tab={tab}",
     }
 
 
 # ---------------------------------------------------------------------------
 # Tool schemas (Anthropic tool-use format) and dispatch
 # ---------------------------------------------------------------------------
-_COND_SCHEMA = {
-    "type": "object",
-    "properties": {
-        "field": {"type": "string"},
-        "op": {"type": "string", "enum": list(OPS)},
-        "value": {"description": "Number, string, boolean, or a list for in/not_in."},
-    },
-    "required": ["field", "op", "value"],
-}
-
 TOOL_SCHEMAS = [
     {
         "name": "get_honours",
         "description": (
-            "Winners of each completed TEG (TEG Trophy, Green Jacket, Wooden Spoon) and how many "
-            "times each player has won each. Use for 'who has won most', 'who won TEG 12', etc. "
-            "This is the official record, including manual overrides."
+            "Official winners of each completed TEG (TEG Trophy, Green Jacket, Wooden Spoon) "
+            "and win counts per player, including manual overrides."
         ),
         "input_schema": {
             "type": "object",
             "properties": {"competition": {"type": "string", "enum": ["all", *COMPETITIONS]}},
             "required": [],
+        },
+    },
+    {
+        "name": "get_records",
+        "description": (
+            "All-time records exactly as the site's Records page shows them, with every "
+            "tied holder: best and worst gross, score, net and Stableford for a whole TEG, a "
+            "round, or a 9 (scope teg/round/nine); or most/fewest eagles, birdies, pars etc. "
+            "in a round or TEG (scope score_counts)."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {"scope": {"type": "string", "enum": [*RECORD_SCOPES, "score_counts"]}},
+            "required": ["scope"],
         },
     },
     {
@@ -488,63 +419,18 @@ TOOL_SCHEMAS = [
             "required": [],
         },
     },
-    {
-        "name": "query_scores",
-        "description": (
-            "Flexible, validated query over the score data for anything the other tools don't "
-            "cover. Pick a level: 'hole' (one row per player per hole), 'round' (per player per "
-            "round) or 'teg' (per player per TEG, with TrophyPosition, JacketPosition, FieldSize "
-            "and Complete; positions are blank for a TEG in progress. JacketPosition is the gross "
-            "rank: official winners, including the TEG 5 Jacket override, come from get_honours). "
-            "Filter, then either list rows (columns + sort_by) or group_by and "
-            "aggregate. Aggregation funcs: count, share (% of rows meeting 'where'), sum, mean, "
-            "median, min, max, nunique. Each aggregation may have its own 'where' filter. "
-            "Every grouped output includes n (rows per group); use min_count to drop tiny samples. "
-            "Measures: Sc (strokes), GrossVP (gross vs par), NetVP (net vs par), Stableford, HC "
-            "(handicap). Hole-level also has PAR, SI, Hole, FrontBack. Birdie or better is "
-            "GrossVP <= -1; par or better GrossVP <= 0; bogey GrossVP == 1; double bogey or "
-            "worse GrossVP >= 2."
-        ),
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "level": {"type": "string", "enum": ["hole", "round", "teg"]},
-                "filters": {"type": "array", "items": _COND_SCHEMA},
-                "group_by": {"type": "array", "items": {"type": "string"}},
-                "aggregations": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "func": {"type": "string", "enum": list(AGG_FUNCS)},
-                            "field": {"type": "string"},
-                            "where": _COND_SCHEMA,
-                            "label": {"type": "string"},
-                        },
-                        "required": ["func"],
-                    },
-                },
-                "columns": {"type": "array", "items": {"type": "string"}},
-                "sort_by": {"type": "string"},
-                "descending": {"type": "boolean"},
-                "limit": {"type": "integer"},
-                "min_count": {"type": "integer"},
-            },
-            "required": ["level"],
-        },
-    },
 ]
 
 _DISPATCH = {
     "get_honours": get_honours,
+    "get_records": get_records,
     "get_streak_records": get_streak_records,
     "get_bounce_back": get_bounce_back,
-    "query_scores": query_scores,
 }
 
 
 def run_tool(name: str, tool_input: dict, data: ChatData) -> dict:
-    """Run one tool. Input errors come back as {"error": ...} for the model to fix."""
+    """Run one lookup. Input errors come back as {"error": ...} for the model to fix."""
     fn = _DISPATCH.get(name)
     if fn is None:
         return {"error": f"Unknown tool '{name}'."}

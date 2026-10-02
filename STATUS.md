@@ -6,7 +6,7 @@ Current state and next priorities. Instructions and architecture live in `CLAUDE
 
 ## 2026-10-02 — TEGBot 5000: ask the stats in plain English
 
-New `/tegbot` page, in the nav as "Ask TEGBot". Claude (Sonnet) picks from four deterministic tools: honours, streaks, bounce-back, and `query_scores`, a validated filter/group/aggregate query over hole, round and TEG data with finishing positions. All numbers come from code. Answers state assumptions and sample sizes, link to the matching site page, and show their workings. Follow-up questions keep context. Live tests: about 6 seconds and 1–2¢ a question. New stat: bounce-back rate (`teg_analysis/analysis/bounceback.py`), not yet on its own page. Package: `teg_analysis/chatbot/`; page notes: `webapp/README.md` → TEGBot 5000.
+New `/tegbot` page, in the nav as "Ask TEGBot". Lookups first: honours, records (every tied holder), streaks and bounce-back, using the site's own definitions. Anything else, Claude (Sonnet) writes pandas that runs in Anthropic's code sandbox against uploaded hole, round, TEG and winner CSVs. Model code never runs on our server. Answers state assumptions and sample sizes, link the matching page, and show their workings, including the code. Follow-ups keep context. Live tests: 3–13 seconds and 1–3p a question. New stat: bounce-back rate (`teg_analysis/analysis/bounceback.py`), not yet on its own page. Package: `teg_analysis/chatbot/`; page notes: `webapp/README.md` → TEGBot 5000.
 
 ## 2026-10-02 — Player profile redesigned as an almanac page
 

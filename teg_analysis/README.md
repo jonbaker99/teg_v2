@@ -109,12 +109,16 @@ teg_analysis/
     scoring.py       3-axis combination + mode weights
 
   chatbot/           TEGBot 5000 — answers stat questions in plain English
-    tools.py         Deterministic tools (honours, streaks, bounce-back, query_scores — a
-                     validated filter/group/aggregate query over hole/round/TEG data) and
-                     their Anthropic tool schemas; ChatData takes the caller's cached loaders
-    prompt.py        System prompt + SITE_PAGES, the only links the bot may give
-    bot.py           ask(): the Claude tool-use loop (lazy SDK import, Sonnet by default,
-                     TEGBOT_MODEL to override); returns text, tool calls and token usage
+    tools.py         Lookups (get_honours, get_records, get_streak_records, get_bounce_back):
+                     full, tie-complete results with the site's own definitions. ChatData
+                     takes the caller's cached loaders and builds the sandbox CSVs
+                     (datasets(): holes, rounds with round/after-round positions, tegs
+                     with finishing positions, winners)
+    prompt.py        System prompt, DATA_GUIDE (the CSVs' columns and rules for code) and
+                     SITE_PAGES, the only links the bot may give
+    bot.py           ask(): the Claude loop — lookups plus Anthropic's code-execution
+                     sandbox (CSVs uploaded once per data version via the Files API);
+                     returns text, every lookup/code step, and token usage
 
   display/           Formatting and output
     formatters.py    Format data for display (HTML, styled tables)

@@ -8,11 +8,11 @@
             {{ answer_html | safe }}
             {% if tool_calls %}
             <details class="tb-workings">
-                <summary>Show the workings ({{ tool_calls | length }} lookup{{ 's' if tool_calls | length != 1 }})</summary>
+                <summary>Show the workings ({{ tool_calls | length }} step{{ 's' if tool_calls | length != 1 }})</summary>
                 {% for c in tool_calls %}
                 <div><strong>{{ c.name }}</strong></div>
-                <pre>Asked: {{ c.input }}</pre>
-                <pre>Got: {{ c.output }}</pre>
+                <pre>{{ c.input }}</pre>
+                <pre>→ {{ c.output }}</pre>
                 {% endfor %}
             </details>
             {% endif %}

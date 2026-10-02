@@ -218,7 +218,7 @@ Two distinct phases. **Streamlit is the original architecture** — self-contain
    - `analysis/` — scoring, rankings, aggregation, streaks, records, eclectic, handicaps, commentary, pipeline, data_update, history, performance, leaderboards, bestball, live_round, round_setup, round_wizard
    - `display/` — formatting, HTML tables, scorecards, nav utilities. Returns HTML strings; never calls `st.write`
    - `reporting/` — LLM-powered tournament reports, plus a free, non-LLM PDF-rendering stage (`report_pdf.py`)
-   - `chatbot/` — TEGBot 5000 (`/tegbot`). The model only picks tools and writes the answer; every number comes from deterministic tools in `chatbot/tools.py`. New stat questions the bot can't answer are fixed by adding a tool, never by letting the model calculate
+   - `chatbot/` — TEGBot 5000 (`/tegbot`). Lookups first (`chatbot/tools.py`: honours, records, streaks, bounce-back, using the site's own definitions and returning full, tie-complete results); otherwise the model writes pandas that runs in **Anthropic's code-execution sandbox** against CSVs built by `ChatData.datasets()` and documented in `prompt.DATA_GUIDE`. Model-written code never runs on our server. The model must not do arithmetic itself. Clearly definable, frequently asked questions earn a lookup; for everything else, improve the data guide or datasets
    - `api/` — placeholder for the REST API layer
 
 2. **`streamlit/`** — the original app, self-contained via its own `utils.py`. **Dead code kept for reference only**: not deployed, not maintained, not migrated, and nothing else in the repo depends on it. Slated for deletion. Never modify it, and don't use it as a model for new work.
