@@ -129,10 +129,45 @@ def test_query_scores_player_filter_resolves_names(data):
     ({"level": "hole", "aggregations": [{"func": "share"}]}, "needs a 'where'"),
     ({"level": "hole", "group_by": ["Sc"]}, "Cannot group by"),
     ({"level": "hole", "nonsense": 1}, "Bad arguments"),
+    ({"level": "hole", "filters": [{"field": "Hole", "op": "==", "value": [1, 2]}]}, "Bad input"),
+    ({"level": "hole", "group_by": ["Player"],
+      "aggregations": [{"func": "mean", "field": "Sc", "label": "Player"}]}, "clashes"),
+    ({"level": "hole", "limit": "abc"}, "whole number"),
+    ({"level": "hole", "aggregations": [{"func": "sum", "field": "Player"}]}, "numeric measure"),
 ])
 def test_query_scores_bad_input_returns_error(data, tool_input, message):
     out = run_tool("query_scores", tool_input, data)
     assert message in out["error"]
+
+
+def test_query_scores_where_sum_is_zero_not_null(data):
+    out = run_tool("query_scores", {
+        "level": "hole", "group_by": ["Player"],
+        "aggregations": [{"func": "sum", "field": "Sc", "label": "s",
+                          "where": {"field": "TEGNum", "op": "==", "value": 99}}],
+    }, data)
+    assert {r["s"] for r in out["result"]} == {0}
+
+
+def test_query_scores_complete_accepts_string_bool(data):
+    out = run_tool("query_scores", {
+        "level": "teg", "filters": [{"field": "Complete", "op": "==", "value": "true"}],
+        "aggregations": [{"func": "count", "label": "c"}],
+    }, data)
+    assert out["result"][0]["c"] == 5
+
+
+def test_positions_blank_for_teg_in_progress(data):
+    data.completed_tegs = lambda: {8}
+    out = run_tool("query_scores", {
+        "level": "teg", "filters": [{"field": "TEGNum", "op": "==", "value": 9}],
+        "columns": ["Player", "TrophyPosition"],
+    }, data)
+    assert all(r["TrophyPosition"] is None for r in out["result"])
+
+
+def test_bounce_back_bad_teg(data):
+    assert "whole number" in run_tool("get_bounce_back", {"teg": "twelve"}, data)["error"]
 
 
 def test_unknown_tool(data):
@@ -201,6 +236,15 @@ def test_ask_flags_tool_errors_to_model(data):
     assert client.calls[1]["messages"][-1]["content"][0]["is_error"] is True
 
 
+def test_ask_last_round_forbids_tools(data):
+    tool_use = SimpleNamespace(type="tool_use", id="t", name="get_honours", input={})
+    client = FakeClient([_resp([tool_use], "tool_use")] * bot.MAX_TOOL_ROUNDS
+                        + [_resp([SimpleNamespace(type="text", text="done")], "end_turn")])
+    assert bot.ask("q", data, client=client).text == "done"
+    assert client.calls[-1]["tool_choice"] == {"type": "none"}
+    assert client.calls[0]["tool_choice"] == {"type": "auto"}
+
+
 def test_ask_handles_refusal(data):
     client = FakeClient([_resp([], "refusal")])
     assert "can't help" in bot.ask("q", data, client=client).text
@@ -218,6 +262,10 @@ def test_clean_history_keeps_alternating_text_turns():
         {"role": "user", "content": "q1"}, {"role": "assistant", "content": "a1"},
     ]
     assert bot.clean_history("nope") == []
+    long = [{"role": "user", "content": "q" * 3000}, {"role": "assistant", "content": "a" * 3000}] * 3
+    trimmed = bot.clean_history(long)
+    assert sum(len(t["content"]) for t in trimmed) <= bot.MAX_HISTORY_CHARS
+    assert trimmed[0]["role"] == "user"
 
 
 # --- route --------------------------------------------------------------------
@@ -230,6 +278,8 @@ def test_render_answer_html_escapes_and_keeps_only_local_links():
     assert "<script>" not in out
     assert 'href="/honours?tab=trophy"' in out
     assert "evil.example" not in out and "javascript:" not in out
+    out = render_answer_html("[x](/\\evil.com) ![p](https://evil.example/p.png)")
+    assert "evil" not in out and "<img" not in out
 
 
 def test_render_answer_html_lists_without_blank_line():
@@ -272,6 +322,24 @@ def test_ask_route_daily_cap(client, monkeypatch):
     monkeypatch.setenv("TEGBOT_DAILY_LIMIT", "1")
     assert "workings" in client.post("/tegbot/ask", data={"question": "q"}).text
     assert "fill of questions" in client.post("/tegbot/ask", data={"question": "q"}).text
+
+
+def test_ask_route_rate_limit_uses_rightmost_forwarded_ip(client, monkeypatch):
+    import webapp.routes.tegbot as route
+    monkeypatch.setattr(route, "PER_VISITOR_HOURLY", 1)
+    for spoof in ("1.1.1.1", "2.2.2.2"):
+        resp = client.post("/tegbot/ask", data={"question": "q"},
+                           headers={"x-forwarded-for": f"{spoof}, 9.9.9.9"})
+    assert "breather" in resp.text
+
+
+def test_ask_route_refunds_slot_on_failure(client, monkeypatch):
+    import webapp.routes.tegbot as route
+    def boom(*a, **k):
+        raise RuntimeError("api down")
+    monkeypatch.setattr(route.bot, "ask", boom)
+    assert "fell over" in client.post("/tegbot/ask", data={"question": "q"}).text
+    assert route._daily["count"] == 0
 
 
 def test_ask_route_empty_question(client):

@@ -110,6 +110,9 @@ class ChatData:
                 net_pos.append(grp["Stableford"].rank(method="min", ascending=False))
         df["TrophyPosition"] = pd.concat(net_pos).astype(int)
         df["FieldSize"] = df.groupby("TEGNum")["Player"].transform("size")
+        # A TEG in progress has partial totals; a position from them isn't a finish.
+        for col in ("JacketPosition", "TrophyPosition"):
+            df[col] = df[col].astype("Int64").where(df["Complete"])
         return df.sort_values(["TEGNum", "TrophyPosition"]).reset_index(drop=True)
 
 
@@ -118,6 +121,13 @@ class ChatData:
 # ---------------------------------------------------------------------------
 class ToolInputError(ValueError):
     """Bad tool input — reported back to the model, never to the user as a crash."""
+
+
+def _as_int(value: Any, name: str) -> int:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        raise ToolInputError(f"{name} must be a whole number, not {value!r}.") from None
 
 
 def resolve_player(value: str, players: dict[str, str]) -> str:
@@ -225,7 +235,8 @@ def get_bounce_back(data: ChatData, basis: str = "gross", trigger: str = "bogey_
                     teg: Optional[int] = None) -> dict:
     holes = data.holes()
     if teg is not None:
-        holes = holes[holes["TEGNum"] == int(teg)]
+        teg = _as_int(teg, "teg")
+        holes = holes[holes["TEGNum"] == teg]
         if holes.empty:
             raise ToolInputError(f"No data for TEG {teg}.")
     try:
@@ -293,6 +304,8 @@ def _normalise_value(field_name: str, value: Any, data: ChatData) -> Any:
         if isinstance(value, list):
             return [resolve_player(v, data.players()) for v in value]
         return resolve_player(value, data.players())
+    if field_name == "Complete" and isinstance(value, str):
+        return value.strip().lower() in ("true", "1", "yes")
     if field_name == "Pl":
         return [str(v).upper() for v in value] if isinstance(value, list) else str(value).upper()
     return value
@@ -326,7 +339,7 @@ def query_scores(data: ChatData, level: str, filters: Optional[list] = None,
     filters = filters or []
     group_by = group_by or []
     aggregations = aggregations or []
-    limit = max(1, min(int(limit or 20), MAX_ROWS))
+    limit = max(1, min(_as_int(limit or 20, "limit"), MAX_ROWS))
 
     mask = pd.Series(True, index=df.index)
     for cond in filters:
@@ -353,9 +366,11 @@ def query_scores(data: ChatData, level: str, filters: Optional[list] = None,
             func = agg.get("func")
             fld = agg.get("field")
             where = agg.get("where")
-            label = agg.get("label") or f"{func}_{fld or 'rows'}"
+            label = str(agg.get("label") or f"{func}_{fld or 'rows'}")
             if func not in AGG_FUNCS:
                 raise ToolInputError(f"Unknown func '{func}'. Allowed: {list(AGG_FUNCS)}")
+            if label in out.columns or label in group_by:
+                raise ToolInputError(f"Label '{label}' clashes with another output column.")
             if func in ("count", "share"):
                 if func == "share" and not where:
                     raise ToolInputError("'share' needs a 'where' condition.")
@@ -363,27 +378,34 @@ def query_scores(data: ChatData, level: str, filters: Optional[list] = None,
                 if keys:
                     series = hit.groupby([work[k] for k in group_by]).sum() if func == "count" \
                         else 100 * hit.groupby([work[k] for k in group_by]).mean()
-                    out[label] = series
+                    out[label] = series.fillna(0) if func == "count" else series
                 else:
                     out[label] = hit.sum() if func == "count" else (100 * hit.mean() if len(hit) else None)
                 desc = f"{label} = {'count' if func == 'count' else '% of rows'}"
                 steps.append(desc + (f" where {_describe_cond(where)}" if where else "") + ".")
             else:
-                if fld not in allowed or fld not in work.columns:
-                    raise ToolInputError(f"Unknown field '{fld}'. Allowed: {allowed}")
+                measures = [c for c in MEASURES[level] if c in work.columns]
+                if func in ("nunique", "min", "max"):
+                    if fld not in allowed or fld not in work.columns:
+                        raise ToolInputError(f"Unknown field '{fld}'. Allowed: {allowed}")
+                elif fld not in measures:
+                    raise ToolInputError(f"'{func}' needs a numeric measure: {measures}")
                 if where:
                     sub = work[_mask(work, where, allowed, data)]
                 else:
                     sub = work
                 if keys:
                     out[label] = sub.groupby(group_by)[fld].agg(func)
+                    if func in ("sum", "nunique"):
+                        out[label] = out[label].fillna(0)
                 else:
-                    out[label] = sub[fld].agg(func)
+                    out[label] = sub[fld].agg(func) if len(sub) or func in ("sum", "nunique") else None
                 steps.append(f"{label} = {func} of {fld}"
                              + (f" where {_describe_cond(where)}" if where else "") + ".")
         out = out.reset_index() if keys else out
         if min_count:
-            out = out[out["n"] >= int(min_count)]
+            min_count = _as_int(min_count, "min_count")
+            out = out[out["n"] >= min_count]
             steps.append(f"Groups with fewer than {min_count} rows dropped.")
         if group_by:
             steps.append("Grouped by " + ", ".join(group_by) + "; n = rows per group.")
@@ -472,7 +494,9 @@ TOOL_SCHEMAS = [
             "Flexible, validated query over the score data for anything the other tools don't "
             "cover. Pick a level: 'hole' (one row per player per hole), 'round' (per player per "
             "round) or 'teg' (per player per TEG, with TrophyPosition, JacketPosition, FieldSize "
-            "and Complete). Filter, then either list rows (columns + sort_by) or group_by and "
+            "and Complete; positions are blank for a TEG in progress. JacketPosition is the gross "
+            "rank: official winners, including the TEG 5 Jacket override, come from get_honours). "
+            "Filter, then either list rows (columns + sort_by) or group_by and "
             "aggregate. Aggregation funcs: count, share (% of rows meeting 'where'), sum, mean, "
             "median, min, max, nunique. Each aggregation may have its own 'where' filter. "
             "Every grouped output includes n (rows per group); use min_count to drop tiny samples. "
@@ -532,3 +556,5 @@ def run_tool(name: str, tool_input: dict, data: ChatData) -> dict:
         return {"error": str(exc)}
     except TypeError as exc:
         return {"error": f"Bad arguments: {exc}"}
+    except (ValueError, KeyError, IndexError) as exc:
+        return {"error": f"Bad input: {exc}"}

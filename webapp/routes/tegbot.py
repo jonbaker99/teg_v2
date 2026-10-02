@@ -37,6 +37,7 @@ templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templa
 
 PER_VISITOR_HOURLY = 20
 DEFAULT_DAILY_LIMIT = 200
+MAX_HISTORY_BYTES = 64_000
 
 EXAMPLE_QUESTIONS = [
     "Who's won the most TEG Trophies?",
@@ -63,8 +64,18 @@ def _daily_limit() -> int:
 
 
 def _visitor_key(request: Request) -> str:
+    # Rightmost entry: added by Railway's edge, so a client can't rotate it to
+    # dodge the limit. Leftmost entries are whatever the client chose to send.
     forwarded = request.headers.get("x-forwarded-for", "")
-    return forwarded.split(",")[0].strip() or (request.client.host if request.client else "?")
+    return forwarded.split(",")[-1].strip() or (request.client.host if request.client else "?")
+
+
+def _refund_slot(visitor: str) -> None:
+    """Give back a question that failed through no fault of the visitor."""
+    with _lock:
+        if _visitor_hits[visitor]:
+            _visitor_hits[visitor].pop()
+        _daily["count"] = max(0, _daily["count"] - 1)
 
 
 def _take_slot(visitor: str) -> str | None:
@@ -87,6 +98,7 @@ def _take_slot(visitor: str) -> str | None:
 
 
 _HREF = re.compile(r'<a href="([^"]*)"')
+_IMG = re.compile(r"<img\b[^>]*>")
 _LIST_START = re.compile(r"^\s*(?:[-*+]|\d+\.)\s")
 
 
@@ -107,9 +119,10 @@ def render_answer_html(text: str) -> str:
 
     def _keep_local(match: re.Match) -> str:
         href = match.group(1)
-        if href.startswith("/") and not href.startswith("//"):
+        if href.startswith("/") and not href.startswith("//") and "\\" not in href:
             return f'<a href="{href}"'
         return "<a"
+    out = _IMG.sub("", out)  # no external images (tracking pixels)
     return _HREF.sub(_keep_local, out)
 
 
@@ -140,11 +153,12 @@ def tegbot_ask(request: Request, question: str = Form(""), history: str = Form("
         return _reply(error="Ask me something first.")
     if not _enabled():
         return _reply(error="TEGBot is switched off at the moment.")
-    refusal = _take_slot(_visitor_key(request))
+    visitor = _visitor_key(request)
+    refusal = _take_slot(visitor)
     if refusal:
         return _reply(error=refusal)
     try:
-        prior = json.loads(history)
+        prior = json.loads(history) if len(history) <= MAX_HISTORY_BYTES else []
     except (json.JSONDecodeError, TypeError):
         prior = []
 
@@ -153,6 +167,7 @@ def tegbot_ask(request: Request, question: str = Form(""), history: str = Form("
         answer = bot.ask(question, _chat_data(), history=prior)
     except Exception:
         logger.exception("TEGBot failed on %r", question)
+        _refund_slot(visitor)
         return _reply(error="TEGBot fell over. Try again in a moment.")
     logger.info(
         "TEGBot q=%r tools=%s secs=%.1f cost=$%.4f usage=%s",

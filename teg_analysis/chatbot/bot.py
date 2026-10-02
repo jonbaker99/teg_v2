@@ -24,6 +24,7 @@ MAX_TOOL_ROUNDS = 6
 MAX_TOKENS = 4000
 MAX_QUESTION_CHARS = 500
 MAX_HISTORY_TURNS = 6
+MAX_HISTORY_CHARS = 8000
 
 # $ per million tokens: (input, output). Cache reads bill at 10% of input,
 # cache writes at 125%. Used only for the cost line in the logs.
@@ -98,6 +99,9 @@ def clean_history(history: Any) -> list[dict]:
             out.append(t)
     if out and out[-1]["role"] == "user":
         out.pop()
+    # Keep the newest turns within a total size budget, still starting on a user turn.
+    while out and sum(len(t["content"]) for t in out) > MAX_HISTORY_CHARS:
+        out = out[2:]
     return out
 
 
@@ -120,13 +124,16 @@ def ask(question: str, data: ChatData, history: Optional[list] = None,
     calls: list[ToolCall] = []
     usage: dict = {}
 
-    for _ in range(MAX_TOOL_ROUNDS + 1):
+    for attempt in range(MAX_TOOL_ROUNDS + 1):
+        last = attempt == MAX_TOOL_ROUNDS
         response = client.beta.messages.create(
             model=model,
             max_tokens=MAX_TOKENS,
             system=system,
             tools=TOOL_SCHEMAS,
             messages=messages,
+            # Out of steps: answer from what the tools already returned.
+            tool_choice={"type": "none" if last else "auto"},
             output_config={"effort": "medium"},
             betas=["server-side-fallback-2026-07-01"],
             fallbacks="default",
