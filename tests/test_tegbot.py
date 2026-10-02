@@ -313,7 +313,8 @@ def test_render_answer_html_lists_without_blank_line():
 
 
 @pytest.fixture
-def client(monkeypatch):
+def client(monkeypatch, tmp_path):
+    monkeypatch.setenv("TEGBOT_LOG_PATH", str(tmp_path / "qa_log.jsonl"))
     from fastapi.testclient import TestClient
     import webapp.routes.tegbot as route
     from webapp.app import app
@@ -368,3 +369,47 @@ def test_ask_route_refunds_slot_on_failure(client, monkeypatch):
 
 def test_ask_route_empty_question(client):
     assert "Ask me something" in client.post("/tegbot/ask", data={"question": "  "}).text
+
+
+# --- shared Q&A log -------------------------------------------------------------
+
+def test_qa_log_groups_conversations_newest_first(monkeypatch, tmp_path):
+    from teg_analysis.chatbot import qa_log
+    monkeypatch.setenv("TEGBOT_LOG_PATH", str(tmp_path / "sub" / "log.jsonl"))
+    kw = dict(answer="a", workings=[], model="m", cost_usd=0.01, seconds=1.0)
+    qa_log.append_entry(conv="aaaaaaaa", question="q1", **kw)
+    qa_log.append_entry(conv="bbbbbbbb", question="q2", **kw)
+    qa_log.append_entry(conv="aaaaaaaa", question="q1 follow-up", **kw)
+    with open(tmp_path / "sub" / "log.jsonl", "a") as fh:
+        fh.write("not json\n")
+    threads = qa_log.conversations()
+    assert [[e["question"] for e in t] for t in threads] == [["q1", "q1 follow-up"], ["q2"]]
+
+
+def test_qa_log_rejects_bad_conv_ids():
+    from teg_analysis.chatbot import qa_log
+    assert qa_log.clean_conv_id("ABCDEF12") == "abcdef12"
+    bad = qa_log.clean_conv_id("../../etc/passwd")
+    assert bad != "../../etc/passwd" and len(bad) == 32
+
+
+def test_ask_route_logs_and_asked_page_shows_thread(client):
+    client.post("/tegbot/ask", data={"question": "Who won?", "conv": "c0ffee00"})
+    client.post("/tegbot/ask", data={"question": "And second?", "conv": "c0ffee00"})
+    page = client.get("/tegbot/asked")
+    assert page.status_code == 200
+    assert page.text.index("Who won?") < page.text.index("And second?")
+    assert "2 questions" in page.text
+    assert 'href="/honours"' in page.text
+
+
+def test_ask_route_survives_log_failure(client, monkeypatch):
+    import webapp.routes.tegbot as route
+    def broken(**kw):
+        raise OSError("disk full")
+    monkeypatch.setattr(route.qa_log, "append_entry", broken)
+    assert "Show the workings" in client.post("/tegbot/ask", data={"question": "q"}).text
+
+
+def test_asked_page_empty(client):
+    assert "Nobody has asked anything yet" in client.get("/tegbot/asked").text

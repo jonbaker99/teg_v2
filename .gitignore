@@ -54,3 +54,5 @@ node_modules/
 
 # Per-machine Claude Code permissions; never commit
 .claude/settings.local.json
+# TEGBot's shared Q&A log when run locally (on Railway it lives on the volume).
+data/tegbot/

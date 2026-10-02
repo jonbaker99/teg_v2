@@ -119,6 +119,8 @@ teg_analysis/
     bot.py           ask(): the Claude loop — lookups plus Anthropic's code-execution
                      sandbox (CSVs uploaded once per data version via the Files API);
                      returns text, every lookup/code step, and token usage
+    qa_log.py        Shared Q&A log (JSONL on the volume, outside data/ so never synced):
+                     append_entry, conversations() for the "What others asked" page
 
   display/           Formatting and output
     formatters.py    Format data for display (HTML, styled tables)

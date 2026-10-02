@@ -72,6 +72,8 @@ webapp only ever serves the bytes. See [§10](#10-report-build--scores--publishe
 
 `live_rounds.csv` / `live_rounds/{token}.csv` back multi-device live round entry (`teg_analysis/analysis/live_round.py`, `/live-round/{token}`) — an admin starts a live round for an already-set-up TEG+Round, gets a shareable link, and players enter scores from their own phones with the server (not client clocks) arbitrating write order and flagging genuine conflicts. The per-round staging file is written `defer_github=True` on every score entry (volume-only, never committed — it's a staging area, not the record) and is archived once finalized, at which point its scores are converted to the same long-format shape the "add a round" flow uses and written via the existing `execute_data_update`. Backups, data, caches and the registry flip land in one GitHub commit. The admin page runs finalise as a background job (`webapp/finalize_jobs.py`). See `DATA_STORAGE_INGESTION_PLAN.md`, "Phase 3.4 design", for the full model (conflict resolution, polling, device identity).
 
+**Outside `data/`, volume-only:** `tegbot/qa_log.jsonl` is TEGBot's shared Q&A log (`teg_analysis/chatbot/qa_log.py`): one JSON line per answered question (question, answer, workings, model, cost, chat id; no visitor identity), read by `/tegbot/asked`. It is deliberately not in `data/`, so it is never GitHub-synced and a question never makes a commit. Locally it is `data/tegbot/qa_log.jsonl` (gitignored). Railway PR environments get their own volume copy, so preview questions don't reach production's log.
+
 ---
 
 ## 2. I/O Layer

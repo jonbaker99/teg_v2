@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title_suffix %} — What others asked TEGBot{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+    <span class="page-label">TEGBot 5000</span>
+    <h1 class="page-title">What others asked</h1>
+</div>
+{% endblock %}
+
+{% block extra_head %}{% include "partials/tegbot_styles.html" %}{% endblock %}
+
+{% block content %}
+<p class="tb-intro">Every question put to TEGBot, newest chat first. Tap a question to see the answer.</p>
+<a class="tb-asked-link" href="/tegbot">← Ask your own question</a>
+
+{% if not conversations %}
+<p class="tb-intro">Nobody has asked anything yet.</p>
+{% endif %}
+
+{% for conv in conversations %}
+<section class="tb-conv">
+    <div class="tb-conv-meta">{{ conv[0].when }}{% if conv | length > 1 %} / {{ conv | length }} questions{% endif %}</div>
+    {% for e in conv %}
+    <details class="tb-past">
+        <summary><span class="tb-q">{{ e.question }}</span></summary>
+        <div class="tb-a" style="margin-top: 8px;">
+            <div class="tb-answer">
+                {{ e.answer_html | safe }}
+                {% if e.workings %}
+                <details class="tb-workings">
+                    <summary>Show the workings ({{ e.workings | length }} step{{ 's' if e.workings | length != 1 }})</summary>
+                    {% for c in e.workings %}
+                    <div><strong>{{ c.name }}</strong></div>
+                    <pre>{{ c.input }}</pre>
+                    <pre>→ {{ c.output }}</pre>
+                    {% endfor %}
+                </details>
+                {% endif %}
+            </div>
+        </div>
+    </details>
+    {% endfor %}
+</section>
+{% endfor %}
+{% endblock %}

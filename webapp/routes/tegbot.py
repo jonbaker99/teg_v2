@@ -25,7 +25,7 @@ from fastapi import APIRouter, Form, Request
 from fastapi.templating import Jinja2Templates
 
 import webapp.deps as deps
-from teg_analysis.chatbot import bot
+from teg_analysis.chatbot import bot, qa_log
 from teg_analysis.chatbot.tools import ChatData
 from teg_analysis.reporting.llm import has_api_key
 
@@ -157,7 +157,8 @@ def tegbot_page(request: Request):
 
 
 @router.post("/tegbot/ask")
-def tegbot_ask(request: Request, question: str = Form(""), history: str = Form("[]")):
+def tegbot_ask(request: Request, question: str = Form(""), history: str = Form("[]"),
+               conv: str = Form("")):
     question = question.strip()[:bot.MAX_QUESTION_CHARS]
     ctx = {"request": request, "question": question}
 
@@ -184,13 +185,44 @@ def tegbot_ask(request: Request, question: str = Form(""), history: str = Form("
         logger.exception("TEGBot failed on %r", question)
         _refund_slot(visitor)
         return _reply(error="TEGBot fell over. Try again in a moment.")
+    seconds = time.time() - started
     logger.info(
         "TEGBot q=%r tools=%s secs=%.1f cost=$%.4f usage=%s",
-        question, [c.name for c in answer.tool_calls], time.time() - started,
-        answer.cost_usd, answer.usage,
+        question, [c.name for c in answer.tool_calls], seconds, answer.cost_usd, answer.usage,
     )
+    workings = [_working(c) for c in answer.tool_calls]
+    try:
+        qa_log.append_entry(conv=conv, question=question, answer=answer.text, workings=workings,
+                            model=answer.model, cost_usd=answer.cost_usd, seconds=seconds)
+    except OSError:
+        # The shared log is a nice-to-have; never lose the visitor's answer over it.
+        logger.exception("TEGBot could not write the Q&A log")
     return _reply(
         answer_text=answer.history_text(),
         answer_html=render_answer_html(answer.text),
-        tool_calls=[_working(c) for c in answer.tool_calls],
+        tool_calls=workings,
     )
+
+
+def _when(iso: str) -> str:
+    try:
+        dt = datetime.fromisoformat(iso)
+    except (TypeError, ValueError):
+        return ""
+    return f"{dt.day} {dt:%b %Y}, {dt:%H:%M} UTC"
+
+
+@router.get("/tegbot/asked")
+def tegbot_asked(request: Request):
+    threads = []
+    for conv in qa_log.conversations(limit=50):
+        threads.append([
+            {**e, "when": _when(e.get("at")), "answer_html": render_answer_html(e.get("answer", "")),
+             "workings": [w for w in e.get("workings", []) if isinstance(w, dict)]}
+            for e in conv
+        ])
+    return templates.TemplateResponse("tegbot_asked.html", {
+        "request": request,
+        "active_page": "tegbot",
+        "conversations": threads,
+    })
