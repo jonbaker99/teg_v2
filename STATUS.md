@@ -4,6 +4,10 @@ Current state and next priorities. Instructions and architecture live in `CLAUDE
 
 **Last updated:** 2026-10-02 (TEG simulator)
 
+## 2026-10-02 — Simulator rolls on to the next TEG and allows first-ever eagles
+
+`/simulation` now targets the TEG after the last completed one. Without a saved scorecard, each simulation draws a random par-72 course from those played before. Without saved handicaps it uses the draft calculation. Players can be added or removed. A small blend of the whole group's scores, matched to each player's average, lets unseen results happen (eagle chance about 1-2% per player per TEG, in line with history). The total-score chart is smoothed. The summary adds eagle chance and expected blobs.
+
 ## 2026-10-02 — TEG simulator predicts the next TEG
 
 New `/simulation` page (Latest TEG menu) runs a Monte Carlo of TEG 19 on its real scorecard, roster and handicaps. Each hole is sampled from the player's past scores on holes of that par, weighted by TEG (default 50/35/15 on TEGs 18/17/16). By default a rolling window around the hole's SI pair (1-2, 3-4 …) widens until it holds 20 holes, weighting the exact pair most; fixed SI bands with shrinkage remain an option. Each player's TEG weights can be overridden, e.g. to skip an injury year. All-history data: SI 1-6 plays about 0.35 strokes harder than SI 7-18, with no clear trend inside 9-18. Output: average scores, a total-score chart and a finishing-position grid, gross or Stableford. Rare-event modelling and in-play conditioning are in `teg_analysis/TODOS.md`.

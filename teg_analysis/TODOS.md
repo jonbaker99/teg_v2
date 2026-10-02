@@ -6,7 +6,8 @@ Analysis package todos. Commentary/reporting pipeline tracked separately in [`re
 
 ## TEG simulator (`analysis/simulation.py`)
 
-- [ ] **Rare and unseen outcomes.** A player can only score what they have scored on that par/SI band in the weighted TEGs (plus par-level shrinkage), so a first-ever eagle on a par 5 has zero chance. Option: blend a small weight of the field-level distribution (all players, all TEGs) into every cell, adjusted for the player's mean.
+- [x] **Rare and unseen outcomes** — done 2026-10-02. Each cell blends in the field's distribution for that par/SI window, exponentially tilted to the player's mean (`field_alpha`, default 5 pseudo-holes). A sideways shift was tried first and gave ~10x too many eagles. Backtest TEGs 8-18: 2.4 eagles predicted vs 3 actual; higher alpha improves log-likelihood but over-predicts birdies (alpha 50: +20%).
+- [ ] **Field blend widens spread.** The field mixes players, so its shape is wider than any one player's; at alpha 5 birdies run ~8% above actual in the backtest. Consider blending only into outcomes the player has never had, or using a field of similar-ability players.
 - [ ] **Condition on holes already played.** During an in-progress TEG, use actual scores for played holes and simulate only the rest, for live win probabilities.
 - [ ] **Field-level SI effect.** An alternative to the rolling SI window: use the player's whole-par distribution shifted by the field's SI effect (SI 1-6 ≈ +0.35 strokes vs 7-18, measured on all history). Uses far more data per player; compare against the window.
 

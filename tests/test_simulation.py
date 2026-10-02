@@ -96,14 +96,14 @@ def test_k0_equals_raw_cell():
 
 def test_large_k_approaches_par_level():
     h = _hist([(1, "A", 4, 1, 0)] * 5 + [(1, "A", 4, 10, 2)] * 5)
-    d = sim.build_distributions(h, ["A"], {1: 1.0}, shrinkage=1e9, method="bands")
+    d = sim.build_distributions(h, ["A"], {1: 1.0}, shrinkage=1e9, method="bands", field_alpha=0)
     c = d.probs[(d.probs.Par == 4) & (d.probs.Band == 0)].set_index("GrossVP")["Prob"]
     assert c[0] == pytest.approx(0.5, abs=1e-6) and c[2] == pytest.approx(0.5, abs=1e-6)
 
 
 def test_zero_weight_teg_ignored():
     h = _hist([(1, "A", 4, 1, 0), (2, "A", 4, 1, 3)])
-    d = sim.build_distributions(h, ["A"], {1: 0.0, 2: 10.0}, shrinkage=0, method="bands")
+    d = sim.build_distributions(h, ["A"], {1: 0.0, 2: 10.0}, shrinkage=0, method="bands", field_alpha=0)
     c = d.probs[(d.probs.Par == 4) & (d.probs.Band == 0)]
     assert list(c.GrossVP) == [3]
     row = d.cells[(d.cells.Par == 4) & (d.cells.Band == 0)].iloc[0]
@@ -166,7 +166,7 @@ def test_window_edge_expands_one_way():
 def test_window_exact_pair_outweighs_neighbour():
     # pair 4 holes score 0, pair 5 holes score 2, equal counts; target pair 4 leans to 0
     rows = [(1, "A", 4, 9, 0)] * 5 + [(1, "A", 4, 11, 2)] * 5
-    d = sim.build_distributions(_hist(rows), ["A"], {1: 1.0}, min_holes=10)
+    d = sim.build_distributions(_hist(rows), ["A"], {1: 1.0}, min_holes=10, field_alpha=0)
     pr = d.probs[(d.probs.Par == 4) & (d.probs.Band == 4)].set_index("GrossVP")["Prob"]
     assert pr[0] == pytest.approx(2 / 3) and pr[2] == pytest.approx(1 / 3)
     assert _cell(d, "A", 4, 4).EffN > 0
@@ -205,8 +205,9 @@ def test_player_weights_override_only_that_player(method):
         rows += [(1, pl, 4, 5, 0)] * 5 + [(2, pl, 4, 5, 3)] * 5
     h = _hist(rows)
     g = {1: 1.0, 2: 1.0}
-    base = sim.build_distributions(h, ["A", "B"], g, method=method)
-    ov = sim.build_distributions(h, ["A", "B"], g, method=method, player_weights={"A": {1: 0.0, 2: 1.0}})
+    base = sim.build_distributions(h, ["A", "B"], g, method=method, field_alpha=0)
+    ov = sim.build_distributions(h, ["A", "B"], g, method=method, field_alpha=0,
+                                player_weights={"A": {1: 0.0, 2: 1.0}})
     assert ov.cells[ov.cells.Pl == "A"].MeanVP.round(6).tolist() != base.cells[base.cells.Pl == "A"].MeanVP.round(6).tolist()
     pa = ov.probs[(ov.probs.Pl == "A") & (ov.probs.Par == 4)]
     assert set(pa.GrossVP) == {3}
@@ -266,6 +267,189 @@ def test_clamp_and_bad_par():
     bad = _target(("AA",), pars=(6, 4), sis=[1, 2])
     with pytest.raises(ValueError):
         sim.run_simulation(d, bad, 5)
+
+
+# ---- field blend
+
+def _field_hist():
+    # A always scores 0 on par 4; B scores 0..3 (so the field has a +3 / -2 that A never had)
+    rows = [(1, "A", 4, 5, 0)] * 30
+    rows += [(1, "B", 4, 5, v) for v in (0, 1, 2, 3, -2) for _ in range(6)]
+    return _hist(rows)
+
+
+@pytest.mark.parametrize("method", ["window", "bands"])
+def test_field_blend_gives_unseen_outcomes_and_mean_preserved(method):
+    h = _field_hist()
+    off = sim.build_distributions(h, ["A"], {1: 1.0}, method=method, field_alpha=0)
+    on = sim.build_distributions(h, ["A"], {1: 1.0}, method=method, field_alpha=5)
+    b = 2 if method == "window" else 1  # SI 5 -> window pair 2 / band "SI 5-9"
+    sel = lambda d: d.probs[(d.probs.Par == 4) & (d.probs.Band == b)].set_index("GrossVP")["Prob"]
+    assert set(sel(off).index) == {0}
+    assert sel(on).get(3, 0) > 0 and sel(on).get(-2, 0) > 0
+    assert sel(on).sum() == pytest.approx(1.0)
+    assert (sum(sel(on).index * sel(on).values)) == pytest.approx(0.0, abs=1e-9)  # A's mean kept
+
+
+def test_field_alpha_zero_equals_old_behaviour():
+    h = _synthetic()
+    a = sim.build_distributions(h, ["AA", "BB"], {1: 1, 2: 1, 3: 1}, field_alpha=0)
+    # support must not be extended and probabilities only come from own data
+    assert a.probs.GrossVP.between(-1, 3).all()
+    pd.testing.assert_frame_equal(
+        a.probs, sim.build_distributions(h, ["AA", "BB"], {1: 1, 2: 1, 3: 1}, field_alpha=-5).probs)
+
+
+def test_tilt_dist_matches_mean_and_keeps_zeros():
+    sup = np.arange(-3, 9)
+    p = np.zeros(len(sup)); p[3:7] = [0.3, 0.4, 0.2, 0.1]  # 0..3, mean 1.1
+    p[1] = 0.0  # -2 never seen: must stay impossible
+    out = sim._tilt_dist(p, sup, 0.6)
+    assert out.sum() == pytest.approx(1.0)
+    assert (out * sup).sum() == pytest.approx(0.6, abs=1e-6)
+    assert out[1] == 0.0
+    # tilting toward a better mean raises the low outcome less than a sideways shift would
+    assert out[3] > p[3]
+
+
+def test_tilt_keeps_eagles_rare():
+    sup = np.arange(-3, 9)
+    p = np.zeros(len(sup)); p[1:6] = [0.003, 0.04, 0.35, 0.4, 0.207]  # -2..2
+    out = sim._tilt_dist(p, sup, (p * sup).sum() - 0.5)
+    assert out[1] < 0.02  # a 0.5-stroke better player: eagle still under 2%
+
+
+def test_blended_support_clamped():
+    h = _hist([(1, "A", 4, 5, 0)] * 20 + [(1, "B", 4, 5, 9)] * 20)  # field has a +9
+    d = sim.build_distributions(h, ["A"], {1: 1.0}, field_alpha=10)
+    assert d.probs.GrossVP.max() <= sim.FIELD_VP_MAX
+    assert d.probs.GrossVP.min() >= sim.FIELD_VP_MIN
+
+
+def test_backtest_returns_finite_rows():
+    rng = np.random.default_rng(1)
+    rows = [(t, pl, int(rng.choice([3, 4, 5])), int(rng.integers(1, 19)), int(rng.integers(-1, 4)))
+            for t in range(1, 7) for pl in ("A", "B", "C") for _ in range(36)]
+    bt = sim.backtest_field_alpha(_hist(rows), alphas=(0, 2), min_holes=5)
+    assert list(bt.columns) == ["Alpha", "MeanLogLik", "Holes", "ZeroProbHoles"]
+    assert len(bt) == 2 and np.isfinite(bt.MeanLogLik).all()
+    assert (bt.Holes == 3 * 36 * 3).all()  # TEGs 4, 5, 6 as targets
+    assert bt.ZeroProbHoles[1] <= bt.ZeroProbHoles[0]
+
+
+# ---- target selection / random courses
+
+def test_default_target_teg(monkeypatch):
+    data = {sim.IN_PROGRESS_TEGS_CSV: pd.DataFrame({"TEGNum": [20]}),
+            sim.COMPLETED_TEGS_CSV: pd.DataFrame({"TEGNum": [3, 18, 19]})}
+    monkeypatch.setattr(sim, "_read_csv", lambda p: data[p])
+    assert sim.default_target_teg() == 20
+    data[sim.IN_PROGRESS_TEGS_CSV] = pd.DataFrame({"TEGNum": []})
+    assert sim.default_target_teg() == 20  # 19 + 1
+    data[sim.COMPLETED_TEGS_CSV] = pd.DataFrame({"TEGNum": [3, 18]})
+    monkeypatch.setattr(sim, "_read_round_pars",
+                        lambda: pd.DataFrame({"TEGNum": [17, 19, 19, 21]}))
+    assert sim.default_target_teg() == 19
+    assert sim.available_target_tegs() == [21, 19]  # 17 is finished, not offered
+
+
+def _pool(n=3):
+    out = []
+    for i in range(n):
+        par = np.array([3, 4, 5, 4, 4, 4] * 3)
+        par[0] = 3 + (i % 2)   # vary par layout but keep total 72
+        par[1] = 4 - (i % 2)
+        out.append((f"C{i}", par, np.arange(1, 19) if i % 2 == 0 else np.arange(18, 0, -1)))
+    return out
+
+
+def test_random_course_target_runs():
+    d = sim.build_distributions(_synthetic(), ["AA", "BB"], {1: 1, 2: 1, 3: 1})
+    t = _target(("AA", "BB"), hcs={"AA": 10, "BB": 20}, pars=(4,) * 18)
+    t.random_rounds, t.course_pool = 3, _pool(4)
+    assert all(int(p.sum()) == 72 for _, p, _ in t.course_pool)
+    r1 = sim.run_simulation(d, t, 300, seed=5)
+    r2 = sim.run_simulation(d, t, 300, seed=5)
+    assert r1.par_total == 18 * 4 + 3 * 72
+    assert np.array_equal(r1.gross, r2.gross) and np.array_equal(r1.courses_used, r2.courses_used)
+    assert r1.courses_used.shape == (300, 3) and len(np.unique(r1.courses_used)) > 1
+    assert len({tuple(row) for row in r1.courses_used.tolist()}) > 1
+    assert r1.random_rounds == 3
+
+
+def test_all_random_target_empty_holes():
+    d = _det_dists(["AA"], {"AA": 0})
+    t = sim.TargetTournament(99, pd.DataFrame(columns=["Round", "Hole", "Par", "SI"], dtype=int),
+                             ["AA"], {"AA": 0}, {"AA": "A"}, random_rounds=4, course_pool=_pool(2))
+    r = sim.run_simulation(d, t, 20, seed=2)
+    assert r.par_total == 288 and (r.gross == 288).all()
+    t.course_pool = []
+    with pytest.raises(ValueError):
+        sim.run_simulation(d, t, 5)
+
+
+def test_load_target_random_and_draft_handicaps(monkeypatch):
+    csvs = {sim.IN_PROGRESS_TEGS_CSV: pd.DataFrame({"TEGNum": [20]}),
+            sim.COMPLETED_TEGS_CSV: pd.DataFrame({"TEGNum": [19]}),
+            sim.ROUND_INFO_CSV: pd.DataFrame({"TEGNum": [20, 20, 20], "Round": [1, 2, 3]}),
+            sim.COURSE_PARS_CSV: pd.concat([
+                pd.DataFrame({"Course": n, "Hole": range(1, 19), "Par": p, "SI": s})
+                for n, p, s in _pool(1)] + [
+                pd.DataFrame({"Course": "Bad", "Hole": range(1, 10), "Par": 4, "SI": range(1, 10)})])}
+    monkeypatch.setattr(sim, "_read_csv", lambda p: csvs[p])
+    monkeypatch.setattr(sim, "_read_round_pars", lambda: pd.DataFrame(columns=["TEGNum"]))
+    monkeypatch.setattr(sim, "_playing_codes", lambda t: {"AA", "BB"})
+    monkeypatch.setattr(sim, "_player_dict", lambda: {"AA": "A A", "BB": "B B", "CC": "C C"})
+    monkeypatch.setattr(sim, "_read_handicaps_raw",
+                        lambda: pd.DataFrame({"TEG": ["TEG 20"], "AA": [12.0], "BB": [np.nan]}))
+    monkeypatch.setattr(sim, "_draft_handicaps", lambda t: {"BB": 22, "CC": 30})
+    t = sim.load_target_tournament()
+    assert t.teg_num == 20 and t.n_rounds == 3 and t.random_rounds == 3 and t.holes.empty
+    assert [c[0] for c in t.course_pool] == ["C0"]  # invalid 9-hole course dropped
+    assert t.handicaps == {"AA": 12, "BB": 22} and t.handicaps_draft
+    assert t.candidates == ["AA", "BB", "CC"]
+    with pytest.raises(ValueError, match="DD"):
+        sim.load_target_tournament(players=["AA", "DD"])
+    monkeypatch.setattr(sim, "_draft_handicaps", lambda t: {})
+    with pytest.raises(ValueError, match="BB"):
+        sim.load_target_tournament()
+    t = sim.load_target_tournament(players=["AA"])
+    assert t.handicaps_draft is False
+
+
+# ---- eagles / blobs / smoothing
+
+def test_eagles_blobs_zero_for_par_player_and_counted_otherwise():
+    d = _det_dists(["AA"], {"AA": 0})
+    r = sim.run_simulation(d, _target(("AA",), hcs={"AA": 0}), 10, seed=1)
+    assert r.eagles.dtype == np.int16 and r.eagles.shape == (10, 1)
+    assert (r.eagles == 0).all() and (r.blobs == 0).all()
+    s = sim.summary_table(r)
+    assert s.EagleChance.iloc[0] == 0 and s.ExpBlobs.iloc[0] == 0
+    d = _det_dists(["AA"], {"AA": -2})
+    r = sim.run_simulation(d, _target(("AA",)), 5, seed=1)
+    assert (r.eagles == 18).all()
+    assert sim.summary_table(r).EagleChance.iloc[0] == 1.0
+    d = _det_dists(["AA"], {"AA": 2})  # net par with HC 0 -> 0 points on every hole
+    r = sim.run_simulation(d, _target(("AA",)), 5, seed=1)
+    assert (r.blobs == 18).all() and (r.stableford == 0).all()
+
+
+def test_smooth_total_distribution():
+    rng = np.random.default_rng(0)
+    n = 2000
+    vals = np.round(rng.normal(80, 6, size=(n, 1))).astype(np.int32)
+    r = sim.SimulationResult(["AA"], {"AA": "A"}, n, 1, 72, vals, vals,
+                             np.ones((n, 1), dtype=np.int8), np.ones((n, 1), dtype=np.int8))
+    sm = sim.total_distribution(r, "gross", smooth=True)
+    assert sm.Fraction.sum() == pytest.approx(1.0)
+    f = sm.Fraction.to_numpy()
+    peak = int(f.argmax())
+    assert (np.diff(f[:peak + 1]) >= -1e-12).all() and (np.diff(f[peak:]) <= 1e-12).all()
+    assert abs(sm.Total.iloc[peak] - 80) <= 2
+    assert sm.Total.min() < vals.min() and sm.Total.max() > vals.max()
+    raw = sim.total_distribution(r, "gross")
+    assert len(raw) < len(sm) and raw.Fraction.sum() == pytest.approx(1.0)
 
 
 # ---- real data smoke
