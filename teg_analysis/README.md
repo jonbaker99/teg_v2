@@ -58,6 +58,8 @@ teg_analysis/
     performance.py   Performance measure tables
     leaderboards.py  Leaderboard generation
     bestball.py      Best-ball / worst-ball competition format
+    bounceback.py    Bounce-back rate (par or better on the hole after a bogey+) vs each
+                     player's own par-or-better baseline — bounce_back_stats
     eclectic.py      Eclectic (best score per hole across rounds) — by-dimension
                      pivots, per-player-per-TEG totals (eclectic_player_teg_totals),
                      all-time + own-history ranking (rank_teg_eclectics) and
@@ -118,7 +120,24 @@ teg_analysis/
     llm.py           Thin Anthropic wrapper (key resolution, prompt caching)
     scoring.py       3-axis combination + mode weights
 
-  
+  chatbot/           TEGBot 5000 — answers stat questions in plain English
+    tools.py         Lookups (get_honours, get_records, get_streak_records, get_bounce_back):
+                     full, tie-complete results with the site's own definitions. ChatData
+                     takes the caller's cached loaders and builds the sandbox CSVs
+                     (datasets(): holes, rounds with round/after-round positions, tegs
+                     with finishing positions, winners)
+    prompt.py        System prompt (incl. when to judge players against their own normal
+                     standard rather than raw totals), DATA_GUIDE (the CSVs' columns and rules for code) and
+                     SITE_PAGES, the only links the bot may give
+    bot.py           ask(): the Claude loop — lookups plus Anthropic's code-execution
+                     sandbox (CSVs uploaded once per data version via the Files API);
+                     returns text, every lookup/code step, and token usage
+    qa_log.py        Shared Q&A log (JSONL on the volume, outside data/ so never synced):
+                     append_entry, conversations(), past_questions(), themes(),
+                     delete_entries() and set_themes() (atomic rewrites)
+    themes.py        regroup_themes(): one structured AI call re-sorts every logged
+                     question into at most 10 themes (admin "Sort into themes")
+
   display/           Formatting and output
     formatters.py    Format data for display (HTML, styled tables)
     html_tables.py   Generate styled HTML tables

@@ -75,6 +75,13 @@ NAV_SECTIONS = [
             ("Eclectic Records", "/eclectic-records", "scorecards", "emoji_events"),
         ],
     },
+    {
+        "label": "Ask TEGBot",
+        "active": {"tegbot"},
+        "pages": [
+            ("TEGBot 5000", "/tegbot", "tegbot", "smart_toy"),
+        ],
+    },
 ]
 
 

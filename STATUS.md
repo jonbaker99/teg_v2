@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-10-02 (TEG simulator odds; player roster redesign)
+**Last updated:** 2026-10-02 (TEGBot 5000; TEG simulator odds; player roster redesign)
+
+## 2026-10-02 — TEGBot 5000: ask the stats in plain English
+
+New `/tegbot` page, in the nav as "Ask TEGBot". Lookups first: honours, records (every tied holder), streaks and bounce-back, using the site's own definitions. Anything else, Claude (Sonnet) writes pandas that runs in Anthropic's code sandbox against uploaded hole, round, TEG and winner CSVs. Model code never runs on our server. Answers state assumptions and sample sizes, link the matching page, and show their workings, including the code. Follow-ups keep context and reuse the earlier method, so answers don't flip-flop. Off-topic questions get a one-line refusal. The page has a lo-fi retro look (green pixel robot, black or white with forest green, grey chat area), a small waiting indicator that varies between pixel animations and a quiet status line, bold key facts, ↗ links to the matching site page, judgement about comparing players with their own normal standard, and a small-print "How I worked this out" under a terminal-style ====== rule, and randomised example questions. Every question and answer is logged on the volume and shown on `/tegbot/asked` ("What others asked"), grouped by chat or by theme. The bot tags each question with a theme and links up to 3 similar past questions under its answer ("Others asked"). Admins can delete entries and re-sort the log into themes with one AI call at `/admin/tegbot`. Live tests: 3–13 seconds and 1–3p a question. New stat: bounce-back rate (`teg_analysis/analysis/bounceback.py`), not yet on its own page. A 30-question answer test (`scripts/tegbot_eval.py`) passes 30/30. Package: `teg_analysis/chatbot/`; page notes: `webapp/README.md` → TEGBot 5000.
 
 ## 2026-10-02 — Simulator shows betting odds
 
