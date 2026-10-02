@@ -499,6 +499,7 @@ A chat page for stat questions. `routes/tegbot.py` posts each question (plus ear
 - **Admin (`/admin/tegbot`, "TEGBot log" tab):** tick and delete entries for good, or "Sort into themes (AI)" to re-theme the whole log in one call (`teg_analysis.chatbot.themes.regroup_themes`).
 - **Answer HTML:** model text is HTML-escaped, rendered as Markdown, and any link not starting with `/` loses its `href`.
 - **Logs:** each answer logs question, tools, seconds, cost and token usage at INFO.
+- **Predictions:** forecasts about the next TEG go through the `get_predictions` lookup, fed by `webapp.routes.simulation.default_prediction()` (the Predictatron's default settings, fixed seed, cached until data changes). The bot never guesses a winner itself and links `/simulation`.
 - **Answer test:** `python scripts/tegbot_eval.py` asks the live bot ~30 questions (lookups, sandbox calculations, judgement, follow-ups, off-topic) and checks names, numbers, links and refusals against expected answers computed from the data at run time. About 30p a run; writes a report to `data/tegbot/eval/` and flags numbers no lookup or code output supports (likely mental maths). Run it before changing the prompt, model or data guide.
 - **When it gets something wrong:** first improve `DATA_GUIDE` or add a column to `ChatData.datasets()`. Add a lookup in `tools.py` only for a clearly definable, common question, with a test in `tests/test_tegbot.py`. Don't loosen the "no arithmetic" rule in `prompt.py`.
 

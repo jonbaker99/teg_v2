@@ -67,6 +67,8 @@ class ChatData:
     winners: Optional[Callable[[], pd.DataFrame]] = None
     completed_tegs: Callable[[], set[int]] = _default_completed
     players: Callable[[], dict[str, str]] = _default_players
+    #: The site's simulation of the next TEG (TEG Predictatron 3100), as plain data.
+    predictions: Optional[Callable[[], dict]] = None
     #: scope ("teg" | "round" | "frontback") -> ranked frame, as /records uses.
     ranked: Callable[[str], pd.DataFrame] = None  # type: ignore[assignment]
     _memo: dict = field(default_factory=dict, repr=False)
@@ -360,9 +362,46 @@ def get_records(data: ChatData, scope: str = "round") -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Tool: predictions — the site's simulator (TEG Predictatron 3100)
+# ---------------------------------------------------------------------------
+def get_predictions(data: ChatData) -> dict:
+    if data.predictions is None:
+        raise ToolInputError("Predictions aren't available here.")
+    try:
+        pred = data.predictions()
+    except ValueError as exc:
+        raise ToolInputError(f"The simulator can't run yet: {exc}") from exc
+    return {
+        **pred,
+        "definition": (
+            f"Monte Carlo simulation of TEG {pred['teg_num']} ({pred['simulations']:,} runs). "
+            "Each player's hole scores are drawn from their recent history by par and stroke "
+            "index, using this TEG's courses and handicaps. Trophy = most Stableford points, "
+            "Green Jacket = lowest gross, Wooden Spoon = fewest Stableford points. Chances are "
+            "the share of simulations each player won; odds are the fair fractional equivalent."
+        ),
+        "notes": [*pred.get("notes", []),
+                  "A prediction from past form, not a certainty.",
+                  "The Predictatron page reruns the simulation, so its figures can differ by a "
+                  "point or two, and lets you change the settings."],
+        "page": "/simulation",
+    }
+
+
+# ---------------------------------------------------------------------------
 # Tool schemas (Anthropic tool-use format) and dispatch
 # ---------------------------------------------------------------------------
 TOOL_SCHEMAS = [
+    {
+        "name": "get_predictions",
+        "description": (
+            "Predictions for the next TEG from the site's simulator, the TEG Predictatron 3100: "
+            "each player's chance and fair odds of winning the TEG Trophy, the Green Jacket and "
+            "the Wooden Spoon, plus expected Stableford and gross. Use for any question about "
+            "who will win, favourites, odds or forecasts for the upcoming TEG."
+        ),
+        "input_schema": {"type": "object", "properties": {}, "required": []},
+    },
     {
         "name": "get_honours",
         "description": (
@@ -422,6 +461,7 @@ TOOL_SCHEMAS = [
 ]
 
 _DISPATCH = {
+    "get_predictions": get_predictions,
     "get_honours": get_honours,
     "get_records": get_records,
     "get_streak_records": get_streak_records,
