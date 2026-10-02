@@ -9,7 +9,7 @@
     --pp-ink: var(--ink, var(--text-primary));
     --pp-dim: var(--ink-muted, var(--text-secondary));
     padding-block: 0.5rem 1.5rem;
-    --pp-bar: color-mix(in srgb, var(--text-muted) 60%, var(--bg-content, var(--bg-card)));
+    --pp-bar: color-mix(in srgb, var(--text-muted) 60%, var(--bg-card));
 }
 .pp-back, .pp-link { color: var(--text-secondary); font: inherit; font-size: 0.8125rem; text-decoration: none; }
 .pp-link { background: transparent; border: 0; padding: 0; cursor: pointer; text-align: left; white-space: nowrap; }
@@ -27,7 +27,6 @@
 .pp-stars { font-size: 18px; letter-spacing: 1px; line-height: 1; margin: 10px 0 0; }
 .pp-stars-gap { display: inline-block; width: 0.5em; }
 .pp-meta { font-size: 0.8125rem; color: var(--text-secondary); margin: 10px 0 0; }
-.pp-context { font-size: 0.75rem; line-height: 1.6; color: var(--text-secondary); }
 .pp-profile .pp-tabs {
     display: flex; align-items: center; flex-wrap: wrap; gap: 0 1.75rem;
     border: 0; border-bottom: 1px solid var(--pp-rule);
@@ -39,11 +38,6 @@
 /* Section headings: the site's .section-title (Lora small caps, green) over a
    2px ink rule. */
 .pp-profile .pp-sec { margin: 0 0 10px; padding-bottom: 8px; border-bottom: 2px solid var(--pp-ink); }
-.pp-profile .pp-section-title { /* Records & Streaks tab still uses this name */
-    font-family: var(--font-serif), Georgia, serif; font-weight: 700; font-size: 13px;
-    letter-spacing: 0.09em; text-transform: uppercase; color: var(--green, var(--accent));
-    margin: 0 0 10px; padding-bottom: 8px; border-bottom: 2px solid var(--pp-ink);
-}
 .pp-sec-row { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem 1rem; flex-wrap: wrap; border-bottom: 2px solid var(--pp-ink); margin-bottom: 10px; }
 .pp-profile .pp-sec-row .pp-sec { border-bottom: 0; margin-bottom: 0; }
 .pp-sec-aside { font-size: 12px; color: var(--pp-dim); }
@@ -90,7 +84,7 @@
 .pp-gaxis { display: none; }
 .pp-gplot { position: relative; height: 240px; border-bottom: 1px solid var(--pp-ink); margin-bottom: 30px; }
 .pp-gcareer { position: absolute; left: 0; right: 0; bottom: var(--career); border-top: 1px dashed var(--pp-dim); }
-.pp-gcareer-label { position: absolute; z-index: 2; right: 0; bottom: var(--career); margin-bottom: 4px; padding-left: 6px; font-size: 11px; color: var(--pp-dim); background: var(--bg-content, var(--bg-card)); }
+.pp-gcareer-label { position: absolute; z-index: 2; right: 0; bottom: var(--career); margin-bottom: 4px; padding-left: 6px; font-size: 11px; color: var(--pp-dim); background: var(--bg-card); }
 .pp-gcols { position: absolute; inset: 0 76px 0 0; margin: 0; padding: 0; list-style: none; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0 10px; }
 .pp-gcol { position: relative; }
 .pp-gtrack { position: absolute; inset: 0; }
@@ -235,5 +229,4 @@
     .pp-chart-direction { display: block; font: 700 0.7rem/1.4 var(--font-sans), sans-serif; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 0.5rem; }
     .pp-rounds-chart { height: 260px; }
     .pp-dist-chart { height: 260px; }
-}
 }

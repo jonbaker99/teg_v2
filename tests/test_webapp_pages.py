@@ -456,7 +456,7 @@ def test_player_profile_links_point_at_real_pages(client):
     assert 'href="/scorecard?teg=10&amp;round=1&amp;player=DM&amp;type=one_round_one_player"' in overview
     assert 'href="/player-rankings"' in overview and 'href="/scoring/by-teg"' in overview
     rounds = client.get("/player/DM/tab/rounds").text
-    assert f'href="/scoring/all-rounds?player={quote_plus("David MULLIN")}"' in rounds
+    assert f'href="/scoring/all-rounds?player={quote_plus("David MULLIN")}&amp;n=67"' in rounds
     assert 'href="/scoring/streaks?tab=detail&amp;d_player=DM"' in client.get("/player/DM/tab/records").text
     assert 'href="/results?teg=18"' in client.get("/player/DM/tab/career").text
     for url in ("/results?teg=10", "/scoring/streaks?tab=detail&d_player=DM", "/scoring/all-rounds?player=David+MULLIN"):
@@ -533,7 +533,7 @@ def test_player_rounds_chart_direction_copy_and_no_inline_height(client):
 
 
 def test_rounds_chart_teg_group_labels_distinguishable_from_row_label():
-    # player-profile.js's initRoundsChart thins the per-TEG-group labels at
+    # player-profile.js's initCharts thins the per-TEG-group labels at
     # phone width but must never touch the single "TEG" row-label caption --
     # it tells them apart via xref:'paper' (only the row label sets it).
     # This pins that server-side contract so a refactor of

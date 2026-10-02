@@ -1040,7 +1040,7 @@ def _build_rounds_context(player_code: str) -> dict:
             "pb_stab": bool(r['Stableford'] == best_stab),
         })
     return {"rounds_rows": rows, "rounds_chart_json": chart_json,
-            "all_rounds_url": _url("/scoring/all-rounds", player=name)}
+            "all_rounds_url": _url("/scoring/all-rounds", player=name, n=len(rows))}
 
 
 # ---------------------------------------------------------------------------
@@ -1063,7 +1063,7 @@ def _build_scoring_context(player_code: str) -> dict:
         sections.append({
             "title": "Average score by par",
             "link": ("/scoring/by-par", "By par"),
-            "table_html": _table_df_to_html(formatted, col_class=_first_left_col_class),
+            "table_html": _table_df_to_html(formatted, col_class=lambda _i, _c: "col-num"),
         })
 
     # Score distribution
