@@ -396,6 +396,8 @@ def _chart_json(res, measure: str) -> str:
         yaxis_title="% of simulations", hovermode="x unified",
         legend=dict(orientation="h", yanchor="top", y=-0.18, xanchor="left", x=0, title_text=""),
         margin=dict(r=12, t=10, b=40, l=44))
+    if measure == "gross":
+        fig.update_xaxes(tickformat="+d")
     fig.layout.xaxis.fixedrange = True
     fig.layout.yaxis.fixedrange = True
     fig.update_layout(**get_chart_style("streamlit"))
