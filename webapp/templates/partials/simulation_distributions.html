@@ -14,14 +14,14 @@
 <div class="data-card"><div class="table-wrapper">
 <table class="teg-table sim-dist">
     <thead><tr>
-        <th class="sim-left">Hole type</th>
+        <th class="sim-left">Hole type</th>{% if dist_window %}<th>Window</th>{% endif %}
         {% for o in outcomes %}<th>{{ o }}</th>{% endfor %}
         <th>N</th><th>EffN</th><th>Mean vs par</th>
     </tr></thead>
     <tbody>
     {% for r in dist_rows %}
     <tr>
-        <td class="sim-left">{{ r.label }}</td>
+        <td class="sim-left">{% if dist_window and r.used %}<strong>{{ r.label }}</strong> <span class="sim-used" title="Used by this TEG's course">&bull;</span>{% else %}{{ r.label }}{% endif %}</td>{% if dist_window %}<td class="sim-win">{{ r.window }}</td>{% endif %}
         {% for c in r.cells %}<td style="{{ c.style }}">{{ c.text }}</td>{% endfor %}
         <td>{{ r.n }}</td>
         <td{% if r.low %} class="sim-low"{% endif %}>{{ r.eff }}{% if r.low %}<span class="sim-flag" title="Low sample">*</span>{% endif %}</td>
@@ -31,7 +31,7 @@
     </tbody>
 </table>
 </div></div>
-<p class="sim-help">Share of holes at each score vs par, after weighting and shrinkage. EffN is the weighted effective sample size.{% if dist_has_low %} <span class="sim-flag">*</span> EffN below 5: thin data, leaning on the player's overall par distribution.{% endif %}</p>
+<p class="sim-help">Share of holes at each score vs par, after weighting{% if not dist_window %} and shrinkage{% endif %}. EffN is the weighted effective sample size.{% if dist_window %} <span class="sim-used">&bull;</span> Hole types on this TEG's scorecard. Window is the SI range of holes used for that row.{% endif %}{% if dist_has_low %} <span class="sim-flag">*</span> EffN below 5: thin data, leaning on the player's overall par distribution.{% endif %}</p>
 {% if dist_warnings %}
 <ul class="sim-warnings">{% for w in dist_warnings %}<li>{{ w }}</li>{% endfor %}</ul>
 {% endif %}

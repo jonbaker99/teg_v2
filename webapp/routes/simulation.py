@@ -95,6 +95,55 @@ def _parse_settings(qp, targets: list[int], history: pd.DataFrame) -> dict:
     if not errors and sum(weights.values()) <= 0:
         errors.append("All TEG weights are zero. Give at least one TEG a weight above 0.")
 
+    tgt = _target(target)
+    played = {pl: {int(t) for t in g["TEGNum"].unique()}
+              for pl, g in history[history["TEGNum"].isin(completed)].groupby("Pl")}
+    player_weights: dict[str, dict[int, float]] = {}
+    player_rows = []
+    for pl in tgt.players:
+        name = tgt.names.get(pl, pl)
+        custom_on = qp.get(f"po_{pl}") not in (None, "", "0", "false")
+        pw: dict[int, float] = {}
+        if custom_on:
+            for t in completed:
+                if t not in played.get(pl, set()):
+                    continue
+                raw = qp.get(f"pw_{pl}_{t}")
+                if raw is None:
+                    pw[t] = weights[t]
+                    continue
+                try:
+                    w = float(str(raw).strip() or 0)
+                except ValueError:
+                    errors.append(f"Custom weight for {name}, TEG {t} must be a number.")
+                    w = 0.0
+                if w < 0 or w > 1e6 or not np.isfinite(w):
+                    errors.append(f"Custom weight for {name}, TEG {t} must be between 0 and 1,000,000.")
+                    w = 0.0
+                pw[t] = w
+            if not errors and played.get(pl) and sum(pw.values()) <= 0:
+                errors.append(f"Custom weights for {name} are all zero. "
+                              "Give at least one TEG a weight above 0 or untick Custom.")
+            if played.get(pl):
+                player_weights[pl] = pw
+        player_rows.append({
+            "code": pl, "name": name, "name_html": _wrap_player_name(name),
+            "custom": custom_on, "played": played.get(pl, set()),
+            "weights": {t: _fmt_num(pw.get(t, weights[t])) for t in completed}})
+
+    method = qp.get("method") or sim.DEFAULT_METHOD
+    if method not in sim.METHODS:
+        method = sim.DEFAULT_METHOD
+    mh_raw = qp.get("min_holes")
+    min_holes = sim.DEFAULT_MIN_HOLES
+    if mh_raw not in (None, ""):
+        mh = _int(mh_raw, None)
+        if mh is None or not 1 <= mh <= 500:
+            if method == "window":
+                errors.append("Min holes must be a whole number between 1 and 500.")
+        else:
+            min_holes = mh
+
     preset = qp.get("bands_preset") or "4 bands"
     if preset not in sim.SI_BAND_PRESETS:
         preset = "4 bands"
@@ -104,7 +153,8 @@ def _parse_settings(qp, targets: list[int], history: pd.DataFrame) -> dict:
         try:
             boundaries = sim.parse_si_boundaries(custom)
         except ValueError as exc:
-            errors.append(f"SI bands: {exc}. Use whole numbers like 4,9,14.")
+            if method == "bands":
+                errors.append(f"SI bands: {exc}. Use whole numbers like 4,9,14.")
 
     k_raw = qp.get("shrinkage")
     k = sim.DEFAULT_SHRINKAGE if k_raw in (None, "") else None
@@ -114,7 +164,8 @@ def _parse_settings(qp, targets: list[int], history: pd.DataFrame) -> dict:
         except ValueError:
             k = None
         if k is None or k < 0 or not np.isfinite(k):
-            errors.append("Shrinkage k must be a number, zero or more.")
+            if method == "bands":
+                errors.append("Shrinkage k must be a number, zero or more.")
             k = sim.DEFAULT_SHRINKAGE
 
     n_raw = qp.get("n_sims")
@@ -136,6 +187,8 @@ def _parse_settings(qp, targets: list[int], history: pd.DataFrame) -> dict:
             seed = None
 
     return {
+        "method": method, "methods": sim.METHODS, "min_holes": min_holes,
+        "player_weights": player_weights, "player_rows": player_rows,
         "target": target, "targets": targets, "completed": completed,
         "weights": weights, "defaults": defaults, "preset": preset,
         "presets": list(sim.SI_BAND_PRESETS), "custom": custom,
@@ -153,6 +206,13 @@ def _fmt_num(x: float) -> str:
     return f"{x:g}"
 
 
+def _build(history: pd.DataFrame, tgt, s: dict) -> "sim.ScoreDistributions":
+    return sim.build_distributions(
+        _history_before(history, s["target"]), tgt.players, s["weights"],
+        s["boundaries"], s["k"], method=s["method"], min_holes=s["min_holes"],
+        player_weights=s["player_weights"] or None)
+
+
 # --- distributions -----------------------------------------------------------
 
 def _shade(frac: float, max_pct: int = 55) -> str:
@@ -161,7 +221,7 @@ def _shade(frac: float, max_pct: int = 55) -> str:
     return f"background: color-mix(in srgb, var(--accent) {pct}%, transparent);"
 
 
-def _distribution_rows(dists: "sim.ScoreDistributions", player: str) -> list[dict]:
+def _distribution_rows(dists: "sim.ScoreDistributions", player: str, used=frozenset()) -> list[dict]:
     probs = dists.probs[dists.probs["Pl"] == player]
     cells = dists.cells[dists.cells["Pl"] == player]
     rows = []
@@ -179,7 +239,7 @@ def _distribution_rows(dists: "sim.ScoreDistributions", player: str) -> list[dic
         rows.append({
             "label": f"Par {c.Par} / {c.BandLabel}", "cells": vals, "n": int(c.N),
             "eff": f"{c.EffN:.1f}", "low": c.EffN < LOW_EFF_N, "mean": f"{c.MeanVP:+.2f}",
-            "source": c.Source,
+            "source": c.Source, "window": c.Window, "used": (int(c.Par), int(c.Band)) in used,
         })
     return rows
 
@@ -195,18 +255,20 @@ def _distributions_context(qp) -> dict:
         ctx = {"s": s, "dist_errors": s["errors"], "players": [], "outcomes": [o[0] for o in _OUTCOMES]}
         if s["errors"]:
             return ctx
-        dists = sim.build_distributions(_history_before(history, s["target"]), tgt.players,
-                                         s["weights"], s["boundaries"], s["k"])
+        dists = _build(history, tgt, s)
         player = qp.get("dist_player")
         if player not in tgt.players:
             player = tgt.players[0]
-        rows = _distribution_rows(dists, player)
+        bands = sim.assign_si_band(tgt.holes["SI"].to_numpy(), dists.boundaries)
+        used = {(int(p), int(b)) for p, b in zip(tgt.holes["Par"], bands)}
+        rows = _distribution_rows(dists, player, used)
         ctx.update({
             "players": [(p, tgt.names.get(p, p)) for p in tgt.players],
             "dist_player": player,
             "dist_rows": rows,
             "dist_warnings": dists.warnings,
             "dist_has_low": any(r["low"] for r in rows),
+            "dist_window": s["method"] == "window",
         })
         return ctx
     except Exception:
@@ -219,8 +281,12 @@ def _distributions_context(qp) -> dict:
 def _caption(res, s, n_holes: int) -> str:
     shares = _weight_shares(s["weights"])
     used = [f"{t} ({shares[t]:.0f}%)" for t in sorted(s["weights"], reverse=True) if s["weights"][t] > 0]
+    how = (f"rolling SI window, min {s['min_holes']} holes" if s["method"] == "window"
+           else "fixed SI bands")
+    custom = [r["name"] for r in s["player_rows"] if r["code"] in s["player_weights"]]
+    extra = f"; custom weights for {', '.join(custom)}" if custom else ""
     return (f"{res.n_sims:,} simulations of TEG {res.teg_num} ({n_holes} holes) "
-            f"using TEG{'s' if len(used) > 1 else ''} {', '.join(used)}.")
+            f"using TEG{'s' if len(used) > 1 else ''} {', '.join(used)} ({how}){extra}.")
 
 
 def _summary_rows(res, measure: str) -> list[dict]:
@@ -282,8 +348,7 @@ def _run_context(qp) -> dict:
         if s["errors"]:
             return {"run_errors": s["errors"]}
         tgt = _target(s["target"])
-        dists = sim.build_distributions(_history_before(history, s["target"]), tgt.players,
-                                         s["weights"], s["boundaries"], s["k"])
+        dists = _build(history, tgt, s)
         res = sim.run_simulation(dists, tgt, s["n_sims"], s["seed"])
         measures = []
         for key, label in (("gross", "Gross"), ("stableford", "Stableford")):

@@ -80,7 +80,7 @@ def test_default_weights():
 
 def test_probs_sum_and_all_cells():
     h = _synthetic()
-    d = sim.build_distributions(h, ["AA", "BB"], {1: 1, 2: 1, 3: 1})
+    d = sim.build_distributions(h, ["AA", "BB"], {1: 1, 2: 1, 3: 1}, method="bands")
     assert len(d.cells) == 2 * 3 * 4
     sums = d.probs.groupby(["Pl", "Par", "Band"])["Prob"].sum()
     assert len(sums) == 24
@@ -89,21 +89,21 @@ def test_probs_sum_and_all_cells():
 
 def test_k0_equals_raw_cell():
     h = _hist([(1, "A", 4, 1, 0), (1, "A", 4, 2, 1), (1, "A", 4, 3, 1), (1, "A", 4, 10, 2)])
-    d = sim.build_distributions(h, ["A"], {1: 1.0}, boundaries=(4, 9, 14), shrinkage=0)
+    d = sim.build_distributions(h, ["A"], {1: 1.0}, boundaries=(4, 9, 14), shrinkage=0, method="bands")
     c = d.probs[(d.probs.Par == 4) & (d.probs.Band == 0)].set_index("GrossVP")["Prob"]
     assert c[0] == pytest.approx(1 / 3) and c[1] == pytest.approx(2 / 3)
 
 
 def test_large_k_approaches_par_level():
     h = _hist([(1, "A", 4, 1, 0)] * 5 + [(1, "A", 4, 10, 2)] * 5)
-    d = sim.build_distributions(h, ["A"], {1: 1.0}, shrinkage=1e9)
+    d = sim.build_distributions(h, ["A"], {1: 1.0}, shrinkage=1e9, method="bands")
     c = d.probs[(d.probs.Par == 4) & (d.probs.Band == 0)].set_index("GrossVP")["Prob"]
     assert c[0] == pytest.approx(0.5, abs=1e-6) and c[2] == pytest.approx(0.5, abs=1e-6)
 
 
 def test_zero_weight_teg_ignored():
     h = _hist([(1, "A", 4, 1, 0), (2, "A", 4, 1, 3)])
-    d = sim.build_distributions(h, ["A"], {1: 0.0, 2: 10.0}, shrinkage=0)
+    d = sim.build_distributions(h, ["A"], {1: 0.0, 2: 10.0}, shrinkage=0, method="bands")
     c = d.probs[(d.probs.Par == 4) & (d.probs.Band == 0)]
     assert list(c.GrossVP) == [3]
     row = d.cells[(d.cells.Par == 4) & (d.cells.Band == 0)].iloc[0]
@@ -112,20 +112,106 @@ def test_zero_weight_teg_ignored():
 
 def test_par_fallback_source():
     h = _hist([(1, "A", 4, 10, 1)])
-    d = sim.build_distributions(h, ["A"], {1: 1.0})
+    d = sim.build_distributions(h, ["A"], {1: 1.0}, method="bands")
     row = d.cells[(d.cells.Par == 4) & (d.cells.Band == 0)].iloc[0]
     assert row.Source == "par fallback" and row.N == 0 and row.MeanVP == pytest.approx(1.0)
 
 
 def test_history_and_field_fallback():
     h = _hist([(1, "A", 4, 1, 0), (1, "B", 4, 1, 2), (2, "A", 3, 1, 1)])
-    d = sim.build_distributions(h, ["A", "C"], {2: 1.0})
+    d = sim.build_distributions(h, ["A", "C"], {2: 1.0}, method="bands")
     a4 = d.cells[(d.cells.Pl == "A") & (d.cells.Par == 4)]
     assert (a4.Source == "history fallback").all()
     c4 = d.cells[(d.cells.Pl == "C") & (d.cells.Par == 4)]
     assert (c4.Source == "field fallback").all()
     assert len(d.warnings) >= 2
     assert np.allclose(d.probs.groupby(["Pl", "Par", "Band"])["Prob"].sum(), 1.0)
+
+
+# ---- rolling window
+
+def _cell(d, pl, par, band):
+    return d.cells[(d.cells.Pl == pl) & (d.cells.Par == par) & (d.cells.Band == band)].iloc[0]
+
+
+def test_window_default_and_structure():
+    h = _synthetic()
+    d = sim.build_distributions(h, ["AA", "BB"], {1: 1, 2: 1, 3: 1})
+    assert d.boundaries == (2, 4, 6, 8, 10, 12, 14, 16)
+    assert len(d.cells) == 2 * 3 * 9
+    assert set(d.cells.Source) == {"window"}
+    assert np.allclose(d.probs.groupby(["Pl", "Par", "Band"])["Prob"].sum(), 1.0)
+    assert list(d.cells.BandLabel[:2]) == ["SI 1-2", "SI 3-4"]
+
+
+def test_window_expands_until_min_holes():
+    # 3 holes in each of pairs 0..8 (par 4): min_holes 7 from pair 4 -> radius 1 gives 9
+    rows = [(1, "A", 4, 2 * q + 1, 0) for q in range(9) for _ in range(3)]
+    d = sim.build_distributions(_hist(rows), ["A"], {1: 1.0}, min_holes=7)
+    c = _cell(d, "A", 4, 4)
+    assert c.N == 9 and c.Window == "SI 7-12"
+    d1 = sim.build_distributions(_hist(rows), ["A"], {1: 1.0}, min_holes=3)
+    assert _cell(d1, "A", 4, 4).Window == "SI 9-10"
+
+
+def test_window_edge_expands_one_way():
+    rows = [(1, "A", 4, 2 * q + 1, 0) for q in range(9) for _ in range(3)]
+    d = sim.build_distributions(_hist(rows), ["A"], {1: 1.0}, min_holes=7)
+    c = _cell(d, "A", 4, 0)
+    assert c.Window == "SI 1-6" and c.N == 9
+    c = _cell(d, "A", 4, 8)
+    assert c.Window == "SI 13-18" and c.N == 9
+
+
+def test_window_exact_pair_outweighs_neighbour():
+    # pair 4 holes score 0, pair 5 holes score 2, equal counts; target pair 4 leans to 0
+    rows = [(1, "A", 4, 9, 0)] * 5 + [(1, "A", 4, 11, 2)] * 5
+    d = sim.build_distributions(_hist(rows), ["A"], {1: 1.0}, min_holes=10)
+    pr = d.probs[(d.probs.Par == 4) & (d.probs.Band == 4)].set_index("GrossVP")["Prob"]
+    assert pr[0] == pytest.approx(2 / 3) and pr[2] == pytest.approx(1 / 3)
+    assert _cell(d, "A", 4, 4).EffN > 0
+
+
+def test_window_min_holes_larger_than_data_uses_all_pairs():
+    rows = [(1, "A", 4, 1, 0), (1, "A", 4, 18, 1)]
+    d = sim.build_distributions(_hist(rows), ["A"], {1: 1.0}, min_holes=500)
+    for b in range(9):
+        c = _cell(d, "A", 4, b)
+        assert c.Window == "SI 1-18" and c.N == 2
+
+
+def test_window_fallbacks_still_work():
+    h = _hist([(1, "A", 4, 1, 0), (1, "B", 4, 1, 2), (2, "A", 3, 1, 1)])
+    d = sim.build_distributions(h, ["A", "C"], {2: 1.0})
+    assert (d.cells[(d.cells.Pl == "A") & (d.cells.Par == 4)].Source == "history fallback").all()
+    assert (d.cells[(d.cells.Pl == "C") & (d.cells.Par == 4)].Source == "field fallback").all()
+
+
+def test_bands_cells_have_window_column():
+    h = _synthetic()
+    d = sim.build_distributions(h, ["AA"], {1: 1, 2: 1, 3: 1}, method="bands")
+    assert list(d.cells.Window) == list(d.cells.BandLabel)
+
+
+def test_unknown_method_rejected():
+    with pytest.raises(ValueError):
+        sim.build_distributions(_synthetic(), ["AA"], {1: 1}, method="x")
+
+
+@pytest.mark.parametrize("method", ["window", "bands"])
+def test_player_weights_override_only_that_player(method):
+    rows = []
+    for pl in ("A", "B"):
+        rows += [(1, pl, 4, 5, 0)] * 5 + [(2, pl, 4, 5, 3)] * 5
+    h = _hist(rows)
+    g = {1: 1.0, 2: 1.0}
+    base = sim.build_distributions(h, ["A", "B"], g, method=method)
+    ov = sim.build_distributions(h, ["A", "B"], g, method=method, player_weights={"A": {1: 0.0, 2: 1.0}})
+    assert ov.cells[ov.cells.Pl == "A"].MeanVP.round(6).tolist() != base.cells[base.cells.Pl == "A"].MeanVP.round(6).tolist()
+    pa = ov.probs[(ov.probs.Pl == "A") & (ov.probs.Par == 4)]
+    assert set(pa.GrossVP) == {3}
+    pd.testing.assert_frame_equal(ov.probs[ov.probs.Pl == "B"].reset_index(drop=True),
+                                  base.probs[base.probs.Pl == "B"].reset_index(drop=True))
 
 
 # ---- simulation

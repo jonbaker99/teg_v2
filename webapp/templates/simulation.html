@@ -9,7 +9,7 @@
     <span class="page-label">Latest TEG</span>
     <h1 class="page-title">{% if teg_num %}TEG {{ teg_num }} simulator{% else %}TEG simulator{% endif %}</h1>
     {% if teg_num %}
-    <p class="page-subtitle">Each hole is sampled from the player's past scores on holes of that par and stroke-index band, weighted by TEG. Stableford uses the TEG {{ teg_num }} handicaps.</p>
+    <p class="page-subtitle">Each hole is sampled from the player's past scores on holes of that par. By default a rolling window around the hole's stroke-index pair (SI 1-2, 3-4 and so on) widens to neighbouring pairs until it holds enough holes, with the exact pair counting most; fixed SI bands are the alternative. Scores are weighted by TEG. Stableford uses the TEG {{ teg_num }} handicaps.</p>
     {% endif %}
 </div>
 {% endblock %}
@@ -31,40 +31,32 @@
         </div>
 
         <div class="sim-block">
-            <div class="sim-block-head"><span class="text-muted">TEG weights</span>
-                <a href="/simulation?target={{ s.target }}" class="sim-reset" id="sim-reset-weights">Reset</a></div>
-            <div class="table-wrapper sim-weights-wrap">
-                <table class="teg-table sim-weights">
-                    <tbody>
-                    {% for t in s.completed %}
-                    <tr>
-                        <td>TEG {{ t }}</td>
-                        <td><input class="theme-select sim-weight" type="number" name="w_{{ t }}" min="0" step="any"
-                                   inputmode="decimal" value="{{ fmt(s.weights[t]) }}" data-default="{{ fmt(s.defaults[t]) }}"
-                                   aria-label="Weight for TEG {{ t }}"></td>
-                        <td class="sim-share" data-share-for="w_{{ t }}">{{ '%.0f' % shares[t] }}%</td>
-                    </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="sim-block">
-            <label class="sim-field"><span class="text-muted">SI bands</span>
-                <select class="theme-select" name="bands_preset">
-                    {% for p in s.presets %}<option value="{{ p }}" {% if p == s.preset %}selected{% endif %}>{{ p }}</option>{% endfor %}
+            <label class="sim-field"><span class="text-muted">Method</span>
+                <select class="theme-select" name="method" id="sim-method">
+                    {% for k, label in s.methods.items() %}<option value="{{ k }}" {% if k == s.method %}selected{% endif %}>{{ label }}</option>{% endfor %}
                 </select>
             </label>
-            <label class="sim-field"><span class="text-muted">Custom boundaries (optional)</span>
-                <input class="theme-select" type="text" name="bands_custom" value="{{ s.custom }}" placeholder="e.g. 4,9,14" autocomplete="off">
-            </label>
-            <p class="sim-help">Custom boundaries override the preset. 4,9,14 gives SI 1-4, 5-9, 10-14, 15-18.</p>
-
-            <label class="sim-field"><span class="text-muted">Shrinkage k</span>
-                <input class="theme-select input-numeric" type="number" name="shrinkage" min="0" step="any" value="{{ fmt(s.k) }}">
-            </label>
-            <p class="sim-help">Pulls thin SI-band cells toward the player's overall par distribution. 0 = raw.</p>
+            <div class="sim-method-window sim-block">
+                <label class="sim-field"><span class="text-muted">Min holes</span>
+                    <input class="theme-select input-numeric" type="number" name="min_holes" min="1" max="500" step="1" value="{{ s.min_holes }}">
+                </label>
+                <p class="sim-help">Widens the SI window until it holds this many of the player's holes of that par.</p>
+            </div>
+            <div class="sim-method-bands sim-block">
+                <label class="sim-field"><span class="text-muted">SI bands</span>
+                    <select class="theme-select" name="bands_preset">
+                        {% for p in s.presets %}<option value="{{ p }}" {% if p == s.preset %}selected{% endif %}>{{ p }}</option>{% endfor %}
+                    </select>
+                </label>
+                <label class="sim-field"><span class="text-muted">Custom boundaries (optional)</span>
+                    <input class="theme-select" type="text" name="bands_custom" value="{{ s.custom }}" placeholder="e.g. 4,9,14" autocomplete="off">
+                </label>
+                <p class="sim-help">Custom boundaries override the preset. 4,9,14 gives SI 1-4, 5-9, 10-14, 15-18.</p>
+                <label class="sim-field"><span class="text-muted">Shrinkage k</span>
+                    <input class="theme-select input-numeric" type="number" name="shrinkage" min="0" step="any" value="{{ fmt(s.k) }}">
+                </label>
+                <p class="sim-help">Pulls thin SI-band cells toward the player's overall par distribution. 0 = raw.</p>
+            </div>
         </div>
 
         <div class="sim-block">
@@ -79,6 +71,45 @@
                         hx-target="#sim-results" hx-swap="innerHTML" hx-indicator="#sim-running">Run simulation</button>
                 <span id="sim-running" class="htmx-indicator text-muted" aria-live="polite">Running&hellip;</span>
             </div>
+        </div>
+
+        <div class="sim-block sim-block--wide">
+            <div class="sim-block-head"><span class="text-muted">TEG weights</span>
+                <a href="/simulation?target={{ s.target }}" class="sim-reset" id="sim-reset-weights">Reset</a></div>
+            <div class="table-wrapper sim-weights-wrap">
+                <table class="teg-table sim-weights">
+                    <thead><tr>
+                        <th class="sim-left">TEG</th>
+                        <th>All players</th>
+                        <th>Share</th>
+                        {% for pr in s.player_rows %}
+                        <th class="sim-pcol">
+                            <span class="sim-pname">{{ pr.name_html | safe }}</span>
+                            <label class="sim-custom"><input type="checkbox" class="sim-po" name="po_{{ pr.code }}" value="1"
+                                   data-player="{{ pr.code }}" {% if pr.custom %}checked{% endif %}> Custom</label>
+                        </th>
+                        {% endfor %}
+                    </tr></thead>
+                    <tbody>
+                    {% for t in s.completed %}
+                    <tr>
+                        <td class="sim-left">TEG {{ t }}</td>
+                        <td><input class="theme-select sim-weight" type="number" name="w_{{ t }}" min="0" step="any"
+                                   inputmode="decimal" value="{{ fmt(s.weights[t]) }}" data-default="{{ fmt(s.defaults[t]) }}"
+                                   data-teg="{{ t }}" aria-label="Weight for TEG {{ t }}"></td>
+                        <td class="sim-share" data-share-for="w_{{ t }}">{{ '%.0f' % shares[t] }}%</td>
+                        {% for pr in s.player_rows %}
+                        <td>{% if t in pr.played %}<input class="theme-select sim-weight sim-pw" type="number" name="pw_{{ pr.code }}_{{ t }}"
+                                   min="0" step="any" inputmode="decimal" value="{{ pr.weights[t] }}" data-player="{{ pr.code }}" data-teg="{{ t }}"
+                                   {% if not pr.custom %}disabled{% endif %}
+                                   aria-label="{{ pr.name }} weight for TEG {{ t }}">{% else %}<span class="text-muted" title="Did not play">&ndash;</span>{% endif %}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <p class="sim-help">Tick Custom to give one player their own weights, for example to skip a year they were injured. Unticked columns follow the All players weights.</p>
         </div>
     </div>
 </form>
@@ -112,7 +143,7 @@
     });
     // Live weight share %.
     function updateShares() {
-        var inputs = document.querySelectorAll('.sim-weight');
+        var inputs = document.querySelectorAll('.sim-weight:not(.sim-pw)');
         var vals = [], total = 0;
         inputs.forEach(function (i) { var v = parseFloat(i.value); v = (isFinite(v) && v > 0) ? v : 0; vals.push(v); total += v; });
         inputs.forEach(function (i, idx) {
@@ -120,14 +151,39 @@
             if (c) c.textContent = (total > 0 ? Math.round(vals[idx] / total * 100) : 0) + '%';
         });
     }
+    // Custom per-player weights: unticked columns mirror the global value, disabled.
+    function syncPlayer(code) {
+        var on = document.querySelector('.sim-po[data-player="' + CSS.escape(code) + '"]').checked;
+        document.querySelectorAll('.sim-pw[data-player="' + CSS.escape(code) + '"]').forEach(function (i) {
+            i.disabled = !on;
+            if (!on) {
+                var g = document.querySelector('.sim-weight[data-teg="' + i.getAttribute('data-teg') + '"]:not(.sim-pw)');
+                if (g) i.value = g.value;
+            }
+        });
+    }
+    function syncAll() { document.querySelectorAll('.sim-po').forEach(function (c) { syncPlayer(c.getAttribute('data-player')); }); }
+    // Method controls: show only the ones that apply.
+    function syncMethod() {
+        var m = document.getElementById('sim-method').value;
+        document.querySelectorAll('.sim-method-window').forEach(function (e) { e.hidden = m !== 'window'; });
+        document.querySelectorAll('.sim-method-bands').forEach(function (e) { e.hidden = m !== 'bands'; });
+    }
     document.addEventListener('input', function (e) {
-        if (e.target.classList && e.target.classList.contains('sim-weight')) updateShares();
+        if (e.target.classList && e.target.classList.contains('sim-weight') && !e.target.classList.contains('sim-pw')) {
+            updateShares(); syncAll();
+        }
     });
+    document.addEventListener('change', function (e) {
+        if (e.target.classList && e.target.classList.contains('sim-po')) syncPlayer(e.target.getAttribute('data-player'));
+        if (e.target.id === 'sim-method') syncMethod();
+    });
+    syncAll(); syncMethod();
     var reset = document.getElementById('sim-reset-weights');
     if (reset) reset.addEventListener('click', function (e) {
         e.preventDefault();
-        document.querySelectorAll('.sim-weight').forEach(function (i) { i.value = i.getAttribute('data-default'); });
-        updateShares();
+        document.querySelectorAll('.sim-weight:not(.sim-pw)').forEach(function (i) { i.value = i.getAttribute('data-default'); });
+        updateShares(); syncAll();
         document.getElementById('sim-form').dispatchEvent(new Event('change', {bubbles: true}));
     });
     var target = document.getElementById('sim-target');

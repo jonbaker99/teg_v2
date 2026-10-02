@@ -1,10 +1,12 @@
 """Monte Carlo simulation of an upcoming TEG from per-player score distributions.
 
 Each player's hole score (strokes vs par) is sampled from an empirical
-distribution built from their history, split by hole par and stroke-index (SI)
-band, recency-weighted by TEG and shrunk towards their par-level distribution
-when a cell has little data. Totals, Stableford points and finishing positions
-are then derived for the target tournament's actual scorecard and handicaps.
+distribution built from their history, split by hole par and stroke index (SI)
+and recency-weighted by TEG. By default a rolling SI window widens around the
+target SI pair until it holds enough holes; fixed SI bands shrunk towards the
+par-level distribution are also available. Totals, Stableford points and
+finishing positions are then derived for the target tournament's actual
+scorecard and handicaps.
 
 UI-agnostic: returns DataFrames/arrays only.
 """
@@ -26,6 +28,10 @@ SI_BAND_PRESETS: dict[str, tuple[int, ...]] = {
     "2 bands": (9,),
     "Par only": (),
 }
+METHODS = {"window": "Rolling SI window", "bands": "Fixed SI bands"}
+DEFAULT_METHOD = "window"
+DEFAULT_MIN_HOLES = 20
+_WINDOW_BOUNDARIES = (2, 4, 6, 8, 10, 12, 14, 16)  # SI pairs 1-2 ... 17-18
 DEFAULT_RECENT_WEIGHTS = (50.0, 35.0, 15.0)
 DEFAULT_SHRINKAGE = 10.0
 DEFAULT_SIMS = 10_000
@@ -188,6 +194,11 @@ def _weighted_hist(vp: np.ndarray, w: np.ndarray, vmin: int, size: int) -> np.nd
     return h / s if s > 0 else h
 
 
+def _pair_label(lo: int, hi: int) -> str:
+    """SI range label for SI pairs lo..hi (0-based), e.g. (1, 3) -> "SI 3-8"."""
+    return f"SI {2 * lo + 1}-{2 * hi + 2}"
+
+
 def build_distributions(
     history: pd.DataFrame,
     players: Sequence[str],
@@ -195,12 +206,35 @@ def build_distributions(
     boundaries: Sequence[int] = DEFAULT_SI_BOUNDARIES,
     shrinkage: float = DEFAULT_SHRINKAGE,
     pars: Sequence[int] = _PARS,
+    *,
+    method: str = DEFAULT_METHOD,
+    min_holes: int = DEFAULT_MIN_HOLES,
+    player_weights: dict[str, dict[int, float]] | None = None,
 ) -> ScoreDistributions:
-    """Per player/par/SI-band GrossVP distributions, recency-weighted and shrunk to par level."""
+    """Per player/par GrossVP distributions by SI, recency-weighted by TEG.
+
+    ``method="window"`` (default): SIs are paired (1-2 ... 17-18). For each target
+    pair the player's holes of that par are gathered from that pair, widening to
+    neighbouring pairs until at least ``min_holes`` raw holes; an observation's
+    weight is TEG weight x 1/(1+pair distance). No shrinkage. ``boundaries`` and
+    ``shrinkage`` are ignored.
+
+    ``method="bands"``: fixed SI ``boundaries``, cells shrunk to the par-level
+    distribution with strength ``shrinkage``.
+
+    ``player_weights[pl]`` replaces ``teg_weights`` for that player's own holes
+    (the field fallback keeps the global weights).
+    """
+    if method not in METHODS:
+        raise ValueError(f"Unknown method {method!r}")
+    window = method == "window"
+    if window:
+        boundaries = _WINDOW_BOUNDARIES
     boundaries = tuple(boundaries)
     labels = si_band_labels(boundaries)
     n_bands = len(labels)
     k = float(shrinkage)
+    min_holes = max(1, int(min_holes))
     warnings: list[str] = []
 
     h = history[["TEGNum", "Pl", "PAR", "SI", "GrossVP"]].copy()
@@ -210,7 +244,8 @@ def build_distributions(
     h["w"] = h["TEGNum"].map(lambda t: float(teg_weights.get(int(t), 0.0))).astype(float)
     h["band"] = assign_si_band(h["SI"].to_numpy(), boundaries)
     vp_all = h["GrossVP"].to_numpy().astype(int)
-    w_all = h["w"].to_numpy()
+    w_global = h["w"].to_numpy()
+    teg_all = h["TEGNum"].to_numpy().astype(int)
     pl_all = h["Pl"].to_numpy()
     par_all = h["PAR"].to_numpy()
     band_all = h["band"].to_numpy()
@@ -223,6 +258,11 @@ def build_distributions(
 
     for pl in players:
         pmask = pl_all == pl
+        w_all = w_global
+        if player_weights and pl in player_weights:
+            ov = player_weights[pl]
+            w_own = np.array([float(ov.get(int(t), 0.0)) for t in teg_all])
+            w_all = np.where(pmask, w_own, w_global)
         for par in pars:
             m = pmask & (par_all == par) & (w_all > 0)
             fallback: str | None = None
@@ -236,33 +276,48 @@ def build_distributions(
                     warnings.append(f"{pl} par {par}: no data in weighted TEGs, "
                                     "used the player's full history")
                 else:
-                    fm = (par_all == par) & (w_all > 0)
+                    fm = (par_all == par) & (w_global > 0)
                     if fm.any():
-                        p_par = _weighted_hist(vp_all[fm], w_all[fm], vmin, size)
+                        p_par = _weighted_hist(vp_all[fm], w_global[fm], vmin, size)
                     else:
                         fm = par_all == par
                         p_par = _weighted_hist(vp_all[fm], np.ones(fm.sum()), vmin, size)
                     fallback = "field fallback"
                     warnings.append(f"{pl} par {par}: no history at all, used the field distribution")
             for b in range(n_bands):
-                mc = m & (band_all == b)
-                n = int(mc.sum())
-                eff = kish(w_all[mc]) if n else 0.0
                 if fallback:
-                    final, src, n, eff = p_par, fallback, 0, 0.0
-                elif n == 0:
-                    final, src = p_par, "par fallback"
+                    final, src, n, eff, win = p_par, fallback, 0, 0.0, "All SI"
+                elif window:
+                    dist = np.abs(band_all[m] - b)
+                    r = 0
+                    while True:
+                        lo, hi = max(0, b - r), min(n_bands - 1, b + r)
+                        inw = dist <= r
+                        n = int(inw.sum())
+                        if n >= min_holes or (lo == 0 and hi == n_bands - 1):
+                            break
+                        r += 1
+                    wo = w_all[m][inw] / (1.0 + dist[inw])
+                    final = _weighted_hist(vp_all[m][inw], wo, vmin, size)
+                    eff, src, win = kish(wo), "window", _pair_label(lo, hi)
                 else:
-                    p_cell = _weighted_hist(vp_all[mc], w_all[mc], vmin, size)
-                    final = (eff * p_cell + k * p_par) / (eff + k) if eff + k > 0 else p_cell
-                    src = "cell"
+                    mc = m & (band_all == b)
+                    n = int(mc.sum())
+                    eff = kish(w_all[mc]) if n else 0.0
+                    win = labels[b]
+                    if n == 0:
+                        final, src = p_par, "par fallback"
+                    else:
+                        p_cell = _weighted_hist(vp_all[mc], w_all[mc], vmin, size)
+                        final = (eff * p_cell + k * p_par) / (eff + k) if eff + k > 0 else p_cell
+                        src = "cell"
                 nz = np.flatnonzero(final > 0)
                 prob_rows.append(pd.DataFrame({
                     "Pl": pl, "Par": par, "Band": b,
                     "GrossVP": support[nz].astype(int), "Prob": final[nz]}))
                 cell_rows.append({
-                    "Pl": pl, "Par": par, "Band": b, "BandLabel": labels[b], "N": n,
-                    "EffN": eff, "MeanVP": float((final * support).sum()), "Source": src})
+                    "Pl": pl, "Par": par, "Band": b, "BandLabel": labels[b], "Window": win,
+                    "N": n, "EffN": eff, "MeanVP": float((final * support).sum()), "Source": src})
 
     probs = (pd.concat(prob_rows, ignore_index=True) if prob_rows else
              pd.DataFrame(columns=["Pl", "Par", "Band", "GrossVP", "Prob"]))
