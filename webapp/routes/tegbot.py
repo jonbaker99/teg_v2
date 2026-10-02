@@ -19,15 +19,19 @@ import time
 from collections import defaultdict, deque
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import quote_plus
 
 import markdown
 from fastapi import APIRouter, Form, Request
+from fastapi.responses import RedirectResponse
+from starlette.concurrency import run_in_threadpool
 from fastapi.templating import Jinja2Templates
 
 import webapp.deps as deps
 from teg_analysis.chatbot import bot, qa_log
 from teg_analysis.chatbot.tools import ChatData
 from teg_analysis.reporting.llm import has_api_key
+from webapp.admin_auth import is_authed
 
 # The app sets no logging config, so a plain module logger drops INFO. A child of
 # uvicorn's logger uses its handler, so the per-question cost line reaches Railway.
@@ -178,9 +182,16 @@ def tegbot_ask(request: Request, question: str = Form(""), history: str = Form("
     except (json.JSONDecodeError, TypeError):
         prior = []
 
+    conv = qa_log.clean_conv_id(conv)
+    try:
+        past = [p for p in qa_log.past_questions() if p["conv"] != conv]
+        themes = qa_log.themes()
+    except OSError:
+        past, themes = [], []
+
     started = time.time()
     try:
-        answer = bot.ask(question, _chat_data(), history=prior)
+        answer = bot.ask(question, _chat_data(), history=prior, past=past, themes=themes)
     except Exception:
         logger.exception("TEGBot failed on %r", question)
         _refund_slot(visitor)
@@ -193,7 +204,8 @@ def tegbot_ask(request: Request, question: str = Form(""), history: str = Form("
     workings = [_working(c) for c in answer.tool_calls]
     try:
         qa_log.append_entry(conv=conv, question=question, answer=answer.text, workings=workings,
-                            model=answer.model, cost_usd=answer.cost_usd, seconds=seconds)
+                            model=answer.model, cost_usd=answer.cost_usd, seconds=seconds,
+                            theme=answer.theme, related=answer.related)
     except OSError:
         # The shared log is a nice-to-have; never lose the visitor's answer over it.
         logger.exception("TEGBot could not write the Q&A log")
@@ -201,6 +213,8 @@ def tegbot_ask(request: Request, question: str = Form(""), history: str = Form("
         answer_text=answer.history_text(),
         answer_html=render_answer_html(answer.text),
         tool_calls=workings,
+        related=[{"id": p["id"], "question": p["question"]}
+                 for rid in answer.related for p in past if p["id"] == rid],
     )
 
 
@@ -212,17 +226,71 @@ def _when(iso: str) -> str:
     return f"{dt.day} {dt:%b %Y}, {dt:%H:%M} UTC"
 
 
+def _entry_view(e: dict) -> dict:
+    return {**e, "when": _when(e.get("at")), "answer_html": render_answer_html(e.get("answer", "")),
+            "workings": [w for w in e.get("workings", []) if isinstance(w, dict)]}
+
+
 @router.get("/tegbot/asked")
-def tegbot_asked(request: Request):
-    threads = []
-    for conv in qa_log.conversations(limit=50):
-        threads.append([
-            {**e, "when": _when(e.get("at")), "answer_html": render_answer_html(e.get("answer", "")),
-             "workings": [w for w in e.get("workings", []) if isinstance(w, dict)]}
-            for e in conv
-        ])
+def tegbot_asked(request: Request, view: str = "newest", theme: str = ""):
+    """Shared Q&A log. view=newest: latest chats first. view=themes: chats grouped by
+    the theme of their first question (theme= narrows to one)."""
+    view = view if view in ("newest", "themes") else "newest"
+    threads = [[_entry_view(e) for e in conv] for conv in qa_log.conversations(limit=500)]
+    groups = []
+    if view == "themes":
+        by_theme: dict[str, list] = {}
+        for conv in threads:
+            by_theme.setdefault(conv[0].get("theme") or "Unsorted", []).append(conv)
+        order = sorted(by_theme, key=lambda t: (t in ("Off-topic", "Unsorted"), -len(by_theme[t]), t))
+        groups = [{"theme": t, "conversations": by_theme[t]} for t in order
+                  if not theme or t == theme]
     return templates.TemplateResponse("tegbot_asked.html", {
         "request": request,
         "active_page": "tegbot",
-        "conversations": threads,
+        "view": view,
+        "conversations": threads[:50],
+        "groups": groups,
     })
+
+
+# --- admin: prune and organise the log ---------------------------------------
+
+@router.get("/admin/tegbot")
+def admin_tegbot(request: Request, msg: str = ""):
+    if not is_authed(request):
+        return RedirectResponse("/admin/login", status_code=303)
+    entries = list(reversed(qa_log.read_entries()))
+    return templates.TemplateResponse("admin_tegbot.html", {
+        "request": request,
+        "active_page": None,
+        "entries": [{**e, "when": _when(e.get("at"))} for e in entries],
+        "themes": qa_log.themes(),
+        "msg": msg,
+    })
+
+
+@router.post("/admin/tegbot/delete")
+async def admin_tegbot_delete(request: Request):
+    # async only to read the variable-length checkbox list; the work is a small file rewrite.
+    if not is_authed(request):
+        return RedirectResponse("/admin/login", status_code=303)
+    form = await request.form()
+    ids = {str(v) for v in form.getlist("ids")}
+    removed = await run_in_threadpool(qa_log.delete_entries, ids) if ids else 0
+    return RedirectResponse(f"/admin/tegbot?msg=Deleted+{removed}+question{'s' if removed != 1 else ''}",
+                            status_code=303)
+
+
+@router.post("/admin/tegbot/themes")
+def admin_tegbot_themes(request: Request):
+    if not is_authed(request):
+        return RedirectResponse("/admin/login", status_code=303)
+    from teg_analysis.chatbot.themes import regroup_themes
+    try:
+        result = regroup_themes()
+        msg = f"Sorted {result['updated']} questions into {len(result['themes'])} themes"
+    except Exception:
+        logger.exception("TEGBot theme regroup failed")
+        msg = "Theme sorting failed; see the logs"
+    return RedirectResponse(f"/admin/tegbot?msg={quote_plus(msg)}", status_code=303)

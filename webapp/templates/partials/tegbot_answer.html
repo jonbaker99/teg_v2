@@ -6,6 +6,16 @@
             <p class="tb-error">{{ error }}</p>
             {% else %}
             {{ answer_html | safe }}
+            {% if related %}
+            <div class="tb-related">
+                <span class="tb-related-label">Others asked</span>
+                <ul>
+                    {% for r in related %}
+                    <li><a href="/tegbot/asked?view=themes#q-{{ r.id }}">{{ r.question }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
             {% if tool_calls %}
             <details class="tb-workings">
                 <summary>Show the workings ({{ tool_calls | length }} step{{ 's' if tool_calls | length != 1 }})</summary>

@@ -8,6 +8,11 @@ commit. Locally it lives under ``data/tegbot/`` (gitignored). Set
 
 No visitor identity is stored: no IP, no name. Entries in one chat share a
 random ``conv`` id made by the page, so follow-ups display with their thread.
+
+Each entry also carries a ``theme`` (tagged by the bot as it answers, or set in
+bulk by ``themes.regroup_themes``) and ``related`` (ids of similar past questions the
+bot pointed to). Admin pruning (``delete_entries``) and re-theming rewrite the
+file atomically under the same lock as appends.
 """
 
 from __future__ import annotations
@@ -46,7 +51,8 @@ def clean_conv_id(value: str | None) -> str:
 
 
 def append_entry(*, conv: str, question: str, answer: str, workings: list[dict],
-                 model: str, cost_usd: float, seconds: float) -> dict:
+                 model: str, cost_usd: float, seconds: float, theme: str = "",
+                 related: list[str] | None = None) -> dict:
     entry = {
         "id": uuid.uuid4().hex,
         "conv": clean_conv_id(conv),
@@ -57,6 +63,8 @@ def append_entry(*, conv: str, question: str, answer: str, workings: list[dict],
         "model": model,
         "cost_usd": round(cost_usd, 5),
         "seconds": round(seconds, 1),
+        "theme": clean_theme(theme),
+        "related": list(related or []),
     }
     path = log_path()
     line = json.dumps(entry, ensure_ascii=False) + "\n"
@@ -82,6 +90,71 @@ def read_entries() -> list[dict]:
             if isinstance(entry, dict) and entry.get("question"):
                 entries.append(entry)
     return entries
+
+
+def clean_theme(value: str | None) -> str:
+    """A short display label: one line, at most 40 characters."""
+    text = " ".join(str(value or "").split())[:40]
+    return text
+
+
+def _rewrite(entries: list[dict]) -> None:
+    """Replace the log with ``entries`` atomically. Caller holds ``_lock``."""
+    path = log_path()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(".tmp")
+    with tmp.open("w", encoding="utf-8") as fh:
+        for entry in entries:
+            fh.write(json.dumps(entry, ensure_ascii=False) + "\n")
+    os.replace(tmp, path)
+
+
+def delete_entries(ids: set[str]) -> int:
+    """Remove the given entries for good. Returns how many were removed."""
+    with _lock:
+        entries = read_entries()
+        kept = [e for e in entries if e.get("id") not in ids]
+        if len(kept) != len(entries):
+            _rewrite(kept)
+        return len(entries) - len(kept)
+
+
+def set_themes(theme_by_id: dict[str, str]) -> int:
+    """Set each entry's theme. Entries not in the mapping keep theirs."""
+    with _lock:
+        entries = read_entries()
+        changed = 0
+        for entry in entries:
+            if entry.get("id") in theme_by_id:
+                entry["theme"] = clean_theme(theme_by_id[entry["id"]])
+                changed += 1
+        if changed:
+            _rewrite(entries)
+        return changed
+
+
+def themes() -> list[str]:
+    """Themes in use, most used first."""
+    counts: dict[str, int] = {}
+    for entry in read_entries():
+        if entry.get("theme"):
+            counts[entry["theme"]] = counts.get(entry["theme"], 0) + 1
+    return sorted(counts, key=lambda t: (-counts[t], t))
+
+
+def past_questions(limit: int = 300) -> list[dict]:
+    """Recent distinct questions with their ids, newest first."""
+    seen, out = set(), []
+    for entry in reversed(read_entries()):
+        key = entry["question"].strip().lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append({"id": entry["id"], "question": entry["question"],
+                    "conv": entry.get("conv", "")})
+        if len(out) >= limit:
+            break
+    return out
 
 
 def conversations(limit: int = 50) -> list[list[dict]]:

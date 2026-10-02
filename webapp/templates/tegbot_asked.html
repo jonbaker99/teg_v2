@@ -11,18 +11,19 @@
 {% block extra_head %}{% include "partials/tegbot_styles.html" %}{% endblock %}
 
 {% block content %}
-<p class="tb-intro">Every question put to TEGBot, newest chat first. Tap a question to see the answer.</p>
+<p class="tb-intro">Every question put to TEGBot, by newest chat or by theme. Tap a question to see the answer.</p>
 <a class="tb-asked-link" href="/tegbot">← Ask your own question</a>
 
-{% if not conversations %}
-<p class="tb-intro">Nobody has asked anything yet.</p>
-{% endif %}
+<nav class="tb-views" aria-label="View">
+    <a href="/tegbot/asked" {% if view == 'newest' %}aria-current="page"{% endif %}>Newest</a>
+    <a href="/tegbot/asked?view=themes" {% if view == 'themes' %}aria-current="page"{% endif %}>By theme</a>
+</nav>
 
-{% for conv in conversations %}
+{% macro thread(conv) %}
 <section class="tb-conv">
     <div class="tb-conv-meta">{{ conv[0].when }}{% if conv | length > 1 %} / {{ conv | length }} questions{% endif %}</div>
     {% for e in conv %}
-    <details class="tb-past">
+    <details class="tb-past" id="q-{{ e.id }}">
         <summary><span class="tb-q">{{ e.question }}</span></summary>
         <div class="tb-a" style="margin-top: 8px;">
             <div class="tb-answer">
@@ -42,5 +43,25 @@
     </details>
     {% endfor %}
 </section>
-{% endfor %}
+{% endmacro %}
+
+{% if not conversations %}
+<p class="tb-intro">Nobody has asked anything yet.</p>
+{% elif view == 'themes' %}
+    {% for g in groups %}
+    <h2 class="tb-theme">{{ g.theme }} <small>{{ g.conversations | length }} chat{{ 's' if g.conversations | length != 1 }}</small></h2>
+    {% for conv in g.conversations %}{{ thread(conv) }}{% endfor %}
+    {% endfor %}
+{% else %}
+    {% for conv in conversations %}{{ thread(conv) }}{% endfor %}
+{% endif %}
+
+<script>
+// Open and highlight the question a "Others asked" link points to.
+(function () {
+    var id = location.hash.slice(1);
+    var el = id && document.getElementById(id);
+    if (el && el.tagName === 'DETAILS') { el.open = true; el.classList.add('tb-hit'); el.scrollIntoView({block: 'center'}); }
+})();
+</script>
 {% endblock %}

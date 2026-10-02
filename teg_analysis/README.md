@@ -120,7 +120,10 @@ teg_analysis/
                      sandbox (CSVs uploaded once per data version via the Files API);
                      returns text, every lookup/code step, and token usage
     qa_log.py        Shared Q&A log (JSONL on the volume, outside data/ so never synced):
-                     append_entry, conversations() for the "What others asked" page
+                     append_entry, conversations(), past_questions(), themes(),
+                     delete_entries() and set_themes() (atomic rewrites)
+    themes.py        regroup_themes(): one structured AI call re-sorts every logged
+                     question into at most 10 themes (admin "Sort into themes")
 
   display/           Formatting and output
     formatters.py    Format data for display (HTML, styled tables)

@@ -15,6 +15,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import threading
 from dataclasses import dataclass, field
 from typing import Any, Optional
@@ -59,6 +60,9 @@ class Answer:
     tool_calls: list[ToolCall] = field(default_factory=list)
     usage: dict = field(default_factory=dict)
     model: str = ""
+    theme: str = ""
+    #: ids of similar past questions the bot pointed to (validated against the log)
+    related: list[str] = field(default_factory=list)
 
     @property
     def method_note(self) -> str:
@@ -194,15 +198,55 @@ def _final_text(content: list) -> str:
     return "\n\n".join(texts).strip()
 
 
+_TRAILER = re.compile(r"^\s*(THEME|RELATED)\s*:\s*(.*?)\s*$", re.IGNORECASE)
+
+
+def past_block(past: list[dict], themes: list[str]) -> str:
+    """System text listing past questions and themes, for linking and tagging."""
+    lines = ["Themes in use: " + (", ".join(themes) if themes else "(none yet)")]
+    lines.append("Questions other players asked before (short id: question):")
+    lines += [f"{p['id'][:8]}: {p['question'][:200]}" for p in past] or ["(none yet)"]
+    return "\n".join(lines)
+
+
+def split_trailer(text: str, past: list[dict]) -> tuple[str, str, list[str]]:
+    """Strip the THEME/RELATED lines from the end of an answer; resolve related ids."""
+    lines = text.rstrip().split("\n")
+    theme, related_raw = "", ""
+    while lines:
+        m = _TRAILER.match(lines[-1])
+        if not m:
+            if not lines[-1].strip():
+                lines.pop()
+                continue
+            break
+        if m.group(1).upper() == "THEME":
+            theme = m.group(2)
+        else:
+            related_raw = m.group(2)
+        lines.pop()
+    by_short = {p["id"][:8]: p["id"] for p in past}
+    related = []
+    for token in re.split(r"[,\s]+", related_raw.lower()):
+        full = by_short.get(token[:8])
+        if full and full not in related:
+            related.append(full)
+    return "\n".join(lines).strip(), theme.strip(), related[:3]
+
+
 def ask(question: str, data: ChatData, history: Optional[list] = None,
-        client: Any = None, model: Optional[str] = None) -> Answer:
-    """Answer one question. ``history`` is prior text-only turns from the page."""
+        client: Any = None, model: Optional[str] = None,
+        past: Optional[list[dict]] = None, themes: Optional[list[str]] = None) -> Answer:
+    """Answer one question. ``history`` is prior text-only turns from the page;
+    ``past`` / ``themes`` come from the shared Q&A log (for "Others asked" and tagging)."""
     question = (question or "").strip()[:MAX_QUESTION_CHARS]
     if not question:
         raise ValueError("Empty question.")
     client = client or _client()
     model = model or get_model()
+    past = past or []
     system = build_system(data.holes(), data.complete(), data.players())
+    system.append({"type": "text", "text": past_block(past, themes or [])})
     uploads = [{"type": "container_upload", "file_id": fid}
                for fid in _dataset_file_ids(client, data)]
     messages: list[dict] = clean_history(history) + [
@@ -239,10 +283,11 @@ def ask(question: str, data: ChatData, history: Optional[list] = None,
             continue
         tool_uses = [b for b in response.content if b.type == "tool_use"]
         if response.stop_reason != "tool_use" or not tool_uses:
-            text = _final_text(response.content)
+            text, theme, related = split_trailer(_final_text(response.content), past)
             if response.stop_reason == "max_tokens":
                 text += "\n\n_(Answer cut short.)_"
-            return Answer(text or "I couldn't find an answer to that.", calls, usage, model)
+            return Answer(text or "I couldn't find an answer to that.", calls, usage, model,
+                          theme=theme, related=related)
 
         # Append the full assistant content unchanged (thinking blocks included).
         messages.append({"role": "assistant", "content": response.content})

@@ -321,9 +321,12 @@ def client(monkeypatch, tmp_path):
     monkeypatch.setattr(route, "_enabled", lambda: True)
     monkeypatch.setattr(route, "_visitor_hits", type(route._visitor_hits)(route._visitor_hits.default_factory))
     monkeypatch.setattr(route, "_daily", {"date": None, "count": 0})
-    monkeypatch.setattr(route.bot, "ask", lambda q, data, history=None: bot.Answer(
-        f"You asked **{q}**. See [Honours](/honours).",
-        [bot.ToolCall("get_honours", {}, {"counts": {}})], {}, "claude-sonnet-5-5"))
+    def fake_ask(q, data, history=None, past=None, themes=None):
+        related = [p["id"] for p in (past or []) if "won" in p["question"]][:1]
+        return bot.Answer(f"You asked **{q}**. See [Honours](/honours).",
+                          [bot.ToolCall("get_honours", {}, {"counts": {}})], {},
+                          "claude-sonnet-5-5", theme="Honours", related=related)
+    monkeypatch.setattr(route.bot, "ask", fake_ask)
     return TestClient(app)
 
 
@@ -413,3 +416,86 @@ def test_ask_route_survives_log_failure(client, monkeypatch):
 
 def test_asked_page_empty(client):
     assert "Nobody has asked anything yet" in client.get("/tegbot/asked").text
+
+
+# --- related questions, themes, admin pruning ----------------------------------
+
+def test_split_trailer_strips_lines_and_resolves_ids():
+    past = [{"id": "abcdef1234567890", "question": "Who won most?"},
+            {"id": "1234abcd00000000", "question": "Best round?"}]
+    text, theme, related = bot.split_trailer(
+        "Answer here.\n\nTHEME: Honours\nRELATED: abcdef12, ffffffff, 1234abcd", past)
+    assert text == "Answer here."
+    assert theme == "Honours"
+    assert related == ["abcdef1234567890", "1234abcd00000000"]
+    assert bot.split_trailer("No trailer", past) == ("No trailer", "", [])
+    assert bot.split_trailer("x\nRELATED: none", past)[2] == []
+
+
+def test_ask_sends_past_questions_and_returns_theme(data):
+    past = [{"id": "abcdef1234567890", "question": "Who won most?", "conv": "c"}]
+    client = FakeClient([_resp([SimpleNamespace(
+        type="text", text="Alan.\nTHEME: Honours\nRELATED: abcdef12")], "end_turn")])
+    answer = bot.ask("Most wins?", data, client=client, past=past, themes=["Honours"])
+    assert (answer.text, answer.theme, answer.related) == ("Alan.", "Honours", ["abcdef1234567890"])
+    system_text = client.calls[0]["system"][-1]["text"]
+    assert "abcdef12: Who won most?" in system_text and "Themes in use: Honours" in system_text
+
+
+def test_qa_log_delete_and_themes(monkeypatch, tmp_path):
+    from teg_analysis.chatbot import qa_log
+    monkeypatch.setenv("TEGBOT_LOG_PATH", str(tmp_path / "log.jsonl"))
+    kw = dict(answer="a", workings=[], model="m", cost_usd=0.0, seconds=0.0)
+    a = qa_log.append_entry(conv="aaaaaaaa", question="Q one", theme="Records", **kw)
+    b = qa_log.append_entry(conv="bbbbbbbb", question="Q two", theme="Honours", **kw)
+    qa_log.append_entry(conv="cccccccc", question="q ONE ", theme="Records", **kw)
+    assert qa_log.themes() == ["Records", "Honours"]
+    assert [p["question"] for p in qa_log.past_questions()] == ["q ONE ", "Q two"]  # deduped
+    assert qa_log.set_themes({b["id"]: "  Big   Wins "}) == 1
+    assert "Big Wins" in qa_log.themes()
+    assert qa_log.delete_entries({a["id"], "nope"}) == 1
+    assert [e["question"] for e in qa_log.read_entries()] == ["Q two", "q ONE "]
+
+
+def test_regroup_themes(monkeypatch, tmp_path):
+    from teg_analysis.chatbot import qa_log, themes
+    import teg_analysis.reporting.llm as llm
+    monkeypatch.setenv("TEGBOT_LOG_PATH", str(tmp_path / "log.jsonl"))
+    kw = dict(answer="a", workings=[], model="m", cost_usd=0.0, seconds=0.0)
+    e1 = qa_log.append_entry(conv="aaaaaaaa", question="Most jackets?", **kw)
+    e2 = qa_log.append_entry(conv="aaaaaaaa", question="Soup?", **kw)
+    def fake(system, user, schema, **k):
+        assert e1["id"][:8] in user
+        return schema(assignments=[{"id": e1["id"][:8], "theme": "Honours"},
+                                   {"id": e2["id"][:8], "theme": "Off-topic"},
+                                   {"id": "zzzzzzzz", "theme": "Ghost"}]), None
+    monkeypatch.setattr(llm, "generate_structured", fake)
+    assert themes.regroup_themes(model="m") == {"updated": 2, "themes": ["Honours", "Off-topic"]}
+
+
+def test_ask_route_shows_related_and_logs_theme(client):
+    from teg_analysis.chatbot import qa_log
+    client.post("/tegbot/ask", data={"question": "Who won most?", "conv": "aaaaaaaa"})
+    resp = client.post("/tegbot/ask", data={"question": "Most wins?", "conv": "bbbbbbbb"})
+    first = qa_log.read_entries()[0]
+    assert "Others asked" in resp.text and f"#q-{first['id']}" in resp.text
+    assert qa_log.read_entries()[-1]["theme"] == "Honours"
+    page = client.get("/tegbot/asked?view=themes")
+    assert '<h2 class="tb-theme">Honours' in page.text and f'id="q-{first["id"]}"' in page.text
+
+
+def test_admin_tegbot_needs_login_and_deletes(client):
+    from teg_analysis.chatbot import qa_log
+    client.post("/tegbot/ask", data={"question": "Delete me", "conv": "aaaaaaaa"})
+    entry = qa_log.read_entries()[0]
+    client.cookies.clear()
+    resp = client.get("/admin/tegbot", follow_redirects=False)
+    assert resp.status_code == 303 and resp.headers["location"] == "/admin/login"
+    assert client.post("/admin/tegbot/delete", data={"ids": entry["id"]},
+                       follow_redirects=False).status_code == 303
+    assert qa_log.read_entries()  # not deleted without login
+    client.post("/admin/login", data={"password": "teg"})
+    page = client.get("/admin/tegbot")
+    assert "Delete me" in page.text and "TEGBot log" in page.text
+    client.post("/admin/tegbot/delete", data={"ids": entry["id"]})
+    assert qa_log.read_entries() == []

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title_suffix %} — TEGBot log{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+  <span class="page-label">Admin</span>
+  <h1 class="page-title">TEGBot log</h1>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="/static/admin.css?v=3">
+<style>
+  .tbl-admin { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .tbl-admin th, .tbl-admin td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--table-cell-border, #ddd); vertical-align: top; }
+  .tbl-admin td.q { max-width: 22rem; }
+  .tbl-admin .a { color: var(--text-muted); font-size: 0.8rem; margin-top: 2px; }
+  .tbl-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0 0 1rem; }
+  .tbl-msg { padding: 8px 12px; background: var(--table-stripe-bg, #f3f3f1); border-radius: 6px; margin-bottom: 1rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+{% set admin_active = 'tegbot' %}
+{% include "partials/admin_nav.html" %}
+
+<div class="section-panel">
+  {% if msg %}<p class="tbl-msg">{{ msg }}</p>{% endif %}
+  <p style="font-size:0.875rem;margin-bottom:1rem;">
+    Every question asked on <a href="/tegbot/asked">What others asked</a>, newest first
+    ({{ entries | length }} in total). Tick questions to delete them for good. The bot tags
+    each new question with a theme; "Sort into themes" re-reads every question and tidies
+    them into at most 10 themes (one AI call, a few pence).
+  </p>
+  {% if themes %}<p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:1rem;">Themes: {{ themes | join(" / ") }}</p>{% endif %}
+
+  <div class="tbl-actions">
+    <form method="post" action="/admin/tegbot/themes" onsubmit="this.querySelector('button').disabled=true;this.querySelector('button').textContent='Sorting…';">
+      <button class="btn-secondary" type="submit" {% if not entries %}disabled{% endif %}>Sort into themes (AI)</button>
+    </form>
+  </div>
+
+  {% if entries %}
+  <form method="post" action="/admin/tegbot/delete"
+        onsubmit="var n=this.querySelectorAll('input[name=ids]:checked').length; return n>0 && confirm('Delete '+n+' question(s) for good?');">
+    <div class="tbl-actions"><button class="btn-action" type="submit">Delete ticked</button></div>
+    <table class="tbl-admin">
+      <thead><tr><th></th><th>When</th><th>Theme</th><th>Question / answer</th></tr></thead>
+      <tbody>
+      {% for e in entries %}
+      <tr>
+        <td><input type="checkbox" name="ids" value="{{ e.id }}" aria-label="Delete this question"></td>
+        <td>{{ e.when }}</td>
+        <td>{{ e.theme or "—" }}</td>
+        <td class="q">{{ e.question }}<div class="a">{{ e.answer[:160] }}{% if e.answer | length > 160 %}…{% endif %}</div></td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </form>
+  {% else %}
+  <p>No questions logged yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

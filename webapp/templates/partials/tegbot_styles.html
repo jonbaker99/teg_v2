@@ -59,4 +59,13 @@
     .tb-conv details.tb-past > summary .tb-q { display: inline-block; }
     .tb-conv details.tb-past[open] > summary .tb-q { opacity: 0.85; }
     .tb-conv .tb-past + .tb-past { margin-top: 10px; }
+    .tb-related { margin-top: 0.8em; padding-top: 0.6em; border-top: 1px dashed #d4d4cf; }
+    .tb-related-label { font-size: var(--fs-200, 12px); text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); }
+    .tb-a .tb-related ul { margin: 4px 0 0 1.1em; }
+    .tb-views { display: flex; gap: 6px; margin: 0 0 var(--sp-4, 16px); }
+    .tb-views a { border: 1px solid var(--select-border, #ccc); border-radius: 999px; padding: 4px 12px; font-size: var(--fs-200, 13px); color: var(--text-secondary); text-decoration: none; }
+    .tb-views a[aria-current="page"] { background: var(--btn-active-bg); color: var(--btn-active-text); border-color: transparent; }
+    .tb-theme { margin: var(--sp-6, 24px) 0 var(--sp-3, 12px); font-size: var(--fs-500, 18px); }
+    .tb-theme small { color: var(--text-muted); font-weight: 400; font-size: 0.75em; }
+    .tb-past:target > summary .tb-q, .tb-past.tb-hit > summary .tb-q { outline: 3px solid var(--accent); }
 </style>
