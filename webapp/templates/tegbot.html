@@ -1,37 +1,53 @@
 {% extends "base.html" %}
 {% block title_suffix %} — TEGBot 5000{% endblock %}
 
-{% block page_title %}
-<div class="page-title-area">
-    <span class="page-label">Ask the stats</span>
-    <h1 class="page-title">TEGBot 5000</h1>
-</div>
-{% endblock %}
+{% block page_title %}{% endblock %}
 
 {% block extra_head %}
 {% include "partials/tegbot_styles.html" %}
+<style>.page-title-outer { display: none; }</style>
 {% endblock %}
 
 {% block content %}
-<p class="tb-intro">
-    Ask anything about TEG players, scores and history. TEGBot 5000 looks up the numbers
-    and works them out with the site's own data. It never guesses, and it shows its workings.
-</p>
+{% from "partials/tegbot_robot.html" import robot %}
+<div class="tb-app">
+<div class="tb-hero">
+    {{ robot(96, label="TEGBot 5000") }}
+    <div>
+        <h2>TEGBOT 5000</h2>
+        <p>Ask me anything about the TEG. I look it up, I do the sums with the site's own data, and I show my workings.</p>
+    </div>
+</div>
 
-<a class="tb-asked-link" href="/tegbot/asked">See what others have asked →</a>
+<div class="tb-links"><a href="/tegbot/asked">What others asked →</a></div>
 
 {% if not enabled %}
-<div class="data-card"><p class="tb-error">TEGBot is switched off at the moment.</p></div>
+<div class="tb-answer"><p class="tb-error">TEGBot is switched off at the moment.</p></div>
 {% else %}
 <div id="tb-thread" class="tb-thread" aria-live="polite"></div>
-<div id="tb-thinking" class="tb-thinking">TEGBot is crunching the numbers…</div>
+
+<template id="tb-pending-tpl">
+    <div class="tb-turn tb-pending">
+        <div class="tb-q"></div>
+        <div class="tb-a">
+            {{ robot(28, busy=True) }}
+            <div class="tb-term" role="status">
+                <div class="tb-term-line"><span class="tb-term-text">Reading the question</span><span class="tb-cursor"></span></div>
+                <div class="tb-term-foot">
+                    <span class="tb-blocks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                    <span class="tb-timer">00:00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
 
 <form id="tb-form" class="tb-form"
       hx-post="/tegbot/ask" hx-target="#tb-thread" hx-swap="beforeend"
-      hx-indicator="#tb-thinking" hx-disabled-elt="#tb-send">
+      hx-disabled-elt="#tb-send">
     <textarea name="question" id="tb-question" maxlength="{{ max_chars }}" rows="2"
-              placeholder="e.g. Who bounces back best from bogeys?" required></textarea>
-    <button id="tb-send" type="submit">Ask</button>
+              placeholder="e.g. {{ placeholder }}" aria-label="Your question" required></textarea>
+    <button id="tb-send" type="submit">ASK</button>
 </form>
 
 <div class="tb-examples" id="tb-examples">
@@ -43,17 +59,48 @@
 <p class="tb-footnote">
     Answers come from an AI model reading the TEG data, so check anything important against
     the linked pages. Each question costs a few pence, so there's a daily limit.
-    Questions and answers are shared on the <a href="/tegbot/asked">What others asked</a> page
+    Questions and answers are shared on <a href="/tegbot/asked">What others asked</a>
     (no names are recorded).
 </p>
+</div>
 
 <script>
 (function () {
     var form = document.getElementById('tb-form');
     var box = document.getElementById('tb-question');
+    var thread = document.getElementById('tb-thread');
+    var tpl = document.getElementById('tb-pending-tpl');
     // One id per chat, so the shared log can show follow-ups with their thread.
     var conv = (window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2))
         .replace(/[^0-9a-f]/gi, '').toLowerCase().slice(0, 32);
+    // What the little terminal says while TEGBot works. First line is fixed; the rest shuffle.
+    var LINES = ["Pulling the scorecards", "Checking the record books", "Running the numbers",
+                 "Counting the triple bogeys", "Consulting the Honours board", "Looking for ties",
+                 "Double-checking the maths", "Raking the bunkers", "Replacing the divots",
+                 "Asking the data nicely", "Totting up the Stableford", "Polishing the answer"];
+    var ticker = null;
+
+    function startPending(question) {
+        var node = tpl.content.firstElementChild.cloneNode(true);
+        node.querySelector('.tb-q').textContent = question;
+        thread.appendChild(node);
+        node.scrollIntoView({behavior: 'smooth', block: 'start'});
+        var text = node.querySelector('.tb-term-text'), timer = node.querySelector('.tb-timer');
+        var order = LINES.slice().sort(function () { return Math.random() - 0.5; });
+        var started = Date.now(), i = 0;
+        ticker = setInterval(function () {
+            var secs = Math.floor((Date.now() - started) / 1000);
+            timer.textContent = ('0' + Math.floor(secs / 60)).slice(-2) + ':' + ('0' + secs % 60).slice(-2);
+            if (secs > 0 && secs % 2 === 0 && text.dataset.at !== String(secs)) {
+                text.dataset.at = String(secs);
+                text.textContent = order[i++ % order.length];
+            }
+        }, 250);
+    }
+    function stopPending() {
+        clearInterval(ticker);
+        thread.querySelectorAll('.tb-pending').forEach(function (n) { n.remove(); });
+    }
 
     document.getElementById('tb-examples').addEventListener('click', function (e) {
         var q = e.target.getAttribute('data-q');
@@ -65,17 +112,28 @@
     // Earlier answered turns ride along as text so follow-ups have context.
     form.addEventListener('htmx:configRequest', function (e) {
         var turns = [];
-        document.querySelectorAll('#tb-thread .tb-turn[data-answer]').forEach(function (t) {
+        thread.querySelectorAll('.tb-turn[data-answer]').forEach(function (t) {
             turns.push({role: 'user', content: t.dataset.question});
             turns.push({role: 'assistant', content: t.dataset.answer});
         });
         e.detail.parameters.history = JSON.stringify(turns.slice(-12));
         e.detail.parameters.conv = conv;
     });
+    form.addEventListener('htmx:beforeRequest', function () { startPending(box.value.trim()); box.value = ''; });
+    form.addEventListener('htmx:afterRequest', function (e) {
+        if (!e.detail.successful) {
+            stopPending();
+            thread.insertAdjacentHTML('beforeend', '<div class="tb-turn"><div class="tb-a"><div class="tb-answer"><p class="tb-error">Lost contact with TEGBot. Try again.</p></div></div></div>');
+        }
+    });
+    // htmx fires swap events on the target (the thread), so listen at the body.
+    document.body.addEventListener('htmx:beforeSwap', function (e) {
+        if (e.detail.target && e.detail.target.id === 'tb-thread') stopPending();
+    });
     document.body.addEventListener('htmx:afterSwap', function (e) {
         if (e.detail.target.id !== 'tb-thread') return;
-        box.value = '';
-        var last = document.querySelector('#tb-thread .tb-turn:last-child');
+        stopPending();
+        var last = thread.querySelector('.tb-turn:last-child');
         if (last) last.scrollIntoView({behavior: 'smooth', block: 'start'});
     });
 })();

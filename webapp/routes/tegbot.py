@@ -13,6 +13,7 @@ import html
 import json
 import logging
 import os
+import random
 import re
 import threading
 import time
@@ -43,12 +44,22 @@ PER_VISITOR_HOURLY = 20
 DEFAULT_DAILY_LIMIT = 200
 MAX_HISTORY_BYTES = 64_000
 
+#: The input's placeholder and the five example buttons are drawn at random from here.
 EXAMPLE_QUESTIONS = [
     "Who's won the most TEG Trophies?",
     "Who bounces back best from bogeys?",
     "Who has the best average on par 3s?",
     "What's the best gross round ever?",
     "How many podium finishes has each player had?",
+    "Who plays best in first rounds?",
+    "When was the last eagle?",
+    "Which course has the hardest par 3s?",
+    "How often does the leader after round 1 win?",
+    "Who is best on the back 9?",
+    "Who has the longest run of pars or better?",
+    "What happened the last time we played Boavista?",
+    "Who has improved most over the years?",
+    "Who finishes strongest over the last 3 holes?",
 ]
 
 _lock = threading.Lock()
@@ -155,7 +166,8 @@ def tegbot_page(request: Request):
         "request": request,
         "active_page": "tegbot",
         "enabled": _enabled(),
-        "examples": EXAMPLE_QUESTIONS,
+        "placeholder": random.choice(EXAMPLE_QUESTIONS),
+        "examples": random.sample(EXAMPLE_QUESTIONS, 5),
         "max_chars": bot.MAX_QUESTION_CHARS,
     })
 

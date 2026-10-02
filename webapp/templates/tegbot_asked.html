@@ -1,18 +1,22 @@
 {% extends "base.html" %}
 {% block title_suffix %} — What others asked TEGBot{% endblock %}
 
-{% block page_title %}
-<div class="page-title-area">
-    <span class="page-label">TEGBot 5000</span>
-    <h1 class="page-title">What others asked</h1>
-</div>
-{% endblock %}
+{% block page_title %}{% endblock %}
 
-{% block extra_head %}{% include "partials/tegbot_styles.html" %}{% endblock %}
+{% block extra_head %}{% include "partials/tegbot_styles.html" %}
+<style>.page-title-outer { display: none; }</style>{% endblock %}
 
 {% block content %}
-<p class="tb-intro">Every question put to TEGBot, by newest chat or by theme. Tap a question to see the answer.</p>
-<a class="tb-asked-link" href="/tegbot">← Ask your own question</a>
+{% from "partials/tegbot_robot.html" import robot %}
+<div class="tb-app">
+<div class="tb-hero">
+    {{ robot(64, label="TEGBot 5000") }}
+    <div>
+        <h2>WHAT OTHERS ASKED</h2>
+        <p>Every question put to TEGBot, by newest chat or by theme. Tap a question to see the answer.</p>
+    </div>
+</div>
+<div class="tb-links"><a href="/tegbot">← Ask your own question</a></div>
 
 <nav class="tb-views" aria-label="View">
     <a href="/tegbot/asked" {% if view == 'newest' %}aria-current="page"{% endif %}>Newest</a>
@@ -25,7 +29,8 @@
     {% for e in conv %}
     <details class="tb-past" id="q-{{ e.id }}">
         <summary><span class="tb-q">{{ e.question }}</span></summary>
-        <div class="tb-a" style="margin-top: 8px;">
+        <div class="tb-a">
+            {{ robot(28) }}
             <div class="tb-answer">
                 {{ e.answer_html | safe }}
                 {% if e.workings %}
@@ -46,7 +51,7 @@
 {% endmacro %}
 
 {% if not conversations %}
-<p class="tb-intro">Nobody has asked anything yet.</p>
+<p>Nobody has asked anything yet.</p>
 {% elif view == 'themes' %}
     {% for g in groups %}
     <h2 class="tb-theme">{{ g.theme }} <small>{{ g.conversations | length }} chat{{ 's' if g.conversations | length != 1 }}</small></h2>
@@ -55,6 +60,8 @@
 {% else %}
     {% for conv in conversations %}{{ thread(conv) }}{% endfor %}
 {% endif %}
+
+</div>
 
 <script>
 // Open and highlight the question a "Others asked" link points to.
