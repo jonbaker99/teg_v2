@@ -152,7 +152,7 @@ def test_navigation_copies_are_request_local():
     assert earlier[1]["label"] == earlier_shortcuts[0]["label"] == "TEG 18"
     assert later[1]["label"] == later_shortcuts[0]["label"] == "TEG 19"
     assert earlier[1]["pages"][2][0] == "TEG 18 in context"
-    assert [page[2] for page in later[1]["pages"]] == ["leaderboard", "latest-round", "handicaps"]
+    assert [page[2] for page in later[1]["pages"]] == ["leaderboard", "latest-round", "simulation", "handicaps"]
     assert earlier[1]["pages"][0][0] == "Final leaderboard"
     assert later[1]["pages"][0][0] == "Latest Leaderboard"
     assert earlier[1]["pages"][-1][0] == later[1]["pages"][-1][0] == "TEG 19 handicaps"
@@ -215,6 +215,7 @@ def test_navigation_report_link_follows_tournament_status(
         ("Latest Leaderboard", "/leaderboard", "leaderboard", "leaderboard"),
         ("Latest Round in context", "/latest-round", "latest-round", "sports_golf"),
         ("Latest TEG in context", "/latest-teg", "latest-teg", "sports_golf"),
+        ("Simulator", "/simulation", "simulation", "casino"),
         ("Handicaps", "/handicaps", "handicaps", "accessible"),
     ]
 

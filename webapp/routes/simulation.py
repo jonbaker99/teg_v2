@@ -1,0 +1,329 @@
+"""Simulation dashboard: /simulation (TEG simulator driven by analysis.simulation)."""
+
+import logging
+from functools import lru_cache
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+from fastapi import APIRouter, Request
+from fastapi.templating import Jinja2Templates
+
+from teg_analysis.analysis import simulation as sim
+from webapp.chart_utils import get_chart_style
+from webapp.deps import register_cache_clearer
+from webapp.routes.history import _wrap_player_name
+
+logger = logging.getLogger(__name__)
+
+router = APIRouter()
+templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
+
+LOW_EFF_N = 5.0
+# (column label, lower bound, upper bound) on GrossVP; tails are bucketed.
+_OUTCOMES = [("Eagle or better", None, -2), ("Birdie", -1, -1), ("Par", 0, 0),
+             ("+1", 1, 1), ("+2", 2, 2), ("+3", 3, 3), ("+4 or worse", 4, None)]
+
+
+# --- cached loaders ----------------------------------------------------------
+
+@lru_cache(maxsize=1)
+def _history() -> pd.DataFrame:
+    return sim.load_history(teg_nums=[50])  # TEG 50 is test data
+
+
+def _history_before(history: pd.DataFrame, target: int) -> pd.DataFrame:
+    """Only TEGs before the target feed the model, fallbacks included."""
+    earlier = history[history["TEGNum"] < target]
+    return earlier if not earlier.empty else history
+
+
+@lru_cache(maxsize=8)
+def _target(teg_num: int):
+    return sim.load_target_tournament(teg_num)
+
+
+@lru_cache(maxsize=1)
+def _target_options() -> tuple:
+    return tuple(sim.available_target_tegs())
+
+
+def _clear_caches() -> None:
+    _history.cache_clear()
+    _target.cache_clear()
+    _target_options.cache_clear()
+
+
+register_cache_clearer(_clear_caches)
+
+
+# --- input parsing -----------------------------------------------------------
+
+def _int(value, default):
+    try:
+        return int(float(str(value).strip()))
+    except (TypeError, ValueError, OverflowError):
+        return default
+
+
+def _parse_settings(qp, targets: list[int], history: pd.DataFrame) -> dict:
+    """Read controls from the query string. Errors are collected, never raised."""
+    errors: list[str] = []
+    target = _int(qp.get("target"), targets[0])
+    if target not in targets:
+        target = targets[0]
+
+    # Only TEGs before the target feed the model (no peeking at the answer).
+    completed = [t for t in sim.completed_teg_numbers(history) if t < target] \
+        or sim.completed_teg_numbers(history)
+    defaults = sim.default_teg_weights(completed)
+    weights: dict[int, float] = {}
+    for t in completed:
+        raw = qp.get(f"w_{t}")
+        if raw is None:
+            weights[t] = defaults[t]
+            continue
+        try:
+            w = float(str(raw).strip() or 0)
+        except ValueError:
+            errors.append(f"Weight for TEG {t} must be a number.")
+            w = 0.0
+        if w < 0 or w > 1e6 or not np.isfinite(w):
+            errors.append(f"Weight for TEG {t} must be between 0 and 1,000,000.")
+            w = 0.0
+        weights[t] = w
+    if not errors and sum(weights.values()) <= 0:
+        errors.append("All TEG weights are zero. Give at least one TEG a weight above 0.")
+
+    preset = qp.get("bands_preset") or "4 bands"
+    if preset not in sim.SI_BAND_PRESETS:
+        preset = "4 bands"
+    custom = (qp.get("bands_custom") or "").strip()
+    boundaries = sim.SI_BAND_PRESETS[preset]
+    if custom:
+        try:
+            boundaries = sim.parse_si_boundaries(custom)
+        except ValueError as exc:
+            errors.append(f"SI bands: {exc}. Use whole numbers like 4,9,14.")
+
+    k_raw = qp.get("shrinkage")
+    k = sim.DEFAULT_SHRINKAGE if k_raw in (None, "") else None
+    if k is None:
+        try:
+            k = float(k_raw)
+        except ValueError:
+            k = None
+        if k is None or k < 0 or not np.isfinite(k):
+            errors.append("Shrinkage k must be a number, zero or more.")
+            k = sim.DEFAULT_SHRINKAGE
+
+    n_raw = qp.get("n_sims")
+    n_sims = _int(n_raw, sim.DEFAULT_SIMS) if n_raw not in (None, "") else sim.DEFAULT_SIMS
+    clamp_note = None
+    if n_sims < 1:
+        n_sims = sim.DEFAULT_SIMS
+        errors.append("Number of simulations must be at least 1.")
+    elif n_sims > sim.MAX_SIMS:
+        n_sims = sim.MAX_SIMS
+        clamp_note = f"Simulations capped at {sim.MAX_SIMS:,}."
+
+    seed_raw = (qp.get("seed") or "").strip()
+    seed = None
+    if seed_raw:
+        seed = _int(seed_raw, None)
+        if seed is None or seed < 0:
+            errors.append("Seed must be a whole number, zero or more.")
+            seed = None
+
+    return {
+        "target": target, "targets": targets, "completed": completed,
+        "weights": weights, "defaults": defaults, "preset": preset,
+        "presets": list(sim.SI_BAND_PRESETS), "custom": custom,
+        "boundaries": boundaries, "k": k, "n_sims": n_sims, "seed": seed,
+        "seed_text": seed_raw, "clamp_note": clamp_note, "errors": errors,
+    }
+
+
+def _weight_shares(weights: dict[int, float]) -> dict[int, float]:
+    total = sum(weights.values())
+    return {t: (w / total * 100 if total > 0 else 0.0) for t, w in weights.items()}
+
+
+def _fmt_num(x: float) -> str:
+    return f"{x:g}"
+
+
+# --- distributions -----------------------------------------------------------
+
+def _shade(frac: float, max_pct: int = 55) -> str:
+    """Theme-aware tint: accent colour mixed into transparent."""
+    pct = int(round(max(0.0, min(1.0, frac)) * max_pct))
+    return f"background: color-mix(in srgb, var(--accent) {pct}%, transparent);"
+
+
+def _distribution_rows(dists: "sim.ScoreDistributions", player: str) -> list[dict]:
+    probs = dists.probs[dists.probs["Pl"] == player]
+    cells = dists.cells[dists.cells["Pl"] == player]
+    rows = []
+    for c in cells.sort_values(["Par", "Band"]).itertuples():
+        pr = probs[(probs["Par"] == c.Par) & (probs["Band"] == c.Band)]
+        vals = []
+        for _label, lo, hi in _OUTCOMES:
+            m = pd.Series(True, index=pr.index)
+            if lo is not None:
+                m &= pr["GrossVP"] >= lo
+            if hi is not None:
+                m &= pr["GrossVP"] <= hi
+            p = float(pr.loc[m, "Prob"].sum())
+            vals.append({"text": f"{p * 100:.0f}%", "style": _shade(p / 0.6)})
+        rows.append({
+            "label": f"Par {c.Par} / {c.BandLabel}", "cells": vals, "n": int(c.N),
+            "eff": f"{c.EffN:.1f}", "low": c.EffN < LOW_EFF_N, "mean": f"{c.MeanVP:+.2f}",
+            "source": c.Source,
+        })
+    return rows
+
+
+def _distributions_context(qp) -> dict:
+    try:
+        history = _history()
+        targets = list(_target_options())
+        if not targets:
+            return {"fatal": "No upcoming TEG scorecard is set up yet."}
+        s = _parse_settings(qp, targets, history)
+        tgt = _target(s["target"])
+        ctx = {"s": s, "dist_errors": s["errors"], "players": [], "outcomes": [o[0] for o in _OUTCOMES]}
+        if s["errors"]:
+            return ctx
+        dists = sim.build_distributions(_history_before(history, s["target"]), tgt.players,
+                                         s["weights"], s["boundaries"], s["k"])
+        player = qp.get("dist_player")
+        if player not in tgt.players:
+            player = tgt.players[0]
+        rows = _distribution_rows(dists, player)
+        ctx.update({
+            "players": [(p, tgt.names.get(p, p)) for p in tgt.players],
+            "dist_player": player,
+            "dist_rows": rows,
+            "dist_warnings": dists.warnings,
+            "dist_has_low": any(r["low"] for r in rows),
+        })
+        return ctx
+    except Exception:
+        logger.exception("simulation distributions failed")
+        return {"fatal": "Couldn't build the sampling distributions."}
+
+
+# --- results -----------------------------------------------------------------
+
+def _caption(res, s, n_holes: int) -> str:
+    shares = _weight_shares(s["weights"])
+    used = [f"{t} ({shares[t]:.0f}%)" for t in sorted(s["weights"], reverse=True) if s["weights"][t] > 0]
+    return (f"{res.n_sims:,} simulations of TEG {res.teg_num} ({n_holes} holes) "
+            f"using TEG{'s' if len(used) > 1 else ''} {', '.join(used)}.")
+
+
+def _summary_rows(res, measure: str) -> list[dict]:
+    df = sim.summary_table(res)
+    df = df.sort_values("ExpPosGross" if measure == "gross" else "ExpPosStableford",
+                        kind="stable").reset_index(drop=True)
+    return [{
+        "name_html": _wrap_player_name(r.Player), "hc": r.Handicap,
+        "gross": f"{r.MeanGross:.1f}", "gross_vp": f"{r.MeanGrossVP:+.1f}",
+        "gross_range": f"{r.P10Gross:.0f}-{r.P90Gross:.0f}",
+        "stab": f"{r.MeanStableford:.1f}",
+        "stab_range": f"{r.P10Stableford:.0f}-{r.P90Stableford:.0f}",
+        "win_gross": f"{r.WinGross * 100:.1f}%", "win_stab": f"{r.WinStableford * 100:.1f}%",
+    } for r in df.itertuples()]
+
+
+def _grid_rows(res, measure: str) -> tuple[list[int], list[dict]]:
+    grid = sim.position_grid(res, measure)
+    vmax = float(grid.to_numpy().max()) or 1.0
+    rows = []
+    for name, vals in grid.iterrows():
+        rows.append({"name_html": _wrap_player_name(name), "cells": [
+            {"text": f"{v * 100:.1f}%", "zero": v < 0.0005, "style": _shade(v / vmax, 60)}
+            for v in vals]})
+    return list(grid.columns), rows
+
+
+def _chart_json(res, measure: str) -> str:
+    import plotly.graph_objects as go
+    import plotly.express as px
+
+    dist = sim.total_distribution(res, measure)
+    palette = px.colors.qualitative.Plotly
+    fig = go.Figure()
+    for i, (name, g) in enumerate(dist.groupby("Player", sort=False)):
+        g = g.sort_values("Total")
+        fig.add_trace(go.Scatter(
+            x=g["Total"], y=(g["Fraction"] * 100).round(2), mode="lines", name=name,
+            line=dict(color=palette[i % len(palette)], width=2, shape="hvh"),
+            hovertemplate="%{x}: %{y:.1f}%<extra>" + name + "</extra>"))
+    fig.update_layout(
+        xaxis_title="Total gross strokes" if measure == "gross" else "Total Stableford points",
+        yaxis_title="% of simulations", hovermode="x unified",
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
+        margin=dict(r=20, t=10, b=40, l=50))
+    fig.layout.xaxis.fixedrange = True
+    fig.layout.yaxis.fixedrange = True
+    fig.update_layout(**get_chart_style("streamlit"))
+    return fig.to_json()
+
+
+def _run_context(qp) -> dict:
+    try:
+        history = _history()
+        targets = list(_target_options())
+        if not targets:
+            return {"fatal": "No upcoming TEG scorecard is set up yet."}
+        s = _parse_settings(qp, targets, history)
+        if s["errors"]:
+            return {"run_errors": s["errors"]}
+        tgt = _target(s["target"])
+        dists = sim.build_distributions(_history_before(history, s["target"]), tgt.players,
+                                         s["weights"], s["boundaries"], s["k"])
+        res = sim.run_simulation(dists, tgt, s["n_sims"], s["seed"])
+        measures = []
+        for key, label in (("gross", "Gross"), ("stableford", "Stableford")):
+            cols, grid = _grid_rows(res, key)
+            measures.append({
+                "key": key, "label": label, "summary": _summary_rows(res, key),
+                "grid_cols": cols, "grid": grid, "chart_json": _chart_json(res, key)})
+        return {
+            "measures": measures, "caption": _caption(res, s, len(tgt.holes)),
+            "clamp_note": s["clamp_note"], "warnings": dists.warnings,
+            "teg_num": res.teg_num,
+        }
+    except Exception:
+        logger.exception("simulation run failed")
+        return {"fatal": "Couldn't run the simulation."}
+
+
+# --- routes (sync def: FastAPI threadpools them) -----------------------------
+
+@router.get("/simulation")
+def simulation_page(request: Request):
+    ctx = _distributions_context(request.query_params)
+    s = ctx.get("s")
+    ctx["teg_num"] = s["target"] if s else None
+    if s:
+        ctx["shares"] = _weight_shares(s["weights"])
+        ctx["fmt"] = _fmt_num
+    return templates.TemplateResponse("simulation.html", {
+        "request": request, "active_page": "simulation", "wide": True, **ctx})
+
+
+@router.get("/simulation/distributions")
+def simulation_distributions(request: Request):
+    ctx = _distributions_context(request.query_params)
+    return templates.TemplateResponse("partials/simulation_distributions.html", {
+        "request": request, **ctx})
+
+
+@router.get("/simulation/run")
+def simulation_run(request: Request):
+    ctx = _run_context(request.query_params)
+    return templates.TemplateResponse("partials/simulation_results.html", {
+        "request": request, **ctx})

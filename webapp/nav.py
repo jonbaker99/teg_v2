@@ -30,11 +30,12 @@ NAV_SECTIONS = [
     },
     {
         "label": "Latest TEG",
-        "active": {"leaderboard", "latest-round", "latest-teg", "handicaps"},
+        "active": {"leaderboard", "latest-round", "latest-teg", "handicaps", "simulation"},
         "pages": [
             ("Latest Leaderboard", "/leaderboard", "leaderboard", "leaderboard"),
             ("Latest Round in context", "/latest-round", "latest-round", "sports_golf"),
             ("Latest TEG in context", "/latest-teg", "latest-teg", "sports_golf"),
+            ("Simulator", "/simulation", "simulation", "casino"),
             ("Handicaps", "/handicaps", "handicaps", "accessible"),
         ],
     },

@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="/static/simulation.css">
+{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+    <span class="page-label">Latest TEG</span>
+    <h1 class="page-title">{% if teg_num %}TEG {{ teg_num }} simulator{% else %}TEG simulator{% endif %}</h1>
+    {% if teg_num %}
+    <p class="page-subtitle">Each hole is sampled from the player's past scores on holes of that par and stroke-index band, weighted by TEG. Stableford uses the TEG {{ teg_num }} handicaps.</p>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block content %}
+{% if fatal %}
+<div class="request-feedback" role="alert"><span>{{ fatal }}</span></div>
+{% else %}
+{% set s = s %}
+<form id="sim-form" class="sim-form data-card data-card--padded" onsubmit="return false;"
+      hx-get="/simulation/distributions" hx-trigger="change delay:300ms" hx-target="#sim-dists" hx-include="[name=dist_player]" hx-swap="innerHTML">
+    <div class="sim-grid">
+        <div class="sim-block">
+            <label class="sim-field"><span class="text-muted">Target TEG</span>
+                <select class="theme-select" name="target" id="sim-target">
+                    {% for t in s.targets %}<option value="{{ t }}" {% if t == s.target %}selected{% endif %}>TEG {{ t }}</option>{% endfor %}
+                </select>
+            </label>
+        </div>
+
+        <div class="sim-block">
+            <div class="sim-block-head"><span class="text-muted">TEG weights</span>
+                <a href="/simulation?target={{ s.target }}" class="sim-reset" id="sim-reset-weights">Reset</a></div>
+            <div class="table-wrapper sim-weights-wrap">
+                <table class="teg-table sim-weights">
+                    <tbody>
+                    {% for t in s.completed %}
+                    <tr>
+                        <td>TEG {{ t }}</td>
+                        <td><input class="theme-select sim-weight" type="number" name="w_{{ t }}" min="0" step="any"
+                                   inputmode="decimal" value="{{ fmt(s.weights[t]) }}" data-default="{{ fmt(s.defaults[t]) }}"
+                                   aria-label="Weight for TEG {{ t }}"></td>
+                        <td class="sim-share" data-share-for="w_{{ t }}">{{ '%.0f' % shares[t] }}%</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="sim-block">
+            <label class="sim-field"><span class="text-muted">SI bands</span>
+                <select class="theme-select" name="bands_preset">
+                    {% for p in s.presets %}<option value="{{ p }}" {% if p == s.preset %}selected{% endif %}>{{ p }}</option>{% endfor %}
+                </select>
+            </label>
+            <label class="sim-field"><span class="text-muted">Custom boundaries (optional)</span>
+                <input class="theme-select" type="text" name="bands_custom" value="{{ s.custom }}" placeholder="e.g. 4,9,14" autocomplete="off">
+            </label>
+            <p class="sim-help">Custom boundaries override the preset. 4,9,14 gives SI 1-4, 5-9, 10-14, 15-18.</p>
+
+            <label class="sim-field"><span class="text-muted">Shrinkage k</span>
+                <input class="theme-select input-numeric" type="number" name="shrinkage" min="0" step="any" value="{{ fmt(s.k) }}">
+            </label>
+            <p class="sim-help">Pulls thin SI-band cells toward the player's overall par distribution. 0 = raw.</p>
+        </div>
+
+        <div class="sim-block">
+            <label class="sim-field"><span class="text-muted">Simulations (max {{ '{:,}'.format(100000) }})</span>
+                <input class="theme-select input-numeric" type="number" name="n_sims" min="1" max="100000" step="1" value="{{ s.n_sims }}">
+            </label>
+            <label class="sim-field"><span class="text-muted">Seed (optional)</span>
+                <input class="theme-select input-numeric" type="number" name="seed" min="0" step="1" value="{{ s.seed_text }}" placeholder="random">
+            </label>
+            <div class="sim-run-row">
+                <button type="button" class="sim-run" hx-get="/simulation/run" hx-include="#sim-form"
+                        hx-target="#sim-results" hx-swap="innerHTML" hx-indicator="#sim-running">Run simulation</button>
+                <span id="sim-running" class="htmx-indicator text-muted" aria-live="polite">Running&hellip;</span>
+            </div>
+        </div>
+    </div>
+</form>
+
+<section class="section-gap">
+    <h2 class="section-title">Sampling distributions</h2>
+    <div id="sim-dists">{% include "partials/simulation_distributions.html" %}</div>
+</section>
+
+<section class="section-gap">
+    <h2 class="section-title">Results</h2>
+    <div id="sim-results"><p class="text-muted">Run the simulation to see predictions.</p></div>
+</section>
+
+<script>
+(function () {
+    // Gross / Stableford toggle (client-side, no re-run).
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-sim-measure]');
+        if (!btn) return;
+        var key = btn.getAttribute('data-sim-measure');
+        var root = btn.closest('.sim-results');
+        root.querySelectorAll('[data-sim-measure]').forEach(function (b) {
+            b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+        });
+        root.querySelectorAll('.sim-panel').forEach(function (p) {
+            p.classList.toggle('sim-hidden', p.getAttribute('data-measure') !== key);
+        });
+        var chart = root.querySelector('.sim-panel[data-measure="' + key + '"] .chart-container');
+        if (chart && window.Plotly) { try { Plotly.Plots.resize(chart); } catch (err) {} }
+    });
+    // Live weight share %.
+    function updateShares() {
+        var inputs = document.querySelectorAll('.sim-weight');
+        var vals = [], total = 0;
+        inputs.forEach(function (i) { var v = parseFloat(i.value); v = (isFinite(v) && v > 0) ? v : 0; vals.push(v); total += v; });
+        inputs.forEach(function (i, idx) {
+            var c = document.querySelector('[data-share-for="' + i.name + '"]');
+            if (c) c.textContent = (total > 0 ? Math.round(vals[idx] / total * 100) : 0) + '%';
+        });
+    }
+    document.addEventListener('input', function (e) {
+        if (e.target.classList && e.target.classList.contains('sim-weight')) updateShares();
+    });
+    var reset = document.getElementById('sim-reset-weights');
+    if (reset) reset.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelectorAll('.sim-weight').forEach(function (i) { i.value = i.getAttribute('data-default'); });
+        updateShares();
+        document.getElementById('sim-form').dispatchEvent(new Event('change', {bubbles: true}));
+    });
+    var target = document.getElementById('sim-target');
+    if (target) target.addEventListener('change', function (e) {
+        e.stopPropagation();
+        window.location.href = '/simulation?target=' + encodeURIComponent(target.value);
+    });
+})();
+</script>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,64 @@
+{% if fatal %}
+<div class="request-feedback" role="alert"><span>{{ fatal }}</span></div>
+{% elif run_errors %}
+<ul class="sim-errors" role="alert">{% for e in run_errors %}<li>{{ e }}</li>{% endfor %}</ul>
+{% else %}
+<div class="sim-results">
+    <p class="sim-caption">{{ caption }}{% if clamp_note %} {{ clamp_note }}{% endif %}</p>
+    {% if warnings %}<ul class="sim-warnings">{% for w in warnings %}<li>{{ w }}</li>{% endfor %}</ul>{% endif %}
+    <div class="section-controls">
+        <div class="segmented" role="group" aria-label="Measure">
+            {% for m in measures %}
+            <button type="button" class="seg-option" data-sim-measure="{{ m.key }}" aria-pressed="{{ 'true' if loop.first else 'false' }}">{{ m.label }}</button>
+            {% endfor %}
+        </div>
+    </div>
+    {% for m in measures %}
+    <div class="sim-panel{% if not loop.first %} sim-hidden{% endif %}" data-measure="{{ m.key }}">
+        <h3 class="sim-subhead">Summary (by expected {{ m.label | lower }} position)</h3>
+        <div class="data-card"><div class="table-wrapper">
+        <table class="teg-table sim-summary">
+            <thead><tr>
+                <th class="sim-left">Player</th><th>HC</th>
+                <th>Gross</th><th>vs par</th><th>Gross 10-90</th>
+                <th>Stableford</th><th>Stab 10-90</th>
+                <th>Win % gross</th><th>Win % stab</th>
+            </tr></thead>
+            <tbody>
+            {% for r in m.summary %}
+            <tr>
+                <td class="sim-left">{{ r.name_html | safe }}</td><td>{{ r.hc }}</td>
+                <td>{{ r.gross }}</td><td>{{ r.gross_vp }}</td><td>{{ r.gross_range }}</td>
+                <td>{{ r.stab }}</td><td>{{ r.stab_range }}</td>
+                <td>{{ r.win_gross }}</td><td>{{ r.win_stab }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div></div>
+
+        <h3 class="sim-subhead">Finishing position, {{ m.label | lower }}</h3>
+        <div class="data-card"><div class="table-wrapper">
+        <table class="teg-table sim-grid-table">
+            <thead><tr><th class="sim-left">Player</th>{% for c in m.grid_cols %}<th>{{ c }}</th>{% endfor %}</tr></thead>
+            <tbody>
+            {% for r in m.grid %}
+            <tr>
+                <td class="sim-left">{{ r.name_html | safe }}</td>
+                {% for c in r.cells %}<td class="{% if c.zero %}sim-zero{% endif %}" style="{{ c.style }}">{{ c.text }}</td>{% endfor %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div></div>
+
+        <h3 class="sim-subhead">Distribution of total {{ 'gross strokes' if m.key == 'gross' else 'Stableford points' }}</h3>
+        <div class="chart-block">
+            <div class="data-card data-card--padded">
+                <div class="chart-container" data-figure="{{ m.chart_json }}" style="height:360px;"></div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
