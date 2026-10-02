@@ -10,6 +10,7 @@ from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 
 from teg_analysis.analysis import simulation as sim
+from teg_analysis.core.players import get_player_dict
 from webapp.chart_utils import get_chart_style
 from webapp.deps import register_cache_clearer
 from webapp.routes.history import _wrap_player_name
@@ -38,9 +39,10 @@ def _history_before(history: pd.DataFrame, target: int) -> pd.DataFrame:
     return earlier if not earlier.empty else history
 
 
-@lru_cache(maxsize=8)
-def _target(teg_num: int):
-    return sim.load_target_tournament(teg_num)
+@lru_cache(maxsize=16)
+def _target(teg_num: int, players: tuple | None = None):
+    """Target tournament; ``players`` is a sorted tuple of codes, None = default roster."""
+    return sim.load_target_tournament(teg_num, list(players) if players is not None else None)
 
 
 @lru_cache(maxsize=1)
@@ -69,9 +71,11 @@ def _int(value, default):
 def _parse_settings(qp, targets: list[int], history: pd.DataFrame) -> dict:
     """Read controls from the query string. Errors are collected, never raised."""
     errors: list[str] = []
-    target = _int(qp.get("target"), targets[0])
+    default = sim.default_target_teg()
+    fallback = default if default in targets else targets[0]
+    target = _int(qp.get("target"), fallback)
     if target not in targets:
-        target = targets[0]
+        target = fallback
 
     # Only TEGs before the target feed the model (no peeking at the answer).
     completed = [t for t in sim.completed_teg_numbers(history) if t < target] \
@@ -95,7 +99,20 @@ def _parse_settings(qp, targets: list[int], history: pd.DataFrame) -> dict:
     if not errors and sum(weights.values()) <= 0:
         errors.append("All TEG weights are zero. Give at least one TEG a weight above 0.")
 
-    tgt = _target(target)
+    default_tgt = _target(target)
+    tgt = default_tgt
+    all_names = get_player_dict()
+    selected = set(default_tgt.players)
+    if qp.get("pl_set"):
+        picked = set(qp.getlist("pl"))
+        chosen = [c for c in default_tgt.candidates if c in picked]
+        selected = set(chosen)
+        if not chosen:
+            errors.append("Pick at least one player.")
+        elif selected != set(default_tgt.players):
+            tgt = _target(target, tuple(sorted(chosen)))
+    player_options = [{"code": c, "name": all_names.get(c, c), "checked": c in selected}
+                      for c in default_tgt.candidates]
     played = {pl: {int(t) for t in g["TEGNum"].unique()}
               for pl, g in history[history["TEGNum"].isin(completed)].groupby("Pl")}
     player_weights: dict[str, dict[int, float]] = {}
@@ -168,6 +185,18 @@ def _parse_settings(qp, targets: list[int], history: pd.DataFrame) -> dict:
                 errors.append("Shrinkage k must be a number, zero or more.")
             k = sim.DEFAULT_SHRINKAGE
 
+    fa_raw = qp.get("field_alpha")
+    field_alpha = sim.DEFAULT_FIELD_ALPHA
+    if fa_raw not in (None, ""):
+        try:
+            field_alpha = float(str(fa_raw).strip())
+        except ValueError:
+            field_alpha = None
+        if field_alpha is None or not np.isfinite(field_alpha) or not 0 <= field_alpha <= 200:
+            errors.append("Field blend must be a number between 0 and 200.")
+            field_alpha = sim.DEFAULT_FIELD_ALPHA
+    fa_text = _fmt_num(field_alpha) if fa_raw in (None, "") else str(fa_raw).strip()
+
     n_raw = qp.get("n_sims")
     n_sims = _int(n_raw, sim.DEFAULT_SIMS) if n_raw not in (None, "") else sim.DEFAULT_SIMS
     clamp_note = None
@@ -194,6 +223,8 @@ def _parse_settings(qp, targets: list[int], history: pd.DataFrame) -> dict:
         "presets": list(sim.SI_BAND_PRESETS), "custom": custom,
         "boundaries": boundaries, "k": k, "n_sims": n_sims, "seed": seed,
         "seed_text": seed_raw, "clamp_note": clamp_note, "errors": errors,
+        "tgt": tgt, "player_options": player_options,
+        "field_alpha": field_alpha, "field_alpha_text": fa_text,
     }
 
 
@@ -210,7 +241,20 @@ def _build(history: pd.DataFrame, tgt, s: dict) -> "sim.ScoreDistributions":
     return sim.build_distributions(
         _history_before(history, s["target"]), tgt.players, s["weights"],
         s["boundaries"], s["k"], method=s["method"], min_holes=s["min_holes"],
-        player_weights=s["player_weights"] or None)
+        player_weights=s["player_weights"] or None, field_alpha=s["field_alpha"])
+
+
+def _status_notes(tgt) -> list[str]:
+    notes = []
+    if tgt.handicaps_draft:
+        notes.append(f"Handicaps are a draft calculation; TEG {tgt.teg_num} handicaps haven't been saved yet.")
+    if tgt.random_rounds > 0:
+        fixed = {int(r) for r in tgt.holes["Round"].unique()} if len(tgt.holes) else set()
+        missing = [r for r in range(1, tgt.n_rounds + 1) if r not in fixed]
+        label = "round" if len(missing) == 1 else "rounds"
+        notes.append(f"No scorecard yet for {label} {', '.join(map(str, missing))}: each simulation "
+                     f"draws a random par-72 course from the {len(tgt.course_pool)} on file.")
+    return notes
 
 
 # --- distributions -----------------------------------------------------------
@@ -251,7 +295,7 @@ def _distributions_context(qp) -> dict:
         if not targets:
             return {"fatal": "No upcoming TEG scorecard is set up yet."}
         s = _parse_settings(qp, targets, history)
-        tgt = _target(s["target"])
+        tgt = s["tgt"]
         ctx = {"s": s, "dist_errors": s["errors"], "players": [], "outcomes": [o[0] for o in _OUTCOMES]}
         if s["errors"]:
             return ctx
@@ -261,6 +305,7 @@ def _distributions_context(qp) -> dict:
             player = tgt.players[0]
         bands = sim.assign_si_band(tgt.holes["SI"].to_numpy(), dists.boundaries)
         used = {(int(p), int(b)) for p, b in zip(tgt.holes["Par"], bands)}
+        has_marks = len(tgt.holes) > 0
         rows = _distribution_rows(dists, player, used)
         ctx.update({
             "players": [(p, tgt.names.get(p, p)) for p in tgt.players],
@@ -269,8 +314,12 @@ def _distributions_context(qp) -> dict:
             "dist_warnings": dists.warnings,
             "dist_has_low": any(r["low"] for r in rows),
             "dist_window": s["method"] == "window",
+            "dist_marks": has_marks,
         })
         return ctx
+    except ValueError as exc:  # setup problems (missing handicap, no scorecard pool)
+        logger.warning("Simulation setup: %s", exc)
+        return {"fatal": f"Can't simulate yet: {exc}. Check the TEG setup (roster and handicaps)."}
     except Exception:
         logger.exception("simulation distributions failed")
         return {"fatal": "Couldn't build the sampling distributions."}
@@ -300,7 +349,21 @@ def _summary_rows(res, measure: str) -> list[dict]:
         "stab": f"{r.MeanStableford:.1f}",
         "stab_range": f"{r.P10Stableford:.0f}-{r.P90Stableford:.0f}",
         "win_gross": f"{r.WinGross * 100:.1f}%", "win_stab": f"{r.WinStableford * 100:.1f}%",
+        "eagle": f"{getattr(r, 'EagleChance', float('nan')) * 100:.1f}%",
+        "blobs": f"{getattr(r, 'ExpBlobs', float('nan')):.1f}",
     } for r in df.itertuples()]
+
+
+def _courses_drawn(res, tgt) -> list[dict]:
+    """Share of random rounds that drew each pool course, most drawn first."""
+    used = res.courses_used
+    if used is None or used.size == 0 or not tgt.course_pool:
+        return []
+    counts = np.bincount(used.ravel().astype(int), minlength=len(tgt.course_pool))
+    total = counts.sum()
+    rows = [{"name": tgt.course_pool[i][0], "pct": f"{counts[i] / total * 100:.1f}%", "n": int(counts[i])}
+            for i in range(len(tgt.course_pool))]
+    return sorted(rows, key=lambda r: (-r["n"], r["name"]))
 
 
 def _grid_rows(res, measure: str) -> tuple[list[int], list[dict]]:
@@ -318,14 +381,14 @@ def _chart_json(res, measure: str) -> str:
     import plotly.graph_objects as go
     import plotly.express as px
 
-    dist = sim.total_distribution(res, measure)
+    dist = sim.total_distribution(res, measure, smooth=True)
     palette = px.colors.qualitative.Plotly
     fig = go.Figure()
     for i, (name, g) in enumerate(dist.groupby("Player", sort=False)):
         g = g.sort_values("Total")
         fig.add_trace(go.Scatter(
             x=g["Total"], y=(g["Fraction"] * 100).round(2), mode="lines", name=name,
-            line=dict(color=palette[i % len(palette)], width=2, shape="hvh"),
+            line=dict(color=palette[i % len(palette)], width=2),
             hovertemplate="%{x}: %{y:.1f}%<extra>" + name + "</extra>"))
     fig.update_layout(
         xaxis_title="Total gross strokes" if measure == "gross" else "Total Stableford points",
@@ -347,7 +410,7 @@ def _run_context(qp) -> dict:
         s = _parse_settings(qp, targets, history)
         if s["errors"]:
             return {"run_errors": s["errors"]}
-        tgt = _target(s["target"])
+        tgt = s["tgt"]
         dists = _build(history, tgt, s)
         res = sim.run_simulation(dists, tgt, s["n_sims"], s["seed"])
         measures = []
@@ -357,10 +420,15 @@ def _run_context(qp) -> dict:
                 "key": key, "label": label, "summary": _summary_rows(res, key),
                 "grid_cols": cols, "grid": grid, "chart_json": _chart_json(res, key)})
         return {
-            "measures": measures, "caption": _caption(res, s, len(tgt.holes)),
+            "measures": measures,
+            "caption": _caption(res, s, len(tgt.holes) + 18 * tgt.random_rounds),
+            "courses": _courses_drawn(res, tgt),
             "clamp_note": s["clamp_note"], "warnings": dists.warnings,
             "teg_num": res.teg_num,
         }
+    except ValueError as exc:  # setup problems (missing handicap, no scorecard pool)
+        logger.warning("Simulation setup: %s", exc)
+        return {"fatal": f"Can't simulate yet: {exc}. Check the TEG setup (roster and handicaps)."}
     except Exception:
         logger.exception("simulation run failed")
         return {"fatal": "Couldn't run the simulation."}
@@ -374,6 +442,7 @@ def simulation_page(request: Request):
     s = ctx.get("s")
     ctx["teg_num"] = s["target"] if s else None
     if s:
+        ctx["notes"] = _status_notes(s["tgt"])
         ctx["shares"] = _weight_shares(s["weights"])
         ctx["fmt"] = _fmt_num
     return templates.TemplateResponse("simulation.html", {

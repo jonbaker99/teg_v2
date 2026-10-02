@@ -135,3 +135,83 @@ def test_all_zero_override_is_an_error(client):
     r = client.get(f"/simulation/run?{q}")
     assert f"Custom weights for {name} are all zero" in r.text
     assert "chart-container" not in r.text
+
+
+# --- target, players, rare events, random courses ----------------------------
+
+def test_default_page_targets_default_teg(client):
+    r = client.get("/simulation")
+    assert f"TEG {sim.default_target_teg()} simulator" in r.text
+    assert 'name="field_alpha"' in r.text and "Field blend (holes)" in r.text
+    assert 'name="pl" value=' in r.text
+
+
+def test_players_subset_and_zero_players(client):
+    tgt = sim.load_target_tournament()
+    two = tgt.players[:2]
+    q = "&".join(f"pl={c}" for c in two)
+    r = client.get(f"/simulation/run?pl_set=1&{q}&n_sims=200&seed=1")
+    assert r.status_code == 200 and "chart-container" in r.text
+    assert tgt.names[tgt.players[2]] not in r.text.replace("&nbsp;", " ").replace("<br>", " ")
+    page = client.get(f"/simulation?pl_set=1&{q}")
+    assert page.text.count('name="po_') == 2
+    r = client.get("/simulation/run?pl_set=1&n_sims=100")
+    assert "Pick at least one player" in r.text and "chart-container" not in r.text
+    assert "Pick at least one player" in client.get("/simulation?pl_set=1").text
+
+
+def test_field_alpha_validated(client):
+    for bad in ("-1", "201", "abc", "nan"):
+        r = client.get(f"/simulation/run?field_alpha={bad}&n_sims=100")
+        assert "Field blend must be" in r.text, bad
+    r = client.get("/simulation/run?field_alpha=0&n_sims=100&seed=1")
+    assert "chart-container" in r.text
+
+
+def test_summary_shows_eagle_and_blobs(client):
+    r = client.get("/simulation/run?n_sims=300&seed=1")
+    assert "Eagle %" in r.text and "Blobs" in r.text
+    assert "xpected holes scoring 0 Stableford points" in r.text
+
+
+@pytest.fixture
+def random_target(monkeypatch):
+    import dataclasses
+    import pandas as pd
+    from webapp.routes import simulation as route
+    base = sim.load_target_tournament(20)
+    tgt = dataclasses.replace(
+        base, holes=pd.DataFrame(columns=["Round", "Hole", "Par", "SI"], dtype=int),
+        random_rounds=4, n_rounds=4, handicaps_draft=True)
+    assert tgt.course_pool
+    monkeypatch.setattr(route, "_target", lambda teg, players=None: tgt)
+    monkeypatch.setattr(route, "_target_options", lambda: (tgt.teg_num,))
+    return tgt
+
+
+def test_random_rounds_note_courses_and_no_markers(client, random_target):
+    r = client.get("/simulation")
+    assert "No scorecard yet for rounds 1, 2, 3, 4" in r.text
+    assert f"from the {len(random_target.course_pool)} on file" in r.text
+    assert "draft calculation" in r.text
+    d = client.get("/simulation/distributions")
+    assert "Par 4 / SI 1-2" in d.text and "sim-used" not in d.text
+    r = client.get("/simulation/run?n_sims=300&seed=2")
+    assert "Courses drawn" in r.text and "chart-container" in r.text
+    assert "of TEG 20 (72 holes)" in r.text or "(72 holes)" in r.text
+
+
+def test_setup_error_message_is_shown(client, monkeypatch):
+    from webapp.routes import simulation as route
+    def boom(*a, **k):
+        raise ValueError("No handicap for TEG 19 player(s): ZZ")
+    monkeypatch.setattr(route, "_target", boom)
+    r = client.get("/simulation")
+    assert r.status_code == 200
+    assert "No handicap for TEG 19 player(s): ZZ" in r.text
+
+
+def test_run_with_one_sim_renders(client):
+    r = client.get("/simulation/run?n_sims=1&seed=1")
+    assert r.status_code == 200
+    assert "Couldn" not in r.text

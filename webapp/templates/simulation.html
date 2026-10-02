@@ -19,6 +19,7 @@
 <div class="request-feedback" role="alert"><span>{{ fatal }}</span></div>
 {% else %}
 {% set s = s %}
+{% if notes %}<ul class="sim-notes">{% for n in notes %}<li>{{ n }}</li>{% endfor %}</ul>{% endif %}
 <form id="sim-form" class="sim-form data-card data-card--padded" onsubmit="return false;"
       hx-get="/simulation/distributions" hx-trigger="change delay:300ms" hx-target="#sim-dists" hx-include="[name=dist_player]" hx-swap="innerHTML">
     <div class="sim-grid">
@@ -28,6 +29,13 @@
                     {% for t in s.targets %}<option value="{{ t }}" {% if t == s.target %}selected{% endif %}>TEG {{ t }}</option>{% endfor %}
                 </select>
             </label>
+            <fieldset class="sim-players">
+                <legend class="text-muted">Players</legend>
+                <input type="hidden" name="pl_set" value="1">
+                {% for p in s.player_options %}
+                <label class="sim-check"><input type="checkbox" name="pl" value="{{ p.code }}" {% if p.checked %}checked{% endif %}> {{ p.name }}</label>
+                {% endfor %}
+            </fieldset>
         </div>
 
         <div class="sim-block">
@@ -60,6 +68,10 @@
         </div>
 
         <div class="sim-block">
+            <label class="sim-field"><span class="text-muted">Field blend (holes)</span>
+                <input class="theme-select input-numeric" type="number" name="field_alpha" min="0" max="200" step="any" value="{{ s.field_alpha_text }}">
+            </label>
+            <p class="sim-help">Mixes in the whole group's scores, matched to the player's average, so things they haven't done yet (a first eagle) can happen. 0 = only their own scores.</p>
             <label class="sim-field"><span class="text-muted">Simulations (max {{ '{:,}'.format(100000) }})</span>
                 <input class="theme-select input-numeric" type="number" name="n_sims" min="1" max="100000" step="1" value="{{ s.n_sims }}">
             </label>
@@ -185,6 +197,14 @@
         document.querySelectorAll('.sim-weight:not(.sim-pw)').forEach(function (i) { i.value = i.getAttribute('data-default'); });
         updateShares(); syncAll();
         document.getElementById('sim-form').dispatchEvent(new Event('change', {bubbles: true}));
+    });
+    // Changing the roster rebuilds the weights columns: reload keeping the other settings.
+    var players = document.querySelector('.sim-players');
+    if (players) players.addEventListener('change', function (e) {
+        e.stopPropagation();
+        var q = new URLSearchParams(new FormData(document.getElementById('sim-form')));
+        q.delete('dist_player');
+        window.location.href = '/simulation?' + q.toString();
     });
     var target = document.getElementById('sim-target');
     if (target) target.addEventListener('change', function (e) {

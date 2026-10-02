@@ -199,13 +199,16 @@ def _tegnums(df: pd.DataFrame) -> list[int]:
 
 def default_target_teg() -> int:
     """TEG in progress (in_progress_tegs.csv), else the one after the last completed TEG."""
-    try:
-        inp = _tegnums(_read_csv(IN_PROGRESS_TEGS_CSV))
-    except FileNotFoundError:
-        inp = []
+    def nums(path: str) -> list[int]:
+        try:
+            return _tegnums(_read_csv(path))
+        except (FileNotFoundError, pd.errors.EmptyDataError):
+            return []
+
+    done = nums(COMPLETED_TEGS_CSV)
+    inp = [t for t in nums(IN_PROGRESS_TEGS_CSV) if t not in done]  # stale rows ignored
     if inp:
         return min(inp)
-    done = _tegnums(_read_csv(COMPLETED_TEGS_CSV))
     return (max(done) if done else 0) + 1
 
 
@@ -410,10 +413,10 @@ def build_distributions(
     ``field_alpha`` (0 disables) blends each cell towards the field so rare events
     (eagles, blobs) have non-zero probability: the field's GrossVP distribution for
     the same par and the same SI pairs/band as the cell (all players' holes in
-    ``history``, equal weight) is shifted by the difference of means so it has the
-    player's mean, then mixed as (EffN*p_player + alpha*p_field)/(EffN + alpha). The
-    shifted field is clamped to GrossVP -3..+8 (tails folded into the edges) so absurd
-    scores cannot appear. Fallback cells (history/field fallback) are not blended; a
+    ``history``, equal weight) is exponentially tilted (``_tilt_dist``) so it has the
+    player's mean while keeping the field's shape, then mixed as
+    (EffN*p_player + alpha*p_field)/(EffN + alpha). The field is clamped to GrossVP
+    -3..+8 (tails folded into the edges) so absurd scores cannot appear. Fallback cells (history/field fallback) are not blended; a
     bands-mode par-fallback cell uses the par-level effective N as its EffN.
     """
     if method not in METHODS:
@@ -584,36 +587,51 @@ def run_simulation(
     holes = target.holes
     fpar = holes["Par"].to_numpy(dtype=int)
     fsi = holes["SI"].to_numpy(dtype=int)
+    nf = len(fpar)
     rr = int(target.random_rounds)
     rng = np.random.default_rng(seed)
 
-    par_mat = np.broadcast_to(fpar, (n_sims, len(fpar)))
-    si_mat = np.broadcast_to(fsi, (n_sims, len(fsi)))
-    courses_used = None
+    def key_groups(par: np.ndarray, si: np.ndarray) -> dict[tuple[int, int], np.ndarray]:
+        """Hole columns per (par, band) for one scorecard."""
+        band = assign_si_band(si, dists.boundaries)
+        return {(int(p), int(b)): np.flatnonzero((par == p) & (band == b))
+                for p, b in sorted(set(zip(par.tolist(), band.tolist())))}
+
+    fixed_groups = key_groups(fpar, fsi)
+    pool_par = pool_si = courses_used = None
+    course_groups: list = []
+    course_rows: list = []
     if rr > 0:
         if not target.course_pool:
             raise ValueError("Target has random rounds but no course pool")
         pool_par = np.stack([np.asarray(c[1], dtype=int) for c in target.course_pool])
         pool_si = np.stack([np.asarray(c[2], dtype=int) for c in target.course_pool])
+        if len(set(pool_par.sum(axis=1).tolist())) != 1:
+            raise ValueError("Course pool must share one par total")
         courses_used = rng.integers(0, len(pool_par), size=(n_sims, rr)).astype(np.int16)
-        par_mat = np.concatenate([par_mat, pool_par[courses_used].reshape(n_sims, rr * 18)], axis=1)
-        si_mat = np.concatenate([si_mat, pool_si[courses_used].reshape(n_sims, rr * 18)], axis=1)
-    bad = sorted(set(np.unique(par_mat).tolist()) - set(_PARS))
+        course_groups = [key_groups(pool_par[c], pool_si[c]) for c in range(len(pool_par))]
+        # sims (rows) that drew each course, per random round
+        course_rows = [[np.flatnonzero(courses_used[:, r] == c) for c in range(len(pool_par))]
+                       for r in range(rr)]
+    all_pars = set(fpar.tolist()) | (set(np.unique(pool_par).tolist()) if rr else set())
+    bad = sorted(all_pars - set(_PARS))
     if bad:
         raise ValueError(f"Unsupported par value(s) in target scorecard: {bad}")
-    par_totals = par_mat.sum(axis=1)
-    par_total = int(par_totals[0])
-    assert (par_totals == par_total).all(), "par total must be constant across sims"
-    n_holes = par_mat.shape[1]
-    band_mat = assign_si_band(si_mat, dists.boundaries)
+    par_total = int(fpar.sum()) + (int(pool_par[0].sum()) * rr if rr else 0)
+    n_holes = nf + 18 * rr
 
     # (Pl, Par, Band) -> (support values, cdf)
-    groups = {key: g for key, g in dists.probs.groupby(["Pl", "Par", "Band"])}
+    cdfs = {}
+    for key, g in dists.probs.groupby(["Pl", "Par", "Band"]):
+        cdf = np.cumsum(g["Prob"].to_numpy())
+        cdfs[key] = (g["GrossVP"].to_numpy().astype(np.int8), cdf / cdf[-1])
 
-    # flat hole positions per (par, band) key, shared by all players
-    key_mat = par_mat * 100 + band_mat
-    key_flat = key_mat.reshape(-1)
-    key_idx = {int(k): np.flatnonzero(key_flat == k) for k in np.unique(key_flat)}
+    def draw(pl: str, key: tuple[int, int], u: np.ndarray) -> np.ndarray:
+        got = cdfs.get((pl, key[0], key[1]))
+        if got is None:
+            raise ValueError(f"No distribution for player {pl}, par {key[0]}, band {key[1]}")
+        vals, cdf = got
+        return vals[np.minimum(np.searchsorted(cdf, u, side="right"), len(vals) - 1)]
 
     n_pl = len(target.players)
     gross = np.empty((n_sims, n_pl), dtype=np.int32)
@@ -622,22 +640,24 @@ def run_simulation(
     blobs = np.empty((n_sims, n_pl), dtype=np.int16)
     for j, pl in enumerate(target.players):
         hc = int(target.handicaps[pl])
-        strokes = (hc // 18 + ((hc % 18) >= si_mat)).astype(np.int16)
-        u = rng.random(n_sims * n_holes)
-        vp = np.empty(n_sims * n_holes, dtype=np.int8)
-        for key, idx in key_idx.items():
-            p, b = key // 100, key % 100
-            g = groups.get((pl, p, b))
-            if g is None:
-                raise ValueError(f"No distribution for player {pl}, par {p}, band {b}")
-            vals = g["GrossVP"].to_numpy()
-            cdf = np.cumsum(g["Prob"].to_numpy())
-            cdf /= cdf[-1]
-            pick = np.minimum(np.searchsorted(cdf, u[idx], side="right"), len(vals) - 1)
-            vp[idx] = vals[pick]
-        vp = vp.reshape(n_sims, n_holes)
+        strokes = np.empty((n_sims, n_holes), dtype=np.int8)
+        strokes[:, :nf] = hc // 18 + ((hc % 18) >= fsi)
+        u = rng.random((n_sims, n_holes))
+        vp = np.empty((n_sims, n_holes), dtype=np.int8)
+        for key, cols in fixed_groups.items():
+            vp[:, cols] = draw(pl, key, u[:, cols])
+        for r in range(rr):
+            off = nf + 18 * r
+            strokes[:, off:off + 18] = hc // 18 + ((hc % 18) >= pool_si[courses_used[:, r]])
+            for c, rows in enumerate(course_rows[r]):
+                if not len(rows):
+                    continue
+                for key, hcols in course_groups[c].items():
+                    sel = np.ix_(rows, off + hcols)
+                    vp[sel] = draw(pl, key, u[sel])
+        del u
         gross[:, j] = vp.sum(axis=1, dtype=np.int32) + par_total
-        net_vp = vp.astype(np.int16) - strokes
+        net_vp = vp - strokes  # int8: |vp| <= 9, strokes <= 3
         stab[:, j] = np.maximum(0, 2 - net_vp).sum(axis=1, dtype=np.int32)
         eagles[:, j] = (vp <= -2).sum(axis=1)
         blobs[:, j] = (net_vp >= 2).sum(axis=1)
@@ -704,7 +724,7 @@ def total_distribution(result: SimulationResult, measure: str, smooth: bool = Fa
 
     ``smooth=False``: the raw histogram. ``smooth=True``: the integer histogram
     convolved with a Gaussian kernel (``bandwidth`` in strokes/points, default
-    max(1.5, 1.06*std*n^-0.2) per player) on an integer grid from min-3h to max+3h;
+    max(1.5, 1.06*std*n^-0.2) per player) on an integer grid from min-4h to max+4h;
     Fraction is the density per grid step and still sums to 1 per player.
     """
     tot, _ = _measure(result, measure)
@@ -717,10 +737,9 @@ def total_distribution(result: SimulationResult, measure: str, smooth: bool = Fa
         else:
             n = len(col)
             h = float(bandwidth) if bandwidth else max(1.5, 1.06 * float(col.std()) * n ** -0.2)
-            pad = int(np.ceil(3 * h))
+            half = pad = int(np.ceil(4 * h))  # pad >= kernel half-width keeps "same" length
             lo, hi = int(col.min()) - pad, int(col.max()) + pad
             hist = np.bincount(col - lo, minlength=hi - lo + 1).astype(float) / n
-            half = int(np.ceil(4 * h))
             k = np.exp(-0.5 * (np.arange(-half, half + 1) / h) ** 2)
             frac = np.convolve(hist, k / k.sum(), mode="same")
             frac = frac / frac.sum()

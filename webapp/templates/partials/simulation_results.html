@@ -6,6 +6,17 @@
 <div class="sim-results">
     <p class="sim-caption">{{ caption }}{% if clamp_note %} {{ clamp_note }}{% endif %}</p>
     {% if warnings %}<ul class="sim-warnings">{% for w in warnings %}<li>{{ w }}</li>{% endfor %}</ul>{% endif %}
+    {% if courses %}
+    <details class="sim-courses">
+        <summary>Courses drawn</summary>
+        <div class="data-card"><div class="table-wrapper">
+        <table class="teg-table sim-courses-table">
+            <thead><tr><th class="sim-left">Course</th><th>% of rounds</th></tr></thead>
+            <tbody>{% for c in courses %}<tr><td class="sim-left">{{ c.name }}</td><td>{{ c.pct }}</td></tr>{% endfor %}</tbody>
+        </table>
+        </div></div>
+    </details>
+    {% endif %}
     <div class="section-controls">
         <div class="segmented" role="group" aria-label="Measure">
             {% for m in measures %}
@@ -23,6 +34,8 @@
                 <th>Gross</th><th>vs par</th><th>Gross 10-90</th>
                 <th>Stableford</th><th>Stab 10-90</th>
                 <th>Win % gross</th><th>Win % stab</th>
+                <th><abbr title="Chance of at least one eagle or better over the TEG">Eagle %</abbr></th>
+                <th><abbr title="Expected holes scoring 0 Stableford points">Blobs</abbr></th>
             </tr></thead>
             <tbody>
             {% for r in m.summary %}
@@ -31,6 +44,7 @@
                 <td>{{ r.gross }}</td><td>{{ r.gross_vp }}</td><td>{{ r.gross_range }}</td>
                 <td>{{ r.stab }}</td><td>{{ r.stab_range }}</td>
                 <td>{{ r.win_gross }}</td><td>{{ r.win_stab }}</td>
+                <td>{{ r.eagle }}</td><td>{{ r.blobs }}</td>
             </tr>
             {% endfor %}
             </tbody>

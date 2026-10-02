@@ -463,3 +463,22 @@ def test_real_data_smoke():
     r = sim.run_simulation(d, target, 500, seed=1)
     assert r.gross.shape == (500, len(target.players))
     assert np.allclose(sim.position_grid(r, "gross").sum(axis=1), 1.0)
+
+
+def test_smoothed_distribution_with_one_sim():
+    h = _synthetic()
+    d = sim.build_distributions(h, ["AA", "BB"], {1: 1, 2: 1, 3: 1})
+    holes = pd.DataFrame({"Round": [1] * 18, "Hole": range(1, 19), "Par": [4] * 18, "SI": range(1, 19)})
+    t = sim.TargetTournament(99, holes, ["AA", "BB"], {"AA": 10, "BB": 20}, {"AA": "A", "BB": "B"})
+    r = sim.run_simulation(d, t, n_sims=1, seed=1)
+    out = sim.total_distribution(r, "gross", smooth=True)
+    assert out.groupby("Pl").Fraction.sum().round(6).eq(1).all()
+
+
+def test_stale_in_progress_teg_ignored(monkeypatch):
+    def fake(path):
+        if path == sim.COMPLETED_TEGS_CSV:
+            return pd.DataFrame({"TEGNum": [17, 18]})
+        return pd.DataFrame({"TEGNum": [18]})
+    monkeypatch.setattr(sim, "_read_csv", fake)
+    assert sim.default_target_teg() == 19

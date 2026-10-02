@@ -35,6 +35,14 @@
 .sim-warnings { color: var(--text-muted); }
 .sim-caption { font-size: 0.9rem; color: var(--text-muted); margin: 0 0 0.75rem; }
 .sim-subhead { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 1.25rem 0 0.5rem; }
+.sim-notes { margin: 0 0 1rem; padding-left: 1.1rem; font-size: 0.875rem; color: var(--text-muted); }
+.sim-players { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; font-size: 0.875rem; }
+.sim-players legend { padding: 0; margin-bottom: 0.25rem; }
+.sim-check { display: flex; align-items: center; gap: 0.4rem; cursor: pointer; }
+.sim-courses { margin: 0.5rem 0 0.75rem; font-size: 0.875rem; }
+.sim-courses summary { cursor: pointer; color: var(--text-muted); margin-bottom: 0.5rem; }
+.sim-courses-table td, .sim-courses-table th { text-align: center; }
+.sim-summary abbr { text-decoration: underline dotted; cursor: help; }
 .sim-hidden { display: none; }
 .teg-table .sim-left { text-align: left; white-space: nowrap; }
 .teg-table.sim-dist td, .teg-table.sim-grid-table td, .teg-table.sim-summary td { text-align: center; }

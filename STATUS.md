@@ -6,7 +6,7 @@ Current state and next priorities. Instructions and architecture live in `CLAUDE
 
 ## 2026-10-02 — Simulator rolls on to the next TEG and allows first-ever eagles
 
-`/simulation` now targets the TEG after the last completed one. Without a saved scorecard, each simulation draws a random par-72 course from those played before. Without saved handicaps it uses the draft calculation. Players can be added or removed. A small blend of the whole group's scores, matched to each player's average, lets unseen results happen (eagle chance about 1-2% per player per TEG, in line with history). The total-score chart is smoothed. The summary adds eagle chance and expected blobs.
+`/simulation` now targets the TEG after the last completed one. Without a saved scorecard, each simulation draws a random par-72 course from those on file (`course_pars.csv`). Without saved handicaps it uses the draft calculation. Players can be added or removed. A small blend of the whole group's scores, matched to each player's average, lets unseen results happen (eagle chance about 1-2% per player per TEG, in line with history). The total-score chart is smoothed. The summary adds eagle chance and expected blobs.
 
 ## 2026-10-02 — TEG simulator predicts the next TEG
 
