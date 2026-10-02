@@ -482,3 +482,25 @@ def test_stale_in_progress_teg_ignored(monkeypatch):
         return pd.DataFrame({"TEGNum": [18]})
     monkeypatch.setattr(sim, "_read_csv", fake)
     assert sim.default_target_teg() == 19
+
+
+@pytest.mark.parametrize("p,expected", [
+    (0.5, "Evens"), (0.25, "3/1"), (0.2, "4/1"), (0.75, "1/3"), (0.1, "9/1"),
+    (0.0, "1000/1+"), (1.0, "1/1000"), (0.0001, "1000/1"),
+])
+def test_fractional_odds(p, expected):
+    assert sim.fractional_odds(p) == expected
+
+
+def test_odds_table_prizes():
+    h = _synthetic()
+    d = sim.build_distributions(h, ["AA", "BB"], {1: 1, 2: 1, 3: 1})
+    holes = pd.DataFrame({"Round": [1] * 18, "Hole": range(1, 19), "Par": [4] * 18, "SI": range(1, 19)})
+    t = sim.TargetTournament(99, holes, ["AA", "BB"], {"AA": 10, "BB": 20}, {"AA": "A", "BB": "B"})
+    r = sim.run_simulation(d, t, n_sims=2000, seed=3)
+    o = sim.odds_table(r)
+    assert o.Trophy.sum() == pytest.approx(1.0)
+    assert o.Jacket.sum() == pytest.approx(1.0)
+    assert o.Spoon.sum() == pytest.approx(1.0)
+    # with two players, the Spoon is whoever did not win the Trophy
+    assert (o.Trophy + o.Spoon).round(9).eq(1.0).all()

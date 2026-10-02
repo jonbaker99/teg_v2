@@ -17,6 +17,26 @@
         </div></div>
     </details>
     {% endif %}
+    <h3 class="chart-title">Odds</h3>
+    <div class="data-card"><div class="table-wrapper">
+    <table class="teg-table sim-odds">
+        <thead><tr>
+            <th class="sim-left">Player</th><th>TEG Trophy</th><th>Green Jacket</th><th>Wooden Spoon</th>
+        </tr></thead>
+        <tbody>
+        {% for r in odds %}
+        <tr>
+            <td class="sim-left">{{ r.name_html | safe }}</td>
+            <td><span class="sim-odds-price">{{ r.trophy }}</span><span class="sim-odds-pct">{{ r.trophy_pct }}</span></td>
+            <td><span class="sim-odds-price">{{ r.jacket }}</span><span class="sim-odds-pct">{{ r.jacket_pct }}</span></td>
+            <td><span class="sim-odds-price">{{ r.spoon }}</span><span class="sim-odds-pct">{{ r.spoon_pct }}</span></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div></div>
+    <p class="caption">Fair odds from the simulations, no bookmaker's margin. Trophy is Stableford, Jacket is gross, Spoon is last on Stableford.</p>
+
     <div class="section-controls">
         <div class="segmented" role="group" aria-label="Measure">
             {% for m in measures %}

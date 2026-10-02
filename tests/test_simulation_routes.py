@@ -224,3 +224,10 @@ def test_gross_shown_vs_par_and_sampling_collapsed(client):
     assert "Gross vs par" in r
     assert "Total gross strokes" not in r
     assert "<th>Gross</th>" not in r
+
+
+def test_stableford_default_and_odds_table(client):
+    r = client.get("/simulation/run?n_sims=500&seed=1").text
+    assert 'data-sim-measure="stableford" aria-pressed="true"' in r
+    assert "TEG Trophy" in r and "Green Jacket" in r and "Wooden Spoon" in r
+    assert "/1" in r or "Evens" in r

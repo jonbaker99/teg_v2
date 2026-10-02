@@ -793,3 +793,52 @@ def backtest_field_alpha(
         rows.append({"Alpha": float(a), "MeanLogLik": ll_sum / n if n else float("nan"),
                      "Holes": n, "ZeroProbHoles": zeros})
     return pd.DataFrame(rows)
+
+
+# ---------------------------------------------------------------- betting odds
+
+# Traditional fractional odds ladder (odds against, as numerator/denominator).
+_ODDS_LADDER = [
+    (1, 1000), (1, 500), (1, 200), (1, 100), (1, 50), (1, 33), (1, 25), (1, 20), (1, 16),
+    (1, 14), (1, 12), (1, 10), (1, 8), (1, 7), (1, 6), (1, 5), (2, 9), (1, 4), (2, 7),
+    (1, 3), (4, 11), (2, 5), (4, 9), (1, 2), (8, 15), (4, 7), (8, 13), (4, 6), (8, 11),
+    (4, 5), (5, 6), (10, 11), (1, 1), (11, 10), (6, 5), (5, 4), (11, 8), (6, 4), (13, 8),
+    (7, 4), (15, 8), (2, 1), (9, 4), (5, 2), (11, 4), (3, 1), (10, 3), (7, 2), (4, 1),
+    (9, 2), (5, 1), (11, 2), (6, 1), (13, 2), (7, 1), (15, 2), (8, 1), (9, 1), (10, 1),
+    (11, 1), (12, 1), (14, 1), (16, 1), (20, 1), (25, 1), (33, 1), (40, 1), (50, 1),
+    (66, 1), (80, 1), (100, 1), (150, 1), (200, 1), (250, 1), (500, 1), (1000, 1),
+]
+
+
+def fractional_odds(p: float) -> str:
+    """Fair fractional odds for probability ``p``, snapped to the traditional ladder.
+
+    No bookmaker's margin. Uses the nearest ladder price in log-odds; 1/1 is "Evens".
+    Never-happened outcomes read "1000/1+" and certainties "1/1000".
+    """
+    if not np.isfinite(p) or p <= 0:
+        return "1000/1+"
+    if p >= 1:
+        return "1/1000"
+    target = np.log((1 - p) / p)
+    num, den = min(_ODDS_LADDER, key=lambda nd: abs(np.log(nd[0] / nd[1]) - target))
+    return "Evens" if num == den else f"{num}/{den}"
+
+
+def odds_table(result: SimulationResult) -> pd.DataFrame:
+    """Win chances and fair fractional odds for the three prizes.
+
+    Trophy = 1st on Stableford, Green Jacket = 1st on gross, Wooden Spoon = last on
+    Stableford (the Trophy order, worst first). Rows ordered by Trophy chance.
+    """
+    n = len(result.players)
+    rows = []
+    for j, pl in enumerate(result.players):
+        trophy = float((result.stableford_pos[:, j] == 1).mean())
+        jacket = float((result.gross_pos[:, j] == 1).mean())
+        spoon = float((result.stableford_pos[:, j] == n).mean())
+        rows.append({"Pl": pl, "Player": result.names.get(pl, pl),
+                     "Trophy": trophy, "TrophyOdds": fractional_odds(trophy),
+                     "Jacket": jacket, "JacketOdds": fractional_odds(jacket),
+                     "Spoon": spoon, "SpoonOdds": fractional_odds(spoon)})
+    return pd.DataFrame(rows).sort_values("Trophy", ascending=False, kind="stable").reset_index(drop=True)

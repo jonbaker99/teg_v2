@@ -417,12 +417,19 @@ def _run_context(qp) -> dict:
         dists = _build(history, tgt, s)
         res = sim.run_simulation(dists, tgt, s["n_sims"], s["seed"])
         measures = []
-        for key, label in (("gross", "Gross"), ("stableford", "Stableford")):
+        for key, label in (("stableford", "Stableford"), ("gross", "Gross")):
             cols, grid = _grid_rows(res, key)
             measures.append({
                 "key": key, "label": label, "summary": _summary_rows(res, key),
                 "grid_cols": cols, "grid": grid, "chart_json": _chart_json(res, key)})
+        odds = [{
+            "name_html": _wrap_player_name(r.Player),
+            "trophy": r.TrophyOdds, "trophy_pct": f"{r.Trophy * 100:.1f}%",
+            "jacket": r.JacketOdds, "jacket_pct": f"{r.Jacket * 100:.1f}%",
+            "spoon": r.SpoonOdds, "spoon_pct": f"{r.Spoon * 100:.1f}%",
+        } for r in sim.odds_table(res).itertuples()]
         return {
+            "odds": odds,
             "measures": measures,
             "caption": _caption(res, s, len(tgt.holes) + 18 * tgt.random_rounds),
             "courses": _courses_drawn(res, tgt),

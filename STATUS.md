@@ -4,6 +4,10 @@ Current state and next priorities. Instructions and architecture live in `CLAUDE
 
 **Last updated:** 2026-10-02 (TEG simulator)
 
+## 2026-10-02 — Simulator shows betting odds
+
+`/simulation` opens on Stableford and leads its results with fair fractional odds (no bookmaker's margin) for the TEG Trophy, Green Jacket and Wooden Spoon, snapped to the traditional price ladder (Evens, 11/8, 9/2 …).
+
 ## 2026-10-02 — Simulator rolls on to the next TEG and allows first-ever eagles
 
 `/simulation` now targets the TEG after the last completed one. Without a saved scorecard, each simulation draws a random par-72 course from those on file (`course_pars.csv`). Without saved handicaps it uses the draft calculation. Players can be added or removed. A small blend of the whole group's scores, matched to each player's average, lets unseen results happen (eagle chance about 1-2% per player per TEG, in line with history). The total-score chart is smoothed. The summary adds eagle chance and expected blobs.

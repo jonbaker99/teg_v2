@@ -113,3 +113,9 @@
 .sim-disclosure[open] .sim-toggle-hint::after { content: "Hide \25B4"; }
 .sim-disclosure > summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .sim-disclosure > .caption { margin-top: 0.75rem; }
+
+/* Odds table: price over its probability */
+.teg-table.sim-odds td, .teg-table.sim-odds th { text-align: center; }
+.teg-table.sim-odds td.sim-left, .teg-table.sim-odds th.sim-left { text-align: left; }
+.sim-odds-price { display: block; font-weight: 600; color: var(--text-primary); }
+.sim-odds-pct { display: block; font-size: 0.75rem; color: var(--text-muted); }
