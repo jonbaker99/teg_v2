@@ -15,7 +15,7 @@ def client():
 def test_page_renders_controls_and_empty_state(client):
     r = client.get("/simulation")
     assert r.status_code == 200
-    assert "simulator" in r.text
+    assert "TEG Predictatron 3100" in r.text
     assert "Run the simulation to see predictions." in r.text
     assert 'name="w_' in r.text and 'name="bands_preset"' in r.text
     assert 'name="method"' in r.text and 'name="min_holes"' in r.text
@@ -141,7 +141,7 @@ def test_all_zero_override_is_an_error(client):
 
 def test_default_page_targets_default_teg(client):
     r = client.get("/simulation")
-    assert f"TEG {sim.default_target_teg()} simulator" in r.text
+    assert "TEG Predictatron 3100" in r.text
     assert 'name="field_alpha"' in r.text and "Field blend (holes)" in r.text
     assert 'name="pl" value=' in r.text
 

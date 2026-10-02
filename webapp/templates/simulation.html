@@ -7,7 +7,7 @@
 {% block page_title %}
 <div class="page-title-area">
     <span class="page-label">Scoring analysis</span>
-    <h1 class="page-title">{% if teg_num %}TEG {{ teg_num }} simulator{% else %}TEG simulator{% endif %}</h1>
+    <h1 class="page-title">TEG Predictatron 3100</h1>
     {% if teg_num %}
     <p class="page-subtitle">Each hole is sampled from the player's past scores on holes of that par. By default a rolling window around the hole's stroke-index pair (SI 1-2, 3-4 and so on) widens to neighbouring pairs until it holds enough holes, with the exact pair counting most; fixed SI bands are the alternative. Scores are weighted by TEG. Stableford uses the TEG {{ teg_num }} handicaps.</p>
     {% endif %}
