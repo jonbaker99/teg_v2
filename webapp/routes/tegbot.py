@@ -135,7 +135,7 @@ def render_answer_html(text: str) -> str:
     def _keep_local(match: re.Match) -> str:
         href = match.group(1)
         if href.startswith("/") and not href.startswith("//") and "\\" not in href:
-            return f'<a href="{href}"'
+            return f'<a class="tb-page-link" href="{href}"'
         return "<a"
     out = _IMG.sub("", out)  # no external images (tracking pixels)
     return _box_method(_HREF.sub(_keep_local, out))

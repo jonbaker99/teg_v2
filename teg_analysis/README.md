@@ -114,7 +114,8 @@ teg_analysis/
                      takes the caller's cached loaders and builds the sandbox CSVs
                      (datasets(): holes, rounds with round/after-round positions, tegs
                      with finishing positions, winners)
-    prompt.py        System prompt, DATA_GUIDE (the CSVs' columns and rules for code) and
+    prompt.py        System prompt (incl. when to judge players against their own normal
+                     standard rather than raw totals), DATA_GUIDE (the CSVs' columns and rules for code) and
                      SITE_PAGES, the only links the bot may give
     bot.py           ask(): the Claude loop — lookups plus Anthropic's code-execution
                      sandbox (CSVs uploaded once per data version via the Files API);

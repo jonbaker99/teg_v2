@@ -32,8 +32,10 @@
         <div class="tb-a">
             {{ robot(28, busy=True) }}
             <div class="tb-working" role="status" aria-label="TEGBot is working">
-                <span class="tb-green-track" aria-hidden="true"><i class="tb-ball"></i><i class="tb-hole"></i></span>
-                <span class="tb-chase" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                <span class="tb-v tb-green-track" data-v="ball" aria-hidden="true"><i class="tb-ball"></i><i class="tb-hole"></i></span>
+                <span class="tb-v tb-chase" data-v="chase" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                <span class="tb-v tb-bar" data-v="bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                <span class="tb-v tb-say" data-v="text"><span class="tb-say-text"></span><span class="tb-cursor"></span></span>
                 <span class="tb-timer">0s</span>
             </div>
         </div>
@@ -71,7 +73,18 @@
     // One id per chat, so the shared log can show follow-ups with their thread.
     var conv = (window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2))
         .replace(/[^0-9a-f]/gi, '').toLowerCase().slice(0, 32);
-    var ticker = null;
+    var ticker = null, lastVariant = null;
+    // Short, quiet lines for the text style of the waiting indicator.
+    var SAY = ["looking it up", "running the numbers", "checking for ties", "reading the scorecards",
+               "checking the record books", "tidying the answer"];
+    function pickVariant(variants, avoid) {
+        var names = variants.map(function (v) { return v.dataset.v; })
+            .filter(function (n) { return n !== avoid; });
+        return names[Math.floor(Math.random() * names.length)];
+    }
+    function show(variants, name) {
+        variants.forEach(function (v) { v.hidden = v.dataset.v !== name; });
+    }
 
     function startPending(question) {
         var node = tpl.content.firstElementChild.cloneNode(true);
@@ -79,9 +92,23 @@
         thread.appendChild(node);
         node.scrollIntoView({behavior: 'smooth', block: 'start'});
         var timer = node.querySelector('.tb-timer'), started = Date.now();
+        var say = node.querySelector('.tb-say-text');
+        var variants = Array.prototype.slice.call(node.querySelectorAll('.tb-v'));
+        var current = pickVariant(variants, lastVariant);
+        var words = SAY.slice().sort(function () { return Math.random() - 0.5; }), w = 0;
+        show(variants, current); say.textContent = words[w++ % words.length];
+        lastVariant = current;
         ticker = setInterval(function () {
-            timer.textContent = Math.floor((Date.now() - started) / 1000) + 's';
-        }, 500);
+            var secs = Math.floor((Date.now() - started) / 1000);
+            timer.textContent = secs + 's';
+            // Long waits drift between styles every few seconds, so nothing loops for too long.
+            if (secs > 0 && secs % 4 === 0 && node.dataset.at !== String(secs)) {
+                node.dataset.at = String(secs);
+                current = pickVariant(variants, current);
+                if (current === 'text') say.textContent = words[w++ % words.length];
+                show(variants, current);
+            }
+        }, 250);
     }
     function stopPending() {
         clearInterval(ticker);

@@ -96,7 +96,23 @@
     .tb-chase i:nth-child(7) { grid-area: 3 / 1; animation-delay: 0.72s; }
     .tb-chase i:nth-child(8) { grid-area: 2 / 1; animation-delay: 0.84s; }
     @keyframes tb-chase { 0%, 24% { opacity: 1; } 25%, 100% { opacity: 0.15; } }
+    .tb-working .tb-v[hidden] { display: none; }
+    .tb-working { min-height: 32px; }
+    .tb-bar { display: inline-flex; gap: 2px; }
+    .tb-bar i { width: 6px; height: 8px; background: var(--tb-green); opacity: 0.15; animation: tb-fill 1.6s steps(1) infinite; }
+    .tb-bar i:nth-child(2) { animation-delay: 0.1s; } .tb-bar i:nth-child(3) { animation-delay: 0.2s; }
+    .tb-bar i:nth-child(4) { animation-delay: 0.3s; } .tb-bar i:nth-child(5) { animation-delay: 0.4s; }
+    .tb-bar i:nth-child(6) { animation-delay: 0.5s; } .tb-bar i:nth-child(7) { animation-delay: 0.6s; }
+    .tb-bar i:nth-child(8) { animation-delay: 0.7s; } .tb-bar i:nth-child(9) { animation-delay: 0.8s; }
+    .tb-bar i:nth-child(10) { animation-delay: 0.9s; }
+    @keyframes tb-fill { 0% { opacity: 0.15; } 1%, 70% { opacity: 1; } 71%, 100% { opacity: 0.15; } }
+    .tb-say { font: 0.78rem var(--tb-mono); color: var(--tb-green); white-space: nowrap; }
+    .tb-say .tb-cursor { display: inline-block; width: 0.5em; height: 0.9em; margin-left: 3px; vertical-align: -0.1em; background: var(--tb-green); animation: tb-flash-bg 0.9s steps(1) infinite; }
+    @keyframes tb-flash-bg { 50% { opacity: 0; } }
     .tb-timer { font: 0.72rem var(--tb-mono); opacity: 0.6; min-width: 2.5em; }
+
+    /* On-site links in answers get a small up-right arrow. */
+    .tb-answer a.tb-page-link::after { content: "\2197"; display: inline-block; margin-left: 2px; font-size: 0.85em; text-decoration: none; }
 
     /* "How I worked this out": small print in a dashed box. */
     .tb-how {
@@ -107,7 +123,7 @@
     .tb-how p:last-child { margin-bottom: 0; }
     .tb-how strong:first-child { font-family: var(--tb-pixel); font-weight: 400; font-size: 1.15rem; letter-spacing: 0.04em; }
     @media (prefers-reduced-motion: reduce) {
-        .tb-bot *, .tb-ball, .tb-chase i, .tb-hole::after { animation: none !important; }
+        .tb-bot *, .tb-ball, .tb-chase i, .tb-bar i, .tb-say .tb-cursor, .tb-hole::after { animation: none !important; }
         .tb-chase i { opacity: 0.6; }
     }
 
