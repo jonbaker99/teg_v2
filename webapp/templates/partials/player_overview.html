@@ -19,7 +19,7 @@
         {% endfor %}
     </div>
     <p class="pp-note pp-foot"><span>Ranks are all-time, out of {{ n_ranked }} players. Fewer is better for triples.</span>
-        <span class="pp-foot-links"><a class="text-link pp-a" href="{{ main_links.honours }}">Honours</a><span aria-hidden="true"> / </span><a class="text-link pp-a" href="{{ main_links.by_par }}">By par</a><span aria-hidden="true"> / </span><a class="text-link pp-a" href="{{ main_links.birdies }}">Birdies</a></span></p>
+        <span class="pp-foot-links"><a class="text-link pp-a" href="{{ main_links.honours }}">Honours ↗</a><span aria-hidden="true"> / </span><a class="text-link pp-a" href="{{ main_links.by_par }}">By par ↗</a><span aria-hidden="true"> / </span><a class="text-link pp-a" href="{{ main_links.birdies }}">Birdies ↗</a></span></p>
 
     <section class="pp-section">
         <h2 class="section-title pp-sec">Finishing position</h2>
@@ -45,7 +45,7 @@
             <span><span class="pp-legend-box" aria-hidden="true"></span>double</span>
         </p>
         <p class="pp-note pp-foot"><span>Net is vs par to TEG {{ stableford_era - 1 }}, Stableford from TEG {{ stableford_era }}.{% for n in finish_notes %} * {{ n }}.{% endfor %}</span>
-            <span class="pp-foot-links"><a class="text-link pp-a" href="/player-rankings">Player rankings</a></span></p>
+            <span class="pp-foot-links"><a class="text-link pp-a" href="/player-rankings">Player rankings ↗</a></span></p>
     </section>
 
     {% if round_chart %}
@@ -75,7 +75,7 @@
             </div>
         </div>
         <p class="pp-note pp-foot"><span>Bar is the TEG average a round. <span class="pp-gkey pp-gkey--best"></span> best round <span class="pp-gkey pp-gkey--worst"></span> worst round. <span class="pp-note-phone">Career {{ round_chart.career_label }}.</span></span>
-            <span class="pp-foot-links"><a class="text-link pp-a" href="/scoring/by-teg">Scoring by TEG</a></span></p>
+            <span class="pp-foot-links"><a class="text-link pp-a" href="/scoring/by-teg">Scoring by TEG ↗</a></span></p>
     </section>
     {% endif %}
 
@@ -98,7 +98,7 @@
         {% endfor %}
         <div class="pp-pb-foot">
             {% if records_note %}<span>{{ records_note }}</span>{% endif %}
-            <span class="pp-foot-links"><button type="button" class="pp-link" data-open-profile-records>Records &amp; streaks</button><span aria-hidden="true"> / </span><a class="text-link pp-a" href="/records">All-time records</a><span aria-hidden="true"> / </span><a class="text-link pp-a" href="/personal-bests">Personal bests</a></span>
+            <span class="pp-foot-links"><button type="button" class="pp-link" data-open-profile-records>Records &amp; streaks ↗</button><span aria-hidden="true"> / </span><a class="text-link pp-a" href="/records">All-time records ↗</a><span aria-hidden="true"> / </span><a class="text-link pp-a" href="/personal-bests">Personal bests ↗</a></span>
         </div>
     </section>
     {% else %}
