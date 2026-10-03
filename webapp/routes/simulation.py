@@ -51,6 +51,7 @@ def _target_options() -> tuple:
 
 
 def _clear_caches() -> None:
+    default_prediction.cache_clear()
     _history.cache_clear()
     _target.cache_clear()
     _target_options.cache_clear()
@@ -442,6 +443,39 @@ def _run_context(qp) -> dict:
     except Exception:
         logger.exception("simulation run failed")
         return {"fatal": "Couldn't run the simulation."}
+
+
+# --- default prediction (used by TEGBot) ---------------------------------------
+
+@lru_cache(maxsize=1)
+def default_prediction(seed: int = 1) -> dict:
+    """The page's default simulation of the next TEG, as plain data.
+
+    Fixed seed so TEGBot gives the same odds every time it is asked; the page itself
+    reruns with a fresh seed, so its figures can differ by a point or two.
+    Raises ValueError when the next TEG isn't set up enough to simulate."""
+    history = _history()
+    targets = list(_target_options())
+    if not targets:
+        raise ValueError("No upcoming TEG scorecard is set up yet.")
+    s = _parse_settings({"seed": str(seed)}, targets, history)
+    if s["errors"]:
+        raise ValueError("; ".join(s["errors"]))
+    tgt = s["tgt"]
+    res = sim.run_simulation(_build(history, tgt, s), tgt, s["n_sims"], s["seed"])
+    summary = sim.summary_table(res).set_index("Pl")
+    odds = []
+    for r in sim.odds_table(res).itertuples():
+        odds.append({
+            "Player": r.Player, "Handicap": summary.loc[r.Pl, "Handicap"],
+            "TrophyChancePct": round(r.Trophy * 100, 1), "TrophyOdds": r.TrophyOdds,
+            "JacketChancePct": round(r.Jacket * 100, 1), "JacketOdds": r.JacketOdds,
+            "SpoonChancePct": round(r.Spoon * 100, 1), "SpoonOdds": r.SpoonOdds,
+            "ExpectedStableford": round(float(summary.loc[r.Pl, "MeanStableford"]), 1),
+            "ExpectedGrossVsPar": round(float(summary.loc[r.Pl, "MeanGrossVP"]), 1),
+        })
+    return {"teg_num": res.teg_num, "simulations": res.n_sims, "players": odds,
+            "notes": _status_notes(tgt)}
 
 
 # --- routes (sync def: FastAPI threadpools them) -----------------------------

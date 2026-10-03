@@ -169,8 +169,9 @@ def _working(call: "bot.ToolCall") -> dict:
 def _chat_data() -> ChatData:
     ranked = {"teg": deps.cached_ranked_teg_data, "round": deps.cached_ranked_round_data,
               "frontback": deps.cached_ranked_frontback_data}
+    from webapp.routes.simulation import default_prediction
     return ChatData(all_data=deps.cached_load_all_data, winners=deps.cached_winners,
-                    ranked=lambda scope: ranked[scope]())
+                    ranked=lambda scope: ranked[scope](), predictions=default_prediction)
 
 
 @router.get("/tegbot")

@@ -100,6 +100,10 @@ class Facts:
         rec = rec[rec["Streak Type"] == kind]
         return sorted(rec["Player"].unique()), str(rec["Record"].iloc[0]).rstrip("*")
 
+    def prediction_favourite(self, col: str) -> str:
+        from webapp.routes.simulation import default_prediction
+        return max(default_prediction()["players"], key=lambda p: p[col])["Player"]
+
     def most_tegs_played(self) -> tuple[list[str], int]:
         n = self.complete.groupby("Player")["TEGNum"].nunique()
         return sorted(n[n == n.max()].index), int(n.max())
@@ -200,6 +204,11 @@ CASES = [
          lambda f: {"refuse": True, "must_not": ["whisker", "purr"]}),
     Case("offtopic-other-golf", "Who won the 2023 Masters?",
          lambda f: {"refuse": True, "must_not": ["Rahm"]}),
+
+    # --- forecasts come from the simulator, never the model's own guess
+    Case("predict-next", "What are your predicted Green Jacket, TEG Trophy and Wooden Spoon winners for the next TEG?",
+         lambda f: {"must": [f.prediction_favourite("TrophyChancePct"), f.prediction_favourite("JacketChancePct"),
+                             f.prediction_favourite("SpoonChancePct")], "link": "/simulation"}),
 
     # --- unknown players / missing data handled plainly
     Case("unknown-player", "How many TEGs has Tiger Woods won?",
@@ -310,8 +319,9 @@ def main() -> int:
     from teg_analysis.chatbot.tools import ChatData
     ranked = {"teg": deps.cached_ranked_teg_data, "round": deps.cached_ranked_round_data,
               "frontback": deps.cached_ranked_frontback_data}
+    from webapp.routes.simulation import default_prediction
     data = ChatData(all_data=deps.cached_load_all_data, winners=deps.cached_winners,
-                    ranked=lambda scope: ranked[scope]())
+                    ranked=lambda scope: ranked[scope](), predictions=default_prediction)
     facts = Facts(data)
     cases = [c for c in CASES if not args.only or args.only in c.id]
 

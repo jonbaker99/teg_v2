@@ -121,7 +121,8 @@ teg_analysis/
     scoring.py       3-axis combination + mode weights
 
   chatbot/           TEGBot 5000 — answers stat questions in plain English
-    tools.py         Lookups (get_honours, get_records, get_streak_records, get_bounce_back):
+    tools.py         Lookups (get_honours, get_records, get_streak_records, get_bounce_back,
+                     get_predictions — the simulator's next-TEG odds via a ChatData provider):
                      full, tie-complete results with the site's own definitions. ChatData
                      takes the caller's cached loaders and builds the sandbox CSVs
                      (datasets(): holes, rounds with round/after-round positions, tegs

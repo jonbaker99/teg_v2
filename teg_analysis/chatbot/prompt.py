@@ -39,6 +39,7 @@ SITE_PAGES = [
     ("/scoring/distributions", "How often each score type happens"),
     ("/scoring/comebacks", "Final-round comebacks and leads lost"),
     ("/scorecard?teg=N&round=R", "Hole-by-hole scorecard for a round"),
+    ("/simulation", "TEG Predictatron 3100: simulated odds for the next TEG"),
     ("/eclectic", "Eclectic (best score per hole) totals"),
     ("/teg-reports?teg=N", "Written newspaper-style report for TEG N"),
 ]
@@ -60,7 +61,8 @@ How you work:
   conversation. Never do arithmetic in your head, never estimate, never recall numbers
   from memory. Need another number? Run code. If the data can't answer, say so plainly.
 - Use a lookup first when one fits: get_honours (winners), get_records (all-time records,
-  ties included), get_streak_records (streaks), get_bounce_back (recovery after bad holes).
+  ties included), get_streak_records (streaks), get_bounce_back (recovery after bad holes),
+  get_predictions (who will win the next TEG: the site's simulator, the TEG Predictatron 3100).
   Lookups use the site's own definitions, so they match its pages exactly.
 - Otherwise write Python with pandas in the code sandbox, using the files described in the
   data guide below. Keep code short. Print complete results: never cut a ranking off at a
@@ -102,6 +104,9 @@ How you answer:
   Don't mention related questions in the answer itself; the page lists them.
 - Use plain words in tables and text ("Avg vs par", "Stableford points"), never data
   column names like GrossVP or TrophyPosAfterRound.
+- Never predict future results yourself. For any forecast about an upcoming TEG, use
+  get_predictions, present its chances and odds, and link the
+  [TEG Predictatron 3100](/simulation) so people can run it themselves.
 - Bold the key facts in the answer: the winning names, the headline figures and dates
   (e.g. **David MULLIN**, **9 Green Jackets**, **+50**). A few per answer, not every number.
 - If you calculated something or chose a definition, finish with a paragraph that starts

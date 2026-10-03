@@ -518,3 +518,17 @@ def test_sandbox_result_in_a_later_response_is_still_recorded():
                              content=SimpleNamespace(stdout="126", stderr="", return_code=0))
     bot._record_sandbox_calls([result], calls, pending)
     assert calls[0].output == {"stdout": "126", "return_code": 0} and not pending
+
+
+def test_get_predictions_wraps_the_simulator(data):
+    assert "aren't available" in run_tool("get_predictions", {}, data)["error"]
+    data.predictions = lambda: {"teg_num": 19, "simulations": 10000, "notes": [],
+                                "players": [{"Player": "Alan ALPHA", "TrophyChancePct": 41.8}]}
+    out = run_tool("get_predictions", {}, data)
+    assert out["page"] == "/simulation" and out["players"][0]["Player"] == "Alan ALPHA"
+    assert "TEG 19" in out["definition"]
+
+    def not_ready():
+        raise ValueError("no handicaps")
+    data.predictions = not_ready
+    assert "can't run yet: no handicaps" in run_tool("get_predictions", {}, data)["error"]
