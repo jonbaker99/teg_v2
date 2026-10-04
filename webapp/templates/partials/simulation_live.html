@@ -1,0 +1,64 @@
+{% if fatal %}
+<div class="request-feedback" role="alert"><span>{{ fatal }}</span></div>
+{% elif not_live %}
+<div class="data-card data-card--padded sim-live-empty">
+    <p class="section-title">No TEG in progress</p>
+    <p>There's nothing to simulate live right now. Live win chances appear here once TEG {{ next_teg }} starts, and update after each round is finalised.</p>
+    <p class="caption">For chances before a TEG starts, use the <a class="text-link" href="/simulation">Prediction</a> tab.{% if last_completed %} To see how this view works, <a class="text-link" href="/simulation?tab=live&amp;teg={{ last_completed }}">replay TEG {{ last_completed }} round by round</a>.{% endif %}</p>
+</div>
+{% else %}
+<div class="sim-results sim-stack">
+    {% if replay %}
+    <p class="request-feedback">Replay of TEG {{ teg }}, which has finished. Each point on the chart is the chances as they stood after that round. <a class="text-link" href="/simulation?tab=live">Back to Live</a></p>
+    {% endif %}
+    <section class="sim-section">
+    <h3 class="chart-title">TEG {{ teg }} win chances{% if done == 0 %} before the start{% elif replay %} at the finish{% else %} after round {{ done }}{% endif %}</h3>
+    <p class="caption">{% if done == 0 %}No round has been finalised yet, so these are pre-tournament chances. They update after each round is finalised.{% elif replay %}The result: the winners on 100%.{% else %}Rounds 1 to {{ done }} count at their actual scores. The rest are simulated hole by hole on their courses, with each player's form updated by how they've played so far.{% endif %}</p>
+    <div class="data-card"><div class="table-wrapper">
+    <table class="teg-table sim-live-table">
+        <thead><tr>
+            <th class="sim-left">Player</th>
+            <th>TEG Trophy</th>{% if done %}<th><abbr title="Change since {{ since }}">Change</abbr></th>{% endif %}
+            <th>Green Jacket</th>{% if done %}<th><abbr title="Change since {{ since }}">Change</abbr></th>{% endif %}
+            {% if done %}<th>{{ 'Stableford' if stableford else 'Net vs par' }}</th><th>Gross vs par</th>{% endif %}
+        </tr></thead>
+        <tbody>
+        {% for r in rows %}
+        <tr>
+            <td class="sim-left">{{ r.name_html | safe }}</td>
+            <td>{{ r.trophy }}</td>{% if done %}<td class="text-muted">{{ r.trophy_change }}</td>{% endif %}
+            <td>{{ r.jacket }}</td>{% if done %}<td class="text-muted">{{ r.jacket_change }}</td>{% endif %}
+            {% if done %}<td>{{ r.net_banked }}</td><td>{{ r.gross_banked }}</td>{% endif %}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div></div>
+    <p class="caption">Trophy is {{ 'Stableford' if stableford else 'net vs par' }}, Jacket is gross. {% if done %}Change is in percentage points since {{ since }}. {% endif %}A tie for the lead counts as a shared win.</p>
+    </section>
+
+    {% if done %}
+    <section class="sim-section sim-stack sim-stack--tight">
+    <h3 class="chart-title">How the chances moved</h3>
+    <div class="section-controls">
+        <div class="segmented" role="group" aria-label="Prize">
+            {% for m in measures %}
+            <button type="button" class="seg-option" data-sim-measure="{{ m.key }}" aria-pressed="{{ 'true' if loop.first else 'false' }}">{{ m.label }}</button>
+            {% endfor %}
+        </div>
+    </div>
+    {% for m in measures %}
+    <div class="sim-panel{% if not loop.first %} sim-hidden{% endif %}" data-measure="{{ m.key }}">
+        <div class="chart-container sim-chart" data-figure="{{ m.chart_json }}" style="height:360px;"></div>
+    </div>
+    {% endfor %}
+    <p class="caption">Each point is the win chance after that round was finalised; Start is before round 1.</p>
+    </section>
+    {% endif %}
+
+    <details class="sim-expander">
+        <summary><span class="section-title">How this works</span><span class="sim-toggle-hint" aria-hidden="true"></span></summary>
+        <p class="caption">Uses the same hole-by-hole simulation as the Prediction tab, at its default settings. Finished rounds are banked at their real scores; each remaining hole's gross score is drawn from the player's past scores on holes of that par and stroke index, and Stableford comes from that score and their strokes on the hole. Form starts from the three previous TEGs (weighted 50/30/20) and leans more on this TEG as rounds are played: this TEG's form counts {{ w_by_round[0] }} after one round, {{ w_by_round[1] }} after two and {{ w_by_round[2] }} after three.</p>
+    </details>
+</div>
+{% endif %}

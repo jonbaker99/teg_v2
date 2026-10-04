@@ -10,7 +10,7 @@ Analysis package todos. Commentary/reporting pipeline tracked separately in [`re
 - [ ] **Field blend widens spread.** The field mixes players, so its shape is wider than any one player's; at alpha 5 birdies run ~8% above actual in the backtest. Consider blending only into outcomes the player has never had, or using a field of similar-ability players.
 - [x] **Condition on rounds already played** — done 2026-10-04 in `analysis/win_probability.py`, on the hole-level engine (banked rounds, prior and current form blended in the hole distributions). Backtest TEGs 5-18 (Brier; only P/k matters): net best at P/k = 3 (0.268 vs 0.270 default), gross at 1.5 (0.204 vs 0.206); default P/k = 2 best for both combined. Prior-only 0.303 / 0.266.
 - [ ] **Condition on holes already played.** Extend the live win probabilities to part-played rounds (bank played holes, simulate the rest).
-- [ ] **Show live win probabilities in the webapp.** `win_probs_by_round` has no page yet; a chart of win chance by round on `/simulation` or the live leaderboard is the obvious home.
+- [x] **Show live win probabilities in the webapp** — done 2026-10-04: Live tab on `/simulation`.
 - [ ] **Field-level SI effect.** An alternative to the rolling SI window: use the player's whole-par distribution shifted by the field's SI effect (SI 1-6 ≈ +0.35 strokes vs 7-18, measured on all history). Uses far more data per player; compare against the window.
 
 ## TEG Reports

@@ -10,6 +10,7 @@ from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 
 from teg_analysis.analysis import simulation as sim
+from teg_analysis.analysis import win_probability as wp
 from teg_analysis.core.players import get_player_dict
 from webapp.chart_utils import get_chart_style
 from webapp.deps import register_cache_clearer
@@ -50,7 +51,20 @@ def _target_options() -> tuple:
     return tuple(sim.available_target_tegs())
 
 
+@lru_cache(maxsize=4)
+def _live_probs(teg_num: int, replay: bool) -> tuple:
+    """(win_probs_by_round frame, names) for an in-progress TEG, or a finished one replayed."""
+    state = wp.load_teg_state(teg_num, _history(), from_scores=replay)
+    names = state.names if not replay else {p: get_player_dict().get(p, p) for p in state.players}
+    return wp.win_probs_by_round(state, n_sims=sim.DEFAULT_SIMS, seed=1), names
+
+
+def _completed_tegs() -> list[int]:
+    return sorted(sim._tegnums(sim._read_csv(sim.COMPLETED_TEGS_CSV)))
+
+
 def _clear_caches() -> None:
+    _live_probs.cache_clear()
     default_prediction.cache_clear()
     _history.cache_clear()
     _target.cache_clear()
@@ -505,6 +519,109 @@ def _run_context(qp) -> dict:
         return {"fatal": "Couldn't run the simulation."}
 
 
+# --- live win chances ---------------------------------------------------------
+
+def _round_label(r: int, n_rounds: int, finished: bool) -> str:
+    if r == 0:
+        return "Start"
+    return "Final" if finished and r == n_rounds else f"After R{r}"
+
+
+def _live_chart_json(df: pd.DataFrame, measure: str, names: dict, labels: list[str]) -> str:
+    import plotly.express as px
+    import plotly.graph_objects as go
+
+    d = df[df["measure"] == measure]
+    last = d["after_round"].max()
+    order = d[d["after_round"] == last].sort_values("win_prob", ascending=False)["player"]
+    palette = px.colors.qualitative.Plotly
+    fig = go.Figure()
+    for i, pl in enumerate(order):
+        g = d[d["player"] == pl].sort_values("after_round")
+        name = names.get(pl, pl)
+        fig.add_trace(go.Scatter(
+            x=[labels[r] for r in g["after_round"]], y=(g["win_prob"] * 100).round(1),
+            mode="lines+markers", name=name, line=dict(color=palette[i % len(palette)], width=2),
+            hovertemplate="%{y:.1f}%<extra>" + name + "</extra>"))
+    fig.update_layout(
+        yaxis_title="Win chance (%)", hovermode="x unified",
+        legend=dict(orientation="h", yanchor="top", y=-0.18, xanchor="left", x=0, title_text=""),
+        margin=dict(r=12, t=10, b=40, l=44))
+    fig.update_yaxes(range=[0, 100], ticksuffix="%")
+    fig.layout.xaxis.fixedrange = True
+    fig.layout.yaxis.fixedrange = True
+    fig.update_layout(**get_chart_style("streamlit"))
+    return fig.to_json()
+
+
+def _live_context(qp) -> dict:
+    """Context for the Live tab: latest win chances and how they moved round by round."""
+    live = wp.in_progress_teg()
+    completed = _completed_tegs()
+    replay_teg = None
+    if qp.get("teg"):
+        try:
+            replay_teg = int(qp.get("teg"))
+        except ValueError:
+            replay_teg = None
+        if replay_teg not in completed:
+            replay_teg = None
+    ctx = {"live_teg": live, "next_teg": sim.default_target_teg(),
+           "last_completed": completed[-1] if completed else None,
+           "w_by_round": [f"{wp.blend_weight(n) * 100:.0f}%" for n in (1, 2, 3)]}
+    teg = replay_teg or live
+    if teg is None:
+        return {**ctx, "not_live": True}
+    replay = replay_teg is not None
+    try:
+        df, names = _live_probs(teg, replay)
+    except ValueError as exc:
+        logger.warning("Live win chances: %s", exc)
+        return {**ctx, "fatal": f"Can't work out live chances for TEG {teg} yet: {exc}."}
+    except Exception:
+        logger.exception("live win chances failed")
+        return {**ctx, "fatal": "Couldn't work out the live win chances."}
+
+    done = int(df["after_round"].max())
+    stableford = teg >= wp.STABLEFORD_ERA_TEG
+    finished = replay
+    labels = [_round_label(r, done, finished) for r in range(done + 1)]
+    latest = df[df["after_round"] == done].pivot(index="player", columns="measure",
+                                                  values=["win_prob", "banked"])
+    prev = (df[df["after_round"] == done - 1].pivot(index="player", columns="measure",
+                                                    values="win_prob") if done else None)
+
+    def change(pl, m):
+        if prev is None:
+            return ""
+        pp = (latest.loc[pl, ("win_prob", m)] - prev.loc[pl, m]) * 100
+        return "0.0" if abs(pp) < 0.05 else f"{pp:+.1f}"
+
+    rows = []
+    order = latest.assign(_b=latest[("banked", "net")] * (1 if stableford else -1)).sort_values(
+        [("win_prob", "net"), "_b"], ascending=False).index
+    for pl in order:
+        net_b, gross_b = latest.loc[pl, ("banked", "net")], latest.loc[pl, ("banked", "gross")]
+        rows.append({
+            "name_html": _wrap_player_name(names.get(pl, pl)),
+            "trophy": f"{latest.loc[pl, ('win_prob', 'net')] * 100:.1f}%",
+            "trophy_change": change(pl, "net"),
+            "jacket": f"{latest.loc[pl, ('win_prob', 'gross')] * 100:.1f}%",
+            "jacket_change": change(pl, "gross"),
+            "net_banked": (f"{net_b:.0f}" if stableford else _signed(int(net_b))) if done else "",
+            "gross_banked": _signed(int(gross_b)) if done else "",
+        })
+    measures = [{"key": "net", "label": "TEG Trophy" if stableford else "TEG Trophy (net)"},
+                {"key": "gross", "label": "Green Jacket"}]
+    if done:
+        for m in measures:
+            m["chart_json"] = _live_chart_json(df, m["key"], names, labels)
+    return {
+        **ctx, "teg": teg, "replay": replay, "done": done, "rows": rows, "measures": measures,
+        "stableford": stableford, "since": ("the start" if done == 1 else f"round {done - 1}") if done else "",
+    }
+
+
 # --- default prediction (used by TEGBot) ---------------------------------------
 
 @lru_cache(maxsize=1)
@@ -542,6 +659,10 @@ def default_prediction(seed: int = 1) -> dict:
 
 @router.get("/simulation")
 def simulation_page(request: Request):
+    if request.query_params.get("tab") == "live":
+        return templates.TemplateResponse("simulation.html", {
+            "request": request, "active_page": "simulation", "wide": True, "tab": "live",
+            "live_query": str(request.query_params)})
     ctx = _distributions_context(request.query_params)
     s = ctx.get("s")
     ctx["teg_num"] = s["target"] if s else None
@@ -550,7 +671,7 @@ def simulation_page(request: Request):
         ctx["shares"] = _weight_shares(s["weights"])
         ctx["fmt"] = _fmt_num
     return templates.TemplateResponse("simulation.html", {
-        "request": request, "active_page": "simulation", "wide": True, **ctx})
+        "request": request, "active_page": "simulation", "wide": True, "tab": "predict", **ctx})
 
 
 @router.get("/simulation/distributions")
@@ -564,4 +685,11 @@ def simulation_distributions(request: Request):
 def simulation_run(request: Request):
     ctx = _run_context(request.query_params)
     return templates.TemplateResponse("partials/simulation_results.html", {
+        "request": request, **ctx})
+
+
+@router.get("/simulation/live")
+def simulation_live(request: Request):
+    ctx = _live_context(request.query_params)
+    return templates.TemplateResponse("partials/simulation_live.html", {
         "request": request, **ctx})

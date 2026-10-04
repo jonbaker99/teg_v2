@@ -8,14 +8,43 @@
 <div class="page-title-area">
     <span class="page-label">Scoring analysis</span>
     <h1 class="page-title">TEG Predictatron 3100</h1>
-    {% if teg_num %}
+    {% if teg_num and tab != 'live' %}
     <p class="page-subtitle">Each hole is sampled from the player's past scores on holes of that par. By default a rolling window around the hole's stroke-index pair (SI 1-2, 3-4 and so on) widens to neighbouring pairs until it holds enough holes, with the exact pair counting most; fixed SI bands are the alternative. Scores are weighted by TEG. Stableford uses the TEG {{ teg_num }} handicaps.</p>
     {% endif %}
 </div>
 {% endblock %}
 
 {% block content %}
-{% if fatal %}
+<nav class="section-nav sim-tabs" aria-label="Simulation views">
+    <a href="/simulation" class="tab-underline{% if tab != 'live' %} tab-underline--active{% endif %}"{% if tab != 'live' %} aria-current="page"{% endif %}>Prediction</a>
+    <a href="/simulation?tab=live" class="tab-underline{% if tab == 'live' %} tab-underline--active{% endif %}"{% if tab == 'live' %} aria-current="page"{% endif %}>Live</a>
+</nav>
+<script>
+(function () {
+    // Measure toggle (client-side, no re-run), for both tabs.
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-sim-measure]');
+        if (!btn) return;
+        var key = btn.getAttribute('data-sim-measure');
+        var root = btn.closest('.sim-results');
+        root.querySelectorAll('[data-sim-measure]').forEach(function (b) {
+            b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+        });
+        root.querySelectorAll('.sim-panel').forEach(function (p) {
+            p.classList.toggle('sim-hidden', p.getAttribute('data-measure') !== key);
+        });
+        var chart = root.querySelector('.sim-panel[data-measure="' + key + '"] .chart-container');
+        if (chart && window.Plotly) { try { Plotly.Plots.resize(chart); } catch (err) {} }
+    });
+})();
+</script>
+{% if tab == 'live' %}
+<section class="sim-section">
+    <div id="sim-live" hx-get="/simulation/live?{{ live_query }}" hx-trigger="load" hx-swap="innerHTML">
+        <p class="caption" aria-live="polite">Working out the live win chances&hellip;</p>
+    </div>
+</section>
+{% elif fatal %}
 <div class="request-feedback" role="alert"><span>{{ fatal }}</span></div>
 {% else %}
 {% set s = s %}
@@ -145,21 +174,6 @@
 
 <script>
 (function () {
-    // Gross / Stableford toggle (client-side, no re-run).
-    document.addEventListener('click', function (e) {
-        var btn = e.target.closest('[data-sim-measure]');
-        if (!btn) return;
-        var key = btn.getAttribute('data-sim-measure');
-        var root = btn.closest('.sim-results');
-        root.querySelectorAll('[data-sim-measure]').forEach(function (b) {
-            b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
-        });
-        root.querySelectorAll('.sim-panel').forEach(function (p) {
-            p.classList.toggle('sim-hidden', p.getAttribute('data-measure') !== key);
-        });
-        var chart = root.querySelector('.sim-panel[data-measure="' + key + '"] .chart-container');
-        if (chart && window.Plotly) { try { Plotly.Plots.resize(chart); } catch (err) {} }
-    });
     // Live weight share %.
     function updateShares() {
         var inputs = document.querySelectorAll('.sim-weight:not(.sim-pw)');

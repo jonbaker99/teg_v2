@@ -223,6 +223,19 @@ def _dists_from_cells(base: sim.ScoreDistributions, support: np.ndarray,
 
 # ---------------------------------------------------------------- the TEG
 
+def in_progress_teg() -> int | None:
+    """The TEG in progress (in_progress_tegs.csv, not also completed), else None."""
+    def nums(path: str) -> list[int]:
+        try:
+            return sim._tegnums(sim._read_csv(path))
+        except (FileNotFoundError, pd.errors.EmptyDataError):
+            return []
+
+    done = set(nums(sim.COMPLETED_TEGS_CSV))
+    live = [t for t in nums(sim.IN_PROGRESS_TEGS_CSV) if t not in done]
+    return min(live) if live else None
+
+
 @dataclass
 class TegState:
     """Everything about one TEG that doesn't depend on k and P."""

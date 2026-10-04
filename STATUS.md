@@ -2,11 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-10-04 (live win probabilities by round; simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
+**Last updated:** 2026-10-04 (live win chances tab on /simulation; simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
 
-## 2026-10-04 — Win probabilities update after each round
+## 2026-10-04 — Live tab on the simulation page shows win chances round by round
 
-New `teg_analysis/analysis/win_probability.py` gives each player's win chance before a TEG and after every completed round, net (Stableford from TEG 8) first, then gross. It reuses the `/simulation` engine: completed rounds count at their actual scores, and the rest are simulated hole by hole on their real scorecards, with Stableford from the simulated gross and each hole's strokes. Form starts from the 3 previous TEGs (50/30/20) and leans more on this TEG as rounds pass (k = 3, P = 6). A backtest on TEGs 5-18 (Brier) puts the default within 0.003 of the best for each measure (net best at P/k = 3, gross at 1.5) and best for the two combined; defaults unchanged. No webapp page yet.
+New `teg_analysis/analysis/win_probability.py` gives each player's win chance before a TEG and after every completed round, net (Stableford from TEG 8) first, then gross. It reuses the `/simulation` engine: completed rounds count at their actual scores, and the rest are simulated hole by hole on their real scorecards, with Stableford from the simulated gross and each hole's strokes. Form starts from the 3 previous TEGs (50/30/20) and leans more on this TEG as rounds pass (k = 3, P = 6). A backtest on TEGs 5-18 (Brier) puts the default within 0.003 of the best for each measure (net best at P/k = 3, gross at 1.5) and best for the two combined; defaults unchanged. The **Live** tab on `/simulation` shows the latest Trophy and Jacket chances, the change since the last round, and a chart of how they moved. With no TEG in progress it says so and offers a replay of the last finished TEG.
 
 ## 2026-10-04 — Simulator shows what handicap changes did to win chances
 

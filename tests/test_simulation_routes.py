@@ -238,3 +238,56 @@ def test_run_includes_handicap_expanders(client):
     assert r.status_code == 200
     assert "Impact of handicap changes" in r.text
     assert "Handicaps that equalise chances" in r.text
+
+
+# ---- Live tab
+
+from teg_analysis.analysis import win_probability as wp  # noqa: E402
+from webapp.routes import simulation as sim_routes  # noqa: E402
+
+
+@pytest.fixture
+def fresh_live_cache():
+    sim_routes._live_probs.cache_clear()
+    yield
+    sim_routes._live_probs.cache_clear()
+
+
+def test_live_tab_shell_loads_partial(client):
+    r = client.get("/simulation?tab=live")
+    assert r.status_code == 200
+    assert 'hx-get="/simulation/live?tab=live"' in r.text
+    assert 'name="w_' not in r.text  # no prediction form on the Live tab
+    assert "tab-underline--active" in r.text
+
+
+def test_live_no_teg_in_progress(client, monkeypatch, fresh_live_cache):
+    monkeypatch.setattr(wp, "in_progress_teg", lambda: None)
+    r = client.get("/simulation/live")
+    assert r.status_code == 200
+    assert "No TEG in progress" in r.text
+    assert "nothing to simulate live" in r.text
+
+
+def test_live_in_progress_shows_latest_and_history(client, monkeypatch, fresh_live_cache):
+    h = sim.load_history(teg_nums=[50])
+    h = h[~((h["TEGNum"] == 18) & (h["Round"] > 2))]  # TEG 18 as if 2 rounds in
+    monkeypatch.setattr(sim_routes, "_history", lambda: h)
+    monkeypatch.setattr(wp, "in_progress_teg", lambda: 18)
+    r = client.get("/simulation/live")
+    assert r.status_code == 200
+    assert "TEG 18 win chances after round 2" in r.text
+    assert "How the chances moved" in r.text and "After R2" in r.text
+    assert r.text.count("sim-left") >= 6  # header + 5 players
+
+
+def test_live_replay_of_finished_teg(client, fresh_live_cache):
+    r = client.get("/simulation/live?teg=18")
+    assert r.status_code == 200
+    assert "Replay of TEG 18" in r.text and "Final" in r.text
+
+
+def test_live_ignores_bad_teg(client, monkeypatch, fresh_live_cache):
+    monkeypatch.setattr(wp, "in_progress_teg", lambda: None)
+    r = client.get("/simulation/live?teg=abc")
+    assert "No TEG in progress" in r.text
