@@ -6,7 +6,7 @@ Current state and next priorities. Instructions and architecture live in `CLAUDE
 
 ## 2026-10-02 — /records marks new records and gains a New Records tab
 
-Records set in the in-progress (else last completed) TEG show a NEW pill on their row. Tabs holding any show a dot. A new first tab lists them with that TEG's personal bests. Dev lab removed.
+Records set in the in-progress (else last completed) TEG show a NEW pill on their row. Tabs holding any show a dot. A new first tab lists them with that TEG's personal bests and worsts. Dev lab removed.
 
 ## 2026-10-01 — Finalise shows the results before the GitHub sync
 

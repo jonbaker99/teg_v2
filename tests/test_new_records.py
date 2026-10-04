@@ -92,8 +92,8 @@ def test_dots_only_on_tabs_with_new_holders(client):
     expected.add("new")  # the New tab is dotted whenever anything is new
     assert dotted == expected and dotted
     assert "(new records)" in resp.text
-    # TEG 18 set no records: no dots.
-    assert "tab-new-mark" not in client.get("/records?new_teg=18").text
+    # TEG 18 set no records, only a personal worst: just the New tab is dotted.
+    assert set(_dots(client.get("/records?new_teg=18").text)) == {"new"}
 
 
 def test_new_tab_matches_dots(client):
@@ -121,3 +121,17 @@ def test_tab_context_cached_and_cleared():
     assert records._tab_context("streaks", 17) is records._tab_context("streaks", 17)
     deps.clear_all_data_caches()
     assert not records._TAB_CTX_CACHE
+
+
+def test_new_tab_lists_personal_worsts(client):
+    resp = client.get("/records/tab/new?new_teg=18")
+    assert "New personal worsts" in resp.text
+    assert "Round 3 Stableford" in resp.text  # Jon BAKER's 28 points
+
+
+def test_new_tab_skips_all_time_results_as_personal():
+    # TEG 17 Rd 2: John PATTERSON's +44 / 116 are all-time worsts, so they
+    # sit under New records, not repeated as personal worsts.
+    pws = records._new_personal_results(17, "personal_worsts")
+    assert not any(label.startswith("Round 2 ") and "Back" not in label and "Front" not in label
+                   for label, _ in pws.get("John PATTERSON", []))

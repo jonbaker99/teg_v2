@@ -436,39 +436,52 @@ _TAB_CTX_CACHE_MAX = 64
 register_cache_clearer(_TAB_CTX_CACHE.clear)
 
 
-def _pb_occasion_label(occasion: str, friendly_name: str) -> str:
-    return f"{occasion} {'Gross' if friendly_name == 'Score' else friendly_name}"
+# Same metric names as the /records labels ("Gross" is vs par, "Score" is strokes).
+_PB_METRIC_LABELS = {'Sc': 'Score', 'GrossVP': 'Gross', 'NetVP': 'Net', 'Stableford': 'Stableford'}
 
 
-def _new_personal_bests(new_teg: int) -> dict:
-    """Personal bests set in TEG ``new_teg``: {player name: [(label, value)]}
-    in occasion order (TEG, then each round, its nines after it). Ties and
-    first-ever appearances count (rank 1 within the player's history); a PB
-    that is also an all-time record is skipped, since the New records
-    section already lists it."""
+def _is_all_time(df: pd.DataFrame, metric: str, value, best: bool) -> bool:
+    """Whether ``value`` equals the all-time best (or worst) ``metric`` in
+    ``df``. Stableford is higher-is-better; the rest are lower-is-better."""
+    col = df[metric].dropna()
+    if col.empty:
+        return False
+    higher_better = metric == 'Stableford'
+    target = col.max() if higher_better == best else col.min()
+    return value == target
+
+
+def _new_personal_results(new_teg: int, kind: str) -> dict:
+    """Personal bests (``kind='personal_bests'``) or worsts
+    (``'personal_worsts'``) set in TEG ``new_teg``: {player name: [(label,
+    value)]} in occasion order (TEG, then each round, its nines after it).
+    Ties and first-ever appearances count (rank 1 within the player's
+    history). One that is also an all-time record is skipped, since the
+    New records section already lists it."""
     # Local import: latest.py imports this module.
     from webapp.routes.latest import _fmt_record_value
 
+    best = kind == 'personal_bests'
     teg_str = f"TEG {new_teg}"
+    teg_df = cached_ranked_teg_data()
     rounds_df = cached_ranked_round_data()
+    nines_df = cached_ranked_frontback_data()
     rounds = sorted(int(r) for r in rounds_df.loc[rounds_df['TEG'] == teg_str, 'Round'].unique())
 
-    def keep(result: dict, occasion: str, segment: bool = False) -> list:
-        record_keys = {(r['player'], r['metric'], r.get('segment')) for r in result['records']}
+    def keep(result: dict, occasion: str, df: pd.DataFrame, segment: bool = False) -> list:
         out = []
-        for pb in result['personal_bests']:
-            if (pb['player'], pb['metric'], pb.get('segment')) in record_keys:
+        for pb in result[kind]:
+            if _is_all_time(df, pb['metric'], pb['value'], best):
                 continue
             occ = f"{occasion} {pb['segment']} 9" if segment else occasion
-            out.append((pb['player'], _pb_occasion_label(occ, pb['friendly_name']),
-                        _fmt_record_value(pb['value'], pb['metric'])))
+            label = f"{occ} {_PB_METRIC_LABELS.get(pb['metric'], pb['friendly_name'])}"
+            out.append((pb['player'], label, _fmt_record_value(pb['value'], pb['metric'])))
         return out
 
-    rows = keep(identify_aggregate_records_and_pbs(cached_ranked_teg_data(), teg_str), "TEG")
+    rows = keep(identify_aggregate_records_and_pbs(teg_df, teg_str), "TEG", teg_df)
     for r in rounds:
-        rows += keep(identify_aggregate_records_and_pbs(rounds_df, teg_str, r), f"Round {r}")
-        rows += keep(identify_9hole_records_and_pbs(teg_str, r, cached_ranked_frontback_data()),
-                     f"Round {r}", segment=True)
+        rows += keep(identify_aggregate_records_and_pbs(rounds_df, teg_str, r), f"Round {r}", rounds_df)
+        rows += keep(identify_9hole_records_and_pbs(teg_str, r, nines_df), f"Round {r}", nines_df, segment=True)
     by_player: dict = {}
     for player, label, value in rows:
         by_player.setdefault(player, []).append((label, value))
@@ -518,17 +531,21 @@ def _new_tab_context(new_teg: int | None) -> dict:
                 new_count += sec["new_count"]
     records_html = "".join(groups) or f"<p class='text-muted text-sm'>No new records set in TEG {new_teg}.</p>"
 
-    pbs = _new_personal_bests(new_teg)
+    pbs = _new_personal_results(new_teg, 'personal_bests')
     pbs_html = _personal_bests_html(pbs) if pbs else (
         f"<p class='text-muted text-sm'>No new personal bests in TEG {new_teg}.</p>")
+    pws = _new_personal_results(new_teg, 'personal_worsts')
+    pws_html = _personal_bests_html(pws) if pws else (
+        f"<p class='text-muted text-sm'>No new personal worsts in TEG {new_teg}.</p>")
     return {
         "intro": intro,
         "sections": [
             {"title": "New records", "table_html": records_html},
             {"title": "New personal bests", "table_html": pbs_html},
+            {"title": "New personal worsts", "table_html": pws_html},
         ],
         "new_count": new_count,
-        "pb_count": len(pbs),
+        "pb_count": len(pbs) + len(pws),
     }
 
 

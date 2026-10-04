@@ -34,7 +34,7 @@ Real incident, 2026-09-12: Railway was deploying on Python 3.11 while local dev 
 
 ## Records page (`/records`)
 
-Tabs: New Records (first), TEG, Round, 9-Hole, Streaks, Score Counts; TEG stays the default. Records set in the "new" TEG (in-progress, else last completed; `?new_teg=N` overrides for previews and is carried through tab loads) get a NEW pill on the holder row, and tabs holding any get a dot. The New Records tab lists those holders by source section, then the TEG's personal bests (ties and first appearances count; PBs that are also all-time records are listed only as records). Tab contexts are cached per `(tab, new_teg)` and cleared by `clear_all_data_caches`.
+Tabs: New Records (first), TEG, Round, 9-Hole, Streaks, Score Counts; TEG stays the default. Records set in the "new" TEG (in-progress, else last completed; `?new_teg=N` overrides for previews and is carried through tab loads) get a NEW pill on the holder row, and tabs holding any get a dot. The New Records tab lists those holders by source section, then the TEG's personal bests and personal worsts (ties and first appearances count; results that are also all-time records are listed only as records). Tab contexts are cached per `(tab, new_teg)` and cleared by `clear_all_data_caches`.
 
 ## Streak table display
 
