@@ -178,6 +178,38 @@ def shift_cells(p: np.ndarray, support: np.ndarray, shift_per_hole: float) -> np
     return _tilt_rows(p, support, (p * support).sum(axis=1) + shift_per_hole)
 
 
+def anchor_newcomers(dists: sim.ScoreDistributions, history: pd.DataFrame,
+                     handicaps: dict[str, int]) -> sim.ScoreDistributions:
+    """Centre players with no history (field-fallback cells) on their handicap.
+
+    The field distribution is the whole group's scoring, which ignores handicap:
+    a 36-handicap debutant would get a ~24-handicap player's scores and win the
+    Stableford nearly every time. Their cells are tilted so a typical round
+    (4 par 3s, 10 par 4s, 4 par 5s) averages handicap + the group's usual gap
+    between gross vs par and handicap in ``history`` (about +1.5 a round).
+    """
+    src = dists.cells.groupby("Pl")["Source"].agg(lambda x: set(x) == {"field fallback"})
+    newcomers = [pl for pl, is_new in src.items() if is_new and pl in handicaps]
+    if not newcomers or history.empty:
+        return dists
+    rounds = history.groupby(["TEGNum", "Round", "Pl"]).agg(G=("GrossVP", "sum"), HC=("HC", "first"))
+    gap = float((rounds["G"] - rounds["HC"]).mean())
+    support, cells = _cell_arrays(dists)
+    for pl in newcomers:
+        keys, p = cells[pl]
+        means = (p * support).sum(axis=1)
+        by_par = {par: means[[i for i, (pp, _) in enumerate(keys) if pp == par]].mean()
+                  for par in (3, 4, 5) if any(pp == par for pp, _ in keys)}
+        mix = {par: n for par, n in ((3, 4), (4, 10), (5, 4)) if par in by_par}
+        typical = _HOLES * sum(n * by_par[par] for par, n in mix.items()) / sum(mix.values())
+        target = handicaps[pl] + gap
+        cells[pl] = (keys, shift_cells(p, support, (target - typical) / _HOLES))
+        dists.warnings.append(f"{pl}: no history, field scoring centred on handicap "
+                              f"{handicaps[pl]} ({target:+.1f} a round)")
+    out = _dists_from_cells(dists, support, cells)
+    return sim.ScoreDistributions(out.boundaries, out.probs, dists.cells, out.warnings)
+
+
 def _dists_from_cells(base: sim.ScoreDistributions, support: np.ndarray,
                       cells: dict[str, tuple[list, np.ndarray]]) -> sim.ScoreDistributions:
     rows = []
@@ -303,6 +335,7 @@ def load_teg_state(
     holes = t.loc[t["Round"].isin(done), ["Round", "Hole", "Pl", "GrossVP", net_col]].rename(
         columns={net_col: "Net"}).astype({"Round": int, "Hole": int, "GrossVP": int, "Net": int})
     prior = prior_distributions(history, teg_num, players, prior_weights, **build_kwargs)
+    prior = anchor_newcomers(prior, history[history["TEGNum"] < teg_num], handicaps)
     return TegState(teg_num, players, names, handicaps, n_rounds, cards, pool, done,
                     holes.reset_index(drop=True), prior)
 

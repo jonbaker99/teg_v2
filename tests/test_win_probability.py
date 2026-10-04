@@ -293,3 +293,16 @@ def test_day_and_form_offsets_spread_outcomes():
     assert g_off["win_prob"].tolist() == [0.5, 0.5] and g_off["sd"].tolist() == [0.0, 0.0]
     assert g_on["sd"].iloc[0] == pytest.approx(np.sqrt(wp.DEFAULT_FORM_VAR + wp.DEFAULT_DAY_VAR))
     assert 0.35 < g_on.loc["AA", "win_prob"] < 0.65
+
+
+def test_newcomer_centred_on_handicap():
+    # AA (off 18) shoots +15 a round, 3 under handicap. Debutant CC (off 36) should be
+    # centred on 36 - 3 = +33 a round, not on the field's +15.
+    spread = np.tile([-1, 0, 1, 2, 3], 4)[:18]
+    rows = [_holes(t, r, "AA", spread, 18) for t in (1, 2, 3) for r in (1, 2)]
+    rows += [_holes(4, 1, "AA", spread, 18), _holes(4, 1, "CC", spread, 36)]
+    st = _state(pd.concat(rows, ignore_index=True))
+    sup, arr = st.cells()
+    cc = (arr["CC"][1] * sup).sum(axis=1)
+    assert cc == pytest.approx(33 / 18, abs=0.01)
+    assert any("CC: no history" in w for w in st.prior.warnings)

@@ -96,7 +96,8 @@ teg_analysis/
                      rest simulated hole by hole with run_simulation on their real
                      scorecards (Stableford from simulated gross and hole strokes);
                      prior = build_distributions on the 3 TEGs held before (50/35/15 as Prediction,
-                     renormalised per player; field if none); current form tilts the
+                     renormalised per player; field if none, centred on handicap + the
+                     group's usual gap: anchor_newcomers); current form tilts the
                      hole distributions by w x the residual per round (w = k*n/(k*n+P),
                      n = holes played / 18: form_shift); correlated TEG-form and day
                      offsets (DEFAULT_FORM_VAR/DAY_VAR) are spread over the simulated
