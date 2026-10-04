@@ -216,7 +216,7 @@ Two distinct phases. **Streamlit is the original architecture** — self-contain
    - `constants.py` — file paths, tournament metadata (see [Player identity](#player-identity) for the players caveat)
    - `io/` — file I/O (`read_file`/`write_file`), GitHub API (`GITHUB_TOKEN`), Railway volume management
    - `core/` — data loading (`load_all_data`) and transformation
-   - `analysis/` — scoring, rankings, aggregation, streaks, records, eclectic, handicaps, commentary, pipeline, data_update, history, performance, leaderboards, bestball, live_round, round_setup, round_wizard, simulation
+   - `analysis/` — scoring, rankings, aggregation, streaks, records, eclectic, handicaps, commentary, pipeline, data_update, history, performance, leaderboards, bestball, live_round, round_setup, round_wizard, simulation, win_probability
    - `display/` — formatting, HTML tables, scorecards, nav utilities. Returns HTML strings; never calls `st.write`
    - `reporting/` — LLM-powered tournament reports, plus a free, non-LLM PDF-rendering stage (`report_pdf.py`)
    - `chatbot/` — TEGBot 5000 (`/tegbot`). Lookups first (`chatbot/tools.py`: honours, records, streaks, bounce-back, next-TEG predictions from the simulator, using the site's own definitions and returning full, tie-complete results); otherwise the model writes pandas that runs in **Anthropic's code-execution sandbox** against CSVs built by `ChatData.datasets()` and documented in `prompt.DATA_GUIDE`. Model-written code never runs on our server. The model must not do arithmetic itself. Clearly definable, frequently asked questions earn a lookup; for everything else, improve the data guide or datasets

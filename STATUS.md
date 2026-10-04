@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-10-04 (simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
+**Last updated:** 2026-10-04 (live win probabilities by round; simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
+
+## 2026-10-04 — Win probabilities update after each round
+
+New `teg_analysis/analysis/win_probability.py` gives each player's win chance before a TEG and after every completed round, net (Stableford from TEG 8) first, then gross. Completed rounds count at their actual scores; the rest are simulated as gross rounds and scored to Stableford with this TEG's handicaps. Form blends the 3 previous TEGs (50/30/20) with this TEG's rounds, leaning more on this TEG as rounds pass (k = 3, P = 6). A backtest on TEGs 5-18 found the default best for net and P/k = 1 marginally better for gross; defaults unchanged. No webapp page yet.
 
 ## 2026-10-04 — Simulator shows what handicap changes did to win chances
 
