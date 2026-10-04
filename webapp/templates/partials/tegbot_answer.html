@@ -28,6 +28,12 @@
                 {% endfor %}
             </details>
             {% endif %}
+            {% if can_dig %}
+            <p class="tb-dig-row{{ ' tb-dig-strong' if suggest_deep }}">
+                {% if suggest_deep %}<span class="tb-dig-why">This one deserves a closer look{% if deep_reason %}: {{ deep_reason | trim('. ') }}{% endif %}.</span>{% endif %}
+                <button type="button" class="tb-dig" data-q="{{ question }}" title="Re-run this question as a Deep dive: slower, more thorough">Dig deeper &rsaquo;</button>
+            </p>
+            {% endif %}
             {% endif %}
         </div>
     </div>

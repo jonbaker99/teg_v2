@@ -830,6 +830,15 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
             "unit": "pts" if value_col == "Stableford" else "vs par",
         }
 
+        # Pre-Stableford TEGs (net = NetVP) are already scored vs net par, so
+        # the "adjusted scale" view adds nothing -- and adjusted_grossvp
+        # (vs bogey) distorts it. Drop the option and show Standard instead.
+        chart_types = RESULTS_CHART_TYPES
+        if tab != "gross" and net_measure == "NetVP":
+            chart_types = [t for t in RESULTS_CHART_TYPES if t[0] != "adjusted"]
+            if chart_variant == "adjusted":
+                chart_variant = "standard"
+
         chart_meta = _results_chart_meta(tab, chart_variant, net_measure, teg_name)
         figure_json = _build_race_figure_json(tab, chart_variant, net_measure, teg_name)
         chart_readout = _build_race_chart_readout(tab, chart_variant, net_measure, teg_name)
@@ -846,8 +855,11 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
             "chart_readout": chart_readout,
             "chart_crowded_threshold": CROWDED_FIELD_THRESHOLD,
             "teg_name": teg_name,
-            "chart_types": RESULTS_CHART_TYPES,
-            "active_chart_variant": chart_variant,
+            "chart_types": chart_types,
+            # The variant actually drawn. Kept apart from active_chart_variant
+            # (the requested one) so the hidden input keeps "adjusted" when
+            # the user moves on to a TEG or tab that supports it.
+            "shown_chart_variant": chart_variant,
             "figure_json": figure_json,
             "teg_complete": complete,
             "context_header": context_header,
@@ -914,6 +926,7 @@ def results_table(request: Request, teg: int = Query(...), tab: str = Query("net
         "request": request,
         "selected_teg": teg,
         "active_tab": tab,
+        "active_chart_variant": chart_variant,
         **ctx,
     })
 

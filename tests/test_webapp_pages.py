@@ -1211,6 +1211,19 @@ def test_race_chart_readout_markup_present_regardless_of_viewport(client):
     assert re.search(r'data-crowded-threshold="\d+"', resp.text)
 
 
+@pytest.mark.parametrize("path", ["/results", "/results/table", "/leaderboard/table"])
+def test_netvp_teg_drops_adjusted_chart_option(client, path):
+    # Pre-Stableford TEGs (net = NetVP) are already vs net par, so the
+    # adjusted-scale option is removed and an "adjusted" request falls back
+    # to Standard. Stableford-era TEGs keep it (covered above with TEG 18).
+    resp = client.get(path, params={"teg": 4, "tab": "net", "chart_variant": "adjusted"})
+    _assert_ok_no_error(resp)
+    assert 'data-public-state-value="adjusted"' not in resp.text
+    assert re.search(r'aria-pressed="true"\s+data-public-state-key="chart_variant" '
+                     r'data-public-state-value="standard"', resp.text)
+    assert "Cumulative net score vs. par" in resp.text
+
+
 def test_honours_page_renders(client):
     resp = client.get("/honours")
     _assert_ok_no_error(resp)

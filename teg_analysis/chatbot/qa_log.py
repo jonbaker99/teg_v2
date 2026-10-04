@@ -52,7 +52,7 @@ def clean_conv_id(value: str | None) -> str:
 
 def append_entry(*, conv: str, question: str, answer: str, workings: list[dict],
                  model: str, cost_usd: float, seconds: float, theme: str = "",
-                 related: list[str] | None = None) -> dict:
+                 related: list[str] | None = None, deep: bool = False) -> dict:
     entry = {
         "id": uuid.uuid4().hex,
         "conv": clean_conv_id(conv),
@@ -65,6 +65,7 @@ def append_entry(*, conv: str, question: str, answer: str, workings: list[dict],
         "seconds": round(seconds, 1),
         "theme": clean_theme(theme),
         "related": list(related or []),
+        "deep": bool(deep),
     }
     path = log_path()
     line = json.dumps(entry, ensure_ascii=False) + "\n"

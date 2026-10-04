@@ -146,6 +146,7 @@ teg_analysis/
                      takes the caller's cached loaders and builds the sandbox CSVs
                      (datasets(): holes, rounds with round/after-round positions, tegs
                      with finishing positions, winners)
+    toolkit/         Code and skills for the code sandbox (see "Chatbot toolkit" below)
     prompt.py        System prompt (incl. when to judge players against their own normal
                      standard rather than raw totals), DATA_GUIDE (the CSVs' columns and rules for code) and
                      SITE_PAGES, the only links the bot may give
@@ -273,6 +274,25 @@ Cache is in-process (`@lru_cache`). Cleared manually after data updates.
 - `create_leaderboard(df, column)` — Create ranking leaderboard
 
 See the modules for full API — each function is documented.
+
+## Chatbot toolkit
+
+`chatbot/toolkit/` is what TEGBot's code-execution sandbox gets besides the CSVs: the site's own
+analysis code and *skills* (Agent-Skills folders with a `SKILL.md`). It runs only in Anthropic's
+sandbox, never on our server.
+
+- `code_zip()` zips `teg_analysis/` (minus `chatbot/`, `reporting/`) and `skills/`. `data_zip()` zips
+  the current data files (raw bytes through `io.read_binary_file`). Both are deterministic.
+  `SETUP_CMD` unpacks them into `/tmp/teg`; `skills_index()` is the system-prompt text.
+- Skills: `teg-simulation` (`scripts/sim.py`: Predictatron baseline / what-if / handicap impact /
+  equalising) and `teg-analysis` (`scripts/tegstats.py`: site definitions, tie-aware ranks,
+  own-baseline comparisons, bootstrap CIs, handicap re-scoring).
+- To add a skill: create `toolkit/skills/<name>/SKILL.md` with `name` and `description`
+  frontmatter, put scripts under `scripts/`, add a test in `tests/test_tegbot_toolkit.py`.
+  Scripts find the code via `$TEG_ROOT` or `/tmp/teg`, and must work on the sandbox's
+  pandas 2.3 as well as the repo's pandas 3.
+- The `github` import is lazy in `io/`, so the package imports without PyGithub (the sandbox has none).
+  Keep it that way; a test guards it. `api/` stays in the zip because `teg_analysis/__init__.py` imports it.
 
 ## Design constraints
 

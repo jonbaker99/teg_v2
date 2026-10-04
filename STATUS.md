@@ -2,11 +2,23 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-10-04 (live win chances tab on /simulation; simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
+**Last updated:** 2026-10-04 (live win chances tab on /simulation; TEGBot toolkit, Dig deeper and charts; new-record markers on /records; simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
 
 ## 2026-10-04 — Live tab on the simulation page shows win chances round by round
 
 New `teg_analysis/analysis/win_probability.py` gives each player's win chance before a TEG and after every completed round, net (Stableford from TEG 8) first, then gross. It reuses the `/simulation` engine: completed rounds count at their actual scores, and the rest are simulated hole by hole on their real scorecards, with Stableford from the simulated gross and each hole's strokes. Form starts from the 3 previous TEGs (50/35/15, matching the Prediction tab) and leans more on this TEG hole by hole (k = 3, P = 6). Each simulated round also carries a small good-day or bad-day swing and some uncertainty in each player's form, which stops the chances lurching on every hole. A debutant is centred on their handicap rather than the group average. Backtest on TEGs 5-18: the default P/k = 2 is best for net and within 0.001 of the best for gross; with the day and form swings, chances move as much as a calibrated forecast should (1.02 vs 1.36 before) at the same accuracy (Brier 0.262 vs 0.260). The **Live** tab on `/simulation` shows the latest Trophy and Jacket chances, the change since the last round, and a hole-by-hole chart of how they moved. The chart fills in while you watch (round ends first, then hole 9s, even holes, odd holes), then lists the three biggest one-hole swings. A slider and Play button step through the TEG hole by hole, and any finished TEG can be replayed from a picker. With no TEG in progress it says so and offers a replay of the last finished TEG.
+
+## 2026-10-04 — TEGBot runs the site's own analysis, digs deeper and draws charts
+
+TEGBot's sandbox now gets a toolkit with every question: the site's analysis code, the current data, the site's precomputed tables, and two skills. `teg-simulation` runs the Predictatron for why and what-if questions (handicap changes, which TEGs count as form, Shapley attribution, equalising handicaps). Plain odds stay on the same settings as `/simulation`. `teg-analysis` holds a short analysis playbook plus tested helpers (site definitions, tie-aware ranks, own-baseline comparisons, bootstrap ranges, handicap re-scoring). **Dig deeper** links under analysis answers rerun the question in Deep dive mode: Opus at high effort, as a background job the page polls (up to 10 minutes; 5 a day per visitor, 30 in total). When the bot thinks Deep dive would materially help, the link is highlighted with its reason. Answers can include one chart, only when the shape of the data is the point: horizontal bars, or lines for trends, drawn with the site's Plotly theme. Package: `teg_analysis/chatbot/toolkit/`.
+
+## 2026-10-04 — Net-vs-par TEGs drop the adjusted race chart
+
+On TEGs 1 to 7 (TEG Trophy decided on net vs par), the TEG Trophy race chart no longer offers "Adjusted scale". It was plotting vs bogey, which distorted the lines; net vs par needs no adjusting. Those TEGs open on Standard. Gross and Stableford-era charts are unchanged.
+
+## 2026-10-04 — /records marks new records and gains a New Records tab
+
+Records set in the in-progress (else last completed) TEG show a NEW pill on their row. Tabs holding any show a dot. A new first tab lists them with that TEG's personal bests and worsts. Dev lab removed.
 
 ## 2026-10-04 — Simulator shows what handicap changes did to win chances
 

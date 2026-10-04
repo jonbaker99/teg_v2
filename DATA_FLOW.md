@@ -26,7 +26,7 @@ data/
   live_round_settings.csv ← admin switch (PublicEntryLink on/off) for the public "Enter scores" banner; missing = off
   streaks.parquet         ← pre-computed streak counters per hole per player
   bestball.parquet        ← pre-computed per-round bestball/worstball totals (read by the webapp for all-time ranking; rebuilt on every add/delete)
-  commentary_*.parquet    ← AI-generated commentary (round/tournament summaries, streaks)
+  commentary_*.parquet    ← computed commentary inputs (round/tournament summaries, events, streaks); also shipped to TEGBot's sandbox
   commentary/             ← the LLM report pipeline's artefacts (see below) — markdown + story-plan JSON
   commentary/pdfs/        ← pre-rendered A4 PDFs of reports (teg_N.pdf, teg_N_round_R.pdf) + manifest.json — built offline, no LLM
   commentary/variants/    ← per-model artefact sets for comparison runs — GITIGNORED

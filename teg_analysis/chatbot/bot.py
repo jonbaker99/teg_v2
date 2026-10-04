@@ -14,19 +14,34 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import os
 import re
 import threading
+import time
 from dataclasses import dataclass, field
 from typing import Any, Optional
 
-from teg_analysis.chatbot.prompt import build_system
+from teg_analysis.chatbot.prompt import DEEP_ADDENDUM, build_system
 from teg_analysis.chatbot.tools import TOOL_SCHEMAS, ChatData, run_tool
 
 DEFAULT_MODEL = "claude-sonnet-5-5"
 ENV_MODEL = "TEGBOT_MODEL"
 MAX_TOOL_ROUNDS = 8
 MAX_TOKENS = 4000
+#: Deep dive: stronger model, more steps and room, longer wait.
+DEEP_MODEL = "claude-opus-5-5"
+ENV_DEEP_MODEL = "TEGBOT_DEEP_MODEL"
+DEEP_TOOL_ROUNDS = 20
+DEEP_MAX_TOKENS = 16000
+DEEP_EFFORT = "high"
+TIMEOUT = 90.0
+DEEP_TIMEOUT = 300.0
+#: Deep dive wall clock: past this, the next call must answer from what it has.
+DEEP_WALL_CLOCK = 600.0
+#: One retry in deep mode, so a single stalled round can't eat the whole budget.
+DEEP_MAX_RETRIES = 1
+logger = logging.getLogger("uvicorn.error.tegbot")
 MAX_QUESTION_CHARS = 500
 MAX_HISTORY_TURNS = 6
 MAX_HISTORY_CHARS = 16000
@@ -63,6 +78,14 @@ class Answer:
     theme: str = ""
     #: ids of similar past questions the bot pointed to (validated against the log)
     related: list[str] = field(default_factory=list)
+    #: the bot thinks a Deep dive would do the question justice (normal mode only)
+    suggest_deep: bool = False
+    #: the bot's short reason for suggesting it (empty when absent)
+    deep_reason: str = ""
+    #: this answer was produced in Deep dive mode
+    deep: bool = False
+    #: set when the analysis toolkit could not be built, so the bot ran without it
+    toolkit_error: str = ""
 
     @property
     def method_note(self) -> str:
@@ -102,13 +125,33 @@ def get_model() -> str:
     return os.environ.get(ENV_MODEL) or DEFAULT_MODEL
 
 
-def _client():
+def get_deep_model() -> str:
+    return os.environ.get(ENV_DEEP_MODEL) or DEEP_MODEL
+
+
+def _client(timeout: float = TIMEOUT, max_retries: int = 2):
     from teg_analysis.reporting.llm import get_api_key
     key = get_api_key()
     if not key:
         raise TegBotError("No Anthropic API key is configured.")
     import anthropic
-    return anthropic.Anthropic(api_key=key, max_retries=2, timeout=90.0)
+    return anthropic.Anthropic(api_key=key, max_retries=max_retries, timeout=timeout)
+
+
+# Only CLOSED fences match, so an unclosed one can't swallow the rest of the answer.
+_CHART_BLOCK = re.compile(r"^[ \t]*```tegchart[ \t]*\n(.*?)\n[ \t]*```[ \t]*$", re.S | re.M)
+_CHART_OPEN = re.compile(r"^[ \t]*```tegchart[ \t]*$\n?", re.M)
+
+
+def strip_charts(text: str) -> str:
+    """Replace bulky `tegchart` blocks with "[chart: <title>]" for the history replay."""
+    def _title(match: re.Match) -> str:
+        try:
+            title = json.loads(match.group(1)).get("title")
+        except (ValueError, AttributeError, RecursionError):
+            title = None
+        return f"[chart: {title if isinstance(title, str) else 'untitled'}]"[:200]
+    return _CHART_OPEN.sub("", _CHART_BLOCK.sub(_title, text))
 
 
 def clean_history(history: Any) -> list[dict]:
@@ -119,7 +162,7 @@ def clean_history(history: Any) -> list[dict]:
     for item in history:
         if (isinstance(item, dict) and item.get("role") in ("user", "assistant")
                 and isinstance(item.get("content"), str) and item["content"].strip()):
-            turns.append({"role": item["role"], "content": item["content"][:6000]})
+            turns.append({"role": item["role"], "content": strip_charts(item["content"])[:6000]})
     turns = turns[-2 * MAX_HISTORY_TURNS:]
     while turns and turns[0]["role"] != "user":
         turns.pop(0)
@@ -144,27 +187,63 @@ def _add_usage(total: dict, usage: Any) -> None:
         total[key] = total.get(key, 0) + (getattr(usage, key, 0) or 0)
 
 
-# Uploaded sandbox files, keyed by a hash of their contents. Re-uploaded only
-# when the data changes; the superseded upload is deleted.
-_uploads: dict[str, list[str]] = {}
+_last_toolkit: Optional[tuple[dict[str, bytes], str]] = None
+
+
+def _toolkit_files() -> tuple[dict[str, bytes], str, str]:
+    """The toolkit zips and skills index, or ({}, "", error) if it cannot be built.
+
+    The bot must still answer basic questions without it, so failure is logged
+    (and carried on the Answer) rather than raised. A failed rebuild reuses the last
+    good build when there is one."""
+    global _last_toolkit
+    try:
+        from teg_analysis.chatbot import toolkit
+        built = ({toolkit.TOOLKIT_ZIP: toolkit.code_zip(), toolkit.DATA_ZIP: toolkit.data_zip()},
+                 toolkit.skills_index())
+        _last_toolkit = built
+        return built[0], built[1], ""
+    except Exception as exc:
+        logger.exception("TEGBot toolkit unavailable; answering without it")
+        files, index = _last_toolkit or ({}, "")
+        return files, index, f"{type(exc).__name__}: {exc}"
+
+
+# Uploaded sandbox files, keyed by file name with a hash of the contents. A file is
+# re-uploaded only when its own contents change, so a missing file (say the toolkit
+# failed to build) never forces the rest to be re-uploaded. A replaced upload is not
+# deleted at once, since an in-flight request may still reference it: it is kept for
+# one more generation of changes, then deleted.
+_uploads: dict[str, tuple[str, str]] = {}
+_retired: list[list[str]] = []
 _upload_lock = threading.Lock()
 
 
-def _dataset_file_ids(client: Any, data: ChatData) -> list[str]:
+def _dataset_file_ids(client: Any, data: ChatData,
+                      extra: Optional[dict[str, bytes]] = None) -> list[str]:
     files = {name: df.to_csv(index=False).encode() for name, df in data.datasets().items()}
-    digest = hashlib.sha256(b"".join(n.encode() + b for n, b in sorted(files.items()))).hexdigest()
+    files.update(extra or {})
+    ids, replaced = [], []
     with _upload_lock:
-        if digest not in _uploads:
-            ids = [client.files.upload(file=(name, body, "text/csv")).id
-                   for name, body in files.items()]
-            for old in [i for d, old_ids in _uploads.items() for i in old_ids]:
-                try:
-                    client.files.delete(old)
-                except Exception:  # best effort: a stale upload costs nothing
-                    pass
-            _uploads.clear()
-            _uploads[digest] = ids
-        return _uploads[digest]
+        for name, body in files.items():
+            digest = hashlib.sha256(body).hexdigest()
+            current = _uploads.get(name)
+            if current is None or current[0] != digest:
+                new_id = client.files.upload(
+                    file=(name, body, "application/zip" if name.endswith(".zip") else "text/csv")).id
+                if current:
+                    replaced.append(current[1])
+                _uploads[name] = (digest, new_id)
+            ids.append(_uploads[name][1])
+        if replaced:
+            _retired.append(replaced)
+            while len(_retired) > 1:
+                for old in _retired.pop(0):
+                    try:
+                        client.files.delete(old)
+                    except Exception:  # best effort: a stale upload costs nothing
+                        pass
+    return ids
 
 
 def _record_sandbox_calls(content: list, calls: list[ToolCall],
@@ -202,7 +281,7 @@ def _final_text(content: list) -> str:
     return "\n\n".join(texts).strip()
 
 
-_TRAILER = re.compile(r"^\s*(THEME|RELATED)\s*:\s*(.*?)\s*$", re.IGNORECASE)
+_TRAILER = re.compile(r"^\s*(THEME|RELATED|DEEP)\s*:\s*(.*?)\s*$", re.IGNORECASE)
 
 
 def past_block(past: list[dict], themes: list[str]) -> str:
@@ -215,44 +294,68 @@ def past_block(past: list[dict], themes: list[str]) -> str:
 
 def split_trailer(text: str, past: list[dict]) -> tuple[str, str, list[str]]:
     """Strip the THEME/RELATED lines from the end of an answer; resolve related ids."""
-    lines = text.rstrip().split("\n")
-    theme, related_raw = "", ""
-    while lines:
-        m = _TRAILER.match(lines[-1])
+    text, theme, related, _ = split_trailer_full(text, past)
+    return text, theme, related
+
+
+def split_trailer_full(text: str, past: list[dict]) -> tuple[str, str, list[str], bool]:
+    """As ``split_trailer`` but also returns the DEEP flag (False when absent)."""
+    return split_trailer_deep(text, past)[:4]
+
+
+def split_trailer_deep(text: str, past: list[dict]) -> tuple[str, str, list[str], bool, str]:
+    """As ``split_trailer_full`` plus the reason from ``DEEP: yes - <reason>`` ("" if none)."""
+    theme, related_raw, deep_raw = "", "", ""
+    # Trailer lines are usually last, but the model sometimes adds a line after them,
+    # so strip them wherever they appear (the last value of each key wins).
+    lines = []
+    for line in text.rstrip().split("\n"):
+        m = _TRAILER.match(line)
         if not m:
-            if not lines[-1].strip():
-                lines.pop()
-                continue
-            break
-        if m.group(1).upper() == "THEME":
+            lines.append(line)
+            continue
+        key = m.group(1).upper()
+        if key == "THEME":
             theme = m.group(2)
+        elif key == "DEEP":
+            deep_raw = m.group(2)
         else:
             related_raw = m.group(2)
-        lines.pop()
     by_short = {p["id"][:8]: p["id"] for p in past}
     related = []
     for token in re.split(r"[,\s]+", related_raw.lower()):
         full = by_short.get(token[:8])
         if full and full not in related:
             related.append(full)
-    return "\n".join(lines).strip(), theme.strip(), related[:3]
+    m = re.match(r"\s*yes\b[\s:,;.\-\u2013\u2014]*(.*)$", deep_raw, re.IGNORECASE)
+    suggest = bool(m)
+    reason = " ".join(m.group(1).split())[:120] if m else ""
+    return "\n".join(lines).strip(), theme.strip(), related[:3], suggest, reason
 
 
 def ask(question: str, data: ChatData, history: Optional[list] = None,
         client: Any = None, model: Optional[str] = None,
-        past: Optional[list[dict]] = None, themes: Optional[list[str]] = None) -> Answer:
+        past: Optional[list[dict]] = None, themes: Optional[list[str]] = None,
+        deep: bool = False) -> Answer:
     """Answer one question. ``history`` is prior text-only turns from the page;
-    ``past`` / ``themes`` come from the shared Q&A log (for "Others asked" and tagging)."""
+    ``past`` / ``themes`` come from the shared Q&A log (for "Others asked" and tagging).
+    ``deep`` switches to the Deep dive limits: stronger model, high effort, more steps."""
     question = (question or "").strip()[:MAX_QUESTION_CHARS]
     if not question:
         raise ValueError("Empty question.")
-    client = client or _client()
-    model = model or get_model()
+    client = client or (_client(DEEP_TIMEOUT, DEEP_MAX_RETRIES) if deep else _client())
+    started = time.monotonic()
+    model = model or (get_deep_model() if deep else get_model())
+    max_rounds = DEEP_TOOL_ROUNDS if deep else MAX_TOOL_ROUNDS
+    max_tokens = DEEP_MAX_TOKENS if deep else MAX_TOKENS
     past = past or []
-    system = build_system(data.holes(), data.complete(), data.players())
+    toolkit_files, skills_index, toolkit_error = _toolkit_files()
+    system = build_system(data.holes(), data.complete(), data.players(), skills_index)
     system.append({"type": "text", "text": past_block(past, themes or [])})
+    if deep:
+        system.append({"type": "text", "text": DEEP_ADDENDUM})
     uploads = [{"type": "container_upload", "file_id": fid}
-               for fid in _dataset_file_ids(client, data)]
+               for fid in _dataset_file_ids(client, data, toolkit_files)]
     messages: list[dict] = clean_history(history) + [
         {"role": "user", "content": [{"type": "text", "text": question}, *uploads]},
     ]
@@ -261,17 +364,18 @@ def ask(question: str, data: ChatData, history: Optional[list] = None,
     container = None
     open_code: dict[str, ToolCall] = {}
 
-    for attempt in range(MAX_TOOL_ROUNDS + 1):
-        last = attempt == MAX_TOOL_ROUNDS
+    for attempt in range(max_rounds + 1):
+        # Out of steps, or (deep) out of time: this call must answer from what it has.
+        last = attempt == max_rounds or (deep and time.monotonic() - started > DEEP_WALL_CLOCK)
         response = client.beta.messages.create(
             model=model,
-            max_tokens=MAX_TOKENS,
+            max_tokens=max_tokens,
             system=system,
             tools=[*TOOL_SCHEMAS, CODE_TOOL],
             messages=messages,
             # Out of steps: answer from what the tools already returned.
             tool_choice={"type": "none" if last else "auto"},
-            output_config={"effort": "medium"},
+            output_config={"effort": DEEP_EFFORT if deep else "medium"},
             betas=["server-side-fallback-2026-07-01"],
             fallbacks="default",
             **({"container": container} if container else {}),
@@ -281,18 +385,21 @@ def ask(question: str, data: ChatData, history: Optional[list] = None,
         _record_sandbox_calls(response.content, calls, open_code)
 
         if response.stop_reason == "refusal":
-            return Answer("Sorry, I can't help with that one.", calls, usage, model)
+            return Answer("Sorry, I can't help with that one.", calls, usage, model,
+                          deep=deep, toolkit_error=toolkit_error)
         if response.stop_reason == "pause_turn":
             # The sandbox hit its step limit mid-turn; resending resumes it.
             messages.append({"role": "assistant", "content": response.content})
             continue
         tool_uses = [b for b in response.content if b.type == "tool_use"]
         if response.stop_reason != "tool_use" or not tool_uses:
-            text, theme, related = split_trailer(_final_text(response.content), past)
+            text, theme, related, suggest, reason = split_trailer_deep(_final_text(response.content), past)
             if response.stop_reason == "max_tokens":
                 text += "\n\n_(Answer cut short.)_"
             return Answer(text or "I couldn't find an answer to that.", calls, usage, model,
-                          theme=theme, related=related)
+                          theme=theme, related=related, suggest_deep=suggest and not deep,
+                          deep_reason=reason if suggest and not deep else "",
+                          deep=deep, toolkit_error=toolkit_error)
 
         # Append the full assistant content unchanged (thinking blocks included).
         messages.append({"role": "assistant", "content": response.content})
@@ -309,4 +416,4 @@ def ask(question: str, data: ChatData, history: Optional[list] = None,
         messages.append({"role": "user", "content": results})
 
     return Answer("That needed more steps than I'm allowed. Try a narrower question.",
-                  calls, usage, model)
+                  calls, usage, model, deep=deep, toolkit_error=toolkit_error)

@@ -1,5 +1,15 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=VT323&display=swap">
+<script src="/static/tegbot_chart.js?v=1" defer></script>
 <style>
+    /* Answer charts (drawn by static/tegbot_chart.js) */
+    .tb-answer .tegbot-chart { margin: 0.9em 0; min-height: 3rem; }
+    .tb-chart-title { font-weight: 600; font-size: 0.82rem; color: var(--tb-green); margin-bottom: 4px; }
+    .tb-chart-plot { width: 100%; }
+    .tb-chart-data { font-size: 0.72rem; margin-top: 2px; opacity: 0.8; }
+    .tb-chart-data summary { cursor: pointer; }
+    .tb-chart-data-scroll { max-height: 14rem; overflow: auto; }
+    .tb-answer .tb-chart-data table { display: table; margin: 4px 0; }
+    .tb-answer .tb-chart-data th, .tb-answer .tb-chart-data td { padding: 2px 10px 2px 0; }
     /* TEGBot: lo-fi retro. Only three colours: paper (white, or black in dark
        mode), forest green, and the grey chat area. */
     .tb-app {
@@ -147,6 +157,14 @@
     }
     .tb-form button:hover { background: var(--tb-green-2); border-color: var(--tb-green-2); }
     .tb-form button[disabled] { opacity: 0.45; cursor: default; }
+    .tb-dig-row { margin: 8px 0 0; font-size: 0.8rem; }
+    .tb-dig { font: inherit; padding: 0; cursor: pointer; background: none; border: 0;
+        color: var(--tb-ink); opacity: 0.65; text-decoration: underline; text-underline-offset: 2px; }
+    .tb-dig:hover { opacity: 1; color: var(--tb-green); }
+    .tb-dig[disabled] { opacity: 0.4; cursor: default; }
+    .tb-dig-strong .tb-dig { color: var(--tb-green); opacity: 1; font-weight: 700; }
+    .tb-dig-why { margin-right: 6px; }
+    .tb-deep-note { font-size: 0.75rem; opacity: 0.7; margin-left: 8px; }
     .tb-examples { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 0; }
     .tb-examples button {
         border: 1px solid var(--tb-green); background: transparent; color: var(--tb-green);

@@ -1,0 +1,12 @@
+{% from "partials/tegbot_robot.html" import robot %}
+<div class="tb-turn tb-job" hx-get="/tegbot/job/{{ job_id }}" hx-trigger="load delay:{{ poll_seconds }}s"
+     hx-swap="outerHTML" role="status" aria-live="polite">
+    <div class="tb-q">{{ question }}</div>
+    <div class="tb-a">
+        {{ robot(28, busy=True) }}
+        <div class="tb-working">
+            <span class="tb-say"><span class="tb-say-text">Thinking&hellip; {{ elapsed }}</span><span class="tb-cursor"></span></span>
+            <span class="tb-deep-note">Deep dive: this can take a minute or two, sometimes more.</span>
+        </div>
+    </div>
+</div>
