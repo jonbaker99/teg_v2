@@ -78,7 +78,7 @@
 <div class="toggle-group">
     <div class="segmented" role="group" aria-label="Chart type">
         {% for cid, clabel in chart_types %}
-        <button type="button" class="seg-option" aria-pressed="{{ 'true' if cid == active_chart_variant else 'false' }}"
+        <button type="button" class="seg-option" aria-pressed="{{ 'true' if cid == shown_chart_variant|default(active_chart_variant) else 'false' }}"
                 data-public-state-key="chart_variant" data-public-state-value="{{ cid }}"
                 onclick="document.getElementById('{{ ns }}-chart-variant').value='{{ cid }}';
                          htmx.trigger(document.getElementById('{{ ns }}-teg-select'), 'change')">
