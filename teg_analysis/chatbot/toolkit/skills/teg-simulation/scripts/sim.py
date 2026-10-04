@@ -46,6 +46,7 @@ import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 
 from teg_analysis.analysis import simulation as sim  # noqa: E402
+from teg_analysis.analysis import win_probability as wp  # noqa: E402
 from teg_analysis.core.players import get_player_dict  # noqa: E402
 
 DEFAULT_N_SIMS = sim.DEFAULT_SIMS  # as the site and get_predictions
@@ -165,6 +166,7 @@ def run_scenario(
     dists = sim.build_distributions(
         hist, tgt.players, w, sim.DEFAULT_SI_BOUNDARIES, float(shrinkage),
         method=method, min_holes=int(min_holes), player_weights=None, field_alpha=float(field_alpha))
+    dists = wp.anchor_newcomers(dists, hist, tgt.handicaps)  # as the site: debutants centred on handicap
     res = sim.run_simulation(dists, tgt, int(n_sims), int(seed), keep_scores=True)
     settings = {"target": target, "n_sims": int(n_sims), "seed": int(seed), "method": method,
                 "min_holes": int(min_holes), "shrinkage": float(shrinkage),

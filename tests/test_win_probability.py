@@ -305,4 +305,5 @@ def test_newcomer_centred_on_handicap():
     sup, arr = st.cells()
     cc = (arr["CC"][1] * sup).sum(axis=1)
     assert cc == pytest.approx(33 / 18, abs=0.01)
-    assert any("CC: no history" in w for w in st.prior.warnings)
+    assert any(w.startswith("CC: first TEG") for w in st.prior.warnings)
+    assert wp.newcomers(st.prior) == ["CC"]

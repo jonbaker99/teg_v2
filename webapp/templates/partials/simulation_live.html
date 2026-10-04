@@ -45,6 +45,7 @@
         </tbody>
     </table>
     </div></div>
+    {% if newcomers %}<p class="request-feedback">First TEG for {{ newcomers | join(' and ') }}: no past scores, so their chances use the group's scoring centred on their handicap. Treat them as a rough guide.</p>{% endif %}
     <p class="caption">Trophy is {{ 'Stableford' if stableford else 'net vs par' }}, Jacket is gross. {% if done %}Change is in percentage points since {{ since }}. {% endif %}A tie for the lead counts as a shared win.</p>
     </section>
 

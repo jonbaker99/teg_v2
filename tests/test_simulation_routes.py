@@ -345,3 +345,9 @@ def test_live_replay_has_hole_slider(client, fresh_live_cache):
     assert "Net vs par" not in r.text  # TEG 9 is a Stableford TEG
     r = client.get("/simulation/live?teg=6")
     assert "Net vs par" in r.text
+
+
+def test_live_flags_debutant(client, fresh_live_cache):
+    r = client.get("/simulation/live?teg=7")  # Alex BAKER's first TEG
+    assert "First TEG for Alex BAKER" in r.text
+    assert "First TEG for" not in client.get("/simulation/live?teg=8").text

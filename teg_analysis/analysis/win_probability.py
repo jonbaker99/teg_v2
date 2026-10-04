@@ -178,6 +178,12 @@ def shift_cells(p: np.ndarray, support: np.ndarray, shift_per_hole: float) -> np
     return _tilt_rows(p, support, (p * support).sum(axis=1) + shift_per_hole)
 
 
+def newcomers(dists: sim.ScoreDistributions) -> list[str]:
+    """Players with no history at all: every cell came from the field."""
+    src = dists.cells.groupby("Pl", sort=False)["Source"].agg(lambda x: set(x) == {"field fallback"})
+    return [str(pl) for pl, is_new in src.items() if is_new]
+
+
 def anchor_newcomers(dists: sim.ScoreDistributions, history: pd.DataFrame,
                      handicaps: dict[str, int]) -> sim.ScoreDistributions:
     """Centre players with no history (field-fallback cells) on their handicap.
@@ -188,14 +194,13 @@ def anchor_newcomers(dists: sim.ScoreDistributions, history: pd.DataFrame,
     (4 par 3s, 10 par 4s, 4 par 5s) averages handicap + the group's usual gap
     between gross vs par and handicap in ``history`` (about +1.5 a round).
     """
-    src = dists.cells.groupby("Pl")["Source"].agg(lambda x: set(x) == {"field fallback"})
-    newcomers = [pl for pl, is_new in src.items() if is_new and pl in handicaps]
-    if not newcomers or history.empty:
+    new = [pl for pl in newcomers(dists) if pl in handicaps]
+    if not new or history.empty:
         return dists
     rounds = history.groupby(["TEGNum", "Round", "Pl"]).agg(G=("GrossVP", "sum"), HC=("HC", "first"))
     gap = float((rounds["G"] - rounds["HC"]).mean())
     support, cells = _cell_arrays(dists)
-    for pl in newcomers:
+    for pl in new:
         keys, p = cells[pl]
         means = (p * support).sum(axis=1)
         by_par = {par: means[[i for i, (pp, _) in enumerate(keys) if pp == par]].mean()
@@ -204,8 +209,8 @@ def anchor_newcomers(dists: sim.ScoreDistributions, history: pd.DataFrame,
         typical = _HOLES * sum(n * by_par[par] for par, n in mix.items()) / sum(mix.values())
         target = handicaps[pl] + gap
         cells[pl] = (keys, shift_cells(p, support, (target - typical) / _HOLES))
-        dists.warnings.append(f"{pl}: no history, field scoring centred on handicap "
-                              f"{handicaps[pl]} ({target:+.1f} a round)")
+        dists.warnings.append(f"{pl}: first TEG, no past scores. Uses the group's scoring, "
+                              f"centred on handicap {handicaps[pl]} ({target:+.1f} gross a round)")
     out = _dists_from_cells(dists, support, cells)
     return sim.ScoreDistributions(out.boundaries, out.probs, dists.cells, out.warnings)
 

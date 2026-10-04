@@ -279,10 +279,13 @@ def _fmt_num(x: float) -> str:
 
 
 def _build(history: pd.DataFrame, tgt, s: dict) -> "sim.ScoreDistributions":
-    return sim.build_distributions(
-        _history_before(history, s["target"]), tgt.players, s["weights"],
+    before = _history_before(history, s["target"])
+    dists = sim.build_distributions(
+        before, tgt.players, s["weights"],
         s["boundaries"], s["k"], method=s["method"], min_holes=s["min_holes"],
         player_weights=s["player_weights"] or None, field_alpha=s["field_alpha"])
+    # a debutant gets the group's scoring centred on their handicap, and a warning
+    return wp.anchor_newcomers(dists, before, tgt.handicaps)
 
 
 def _status_notes(tgt) -> list[str]:
@@ -688,6 +691,7 @@ def _live_context(qp) -> dict:
             "total": len(axis) - 1, "steps": _LIVE_STEPS}).replace("</", "<\\/")
     return {
         **ctx, "teg": teg, "replay": replay, "done": done, "rows": rows, "measures": measures,
+        "newcomers": [names.get(p, p) for p in wp.newcomers(state.prior)],
         "total": len(wp.checkpoints(state)) - 1,
         "stableford": stableford, "live_data": live_data,
         "since": ("the start" if done == 1 else f"round {done - 1}") if done else "",
