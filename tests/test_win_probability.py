@@ -6,18 +6,30 @@ import pytest
 
 from teg_analysis.analysis import win_probability as wp
 
+_SI = np.arange(1, 19)
 
-def _rounds(rows):
-    """rows: (TEGNum, Round, Pl, GrossVP, HC). Holes spread the GrossVP evenly over SI 1..18."""
-    out = []
-    for t, r, pl, g, hc in rows:
-        holes = wp.spread_to_total(np.zeros((1, 18), dtype=np.int64), np.array([g]))[0]
-        pts = int(np.maximum(0, 2 + wp.hole_strokes(hc) - holes).sum())
-        rec = {"TEGNum": t, "Round": r, "Pl": pl, "GrossVP": float(g), "NetVP": float(g - hc),
-               "Stableford": float(pts), "HC": float(hc), "Holes": 18}
-        rec.update({c: int(v) for c, v in zip(wp._SI_COLS, holes)})
-        out.append(rec)
-    return pd.DataFrame(out)
+
+def _holes(teg, rnd, pl, vp, hc, n_holes=18):
+    """Hole rows (``load_history`` format) on an all-par-4 course, SI 1..18, GrossVP ``vp`` each hole."""
+    vp = np.broadcast_to(np.asarray(vp), (18,))[:n_holes]
+    si = _SI[:n_holes]
+    strokes = hc // 18 + ((hc % 18) >= si)
+    return pd.DataFrame({
+        "TEGNum": teg, "Round": rnd, "Hole": np.arange(1, n_holes + 1), "Pl": pl,
+        "PAR": 4, "SI": si, "Sc": 4 + vp, "GrossVP": vp, "HC": float(hc),
+        "NetVP": vp - strokes, "Stableford": np.maximum(0, 2 + strokes - vp)})
+
+
+def _history(current, prior_vp=None, hc=None, rounds=(1, 2), tegs=(1, 2, 3)):
+    """Prior TEGs where each player scores ``prior_vp[pl]`` on every hole, plus ``current`` rows."""
+    prior_vp = prior_vp or {"AA": 1, "BB": 1}
+    hc = hc or {pl: 18 for pl in prior_vp}
+    rows = [_holes(t, r, pl, v, hc[pl]) for t in tegs for r in rounds for pl, v in prior_vp.items()]
+    return pd.concat(rows + list(current), ignore_index=True)
+
+
+def _state(history, teg=4):
+    return wp.load_teg_state(teg, history, from_scores=True, field_alpha=0)
 
 
 # ---- weighting
@@ -55,53 +67,57 @@ def test_blend_weight_formula():
 
 
 def test_blend_form_round_zero_is_prior():
-    assert wp.blend_form(20.0, 5.0, []) == (20.0, 5.0, 0.0)
+    assert wp.blend_form(5.0, []) == (0.0, 5.0, 0.0)
 
 
 def test_blend_form_one_round_keeps_prior_sd():
-    mean, sd, w = wp.blend_form(20.0, 5.0, [29.0])
+    shift, sd, w = wp.blend_form(5.0, [9.0])
     assert w == pytest.approx(1 / 3)
-    assert mean == pytest.approx(23.0)
+    assert shift == pytest.approx(3.0)
     assert sd == pytest.approx(5.0)
 
 
 def test_blend_form_sd_uses_half_weight():
-    mean, sd, w = wp.blend_form(20.0, 5.0, [10.0, 14.0])  # sample SD 2.83
+    shift, sd, w = wp.blend_form(5.0, [-10.0, -6.0])  # residual SD 2.83
     assert w == pytest.approx(0.5)
-    assert mean == pytest.approx(16.0)
+    assert shift == pytest.approx(-4.0)
     assert sd == pytest.approx(0.25 * np.sqrt(8) + 0.75 * 5.0)
 
 
-def test_prior_form_weighted_renormalised_and_field_fallback():
-    rows = []
-    for t, g in ((1, 10), (2, 20), (3, 30)):
-        rows += [(t, r, "AA", g, 10) for r in (1, 2)]
-    rows += [(3, r, "BB", 40 + 2 * r, 10) for r in (1, 2)]   # BB only played TEG 3
-    rows += [(4, 1, "AA", 0, 10)]                              # current TEG ignored
-    pf = wp.prior_form(_rounds(rows), 4, ["AA", "BB", "CC"]).set_index("Pl")
-    assert pf.loc["AA", "PriorMean"] == pytest.approx(0.5 * 30 + 0.3 * 20 + 0.2 * 10)
-    assert pf.loc["AA", "PriorTEGs"] == "3,2,1"
-    assert pf.loc["BB", "PriorMean"] == pytest.approx(43.0)
-    assert pf.loc["BB", "PriorSD"] == pytest.approx(np.sqrt(2))
-    assert pf.loc["CC", "PriorSource"] == "field"
-    assert pf.loc["AA", "PriorSource"] == "player"
+def test_prior_uses_weighted_tegs_and_field_for_newcomer():
+    hist = _history([], prior_vp={"AA": 1, "BB": 3})
+    hist = pd.concat([hist, _holes(0, 1, "AA", 9, 18)], ignore_index=True)  # older than 3 TEGs back
+    d = wp.prior_distributions(hist, 4, ["AA", "CC"], field_alpha=0)
+    means = d.cells[d.cells["Par"] == 4].groupby("Pl")["MeanVP"].mean()
+    assert means["AA"] == pytest.approx(1.0)  # TEG 0 is outside the 3 prior TEGs
+    assert means["CC"] == pytest.approx(2.0)  # no history: field (AA and BB equally)
+    assert (d.cells.loc[d.cells["Pl"] == "CC", "Source"] == "field fallback").all()
 
 
-# ---- simulation pieces
+# ---- distribution adjustment
 
-def test_hole_strokes():
-    assert wp.hole_strokes(0).sum() == 0
-    assert list(wp.hole_strokes(20)[:3]) == [2, 2, 1]
-    assert wp.hole_strokes(20).sum() == 20
-    assert wp.hole_strokes(-2).sum() == -2
+def _spread_cells():
+    support = np.arange(-1, 4)
+    p = np.array([[0.1, 0.3, 0.4, 0.2, 0.0], [0.0, 0.2, 0.5, 0.2, 0.1]])
+    ref = [np.array([0] * 9 + [1] * 9)]
+    return support, p, ref
 
 
-def test_spread_to_total_hits_total():
-    tmpl = np.array([[0, 1, 2] * 6, [3] * 18])
-    out = wp.spread_to_total(tmpl, np.array([5, 40]))
-    assert list(out.sum(axis=1)) == [5, 40]
-    assert list(out[0, :6]) == [0, 1, 2, 0, 1, 1]  # -13: -1 each, +1 back on SI 1-5
-    assert list(wp.spread_to_total(np.zeros((1, 18), int), np.array([2]))[0, :3]) == [1, 1, 0]
+def test_adjust_cells_shifts_mean_and_keeps_zeros():
+    support, p, ref = _spread_cells()
+    q = wp.adjust_cells(p, support, 0.25, None, ref)
+    assert ((q * support).sum(axis=1) - (p * support).sum(axis=1)) == pytest.approx([0.25, 0.25])
+    assert (q[p == 0] == 0).all()
+    assert q.sum(axis=1) == pytest.approx([1, 1])
+
+
+@pytest.mark.parametrize("target", [2.5, 4.0])
+def test_adjust_cells_hits_target_round_sd(target):
+    support, p, ref = _spread_cells()
+    q = wp.adjust_cells(p, support, 0.0, target, ref)
+    mean_q, sd_q = wp._round_moments(q, support, ref)
+    assert sd_q == pytest.approx(target, abs=1e-3)
+    assert mean_q == pytest.approx(wp._round_moments(p, support, ref)[0], abs=1e-4)
 
 
 def test_win_shares_split_ties():
@@ -112,77 +128,103 @@ def test_win_shares_split_ties():
 
 # ---- banked scores
 
-def test_no_remaining_rounds_is_banked_result():
-    p = wp.simulate_win_probs(np.array([20, 18]), np.array([70, 72]), np.zeros(2), np.ones(2),
-                              [np.zeros((1, 18), int)] * 2, [10, 10], 0, True)
-    assert p["gross"] == pytest.approx([0, 1])
-    assert p["net"] == pytest.approx([0, 1])
+def _current_teg():
+    """TEG 4, 3 rounds: R1 AA -18 / BB +18, R2 AA complete but BB only 9 holes."""
+    return [_holes(4, 1, "AA", -1, 18), _holes(4, 1, "BB", 1, 18),
+            _holes(4, 2, "AA", 1, 18), _holes(4, 2, "BB", 1, 18, n_holes=9),
+            _holes(4, 3, "AA", 1, 18).iloc[:0]]
 
 
-def test_banked_lead_carries_through_simulation():
-    tm = [np.zeros((1, 18), int)] * 2
-    p = wp.simulate_win_probs(np.array([0, 30]), np.array([0, 30]), np.array([20.0, 20.0]),
-                              np.array([0.0, 0.0]), tm, [0, 0], 2, False, 500,
-                              np.random.default_rng(0))
-    assert p["gross"] == pytest.approx([1, 0])
-    assert p["net"] == pytest.approx([1, 0])  # pre-Stableford era: net vs par
+def test_completed_rounds_requires_all_players_and_order():
+    h = _history(_current_teg())
+    assert wp.completed_rounds(h, 4, ["AA", "BB"]) == [1]
+    assert wp.completed_rounds(h, 4, ["AA"]) == [1, 2]
 
 
-def test_stableford_scored_from_simulated_gross():
-    # Same gross, AA gets 18 more strokes: AA wins net every time, gross is shared.
-    tm = [np.zeros((1, 18), int)] * 2
-    p = wp.simulate_win_probs(np.zeros(2), np.zeros(2), np.array([18.0, 18.0]), np.zeros(2),
-                              tm, [36, 18], 1, True, 200, np.random.default_rng(0))
-    assert p["net"] == pytest.approx([1, 0])
-    assert p["gross"] == pytest.approx([0.5, 0.5])
-
-
-def _two_player_teg():
-    rows = [(t, r, pl, g, 18) for t in (1, 2, 3) for r in (1, 2)
-            for pl, g in (("AA", 20), ("BB", 22))]
-    rows += [(4, 1, "AA", 10, 18), (4, 1, "BB", 30, 18), (4, 2, "AA", 12, 18)]  # R2 incomplete
-    return _rounds(rows)
-
-
-def test_win_probs_by_round_banks_completed_rounds_only():
-    df = wp.win_probs_by_round(4, _two_player_teg(), n_sims=2000, seed=1,
-                               players=["AA", "BB"], handicaps={"AA": 18, "BB": 18}, n_rounds=3)
+def test_banked_rounds_and_tidy_output():
+    st = _state(_history(_current_teg()))
+    st.n_rounds = 3  # round 3 not started: simulated on round 1's card
+    st.cards[3] = st.cards[1]
+    df = wp.win_probs_by_round(st, n_sims=300, seed=1)
     assert list(df.columns) == ["teg", "after_round", "measure", "player", "win_prob",
                                 "mean", "sd", "w", "banked"]
     assert sorted(df["after_round"].unique()) == [0, 1]
     assert list(df["measure"].unique()) == ["net", "gross"]
-    r1 = df[(df["after_round"] == 1) & (df["measure"] == "gross")].set_index("player")
-    assert r1.loc["AA", "banked"] == 10 and r1.loc["BB", "banked"] == 30
-    assert r1.loc["AA", "w"] == pytest.approx(1 / 3)
-    assert r1.loc["AA", "mean"] == pytest.approx(20 * 2 / 3 + 10 / 3)
-    assert r1.loc["AA", "win_prob"] > 0.95
-    assert df.groupby(["after_round", "measure"])["win_prob"].sum().to_numpy() == pytest.approx(1)
+    g = df[df["measure"] == "gross"].set_index(["after_round", "player"])
+    # same deterministic prior: a shared win before the TEG, AA's banked lead after R1
+    assert g.loc[(0, "AA"), "win_prob"] == pytest.approx(0.5)
+    assert g.loc[(1, "AA"), "banked"] == -18 and g.loc[(1, "BB"), "banked"] == 18
+    assert g.loc[(1, "AA"), "win_prob"] == pytest.approx(1.0)
+    assert g.loc[(1, "AA"), "w"] == pytest.approx(1 / 3)
+    assert g.loc[(0, "AA"), "mean"] == pytest.approx(18.0)
+    n = df[df["measure"] == "net"].set_index(["after_round", "player"])
+    assert n.loc[(1, "AA"), "banked"] == -36 and n.loc[(1, "BB"), "banked"] == 0  # NetVP era
 
 
-def test_win_probs_seed_reproducible():
-    kw = dict(n_sims=500, seed=3, players=["AA", "BB"], handicaps={"AA": 18, "BB": 18}, n_rounds=3)
-    a = wp.win_probs_by_round(4, _two_player_teg(), **kw)
-    b = wp.win_probs_by_round(4, _two_player_teg(), **kw)
-    pd.testing.assert_frame_equal(a, b)
+def test_completed_teg_final_row_is_actual_result():
+    cur = [_holes(4, r, pl, v, 18) for r in (1, 2) for pl, v in (("AA", 0), ("BB", 1))]
+    df = wp.win_probs_by_round(_state(_history(cur)), n_sims=200, seed=1)
+    final = df[df["after_round"] == 2].set_index(["measure", "player"])["win_prob"]
+    assert final[("gross", "AA")] == 1.0 and final[("net", "AA")] == 1.0
+    assert df.loc[df["after_round"] == 2, "mean"].isna().all()
 
 
-def test_completed_rounds_requires_all_players_and_order():
-    r = _two_player_teg()
-    assert wp.completed_rounds(r, 4, ["AA", "BB"]) == [1]
-    assert wp.completed_rounds(r, 4, ["AA"]) == [1, 2]
+def test_stableford_from_simulated_gross_and_handicap():
+    # Same gross; AA gets 18 more strokes, so AA wins net every time and gross is shared.
+    cur = [_holes(4, 1, "AA", 1, 36), _holes(4, 1, "BB", 1, 18)]
+    st = _state(_history(cur, hc={"AA": 36, "BB": 18}))
+    st.n_rounds, st.cards[2] = 2, st.cards[1]
+    df = wp.win_probs_by_round(st, n_sims=200, seed=1)
+    r0 = df[df["after_round"] == 0].set_index(["measure", "player"])["win_prob"]
+    assert r0[("net", "AA")] == pytest.approx(1.0)
+    assert r0[("gross", "AA")] == pytest.approx(0.5)
+
+
+def test_pre_stableford_era_net_is_net_vs_par():
+    cur = [_holes(4, 1, "AA", 1, 36), _holes(4, 1, "BB", 1, 18)]
+    st = _state(_history(cur, hc={"AA": 36, "BB": 18}))
+    assert not st.stableford  # TEG 4 < STABLEFORD_ERA_TEG
+    df = wp.win_probs_by_round(st, n_sims=200, seed=1)
+    r1 = df[(df["after_round"] == 1) & (df["measure"] == "net")].set_index("player")
+    assert r1.loc["AA", "banked"] == -18 and r1.loc["BB", "banked"] == 0
+    assert r1.loc["AA", "win_prob"] == 1.0
+
+
+def test_live_round_in_progress_keeps_full_scorecard(monkeypatch):
+    from teg_analysis.analysis import simulation as sim
+
+    cur = [_holes(4, 1, pl, 1, 18) for pl in ("AA", "BB")]
+    cur += [_holes(4, 2, pl, 1, 18, n_holes=5) for pl in ("AA", "BB")]
+    card = pd.DataFrame({"Round": np.repeat([1, 2], 18), "Hole": np.tile(range(1, 19), 2),
+                         "Par": 4, "SI": np.tile(_SI, 2)})
+    target = sim.TargetTournament(4, card, ["AA", "BB"], {"AA": 18, "BB": 18},
+                                  {"AA": "AA", "BB": "BB"}, n_rounds=2)
+    monkeypatch.setattr(sim, "load_target_tournament", lambda teg: target)
+    st = wp.load_teg_state(4, _history(cur), field_alpha=0)
+    assert st.done == [1] and len(st.cards[2]) == 18
+    df = wp.win_probs_by_round(st, n_sims=100, seed=1)
+    assert df.loc[df["after_round"] == 1, "mean"].to_numpy() == pytest.approx(18.0)
+
+
+def test_seed_reproducible():
+    st = _state(_history(_current_teg()))
+    st.n_rounds, st.cards[3] = 3, st.cards[1]
+    pd.testing.assert_frame_equal(wp.win_probs_by_round(st, n_sims=200, seed=3),
+                                  wp.win_probs_by_round(st, n_sims=200, seed=3))
 
 
 # ---- backtest
 
-def _complete_teg():
-    rows = [(t, r, pl, g + t, 18) for t in (1, 2, 3, 4) for r in (1, 2, 3)
-            for pl, g in (("AA", 20), ("BB", 22), ("CC", 25))]
-    return _rounds(rows)
+def _noisy_history(seed=0):
+    rng = np.random.default_rng(seed)
+    rows = [_holes(t, r, pl, rng.integers(-1, 3 + i, size=18), 18)
+            for t in (1, 2, 3, 4) for r in (1, 2, 3) for i, pl in enumerate(("AA", "BB", "CC"))]
+    return pd.concat(rows, ignore_index=True)
 
 
 def test_backtest_shape_and_ratio_only_matters():
-    b = wp.backtest_blend(ks=(1.0, 2.0), Ps=(2.0, 4.0), target_tegs=[4], rounds=_complete_teg(),
-                          n_sims=300)
+    b = wp.backtest_blend(ks=(1.0, 2.0), Ps=(2.0, 4.0), target_tegs=[4],
+                          history=_noisy_history(), n_sims=200)
     assert set(b["after_round"]) == {1, 2}
     assert (b["tegs"] == 1).all() and b["brier"].notna().all()
     v = b.set_index(["k", "P", "measure", "after_round"])["brier"]
@@ -191,5 +233,5 @@ def test_backtest_shape_and_ratio_only_matters():
 
 def test_backtest_rejects_incomplete_teg():
     with pytest.raises(ValueError, match="not complete"):
-        wp.backtest_blend(ks=(1.0,), Ps=(2.0,), target_tegs=[4], rounds=_two_player_teg(),
-                          n_sims=100)
+        wp.backtest_blend(ks=(1.0,), Ps=(2.0,), target_tegs=[4],
+                          history=_history(_current_teg()), n_sims=100)
