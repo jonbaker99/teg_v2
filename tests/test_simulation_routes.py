@@ -324,6 +324,9 @@ def test_live_point_rejects_bad_requests(client, monkeypatch, fresh_live_cache):
     assert client.get("/simulation/live/point?teg=18&round=2&hole=9").status_code == 400
     assert client.get("/simulation/live/point?teg=18&round=9&hole=9&replay=1").status_code == 400
     assert client.get("/simulation/live/point?teg=99&round=1&hole=9&replay=1").status_code == 400
+    assert client.get("/simulation/live/point?teg=18&round=0&hole=5&replay=1").status_code == 400
+    assert client.get("/simulation/live/point?teg=18&round=1&hole=19&replay=1").status_code == 400
+    assert not any(k[2] == 0 and k[3] != 0 for k in sim_routes._LIVE_POINTS)
 
 
 def test_live_picker_offers_every_replayable_teg(client, monkeypatch, fresh_live_cache):

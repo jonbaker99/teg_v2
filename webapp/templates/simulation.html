@@ -229,7 +229,10 @@
                 ', hole ' + q[1] + '. ' + doneCount() + ' of ' + d.total + ' points done.';
             fetch('/simulation/live/point?teg=' + d.teg + '&round=' + q[0] + '&hole=' + q[1] + '&replay=' + (d.replay ? 1 : 0))
                 .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
-                .then(function (p) { d.points[key(q[0], q[1])] = {net: p.net, gross: p.gross}; redraw(root, d); refreshScrub(); })
+                .then(function (p) {
+                    if (running !== token) return;  // the user switched TEG while this was in flight
+                    d.points[key(q[0], q[1])] = {net: p.net, gross: p.gross}; redraw(root, d); refreshScrub();
+                })
                 .catch(function () { failed++; })
                 .then(function () { n++; next(); });
         }

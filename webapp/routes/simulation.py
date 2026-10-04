@@ -60,6 +60,7 @@ def _live_state(teg_num: int, replay: bool) -> tuple:
 
 
 _LIVE_POINTS: dict[tuple, dict] = {}  # (teg, replay, round, hole) -> point; cleared with the data caches
+_LIVE_GEN = [0]  # bumped on every clear, so a point computed from old data is never stored
 
 
 def _live_point(teg_num: int, replay: bool, rnd: int, hole: int) -> dict:
@@ -67,13 +68,19 @@ def _live_point(teg_num: int, replay: bool, rnd: int, hole: int) -> dict:
     round ``rnd`` (default model, fixed seed). Memoised so the page can show every
     point already worked out straight away."""
     key = (int(teg_num), bool(replay), int(rnd), int(hole))
-    if key not in _LIVE_POINTS:
-        state, _ = _live_state(teg_num, replay)
-        df = wp.win_probs_at(state, rnd, hole, n_sims=sim.DEFAULT_SIMS, seed=1)
-        pt = {m: {str(r.player): float(r.win_prob) for r in g.itertuples()}
-              for m, g in df.groupby("measure", sort=False)}
-        _LIVE_POINTS[key] = {**pt, "_frame": df}
-    return _LIVE_POINTS[key]
+    if key in _LIVE_POINTS:
+        return _LIVE_POINTS[key]
+    gen = _LIVE_GEN[0]
+    state, _ = _live_state(teg_num, replay)
+    if key[2:] not in set(wp.checkpoints(state)):
+        raise ValueError(f"No checkpoint at round {rnd} hole {hole}")
+    df = wp.win_probs_at(state, rnd, hole, n_sims=sim.DEFAULT_SIMS, seed=1)
+    pt = {m: {str(r.player): float(r.win_prob) for r in g.itertuples()}
+          for m, g in df.groupby("measure", sort=False)}
+    point = {**pt, "_frame": df}
+    if gen == _LIVE_GEN[0]:
+        _LIVE_POINTS[key] = point
+    return point
 
 
 def _completed_tegs() -> list[int]:
@@ -81,6 +88,7 @@ def _completed_tegs() -> list[int]:
 
 
 def _clear_caches() -> None:
+    _LIVE_GEN[0] += 1
     _LIVE_POINTS.clear()
     _live_state.cache_clear()
     default_prediction.cache_clear()
