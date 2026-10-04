@@ -10,6 +10,7 @@ Run it before changing the prompt, the model or the data guide.
 
     python scripts/tegbot_eval.py                # all cases
     python scripts/tegbot_eval.py --only honours # cases whose id contains "honours"
+    python scripts/tegbot_eval.py --only multi   # the multi-step / deep / chart cases (ids start multi_)
     python scripts/tegbot_eval.py --model claude-opus-5-5
 
 Writes a Markdown report to data/tegbot/eval/ (gitignored) and exits 1 if any
@@ -19,8 +20,10 @@ case fails.
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import re
+import statistics
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -109,6 +112,90 @@ class Facts:
         return sorted(n[n == n.max()].index), int(n.max())
 
 
+class SimFacts:
+    """What-if / attribution figures from the bot's own toolkit script (sim.py), same
+    defaults and seed as get_predictions. Built lazily: only multi_ cases need it."""
+
+    def __init__(self):
+        path = (Path(__file__).resolve().parent.parent / "teg_analysis" / "chatbot" / "toolkit"
+                / "skills" / "teg-simulation" / "scripts" / "sim.py")
+        spec = importlib.util.spec_from_file_location("tegbot_eval_sim", path)
+        self.sim = importlib.util.module_from_spec(spec)
+        sys.modules["tegbot_eval_sim"] = self.sim  # dataclasses need the module registered
+        spec.loader.exec_module(self.sim)
+        self.base = self.sim.baseline()
+        self.teg = self.base["teg"]
+        self.table = {r["Player"]: r for r in self.base["table"]}
+        self.last_teg = max(self.base["settings"]["teg_weights"])
+        self._impact = None
+        self._memo: dict = {}
+
+    def favourite(self) -> dict:
+        """Trophy favourite as get_predictions reports it (webapp default_prediction)."""
+        from webapp.routes.simulation import default_prediction
+        pred = default_prediction()
+        top = max(pred["players"], key=lambda p: p["TrophyChancePct"])
+        return {"name": top["Player"], "pct": float(top["TrophyChancePct"]),
+                "hc": self.table[top["Player"]]["Handicap"], "pl": self.table[top["Player"]]["Pl"]}
+
+    def impact(self) -> dict:
+        if self._impact is None:
+            self._impact = {r["Player"]: r for r in self.sim.handicap_impact()["table"]}
+        return self._impact
+
+    def handicap_whatif(self) -> dict:
+        if "handicap_whatif" not in self._memo:
+            self._memo["handicap_whatif"] = self._handicap_whatif()
+        return self._memo["handicap_whatif"]
+
+    def _handicap_whatif(self) -> dict:
+        fav = self.favourite()
+        new_hc = fav["hc"] + 3
+        out = self.sim.whatif(handicaps={fav["pl"]: new_hc})
+        row = next(r for r in out["table"] if r["Player"] == fav["name"])
+        return {"name": fav["name"], "old": fav["hc"], "new": new_hc,
+                "pct": row["TrophyPct"], "delta": row["TrophyDeltaPP"]}
+
+    def form_whatif(self) -> dict:
+        if "form_whatif" not in self._memo:
+            self._memo["form_whatif"] = self._form_whatif()
+        return self._memo["form_whatif"]
+
+    def _form_whatif(self) -> dict:
+        out = self.sim.whatif(exclude_tegs=[self.last_teg])
+        row = max(out["table"], key=lambda r: abs(r["TrophyDeltaPP"]))
+        return {"name": row["Player"], "pct": row["TrophyPct"], "delta": row["TrophyDeltaPP"],
+                "last": self.last_teg}
+
+    def equalising(self) -> dict:
+        return {r["Player"]: int(r["EqualisingHC"]) for r in self.sim.equalising()["table"]}
+
+
+_SIM: SimFacts | None = None
+
+
+def sim_facts() -> SimFacts:
+    global _SIM
+    if _SIM is None:
+        _SIM = SimFacts()
+    return _SIM
+
+
+def led_but_lost() -> tuple[list[str], int, int]:
+    """Most holes leading the Stableford (Trophy) race in one TEG by someone who did not win it.
+    Straight from commentary_tournament_summary, Stableford era, completed TEGs."""
+    import pandas as pd
+    from teg_analysis.analysis.aggregation import STABLEFORD_ERA_TEG
+    from teg_analysis.io.file_operations import read_file
+    t = pd.read_parquet(Path(__file__).resolve().parent.parent / "data" / "commentary_tournament_summary.parquet")
+    done = {int(x) for x in read_file("data/completed_tegs.csv")["TEGNum"]}
+    t = t[t["TEGNum"].isin(done) & (t["TEGNum"] >= STABLEFORD_ERA_TEG) & (~t["Won_Stableford"].astype(bool))]
+    top = t["Total_Holes_In_Lead_Stableford"].max()
+    hit = t[t["Total_Holes_In_Lead_Stableford"] == top]
+    return sorted(hit["Player"].unique()), int(top), int(hit["TEGNum"].iloc[0])
+
+
+
 # ---------------------------------------------------------------------------
 # Cases
 # ---------------------------------------------------------------------------
@@ -118,6 +205,7 @@ class Case:
     question: str
     expect: Callable[[Facts], dict]
     history: list = field(default_factory=list)
+    deep: bool = False  # run via ask(deep=True) (Deep dive mode)
 
 
 def _num(n) -> str:
@@ -213,6 +301,46 @@ CASES = [
     # --- unknown players / missing data handled plainly
     Case("unknown-player", "How many TEGs has Tiger Woods won?",
          lambda f: {"any": [["no ", "not ", "isn't", "never"]], "must_not": ["Tiger Woods has won"]}),
+
+    # --- multi-step: simulator what-ifs, precomputed tables, deep dive, charts (ids start multi_)
+    Case("multi_why_favourite", "(question set at run time)",
+         lambda f: {"question": "Why is {fav} the favourite for the next TEG Trophy?".format(fav=sim_facts().favourite()["name"]),
+                    "near": [("headline Trophy odds", [sim_facts().favourite()["pct"]], 0.5)],
+                    "must": ["handicap"], "any": [["form", "recent"]],
+                    "suggest_deep": True, "words_max": 200}),
+    Case("multi_why_favourite_deep", "(question set at run time)",
+         lambda f: {"question": "Why is {fav} the favourite for the next TEG Trophy?".format(fav=sim_facts().favourite()["name"]),
+                    "near": [("Shapley handicap-change figure", [
+                        sim_facts().impact()[sim_facts().favourite()["name"]][k]
+                        for k in (f"from_{sim_facts().favourite()['pl']}_PP", "TotalChangePP")], 0.5)],
+                    "suggest_deep": False, "words_max": 400, "deep_mode": True}, deep=True),
+    Case("multi_hc_whatif", "(question set at run time)",
+         lambda f: {"question": "What would {n}'s chance of winning the TEG Trophy be if his handicap were {h} instead of {o}?".format(
+                        n=sim_facts().handicap_whatif()["name"], h=sim_facts().handicap_whatif()["new"],
+                        o=sim_facts().handicap_whatif()["old"]),
+                    "near": [("what-if Trophy % (or change in pp)", [sim_facts().handicap_whatif()["pct"],
+                                                                   sim_facts().handicap_whatif()["delta"]], 0.5)],
+                    "suggest_deep": False}),
+    Case("multi_form_whatif", "(question set at run time)",
+         lambda f: {"question": "If we ignored TEG {t} completely when judging form, what would {n}'s chance of winning the next TEG Trophy be?".format(
+                        t=sim_facts().form_whatif()["last"], n=sim_facts().form_whatif()["name"]),
+                    "near": [("what-if Trophy % (or change in pp)", [sim_facts().form_whatif()["pct"],
+                                                                   sim_facts().form_whatif()["delta"]], 0.5)]}),
+    Case("multi_equalising", "What handicap would each player need for the next TEG to be fair, so everyone averages about 36 points a round?",
+         lambda f: {"rows": sim_facts().equalising()}),
+    Case("multi_precomputed_led_lost", "In the Stableford era, who has led the TEG Trophy race for the most holes in a single TEG and still not won it?",
+         lambda f: {"must": [*led_but_lost()[0], _num(led_but_lost()[1])], "suggest_deep": False,
+                    "precomputed": "commentary_tournament_summary"}),
+    Case("multi_last3_relative", "Compared with their own normal standard, who plays the last three holes of a round best?",
+         lambda f: {"lead": f.last3_relative_leader(), "method": True}),
+    Case("multi_pressure", "Who handles the pressure best when a TEG is on the line?",
+         lambda f: {"suggest_deep": True, "reason": True}),
+    Case("multi_chart_trend", "How has the winning Stableford total changed from TEG to TEG? Show me the trend.",
+         lambda f: {"chart": "line"}),
+    Case("multi_chart_none", "How many Green Jackets have Jon BAKER, David MULLIN and Gregg WILLIAMS each won?",
+         lambda f: {"must": [_num(int(f.winners["Green Jacket"].value_counts().get(n, 0)))
+                             for n in ("Jon BAKER", "David MULLIN", "Gregg WILLIAMS")],
+                    "chart": "none"}),
 ]
 
 
@@ -231,6 +359,38 @@ def _has(text: str, needle: str) -> bool:
 
 
 _REFUSAL = re.compile(r"only (answer|do|handle|talk about)|TEG questions|outside my", re.IGNORECASE)
+
+
+def _numbers(text: str) -> list[float]:
+    return [float(x) for x in re.findall(r"(?<![\w.])[+-]?\d+(?:\.\d+)?", text.replace(",", "").replace("\u2212", "-"))]
+
+
+_WORKINGS = re.compile(r"how i worked this out", re.IGNORECASE)
+
+
+def words_before_workings(text: str) -> int:
+    """Words in the answer proper: before 'How I worked this out', charts and table rules excluded."""
+    body = _WORKINGS.split(_plain(text), maxsplit=1)[0]
+    body = re.sub(r"```tegchart.*?```", " ", body, flags=re.S)
+    return len([w for w in body.split() if re.search(r"\w", w)])
+
+
+def chart_blocks(text: str) -> list[str]:
+    from webapp.routes.tegbot import _CHART_BLOCK
+    return _CHART_BLOCK.findall(text)
+
+
+def check_charts(text: str, want: str) -> list[str]:
+    from webapp.routes.tegbot import validate_chart
+    blocks = chart_blocks(text)
+    if want == "none":
+        return [f"{len(blocks)} chart(s) on a question that needs none"] if blocks else []
+    if len(blocks) != 1:
+        return [f"expected exactly one tegchart block, found {len(blocks)}"]
+    spec = validate_chart(blocks[0])
+    if spec is None:
+        return ["tegchart block fails validate_chart"]
+    return [f"chart type is {spec['type']}, expected {want}"] if spec["type"] != want else []
 
 
 def check(answer, exp: dict) -> list[str]:
@@ -253,6 +413,27 @@ def check(answer, exp: dict) -> list[str]:
         problems.append(f"no link to {exp['link']}")
     if exp.get("method") and "how i worked this out" not in text.lower():
         problems.append("no 'How I worked this out' note")
+    for label, targets, tol in exp.get("near", []):
+        nums = _numbers(text)
+        if not any(abs(abs(n) - abs(t)) <= tol for n in nums for t in targets):
+            problems.append(f"no number within {tol} of {label}: {[round(t, 2) for t in targets]}")
+    for name, hc in exp.get("rows", {}).items():
+        lines = [ln for ln in text.splitlines() if name.lower() in ln.lower()]
+        if not lines:
+            problems.append(f"{name} not mentioned")
+        elif not any(_has(ln.replace(name, " "), hc) for ln in lines):
+            problems.append(f"{name}: expected equalising handicap {hc} on the same line")
+    words = words_before_workings(answer.text)
+    if exp.get("words_max") and words > exp["words_max"]:
+        problems.append(f"{words} words before the workings note, limit {exp['words_max']}")
+    # suggest_deep is the model's judgement call and flips between runs on borderline
+    # questions; the run line reports it (deep=...) but it doesn't fail a case.
+    if exp.get("reason") and not answer.deep_reason:
+        problems.append("suggested a deep dive without a reason")
+    if exp.get("deep_mode") and not answer.deep:
+        problems.append("answer not produced in deep mode")
+    if exp.get("chart"):
+        problems += check_charts(answer.text, exp["chart"])
     if exp.get("refuse"):
         if not _REFUSAL.search(text):
             problems.append("did not refuse")
@@ -290,21 +471,31 @@ def unsupported_numbers(answer, question: str, history: list) -> list[str]:
 # ---------------------------------------------------------------------------
 # Run
 # ---------------------------------------------------------------------------
-def run_case(case: Case, data, facts: Facts, model: str | None) -> dict:
+def run_case(case: Case, data, facts: Facts, model: str | None, exp: dict) -> dict:
     from teg_analysis.chatbot.bot import ask
-    exp = case.expect(facts)
+    question = exp.get("question", case.question)
     started = time.time()
     try:
-        answer = ask(case.question, data, history=case.history, model=model, past=[], themes=[])
+        answer = ask(question, data, history=case.history, model=model, past=[], themes=[],
+                     deep=case.deep)
     except Exception as exc:  # report and carry on
-        return {"id": case.id, "question": case.question, "ok": False,
-                "problems": [f"error: {exc}"], "answer": "", "secs": 0, "cost": 0, "flags": []}
+        return {"id": case.id, "question": question, "ok": False, "deep": case.deep,
+                "problems": [f"error: {exc}"], "answer": "", "secs": round(time.time() - started, 1),
+                "cost": 0, "flags": [], "words": 0, "suggest_deep": None, "chart": False}
     problems = check(answer, exp)
+    note = answer.method_note
+    if exp.get("precomputed"):
+        # Soft signal, reported not failed: did the workings actually use the precomputed table?
+        used = exp["precomputed"] in note or "load_precomputed" in note
+        exp = {**exp, "precomputed_used": used}
     return {
-        "id": case.id, "question": case.question, "ok": not problems, "problems": problems,
-        "expect": {k: v for k, v in exp.items()}, "answer": answer.text,
+        "id": case.id, "question": question, "ok": not problems, "problems": problems, "deep": case.deep,
+        "expect": {k: v for k, v in exp.items() if k != "rows"}, "answer": answer.text,
         "tools": [c.name for c in answer.tool_calls], "secs": round(time.time() - started, 1),
-        "cost": round(answer.cost_usd, 4), "flags": unsupported_numbers(answer, case.question, case.history),
+        "cost": round(answer.cost_usd, 4), "flags": unsupported_numbers(answer, question, case.history),
+        "words": words_before_workings(answer.text), "total_words": len(_plain(answer.text).split()),
+        "suggest_deep": bool(answer.suggest_deep), "deep_reason": answer.deep_reason,
+        "chart": bool(chart_blocks(answer.text)), "precomputed_used": exp.get("precomputed_used"),
     }
 
 
@@ -315,24 +506,26 @@ def main() -> int:
     parser.add_argument("--workers", type=int, default=4)
     args = parser.parse_args()
 
-    import webapp.deps as deps
-    from teg_analysis.chatbot.tools import ChatData
-    ranked = {"teg": deps.cached_ranked_teg_data, "round": deps.cached_ranked_round_data,
-              "frontback": deps.cached_ranked_frontback_data}
-    from webapp.routes.simulation import default_prediction
-    data = ChatData(all_data=deps.cached_load_all_data, winners=deps.cached_winners,
-                    ranked=lambda scope: ranked[scope](), predictions=default_prediction)
+    from webapp.routes.tegbot import _chat_data  # the ChatData the route builds, predictions included
+    data = _chat_data()
     facts = Facts(data)
     cases = [c for c in CASES if not args.only or args.only in c.id]
+    # Expectations first, one at a time: the simulator runs are not thread-safe and cost seconds.
+    exps = {c.id: c.expect(facts) for c in cases}
 
     with ThreadPoolExecutor(max_workers=args.workers) as pool:
-        results = list(pool.map(lambda c: run_case(c, data, facts, args.model), cases))
+        results = list(pool.map(lambda c: run_case(c, data, facts, args.model, exps[c.id]), cases))
 
     passed = sum(r["ok"] for r in results)
     cost = sum(r["cost"] for r in results)
     lines = [f"# TEGBot test {datetime.now():%Y-%m-%d %H:%M}",
              f"**{passed} of {len(results)} passed.** Cost ${cost:.2f}. "
-             f"Average {sum(r['secs'] for r in results) / max(len(results), 1):.1f}s per question.", ""]
+             f"Average {sum(r['secs'] for r in results) / max(len(results), 1):.1f}s per question."]
+    multi_words = [r["words"] for r in results if r["id"].startswith("multi_") and not r["deep"] and r["answer"]]
+    if multi_words:
+        lines.append(f"Median words before the workings note, normal-mode multi answers: "
+                     f"{statistics.median(multi_words):g} (n={len(multi_words)}).")
+    lines.append("")
     for r in results:
         mark = "PASS" if r["ok"] else "FAIL"
         lines.append(f"## {mark} {r['id']}: {r['question']}")
@@ -342,6 +535,11 @@ def main() -> int:
             lines.append("Numbers not found in any lookup or code output (check for mental maths): "
                          + ", ".join(r["flags"]))
         lines.append(f"Tools: {', '.join(r.get('tools', [])) or 'none'} / {r['secs']}s / ${r['cost']}")
+        if r["id"].startswith("multi_"):
+            lines.append(f"Mode: {'deep' if r['deep'] else 'normal'} / words {r['words']} / "
+                         f"suggest_deep {r['suggest_deep']} {r.get('deep_reason') or ''} / chart {r['chart']}"
+                         + (f" / precomputed table used: {r['precomputed_used']}"
+                            if r.get("precomputed_used") is not None else ""))
         lines.append("")
         lines.append("> " + r["answer"].replace("\n", "\n> "))
         lines.append("")
@@ -352,6 +550,7 @@ def main() -> int:
     for r in results:
         print(f"{'PASS' if r['ok'] else 'FAIL'}  {r['id']:<26} {r['secs']:>5}s  "
               + ("; ".join(r["problems"]) if r["problems"] else "")
+              + (f"  [{r['words']}w ${r['cost']} deep={r['suggest_deep']} chart={r['chart']}]" if r["id"].startswith("multi_") else "")
               + (f"  [unsupported numbers: {', '.join(r['flags'])}]" if r["flags"] else ""))
     print(f"\n{passed}/{len(results)} passed, ${cost:.2f}. Report: {report}")
     return 0 if passed == len(results) else 1

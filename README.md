@@ -136,6 +136,7 @@ teg_analysis/
 | `ad_hoc_analysis/` | Jupyter notebooks for exploratory / one-off analysis |
 | `scripts/` | Standalone maintenance and experiment scripts. `export_cowork_kit.py` (report-writing kit for rewriting outside the pipeline), `humour_dial.py`, `check_pandas_compat.py`, `build_report_pdfs.py` (offline report-PDF build) |
 | `scripts/agent_handoff.py`, `scripts/agent_handoff.zsh` | Shared Claude/Codex CLI recovery hooks, installer and continuation shortcuts |
+| `.claude/skills/` | Dev-session skills: `teg-simulation` and `teg-analysis` wrap the same scripts TEGBot's sandbox uses (`teg_analysis/chatbot/toolkit/skills/`); `teg-report-respond` answers the report mailbox |
 | `tests/` | Test suite for `teg_analysis` |
 | `examples/` | FastAPI proof-of-concept |
 | `prompts/` | Saved prompt text for one-off work. Not read by any code |

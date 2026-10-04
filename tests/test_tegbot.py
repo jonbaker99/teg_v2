@@ -1,5 +1,7 @@
 """TEGBot 5000: deterministic tools, the tool-use loop (fake client) and the route."""
 
+from datetime import datetime, timedelta, timezone
+import time
 import json
 from types import SimpleNamespace
 
@@ -173,6 +175,8 @@ class FakeClient:
 @pytest.fixture(autouse=True)
 def _fresh_uploads(monkeypatch):
     monkeypatch.setattr(bot, "_uploads", {})
+    monkeypatch.setattr(bot, "_containers", {})
+    monkeypatch.setattr(bot, "_retired", [])
     # Deterministic: independent of the real toolkit build.
     monkeypatch.setattr(bot, "_toolkit_files", lambda: (
         {"teg_toolkit.zip": b"code", "teg_data.zip": b"data"}, "Setup: unzip. Skills: teg-simulation", ""))
@@ -209,6 +213,84 @@ def test_ask_records_sandbox_code_and_reuses_container(data):
     assert client.calls[1]["container"] == client.calls[2]["container"] == "cont_1"
     # pause_turn resends with the paused assistant turn last, no new user message
     assert client.calls[2]["messages"][-1]["role"] == "assistant"
+
+
+def _in_box(container_id="cont_1", expires_at=None):
+    r = _resp([SimpleNamespace(type="text", text="ok")], "end_turn")
+    r.container = SimpleNamespace(id=container_id, expires_at=expires_at)
+    return r
+
+
+def test_container_reused_within_a_chat_without_reupload(data):
+    client = FakeClient([_in_box(), _in_box()])
+    bot.ask("q1", data, client=client, conv="chat1")
+    uploads_after_first = list(client.uploads)
+    bot.ask("q2", data, client=client, conv="chat1")
+    assert client.calls[1]["container"] == "cont_1"
+    assert client.uploads == uploads_after_first
+    content = client.calls[1]["messages"][-1]["content"]
+    assert [b["type"] for b in content] == ["text", "text"]
+    assert "/tmp/teg" in content[1]["text"]
+
+
+def test_container_not_shared_across_chats_or_without_conv(data):
+    client = FakeClient([_in_box("a"), _in_box("b"), _in_box("c")])
+    bot.ask("q", data, client=client, conv="chat1")
+    bot.ask("q", data, client=client, conv="chat2")
+    bot.ask("q", data, client=client)
+    assert all("container" not in c for c in client.calls)
+    assert "c" not in {v[0] for v in bot._containers.values()}
+
+
+def test_container_dropped_when_data_changes(data, monkeypatch):
+    client = FakeClient([_in_box("old"), _in_box("new")])
+    bot.ask("q1", data, client=client, conv="chat1")
+    monkeypatch.setattr(bot, "_toolkit_files", lambda: (
+        {"teg_toolkit.zip": b"code2", "teg_data.zip": b"data"}, "idx", ""))
+    bot.ask("q2", data, client=client, conv="chat1")
+    assert "container" not in client.calls[1]
+    assert any(b["type"] == "container_upload" for b in client.calls[1]["messages"][-1]["content"])
+    assert bot._containers["chat1"][0] == "new"
+
+
+def test_container_expiry_honours_api_and_ttl(data):
+    soon = datetime.now(timezone.utc) + timedelta(seconds=100)
+    bot.ask("q", data, client=FakeClient([_in_box("x", expires_at=soon)]), conv="chat1")
+    assert "chat1" not in bot._containers  # inside the safety margin: not kept
+    bot.ask("q", data, client=FakeClient([_in_box("y")]), conv="chat2")
+    assert bot._containers["chat2"][2] > time.time() + 3600
+
+
+def test_rejected_container_retries_fresh_and_answers(data):
+    class Gone(Exception):
+        status_code = 400
+    client = FakeClient([_in_box("c1")])
+    bot.ask("q1", data, client=client, conv="chat1")
+    good = _in_box("c2")
+    seq = iter([Gone("container expired"), good])
+    def create(**kw):
+        client.calls.append(kw)
+        item = next(seq)
+        if isinstance(item, Exception):
+            raise item
+        return item
+    client.beta.messages.create = create
+    answer = bot.ask("q2", data, client=client, conv="chat1")
+    assert answer.text == "ok"
+    assert client.calls[1]["container"] == "c1"
+    assert "container" not in client.calls[2]
+    assert any(b["type"] == "container_upload" for b in client.calls[2]["messages"][-1]["content"])
+    assert bot._containers["chat1"][0] == "c2"
+
+
+def test_non_client_errors_are_not_retried(data):
+    client = FakeClient([_in_box("c1")])
+    bot.ask("q1", data, client=client, conv="chat1")
+    def boom(**kw):
+        raise RuntimeError("server down")
+    client.beta.messages.create = boom
+    with pytest.raises(RuntimeError):
+        bot.ask("q2", data, client=client, conv="chat1")
 
 
 def test_final_text_skips_narration_before_tools():
@@ -329,7 +411,7 @@ def client(monkeypatch, tmp_path):
     monkeypatch.setattr(route, "_visitor_deep", {})
     monkeypatch.setattr(route, "_jobs", {})
     calls = []
-    def fake_ask(q, data, history=None, past=None, themes=None, deep=False):
+    def fake_ask(q, data, history=None, past=None, themes=None, deep=False, conv=""):
         calls.append(deep)
         related = [p["id"] for p in (past or []) if "won" in p["question"]][:1]
         tools = ([bot.ToolCall("code", {"command": "print(1)"}, {"stdout": "1"})]
@@ -733,13 +815,16 @@ def test_deep_job_lifecycle_pending_then_done(client, monkeypatch):
     import threading, re
     import webapp.routes.tegbot as route
     gate = threading.Event()
-    def slow_ask(q, data, history=None, past=None, themes=None, deep=False):
+    def slow_ask(q, data, history=None, past=None, themes=None, deep=False, conv=""):
         gate.wait(5)
         return bot.Answer("Done **it**.", [], {}, "claude-opus-5-5", deep=True)
     monkeypatch.setattr(route.bot, "ask", slow_ask)
     start = client.post("/tegbot/ask", data={"question": "Why?", "deep": "1"})
     assert "tb-job" in start.text and "Thinking" in start.text and "Why?" in start.text
-    assert 'hx-trigger="load delay:3s"' in start.text
+    assert 'hx-trigger="load delay:3s, tb-retry"' in start.text
+    # a failed poll retries (tb-retry) for about a minute, then gives up politely
+    assert "hx-on::after-request" in start.text and "60000" in start.text
+    assert "Lost contact" in start.text
     job = re.search(r'hx-get="(/tegbot/job/[0-9a-f]+)"', start.text).group(1)
     assert "tb-job" in client.get(job).text  # still pending
     gate.set()

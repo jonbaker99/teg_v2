@@ -45,6 +45,22 @@
         return d;
     }
 
+    // Redraw when the chart crosses the narrow threshold (phone rotated, window
+    // resized) so name wrapping follows. Debounced; one observer per chart.
+    function watch(node) {
+        if (node._tbWatching || !window.ResizeObserver) return;
+        node._tbWatching = true;
+        var timer = null;
+        new ResizeObserver(function () {
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                var w = node.clientWidth;
+                if (!node.isConnected || !w || (w < 420) === node._tbNarrow) return;
+                try { draw(node); } catch (e) { node.remove(); }
+            }, 150);
+        }).observe(node);
+    }
+
     function draw(node) {
         var spec;
         try { spec = JSON.parse(node.getAttribute('data-chart')); } catch (e) { node.remove(); return; }
@@ -67,6 +83,8 @@
 
         var width = node.clientWidth || 360;
         var narrow = width < 420;
+        node._tbNarrow = narrow;
+        watch(node);
         var isBar = spec.type === 'bar';
         var tick = { size: 10, color: ink };
         var yAxisTitle = { text: spec.y_label || '', font: { size: 11, color: ink }, standoff: 8 };
