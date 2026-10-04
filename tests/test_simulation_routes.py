@@ -219,7 +219,7 @@ def test_run_with_one_sim_renders(client):
 
 def test_gross_shown_vs_par_and_sampling_collapsed(client):
     page = client.get("/simulation").text
-    assert '<details class="sim-disclosure" id="sim-dists-box">' in page  # closed by default
+    assert '<details class="sim-expander" id="sim-dists-box">' in page  # closed by default
     r = client.get("/simulation/run?n_sims=500&seed=1").text
     assert "Gross vs par" in r
     assert "Total gross strokes" not in r
