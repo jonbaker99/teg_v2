@@ -896,3 +896,11 @@ def test_prompt_documents_charts():
     from teg_analysis.chatbot import prompt
     assert "tegchart" in prompt._RULES and "default is NO chart" in prompt._RULES
     assert "sideways" in prompt._RULES and "line" in prompt._RULES
+
+
+def test_split_trailer_full_strips_trailer_lines_not_at_end():
+    text = "Answer.\n\nTHEME: Predictions\nRELATED: none\nDEEP: yes\n\nA stray line after."
+    out, theme, related, deep = bot.split_trailer_full(text, [])
+    assert "THEME" not in out and "DEEP" not in out
+    assert out.endswith("A stray line after.")
+    assert theme == "Predictions" and deep is True and related == []

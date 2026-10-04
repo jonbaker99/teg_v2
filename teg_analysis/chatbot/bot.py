@@ -298,15 +298,15 @@ def split_trailer(text: str, past: list[dict]) -> tuple[str, str, list[str]]:
 
 def split_trailer_full(text: str, past: list[dict]) -> tuple[str, str, list[str], bool]:
     """As ``split_trailer`` but also returns the DEEP flag (False when absent)."""
-    lines = text.rstrip().split("\n")
     theme, related_raw, deep_raw = "", "", ""
-    while lines:
-        m = _TRAILER.match(lines[-1])
+    # Trailer lines are usually last, but the model sometimes adds a line after them,
+    # so strip them wherever they appear (the last value of each key wins).
+    lines = []
+    for line in text.rstrip().split("\n"):
+        m = _TRAILER.match(line)
         if not m:
-            if not lines[-1].strip():
-                lines.pop()
-                continue
-            break
+            lines.append(line)
+            continue
         key = m.group(1).upper()
         if key == "THEME":
             theme = m.group(2)
@@ -314,7 +314,6 @@ def split_trailer_full(text: str, past: list[dict]) -> tuple[str, str, list[str]
             deep_raw = m.group(2)
         else:
             related_raw = m.group(2)
-        lines.pop()
     by_short = {p["id"][:8]: p["id"] for p in past}
     related = []
     for token in re.split(r"[,\s]+", related_raw.lower()):
