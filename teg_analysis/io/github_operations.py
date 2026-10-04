@@ -12,9 +12,15 @@ from typing import Union
 
 import pandas as pd
 
-from github import Github, InputGitTreeElement
 
 logger = logging.getLogger(__name__)
+
+def _github():
+    """Import PyGithub on first use, so the package imports without it (Anthropic's sandbox)."""
+    import github
+
+    return github
+
 
 # GitHub configuration
 GITHUB_REPO = "jonbaker99/teg_v2"
@@ -62,7 +68,7 @@ def read_from_github(file_path: str) -> Union[pd.DataFrame, str]:
         Parquet file, otherwise the decoded content of the file as a string.
     """
     token = os.getenv('GITHUB_TOKEN')
-    g = Github(token)
+    g = _github().Github(token)
     repo = g.get_repo(GITHUB_REPO)
     content = repo.get_contents(file_path, ref=_get_github_branch())
 
@@ -92,7 +98,7 @@ def read_text_from_github(file_path: str) -> str:
         str: The decoded content of the file as a string.
     """
     token = os.getenv('GITHUB_TOKEN')
-    g = Github(token)
+    g = _github().Github(token)
     repo = g.get_repo(GITHUB_REPO)
     content = repo.get_contents(file_path, ref=_get_github_branch())
 
@@ -114,7 +120,7 @@ def write_text_to_github(file_path: str, content: str, commit_message: str = "Up
             write operation. Defaults to "Update text file".
     """
     token = os.getenv('GITHUB_TOKEN')
-    g = Github(token)
+    g = _github().Github(token)
     repo = g.get_repo(GITHUB_REPO)
 
     # Encode string content to bytes then base64
@@ -161,7 +167,7 @@ def write_to_github(file_path: str, data: Union[pd.DataFrame, str], commit_messa
             write operation. Defaults to "Update data".
     """
     token = os.getenv('GITHUB_TOKEN')
-    g = Github(token)
+    g = _github().Github(token)
     repo = g.get_repo(GITHUB_REPO)
 
     branch = _get_github_branch()
@@ -203,7 +209,7 @@ def batch_commit_to_github(files_data: list, commit_message: str = "Batch update
             update. Defaults to "Batch update data".
     """
     token = os.getenv('GITHUB_TOKEN')
-    g = Github(token)
+    g = _github().Github(token)
     repo = g.get_repo(GITHUB_REPO)
     branch = _get_github_branch()
 
@@ -218,7 +224,7 @@ def batch_commit_to_github(files_data: list, commit_message: str = "Batch update
         if file_info.get('delete'):
             # A null SHA removes the path from the new tree.
             tree_elements.append(
-                InputGitTreeElement(path=file_path, mode='100644', type='blob', sha=None)
+                _github().InputGitTreeElement(path=file_path, mode='100644', type='blob', sha=None)
             )
             continue
         data = file_info['data']
@@ -243,7 +249,7 @@ def batch_commit_to_github(files_data: list, commit_message: str = "Batch update
 
         # Create tree element referencing the blob
         tree_elements.append(
-            InputGitTreeElement(
+            _github().InputGitTreeElement(
                 path=file_path,
                 mode='100644',
                 type='blob',

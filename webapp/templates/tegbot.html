@@ -37,6 +37,7 @@
                 <span class="tb-v tb-bar" data-v="bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
                 <span class="tb-v tb-say" data-v="text"><span class="tb-say-text"></span><span class="tb-cursor"></span></span>
                 <span class="tb-timer">0s</span>
+                <span class="tb-deep-note" hidden>Deep dive: this can take a minute or two.</span>
             </div>
         </div>
     </div>
@@ -48,6 +49,11 @@
     <textarea name="question" id="tb-question" maxlength="{{ max_chars }}" rows="2"
               placeholder="e.g. {{ placeholder }}" aria-label="Your question" required></textarea>
     <button id="tb-send" type="submit">ASK</button>
+    <label class="tb-deep">
+        <input type="checkbox" name="deep" value="1" id="tb-deep">
+        <span>Deep dive</span>
+        <small>Slower, more thorough</small>
+    </label>
 </form>
 
 <div class="tb-examples" id="tb-examples">
@@ -70,6 +76,7 @@
     var box = document.getElementById('tb-question');
     var thread = document.getElementById('tb-thread');
     var tpl = document.getElementById('tb-pending-tpl');
+    var deepBox = document.getElementById('tb-deep'), digging = false;
     // One id per chat, so the shared log can show follow-ups with their thread.
     var conv = (window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2))
         .replace(/[^0-9a-f]/gi, '').toLowerCase().slice(0, 32);
@@ -87,11 +94,12 @@
         variants.forEach(function (v) { v.hidden = v.dataset.v !== name; });
     }
 
-    function startPending(question) {
+    function startPending(question, isDeep) {
         var node = tpl.content.firstElementChild.cloneNode(true);
         node.querySelector('.tb-q').textContent = question;
         thread.appendChild(node);
         node.scrollIntoView({behavior: 'smooth', block: 'start'});
+        if (isDeep) node.querySelector('.tb-deep-note').hidden = false;
         var timer = node.querySelector('.tb-timer'), started = Date.now();
         var say = node.querySelector('.tb-say-text');
         var variants = Array.prototype.slice.call(node.querySelectorAll('.tb-v'));
@@ -113,6 +121,16 @@
         var q = e.target.getAttribute('data-q');
         if (q) { box.value = q; form.requestSubmit(); }
     });
+    // "Dig deeper" under an answer re-asks that question with Deep dive on.
+    thread.addEventListener('click', function (e) {
+        var b = e.target.closest && e.target.closest('.tb-dig');
+        if (!b) return;
+        b.disabled = true;
+        digging = true;
+        box.value = b.getAttribute('data-q');
+        deepBox.checked = true;
+        form.requestSubmit();
+    });
     box.addEventListener('keydown', function (e) {
         if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); }
     });
@@ -126,7 +144,11 @@
         e.detail.parameters.history = JSON.stringify(turns.slice(-12));
         e.detail.parameters.conv = conv;
     });
-    form.addEventListener('htmx:beforeRequest', function () { startPending(box.value.trim()); box.value = ''; });
+    form.addEventListener('htmx:beforeRequest', function () {
+        startPending(box.value.trim(), deepBox.checked); box.value = '';
+        // "Dig deeper" is a one-off: don't leave Deep dive ticked for the next question.
+        if (digging) { deepBox.checked = false; digging = false; }
+    });
     form.addEventListener('htmx:afterRequest', function (e) {
         if (!e.detail.successful) {
             stopPending();

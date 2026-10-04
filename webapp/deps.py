@@ -172,6 +172,9 @@ def clear_all_data_caches() -> None:
     from teg_analysis.core.players import clear_player_cache
     clear_player_cache()
 
+    from teg_analysis.chatbot.toolkit import clear_data_cache
+    clear_data_cache()
+
     # Route-level caches that registered themselves (see register_cache_clearer).
     for clear_fn in _extra_cache_clearers:
         clear_fn()

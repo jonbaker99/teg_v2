@@ -1,5 +1,6 @@
 """TEGBot 5000: deterministic tools, the tool-use loop (fake client) and the route."""
 
+import json
 from types import SimpleNamespace
 
 import pandas as pd
@@ -172,6 +173,9 @@ class FakeClient:
 @pytest.fixture(autouse=True)
 def _fresh_uploads(monkeypatch):
     monkeypatch.setattr(bot, "_uploads", {})
+    # Deterministic: independent of the real toolkit build.
+    monkeypatch.setattr(bot, "_toolkit_files", lambda: (
+        {"teg_toolkit.zip": b"code", "teg_data.zip": b"data"}, "Setup: unzip. Skills: teg-simulation", ""))
 
 
 def test_ask_uploads_datasets_once_and_attaches_them(data):
@@ -179,9 +183,10 @@ def test_ask_uploads_datasets_once_and_attaches_them(data):
     client = FakeClient([done, done])
     bot.ask("q1", data, client=client)
     bot.ask("q2", data, client=client)
-    assert sorted(client.uploads) == ["holes.csv", "rounds.csv", "tegs.csv", "winners.csv"]
+    assert sorted(client.uploads) == ["holes.csv", "rounds.csv", "teg_data.zip", "teg_toolkit.zip",
+                                      "tegs.csv", "winners.csv"]
     content = client.calls[0]["messages"][-1]["content"]
-    assert [b["type"] for b in content] == ["text"] + ["container_upload"] * 4
+    assert [b["type"] for b in content] == ["text"] + ["container_upload"] * 6
     assert {"type": "code_execution_20260521", "name": "code_execution"} in client.calls[0]["tools"]
 
 
@@ -320,14 +325,21 @@ def client(monkeypatch, tmp_path):
     from webapp.app import app
     monkeypatch.setattr(route, "_enabled", lambda: True)
     monkeypatch.setattr(route, "_visitor_hits", type(route._visitor_hits)(route._visitor_hits.default_factory))
-    monkeypatch.setattr(route, "_daily", {"date": None, "count": 0})
-    def fake_ask(q, data, history=None, past=None, themes=None):
+    monkeypatch.setattr(route, "_daily", {"date": None, "count": 0, "deep": 0})
+    monkeypatch.setattr(route, "_visitor_deep", {})
+    monkeypatch.setattr(route, "_jobs", {})
+    calls = []
+    def fake_ask(q, data, history=None, past=None, themes=None, deep=False):
+        calls.append(deep)
         related = [p["id"] for p in (past or []) if "won" in p["question"]][:1]
         return bot.Answer(f"You asked **{q}**. See [Honours](/honours).",
                           [bot.ToolCall("get_honours", {}, {"counts": {}})], {},
-                          "claude-sonnet-5-5", theme="Honours", related=related)
+                          "claude-opus-5-5" if deep else "claude-sonnet-5-5", theme="Honours",
+                          related=related, suggest_deep=q.startswith("Why"), deep=deep)
     monkeypatch.setattr(route.bot, "ask", fake_ask)
-    return TestClient(app)
+    tc = TestClient(app)
+    tc.ask_calls = calls
+    return tc
 
 
 def test_ask_route_renders_answer_and_workings(client):
@@ -532,3 +544,355 @@ def test_get_predictions_wraps_the_simulator(data):
         raise ValueError("no handicaps")
     data.predictions = not_ready
     assert "can't run yet: no handicaps" in run_tool("get_predictions", {}, data)["error"]
+
+
+# --- toolkit and Deep dive -----------------------------------------------------
+
+_REAL_TOOLKIT_FILES = bot._toolkit_files
+
+
+def _done(text="ok"):
+    return _resp([SimpleNamespace(type="text", text=text)], "end_turn")
+
+
+def test_toolkit_attached_and_skills_index_in_system_prompt(data):
+    client = FakeClient([_done()])
+    bot.ask("q", data, client=client)
+    system = client.calls[0]["system"]
+    assert "Setup: unzip. Skills: teg-simulation" in system[1]["text"]
+    assert system[1]["cache_control"] == {"type": "ephemeral"}
+    assert "Site pages" in system[0]["text"] and "Players" in system[2]["text"]
+    assert not any("Deep dive mode is on" in b["text"] for b in system)
+    assert ("teg_toolkit.zip", "application/zip") == next(
+        (n, "application/zip") for n in client.uploads if n.endswith("toolkit.zip"))
+
+
+def test_toolkit_failure_falls_back_and_is_surfaced(data, monkeypatch, caplog):
+    import sys
+    monkeypatch.setattr(bot, "_toolkit_files", _REAL_TOOLKIT_FILES)
+    broken = SimpleNamespace(TOOLKIT_ZIP="t.zip", DATA_ZIP="d.zip", skills_index=lambda: "x",
+                             code_zip=lambda: (_ for _ in ()).throw(RuntimeError("no zip")),
+                             data_zip=lambda: b"")
+    monkeypatch.setitem(sys.modules, "teg_analysis.chatbot.toolkit", broken)
+    monkeypatch.setattr("teg_analysis.chatbot.toolkit", broken, raising=False)
+    client = FakeClient([_done()])
+    with caplog.at_level("ERROR"):
+        answer = bot.ask("q", data, client=client)
+    assert answer.text == "ok"
+    assert "no zip" in answer.toolkit_error
+    assert sorted(client.uploads) == ["holes.csv", "rounds.csv", "tegs.csv", "winners.csv"]
+    assert len(client.calls[0]["system"]) == 3  # no skills block
+    assert "toolkit unavailable" in caplog.text
+
+
+def test_normal_mode_limits_unchanged(data, monkeypatch):
+    monkeypatch.delenv("TEGBOT_MODEL", raising=False)
+    client = FakeClient([_done()])
+    answer = bot.ask("q", data, client=client)
+    call = client.calls[0]
+    assert (call["model"], call["max_tokens"]) == ("claude-sonnet-5-5", 4000)
+    assert call["output_config"] == {"effort": "medium"}
+    assert answer.deep is False
+
+
+def test_deep_mode_uses_opus_high_effort_more_rounds(data, monkeypatch):
+    monkeypatch.delenv("TEGBOT_DEEP_MODEL", raising=False)
+    lookup = SimpleNamespace(type="tool_use", id="t1", name="get_honours", input={})
+    # 10 tool rounds would exhaust normal mode (8); deep allows up to 20.
+    responses = [_resp([lookup], "tool_use") for _ in range(10)] + [_done("Deep answer.\nDEEP: no")]
+    client = FakeClient(responses)
+    answer = bot.ask("q", data, client=client, deep=True)
+    assert answer.text == "Deep answer." and answer.deep is True
+    call = client.calls[0]
+    assert call["model"] == "claude-opus-5-5" and call["max_tokens"] == 16000
+    assert call["output_config"] == {"effort": "high"}
+    assert "Deep dive mode is on" in call["system"][-1]["text"]
+    assert len(client.calls) == 11 and client.calls[10]["tool_choice"] == {"type": "auto"}
+    assert answer.cost_usd == pytest.approx(11 * (100 * 4.0 + 20 * 20.0) / 1e6)
+
+
+def test_deep_model_env_override_and_last_round_forbids_tools(data, monkeypatch):
+    monkeypatch.setenv("TEGBOT_DEEP_MODEL", "claude-sonnet-5-5")
+    lookup = SimpleNamespace(type="tool_use", id="t1", name="get_honours", input={})
+    client = FakeClient([_resp([lookup], "tool_use") for _ in range(bot.DEEP_TOOL_ROUNDS)]
+                        + [_done()])
+    bot.ask("q", data, client=client, deep=True)
+    assert client.calls[0]["model"] == "claude-sonnet-5-5"
+    assert client.calls[-1]["tool_choice"] == {"type": "none"}
+
+
+def test_deep_client_gets_longer_timeout(data, monkeypatch):
+    seen = []
+    def fake_client(timeout=bot.TIMEOUT, max_retries=2):
+        seen.append(timeout)
+        return FakeClient([_done()])
+    monkeypatch.setattr(bot, "_client", fake_client)
+    bot.ask("q", data)
+    bot.ask("q", data, deep=True)
+    assert seen == [90.0, 300.0]
+
+
+def test_split_trailer_parses_deep_and_stays_compatible():
+    text, theme, related, deep = bot.split_trailer_full(
+        "Best guess.\n\nTHEME: Honours\nRELATED: none\nDEEP: yes", [])
+    assert (text, theme, related, deep) == ("Best guess.", "Honours", [], True)
+    assert bot.split_trailer_full("A\nTHEME: X\nRELATED: none\nDEEP: no", [])[3] is False
+    assert bot.split_trailer_full("A\nTHEME: X\nRELATED: none", [])[3] is False
+    # old 3-tuple API unchanged, and DEEP is stripped from the text
+    assert bot.split_trailer("A\nTHEME: X\nRELATED: none\nDEEP: yes", []) == ("A", "X", [])
+
+
+def test_ask_flags_suggest_deep_only_in_normal_mode(data):
+    reply = "Roughly.\nTHEME: Why\nRELATED: none\nDEEP: yes"
+    assert bot.ask("q", data, client=FakeClient([_done(reply)])).suggest_deep is True
+    assert bot.ask("q", data, client=FakeClient([_done(reply)]), deep=True).suggest_deep is False
+
+
+def test_suggest_deep_renders_dig_deeper_button(client):
+    resp = client.post("/tegbot/ask", data={"question": "Why did Alan win?"})
+    assert 'class="tb-dig"' in resp.text and "Dig deeper" in resp.text
+    assert client.ask_calls == [False]
+    assert "Dig deeper" not in client.post("/tegbot/ask", data={"question": "Who won?"}).text
+    deep = _finish_job(client, client.post("/tegbot/ask", data={"question": "Why did Alan win?", "deep": "1"}))
+    assert "Dig deeper" not in deep.text
+    assert client.ask_calls[-1] is True
+
+
+def test_page_has_deep_toggle(client):
+    html_ = client.get("/tegbot").text
+    assert 'name="deep"' in html_ and "Deep dive" in html_ and "a minute or two" in html_
+
+
+def _finish_job(client, resp, timeout=5.0):
+    """Follow a deep dive's working partial until the answer arrives."""
+    import re, time
+    end = time.time() + timeout
+    while "tb-job" in resp.text and time.time() < end:
+        job = re.search(r'hx-get="(/tegbot/job/[0-9a-f]+)"', resp.text).group(1)
+        time.sleep(0.02)
+        resp = client.get(job)
+    return resp
+
+
+def test_deep_daily_cap_is_separate_and_refunded(client, monkeypatch):
+    import webapp.routes.tegbot as route
+    monkeypatch.setenv("TEGBOT_DEEP_DAILY_LIMIT", "1")
+    assert "workings" in _finish_job(client, client.post("/tegbot/ask", data={"question": "q", "deep": "1"})).text
+    assert "deep dives" in client.post("/tegbot/ask", data={"question": "q", "deep": "1"}).text
+    assert "workings" in client.post("/tegbot/ask", data={"question": "q"}).text  # normal still fine
+    assert route._daily["deep"] == 1 and route._daily["count"] == 2
+
+    def boom(*a, **k):
+        raise RuntimeError("api down")
+    monkeypatch.setattr(route.bot, "ask", boom)
+    monkeypatch.setenv("TEGBOT_DEEP_DAILY_LIMIT", "5")
+    out = _finish_job(client, client.post("/tegbot/ask", data={"question": "q", "deep": "1"}))
+    assert "fell over" in out.text
+    assert route._daily["deep"] == 1 and route._daily["count"] == 2
+
+
+def test_deep_per_visitor_cap(client, monkeypatch):
+    monkeypatch.setenv("TEGBOT_DEEP_PER_VISITOR", "2")
+    for _ in range(2):
+        _finish_job(client, client.post("/tegbot/ask", data={"question": "q", "deep": "1"}))
+    assert "your deep dives" in client.post("/tegbot/ask", data={"question": "q", "deep": "1"}).text
+    other = client.post("/tegbot/ask", data={"question": "q", "deep": "1"},
+                        headers={"x-forwarded-for": "8.8.8.8"})
+    assert "tb-job" in other.text
+
+
+def test_deep_job_lifecycle_pending_then_done(client, monkeypatch):
+    import threading, re
+    import webapp.routes.tegbot as route
+    gate = threading.Event()
+    def slow_ask(q, data, history=None, past=None, themes=None, deep=False):
+        gate.wait(5)
+        return bot.Answer("Done **it**.", [], {}, "claude-opus-5-5", deep=True)
+    monkeypatch.setattr(route.bot, "ask", slow_ask)
+    start = client.post("/tegbot/ask", data={"question": "Why?", "deep": "1"})
+    assert "tb-job" in start.text and "Thinking" in start.text and "Why?" in start.text
+    assert 'hx-trigger="load delay:3s"' in start.text
+    job = re.search(r'hx-get="(/tegbot/job/[0-9a-f]+)"', start.text).group(1)
+    assert "tb-job" in client.get(job).text  # still pending
+    gate.set()
+    done = _finish_job(client, client.get(job))
+    assert "<strong>it</strong>" in done.text and "tb-job" not in done.text
+    assert 'data-answer=' in done.text
+
+
+def test_unknown_job_id_is_friendly(client):
+    resp = client.get("/tegbot/job/" + "0" * 32)
+    assert resp.status_code == 200 and "expired" in resp.text
+
+
+def test_finished_jobs_expire(client, monkeypatch):
+    import webapp.routes.tegbot as route
+    start = client.post("/tegbot/ask", data={"question": "q", "deep": "1"})
+    _finish_job(client, start)
+    for job in route._jobs.values():
+        job["finished"] -= route.JOB_KEEP_SECONDS + 5
+    route._purge_jobs()
+    assert route._jobs == {}
+
+
+def test_wall_clock_cap_forces_final_call_without_tools(data, monkeypatch):
+    monkeypatch.setattr(bot, "DEEP_WALL_CLOCK", -1.0)  # already over time
+    lookup = SimpleNamespace(type="tool_use", id="t1", name="get_honours", input={})
+    client = FakeClient([_done("Best so far.")])
+    answer = bot.ask("q", data, client=client, deep=True)
+    assert answer.text == "Best so far."
+    assert client.calls[0]["tool_choice"] == {"type": "none"}
+
+
+def test_deep_client_uses_single_retry(monkeypatch):
+    import sys
+    seen = {}
+    fake = SimpleNamespace(Anthropic=lambda **kw: seen.update(kw))
+    monkeypatch.setitem(sys.modules, "anthropic", fake)
+    monkeypatch.setattr("teg_analysis.reporting.llm.get_api_key", lambda: "k")
+    bot._client(bot.DEEP_TIMEOUT, bot.DEEP_MAX_RETRIES)
+    assert seen["max_retries"] == 1 and seen["timeout"] == 300.0
+
+
+def test_upload_cache_keeps_previous_generation_and_survives_toolkit_failure(data, monkeypatch):
+    deleted = []
+    client = FakeClient([])
+    client.files.delete = deleted.append
+    base = {"teg_toolkit.zip": b"v1", "teg_data.zip": b"d"}
+    first = bot._dataset_file_ids(client, data, base)
+    n = len(client.uploads)
+    # toolkit missing: nothing re-uploaded, nothing deleted
+    bot._dataset_file_ids(client, data, {})
+    assert len(client.uploads) == n and deleted == []
+    # toolkit changes: new upload, old kept (an in-flight request may use it)
+    bot._dataset_file_ids(client, data, {"teg_toolkit.zip": b"v2", "teg_data.zip": b"d"})
+    assert len(client.uploads) == n + 1 and deleted == []
+    # next change: the generation before is deleted, the previous one survives
+    bot._dataset_file_ids(client, data, {"teg_toolkit.zip": b"v3", "teg_data.zip": b"d"})
+    assert len(deleted) == 1
+    assert deleted[0] not in [i for _, i in bot._uploads.values()]
+
+
+def test_unclosed_tegchart_fence_keeps_rest_of_answer():
+    from webapp.routes.tegbot import render_answer_html
+    text = "Lead.\n\n```tegchart\n{\"type\": \"bar\"\n\nTable follows.\n\n**Kept** bold."
+    out = render_answer_html(text)
+    assert "Table follows." in out and "<strong>Kept</strong>" in out
+    assert "```tegchart" not in out and "tegbot-chart" not in out
+    stripped = bot.strip_charts(text)
+    assert "Kept" in stripped and "```tegchart" not in stripped
+    closed = bot.strip_charts('A\n```tegchart\n{"title": "T"}\n```\nB')
+    assert closed == "A\n[chart: T]\nB"
+
+
+def test_qa_log_records_deep_and_old_entries_load(client, tmp_path):
+    from teg_analysis.chatbot import qa_log
+    path = tmp_path / "qa_log.jsonl"
+    old = {"id": "a" * 32, "conv": "b" * 32, "at": "2026-01-01T00:00:00+00:00", "question": "old?",
+           "answer": "x", "workings": [], "model": "m", "cost_usd": 0, "seconds": 1}
+    path.write_text(json.dumps(old) + "\n")
+    _finish_job(client, client.post("/tegbot/ask", data={"question": "new?", "deep": "1"}))
+    entries = qa_log.read_entries()
+    assert [e.get("deep", False) for e in entries] == [False, True]
+
+
+# ---- answer charts (tegchart blocks) ----
+
+def _chart(**over):
+    spec = {"type": "line", "title": "Gross per TEG", "x_label": "TEG", "y_label": "Gross vs par",
+            "x": ["TEG 1", "TEG 2", "TEG 3"],
+            "series": [{"name": "David MULLIN", "values": [10, None, 12.5]}]}
+    spec.update(over)
+    return spec
+
+
+def _block(spec) -> str:
+    raw = spec if isinstance(spec, str) else json.dumps(spec)
+    return f"Lead sentence.\n\n```tegchart\n{raw}\n```\n\nAfter."
+
+
+def _chart_data(out: str) -> dict:
+    import html as _html
+    import re
+    m = re.search(r'data-chart="([^"]*)"', out)
+    return json.loads(_html.unescape(m.group(1)))
+
+
+@pytest.mark.parametrize("kind", ["bar", "line"])
+def test_valid_chart_renders_placeholder(kind):
+    from webapp.routes.tegbot import render_answer_html
+    out = render_answer_html(_block(_chart(type=kind, y_reverse=True)))
+    assert out.count('class="tegbot-chart"') == 1
+    assert "tegchart" not in out and "```" not in out
+    assert "<p>Lead sentence.</p>" in out and "<p>After.</p>" in out
+    data = _chart_data(out)
+    assert data["type"] == kind and data["y_reverse"] is True
+    assert data["series"][0]["values"] == [10, None, 12.5]
+
+
+@pytest.mark.parametrize("bad", [
+    "{not json",
+    '{"type": "line", "title": "t", "x_label": "", "y_label": "", "x": [1, 2], '
+    '"series": [{"name": "a", "values": [1, NaN]}]}',
+    _chart(type="pie"),
+    _chart(title=""),
+    _chart(series=[]),
+    _chart(series=[{"name": "a", "values": [1, 2]}]),                       # length mismatch
+    _chart(series=[{"name": "a", "values": [1, "x", 3]}]),                  # non-number
+    _chart(series=[{"name": "a", "values": [1, True, 3]}]),                 # bool
+    _chart(series=[{"name": f"s{i}", "values": [1, 2, 3]} for i in range(9)]),
+    _chart(x=list(range(61)), series=[{"name": "a", "values": list(range(61))}]),
+    _chart(x=[1], series=[{"name": "a", "values": [1]}]),
+    _chart(series=[{"name": "a", "values": [1, 2, 3]}, {"name": "a", "values": [1, 2, 3]}]),
+    [1, 2],
+])
+def test_invalid_chart_dropped_answer_still_renders(bad):
+    from webapp.routes.tegbot import render_answer_html
+    out = render_answer_html(_block(bad))
+    assert "tegbot-chart" not in out and "tegchart" not in out
+    assert "<p>Lead sentence.</p>" in out and "<p>After.</p>" in out
+
+
+def test_chart_text_cannot_inject_html():
+    from webapp.routes.tegbot import render_answer_html
+    evil = '"><script>alert(1)</script><img src=x onerror=alert(1)>'
+    spec = _chart(title=evil, x_label=evil,
+                  series=[{"name": evil, "values": [1, 2, 3]}])
+    out = render_answer_html(_block(spec))
+    assert "<script" not in out and "<img" not in out
+    assert out.count('class="tegbot-chart"') == 1
+    assert "<" not in _chart_data(out)["title"]
+
+
+def test_only_first_valid_chart_kept():
+    from webapp.routes.tegbot import render_answer_html
+    text = _block(_chart(title="First")) + "\n\n" + _block(_chart(title="Second"))
+    out = render_answer_html(text)
+    assert out.count('class="tegbot-chart"') == 1
+    assert _chart_data(out)["title"] == "First"
+    # An invalid first block does not use up the slot.
+    out = render_answer_html(_block("{bad") + "\n\n" + _block(_chart(title="Second")))
+    assert _chart_data(out)["title"] == "Second"
+
+
+def test_unterminated_chart_block_is_dropped():
+    from webapp.routes.tegbot import render_answer_html
+    out = render_answer_html('Intro.\n\n```tegchart\n{"type": "bar", "ti')
+    assert "tegchart" not in out and "<p>Intro.</p>" in out
+
+
+def test_history_replay_strips_charts():
+    text = _block(_chart(title="Gross per TEG"))
+    out = bot.clean_history([{"role": "user", "content": "q"},
+                             {"role": "assistant", "content": text},
+                             {"role": "user", "content": "next"},
+                             {"role": "assistant", "content": "ok"}])
+    assert "[chart: Gross per TEG]" in out[1]["content"]
+    assert "tegchart" not in out[1]["content"] and "David MULLIN" not in out[1]["content"]
+    assert "Lead sentence." in out[1]["content"] and "After." in out[1]["content"]
+
+
+def test_prompt_documents_charts():
+    from teg_analysis.chatbot import prompt
+    assert "tegchart" in prompt._RULES and "default is NO chart" in prompt._RULES
+    assert "sideways" in prompt._RULES and "line" in prompt._RULES

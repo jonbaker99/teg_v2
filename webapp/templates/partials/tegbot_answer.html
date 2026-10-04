@@ -28,6 +28,10 @@
                 {% endfor %}
             </details>
             {% endif %}
+            {% if suggest_deep %}
+            <button type="button" class="tb-dig" data-q="{{ question }}">Dig deeper</button>
+            <span class="tb-dig-hint">Re-runs this question as a Deep dive (slower, more thorough).</span>
+            {% endif %}
             {% endif %}
         </div>
     </div>
