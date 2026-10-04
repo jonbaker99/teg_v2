@@ -602,15 +602,18 @@ def _live_context(qp) -> dict:
 
     live = wp.in_progress_teg()
     completed = _completed_tegs()
+    held = sorted({int(t) for t in _history()["TEGNum"].unique()})
+    # a replay needs at least one earlier TEG to build prior form from
+    replay_options = sorted((t for t in completed if any(e < t for e in held)), reverse=True)
     replay_teg = None
     if qp.get("teg"):
         try:
             replay_teg = int(qp.get("teg"))
         except ValueError:
             replay_teg = None
-        if replay_teg not in completed:
+        if replay_teg not in replay_options:
             replay_teg = None
-    ctx = {"live_teg": live, "next_teg": sim.default_target_teg(),
+    ctx = {"live_teg": live, "next_teg": sim.default_target_teg(), "replay_options": replay_options,
            "last_completed": completed[-1] if completed else None,
            "w_by_round": [f"{wp.blend_weight(n) * 100:.0f}%" for n in (1, 2, 3)]}
     teg = replay_teg or live
@@ -677,6 +680,7 @@ def _live_context(qp) -> dict:
             "total": len(axis) - 1, "steps": _LIVE_STEPS}).replace("</", "<\\/")
     return {
         **ctx, "teg": teg, "replay": replay, "done": done, "rows": rows, "measures": measures,
+        "total": len(wp.checkpoints(state)) - 1,
         "stableford": stableford, "live_data": live_data,
         "since": ("the start" if done == 1 else f"round {done - 1}") if done else "",
     }

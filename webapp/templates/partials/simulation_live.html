@@ -1,15 +1,26 @@
+{% if replay_options or live_teg %}
+<div class="section-controls sim-live-pick">
+    <label class="sim-field"><span class="text-muted">TEG</span>
+        <select class="theme-select" id="sim-live-teg" aria-label="TEG to show">
+            {% if live_teg %}<option value="" {% if not replay %}selected{% endif %}>TEG {{ live_teg }} (in progress)</option>
+            {% else %}<option value="" {% if not replay %}selected{% endif %}>No TEG in progress</option>{% endif %}
+            {% for t in replay_options %}<option value="{{ t }}" {% if replay and t == teg %}selected{% endif %}>TEG {{ t }} replay</option>{% endfor %}
+        </select>
+    </label>
+</div>
+{% endif %}
 {% if fatal %}
 <div class="request-feedback" role="alert"><span>{{ fatal }}</span></div>
 {% elif not_live %}
 <div class="data-card data-card--padded sim-live-empty">
     <p class="section-title">No TEG in progress</p>
     <p>There's nothing to simulate live right now. Live win chances appear here once TEG {{ next_teg }} starts, and update after each round is finalised.</p>
-    <p class="caption">For chances before a TEG starts, use the <a class="text-link" href="/simulation">Prediction</a> tab.{% if last_completed %} To see how this view works, <a class="text-link" href="/simulation?tab=live&amp;teg={{ last_completed }}">replay TEG {{ last_completed }} round by round</a>.{% endif %}</p>
+    <p class="caption">For chances before a TEG starts, use the <a class="text-link" href="/simulation">Prediction</a> tab.{% if replay_options %} To see how a finished TEG unfolded hole by hole, pick it above{% if last_completed %}, or <a class="text-link" href="/simulation?tab=live&amp;teg={{ last_completed }}">replay TEG {{ last_completed }}</a>{% endif %}.{% endif %}</p>
 </div>
 {% else %}
 <div class="sim-results sim-stack">
     {% if replay %}
-    <p class="request-feedback">Replay of TEG {{ teg }}, which has finished. Each point on the chart is the chances as they stood after that hole. <a class="text-link" href="/simulation?tab=live">Back to Live</a></p>
+    <p class="request-feedback">Replay of TEG {{ teg }}, which has finished. Each point on the chart is the chances as they stood after that hole.</p>
     {% endif %}
     <section class="sim-section">
     <h3 class="chart-title">TEG {{ teg }} win chances{% if done == 0 %} before the start{% elif replay %} at the finish{% else %} after round {{ done }}{% endif %}</h3>
@@ -51,10 +62,33 @@
     {% for m in measures %}
     <div class="sim-panel{% if not loop.first %} sim-hidden{% endif %}" data-measure="{{ m.key }}">
         <div class="chart-container sim-chart sim-live-plot" data-measure="{{ m.key }}" data-figure="{{ m.chart_json }}" style="height:360px;"></div>
-        <div class="sim-live-swings" data-measure="{{ m.key }}">
-            <h4 class="caption"><strong>Biggest swings</strong></h4>
-            <ul class="caption sim-list"><li>Appear once every hole is worked out.</li></ul>
+    </div>
+    {% endfor %}
+
+    <div class="sim-scrub sim-stack sim-stack--tight" id="sim-scrub">
+        <div class="sim-scrub-row">
+            <button type="button" class="action sim-scrub-play" id="sim-scrub-play" aria-pressed="false">Play</button>
+            <input type="range" class="sim-scrub-range" id="sim-scrub-range" min="0" max="{{ total }}" step="1" value="{{ total }}" aria-label="Hole" aria-describedby="sim-scrub-label">
+            <span class="sim-scrub-label" id="sim-scrub-label"></span>
         </div>
+        <p class="caption">Drag the slider or press Play to step through the TEG hole by hole. The table shows where things stood at that hole.</p>
+        <div class="data-card"><div class="table-wrapper">
+        <table class="teg-table sim-scrub-table">
+            <thead><tr>
+                <th class="sim-left">Player</th><th>TEG Trophy</th><th>Green Jacket</th>
+                <th>{{ 'Stableford' if stableford else 'Net vs par' }}</th><th>Gross vs par</th><th>That hole</th>
+            </tr></thead>
+            <tbody id="sim-scrub-body">
+            {% for r in rows %}<tr><td class="sim-left">{{ r.name_html | safe }}</td><td></td><td></td><td></td><td></td><td></td></tr>{% endfor %}
+            </tbody>
+        </table>
+        </div></div>
+    </div>
+
+    {% for m in measures %}
+    <div class="sim-panel sim-live-swings{% if not loop.first %} sim-hidden{% endif %}" data-measure="{{ m.key }}">
+        <h4 class="caption"><strong>Biggest swings, {{ m.label }}</strong></h4>
+        <ul class="caption sim-list"><li>Appear once every hole is worked out.</li></ul>
     </div>
     {% endfor %}
     <p class="caption">Each point is the win chance after that hole, with the rest of the TEG simulated from there. Start is before round 1.</p>

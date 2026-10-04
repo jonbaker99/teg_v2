@@ -112,7 +112,98 @@
         });
     }
 
+    var VP_SHORT = {'-3': 'Albatross', '-2': 'Eagle', '-1': 'Birdie', '0': 'Par', '1': 'Bogey',
+                    '2': 'Double', '3': 'Triple'};
+    function signed(v) { return v > 0 ? '+' + v : v === 0 ? '0' : String(v); }
+    function nameHtml(cell, name) {
+        // Same markup as the server's _wrap_player_name, built with textContent.
+        var i = name.indexOf(' ');
+        var outer = document.createElement('span'); outer.className = 'player-name';
+        var f = document.createElement('span'); f.className = 'first'; f.textContent = i < 0 ? name : name.slice(0, i);
+        var l = document.createElement('span'); l.className = 'last'; l.textContent = i < 0 ? '' : name.slice(i + 1);
+        outer.appendChild(f); outer.appendChild(document.createTextNode(' ')); outer.appendChild(l);
+        cell.textContent = ''; cell.appendChild(outer);
+    }
+    function barCell(cell, p) {
+        if (p == null) { cell.textContent = '\u2013'; return; }
+        cell.innerHTML = '<span class="sim-bar"></span><span></span>';
+        cell.firstChild.style.setProperty('--w', (p * 100).toFixed(1) + '%');
+        cell.lastChild.textContent = pct(p);
+    }
+
+    var playTimer = null;
+    function stopPlay(btn) {
+        if (playTimer) { clearInterval(playTimer); playTimer = null; }
+        if (btn) { btn.textContent = 'Play'; btn.setAttribute('aria-pressed', 'false'); }
+    }
+
+    // Slider + Play: steps through every checkpoint, re-sorting the readout table
+    // and moving a marker on both charts. Rows are reused, so heights never change.
+    function setupScrub(root, d) {
+        var range = root.querySelector('#sim-scrub-range');
+        if (!range) return function () {};
+        var labelEl = root.querySelector('#sim-scrub-label');
+        var rows = root.querySelectorAll('#sim-scrub-body tr');
+        var play = root.querySelector('#sim-scrub-play');
+        var cum = [], g = {}, nt = {};
+        d.players.forEach(function (p) { g[p] = 0; nt[p] = 0; });
+        d.axis.forEach(function (a, i) {
+            var sc = i ? (d.scores[key(a[0], a[1])] || {}) : {};
+            d.players.forEach(function (p) { if (sc[p]) { g[p] += sc[p][0]; nt[p] += sc[p][1]; } });
+            cum.push({g: Object.assign({}, g), n: Object.assign({}, nt), sc: sc});
+        });
+        function measure() {
+            var b = root.querySelector('[data-sim-measure][aria-pressed="true"]');
+            return b ? b.getAttribute('data-sim-measure') : 'net';
+        }
+        function show() {
+            var i = parseInt(range.value, 10) || 0;
+            var a = d.axis[i], pt = d.points[key(a[0], a[1])], m = measure();
+            labelEl.textContent = (i === 0 ? 'Start' : 'Round ' + a[0] + ', hole ' + a[1]) + (pt ? '' : ' (working out)');
+            var order = d.players.slice();
+            if (pt) order.sort(function (x, y) { return pt[m][y] - pt[m][x]; });
+            order.forEach(function (p, j) {
+                var td = rows[j].children, sc = cum[i].sc[p];
+                nameHtml(td[0], d.names[p]);
+                barCell(td[1], pt ? pt.net[p] : null);
+                barCell(td[2], pt ? pt.gross[p] : null);
+                td[3].textContent = i ? (d.stableford ? cum[i].n[p] : signed(cum[i].n[p])) : '\u2013';
+                td[4].textContent = i ? signed(cum[i].g[p]) : '\u2013';
+                td[5].textContent = sc ? (VP_SHORT[String(sc[0])] || signed(sc[0])) +
+                    (d.stableford ? ', ' + sc[1] + (sc[1] === 1 ? ' pt' : ' pts') : '') : '\u2013';
+            });
+            var x = label(a[0], a[1]);
+            root.querySelectorAll('.sim-live-plot').forEach(function (el) {
+                if (!el._fullLayout || !window.Plotly) return;
+                try {
+                    Plotly.relayout(el, {shapes: i >= d.total ? [] : [{type: 'line', xref: 'x', yref: 'paper', x0: x, x1: x,
+                        y0: 0, y1: 1, line: {color: 'rgba(128,128,128,0.7)', width: 1, dash: 'dot'}}]});
+                } catch (err) {}
+            });
+        }
+        range.addEventListener('input', function () { stopPlay(play); show(); });
+        root.querySelector('.sim-results').addEventListener('click', function (e) {  // swapped with the content
+            if (e.target.closest('[data-sim-measure]')) setTimeout(show, 0);
+        });
+        play.addEventListener('click', function () {
+            if (playTimer) { stopPlay(play); return; }
+            if (parseInt(range.value, 10) >= d.total) range.value = 0;
+            play.textContent = 'Pause'; play.setAttribute('aria-pressed', 'true');
+            show();
+            playTimer = setInterval(function () {
+                var v = parseInt(range.value, 10) + 1;
+                if (v > d.total) { stopPlay(play); return; }
+                range.value = v; show();
+            }, 220);
+        });
+        show();
+        return show;
+    }
+
     function start(root) {
+        stopPlay(null);
+        root.style.minHeight = '';
+        root.classList.remove('sim-loading');
         var dataEl = root.querySelector('#sim-live-data');
         if (!dataEl) return;
         var d = JSON.parse(dataEl.textContent);
@@ -120,9 +211,11 @@
         running = token;
         var status = root.querySelector('#sim-live-status');
         var queue = d.queue, n = 0, failed = 0;
+        var refreshScrub = function () {};
         function doneCount() { return Object.keys(d.points).length - 1; }
         function finish() {
             redrawWhenReady(root, d, 30);
+            setTimeout(refreshScrub, 150);
             status.textContent = failed
                 ? 'All holes worked out except ' + failed + ' that failed. Reload to retry.'
                 : 'Every hole worked out (' + d.total + ' points).';
@@ -136,16 +229,28 @@
                 ', hole ' + q[1] + '. ' + doneCount() + ' of ' + d.total + ' points done.';
             fetch('/simulation/live/point?teg=' + d.teg + '&round=' + q[0] + '&hole=' + q[1] + '&replay=' + (d.replay ? 1 : 0))
                 .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
-                .then(function (p) { d.points[key(q[0], q[1])] = {net: p.net, gross: p.gross}; redraw(root, d); })
+                .then(function (p) { d.points[key(q[0], q[1])] = {net: p.net, gross: p.gross}; redraw(root, d); refreshScrub(); })
                 .catch(function () { failed++; })
                 .then(function () { n++; next(); });
         }
         // Give the shared renderer a moment to draw the plots, then fill in.
-        setTimeout(function () { redrawWhenReady(root, d, 30); next(); }, 50);
+        setTimeout(function () { redrawWhenReady(root, d, 30); refreshScrub = setupScrub(root, d); next(); }, 50);
     }
 
     document.addEventListener('htmx:afterSettle', function (e) {
         if (e.detail && e.detail.elt && e.detail.elt.id === 'sim-live') start(e.detail.elt);
+    });
+    document.addEventListener('change', function (e) {
+        if (!e.target || e.target.id !== 'sim-live-teg') return;
+        var v = e.target.value, box = document.getElementById('sim-live');
+        stopPlay(null);
+        running = null;  // stop filling in the old TEG
+        box.style.minHeight = box.offsetHeight + 'px';  // hold the height while the new TEG loads
+        box.classList.add('sim-loading');
+        var st = document.getElementById('sim-live-status');
+        if (st) st.textContent = 'Loading ' + (v ? 'TEG ' + v : 'the live TEG') + '\u2026';
+        history.replaceState(null, '', '/simulation?tab=live' + (v ? '&teg=' + encodeURIComponent(v) : ''));
+        htmx.ajax('GET', '/simulation/live' + (v ? '?teg=' + encodeURIComponent(v) : ''), {target: '#sim-live', swap: 'innerHTML'});
     });
 })();
 </script>

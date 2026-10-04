@@ -324,3 +324,21 @@ def test_live_point_rejects_bad_requests(client, monkeypatch, fresh_live_cache):
     assert client.get("/simulation/live/point?teg=18&round=2&hole=9").status_code == 400
     assert client.get("/simulation/live/point?teg=18&round=9&hole=9&replay=1").status_code == 400
     assert client.get("/simulation/live/point?teg=99&round=1&hole=9&replay=1").status_code == 400
+
+
+def test_live_picker_offers_every_replayable_teg(client, monkeypatch, fresh_live_cache):
+    monkeypatch.setattr(wp, "in_progress_teg", lambda: None)
+    r = client.get("/simulation/live")
+    assert 'id="sim-live-teg"' in r.text
+    assert '<option value="18"' in r.text and '<option value="3"' in r.text
+    assert '<option value="2"' not in r.text  # no earlier TEG to build form from
+    r = client.get("/simulation/live?teg=2")
+    assert "No TEG in progress" in r.text
+
+
+def test_live_replay_has_hole_slider(client, fresh_live_cache):
+    r = client.get("/simulation/live?teg=9")
+    assert 'id="sim-scrub-range"' in r.text and 'max="72"' in r.text
+    assert "Net vs par" not in r.text  # TEG 9 is a Stableford TEG
+    r = client.get("/simulation/live?teg=6")
+    assert "Net vs par" in r.text
