@@ -231,3 +231,10 @@ def test_stableford_default_and_odds_table(client):
     assert 'data-sim-measure="stableford" aria-pressed="true"' in r
     assert "TEG Trophy" in r and "Green Jacket" in r and "Wooden Spoon" in r
     assert "/1" in r or "Evens" in r
+
+
+def test_run_includes_handicap_expanders(client):
+    r = client.get("/simulation/run?n_sims=500&seed=1")
+    assert r.status_code == 200
+    assert "Impact of handicap changes" in r.text
+    assert "Handicaps that equalise chances" in r.text

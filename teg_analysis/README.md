@@ -85,7 +85,12 @@ teg_analysis/
                      else draft) and scorecards, with random par-72 courses from
                      course_pars.csv for rounds without one — load_target_tournament/
                      run_simulation (also eagles/blobs per sim);
-                     summary_table/position_grid/total_distribution (optionally smoothed)
+                     summary_table/position_grid/total_distribution (optionally smoothed);
+                     handicap what-ifs on kept draws (run_simulation(keep_scores=True)):
+                     stableford_totals (re-score under other handicaps),
+                     previous_handicaps, handicap_change_impact (exact Shapley split of
+                     each handicap change into every player's Stableford win %, shared
+                     tie-break noise), equalising_handicaps (HC giving ~36 pts/round)
     live_round.py    Multi-device live round entry: registry + per-round staging CSVs,
                      server-ordered writes, conflict flagging, live leaderboard from
                      staging, finalize into execute_data_update —

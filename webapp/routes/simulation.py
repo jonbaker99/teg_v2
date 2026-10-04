@@ -405,6 +405,65 @@ def _chart_json(res, measure: str) -> str:
     return fig.to_json()
 
 
+def _pp(v: float) -> str:
+    t = f"{v:+.1f}"
+    return "0.0" if t in ("+0.0", "-0.0") else t
+
+
+def _signed(v: int) -> str:
+    return f"{v:+d}" if v else "0"
+
+
+def _impact_context(res) -> dict:
+    """Context for the "Impact of handicap changes" expander (never raises)."""
+    try:
+        old = sim.previous_handicaps(res.teg_num)
+        if not old:
+            return {"message": f"No TEG {res.teg_num - 1} handicaps to compare with."}
+        imp = sim.handicap_change_impact(res, old)
+        names = [res.names.get(p, p) for p in imp.players]
+        out = {
+            "prev": res.teg_num - 1, "teg": res.teg_num,
+            "cols": [_wrap_player_name(n) for n in names],
+            "message": imp.skipped_reason,
+            "unchanged": [res.names.get(p, p) for p in imp.players
+                          if p not in imp.movers and p not in imp.no_previous],
+            "no_previous": [res.names.get(p, p) for p in imp.no_previous],
+            "n_movers": len(imp.movers),
+        }
+        if not imp.movers:
+            out["message"] = out["message"] or "No handicaps changed, so there is nothing to split."
+            return out
+        if imp.shapley is not None:
+            out["rows"] = [{
+                "name_html": _wrap_player_name(res.names.get(p, p)),
+                "change": f"{imp.old_handicaps[p]}\u2192{imp.new_handicaps[p]}",
+                "cells": [_pp(v) for v in imp.shapley[i]]} for i, p in enumerate(imp.movers)]
+            out["total"] = [_pp(v) for v in imp.total_change]
+            out["single_sum"] = [_pp(v) for v in imp.single_sum]
+        out["win_old"] = [f"{v * 100:.1f}%" for v in imp.win_old]
+        out["win_new"] = [f"{v * 100:.1f}%" for v in imp.win_new]
+        return out
+    except Exception:
+        logger.exception("simulation handicap impact failed")
+        return {"message": "Couldn't work out the impact of handicap changes."}
+
+
+def _equalising_context(res) -> dict:
+    """Context for the "Handicaps that equalise chances" expander (never raises)."""
+    try:
+        df = sim.equalising_handicaps(res)
+        return {"target": int(sim.EQUALISING_TARGET), "rows": [{
+            "name_html": _wrap_player_name(r.Player), "current": r.CurrentHC,
+            "equal": r.EqualisingHC, "change": _signed(int(r.Change)),
+            "unrounded": f"{r.Unrounded:.1f}" + ("" if r.Reachable else " *"),
+            "pts": f"{r.PtsPerRound:.1f}", "win": f"{r.WinStableford * 100:.1f}%",
+        } for r in df.itertuples()], "unreachable": bool((~df.Reachable).any())}
+    except Exception:
+        logger.exception("simulation equalising handicaps failed")
+        return {"message": "Couldn't work out equalising handicaps."}
+
+
 def _run_context(qp) -> dict:
     try:
         history = _history()
@@ -416,7 +475,7 @@ def _run_context(qp) -> dict:
             return {"run_errors": s["errors"]}
         tgt = s["tgt"]
         dists = _build(history, tgt, s)
-        res = sim.run_simulation(dists, tgt, s["n_sims"], s["seed"])
+        res = sim.run_simulation(dists, tgt, s["n_sims"], s["seed"], keep_scores=True)
         measures = []
         for key, label in (("stableford", "Stableford"), ("gross", "Gross")):
             cols, grid = _grid_rows(res, key)
@@ -436,6 +495,7 @@ def _run_context(qp) -> dict:
             "courses": _courses_drawn(res, tgt),
             "clamp_note": s["clamp_note"], "warnings": dists.warnings,
             "teg_num": res.teg_num,
+            "impact": _impact_context(res), "equalise": _equalising_context(res),
         }
     except ValueError as exc:  # setup problems (missing handicap, no scorecard pool)
         logger.warning("Simulation setup: %s", exc)

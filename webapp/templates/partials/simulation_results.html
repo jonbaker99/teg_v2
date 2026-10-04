@@ -92,5 +92,53 @@
         </div>
     </div>
     {% endfor %}
+    {% if impact %}
+    <details class="sim-courses">
+        <summary>Impact of handicap changes</summary>
+        {% if impact.message %}<p class="caption">{{ impact.message }}</p>{% endif %}
+        {% if impact.win_old %}
+        {% if impact.rows %}<p class="caption">How the change from TEG {{ impact.prev }} to TEG {{ impact.teg }} handicaps moves each player's Stableford win chance. Each cell is that row player's handicap change, averaged over every order the changes could be applied in (Shapley), in percentage points for the column player.</p>{% endif %}
+        <div class="data-card"><div class="table-wrapper">
+        <table class="teg-table sim-impact">
+            <thead><tr><th class="sim-left">Handicap change</th>{% for c in impact.cols %}<th>{{ c | safe }}</th>{% endfor %}</tr></thead>
+            <tbody>
+            {% for r in impact.rows or [] %}
+            <tr><td class="sim-left">{{ r.name_html | safe }} ({{ r.change }})</td>{% for c in r.cells %}<td>{{ c }}</td>{% endfor %}</tr>
+            {% endfor %}
+            {% if impact.rows %}<tr><td class="sim-left"><strong>Total change</strong></td>{% for c in impact.total %}<td><strong>{{ c }}</strong></td>{% endfor %}</tr>{% endif %}
+            <tr><td class="sim-left">Win % on TEG {{ impact.prev }} handicaps</td>{% for c in impact.win_old %}<td>{{ c }}</td>{% endfor %}</tr>
+            <tr><td class="sim-left">Win % on TEG {{ impact.teg }} handicaps</td>{% for c in impact.win_new %}<td>{{ c }}</td>{% endfor %}</tr>
+            <tr><td class="sim-left">Sum of single changes</td>{% for c in impact.single_sum %}<td>{{ c }}</td>{% endfor %}</tr>
+            </tbody>
+        </table>
+        </div></div>
+        <p class="caption">{% if impact.rows %}Each row sums to zero across players. {% endif %}The last row adds up each change made on its own, with the others held at TEG {{ impact.prev }}.{% if impact.rows %} The gap to the total shows the changes are not additive.{% endif %}</p>
+        {% if impact.rows %}
+        <p class="caption"><strong>How the split works (Shapley).</strong> One handicap change matters more or less depending on which other changes have already happened. Cutting one rival's handicap barely helps a player far off the pace, but helps a lot once they are in contention. So each change is tried in every possible order: first, last and everywhere in between. Its average effect across all those orders is its share. The shares always add up to the total change, so the whole swing is credited and nothing is counted twice.</p>
+        {% endif %}
+        {% endif %}
+        {% if impact.unchanged or impact.no_previous %}<p class="caption">{% if impact.unchanged %}Unchanged handicap: {{ impact.unchanged | join(', ') }}. {% endif %}{% if impact.no_previous %}No TEG {{ impact.prev }} handicap, treated as unchanged: {{ impact.no_previous | join(', ') }}.{% endif %}</p>{% endif %}
+    </details>
+    {% endif %}
+    {% if equalise %}
+    <details class="sim-courses">
+        <summary>Handicaps that equalise chances</summary>
+        {% if equalise.message %}<p class="caption">{{ equalise.message }}</p>{% endif %}
+        {% if equalise.rows %}
+        <p class="caption">The handicap at which each player averages {{ equalise.target }} Stableford points per round in these simulations. Win chances still differ: handicaps are whole numbers, and some players' scores swing more than others'.</p>
+        <div class="data-card"><div class="table-wrapper">
+        <table class="teg-table sim-equalise">
+            <thead><tr><th class="sim-left">Player</th><th>Current HC</th><th>Equalising HC</th><th>Change</th><th>Unrounded</th><th>Pts/round</th><th>Win % at equalising HCs</th></tr></thead>
+            <tbody>
+            {% for r in equalise.rows %}
+            <tr><td class="sim-left">{{ r.name_html | safe }}</td><td>{{ r.current }}</td><td>{{ r.equal }}</td><td>{{ r.change }}</td><td>{{ r.unrounded }}</td><td>{{ r.pts }}</td><td>{{ r.win }}</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div></div>
+        {% if equalise.unreachable %}<p class="caption">* The target is outside what any handicap in range reaches for this player.</p>{% endif %}
+        {% endif %}
+    </details>
+    {% endif %}
 </div>
 {% endif %}

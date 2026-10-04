@@ -560,6 +560,8 @@ class SimulationResult:
     blobs: np.ndarray | None = None    # (n_sims, n_pl) int16: holes with 0 Stableford points
     random_rounds: int = 0
     courses_used: np.ndarray | None = None  # (n_sims, random_rounds) index into target.course_pool
+    hole_vp: np.ndarray | None = None  # (n_sims, n_pl, n_holes) int8 GrossVP draws; only if keep_scores
+    hole_si: np.ndarray | None = None  # (n_sims, n_holes) int8 stroke index per sim/hole; only if keep_scores
 
 
 def _positions(totals: np.ndarray, rng: np.random.Generator, higher_better: bool) -> np.ndarray:
@@ -576,8 +578,12 @@ def run_simulation(
     target: TargetTournament,
     n_sims: int = DEFAULT_SIMS,
     seed: int | None = None,
+    keep_scores: bool = False,
 ) -> SimulationResult:
     """Simulate the target tournament ``n_sims`` times (clamped to 1..MAX_SIMS).
+
+    ``keep_scores`` also stores the per-hole draws (``hole_vp``/``hole_si``) so they can be
+    re-scored under other handicaps (see ``stableford_totals``). It never changes the draws.
 
     Fixed-scorecard rounds are identical every sim; each random round draws a course
     uniformly (with replacement) from ``target.course_pool``, the same course for all
@@ -638,6 +644,7 @@ def run_simulation(
     stab = np.empty((n_sims, n_pl), dtype=np.int32)
     eagles = np.empty((n_sims, n_pl), dtype=np.int16)
     blobs = np.empty((n_sims, n_pl), dtype=np.int16)
+    hole_vp = np.empty((n_sims, n_pl, n_holes), dtype=np.int8) if keep_scores else None
     for j, pl in enumerate(target.players):
         hc = int(target.handicaps[pl])
         strokes = np.empty((n_sims, n_holes), dtype=np.int8)
@@ -656,11 +663,20 @@ def run_simulation(
                     sel = np.ix_(rows, off + hcols)
                     vp[sel] = draw(pl, key, u[sel])
         del u
+        if hole_vp is not None:
+            hole_vp[:, j, :] = vp
         gross[:, j] = vp.sum(axis=1, dtype=np.int32) + par_total
         net_vp = vp - strokes  # int8: |vp| <= 9, strokes <= 3
         stab[:, j] = np.maximum(0, 2 - net_vp).sum(axis=1, dtype=np.int32)
         eagles[:, j] = (vp <= -2).sum(axis=1)
         blobs[:, j] = (net_vp >= 2).sum(axis=1)
+
+    hole_si = None
+    if keep_scores:
+        hole_si = np.empty((n_sims, n_holes), dtype=np.int8)
+        hole_si[:, :nf] = fsi
+        for r in range(rr):
+            hole_si[:, nf + 18 * r:nf + 18 * (r + 1)] = pool_si[courses_used[:, r]]
 
     return SimulationResult(
         players=list(target.players), names=dict(target.names), n_sims=n_sims,
@@ -668,7 +684,7 @@ def run_simulation(
         gross_pos=_positions(gross, rng, higher_better=False),
         stableford_pos=_positions(stab, rng, higher_better=True),
         handicaps=dict(target.handicaps), eagles=eagles, blobs=blobs,
-        random_rounds=rr, courses_used=courses_used)
+        random_rounds=rr, courses_used=courses_used, hole_vp=hole_vp, hole_si=hole_si)
 
 
 # ---------------------------------------------------------------- summaries
@@ -842,3 +858,186 @@ def odds_table(result: SimulationResult) -> pd.DataFrame:
                      "Jacket": jacket, "JacketOdds": fractional_odds(jacket),
                      "Spoon": spoon, "SpoonOdds": fractional_odds(spoon)})
     return pd.DataFrame(rows).sort_values("Trophy", ascending=False, kind="stable").reset_index(drop=True)
+
+
+# ---------------------------------------------------------------- handicap what-ifs
+
+MAX_SHAPLEY_MOVERS = 8  # 2**8 subsets
+EQUALISING_TARGET = 36.0  # Stableford points per round
+_TIEBREAK_SEED = 0
+_VP_OFFSET = 20
+
+
+def _require_scores(result: SimulationResult) -> None:
+    if result.hole_vp is None or result.hole_si is None:
+        raise ValueError("Re-scoring needs run_simulation(..., keep_scores=True)")
+
+
+def _player_stableford(result: SimulationResult, j: int, hc: int) -> np.ndarray:
+    """Stableford totals (n_sims,) of player index ``j`` on handicap ``hc`` (plus handicaps, i.e. negative, give strokes back)."""
+    hc = int(hc)
+    si = result.hole_si
+    strokes = (hc // 18 + ((hc % 18) >= si)).astype(np.int8)
+    return np.maximum(0, 2 - (result.hole_vp[:, j, :] - strokes)).sum(axis=1, dtype=np.int32)
+
+
+def stableford_totals(result: SimulationResult, handicaps: dict[str, int]) -> np.ndarray:
+    """Re-score the kept draws: (n_sims, n_pl) Stableford totals on ``handicaps``."""
+    _require_scores(result)
+    out = np.empty((result.n_sims, len(result.players)), dtype=np.int32)
+    for j, pl in enumerate(result.players):
+        out[:, j] = _player_stableford(result, j, handicaps.get(pl, result.handicaps.get(pl, 0)))
+    return out
+
+
+def _tiebreak(result: SimulationResult) -> np.ndarray:
+    return np.random.default_rng(_TIEBREAK_SEED).random((result.n_sims, len(result.players)))
+
+
+def _win_share(totals: np.ndarray, half_noise: np.ndarray) -> np.ndarray:
+    """Share of sims each column wins (highest total, ties broken by the fixed ``half_noise``, in [0, 0.5))."""
+    winner = np.argmax(totals + half_noise, axis=1)
+    return np.bincount(winner, minlength=totals.shape[1]) / totals.shape[0]
+
+
+def previous_handicaps(teg_num: int) -> dict[str, int]:
+    """Handicaps saved for TEG ``teg_num - 1`` (exact row; blank cells skipped)."""
+    raw = _read_handicaps_raw()
+    playing = _playing_codes(int(teg_num) - 1)  # None: no roster record, so 0 = not playing
+    row = raw[raw["TEG"].astype(str).str.strip() == f"TEG {int(teg_num) - 1}"]
+    out: dict[str, int] = {}
+    if row.empty:
+        return out
+    for c in raw.columns:
+        if c == "TEG":
+            continue
+        val = row[c].iloc[0]
+        if pd.isna(val) or str(val).strip() == "":
+            continue
+        v = int(round(float(val)))
+        if v == 0 and playing is None:
+            continue
+        out[str(c)] = v
+    return out
+
+
+@dataclass
+class HandicapImpact:
+    players: list[str]
+    old_handicaps: dict[str, int]    # effective "old" handicap (= new for players without one)
+    new_handicaps: dict[str, int]
+    movers: list[str]                # players whose handicap changed, in roster order
+    no_previous: list[str]           # players with no previous handicap (treated as unchanged)
+    win_old: np.ndarray              # (n_pl,) Stableford win share, everyone on old handicaps
+    win_new: np.ndarray              # (n_pl,) ... everyone on new handicaps
+    mean_old: np.ndarray             # (n_pl,) mean Stableford total on old handicaps
+    mean_new: np.ndarray
+    shapley: np.ndarray | None       # (n_movers, n_pl) pp change; None if too many movers
+    single: np.ndarray | None        # (n_movers, n_pl) pp change, only that mover changed
+    skipped_reason: str = ""
+
+    @property
+    def single_sum(self) -> np.ndarray | None:
+        return None if self.single is None else self.single.sum(axis=0)
+
+    @property
+    def total_change(self) -> np.ndarray:
+        return (self.win_new - self.win_old) * 100.0
+
+
+def handicap_change_impact(result: SimulationResult, old_handicaps: dict[str, int]) -> HandicapImpact:
+    """Exact Shapley split of each mover's handicap change into every player's win chance.
+
+    The same simulated rounds and one fixed tie-break array are used for every
+    handicap combination, so differences between combinations are paired.
+    """
+    _require_scores(result)
+    pls = result.players
+    n_pl = len(pls)
+    new = {p: int(result.handicaps[p]) for p in pls}
+    old = {p: int(old_handicaps[p]) if p in old_handicaps else new[p] for p in pls}
+    no_prev = [p for p in pls if p not in old_handicaps]
+    movers = [p for p in pls if old[p] != new[p]]
+    m = len(movers)
+
+    cols = np.stack([np.stack([_player_stableford(result, j, old[p]) for j, p in enumerate(pls)], axis=1),
+                     np.stack([_player_stableford(result, j, new[p]) for j, p in enumerate(pls)], axis=1)])
+    noise = 0.5 * _tiebreak(result)  # scaled once, shared by every subset
+    mover_idx = [pls.index(p) for p in movers]
+    base = cols[0].copy()  # non-movers are identical in cols[0] and cols[1]
+
+    def win(mask: int) -> np.ndarray:
+        t = base.copy()
+        for b, j in enumerate(mover_idx):
+            if mask >> b & 1:
+                t[:, j] = cols[1][:, j]
+        return _win_share(t, noise) * 100.0
+
+    w_old, w_new = win(0) / 100.0, win((1 << m) - 1) / 100.0
+    shap = single = None
+    reason = ""
+    if m > MAX_SHAPLEY_MOVERS:
+        reason = f"{m} handicaps changed; the exact split is skipped above {MAX_SHAPLEY_MOVERS}."
+        single = np.stack([win(1 << i) - win(0) for i in range(m)])  # cheap: m extra passes
+    elif m:
+        W = np.stack([win(k) for k in range(1 << m)])  # (2**m, n_pl) in pp
+        from math import factorial
+        coef = [factorial(k) * factorial(m - k - 1) / factorial(m) for k in range(m)]
+        shap = np.zeros((m, n_pl))
+        for i in range(m):
+            for mask in range(1 << m):
+                if mask >> i & 1:
+                    continue
+                shap[i] += coef[bin(mask).count("1")] * (W[mask | 1 << i] - W[mask])
+        single = np.stack([W[1 << i] - W[0] for i in range(m)])
+    else:
+        shap = single = np.zeros((0, n_pl))
+    return HandicapImpact(
+        players=list(pls), old_handicaps=old, new_handicaps=new, movers=movers, no_previous=no_prev,
+        win_old=w_old, win_new=w_new, mean_old=cols[0].mean(axis=0), mean_new=cols[1].mean(axis=0),
+        shapley=shap, single=single, skipped_reason=reason)
+
+
+def _mean_points_by_handicap(result: SimulationResult, j: int, hcs: np.ndarray) -> np.ndarray:
+    """Mean Stableford points per round for player ``j`` at each handicap in ``hcs``.
+
+    Counts holes by (SI, GrossVP) once, so every handicap is then a cheap lookup.
+    """
+    n_holes = result.hole_si.shape[1]
+    width = 64
+    idx = (result.hole_si.astype(np.int16) * width
+           + (result.hole_vp[:, j, :].astype(np.int16) + _VP_OFFSET))
+    counts = np.bincount(idx.ravel(), minlength=19 * width).reshape(19, width)
+    vp = np.arange(width) - _VP_OFFSET
+    kmax = int(hcs.max()) // 18 + 1
+    # A[k, s]: total points at SI s if every such hole gets k strokes
+    A = np.stack([(counts * np.maximum(0, 2 - vp + k)).sum(axis=1) for k in range(kmax + 1)])
+    sis = np.arange(1, 19)
+    out = np.empty(len(hcs))
+    for i, hc in enumerate(hcs):
+        k = int(hc) // 18 + ((int(hc) % 18) >= sis)
+        out[i] = A[k, sis].sum()
+    return out / result.n_sims / (n_holes / 18)
+
+
+def equalising_handicaps(result: SimulationResult, target_per_round: float = EQUALISING_TARGET,
+                         hc_range: tuple[int, int] = (0, 54)) -> pd.DataFrame:
+    """Per player, the integer handicap whose mean Stableford per round is closest to the target."""
+    _require_scores(result)
+    lo, hi = int(hc_range[0]), int(hc_range[1])
+    hcs = np.arange(lo, hi + 1)
+    rows, chosen = [], {}
+    for j, pl in enumerate(result.players):
+        f = _mean_points_by_handicap(result, j, hcs)
+        k = int(np.argmin(np.abs(f - target_per_round)))  # first minimum = lower handicap on ties
+        reachable = bool(f.min() <= target_per_round <= f.max())
+        unrounded = float(np.interp(target_per_round, np.maximum.accumulate(f), hcs))
+        chosen[pl] = int(hcs[k])
+        cur = int(result.handicaps.get(pl, 0))
+        rows.append({"Pl": pl, "Player": result.names.get(pl, pl), "CurrentHC": cur,
+                     "EqualisingHC": int(hcs[k]), "Change": int(hcs[k]) - cur,
+                     "Unrounded": unrounded, "PtsPerRound": float(f[k]), "Reachable": reachable})
+    win = _win_share(stableford_totals(result, chosen), 0.5 * _tiebreak(result))
+    df = pd.DataFrame(rows)
+    df["WinStableford"] = win
+    return df
