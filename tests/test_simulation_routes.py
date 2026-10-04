@@ -248,9 +248,12 @@ from webapp.routes import simulation as sim_routes  # noqa: E402
 
 @pytest.fixture
 def fresh_live_cache():
-    sim_routes._live_probs.cache_clear()
+    def clear():
+        sim_routes._LIVE_POINTS.clear()
+        sim_routes._live_state.cache_clear()
+    clear()
     yield
-    sim_routes._live_probs.cache_clear()
+    clear()
 
 
 def test_live_tab_shell_loads_partial(client):
@@ -277,17 +280,47 @@ def test_live_in_progress_shows_latest_and_history(client, monkeypatch, fresh_li
     r = client.get("/simulation/live")
     assert r.status_code == 200
     assert "TEG 18 win chances after round 2" in r.text
-    assert "How the chances moved" in r.text and "After R2" in r.text
+    assert "How the chances moved, hole by hole" in r.text and "End R2" in r.text
     assert r.text.count("sim-left") >= 6  # header + 5 players
 
 
 def test_live_replay_of_finished_teg(client, fresh_live_cache):
     r = client.get("/simulation/live?teg=18")
     assert r.status_code == 200
-    assert "Replay of TEG 18" in r.text and "Final" in r.text
+    assert "Replay of TEG 18" in r.text and "win chances at the finish" in r.text
 
 
 def test_live_ignores_bad_teg(client, monkeypatch, fresh_live_cache):
     monkeypatch.setattr(wp, "in_progress_teg", lambda: None)
     r = client.get("/simulation/live?teg=abc")
     assert "No TEG in progress" in r.text
+
+
+def test_live_page_queues_holes_in_order(client, fresh_live_cache):
+    import json
+    import re
+
+    r = client.get("/simulation/live?teg=18")
+    d = json.loads(re.search(r'id="sim-live-data">(.*?)</script>', r.text, re.S).group(1))
+    assert d["total"] == 72 and set(d["points"]) == {"0-0", "1-18", "2-18", "3-18", "4-18"}
+    steps = [q[2] for q in d["queue"]]
+    assert steps == sorted(steps) and steps[:4] == [2, 2, 2, 2]  # hole 9s, then even, then odd
+    assert [q[:2] for q in d["queue"][:4]] == [[4, 9], [3, 9], [2, 9], [1, 9]]
+    assert len(d["queue"]) == 68 and d["scores"]["1-1"]
+
+
+def test_live_point_endpoint(client, fresh_live_cache):
+    r = client.get("/simulation/live/point?teg=18&round=2&hole=9&replay=1")
+    assert r.status_code == 200
+    body = r.json()
+    assert sum(body["net"].values()) == pytest.approx(1.0) and set(body["gross"]) == set(body["net"])
+    # cached points are embedded in the next page load, so they aren't queued again
+    page = client.get("/simulation/live?teg=18")
+    assert '"2-9"' in page.text
+
+
+def test_live_point_rejects_bad_requests(client, monkeypatch, fresh_live_cache):
+    monkeypatch.setattr(wp, "in_progress_teg", lambda: None)
+    assert client.get("/simulation/live/point?teg=18&round=2&hole=9").status_code == 400
+    assert client.get("/simulation/live/point?teg=18&round=9&hole=9&replay=1").status_code == 400
+    assert client.get("/simulation/live/point?teg=99&round=1&hole=9&replay=1").status_code == 400

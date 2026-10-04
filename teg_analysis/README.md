@@ -99,6 +99,7 @@ teg_analysis/
                      renormalised per player; field if none); current form tilts the
                      hole distributions by w x the round residual (w = k*n/(k*n+P)) and
                      re-spreads them to a w/2-blended round SD — load_teg_state/
+                     win_probs_at (any hole of a finished round; checkpoints)/
                      win_probs_by_round (tidy: teg, after_round, measure, player,
                      win_prob, mean, sd); backtest_blend (Brier of a k/P grid)
     live_round.py    Multi-device live round entry: registry + per-round staging CSVs,

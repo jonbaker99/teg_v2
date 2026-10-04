@@ -52,11 +52,28 @@ def _target_options() -> tuple:
 
 
 @lru_cache(maxsize=4)
-def _live_probs(teg_num: int, replay: bool) -> tuple:
-    """(win_probs_by_round frame, names) for an in-progress TEG, or a finished one replayed."""
+def _live_state(teg_num: int, replay: bool) -> tuple:
+    """(TegState, names) for an in-progress TEG, or a finished one replayed."""
     state = wp.load_teg_state(teg_num, _history(), from_scores=replay)
     names = state.names if not replay else {p: get_player_dict().get(p, p) for p in state.players}
-    return wp.win_probs_by_round(state, n_sims=sim.DEFAULT_SIMS, seed=1), names
+    return state, names
+
+
+_LIVE_POINTS: dict[tuple, dict] = {}  # (teg, replay, round, hole) -> point; cleared with the data caches
+
+
+def _live_point(teg_num: int, replay: bool, rnd: int, hole: int) -> dict:
+    """{"net": {Pl: p}, "gross": {Pl: p}, "_frame": tidy rows} after hole ``hole`` of
+    round ``rnd`` (default model, fixed seed). Memoised so the page can show every
+    point already worked out straight away."""
+    key = (int(teg_num), bool(replay), int(rnd), int(hole))
+    if key not in _LIVE_POINTS:
+        state, _ = _live_state(teg_num, replay)
+        df = wp.win_probs_at(state, rnd, hole, n_sims=sim.DEFAULT_SIMS, seed=1)
+        pt = {m: {str(r.player): float(r.win_prob) for r in g.itertuples()}
+              for m, g in df.groupby("measure", sort=False)}
+        _LIVE_POINTS[key] = {**pt, "_frame": df}
+    return _LIVE_POINTS[key]
 
 
 def _completed_tegs() -> list[int]:
@@ -64,7 +81,8 @@ def _completed_tegs() -> list[int]:
 
 
 def _clear_caches() -> None:
-    _live_probs.cache_clear()
+    _LIVE_POINTS.clear()
+    _live_state.cache_clear()
     default_prediction.cache_clear()
     _history.cache_clear()
     _target.cache_clear()
@@ -521,32 +539,55 @@ def _run_context(qp) -> dict:
 
 # --- live win chances ---------------------------------------------------------
 
-def _round_label(r: int, n_rounds: int, finished: bool) -> str:
-    if r == 0:
-        return "Start"
-    return "Final" if finished and r == n_rounds else f"After R{r}"
+MEASURE_KEYS = wp.MEASURES
+_LIVE_STEPS = {2: "the halfway points (hole 9)", 3: "the even holes", 4: "the odd holes"}
 
 
-def _live_chart_json(df: pd.DataFrame, measure: str, names: dict, labels: list[str]) -> str:
+def _cp_key(rnd: int, hole: int) -> str:
+    return f"{rnd}-{hole}"
+
+
+def _cp_label(rnd: int, hole: int) -> str:
+    return "Start" if rnd == 0 else f"R{rnd} hole {hole}"
+
+
+def _live_queue(done: list[int]) -> list[list]:
+    """Hole checkpoints still to work out, in the order the page fills them in.
+
+    Round ends come with the page; then hole 9, the even holes and the odd holes,
+    latest round first within each step.
+    """
+    latest_first = sorted(done, reverse=True)
+    q = [[r, 9, 2] for r in latest_first]
+    q += [[r, h, 3] for r in latest_first for h in range(2, 18, 2)]
+    q += [[r, h, 4] for r in latest_first for h in range(1, 18, 2) if h != 9]
+    return q
+
+
+def _live_chart_json(points: dict, measure: str, players: list[str], names: dict,
+                     order: list[tuple[int, int]]) -> str:
     import plotly.express as px
     import plotly.graph_objects as go
 
-    d = df[df["measure"] == measure]
-    last = d["after_round"].max()
-    order = d[d["after_round"] == last].sort_values("win_prob", ascending=False)["player"]
+    labels = [_cp_label(r, h) for r, h in order]
+    have = [(r, h) for r, h in order if _cp_key(r, h) in points]
     palette = px.colors.qualitative.Plotly
     fig = go.Figure()
-    for i, pl in enumerate(order):
-        g = d[d["player"] == pl].sort_values("after_round")
+    for i, pl in enumerate(players):
         name = names.get(pl, pl)
         fig.add_trace(go.Scatter(
-            x=[labels[r] for r in g["after_round"]], y=(g["win_prob"] * 100).round(1),
-            mode="lines+markers", name=name, line=dict(color=palette[i % len(palette)], width=2),
+            x=[_cp_label(r, h) for r, h in have],
+            y=[round(points[_cp_key(r, h)][measure][pl] * 100, 1) for r, h in have],
+            mode="lines", name=name, line=dict(color=palette[i % len(palette)], width=2),
             hovertemplate="%{y:.1f}%<extra>" + name + "</extra>"))
+    ends = [lab for lab, (r, h) in zip(labels, order) if r == 0 or h == 18]
     fig.update_layout(
         yaxis_title="Win chance (%)", hovermode="x unified",
         legend=dict(orientation="h", yanchor="top", y=-0.18, xanchor="left", x=0, title_text=""),
         margin=dict(r=12, t=10, b=40, l=44))
+    fig.update_xaxes(type="category", categoryorder="array", categoryarray=labels,
+                     range=[-0.5, len(labels) - 0.5], tickmode="array", tickvals=ends,
+                     ticktext=["Start" if e == "Start" else "End " + e.split(" ")[0] for e in ends])
     fig.update_yaxes(range=[0, 100], ticksuffix="%")
     fig.layout.xaxis.fixedrange = True
     fig.layout.yaxis.fixedrange = True
@@ -555,7 +596,10 @@ def _live_chart_json(df: pd.DataFrame, measure: str, names: dict, labels: list[s
 
 
 def _live_context(qp) -> dict:
-    """Context for the Live tab: latest win chances and how they moved round by round."""
+    """Context for the Live tab: latest win chances, plus everything the page needs
+    to fill in the hole-by-hole chart."""
+    import json
+
     live = wp.in_progress_teg()
     completed = _completed_tegs()
     replay_teg = None
@@ -574,7 +618,10 @@ def _live_context(qp) -> dict:
         return {**ctx, "not_live": True}
     replay = replay_teg is not None
     try:
-        df, names = _live_probs(teg, replay)
+        state, names = _live_state(teg, replay)
+        done = len(state.done)
+        cps = [(0, 0)] + [(r, 18) for r in state.done]
+        points = {_cp_key(r, h): _live_point(teg, replay, r, h) for r, h in cps}
     except ValueError as exc:
         logger.warning("Live win chances: %s", exc)
         return {**ctx, "fatal": f"Can't work out live chances for TEG {teg} yet: {exc}."}
@@ -582,25 +629,22 @@ def _live_context(qp) -> dict:
         logger.exception("live win chances failed")
         return {**ctx, "fatal": "Couldn't work out the live win chances."}
 
-    done = int(df["after_round"].max())
-    stableford = teg >= wp.STABLEFORD_ERA_TEG
-    finished = replay
-    labels = [_round_label(r, done, finished) for r in range(done + 1)]
-    latest = df[df["after_round"] == done].pivot(index="player", columns="measure",
-                                                  values=["win_prob", "banked"])
-    prev = (df[df["after_round"] == done - 1].pivot(index="player", columns="measure",
-                                                    values="win_prob") if done else None)
+    stableford = state.stableford
+    frame = points[_cp_key(*cps[-1])]["_frame"]
+    latest = frame.pivot(index="player", columns="measure", values=["win_prob", "banked"])
+    prev = points[_cp_key(*cps[-2])] if done else None
 
     def change(pl, m):
         if prev is None:
             return ""
-        pp = (latest.loc[pl, ("win_prob", m)] - prev.loc[pl, m]) * 100
+        pp = (latest.loc[pl, ("win_prob", m)] - prev[m][pl]) * 100
         return "0.0" if abs(pp) < 0.05 else f"{pp:+.1f}"
 
-    rows = []
     order = latest.assign(_b=latest[("banked", "net")] * (1 if stableford else -1)).sort_values(
         [("win_prob", "net"), "_b"], ascending=False).index
-    for pl in order:
+    players = [str(p) for p in order]
+    rows = []
+    for pl in players:
         net_b, gross_b = latest.loc[pl, ("banked", "net")], latest.loc[pl, ("banked", "gross")]
         rows.append({
             "name_html": _wrap_player_name(names.get(pl, pl)),
@@ -613,12 +657,28 @@ def _live_context(qp) -> dict:
         })
     measures = [{"key": "net", "label": "TEG Trophy" if stableford else "TEG Trophy (net)"},
                 {"key": "gross", "label": "Green Jacket"}]
+    live_data = None
     if done:
+        axis = wp.checkpoints(state)
+        for (t, rp, r, h), v in list(_LIVE_POINTS.items()):  # anything already worked out
+            if t == teg and rp == replay:
+                points.setdefault(_cp_key(r, h), v)
+        clean = {k: {m: v[m] for m in MEASURE_KEYS} for k, v in points.items()}
         for m in measures:
-            m["chart_json"] = _live_chart_json(df, m["key"], names, labels)
+            m["chart_json"] = _live_chart_json(clean, m["key"], players, names, axis)
+        scores = {}
+        for r in state.holes.itertuples():
+            scores.setdefault(_cp_key(r.Round, r.Hole), {})[r.Pl] = [int(r.GrossVP), int(r.Net)]
+        live_data = json.dumps({
+            "teg": teg, "replay": replay, "stableford": stableford,
+            "players": players, "names": {p: names.get(p, p) for p in players},
+            "axis": [[r, h] for r, h in axis], "points": clean, "scores": scores,
+            "queue": [q for q in _live_queue(state.done) if _cp_key(q[0], q[1]) not in clean],
+            "total": len(axis) - 1, "steps": _LIVE_STEPS}).replace("</", "<\\/")
     return {
         **ctx, "teg": teg, "replay": replay, "done": done, "rows": rows, "measures": measures,
-        "stableford": stableford, "since": ("the start" if done == 1 else f"round {done - 1}") if done else "",
+        "stableford": stableford, "live_data": live_data,
+        "since": ("the start" if done == 1 else f"round {done - 1}") if done else "",
     }
 
 
@@ -693,3 +753,23 @@ def simulation_live(request: Request):
     ctx = _live_context(request.query_params)
     return templates.TemplateResponse("partials/simulation_live.html", {
         "request": request, **ctx})
+
+
+@router.get("/simulation/live/point")
+def simulation_live_point(teg: int, round: int, hole: int, replay: int = 0):
+    """Win chances at one hole checkpoint, as JSON for the Live tab's chart."""
+    from fastapi.responses import JSONResponse
+
+    replay_b = bool(replay)
+    if replay_b and teg not in _completed_tegs():
+        return JSONResponse({"error": "Not a finished TEG"}, status_code=400)
+    if not replay_b and teg != wp.in_progress_teg():
+        return JSONResponse({"error": "Not the TEG in progress"}, status_code=400)
+    try:
+        pt = _live_point(teg, replay_b, round, hole)
+    except ValueError as exc:
+        return JSONResponse({"error": str(exc)}, status_code=400)
+    except Exception:
+        logger.exception("live point failed")
+        return JSONResponse({"error": "Calculation failed"}, status_code=500)
+    return {"round": round, "hole": hole, **{m: pt[m] for m in MEASURE_KEYS}}

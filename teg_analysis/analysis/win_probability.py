@@ -65,7 +65,7 @@ def prior_teg_weights(
     return {t: w / total for t, w in raw.items()} if total > 0 else {}
 
 
-def blend_weight(n: int, k: float = DEFAULT_K, P: float = DEFAULT_P) -> float:
+def blend_weight(n: float, k: float = DEFAULT_K, P: float = DEFAULT_P) -> float:
     """Current-form weight w = k*n / (k*n + P) after ``n`` completed rounds."""
     if k < 0 or P <= 0:
         raise ValueError("k must be >= 0 and P > 0")
@@ -247,9 +247,15 @@ class TegState:
     cards: dict[int, pd.DataFrame]   # Round -> Hole, Par, SI for rounds with a scorecard
     course_pool: list = field(default_factory=list)
     done: list[int] = field(default_factory=list)        # completed rounds 1..n
-    gross: pd.DataFrame | None = None  # Round x Pl actual GrossVP (completed rounds)
-    net: pd.DataFrame | None = None    # Round x Pl Stableford (TEG 8+) or NetVP
-    prior: sim.ScoreDistributions | None = None
+    holes: pd.DataFrame | None = None  # completed rounds: Round, Hole, Pl, GrossVP, Net
+    prior: sim.ScoreDistributions | None = None   # (Net = Stableford from TEG 8, else NetVP)
+    _cells: tuple | None = field(default=None, repr=False)
+
+    def cells(self) -> tuple:
+        """(support, per-player prior cell arrays), computed once."""
+        if self._cells is None:
+            self._cells = _cell_arrays(self.prior)
+        return self._cells
 
     @property
     def stableford(self) -> bool:
@@ -325,89 +331,134 @@ def load_teg_state(
     if len(done) < n_rounds and not pool and any(r not in cards for r in range(len(done) + 1, n_rounds + 1)):
         raise ValueError(f"TEG {teg_num}: a remaining round has no scorecard and no course pool")
     net_col = "Stableford" if teg_num >= STABLEFORD_ERA_TEG else "NetVP"
-    cur = t[t["Round"].isin(done)]
-    gross = cur.pivot_table(index="Round", columns="Pl", values="GrossVP", aggfunc="sum")
-    net = cur.pivot_table(index="Round", columns="Pl", values=net_col, aggfunc="sum")
+    holes = t.loc[t["Round"].isin(done), ["Round", "Hole", "Pl", "GrossVP", net_col]].rename(
+        columns={net_col: "Net"}).astype({"Round": int, "Hole": int, "GrossVP": int, "Net": int})
     prior = prior_distributions(history, teg_num, players, prior_weights, **build_kwargs)
     return TegState(teg_num, players, names, handicaps, n_rounds, cards, pool, done,
-                    gross, net, prior)
+                    holes.reset_index(drop=True), prior)
 
 
-def _remaining_target(state: TegState, after: int) -> sim.TargetTournament:
-    rounds = range(after + 1, state.n_rounds + 1)
-    fixed = [state.cards[r].assign(Round=r) for r in rounds if r in state.cards]
+def checkpoints(state: TegState) -> list[tuple[int, int]]:
+    """Every (round, hole) checkpoint so far: (0, 0) before the TEG, then each hole of each completed round."""
+    return [(0, 0)] + [(r, h) for r in state.done for h in range(1, _HOLES + 1)]
+
+
+def _remaining_target(state: TegState, rnd: int, hole: int) -> sim.TargetTournament:
+    """Holes after hole ``hole`` of round ``rnd``, then the later rounds."""
+    later = range(rnd + 1, state.n_rounds + 1)
+    fixed = []
+    if rnd and hole < _HOLES:
+        c = state.cards[rnd]
+        fixed.append(c[c["Hole"] > hole].assign(Round=rnd))
+    fixed += [state.cards[r].assign(Round=r) for r in later if r in state.cards]
     holes = (pd.concat(fixed, ignore_index=True)[["Round", "Hole", "Par", "SI"]] if fixed
              else pd.DataFrame(columns=["Round", "Hole", "Par", "SI"], dtype=int))
     return sim.TargetTournament(
         state.teg_num, holes, list(state.players), dict(state.handicaps), dict(state.names),
-        random_rounds=sum(r not in state.cards for r in rounds),
-        course_pool=state.course_pool, n_rounds=len(rounds))
+        random_rounds=sum(r not in state.cards for r in later),
+        course_pool=state.course_pool, n_rounds=len(later) + int(bool(rnd) and hole < _HOLES))
 
 
 def _pool_card(course) -> pd.DataFrame:
     return pd.DataFrame({"Par": np.asarray(course[1], dtype=int), "SI": np.asarray(course[2], dtype=int)})
 
 
-def _after_round(state: TegState, after: int, k: float, P: float,
-                 n_sims: int, seed: int | None) -> pd.DataFrame:
-    """Tidy rows for one after_round (both measures)."""
-    played = state.done[:after]
-    support, cells = _cell_arrays(state.prior)
-    bnd = state.prior.boundaries
-    remaining = state.n_rounds - after
-    rem_cards = [state.cards[r] for r in range(after + 1, state.n_rounds + 1) if r in state.cards]
-    n_random = remaining - len(rem_cards)
+def _strokes(si: np.ndarray, hc: int) -> int:
+    """Handicap strokes received over holes with these stroke indexes."""
+    return int((hc // _HOLES + ((hc % _HOLES) >= np.asarray(si, dtype=int))).sum())
 
-    adjusted, means, sds, ws = {}, [], [], []
+
+def win_probs_at(state: TegState, rnd: int, hole: int, k: float = DEFAULT_K,
+                 P: float = DEFAULT_P, n_sims: int = sim.DEFAULT_SIMS,
+                 seed: int | None = None) -> pd.DataFrame:
+    """Win chances after hole ``hole`` of completed round ``rnd`` ((0, 0) = before the TEG).
+
+    Rounds before ``rnd`` and holes 1..``hole`` of it are banked; the rest of the
+    round and the later rounds are simulated. Current form counts played holes as
+    a fraction of a round (n = holes / 18): the mean moves by w x the residual per
+    round over all played holes; the SD uses complete rounds only. Returns a tidy
+    frame: teg, round, hole, measure, player, win_prob, mean and sd (expected
+    GrossVP per 18 remaining holes and its SD, NaN when none remain), w, banked.
+    """
+    rnd, hole = int(rnd), int(hole)
+    if rnd == 0:
+        hole = 0
+    elif rnd not in state.done or not 1 <= hole <= _HOLES:
+        raise ValueError(f"No completed round {rnd} hole {hole} in TEG {state.teg_num}")
+    support, cells = state.cells()
+    bnd = state.prior.boundaries
+    full = [r for r in state.done if r < rnd] + ([rnd] if hole == _HOLES else [])
+    segments = [(r, _HOLES) for r in full] + ([(rnd, hole)] if rnd and hole < _HOLES else [])
+    n_eff = sum(h for _, h in segments) / _HOLES
+    played = state.holes.merge(pd.DataFrame(segments, columns=["Round", "Upto"]), on="Round")
+    played = played[played["Hole"] <= played["Upto"]]
+    tot = played.groupby("Pl")[["GrossVP", "Net"]].sum()
+    gross_b = np.array([int(tot["GrossVP"].get(p, 0)) for p in state.players], dtype=np.int64)
+    net_b = np.array([int(tot["Net"].get(p, 0)) for p in state.players], dtype=np.int64)
+    by_round = played.groupby(["Pl", "Round"])["GrossVP"].sum()
+
+    tgt = _remaining_target(state, rnd, hole)
+    rem_cards = [c for _, c in tgt.holes.groupby("Round")] if len(tgt.holes) else []
+    w = blend_weight(n_eff, k, P) if n_eff else 0.0
+    adjusted, means, sds = {}, [], []
     for pl in state.players:
         keys, p = cells[pl]
-        ref = [_card_cells(keys, state.cards[r], bnd) for r in played]
         prior_mean = (p * support).sum(axis=1)
-        res = [float(state.gross.loc[r, pl]) - float(prior_mean[h].sum())
-               for r, h in zip(played, ref)]
-        prior_sd = _round_moments(p, support, ref)[1] if ref else float("nan")
-        shift, target_sd, w = blend_form(prior_sd, res, k, P)
-        q = adjust_cells(p, support, shift / _HOLES,
-                         target_sd if len(res) >= 2 else None, ref) if played else p
+        seg_cells = [_card_cells(keys, state.cards[r][state.cards[r]["Hole"] <= h], bnd)
+                     for r, h in segments]
+        res = [float(by_round.get((pl, r), 0)) - float(prior_mean[c].sum())
+               for (r, _), c in zip(segments, seg_cells)]
+        ref = [c for (_, h), c in zip(segments, seg_cells) if h == _HOLES]
+        full_res = [x for (_, h), x in zip(segments, res) if h == _HOLES]
+        q = p
+        if segments:
+            prior_sd = _round_moments(p, support, ref)[1] if ref else float("nan")
+            target_sd = None  # as blend_form: w/2 on the SD, complete rounds only
+            if len(full_res) >= 2:
+                target_sd = (w / 2) * float(np.std(full_res, ddof=1)) + (1 - w / 2) * prior_sd
+            q = adjust_cells(p, support, w * sum(res) / n_eff / _HOLES, target_sd, ref)
         adjusted[pl] = (keys, q)
-        ws.append(w)
-        rem = [_card_cells(keys, c, bnd) for c in rem_cards]
-        if n_random:
+        qm, qv = _moments(q, support)
+        hm = [qm[_card_cells(keys, c, bnd)] for c in rem_cards]
+        hv = [qv[_card_cells(keys, c, bnd)] for c in rem_cards]
+        if tgt.random_rounds:
             pool = [_card_cells(keys, _pool_card(c), bnd) for c in state.course_pool]
-            pm, pv = _moments(q, support)
-            avg_m = np.mean([pm[h].sum() for h in pool])
-            avg_v = np.mean([pv[h].sum() for h in pool])
-        if remaining:
-            qm, qv = _moments(q, support)
-            m_all = [qm[h].sum() for h in rem] + ([avg_m] * n_random if n_random else [])
-            v_all = [qv[h].sum() for h in rem] + ([avg_v] * n_random if n_random else [])
-            means.append(float(np.mean(m_all)))
-            sds.append(float(np.sqrt(np.mean(v_all))))
+            hm += [np.concatenate([qm[h] for h in pool]).reshape(-1, _HOLES).mean(axis=0)] * tgt.random_rounds
+            hv += [np.concatenate([qv[h] for h in pool]).reshape(-1, _HOLES).mean(axis=0)] * tgt.random_rounds
+        if hm:
+            means.append(float(np.concatenate(hm).mean() * _HOLES))
+            sds.append(float(np.sqrt(np.concatenate(hv).mean() * _HOLES)))
         else:
             means.append(float("nan"))
             sds.append(float("nan"))
 
-    gross_b = np.array([int(state.gross.loc[played, pl].sum()) if played else 0
-                        for pl in state.players], dtype=np.int64)
-    net_b = np.array([int(state.net.loc[played, pl].sum()) if played else 0
-                      for pl in state.players], dtype=np.int64)
-    if remaining:
+    if len(tgt.holes) or tgt.random_rounds:
         dists = _dists_from_cells(state.prior, support, adjusted)
-        res = sim.run_simulation(dists, _remaining_target(state, after), n_sims, seed)
-        vp = res.gross.astype(np.int64) - res.par_total
+        out = sim.run_simulation(dists, tgt, n_sims, seed)
+        vp = out.gross.astype(np.int64) - out.par_total
         gross_t = gross_b + vp
         if state.stableford:
-            net_t = net_b + res.stableford
+            net_t = net_b + out.stableford
         else:
-            net_t = net_b + vp - remaining * np.array([state.handicaps[p] for p in state.players])
+            fixed_si = tgt.holes["SI"].to_numpy(int)
+            strokes = np.array([_strokes(fixed_si, state.handicaps[p]) + tgt.random_rounds * state.handicaps[p]
+                                for p in state.players])
+            net_t = net_b + vp - strokes
     else:
         gross_t, net_t = gross_b[None, :], net_b[None, :]
     probs = {"net": win_shares(net_t, higher_better=state.stableford),
              "gross": win_shares(gross_t, higher_better=False)}
     return pd.concat([pd.DataFrame({
-        "teg": state.teg_num, "after_round": after, "measure": m, "player": state.players,
-        "win_prob": probs[m], "mean": means, "sd": sds, "w": ws,
+        "teg": state.teg_num, "round": rnd, "hole": hole, "measure": m, "player": state.players,
+        "win_prob": probs[m], "mean": means, "sd": sds, "w": w,
         "banked": net_b if m == "net" else gross_b}) for m in MEASURES], ignore_index=True)
+
+
+def _after_round(state: TegState, after: int, k: float, P: float,
+                 n_sims: int, seed: int | None) -> pd.DataFrame:
+    """Tidy rows for one after_round (both measures)."""
+    df = win_probs_at(state, after, _HOLES if after else 0, k, P, n_sims, seed)
+    return df.rename(columns={"round": "after_round"}).drop(columns="hole")
 
 
 def win_probs_by_round(

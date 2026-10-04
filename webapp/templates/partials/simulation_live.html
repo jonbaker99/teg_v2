@@ -9,7 +9,7 @@
 {% else %}
 <div class="sim-results sim-stack">
     {% if replay %}
-    <p class="request-feedback">Replay of TEG {{ teg }}, which has finished. Each point on the chart is the chances as they stood after that round. <a class="text-link" href="/simulation?tab=live">Back to Live</a></p>
+    <p class="request-feedback">Replay of TEG {{ teg }}, which has finished. Each point on the chart is the chances as they stood after that hole. <a class="text-link" href="/simulation?tab=live">Back to Live</a></p>
     {% endif %}
     <section class="sim-section">
     <h3 class="chart-title">TEG {{ teg }} win chances{% if done == 0 %} before the start{% elif replay %} at the finish{% else %} after round {{ done }}{% endif %}</h3>
@@ -38,8 +38,8 @@
     </section>
 
     {% if done %}
-    <section class="sim-section sim-stack sim-stack--tight">
-    <h3 class="chart-title">How the chances moved</h3>
+    <section class="sim-section sim-stack sim-stack--tight" id="sim-live-chart">
+    <h3 class="chart-title">How the chances moved, hole by hole</h3>
     <div class="section-controls">
         <div class="segmented" role="group" aria-label="Prize">
             {% for m in measures %}
@@ -47,12 +47,18 @@
             {% endfor %}
         </div>
     </div>
+    <p class="caption sim-live-status" id="sim-live-status" aria-live="polite">Round ends shown. Filling in the holes&hellip;</p>
     {% for m in measures %}
     <div class="sim-panel{% if not loop.first %} sim-hidden{% endif %}" data-measure="{{ m.key }}">
-        <div class="chart-container sim-chart" data-figure="{{ m.chart_json }}" style="height:360px;"></div>
+        <div class="chart-container sim-chart sim-live-plot" data-measure="{{ m.key }}" data-figure="{{ m.chart_json }}" style="height:360px;"></div>
+        <div class="sim-live-swings" data-measure="{{ m.key }}">
+            <h4 class="caption"><strong>Biggest swings</strong></h4>
+            <ul class="caption sim-list"><li>Appear once every hole is worked out.</li></ul>
+        </div>
     </div>
     {% endfor %}
-    <p class="caption">Each point is the win chance after that round was finalised; Start is before round 1.</p>
+    <p class="caption">Each point is the win chance after that hole, with the rest of the TEG simulated from there. Start is before round 1.</p>
+    <script type="application/json" id="sim-live-data">{{ live_data | safe }}</script>
     </section>
     {% endif %}
 

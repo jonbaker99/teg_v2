@@ -235,3 +235,49 @@ def test_backtest_rejects_incomplete_teg():
     with pytest.raises(ValueError, match="not complete"):
         wp.backtest_blend(ks=(1.0,), Ps=(2.0,), target_tegs=[4],
                           history=_history(_current_teg()), n_sims=100)
+
+
+# ---- hole checkpoints
+
+def _two_round_teg(vp=None, hc=None):
+    vp = vp or {"AA": 0, "BB": 1}
+    hc = hc or {"AA": 18, "BB": 18}
+    cur = [_holes(4, r, pl, v, hc[pl]) for r in (1, 2) for pl, v in vp.items()]
+    return _state(_history(cur, prior_vp=vp, hc=hc))
+
+
+def test_checkpoints_cover_every_hole_of_completed_rounds():
+    cps = wp.checkpoints(_two_round_teg())
+    assert cps[0] == (0, 0) and len(cps) == 1 + 36
+    assert cps[1] == (1, 1) and cps[-1] == (2, 18)
+
+
+def test_mid_round_banks_played_holes_and_counts_fraction_of_round():
+    df = wp.win_probs_at(_two_round_teg(), 1, 9, n_sims=200, seed=1)
+    g = df[df["measure"] == "gross"].set_index("player")
+    assert g.loc["AA", "banked"] == 0 and g.loc["BB", "banked"] == 9
+    assert g.loc["AA", "w"] == pytest.approx(wp.blend_weight(0.5))
+    assert g.loc["AA", "win_prob"] == 1.0
+
+
+def test_hole_18_matches_round_checkpoint():
+    st = _two_round_teg()
+    a = wp.win_probs_at(st, 1, 18, n_sims=200, seed=2)
+    b = wp.win_probs_by_round(st, n_sims=200, seed=2)
+    b = b[b["after_round"] == 1]
+    assert a["win_prob"].to_numpy() == pytest.approx(b["win_prob"].to_numpy())
+    assert a["banked"].tolist() == b["banked"].tolist()
+
+
+def test_mid_round_net_vs_par_subtracts_strokes_on_remaining_holes():
+    # AA: +2 a hole off 36 (net level); BB: +1 a hole off 18 (net level): net always tied.
+    st = _two_round_teg(vp={"AA": 2, "BB": 1}, hc={"AA": 36, "BB": 18})
+    df = wp.win_probs_at(st, 1, 9, n_sims=200, seed=1)
+    n = df[df["measure"] == "net"].set_index("player")
+    assert n.loc["AA", "banked"] == 0 and n.loc["BB", "banked"] == 0
+    assert n["win_prob"].to_numpy() == pytest.approx([0.5, 0.5])
+
+
+def test_win_probs_at_rejects_unplayed_hole():
+    with pytest.raises(ValueError):
+        wp.win_probs_at(_two_round_teg(), 3, 1)

@@ -125,3 +125,9 @@
 .teg-table.sim-odds td.sim-left, .teg-table.sim-odds th.sim-left { text-align: left; }
 .sim-odds-price { display: block; font-weight: 600; color: var(--text-primary); }
 .sim-odds-pct { display: block; font-size: 0.75rem; color: var(--text-muted); }
+
+/* Live tab: fixed-height status line and swings block so filling in the
+   chart never shifts the page. */
+.sim-live-status { min-height: 1.5em; }
+.sim-live-swings { min-height: 7.5rem; }
+.sim-live-swings h4 { margin: 0.75rem 0 0.25rem; }

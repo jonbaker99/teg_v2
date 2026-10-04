@@ -44,6 +44,111 @@
         <p class="caption" aria-live="polite">Working out the live win chances&hellip;</p>
     </div>
 </section>
+<script>
+(function () {
+    // Fills in the hole-by-hole chart one checkpoint at a time, in the order the
+    // server queues (hole 9, even holes, odd holes). Updates the existing plots in
+    // place with Plotly.restyle: nothing is swapped, so the page never jumps.
+    var running = null;
+    var VP = {'-3': 'an albatross', '-2': 'an eagle', '-1': 'a birdie', '0': 'a par',
+              '1': 'a bogey', '2': 'a double bogey', '3': 'a triple bogey', '4': 'a quadruple bogey'};
+    function key(r, h) { return r + '-' + h; }
+    function label(r, h) { return r === 0 ? 'Start' : 'R' + r + ' hole ' + h; }
+    function pct(p) { return (Math.round(p * 1000) / 10).toFixed(1) + '%'; }
+    function scoreText(d, m, pl, r, h) {
+        var sc = (d.scores[key(r, h)] || {})[pl];
+        if (!sc) return '';
+        var g = VP[String(sc[0])] || (sc[0] > 0 ? 'a +' + sc[0] : 'a ' + sc[0]);
+        if (m === 'gross') return g;
+        if (d.stableford) return g + ', ' + sc[1] + (sc[1] === 1 ? ' point' : ' points');
+        return g + ', net ' + (sc[1] > 0 ? '+' + sc[1] : sc[1] === 0 ? 'level' : sc[1]);
+    }
+
+    function redraw(root, d) {
+        var have = d.axis.filter(function (a) { return d.points[key(a[0], a[1])]; });
+        var x = have.map(function (a) { return label(a[0], a[1]); });
+        var idx = d.players.map(function (_, i) { return i; });
+        var drawn = true;
+        root.querySelectorAll('.sim-live-plot').forEach(function (el) {
+            if (!el._fullLayout || !window.Plotly) { drawn = false; return; }  // not drawn yet
+            var m = el.getAttribute('data-measure');
+            var ys = d.players.map(function (p) {
+                return have.map(function (a) { return Math.round(d.points[key(a[0], a[1])][m][p] * 1000) / 10; });
+            });
+            try { Plotly.restyle(el, {x: d.players.map(function () { return x; }), y: ys}, idx); } catch (err) {}
+        });
+        return drawn;
+    }
+    function redrawWhenReady(root, d, tries) {
+        if (!redraw(root, d) && tries > 0) setTimeout(function () { redrawWhenReady(root, d, tries - 1); }, 100);
+    }
+
+    function swings(root, d) {
+        root.querySelectorAll('.sim-live-swings').forEach(function (box) {
+            var m = box.getAttribute('data-measure');
+            var list = [];
+            for (var i = 1; i < d.axis.length; i++) {
+                var a = d.axis[i], b = d.axis[i - 1];
+                var pa = d.points[key(a[0], a[1])], pb = d.points[key(b[0], b[1])];
+                if (!pa || !pb) continue;
+                var best = null;
+                d.players.forEach(function (p) {
+                    var delta = pa[m][p] - pb[m][p];
+                    if (!best || Math.abs(delta) > Math.abs(best.delta)) best = {p: p, delta: delta, from: pb[m][p], to: pa[m][p]};
+                });
+                if (best) { best.r = a[0]; best.h = a[1]; list.push(best); }
+            }
+            list.sort(function (u, v) { return Math.abs(v.delta) - Math.abs(u.delta); });
+            var ul = box.querySelector('ul');
+            ul.innerHTML = '';
+            list.slice(0, 3).forEach(function (s) {
+                var li = document.createElement('li');
+                var sc = scoreText(d, m, s.p, s.r, s.h);
+                li.textContent = 'Round ' + s.r + ', hole ' + s.h + ': ' + d.names[s.p] + ' ' + pct(s.from) +
+                    ' to ' + pct(s.to) + (sc ? ' (' + sc + ')' : '') + '.';
+                ul.appendChild(li);
+            });
+            if (!list.length) ul.innerHTML = '<li>No hole-by-hole changes yet.</li>';
+        });
+    }
+
+    function start(root) {
+        var dataEl = root.querySelector('#sim-live-data');
+        if (!dataEl) return;
+        var d = JSON.parse(dataEl.textContent);
+        var token = {};
+        running = token;
+        var status = root.querySelector('#sim-live-status');
+        var queue = d.queue, n = 0, failed = 0;
+        function doneCount() { return Object.keys(d.points).length - 1; }
+        function finish() {
+            redrawWhenReady(root, d, 30);
+            status.textContent = failed
+                ? 'All holes worked out except ' + failed + ' that failed. Reload to retry.'
+                : 'Every hole worked out (' + d.total + ' points).';
+            swings(root, d);
+        }
+        function next() {
+            if (running !== token) return;
+            if (n >= queue.length) { finish(); return; }
+            var q = queue[n];
+            status.textContent = 'Step ' + (q[2]) + ' of 4, ' + d.steps[q[2]] + ': working out round ' + q[0] +
+                ', hole ' + q[1] + '. ' + doneCount() + ' of ' + d.total + ' points done.';
+            fetch('/simulation/live/point?teg=' + d.teg + '&round=' + q[0] + '&hole=' + q[1] + '&replay=' + (d.replay ? 1 : 0))
+                .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+                .then(function (p) { d.points[key(q[0], q[1])] = {net: p.net, gross: p.gross}; redraw(root, d); })
+                .catch(function () { failed++; })
+                .then(function () { n++; next(); });
+        }
+        // Give the shared renderer a moment to draw the plots, then fill in.
+        setTimeout(function () { redrawWhenReady(root, d, 30); next(); }, 50);
+    }
+
+    document.addEventListener('htmx:afterSettle', function (e) {
+        if (e.detail && e.detail.elt && e.detail.elt.id === 'sim-live') start(e.detail.elt);
+    });
+})();
+</script>
 {% elif fatal %}
 <div class="request-feedback" role="alert"><span>{{ fatal }}</span></div>
 {% else %}
