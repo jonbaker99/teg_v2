@@ -21,6 +21,8 @@ from typing import Any, Callable, Optional
 
 import pandas as pd
 
+from teg_analysis.analysis.standings import build_rounds, build_tegs
+
 from teg_analysis.analysis.bounceback import (
     BASIS_COLUMNS, GROUPINGS, TRIGGER_THRESHOLDS, bounce_back_stats,
 )
@@ -99,45 +101,10 @@ class ChatData:
         return self._get("tegs", self._build_tegs)
 
     def _build_rounds(self) -> pd.DataFrame:
-        holes = self.holes()
-        keys = ["Player", "Pl", "TEGNum", "Year", "Round", "Course"]
-        keys += [c for c in ("Area", "Date") if c in holes.columns]
-        df = holes.groupby(keys, as_index=False).agg(
-            Sc=("Sc", "sum"), GrossVP=("GrossVP", "sum"), NetVP=("NetVP", "sum"),
-            Stableford=("Stableford", "sum"), HC=("HC", "first"), Holes=("Hole", "size"),
-        )
-        if "Date" in df.columns:
-            df["Date"] = pd.to_datetime(df["Date"], format="%d/%m/%Y", errors="coerce").dt.date
-        df = df.sort_values(["TEGNum", "Round", "Player"]).reset_index(drop=True)
-        # Position in this round alone, and in the TEG standings after this round.
-        df["RoundJacketPos"] = df.groupby(["TEGNum", "Round"])["GrossVP"].rank(method="min")
-        df["RoundTrophyPos"] = _trophy_rank(df, ["TEGNum", "Round"])
-        cum = df.groupby(["TEGNum", "Player"])[["GrossVP", "NetVP", "Stableford"]].cumsum()
-        after = df[["TEGNum", "Round"]].join(cum)
-        df["JacketPosAfterRound"] = after.groupby(["TEGNum", "Round"])["GrossVP"].rank(method="min")
-        df["TrophyPosAfterRound"] = _trophy_rank(after, ["TEGNum", "Round"])
-        for col in ("RoundJacketPos", "RoundTrophyPos", "JacketPosAfterRound", "TrophyPosAfterRound"):
-            df[col] = df[col].astype("Int64")
-        return df
+        return build_rounds(self.holes())
 
     def _build_tegs(self) -> pd.DataFrame:
-        keys = ["Player", "Pl", "TEGNum", "Year"]
-        if "Area" in self.holes().columns:
-            keys.append("Area")
-        df = self.holes().groupby(keys, as_index=False).agg(
-            Sc=("Sc", "sum"), GrossVP=("GrossVP", "sum"), NetVP=("NetVP", "sum"),
-            Stableford=("Stableford", "sum"), HC=("HC", "first"),
-            Rounds=("Round", "nunique"), Holes=("Hole", "size"),
-        )
-        df["Complete"] = df["TEGNum"].isin(self.complete())
-        df["JacketPosition"] = df.groupby("TEGNum")["GrossVP"].rank(method="min")
-        df["TrophyPosition"] = _trophy_rank(df, ["TEGNum"])
-        df["FieldSize"] = df.groupby("TEGNum")["Player"].transform("size")
-        # A TEG in progress has partial totals; a position from them isn't a finish.
-        for col in ("JacketPosition", "TrophyPosition"):
-            df[col] = df[col].astype("Int64").where(df["Complete"])
-        return df.sort_values(["TEGNum", "TrophyPosition"]).reset_index(drop=True)
-
+        return build_tegs(self.holes(), self.complete())
 
     def datasets(self) -> dict[str, pd.DataFrame]:
         """The CSVs uploaded to the code sandbox. Columns: see prompt.DATA_GUIDE."""
@@ -154,15 +121,6 @@ class ChatData:
             "tegs.csv": self.tegs(),
             "winners.csv": winners,
         }
-
-
-def _trophy_rank(df: pd.DataFrame, keys: list[str]) -> pd.Series:
-    """Rank in the net competition: lowest NetVP up to TEG 7, most Stableford from TEG 8."""
-    from teg_analysis.analysis.scoring import get_net_competition_measure
-    by_net = df.groupby(keys)["NetVP"].rank(method="min")
-    by_stab = df.groupby(keys)["Stableford"].rank(method="min", ascending=False)
-    net_era = df["TEGNum"].map(lambda t: get_net_competition_measure(int(t)) == "NetVP")
-    return by_net.where(net_era, by_stab)
 
 
 # ---------------------------------------------------------------------------

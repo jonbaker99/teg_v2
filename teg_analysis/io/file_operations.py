@@ -10,8 +10,6 @@ import logging
 from pathlib import Path
 import pandas as pd
 
-from github import GithubException
-
 from . import volume_operations
 from .github_operations import read_from_github, read_text_from_github, write_text_to_github, write_to_github
 # No circular import here: sync.py only imports github_operations/volume_operations,
@@ -19,6 +17,16 @@ from .github_operations import read_from_github, read_text_from_github, write_te
 from .sync import github_download_bytes
 
 logger = logging.getLogger(__name__)
+
+
+def _github_exception():
+    """PyGithub's ``GithubException``, or a never-raised stand-in when it isn't installed."""
+    try:
+        from github import GithubException
+    except ImportError:
+        class GithubException(Exception):  # noqa: N818
+            status = None
+    return GithubException
 
 
 def read_file(file_path: str) -> pd.DataFrame:
@@ -72,7 +80,7 @@ def read_file(file_path: str) -> pd.DataFrame:
             logger.info(f"Cached {file_path} to volume for future reads")
             return data
 
-        except GithubException as e:
+        except _github_exception() as e:
             # Absent from both volume and GitHub: raise what the local branch
             # raises, so callers' `except FileNotFoundError` fallbacks work here too.
             if e.status == 404:
@@ -246,7 +254,7 @@ def read_binary_file(file_path: str) -> bytes:
         # File not cached or volume read failed: download and cache
         try:
             content = github_download_bytes(file_path)
-        except GithubException as e:
+        except _github_exception() as e:
             if e.status == 404:
                 raise FileNotFoundError(file_path) from e
             logger.error(f"Error reading {file_path} from GitHub: {e}")
