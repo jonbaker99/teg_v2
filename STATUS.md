@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-10-04 (simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
+**Last updated:** 2026-10-04 (new-record markers on /records; simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
+
+## 2026-10-04 — /records marks new records and gains a New Records tab
+
+Records set in the in-progress (else last completed) TEG show a NEW pill on their row. Tabs holding any show a dot. A new first tab lists them with that TEG's personal bests and worsts. Dev lab removed.
 
 ## 2026-10-04 — Simulator shows what handicap changes did to win chances
 
