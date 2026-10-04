@@ -588,6 +588,27 @@ def _streak_achievements(teg_num: int, round_num: Optional[int]) -> tuple[list, 
     return records, pbs, worsts
 
 
+def _round_extremes_lines(teg_num: int, all_data) -> list:
+    """'Best gross: David Mullin, +11 at Boavista (R2)' — one line per
+    holder (a tie gets one line each), from the same
+    `analysis.records.get_teg_round_extremes` the webapp's /latest-teg
+    Records & PBs tab uses. Gross is shown vs par, so rounds on courses
+    with different pars compare fairly; the Trophy metric follows the era."""
+    from teg_analysis.analysis.records import get_teg_round_extremes
+    from teg_analysis.reporting.events import _proper
+
+    names = {"GrossVP": "gross", "Stableford": "Stableford", "NetVP": "net"}
+    lines = []
+    for e in get_teg_round_extremes(all_data, teg_num):
+        value = (f"{e['value']} pts" if e["metric"] == "Stableford"
+                 else _fmt_signed(e["value"]))
+        label = f"{e['kind'].capitalize()} {names[e['metric']]}"
+        for h in e["holders"]:
+            lines.append(f"{label}: {_proper(h['player'])}, {value} at "
+                         f"{h['course']} (R{h['round']})")
+    return lines
+
+
 def build_records_block(teg_num: int, round_num: Optional[int] = None) -> str:
     """Deterministic 'Notable Achievements' appendix block. Empty string if none.
 
@@ -597,6 +618,8 @@ def build_records_block(teg_num: int, round_num: Optional[int] = None) -> str:
       equalled (`course_history.detect_course_records`).
     - **Personal bests**: player-best round/9/total, personal-best streak.
     - **Personal worsts**: player-worst round/9/total, personal-worst streak.
+    - **Best and worst rounds** (tournament scope only): the TEG's best and
+      worst single round, gross and Trophy metric, ties all listed.
     - **Rare feats**: holes-in-one, eagles, career/TEG-record-worst blow-ups
       (hole scores over par shown numerically — "+5" — never as a word like
       "quintuple bogey").
@@ -673,6 +696,10 @@ def build_records_block(teg_num: int, round_num: Optional[int] = None) -> str:
 
     course_recs = _course_record_achievements(teg_num, round_num, all_data)
 
+    # The TEG's best and worst single rounds — tournament scope only; a
+    # round report's own scores block already shows that round's spread.
+    extremes = _round_extremes_lines(teg_num, all_data) if round_num is None else []
+
     # Deduplicate within each category
     records = _dedup_entries(records)
     pbs = _dedup_entries(pbs)
@@ -681,6 +708,7 @@ def build_records_block(teg_num: int, round_num: Optional[int] = None) -> str:
 
     chunks = []
     for label, css_class, lines in [
+        ("Best and worst rounds", "records", extremes),
         ("TEG records", "records", records),
         ("Course records", "records", course_recs),
         ("Personal bests", "records", pbs),

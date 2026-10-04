@@ -195,6 +195,7 @@ streamlit run streamlit/nav.py       # legacy Streamlit app — frozen, rarely n
 pip install -r requirements-dev.txt          # dev-only extras (Playwright, for the PDF build)
 python scripts/build_report_pdfs.py --all    # rebuild the downloadable report PDFs
 python scripts/build_report_pdfs.py --check --all  # exit 1 if any PDF is out of date
+python scripts/tegbot_eval.py                # TEGBot answer test: ~30 live questions, ~30p a run
 ```
 
 The report PDFs (`data/commentary/pdfs/`) are a build artefact of the report
@@ -215,14 +216,15 @@ Two distinct phases. **Streamlit is the original architecture** — self-contain
    - `constants.py` — file paths, tournament metadata (see [Player identity](#player-identity) for the players caveat)
    - `io/` — file I/O (`read_file`/`write_file`), GitHub API (`GITHUB_TOKEN`), Railway volume management
    - `core/` — data loading (`load_all_data`) and transformation
-   - `analysis/` — scoring, rankings, aggregation, streaks, records, eclectic, handicaps, commentary, pipeline, data_update, history, performance, leaderboards, bestball, live_round, round_setup, round_wizard
+   - `analysis/` — scoring, rankings, aggregation, streaks, records, eclectic, handicaps, commentary, pipeline, data_update, history, performance, leaderboards, bestball, live_round, round_setup, round_wizard, simulation
    - `display/` — formatting, HTML tables, scorecards, nav utilities. Returns HTML strings; never calls `st.write`
    - `reporting/` — LLM-powered tournament reports, plus a free, non-LLM PDF-rendering stage (`report_pdf.py`)
+   - `chatbot/` — TEGBot 5000 (`/tegbot`). Lookups first (`chatbot/tools.py`: honours, records, streaks, bounce-back, next-TEG predictions from the simulator, using the site's own definitions and returning full, tie-complete results); otherwise the model writes pandas that runs in **Anthropic's code-execution sandbox** against CSVs built by `ChatData.datasets()` and documented in `prompt.DATA_GUIDE`. Model-written code never runs on our server. The model must not do arithmetic itself. Clearly definable, frequently asked questions earn a lookup; for everything else, improve the data guide or datasets
    - `api/` — placeholder for the REST API layer
 
 2. **`streamlit/`** — the original app, self-contained via its own `utils.py`. **Dead code kept for reference only**: not deployed, not maintained, not migrated, and nothing else in the repo depends on it. Slated for deletion. Never modify it, and don't use it as a model for new work.
 
-3. **`webapp/`** — FastAPI + HTMX + Jinja2 + Tailwind. Deployed on Railway from `main` via `railway.toml` → `uvicorn webapp.app:app`. `requirements.txt` is webapp-only (includes `pyarrow`). Needs `GITHUB_TOKEN` and a volume at `/mnt/data_repo`; `ANTHROPIC_API_KEY` for reports (`TEG_ANTHROPIC_API_KEY` is accepted as an alias), `GOOGLE_*` for data-update ingestion. Public pages only *read* finished reports. Admins can generate them from `/admin/reports`, which runs the report pipeline in the webapp process (`webapp/report_generation.py`).
+3. **`webapp/`** — FastAPI + HTMX + Jinja2 + Tailwind. Deployed on Railway from `main` via `railway.toml` → `uvicorn webapp.app:app`. `requirements.txt` is webapp-only (includes `pyarrow`). Needs `GITHUB_TOKEN` and a volume at `/mnt/data_repo`; `ANTHROPIC_API_KEY` for reports (`TEG_ANTHROPIC_API_KEY` is accepted as an alias), `GOOGLE_*` for data-update ingestion; optional `TEGBOT_MODEL`, `TEGBOT_DAILY_LIMIT`, `TEGBOT_ENABLED` for the chatbot. Public pages only *read* finished reports. Admins can generate them from `/admin/reports`, which runs the report pipeline in the webapp process (`webapp/report_generation.py`).
 
 4. **`ad_hoc_analysis/`** — Jupyter notebooks calling `teg_analysis/` directly. Start at `quickstart.ipynb`.
 
@@ -252,7 +254,7 @@ Enforced by a test guard. `teg_analysis/` must import cleanly with no UI package
 
 ### Table presentation
 
-Before changing table layout or player-name rendering, read `webapp/design_principles.md` → **Tables** and follow its player-name wrapping rule.
+Before changing table layout or player-name rendering, read `webapp/design_principles.md` → **Tables** and follow its player-name wrapping rule. Player names are always full ("David MULLIN"), wrapped onto two lines if needed, with every name in the table or list wrapping together. Never abbreviate ("D.MULLIN"); initials only when even a wrapped full name cannot fit.
 
 ### Webapp route handlers are sync `def`
 

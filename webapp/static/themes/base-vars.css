@@ -1296,111 +1296,6 @@ a.tab-underline .tab-arrow {
 .player-results-table td.result-win span { background: green; color: #ffffff; }
 .player-results-table td.result-loss span { background: #FAE9E8; color: #8b0000; }
 
-/* ── Player roster (Player Profiles landing) ── */
-/* Mono, lightly-spaced lead-in that sits well clear of the card grid. */
-.page-subtitle--mono {
-    font-family: var(--font-table), sans-serif;
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    margin-bottom: 1.75rem;
-}
-.player-roster {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 1rem;
-}
-.player-card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    background-color: var(--bg-card);
-    border: 1px solid var(--table-cell-border);
-    border-radius: var(--card-radius);
-    padding: 1.1rem 1.2rem;
-    text-decoration: none;
-    color: inherit;
-    transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
-}
-.player-card:hover {
-    border-color: var(--accent);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
-    transform: translateY(-2px);
-}
-/* Lo-fi / monospaced card identity — mono name in place of the serif heading
-   so the roster reads like a scorecard rather than a magazine page. */
-.player-card-name {
-    font-family: var(--font-table), sans-serif;
-    font-size: 0.95rem;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    color: var(--text-primary);
-    line-height: 1.2;
-}
-.player-card-meta {
-    font-family: var(--font-table), sans-serif;
-    font-size: 0.7rem;
-    color: var(--text-muted);
-}
-.player-card-stars {
-    display: block;
-    line-height: 1;
-    margin: 0.05rem 0 0.15rem;
-}
-.player-card-stars .trophy-star {
-    font-size: 1rem;
-    margin-right: 0.04rem;
-}
-.player-card-stars-gap {
-    display: inline-block;
-    width: 0.3rem;
-}
-.player-card-stars--none {
-    font-family: var(--font-table), sans-serif;
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    opacity: 0.75;
-}
-/* Three mono metrics (HC / Avg gross / Avg stab), pinned to the card foot with
-   a single thin rule — no boxed dotted-rule strip. */
-.player-card-stats {
-    display: flex;
-    gap: 1.25rem;
-    margin-top: auto;
-    padding-top: 0.7rem;
-    border-top: 1px solid var(--table-cell-border);
-}
-.pc-stat {
-    display: flex;
-    flex-direction: column;
-    gap: 0.1rem;
-}
-.pc-stat-val {
-    font-family: var(--font-table), sans-serif;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    line-height: 1;
-}
-.pc-stat-lbl {
-    font-family: var(--font-table), sans-serif;
-    font-size: 0.6rem;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--text-muted);
-}
-.player-card-badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-}
-/* Badges sit inline in flowing text elsewhere (hence their left margin); inside
-   a card's own badge row that margin is unwanted. */
-.player-card-badges .badge,
-.player-card-badges .badge-muted {
-    margin-left: 0;
-}
-
 /* ── Divider ── */
 .divider {
     border: none;
@@ -1879,6 +1774,41 @@ body.layout-wide .content-wrapper {
    the accessibility tree. */
 .standings-rounds {
     display: none;
+}
+
+/* Best/worst round boxes (_standings_table.html, /leaderboard + /results):
+   the TEG's best round(s) boxed green, worst boxed red, on the competition
+   shown. A border only -- no fill -- so the leader-row tint and hover still
+   read through. The negative margin cancels the padding + border, so a
+   boxed value takes the same width as an unboxed one and columns don't
+   shift. dark.css re-points both tokens. */
+:root {
+    --rd-best: var(--green, forestgreen);
+    --rd-worst: #b91c1c;
+}
+.rd-mark {
+    display: inline-block;
+    padding: 0 4px;
+    margin: 0 -5px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    line-height: 1.35;
+}
+.rd-mark--best { border-color: var(--rd-best); }
+.rd-mark--worst { border-color: var(--rd-worst); }
+/* Phone round strip: keep each "R2 +14" together so a line never ends
+   on a bare round label. */
+.standings-round { white-space: nowrap; }
+/* Phone round strip: inline text, so no negative margin (it would overlap
+   the "R2" label before it). */
+.standings-rounds .rd-mark { margin: 0; padding: 0 3px; }
+/* Key under the table: small empty swatches. */
+.rd-mark-key .rd-mark {
+    width: 0.9em;
+    height: 0.9em;
+    margin: 0 0.2em 0 0;
+    padding: 0;
+    vertical-align: -0.1em;
 }
 
 /* ── Leader row — L2, the owner-selected fix (C3) ──

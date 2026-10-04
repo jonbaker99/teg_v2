@@ -491,6 +491,22 @@ don't need the link sent to them.
   set back and leaves the round `active` to retry. Full ordering rationale is in
   the `finalize_live_round` docstring.
 
+## TEGBot 5000 (`/tegbot`)
+
+A chat page for stat questions. `routes/tegbot.py` posts each question (plus earlier turns, as text, held in the page) to `teg_analysis.chatbot.bot.ask`. The bot uses a lookup when one fits (honours, records, streaks, bounce-back); otherwise it writes pandas that runs in Anthropic's code-execution sandbox against uploaded CSVs. It never calculates in its head, and links only to `SITE_PAGES` paths. Each answer has a folded "Show the workings" block listing every lookup and every piece of code with its output.
+
+- **Cost guard:** 20 questions per visitor per hour and `TEGBOT_DAILY_LIMIT` (default 200) site-wide per UTC day. Both are in-process and reset on restart. Typical cost is 1–3p a question on Sonnet (sandbox time is negligible).
+- **Switches:** `TEGBOT_ENABLED=0` turns it off; `TEGBOT_MODEL` overrides the model. With no Anthropic key the page says it is off.
+- **Behaviour rules (in `prompt.py`):** TEG questions only, with a one-line refusal for anything else. Follow-ups reuse the earlier method: each assistant turn is replayed with a note of the code or lookups behind it (`Answer.history_text`), and the bot doesn't re-audit earlier answers unprompted. It names any definition it chose; the user can override it, and the bot re-runs their way and keeps their version for the rest of the chat. Look: lo-fi retro, scoped to `.tb-app` in `partials/tegbot_styles.html`. Three colours only (paper white or black by mode, forest green, grey chat area), IBM Plex Mono text and VT323 pixel headings. The pixel-art robot is a Jinja macro (`partials/tegbot_robot.html`) that blinks idle and scans while busy. While waiting, the question shows at once with a small indicator and a seconds counter. The style varies (ball rolling into a flagged hole, blocks chasing round a 3x3 ring, a filling bar, or a quiet one-line status), picked at random for each question (never the same as the previous one) and kept for that whole wait. On-site links in answers get a `tb-page-link` class and a ↗ marker. Answers bold the key facts; the "How I worked this out:" note sits in small print under a dark grey ====== rule (`_box_method`). The placeholder and the five example buttons are drawn at random from `EXAMPLE_QUESTIONS`.
+- **Shared log:** every answered question is appended to `tegbot/qa_log.jsonl` on the volume (`teg_analysis.chatbot.qa_log`; no names or IPs), with its theme and any related past questions. `/tegbot/asked` ("What others asked") shows the latest 50 chats newest first, or every chat grouped by theme (`?view=themes`), with follow-ups kept in their thread and each answer folded. A failed log write never costs the visitor their answer.
+- **Similar questions and themes:** each request carries the latest 300 distinct past questions (other chats only) and the themes in use. The bot ends its answer with `THEME:` and `RELATED:` lines, which `bot.split_trailer` strips and validates. Related questions show as "Others asked" links under the answer, opening the matching entry on the themes view.
+- **Admin (`/admin/tegbot`, "TEGBot log" tab):** tick and delete entries for good, or "Sort into themes (AI)" to re-theme the whole log in one call (`teg_analysis.chatbot.themes.regroup_themes`).
+- **Answer HTML:** model text is HTML-escaped, rendered as Markdown, and any link not starting with `/` loses its `href`.
+- **Logs:** each answer logs question, tools, seconds, cost and token usage at INFO.
+- **Predictions:** forecasts about the next TEG go through the `get_predictions` lookup, fed by `webapp.routes.simulation.default_prediction()` (the Predictatron's default settings, fixed seed, cached until data changes). The bot never guesses a winner itself and links `/simulation`.
+- **Answer test:** `python scripts/tegbot_eval.py` asks the live bot ~30 questions (lookups, sandbox calculations, judgement, follow-ups, off-topic) and checks names, numbers, links and refusals against expected answers computed from the data at run time. About 30p a run; writes a report to `data/tegbot/eval/` and flags numbers no lookup or code output supports (likely mental maths). Run it before changing the prompt, model or data guide.
+- **When it gets something wrong:** first improve `DATA_GUIDE` or add a column to `ChatData.datasets()`. Add a lookup in `tools.py` only for a clearly definable, common question, with a test in `tests/test_tegbot.py`. Don't loosen the "no arithmetic" rule in `prompt.py`.
+
 ## Architecture
 
 ### Tech stack
@@ -539,25 +555,43 @@ All data comes from `teg_analysis/`. The webapp never calculates anything — it
 
 ## Player profiles
 
-The `/player` roster keeps its existing card layout. `/player/{code}` uses
-page-only `player-profile.css` and `player-profile.js`: bounded At a glance
-and Trophy Cabinet blocks sit side by side on desktop, then stack below
-800px. Career Highlights remain cards. The player picker replaces the long
-detail-page pill list; the four existing section endpoints remain unchanged.
+The `/player` roster (in the nav under TEG History) is a two-line list on the site's white panel: one row per player, ranked by silverware then TEGs played. A "Click a player" line sits above the list (no section title; the page title says it). The whole row links to the profile, and names and footer links carry the site's ↗ link arrow. Each row shows name, career span, gold/green stars, then avg gross vs par, avg Stableford and Wooden Spoons as value over all-time rank ("1st / 7"). Above 640px one header row labels the stat columns (the per-row labels stay for screen readers); on phones each row keeps its own labels, since a header would scroll out of view. Between 641px and 860px the stars move under the name. It is built by `_build_roster()` (ranks from the same `_metric_specs` the profile uses; asterisked wins count) and styled by the `pr-` rules in `player-profile.css`. On phones each player stacks: name, stars, career line, then gross / Stableford / spoons. `/player/{code}` is an
+almanac page (`player-profile.css`, `player-profile.js`): Lora for the name and
+section headings, Inter for the rest, thin rules and no card boxes. The header
+shows gold stars (TEG Trophies) then green stars (Green Jackets). Tabs:
+Overview, Career record, Rounds, Scoring, Records & Streaks (HTMX partials at
+`/player/{code}/tab/{tab}`). Footer links under each section end in the
+site's ↗ link arrow.
 
-Current handicap uses `_current_playing_handicaps()`, shared with the roster:
-the next/in-progress TEG's playing handicap, not the latest historical score.
-Scoring landmarks retain counts, ranks and location details in a disclosure.
-The overview previews held records; Records & Streaks contains their complete
-details, all worsts, personal bests/worsts and existing streak tables.
+Overview, in order: Honours / Averages / Counting columns with all-time ranks
+(`_metric_specs` / `_metric_columns`; fewer is better for triples); Finishing
+position; Gross vs par per round (server-rendered HTML/CSS bars, not Plotly);
+Records and personal bests. Finishing position and the chart are each one
+Jinja loop that CSS reflows from desktop columns to phone rows (newest first),
+so there is no second rendering to drift. In the chart, best/worst round dots are
+centred on each bar, and the TEG average sits beside the TEG label (under it on
+desktop) rather than in the bar, so dots and values never collide. Spoon red is
+the theme `--failure`.
 
-Career Trend precedes the results table. Its local presentation uses theme
-colours and fewer phone ticks; crossing the phone breakpoint restores desktop
-rank annotations. Calculations and average weighting are unchanged. Long
-result histories initially show three recent TEGs with an expansion control;
-without JavaScript, the complete table remains visible. Profile identity,
-headings and data use the site's standard sans/tabular typography, same as
-every other data page.
+Winners marked `*` in the winners table (an off-course decision) are matched
+with the asterisk stripped. The winner's gross or net position, and anyone else
+who finished 1st, gets `*` plus a footnote. TEG-level personal bests only use
+TEGs the player played in full, and only TEGs of the usual length, so the
+three-round TEG 2 cannot be a "worst". "TEG record" / "TEG worst" tags compare
+with every player's figure for the same measure (9-hole records pool front and
+back nines; Stableford rows use TEG 8 onwards). The Career record tab lists
+every TEG newest first.
+
+Rounds, Scoring and Records & Streaks use the site's standard `.section-title`, `.data-card` and `.teg-table` pieces (PB rows carry a bold value plus a small PB tag; Records & Streaks lists the held records and worsts and the streaks table, since the Overview board covers personal bests).
+
+Links stay quiet: TEG numbers link to `/results?teg=N`, round references to that
+player's `/scorecard`, in the text colour (underline on hover only; green is for
+honours). Each section has at most one right-aligned muted footer line of plain
+links to the matching main-site page (built with `_url`, which encodes queries).
+
+## Simulator
+
+`/simulation` (`webapp/routes/simulation.py`) is a Monte Carlo dashboard for the next TEG, built on `teg_analysis.analysis.simulation`. Nav entry: **Scoring analysis > Simulation** (page label "Scoring analysis"). UI uses site components only (`.data-card`, `.theme-select`, `.action` with the button tokens, `.segmented`, `.teg-table` in `.table-wrapper`, `.request-feedback`, `.caption`); `simulation.css` holds just page layout, the `--heat` shading (theme-aware `color-mix`, softer in dark) and Plotly dark-mode overrides. Players, Simulations and Run lead; everything else sits in a collapsed **Model settings** expander. The chart legend sits below the plot and the chart is deliberately not in a `.chart-block` (that wrapper hides legends on phones). Controls are one GET form: target TEG, `method` (`window` default = rolling SI-pair window with `min_holes`, default 20; or `bands` = fixed SI bands with preset/custom boundaries and shrinkage k; the irrelevant controls are hidden client-side), a TEG weights matrix (global `w_<TEGNum>`, default 50/35/15 on the three latest, plus one column per target player: tick `po_<Pl>` (Custom) to enable that player's own `pw_<Pl>_<TEGNum>` weights, e.g. to skip an injury year; unticked inputs are disabled and not submitted), sims and seed. The distributions table lists all 9 SI pairs per par, bolding those on the target scorecard, with the SI range each row's window used. Changing a control re-renders the sampling distributions (`/simulation/distributions`); **Run** renders results (`/simulation/run`): a fair fractional odds table for TEG Trophy (1st on Stableford), Green Jacket (1st on gross) and Wooden Spoon (last on Stableford) from `odds_table`/`fractional_odds`, then summary table, finishing-position grid and score chart with a client-side Stableford / Gross toggle (Stableford default). Gross is shown vs par throughout. All five expanders (Model settings, Sampling distributions, Courses drawn, and the two below) share one pattern, `.sim-expander`: a full-width bordered row with the title left and a Show / Hide hint right. Every section is a `.sim-section` (title, one-sentence `.caption`, then content) with one `--sim-gap` (2rem) between sections. Two collapsed expanders follow the measure panels, both Stableford only and re-scoring the same draws (`run_simulation(keep_scores=True)`): **Impact of handicap changes** (previous TEG to target TEG handicaps; Shapley table of each mover's effect on every player's win %, with totals and the non-additive sum of single changes) and **Handicaps that equalise chances** (handicap giving 36 points a round). Each degrades to a one-line message on failure. Sims are capped at `MAX_SIMS` (100k, ~2s). Target options come from `available_target_tegs()` (default `default_target_teg()`). A **Players** checkbox group (`pl=<code>` repeated plus hidden `pl_set=1`, so zero ticked is an error) overrides the roster; changing it reloads the page so the weights columns follow. `field_alpha` ("Field blend (holes)", 0-200, default `DEFAULT_FIELD_ALPHA`) mixes the whole group's scores into each cell so unseen outcomes (a first eagle) can happen. Status notes show when handicaps are a draft calculation or rounds lack a scorecard (each sim then draws a random par-72 course; results list "Courses drawn"; the on-scorecard markers are dropped when every round is random). The summary adds Eagle % and expected Blobs; the chart uses the smoothed `total_distribution`. `_target` is cached per (TEG, sorted players).
 
 ## Theme system
 

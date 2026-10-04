@@ -1,0 +1,167 @@
+{% if fatal %}
+<div class="request-feedback" role="alert"><span>{{ fatal }}</span></div>
+{% elif run_errors %}
+<div class="request-feedback" data-state="error" role="alert"><ul class="sim-list">{% for e in run_errors %}<li>{{ e }}</li>{% endfor %}</ul></div>
+{% else %}
+<div class="sim-results sim-stack">
+    <p class="caption sim-caption">{{ caption }}{% if clamp_note %} {{ clamp_note }}{% endif %}</p>
+    {% if warnings %}<ul class="caption sim-list">{% for w in warnings %}<li>{{ w }}</li>{% endfor %}</ul>{% endif %}
+    <section class="sim-section">
+    <h3 class="chart-title">Odds</h3>
+    <p class="caption">Fair odds for each prize, from the simulations, with no bookmaker's margin.</p>
+    <div class="data-card"><div class="table-wrapper">
+    <table class="teg-table sim-odds">
+        <thead><tr>
+            <th class="sim-left">Player</th><th>TEG Trophy</th><th>Green Jacket</th><th>Wooden Spoon</th>
+        </tr></thead>
+        <tbody>
+        {% for r in odds %}
+        <tr>
+            <td class="sim-left">{{ r.name_html | safe }}</td>
+            <td><span class="sim-odds-price">{{ r.trophy }}</span><span class="sim-odds-pct">{{ r.trophy_pct }}</span></td>
+            <td><span class="sim-odds-price">{{ r.jacket }}</span><span class="sim-odds-pct">{{ r.jacket_pct }}</span></td>
+            <td><span class="sim-odds-price">{{ r.spoon }}</span><span class="sim-odds-pct">{{ r.spoon_pct }}</span></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div></div>
+    <p class="caption">Trophy is Stableford, Jacket is gross, Spoon is last on Stableford.</p>
+    </section>
+
+    <div class="sim-stack sim-stack--tight">
+    <div class="section-controls">
+        <div class="segmented" role="group" aria-label="Measure">
+            {% for m in measures %}
+            <button type="button" class="seg-option" data-sim-measure="{{ m.key }}" aria-pressed="{{ 'true' if loop.first else 'false' }}">{{ m.label }}</button>
+            {% endfor %}
+        </div>
+    </div>
+    {% for m in measures %}
+    <div class="sim-panel sim-stack{% if not loop.first %} sim-hidden{% endif %}" data-measure="{{ m.key }}">
+        <section class="sim-section">
+        <h3 class="chart-title">Summary (by expected {{ m.label | lower }} position)</h3>
+        <p class="caption">Each player's average result, likely range (10th to 90th percentile) and win chance.</p>
+        <div class="data-card"><div class="table-wrapper">
+        <table class="teg-table sim-summary">
+            <thead><tr>
+                <th class="sim-left">Player</th><th>HC</th>
+                <th>Gross vs par</th><th>Gross 10-90</th>
+                <th>Stableford</th><th>Stab 10-90</th>
+                <th>Win % gross</th><th>Win % stab</th>
+                <th><abbr title="Chance of at least one eagle or better over the TEG">Eagle %</abbr></th>
+                <th><abbr title="Expected holes scoring 0 Stableford points">Blobs</abbr></th>
+            </tr></thead>
+            <tbody>
+            {% for r in m.summary %}
+            <tr>
+                <td class="sim-left">{{ r.name_html | safe }}</td><td>{{ r.hc }}</td>
+                <td>{{ r.gross_vp }}</td><td>{{ r.gross_range }}</td>
+                <td>{{ r.stab }}</td><td>{{ r.stab_range }}</td>
+                <td>{{ r.win_gross }}</td><td>{{ r.win_stab }}</td>
+                <td>{{ r.eagle }}</td><td>{{ r.blobs }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div></div>
+        </section>
+
+        <section class="sim-section">
+        <h3 class="chart-title">Finishing position, {{ m.label | lower }}</h3>
+        <p class="caption">How often each player finishes in each position.</p>
+        <div class="data-card"><div class="table-wrapper">
+        <table class="teg-table sim-grid-table">
+            <thead><tr><th class="sim-left">Player</th>{% for c in m.grid_cols %}<th>{{ c }}</th>{% endfor %}</tr></thead>
+            <tbody>
+            {% for r in m.grid %}
+            <tr>
+                <td class="sim-left">{{ r.name_html | safe }}</td>
+                {% for c in r.cells %}<td class="sim-heat{% if c.zero %} sim-zero{% endif %}" style="{{ c.style }}">{{ c.text }}</td>{% endfor %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div></div>
+        </section>
+
+        <section class="sim-section">
+        <h3 class="chart-title">Distribution of {{ 'gross vs par' if m.key == 'gross' else 'total Stableford points' }}</h3>
+        <p class="caption">How each player's total is spread across all simulations.</p>
+        <div class="data-card data-card--padded">
+            <div class="chart-container sim-chart" data-figure="{{ m.chart_json }}" style="height:400px;"></div>
+        </div>
+        </section>
+    </div>
+    {% endfor %}
+    </div>
+    {% if courses %}
+    <section class="sim-section">
+        <details class="sim-expander">
+            <summary><span class="section-title">Courses drawn</span><span class="sim-toggle-hint" aria-hidden="true"></span></summary>
+            <p class="caption">Which courses the simulation drew for rounds with no fixed scorecard.</p>
+            <div class="data-card"><div class="table-wrapper">
+            <table class="teg-table sim-courses-table">
+                <thead><tr><th class="sim-left">Course</th><th>% of rounds</th></tr></thead>
+                <tbody>{% for c in courses %}<tr><td class="sim-left">{{ c.name }}</td><td>{{ c.pct }}</td></tr>{% endfor %}</tbody>
+            </table>
+            </div></div>
+        </details>
+    </section>
+    {% endif %}
+    {% if impact %}
+    <section class="sim-section">
+    <details class="sim-expander">
+        <summary><span class="section-title">Impact of handicap changes</span><span class="sim-toggle-hint" aria-hidden="true"></span></summary>
+        <p class="caption">How each player's handicap change since TEG {{ impact.prev }} moves everyone's Stableford win chance.</p>
+        {% if impact.message %}<p class="caption">{{ impact.message }}</p>{% endif %}
+        {% if impact.win_old %}
+        <div class="data-card"><div class="table-wrapper">
+        <table class="teg-table sim-impact">
+            <thead><tr><th class="sim-left">Handicap change</th>{% for c in impact.cols %}<th>{{ c | safe }}</th>{% endfor %}</tr></thead>
+            <tbody>
+            {% for r in impact.rows or [] %}
+            <tr><td class="sim-left">{{ r.name_html | safe }} ({{ r.change }})</td>{% for c in r.cells %}<td>{{ c }}</td>{% endfor %}</tr>
+            {% endfor %}
+            {% if impact.rows %}<tr><td class="sim-left"><strong>Total change</strong></td>{% for c in impact.total %}<td><strong>{{ c }}</strong></td>{% endfor %}</tr>{% endif %}
+            <tr><td class="sim-left">Win % on TEG {{ impact.prev }} handicaps</td>{% for c in impact.win_old %}<td>{{ c }}</td>{% endfor %}</tr>
+            <tr><td class="sim-left">Win % on TEG {{ impact.teg }} handicaps</td>{% for c in impact.win_new %}<td>{{ c }}</td>{% endfor %}</tr>
+            <tr><td class="sim-left">Sum of single changes</td>{% for c in impact.single_sum %}<td>{{ c }}</td>{% endfor %}</tr>
+            </tbody>
+        </table>
+        </div></div>
+        <p class="caption">{% if impact.rows %}Each row sums to zero across players. {% endif %}The last row adds up each change made on its own, with the others held at TEG {{ impact.prev }}.{% if impact.rows %} The gap to the total shows the changes are not additive.{% endif %}</p>
+        {% if impact.rows %}
+        <p class="caption">Each cell is that row player's handicap change, averaged over every order the changes could be applied in (Shapley), in percentage points for the column player.</p>
+        <p class="caption"><strong>How the split works (Shapley).</strong> One handicap change matters more or less depending on which other changes have already happened. Cutting one rival's handicap barely helps a player far off the pace, but helps a lot once they are in contention. So each change is tried in every possible order: first, last and everywhere in between. Its average effect across all those orders is its share. The shares always add up to the total change, so the whole swing is credited and nothing is counted twice.</p>
+        {% endif %}
+        {% endif %}
+        {% if impact.unchanged or impact.no_previous %}<p class="caption">{% if impact.unchanged %}Unchanged handicap: {{ impact.unchanged | join(', ') }}. {% endif %}{% if impact.no_previous %}No TEG {{ impact.prev }} handicap, treated as unchanged: {{ impact.no_previous | join(', ') }}.{% endif %}</p>{% endif %}
+    </details>
+    </section>
+    {% endif %}
+    {% if equalise %}
+    <section class="sim-section">
+    <details class="sim-expander">
+        <summary><span class="section-title">Handicaps that equalise chances</span><span class="sim-toggle-hint" aria-hidden="true"></span></summary>
+        <p class="caption">The handicaps that would give everyone the same average score of {{ equalise.target }} points per round.</p>
+        {% if equalise.message %}<p class="caption">{{ equalise.message }}</p>{% endif %}
+        {% if equalise.rows %}
+        <div class="data-card"><div class="table-wrapper">
+        <table class="teg-table sim-equalise">
+            <thead><tr><th class="sim-left">Player</th><th>Current HC</th><th>Equalising HC</th><th>Change</th><th>Unrounded</th><th>Pts/round</th><th>Win % at equalising HCs</th></tr></thead>
+            <tbody>
+            {% for r in equalise.rows %}
+            <tr><td class="sim-left">{{ r.name_html | safe }}</td><td>{{ r.current }}</td><td>{{ r.equal }}</td><td>{{ r.change }}</td><td>{{ r.unrounded }}</td><td>{{ r.pts }}</td><td>{{ r.win }}</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div></div>
+        <p class="caption">Win chances still differ: handicaps are whole numbers, and some players' scores swing more than others'.</p>
+        {% if equalise.unreachable %}<p class="caption">* The target is outside what any handicap in range reaches for this player.</p>{% endif %}
+        {% endif %}
+    </details>
+    </section>
+    {% endif %}
+</div>
+{% endif %}

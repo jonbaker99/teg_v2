@@ -6,11 +6,14 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 ## IN PROGRESS
 
+- [ ] **TEGBot 5000 follow-ups (2026-10-02).** (1) Give bounce-back rate its own page under Scoring analysis, then add it to `SITE_PAGES` so the bot links it. (2) Answer test built (`scripts/tegbot_eval.py`, 30/30 on 2026-10-02); it still flags occasional mental maths (e.g. "65%" from 11 of 17); tighten the prompt and re-run. (3) Stream answers if the ~6s wait feels slow. (4) Move the daily cap to persistent storage if restarts make it too leaky. (5) Read the `TEGBot q=` log lines after the first week to see which questions fail and which tools are missing.
+- [ ] **TEGBot: "why" questions on win chances, via the simulator (2026-10-04).** Today `get_predictions` only returns the default run's odds. Target questions: "why is JB favourite?", "how much did handicap changes matter?", "what if handicaps hadn't changed?", "what if JB's injury TEG is ignored?", "what handicaps would make it fair?". Worked example: the PR #170 session (Shapley split of handicap changes, weighting scenarios, equalising handicaps). Proposed lookups calling `teg_analysis.analysis.simulation`, fixed seed, cached: (1) `get_handicap_impact` wrapping `handicap_change_impact` + `previous_handicaps`; (2) `get_equalising_handicaps` wrapping `equalising_handicaps`; (3) `run_what_if` with a bounded schema (per-player handicap overrides, TEG-weight presets incl. "skip TEG n for player X"), returning win % and mean Stableford vs the default run. Keep sims modest (~20k) for latency and say the figures are paired with the default run. Add eval questions to `scripts/tegbot_eval.py`.
 - [ ] **TEG 19 dry-run fixes, Batches 1B to 4 (2026-09-29).** Batch 1A (post-completion crashes, issues 13 to 16) is done. Before 10 October: wave 1 (Batches 1B, 3 and 4a) runs in parallel now, then wave 2 (Batch 4b, admin pages on mobile) once 1B and 3 merge. Batch 2 (finalise reliability) was pulled forward (PR #149). Plan, root causes and acceptance criteria: `TEG19_FIX_PLAN.md`; evidence: `TEST_TOURNAMENT_ISSUES.md`. Delete both once every item is fixed or moved here.
 - [x] **Run round deletion as a background job (2026-09-30; done 2026-10-01, Batch 6 PR B).** `webapp/delete_jobs.py` mirrors `finalize_jobs.py`: a step checklist that survives a reload or a locked phone.
 - [ ] **Deleted reports keep their PDFs (2026-09-30).** Round deletion archives report markdown/JSON but leaves `data/commentary/pdfs/teg_N*.pdf` and their manifest entries. Harmless while PDFs are only linked from the report page; revisit if PDFs get built automatically.
 - [ ] **`test_round_setup_list_renders` fails on `main` (2026-09-30).** It asserts "Nothing pending" against the real `data/round_info.csv`, which now lists TEG 19 rounds with no scores yet. Make the test stub its data rather than read the repo's.
 - [ ] **Make report status writes atomic (2026-09-30).** `report_generation.write_status` truncates then writes, so a poll can read a half-written file as "no run". `finalize_jobs.write_status` now writes a temp file and `os.replace`s it; apply the same to reports.
+- [ ] **Remove the remaining abbreviated player names (2026-10-02).** Jon wants full names everywhere, wrapped together if needed (`design_principles.md` → Tables). The records lists on `/latest-teg` and `/latest-round` are fixed. Still abbreviating: `/eclectic` record tables and one `/scoring` table (`shorten_players=True` via `webapp/tables.py`), the `/top-performances` table (`webapp/routes/performance.py`), and scorecard player labels (`teg_analysis/display/scorecards.py`). Scorecards may justify initials, but not "D.MULLIN".
 - [ ] **Draft handicap for a player with only one TEG of history (2026-09-29).** `get_hc` now leaves out anyone missing a handicap in either of the two TEGs it weighs, so a first-year player gets no draft and TEG setup shows a blank to fill by hand. Decide whether to weight their one TEG at 100% instead.
 
 - [x] **Scorecard controls follow-up (2026-09-25).** View occupies its own mobile row with parallel labels; the remaining selectors wrap below with consistent 44px dropdown sizing and a white light-mode surface. Header rules are thin and muted. Browser interaction checks cover dependent selectors.
@@ -334,16 +337,13 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
   `teg_analysis/reporting/`.
 
 ## PLAYER PROFILES
-- [ ] **Align career-average definitions** — during the profile design review,
-  Jon's headline gross average rendered `+20.5`, while the chart reference line
-  rendered `+20.7` (Stableford: `36.1` versus `36.0`). `_metric_specs` weights each round equally; `_trend_fig`
-  averages the per-TEG bars equally. Agree the intended definition and label or
-  align the reference line. Keep this separate from the layout change.
+- [x] **Align career-average definitions** — resolved 2026-10-02: the Overview chart's
+  dashed line and the Averages "Gross vs par / round" are both the mean of round GrossVP.
 - [x] **Grouped player-detail layout** — approved interactive direction implemented
   2026-09-13. Compact player picker, grouped glance/cabinet blocks, four neutral
   Career Highlights cards, trend before expandable results and complete held
   records on Records & Streaks. The liked roster is unchanged.
-- [ ] **Less generic player-detail aesthetic** — revisit the approved structure
+- [x] **Less generic player-detail aesthetic** — done 2026-10-02 (almanac redesign: Lora headings, no cards, Career record tab; see `README.md` → Player profiles). Original notes: revisit the approved structure
   after the wider UI work, not as the next task (decision 2026-09-13). Reconfirmed
   2026-09-16 (Jon, reviewing the mobile rollout): individual player pages still read
   as too much mono font — matches the "no definition/structure" rejection reasoning

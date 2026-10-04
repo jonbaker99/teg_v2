@@ -58,6 +58,8 @@ teg_analysis/
     performance.py   Performance measure tables
     leaderboards.py  Leaderboard generation
     bestball.py      Best-ball / worst-ball competition format
+    bounceback.py    Bounce-back rate (par or better on the hole after a bogey+) vs each
+                     player's own par-or-better baseline — bounce_back_stats
     eclectic.py      Eclectic (best score per hole across rounds) — by-dimension
                      pivots, per-player-per-TEG totals (eclectic_player_teg_totals),
                      all-time + own-history ranking (rank_teg_eclectics) and
@@ -72,6 +74,23 @@ teg_analysis/
     teg_setup.py     Pre-TEG roster + handicap confirmation (handicaps.csv + who plays in
                      teg_rosters.csv) — not every player plays every TEG —
                      get_teg_roster_form/save_teg_roster
+    simulation.py    Monte Carlo prediction of an upcoming TEG: per-player GrossVP
+                     distributions by par x SI (default: rolling window over SI pairs
+                     widened to a min hole count; or fixed SI bands shrunk to par
+                     level), recency-weighted by TEG with optional per-player weight
+                     overrides, blended towards the field (field_alpha, tuned by
+                     backtest_field_alpha) so rare events stay possible —
+                     build_distributions; the target is default_target_teg()
+                     (in-progress, else last completed + 1): roster/handicaps (saved,
+                     else draft) and scorecards, with random par-72 courses from
+                     course_pars.csv for rounds without one — load_target_tournament/
+                     run_simulation (also eagles/blobs per sim);
+                     summary_table/position_grid/total_distribution (optionally smoothed);
+                     handicap what-ifs on kept draws (run_simulation(keep_scores=True)):
+                     stableford_totals (re-score under other handicaps),
+                     previous_handicaps, handicap_change_impact (exact Shapley split of
+                     each handicap change into every player's Stableford win %, shared
+                     tie-break noise), equalising_handicaps (HC giving ~36 pts/round)
     live_round.py    Multi-device live round entry: registry + per-round staging CSVs,
                      server-ordered writes, conflict flagging, live leaderboard from
                      staging, finalize into execute_data_update —
@@ -106,7 +125,25 @@ teg_analysis/
     llm.py           Thin Anthropic wrapper (key resolution, prompt caching)
     scoring.py       3-axis combination + mode weights
 
-  
+  chatbot/           TEGBot 5000 — answers stat questions in plain English
+    tools.py         Lookups (get_honours, get_records, get_streak_records, get_bounce_back,
+                     get_predictions — the simulator's next-TEG odds via a ChatData provider):
+                     full, tie-complete results with the site's own definitions. ChatData
+                     takes the caller's cached loaders and builds the sandbox CSVs
+                     (datasets(): holes, rounds with round/after-round positions, tegs
+                     with finishing positions, winners)
+    prompt.py        System prompt (incl. when to judge players against their own normal
+                     standard rather than raw totals), DATA_GUIDE (the CSVs' columns and rules for code) and
+                     SITE_PAGES, the only links the bot may give
+    bot.py           ask(): the Claude loop — lookups plus Anthropic's code-execution
+                     sandbox (CSVs uploaded once per data version via the Files API);
+                     returns text, every lookup/code step, and token usage
+    qa_log.py        Shared Q&A log (JSONL on the volume, outside data/ so never synced):
+                     append_entry, conversations(), past_questions(), themes(),
+                     delete_entries() and set_themes() (atomic rewrites)
+    themes.py        regroup_themes(): one structured AI call re-sorts every logged
+                     question into at most 10 themes (admin "Sort into themes")
+
   display/           Formatting and output
     formatters.py    Format data for display (HTML, styled tables)
     html_tables.py   Generate styled HTML tables
@@ -214,6 +251,7 @@ Cache is in-process (`@lru_cache`). Cleared manually after data updates.
 - `get_teg_placings(df, teg_num)` — Full best-to-worst order for one TEG's Trophy/Green Jacket, override-aware like `get_teg_winners`
 - `calculate_par_performance_matrix()` — Score distribution by par type
 - `prepare_comeback_data()` — Comeback/improvement records
+- `get_teg_round_extremes(all_data, teg_num)` — One TEG's best and worst single rounds, gross and era Trophy metric (full 18-hole rounds only; ties listed)
 
 ### Display formatting
 - `prepare_record_table(all_data, ...)` — Format records for display

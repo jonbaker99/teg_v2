@@ -1,0 +1,38 @@
+{% if fatal %}
+<div class="request-feedback" role="alert"><span>{{ fatal }}</span></div>
+{% elif dist_errors %}
+<div class="request-feedback" data-state="error" role="alert"><ul class="sim-list">{% for e in dist_errors %}<li>{{ e }}</li>{% endfor %}</ul></div>
+{% else %}
+<div class="section-controls">
+    <label class="sim-field"><span class="text-muted">Player</span>
+        <select class="theme-select" name="dist_player" hx-get="/simulation/distributions"
+                hx-include="#sim-form, [name=dist_player]" hx-target="#sim-dists" hx-swap="innerHTML" hx-trigger="change">
+            {% for code, name in players %}<option value="{{ code }}" {% if code == dist_player %}selected{% endif %}>{{ name }}</option>{% endfor %}
+        </select>
+    </label>
+</div>
+<div class="data-card"><div class="table-wrapper">
+<table class="teg-table sim-dist">
+    <thead><tr>
+        <th class="sim-left">Hole type</th>{% if dist_window %}<th>Window</th>{% endif %}
+        {% for o in outcomes %}<th>{{ o }}</th>{% endfor %}
+        <th>N</th><th>EffN</th><th>Mean vs par</th>
+    </tr></thead>
+    <tbody>
+    {% for r in dist_rows %}
+    <tr>
+        <td class="sim-left">{% if dist_window and dist_marks and r.used %}<strong>{{ r.label }}</strong> <span class="sim-used" title="Used by this TEG's course">&bull;</span>{% else %}{{ r.label }}{% endif %}</td>{% if dist_window %}<td class="sim-win">{{ r.window }}</td>{% endif %}
+        {% for c in r.cells %}<td class="sim-heat" style="{{ c.style }}">{{ c.text }}</td>{% endfor %}
+        <td>{{ r.n }}</td>
+        <td{% if r.low %} class="sim-low"{% endif %}>{{ r.eff }}{% if r.low %}<span class="sim-flag" title="Low sample">*</span>{% endif %}</td>
+        <td>{{ r.mean }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div></div>
+<p class="caption">Share of holes at each score vs par, after weighting{% if not dist_window %} and shrinkage{% endif %}. EffN is the weighted effective sample size.{% if dist_window %}{% if dist_marks %} <span class="sim-used">&bull;</span> Hole types on this TEG's scorecard.{% endif %} Window is the SI range of holes used for that row.{% endif %}{% if dist_has_low %} <span class="sim-flag">*</span> EffN below 5: thin data, leaning on the player's overall par distribution.{% endif %}</p>
+{% if dist_warnings %}
+<ul class="caption sim-list">{% for w in dist_warnings %}<li>{{ w }}</li>{% endfor %}</ul>
+{% endif %}
+{% endif %}

@@ -1,30 +1,40 @@
-<div>
-    <section class="pp-block pp-held-records">
-        <h2 class="pp-section-title">All-time records and worsts held</h2>
-        <div class="pp-held-grid">
-            {% for r in records_held + worsts_held %}
-            <article class="pp-held-item">
-                <h3 class="pp-label">{{ r.label }}{% if r.shared %} · shared{% endif %}</h3>
-                <strong>{{ r.value }}</strong>
-                {% if r.detail %}<p class="pp-context">{{ r.detail }}</p>{% endif %}
-            </article>
-            {% endfor %}
-        </div>
-        {% if not records_held %}<p class="pp-context">No outright TEG records held.</p>{% endif %}
-        {% if not worsts_held %}<p class="pp-context">No outright TEG worsts held.</p>{% endif %}
+{% macro held_table(items) %}
+<div class="data-card"><div class="table-wrapper table-wrapper--no-pin">
+    <table class="teg-table pp-held-table">
+        <thead><tr><th class="col-player">Record</th><th class="col-num">Value</th><th class="col-player">Where</th></tr></thead>
+        <tbody>
+        {% for r in items %}
+        <tr>
+            <td class="col-player">{{ r.label }}{% if r.shared %} <span class="pp-pb-tag">shared</span>{% endif %}</td>
+            <td class="col-num pp-strong">{{ r.value }}</td>
+            <td class="col-player pp-where">{{ r.detail or '–' }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div></div>
+{% endmacro %}
+<div class="pp-tab">
+    <section class="pp-section">
+        <h2 class="section-title">All-time records held</h2>
+        {% if records_held %}{{ held_table(records_held) }}{% else %}<p class="pp-note">No outright TEG records held.</p>{% endif %}
+    </section>
+    <section class="pp-section">
+        <h2 class="section-title">All-time worsts held</h2>
+        {% if worsts_held %}{{ held_table(worsts_held) }}{% else %}<p class="pp-note">No outright TEG worsts held.</p>{% endif %}
+        <p class="pp-note pp-foot"><span></span><span class="pp-foot-links"><a class="text-link pp-a" href="/records">All-time records ↗</a></span></p>
     </section>
     {% for section in sections %}
-    {% if not loop.first %}
-    <hr class="divider--dotted my-6">
-    {% endif %}
-    <div>
+    <section class="pp-section">
         <h2 class="section-title">{{ section.title }}</h2>
-        <div class="data-card"><div class="overflow-x-auto">
-            {{ section.table_html | safe }}
-        </div></div>
-    </div>
+        <div class="data-card"><div class="table-wrapper table-wrapper--no-pin">{{ section.table_html | safe }}</div></div>
+        <p class="pp-note pp-foot"><span></span><span class="pp-foot-links"><a class="text-link pp-a" href="{{ streaks_url }}">Streaks ↗</a></span></p>
+    </section>
     {% endfor %}
     {% if not sections %}
-    <p class="text-muted text-sm">No records data available.</p>
+    <section class="pp-section">
+        <h2 class="section-title">Streaks</h2>
+        <p class="pp-note">No streak data.</p>
+    </section>
     {% endif %}
 </div>

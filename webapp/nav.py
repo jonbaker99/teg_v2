@@ -17,15 +17,14 @@ Material Symbols web font.
 NAV_SECTIONS = [
     {
         "label": "TEG History",
-        "active": {"history", "honours", "results", "player-rankings", "teg-reports"},
+        "active": {"history", "honours", "results", "player-rankings", "player", "teg-reports"},
         "pages": [
             ("TEG History", "/history", "history", "lists"),
             ("TEG Honours Board", "/honours", "honours", "trophy"),
             ("Past results", "/results", "results", "sports_score"),
             ("Player Rankings", "/player-rankings", "player-rankings", "123"),
+            ("Player Profiles", "/player", "player", "person"),
             ("TEG Reports", "/teg-reports", "teg-reports", "description"),
-            # Player Profiles hidden from nav 2026-09-18: pages need more work
-            # before going live. Route/templates untouched, just unlinked.
         ],
     },
     {
@@ -49,7 +48,7 @@ NAV_SECTIONS = [
     },
     {
         "label": "Scoring analysis",
-        "active": {"scoring"},
+        "active": {"scoring", "simulation"},
         "pages": [
             ("Eagles / Birdies / Pars", "/scoring/birdies", "scoring", "strategy"),
             ("Streaks", "/scoring/streaks", "scoring", "trending_up"),
@@ -63,6 +62,7 @@ NAV_SECTIONS = [
             ("Changes vs previous round", "/scoring/changes", "scoring", "strategy"),
             ("Heatmap (WIP)", "/scoring/heatmap", "scoring", "strategy"),
             ("Final Round Comebacks", "/scoring/comebacks", "scoring", "trending_up"),
+            ("Simulation", "/simulation", "simulation", "casino"),
         ],
     },
     {
@@ -73,6 +73,13 @@ NAV_SECTIONS = [
             ("Best/Worstball", "/bestball", "scorecards", "strategy"),
             ("Eclectic Scores", "/eclectic", "scorecards", "golf_course"),
             ("Eclectic Records", "/eclectic-records", "scorecards", "emoji_events"),
+        ],
+    },
+    {
+        "label": "Ask TEGBot",
+        "active": {"tegbot"},
+        "pages": [
+            ("TEGBot 5000", "/tegbot", "tegbot", "smart_toy"),
         ],
     },
 ]

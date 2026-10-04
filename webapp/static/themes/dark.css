@@ -79,6 +79,7 @@ html[data-mode="dark"] {
   --ink-muted: #9c9a8f; /* verified 5.98–6.47:1 on the dark surfaces this
       workstream's components use */
   --green: #6cc77f;
+  --rd-worst: #f08a80; /* best/worst round boxes (base-vars.css) */
   --focus: var(--ink);
   --warning: #c9a227;
   --failure: #e06a63;

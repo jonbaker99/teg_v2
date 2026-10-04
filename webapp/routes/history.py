@@ -25,6 +25,7 @@ from teg_analysis.analysis.player_rankings import (
 from teg_analysis.io.file_operations import read_file
 from teg_analysis.constants import ROUND_INFO_CSV
 from teg_analysis.reporting.newspaper_edition import available_tegs
+from teg_analysis.analysis.records import get_teg_round_extremes
 from webapp.deps import (
     cached_load_all_data,
     cached_round_data,
@@ -586,7 +587,22 @@ def _split_player_name(name) -> tuple:
     return (first, rest[0] if rest else "")
 
 
-def _standings_rows(df: pd.DataFrame, link_players: bool = False) -> dict:
+def _round_marks(teg_num: int, metric: str) -> dict:
+    """{player name: {"R2": "best", ...}} for the TEG's best and worst
+    rounds on ``metric`` (get_teg_round_extremes -- the same source as
+    /latest-teg's Best & Worst Rounds, so ties are all marked and a round
+    still in play never is). Empty when the metric has no extremes."""
+    marks: dict = {}
+    for e in get_teg_round_extremes(cached_load_all_data(), teg_num):
+        if e["metric"] != metric:
+            continue
+        for h in e["holders"]:
+            marks.setdefault(h["player"], {})[f"R{h['round']}"] = e["kind"]
+    return marks
+
+
+def _standings_rows(df: pd.DataFrame, link_players: bool = False,
+                    round_marks: Optional[dict] = None) -> dict:
     """Structured standings for the unified Jinja renderer (I1): round labels
     plus one dict per player, built once and shared by the desktop table
     columns and the phone round-strip inside the same <tr> -- so the two
@@ -595,9 +611,14 @@ def _standings_rows(df: pd.DataFrame, link_players: bool = False) -> dict:
     ``link_players=False`` (default -- player profiles hidden 2026-09-18, not
     ready to be live) omits the player code so the template renders plain
     text instead of a link to ``/player/<code>``. Pass ``link_players=True``
-    to restore click-through once the profile pages are ready."""
+    to restore click-through once the profile pages are ready.
+
+    ``round_marks`` (_round_marks) flags best/worst round cells; each row
+    gets ``marks`` ({"R2": "best"}) and the table a ``has_marks`` flag for
+    its key line."""
     if df is None or df.empty:
         return {"round_labels": [], "rows": []}
+    round_marks = round_marks or {}
 
     round_labels = [c for c in df.columns if c not in ("Rank", "Player", "Total")]
     rows = []
@@ -612,10 +633,11 @@ def _standings_rows(df: pd.DataFrame, link_players: bool = False) -> dict:
             "last": last,
             "code": get_name_to_code().get(player) if link_players else None,
             "rounds": [(label, str(row[label])) for label in round_labels],
+            "marks": round_marks.get(player, {}),
             "total": str(row["Total"]),
             "lead": rank.startswith("1"),
         })
-    return {"round_labels": round_labels, "rows": rows}
+    return {"round_labels": round_labels, "rows": rows, "has_marks": any(r["marks"] for r in rows)}
 
 
 def _results_chart_meta(tab: str, variant: str, net_measure: str, teg_name: str) -> dict:
@@ -796,7 +818,8 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
         # string table and the now-deleted .lb-cards duplicate.
         for col in [c for c in lb.columns if c not in ['Rank', 'Player']]:
             lb[col] = lb[col].apply(lambda x: format_value(x, value_col))
-        standings = _standings_rows(lb, link_players=link_players)
+        standings = _standings_rows(lb, link_players=link_players,
+                                    round_marks=_round_marks(teg_num, value_col))
 
         lb_hero = {
             "label": leader_label,

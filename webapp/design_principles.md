@@ -8,8 +8,9 @@ The webapp should feel **lo-fi and data-forward** — like a well-kept scorecard
  further down for the full role table. This replaces both an earlier
  "mono-first" direction and, before that, a "serif-first" one; where a page
  still doesn't match, treat it as *not yet converted*, not as the target.
- The `/player` roster is the reference implementation for the rest of the
- vibe (surfaces, restraint, no decorative chrome).
+ The `/player` roster (a two-line list: value over muted label, thin rules,
+ Lora names, no card boxes) is the reference implementation for the rest of the
+ vibe (restraint, no decorative chrome).
 
 ## Design vibe
 
@@ -60,7 +61,7 @@ vibe conversion for one page:
  ```text
  Apply our **Design vibe** to the `[PAGE — e.g. /player/{code} profile, or /teg-history]` page.
 
- First read `webapp/design_principles.md` — start with the **Design vibe** section (the lo-fi / mono-first direction + checklist). That's the target; the `/player` roster (`webapp/templates/player_index.html`) is the reference implementation to match.
+ First read `webapp/design_principles.md` — start with the **Design vibe** section (the lo-fi / mono-first direction + checklist). That's the target; the `/player` roster (`webapp/templates/player_index.html`, a two-line list) is the reference implementation to match.
 
  Then:
  1. Look at the page as it renders now (route + template + the CSS it uses) and tell me, briefly, where it currently breaks the vibe — serif where it should be mono, decorative chrome, redundant CTAs, marketing-y copy, misused accent colour, boxed/heavy surfaces, edge alignment.
@@ -131,7 +132,7 @@ Typography bullet above):
   cells carry their own background (e.g. scorecard shape cells), tint those cells on
   `tr:hover` so the highlight isn't masked.
 - Aim for Datawrapper-like density: tight row spacing, thin borders, generous but not excessive cell padding
-- **Player names wrap together** — preserve full names. If any player name in a table needs to wrap between first name and surname, every player name in that table must use the same two-line layout, with tight line spacing. Never mix one-line and two-line names in the same table. When all names fit again, return all names to one line. Recheck on initial load, viewport resize and HTMX content changes. Use the shared `.player-name` first/last spans and `.names-break` behaviour in `base.html`; keep the wrapper inside the table cell. Do not introduce initials or abbreviated names unless explicitly requested. Some existing tables still use `_player_name_spans` / `shorten_players=True`; that legacy behaviour is not the default for new or revised tables.
+- **Player names wrap together** — preserve full names. If any player name in a table needs to wrap between first name and surname, every player name in that table must use the same two-line layout, with tight line spacing. Never mix one-line and two-line names in the same table. When all names fit again, return all names to one line. Recheck on initial load, viewport resize and HTMX content changes. Use the shared `.player-name` first/last spans and `.names-break` behaviour in `base.html`; keep the wrapper inside the table cell. **Never abbreviate names** ("D.MULLIN") or truncate them with an ellipsis. Initials ("DM") are a last resort, only where a full name cannot fit even on two lines, such as a dense scorecard grid. The same rule applies to mobile lists, not just tables: `.records-list` uses the same spans and `names-break` check. Code still using `_player_name_spans` / `shorten_players=True` is a known bug, listed in `webapp/TODOS.md`. Never copy it, and never cite it as "matching the existing page"; migrate it when you touch it.
 - **Free room before abbreviating** — `/records` uses stacked full-name holder lists at every width (`_build_stacked_records_list`, `webapp/routes/records.py`). For wide data sets, consider separate tables that stack on narrow screens.
 
 ### Mobile table pattern — the reference implementation

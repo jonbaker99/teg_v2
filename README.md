@@ -54,6 +54,7 @@ python todos.py --all    # include completed items too
 # Rebuild the downloadable report PDFs (needs: pip install -r requirements-dev.txt)
 python scripts/build_report_pdfs.py --all    # every tournament and round report
 python scripts/build_report_pdfs.py --check --all   # exit 1 if any is out of date
+python scripts/tegbot_eval.py                # TEGBot answer test: ~30 live questions, ~30p a run
 ```
 
 See [TODOS.md](TODOS.md) for the central to-do index. Each area (`webapp/`, `streamlit/`, `teg_analysis/`) has its own `TODOS.md` file for working details.
@@ -120,6 +121,7 @@ teg_analysis/
                      eclectic, pipeline, data update, live round, leaderboards
   display/           Formatting, HTML tables, scorecards, navigation utilities
   reporting/         LLM-powered tournament reports
+  chatbot/           TEGBot 5000: lookups first, else pandas in Anthropic's code sandbox
   api/               (Placeholder for REST API endpoints)
 ```
 

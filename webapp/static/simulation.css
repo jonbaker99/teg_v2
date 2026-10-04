@@ -1,0 +1,127 @@
+/* /simulation -- page-specific bits only. Everything else comes from the site
+   components (.data-card, .theme-select, .teg-table, .segmented, .action,
+   .request-feedback, .caption). Every colour is a theme variable. */
+.sim-form { margin-bottom: var(--sim-gap); }
+.sim-main { display: grid; grid-template-columns: repeat(2, minmax(0, 14rem)) 1fr; gap: 1rem 1.5rem; align-items: start; }
+.sim-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1.25rem 1.75rem; margin-top: 1rem; }
+.sim-block { display: flex; flex-direction: column; gap: 0.6rem; min-width: 0; }
+.sim-block--wide { grid-column: 1 / -1; }
+.sim-block-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.875rem; }
+.sim-reset { font-size: 0.8rem; color: var(--text-secondary); text-decoration: underline; }
+.sim-field { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.875rem; min-width: 0; }
+.sim-field .theme-select { width: 100%; max-width: 100%; box-sizing: border-box; min-height: 36px; font-size: 0.875rem; }
+.sim-form .caption { margin: 0; }
+.sim-list { margin: 0; padding-left: 1.1rem; }
+.sim-method-window[hidden], .sim-method-bands[hidden] { display: none; }
+
+/* Players */
+.sim-players { border: 0; margin: 0; padding: 0; min-width: 0; font-size: 0.875rem; grid-column: 1 / -1; order: 3; }
+.sim-players legend { padding: 0; margin-bottom: 0.25rem; }
+.sim-player-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr)); gap: 0.1rem 1rem; }
+.sim-check { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; min-height: 32px; }
+.sim-check input, .sim-custom input { accent-color: var(--accent); width: 1rem; height: 1rem; flex: none; }
+
+/* Run button: the site's .action, given a solid primary treatment from the button tokens. */
+.sim-run-row { grid-column: 1 / -1; order: 4; display: flex; align-items: center; gap: 0.75rem; }
+.sim-run {
+    background: var(--btn-active-bg); color: var(--btn-active-text);
+    border: 1px solid var(--btn-active-bg); padding: 0 1.25rem;
+    font-size: 0.9rem; font-weight: 600; min-height: 40px;
+}
+.sim-run:hover { opacity: 0.88; }
+
+/* TEG weights matrix */
+.sim-weights-wrap { max-height: 20rem; overflow: auto; max-width: 100%; }
+.sim-weights th, .sim-weights td { padding: 0.25rem 0.4rem; vertical-align: middle; text-align: center; }
+.sim-weights th { font-size: 0.8rem; font-weight: 600; }
+.sim-pcol { min-width: 6.5rem; }
+.sim-pname { display: block; }
+.sim-custom { display: flex; align-items: center; justify-content: center; gap: 0.3rem; font-weight: 400; color: var(--text-muted); margin-top: 0.2rem; cursor: pointer; }
+.sim-weights td.sim-left, .sim-weights th.sim-left { text-align: left; }
+.sim-weights input.theme-select { width: 4.75rem; text-align: center; box-sizing: border-box; }
+.sim-weights input:disabled { opacity: 0.5; cursor: not-allowed; }
+.sim-share { color: var(--text-muted); width: 3rem; }
+
+/* Result and distribution tables */
+.sim-summary abbr { text-decoration: underline dotted; cursor: help; }
+
+.teg-table .sim-left { text-align: left; white-space: nowrap; }
+.teg-table.sim-dist td, .teg-table.sim-grid-table td, .teg-table.sim-summary td,
+.teg-table.sim-dist th, .teg-table.sim-grid-table th, .teg-table.sim-summary th,
+.sim-courses-table td, .sim-courses-table th { text-align: center; }
+.teg-table.sim-dist td.sim-left, .teg-table.sim-grid-table td.sim-left, .teg-table.sim-summary td.sim-left,
+.sim-courses-table td.sim-left, .teg-table.sim-dist th.sim-left, .teg-table.sim-grid-table th.sim-left,
+.teg-table.sim-summary th.sim-left, .sim-courses-table th.sim-left { text-align: left; }
+.teg-table.sim-grid-table td { min-width: 3.4rem; }
+/* Heat shading: --heat (0-1) is set inline; one accent, one job (probability). */
+.sim-heat { background: color-mix(in srgb, var(--accent) calc(var(--heat, 0) * 55%), transparent); }
+:root[data-mode="dark"] .sim-heat { background: color-mix(in srgb, var(--accent) calc(var(--heat, 0) * 38%), transparent); }
+.sim-zero, .sim-low, .sim-win, .sim-flag { color: var(--text-muted); }
+.sim-zero { opacity: 0.7; }
+.sim-win { white-space: nowrap; }
+.sim-used { color: var(--accent); }
+.sim-flag { margin-left: 1px; }
+.sim-results .section-controls { margin-bottom: 0.5rem; }
+
+/* Plotly inlines dark-grey text and white hover boxes; follow the theme. */
+.sim-chart .main-svg text { fill: var(--text-secondary) !important; }
+.sim-chart .main-svg .legendtext { fill: var(--text-primary) !important; }
+.sim-chart .main-svg .gridlayer path { stroke: var(--table-cell-border) !important; stroke-opacity: 1 !important; }
+.sim-chart .hoverlayer .hovertext rect { fill: var(--bg-card) !important; stroke: var(--table-header-border) !important; }
+.sim-chart .hoverlayer .hovertext text { fill: var(--text-primary) !important; }
+
+@media (max-width: 640px), (pointer: coarse) {
+    .sim-main { grid-template-columns: 1fr; }
+    .sim-field .theme-select, .sim-weights input.theme-select { min-height: 44px; font-size: 16px; border-radius: 10px; }
+    .sim-weights input.theme-select { width: 5rem; }
+    .sim-check { min-height: 44px; }
+    .sim-player-grid { grid-template-columns: 1fr 1fr; }
+    .sim-run { min-height: 44px; width: 100%; }
+    .sim-run-row { flex-wrap: wrap; }
+    .sim-weights-wrap { max-height: 16rem; }
+    .sim-chart { height: 340px !important; }
+}
+
+/* Vertical rhythm. One gap (--sim-gap) between sections everywhere on the page;
+   inside a section: title, then caption, then content. */
+:root { --sim-gap: 2rem; }
+.sim-section { margin: 0 0 var(--sim-gap); }
+.sim-section:last-child { margin-bottom: 0; }
+.sim-stack { display: flex; flex-direction: column; gap: var(--sim-gap); }
+.sim-stack--tight { gap: 1rem; }
+.sim-stack .sim-section { margin: 0; }
+.sim-stack > .caption, .sim-stack > .sim-list { margin: 0; }
+.sim-section > .section-title, .sim-section > .chart-title { margin: 0 0 0.25rem; }
+.sim-section > .caption, .sim-expander > .caption { margin: 0 0 0.625rem; }
+.sim-section > .caption + .caption, .sim-expander > .caption + .caption { margin-top: -0.25rem; }
+.sim-section > .data-card + .caption, .sim-expander > .data-card + .caption { margin: 0.5rem 0 0; }
+.sim-section > .section-controls { margin: 0; }
+.sim-results .section-controls { margin: 0; }
+
+/* The one expander pattern: full-width row, title left, Show / Hide hint right. */
+.sim-expander > summary {
+    list-style: none; cursor: pointer; display: flex; align-items: center;
+    justify-content: space-between; gap: 1rem; min-height: 44px;
+    border-top: 1px solid var(--table-cell-border);
+    border-bottom: 1px solid var(--table-cell-border);
+}
+.sim-expander > summary::-webkit-details-marker { display: none; }
+.sim-expander > summary .section-title { margin: 0; }
+.sim-expander > summary:hover .section-title, .sim-expander > summary:hover .sim-toggle-hint::after { color: var(--accent); }
+.sim-expander > summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.sim-toggle-hint::after {
+    content: "Show \25BE"; font-size: 0.875rem; color: var(--text-secondary); white-space: nowrap;
+}
+.sim-expander[open] .sim-toggle-hint::after { content: "Hide \25B4"; }
+.sim-expander[open] > summary { margin-bottom: 0.75rem; }
+.sim-expander[open] { padding-bottom: 0.75rem; }
+.sim-expander--form { margin-top: 1.25rem; }
+.sim-expander--form .sim-grid { margin-top: 0.75rem; }
+
+.sim-hidden, .sim-panel.sim-hidden { display: none; }
+
+/* Odds table: price over its probability */
+.teg-table.sim-odds td, .teg-table.sim-odds th { text-align: center; }
+.teg-table.sim-odds td.sim-left, .teg-table.sim-odds th.sim-left { text-align: left; }
+.sim-odds-price { display: block; font-weight: 600; color: var(--text-primary); }
+.sim-odds-pct { display: block; font-size: 0.75rem; color: var(--text-muted); }

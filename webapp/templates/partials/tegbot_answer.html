@@ -1,0 +1,34 @@
+{% from "partials/tegbot_robot.html" import robot %}
+<div class="tb-turn" data-question="{{ question }}"{% if answer_text %} data-answer="{{ answer_text }}"{% endif %}>
+    <div class="tb-q">{{ question }}</div>
+    <div class="tb-a">
+        {{ robot(28) }}
+        <div class="tb-answer">
+            {% if error %}
+            <p class="tb-error">{{ error }}</p>
+            {% else %}
+            {{ answer_html | safe }}
+            {% if related %}
+            <div class="tb-related">
+                <span class="tb-related-label">Others asked</span>
+                <ul>
+                    {% for r in related %}
+                    <li><a href="/tegbot/asked?view=themes#q-{{ r.id }}">{{ r.question }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            {% if tool_calls %}
+            <details class="tb-workings">
+                <summary>Show the workings ({{ tool_calls | length }} step{{ 's' if tool_calls | length != 1 }})</summary>
+                {% for c in tool_calls %}
+                <div><strong>{{ c.name }}</strong></div>
+                <pre>{{ c.input }}</pre>
+                <pre>→ {{ c.output }}</pre>
+                {% endfor %}
+            </details>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
