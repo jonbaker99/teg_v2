@@ -125,3 +125,20 @@
 .teg-table.sim-odds td.sim-left, .teg-table.sim-odds th.sim-left { text-align: left; }
 .sim-odds-price { display: block; font-weight: 600; color: var(--text-primary); }
 .sim-odds-pct { display: block; font-size: 0.75rem; color: var(--text-muted); }
+
+/* Live tab: fixed-height status line and swings block so filling in the
+   chart never shifts the page. */
+.sim-live-status { min-height: 1.5em; }
+.sim-live-swings { min-height: 7.5rem; }
+.sim-live-swings h4 { margin: 0.75rem 0 0.25rem; }
+.sim-live-pick { margin-bottom: 1rem; }
+.sim-live-pick .sim-field { max-width: 16rem; }
+.sim-scrub { margin-top: 0.5rem; }
+.sim-scrub-row { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.sim-scrub-play { min-width: 5rem; min-height: 40px; }
+.sim-scrub-range { flex: 1 1 14rem; min-width: 10rem; accent-color: var(--focus, currentColor); height: 40px; }
+.sim-scrub-label { min-width: 8.5rem; font-variant-numeric: tabular-nums; font-size: 0.9rem; }
+.sim-scrub-table td { white-space: nowrap; }
+.sim-bar { display: inline-block; vertical-align: middle; width: 3.5rem; height: 0.55rem; margin-right: 0.4rem;
+           border-radius: 2px; background: linear-gradient(to right, var(--text-secondary) var(--w, 0%), var(--border, #ddd) var(--w, 0%)); }
+.sim-loading { opacity: 0.5; pointer-events: none; transition: opacity 0.15s; }

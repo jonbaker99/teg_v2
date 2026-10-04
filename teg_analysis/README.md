@@ -91,6 +91,20 @@ teg_analysis/
                      previous_handicaps, handicap_change_impact (exact Shapley split of
                      each handicap change into every player's Stableford win %, shared
                      tie-break noise), equalising_handicaps (HC giving ~36 pts/round)
+    win_probability.py  Round-by-round win probabilities for a TEG (in progress or
+                     replayed), built on simulation.py: completed rounds banked, the
+                     rest simulated hole by hole with run_simulation on their real
+                     scorecards (Stableford from simulated gross and hole strokes);
+                     prior = build_distributions on the 3 TEGs held before (50/35/15 as Prediction,
+                     renormalised per player; field if none, centred on handicap + the
+                     group's usual gap: anchor_newcomers); current form tilts the
+                     hole distributions by w x the residual per round (w = k*n/(k*n+P),
+                     n = holes played / 18: form_shift); correlated TEG-form and day
+                     offsets (DEFAULT_FORM_VAR/DAY_VAR) are spread over the simulated
+                     holes so rounds aren't too predictable — load_teg_state/
+                     win_probs_at (any hole of a finished round; checkpoints)/
+                     win_probs_by_round (tidy: teg, after_round, measure, player,
+                     win_prob, mean, sd); backtest_blend (Brier of a k/P grid)
     live_round.py    Multi-device live round entry: registry + per-round staging CSVs,
                      server-ordered writes, conflict flagging, live leaderboard from
                      staging, finalize into execute_data_update —

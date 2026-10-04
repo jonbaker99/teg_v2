@@ -238,3 +238,116 @@ def test_run_includes_handicap_expanders(client):
     assert r.status_code == 200
     assert "Impact of handicap changes" in r.text
     assert "Handicaps that equalise chances" in r.text
+
+
+# ---- Live tab
+
+from teg_analysis.analysis import win_probability as wp  # noqa: E402
+from webapp.routes import simulation as sim_routes  # noqa: E402
+
+
+@pytest.fixture
+def fresh_live_cache():
+    def clear():
+        sim_routes._LIVE_POINTS.clear()
+        sim_routes._live_state.cache_clear()
+    clear()
+    yield
+    clear()
+
+
+def test_live_tab_shell_loads_partial(client):
+    r = client.get("/simulation?tab=live")
+    assert r.status_code == 200
+    assert 'hx-get="/simulation/live?tab=live"' in r.text
+    assert 'name="w_' not in r.text  # no prediction form on the Live tab
+    assert "tab-underline--active" in r.text
+
+
+def test_live_no_teg_in_progress(client, monkeypatch, fresh_live_cache):
+    monkeypatch.setattr(wp, "in_progress_teg", lambda: None)
+    r = client.get("/simulation/live")
+    assert r.status_code == 200
+    assert "No TEG in progress" in r.text
+    assert "nothing to simulate live" in r.text
+
+
+def test_live_in_progress_shows_latest_and_history(client, monkeypatch, fresh_live_cache):
+    h = sim.load_history(teg_nums=[50])
+    h = h[~((h["TEGNum"] == 18) & (h["Round"] > 2))]  # TEG 18 as if 2 rounds in
+    monkeypatch.setattr(sim_routes, "_history", lambda: h)
+    monkeypatch.setattr(wp, "in_progress_teg", lambda: 18)
+    r = client.get("/simulation/live")
+    assert r.status_code == 200
+    assert "TEG 18 win chances after round 2" in r.text
+    assert "How the chances moved, hole by hole" in r.text and "End R2" in r.text
+    assert r.text.count("sim-left") >= 6  # header + 5 players
+
+
+def test_live_replay_of_finished_teg(client, fresh_live_cache):
+    r = client.get("/simulation/live?teg=18")
+    assert r.status_code == 200
+    assert "Replay of TEG 18" in r.text and "win chances at the finish" in r.text
+
+
+def test_live_ignores_bad_teg(client, monkeypatch, fresh_live_cache):
+    monkeypatch.setattr(wp, "in_progress_teg", lambda: None)
+    r = client.get("/simulation/live?teg=abc")
+    assert "No TEG in progress" in r.text
+
+
+def test_live_page_queues_holes_in_order(client, fresh_live_cache):
+    import json
+    import re
+
+    r = client.get("/simulation/live?teg=18")
+    d = json.loads(re.search(r'id="sim-live-data">(.*?)</script>', r.text, re.S).group(1))
+    assert d["total"] == 72 and set(d["points"]) == {"0-0", "1-18", "2-18", "3-18", "4-18"}
+    steps = [q[2] for q in d["queue"]]
+    assert steps == sorted(steps) and steps[:4] == [2, 2, 2, 2]  # hole 9s, then even, then odd
+    assert [q[:2] for q in d["queue"][:4]] == [[4, 9], [3, 9], [2, 9], [1, 9]]
+    assert len(d["queue"]) == 68 and d["scores"]["1-1"]
+
+
+def test_live_point_endpoint(client, fresh_live_cache):
+    r = client.get("/simulation/live/point?teg=18&round=2&hole=9&replay=1")
+    assert r.status_code == 200
+    body = r.json()
+    assert sum(body["net"].values()) == pytest.approx(1.0) and set(body["gross"]) == set(body["net"])
+    # cached points are embedded in the next page load, so they aren't queued again
+    page = client.get("/simulation/live?teg=18")
+    assert '"2-9"' in page.text
+
+
+def test_live_point_rejects_bad_requests(client, monkeypatch, fresh_live_cache):
+    monkeypatch.setattr(wp, "in_progress_teg", lambda: None)
+    assert client.get("/simulation/live/point?teg=18&round=2&hole=9").status_code == 400
+    assert client.get("/simulation/live/point?teg=18&round=9&hole=9&replay=1").status_code == 400
+    assert client.get("/simulation/live/point?teg=99&round=1&hole=9&replay=1").status_code == 400
+    assert client.get("/simulation/live/point?teg=18&round=0&hole=5&replay=1").status_code == 400
+    assert client.get("/simulation/live/point?teg=18&round=1&hole=19&replay=1").status_code == 400
+    assert not any(k[2] == 0 and k[3] != 0 for k in sim_routes._LIVE_POINTS)
+
+
+def test_live_picker_offers_every_replayable_teg(client, monkeypatch, fresh_live_cache):
+    monkeypatch.setattr(wp, "in_progress_teg", lambda: None)
+    r = client.get("/simulation/live")
+    assert 'id="sim-live-teg"' in r.text
+    assert '<option value="18"' in r.text and '<option value="3"' in r.text
+    assert '<option value="2"' not in r.text  # no earlier TEG to build form from
+    r = client.get("/simulation/live?teg=2")
+    assert "No TEG in progress" in r.text
+
+
+def test_live_replay_has_hole_slider(client, fresh_live_cache):
+    r = client.get("/simulation/live?teg=9")
+    assert 'id="sim-scrub-range"' in r.text and 'max="72"' in r.text
+    assert "Net vs par" not in r.text  # TEG 9 is a Stableford TEG
+    r = client.get("/simulation/live?teg=6")
+    assert "Net vs par" in r.text
+
+
+def test_live_flags_debutant(client, fresh_live_cache):
+    r = client.get("/simulation/live?teg=7")  # Alex BAKER's first TEG
+    assert "First TEG for Alex BAKER" in r.text
+    assert "First TEG for" not in client.get("/simulation/live?teg=8").text
