@@ -38,7 +38,7 @@ from teg_analysis.analysis.aggregation import STABLEFORD_ERA_TEG
 
 DEFAULT_K = 3.0
 DEFAULT_P = 6.0
-DEFAULT_PRIOR_WEIGHTS = (50.0, 30.0, 20.0)
+DEFAULT_PRIOR_WEIGHTS = sim.DEFAULT_RECENT_WEIGHTS  # 50/35/15, same as the Prediction tab
 MEASURES = ("net", "gross")  # net leads: Stableford (TEG 8+), else NetVP
 BACKTEST_KS = (1.0, 2.0, 3.0, 4.0, 6.0)
 BACKTEST_PS = (2.0, 4.0, 6.0, 9.0, 12.0)

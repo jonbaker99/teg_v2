@@ -95,7 +95,7 @@ teg_analysis/
                      replayed), built on simulation.py: completed rounds banked, the
                      rest simulated hole by hole with run_simulation on their real
                      scorecards (Stableford from simulated gross and hole strokes);
-                     prior = build_distributions on the 3 TEGs held before (50/30/20,
+                     prior = build_distributions on the 3 TEGs held before (50/35/15 as Prediction,
                      renormalised per player; field if none); current form tilts the
                      hole distributions by w x the round residual (w = k*n/(k*n+P)) and
                      re-spreads them to a w/2-blended round SD — load_teg_state/

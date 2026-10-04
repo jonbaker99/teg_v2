@@ -36,12 +36,12 @@ def _state(history, teg=4):
 
 def test_prior_weights_full_history():
     assert wp.prior_teg_weights([18, 17, 16], [16, 17, 18]) == pytest.approx(
-        {18: 0.5, 17: 0.3, 16: 0.2})
+        {18: 0.5, 17: 0.35, 16: 0.15})
 
 
 def test_prior_weights_renormalise_missed_teg():
     w = wp.prior_teg_weights([18, 17, 16], [18, 16])
-    assert w == pytest.approx({18: 0.5 / 0.7, 16: 0.2 / 0.7})
+    assert w == pytest.approx({18: 0.5 / 0.65, 16: 0.15 / 0.65})
     assert sum(w.values()) == pytest.approx(1.0)
 
 

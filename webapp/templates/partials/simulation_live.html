@@ -98,7 +98,7 @@
 
     <details class="sim-expander">
         <summary><span class="section-title">How this works</span><span class="sim-toggle-hint" aria-hidden="true"></span></summary>
-        <p class="caption">Uses the same hole-by-hole simulation as the Prediction tab, at its default settings. Finished rounds are banked at their real scores; each remaining hole's gross score is drawn from the player's past scores on holes of that par and stroke index, and Stableford comes from that score and their strokes on the hole. Form starts from the three previous TEGs (weighted 50/30/20) and leans more on this TEG as rounds are played: this TEG's form counts {{ w_by_round[0] }} after one round, {{ w_by_round[1] }} after two and {{ w_by_round[2] }} after three.</p>
+        <p class="caption">Uses the same hole-by-hole simulation as the Prediction tab, at its default settings. Finished rounds are banked at their real scores; each remaining hole's gross score is drawn from the player's past scores on holes of that par and stroke index, and Stableford comes from that score and their strokes on the hole. Form starts from the three previous TEGs (weighted 50/35/15, as on the Prediction tab) and leans more on this TEG as rounds are played: this TEG's form counts {{ w_by_round[0] }} after one round, {{ w_by_round[1] }} after two and {{ w_by_round[2] }} after three.</p>
     </details>
 </div>
 {% endif %}
