@@ -373,7 +373,7 @@ def _run_question(question: str, prior: list, past: list, themes: list, conv: st
     started = time.time()
     try:
         answer = bot.ask(question, _chat_data(), history=prior, past=past, themes=themes,
-                         **({"deep": True} if deep_mode else {}))
+                         conv=conv, **({"deep": True} if deep_mode else {}))
     except Exception:
         logger.exception("TEGBot failed on %r", question)
         _refund_slot(visitor, deep_mode)

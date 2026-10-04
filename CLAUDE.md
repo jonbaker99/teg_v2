@@ -95,6 +95,7 @@ TEG v2 is a golf tournament analysis project with two architectural layers: a le
 | How do I test/iterate on a report-pipeline element (voice, weights, structure)? | `teg_analysis/reporting/ARTEFACTS.md` |
 | **How do I regenerate a report, or just part of one?** (which stages, what each costs, plan usage vs API) | `teg_analysis/reporting/README.md` → *Running only the stages you need* |
 | Running reports on plan usage vs API billing; model comparisons | `teg_analysis/reporting/README.md` → *Who answers the prompts* |
+| Forecast / what-if / handicap-impact or ad-hoc stats question in a dev session | `.claude/skills/teg-simulation`, `.claude/skills/teg-analysis` (reuse; do not re-derive) |
 | Streamlit internals (frozen) | `streamlit/README.md` |
 
 Use this table as a lookup. Read only sources relevant to the current task; do not load every listed document at startup. Read more when dependencies or uncertainty justify it.

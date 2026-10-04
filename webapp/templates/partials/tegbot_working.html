@@ -1,6 +1,7 @@
 {% from "partials/tegbot_robot.html" import robot %}
-<div class="tb-turn tb-job" hx-get="/tegbot/job/{{ job_id }}" hx-trigger="load delay:{{ poll_seconds }}s"
-     hx-swap="outerHTML" role="status" aria-live="polite">
+<div class="tb-turn tb-job" hx-get="/tegbot/job/{{ job_id }}" hx-trigger="load delay:{{ poll_seconds }}s, tb-retry"
+     hx-swap="outerHTML"
+     hx-on::after-request="if (event.detail.successful) return; var t = this; t._failSince = t._failSince || Date.now(); if (Date.now() - t._failSince > 60000) { t.querySelector('.tb-say-text').textContent = 'Lost contact with the server. Check your connection and ask again.'; var c = t.querySelector('.tb-cursor'); if (c) c.remove(); t.querySelector('.tb-deep-note').remove(); return; } setTimeout(function () { htmx.trigger(t, 'tb-retry'); }, {{ poll_seconds }}000)" role="status" aria-live="polite">
     <div class="tb-q">{{ question }}</div>
     <div class="tb-a">
         {{ robot(28, busy=True) }}

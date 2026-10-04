@@ -2,11 +2,15 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-10-04 (live win chances tab on /simulation; TEGBot toolkit, Dig deeper and charts; new-record markers on /records; simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
+**Last updated:** 2026-10-04 (TEGBot follow-ups and dev skills; live win chances tab on /simulation; TEGBot toolkit, Dig deeper and charts; new-record markers on /records; simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
 
 ## 2026-10-04 — Live tab on the simulation page shows win chances round by round
 
 New `teg_analysis/analysis/win_probability.py` gives each player's win chance before a TEG and after every completed round, net (Stableford from TEG 8) first, then gross. It reuses the `/simulation` engine: completed rounds count at their actual scores, and the rest are simulated hole by hole on their real scorecards, with Stableford from the simulated gross and each hole's strokes. Form starts from the 3 previous TEGs (50/35/15, matching the Prediction tab) and leans more on this TEG hole by hole (k = 3, P = 6). Each simulated round also carries a small good-day or bad-day swing and some uncertainty in each player's form, which stops the chances lurching on every hole. A debutant is centred on their handicap rather than the group average. Backtest on TEGs 5-18: the default P/k = 2 is best for net and within 0.001 of the best for gross; with the day and form swings, chances move as much as a calibrated forecast should (1.02 vs 1.36 before) at the same accuracy (Brier 0.262 vs 0.260). The **Live** tab on `/simulation` shows the latest Trophy and Jacket chances, the change since the last round, and a hole-by-hole chart of how they moved. The chart fills in while you watch (round ends first, then hole 9s, even holes, odd holes), then lists the three biggest one-hole swings. A slider and Play button step through the TEG hole by hole, and any finished TEG can be replayed from a picker. With no TEG in progress it says so and offers a replay of the last finished TEG.
+
+## 2026-10-04 — TEGBot follow-ups: faster follow-ups, shorter answers, dev skills
+
+Follow-up questions in a TEGBot chat reuse the same sandbox, so they skip setup (held server-side per chat; a data or toolkit change starts a fresh one). Deep-dive polling survives brief network drops, and chart names re-wrap when a phone rotates. The prompt now checks the site's precomputed tables first and keeps normal answers to about 120 words (180 at most). Ten multi-step eval cases (`python scripts/tegbot_eval.py --only multi`, about 60p a run) cover why and what-if questions, equalising handicaps, precomputed tables and charts; the latest run passed all graded checks. Claude Code sessions get the same two skills in `.claude/skills/`, running the same scripts as the bot.
 
 ## 2026-10-04 — TEGBot runs the site's own analysis, digs deeper and draws charts
 

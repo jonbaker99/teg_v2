@@ -246,6 +246,75 @@ def _dataset_file_ids(client: Any, data: ChatData,
     return ids
 
 
+# Sandbox containers, kept server-side per chat (never taken from the client). A
+# container keeps its files for up to 30 days (Claude API docs: code execution,
+# "Container Reuse"), so a follow-up skips the upload and toolkit setup. Each entry
+# remembers the digest of the files it was set up with: when data or toolkit change,
+# the next question starts a fresh container so answers never use stale data.
+CONTAINER_TTL = 29 * 24 * 3600.0
+CONTAINER_MARGIN = 300.0
+MAX_CONTAINERS = 500
+_containers: dict[str, tuple[str, str, float]] = {}  # conv -> (container id, digest, expiry)
+_container_lock = threading.Lock()
+
+
+def _files_digest(file_ids: list[str]) -> str:
+    """Upload ids change whenever a file's contents do, so they stand for the file set."""
+    return hashlib.sha256("|".join(file_ids).encode()).hexdigest()
+
+
+def _get_container(conv: str, digest: str) -> Optional[str]:
+    if not conv:
+        return None
+    with _container_lock:
+        entry = _containers.get(conv)
+        if entry and (entry[2] <= time.time() or entry[1] != digest):
+            del _containers[conv]
+            return None
+        return entry[0] if entry else None
+
+
+def _forget_container(conv: str) -> None:
+    with _container_lock:
+        _containers.pop(conv, None)
+
+
+def _remember_container(conv: str, container: Any, digest: str) -> None:
+    cid = getattr(container, "id", None)
+    if not conv or not cid:
+        return
+    expiry = time.time() + CONTAINER_TTL
+    raw = getattr(container, "expires_at", None)
+    try:  # the API says when it will expire; stop a little before that
+        if raw is not None:
+            from datetime import datetime
+            stamp = raw if hasattr(raw, "timestamp") else datetime.fromisoformat(str(raw).replace("Z", "+00:00"))
+            expiry = min(expiry, stamp.timestamp() - CONTAINER_MARGIN)
+    except (ValueError, TypeError, OverflowError):
+        pass
+    with _container_lock:
+        _containers[conv] = (cid, digest, expiry)
+        now = time.time()
+        for key in [k for k, v in _containers.items() if v[2] <= now]:
+            del _containers[key]
+        while len(_containers) > MAX_CONTAINERS:
+            del _containers[next(iter(_containers))]  # oldest first
+
+
+_REUSE_NOTE = ("Note: the analysis toolkit is already set up at /tmp/teg in this session. "
+               "Skip the setup command and use it directly.")
+
+
+class _ReuseFailed(Exception):
+    """A reused container was rejected by the API; the cause is chained."""
+
+
+def _is_client_error(exc: Exception) -> bool:
+    """A 4xx from the API (not rate limiting): what an expired container id looks like."""
+    code = getattr(exc, "status_code", None)
+    return isinstance(code, int) and 400 <= code < 500 and code != 429
+
+
 def _record_sandbox_calls(content: list, calls: list[ToolCall],
                           pending: Optional[dict] = None) -> None:
     """Add the sandbox's code and output to the workings shown under the answer.
@@ -336,10 +405,24 @@ def split_trailer_deep(text: str, past: list[dict]) -> tuple[str, str, list[str]
 def ask(question: str, data: ChatData, history: Optional[list] = None,
         client: Any = None, model: Optional[str] = None,
         past: Optional[list[dict]] = None, themes: Optional[list[str]] = None,
-        deep: bool = False) -> Answer:
+        deep: bool = False, conv: str = "") -> Answer:
     """Answer one question. ``history`` is prior text-only turns from the page;
     ``past`` / ``themes`` come from the shared Q&A log (for "Others asked" and tagging).
-    ``deep`` switches to the Deep dive limits: stronger model, high effort, more steps."""
+    ``deep`` switches to the Deep dive limits: stronger model, high effort, more steps.
+    ``conv`` is the (server-validated) chat id: follow-ups in it reuse the sandbox
+    container. If a reused container is rejected, the question restarts on a fresh one."""
+    try:
+        return _ask(question, data, history, client, model, past, themes, deep, conv, True)
+    except _ReuseFailed as failed:
+        logger.warning("TEGBot container reuse failed (%s); retrying on a fresh container",
+                       failed.__cause__)
+        _forget_container(conv)
+        return _ask(question, data, history, client, model, past, themes, deep, conv, False)
+
+
+def _ask(question: str, data: ChatData, history: Optional[list], client: Any,
+         model: Optional[str], past: Optional[list[dict]], themes: Optional[list[str]],
+         deep: bool, conv: str, allow_reuse: bool) -> Answer:
     question = (question or "").strip()[:MAX_QUESTION_CHARS]
     if not question:
         raise ValueError("Empty question.")
@@ -354,34 +437,46 @@ def ask(question: str, data: ChatData, history: Optional[list] = None,
     system.append({"type": "text", "text": past_block(past, themes or [])})
     if deep:
         system.append({"type": "text", "text": DEEP_ADDENDUM})
-    uploads = [{"type": "container_upload", "file_id": fid}
-               for fid in _dataset_file_ids(client, data, toolkit_files)]
-    messages: list[dict] = clean_history(history) + [
-        {"role": "user", "content": [{"type": "text", "text": question}, *uploads]},
-    ]
+    file_ids = _dataset_file_ids(client, data, toolkit_files)
+    digest = _files_digest(file_ids)
+    container = _get_container(conv, digest) if allow_reuse else None
+    reused = bool(container)
+    if reused:
+        # Files and toolkit are already in the container: no uploads, no setup.
+        content = [{"type": "text", "text": question}, *([{"type": "text", "text": _REUSE_NOTE}] if toolkit_files else [])]
+    else:
+        content = [{"type": "text", "text": question},
+                   *({"type": "container_upload", "file_id": fid} for fid in file_ids)]
+    messages: list[dict] = clean_history(history) + [{"role": "user", "content": content}]
     calls: list[ToolCall] = []
     usage: dict = {}
-    container = None
     open_code: dict[str, ToolCall] = {}
 
     for attempt in range(max_rounds + 1):
         # Out of steps, or (deep) out of time: this call must answer from what it has.
         last = attempt == max_rounds or (deep and time.monotonic() - started > DEEP_WALL_CLOCK)
-        response = client.beta.messages.create(
-            model=model,
-            max_tokens=max_tokens,
-            system=system,
-            tools=[*TOOL_SCHEMAS, CODE_TOOL],
-            messages=messages,
-            # Out of steps: answer from what the tools already returned.
-            tool_choice={"type": "none" if last else "auto"},
-            output_config={"effort": DEEP_EFFORT if deep else "medium"},
-            betas=["server-side-fallback-2026-07-01"],
-            fallbacks="default",
-            **({"container": container} if container else {}),
-        )
+        try:
+            response = client.beta.messages.create(
+                model=model,
+                max_tokens=max_tokens,
+                system=system,
+                tools=[*TOOL_SCHEMAS, CODE_TOOL],
+                messages=messages,
+                # Out of steps: answer from what the tools already returned.
+                tool_choice={"type": "none" if last else "auto"},
+                output_config={"effort": DEEP_EFFORT if deep else "medium"},
+                betas=["server-side-fallback-2026-07-01"],
+                fallbacks="default",
+                **({"container": container} if container else {}),
+            )
+        except Exception as exc:
+            if reused and _is_client_error(exc):
+                raise _ReuseFailed() from exc
+            raise
         _add_usage(usage, response.usage)
-        container = getattr(getattr(response, "container", None), "id", None) or container
+        reply_container = getattr(response, "container", None)
+        container = getattr(reply_container, "id", None) or container
+        _remember_container(conv, reply_container, digest)
         _record_sandbox_calls(response.content, calls, open_code)
 
         if response.stop_reason == "refusal":
