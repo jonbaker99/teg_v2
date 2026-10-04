@@ -1,7 +1,7 @@
 /* /simulation -- page-specific bits only. Everything else comes from the site
    components (.data-card, .theme-select, .teg-table, .segmented, .action,
    .request-feedback, .caption). Every colour is a theme variable. */
-.sim-form { margin-bottom: 1.5rem; }
+.sim-form { margin-bottom: var(--sim-gap); }
 .sim-main { display: grid; grid-template-columns: repeat(2, minmax(0, 14rem)) 1fr; gap: 1rem 1.5rem; align-items: start; }
 .sim-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1.25rem 1.75rem; margin-top: 1rem; }
 .sim-block { display: flex; flex-direction: column; gap: 0.6rem; min-width: 0; }
@@ -12,7 +12,6 @@
 .sim-field .theme-select { width: 100%; max-width: 100%; box-sizing: border-box; min-height: 36px; font-size: 0.875rem; }
 .sim-form .caption { margin: 0; }
 .sim-list { margin: 0; padding-left: 1.1rem; }
-.sim-caption { margin: 0 0 1rem; }
 .sim-method-window[hidden], .sim-method-bands[hidden] { display: none; }
 
 /* Players */
@@ -31,17 +30,6 @@
 }
 .sim-run:hover { opacity: 0.88; }
 
-/* Model settings disclosure */
-.sim-settings { margin-top: 1rem; border-top: 1px solid var(--table-cell-border); padding-top: 0.25rem; }
-.sim-settings > summary {
-    cursor: pointer; min-height: 40px; display: flex; align-items: center;
-    font-size: 0.875rem; font-weight: 600; color: var(--text-primary); list-style: none;
-}
-.sim-settings > summary::-webkit-details-marker { display: none; }
-.sim-settings > summary::before { content: "+"; display: inline-block; width: 1.25rem; color: var(--text-muted); font-weight: 400; }
-.sim-settings[open] > summary::before { content: "\2212"; }
-.sim-settings > summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
-
 /* TEG weights matrix */
 .sim-weights-wrap { max-height: 20rem; overflow: auto; max-width: 100%; }
 .sim-weights th, .sim-weights td { padding: 0.25rem 0.4rem; vertical-align: middle; text-align: center; }
@@ -56,7 +44,7 @@
 
 /* Result and distribution tables */
 .sim-summary abbr { text-decoration: underline dotted; cursor: help; }
-.sim-hidden { display: none; }
+
 .teg-table .sim-left { text-align: left; white-space: nowrap; }
 .teg-table.sim-dist td, .teg-table.sim-grid-table td, .teg-table.sim-summary td,
 .teg-table.sim-dist th, .teg-table.sim-grid-table th, .teg-table.sim-summary th,
@@ -73,10 +61,6 @@
 .sim-win { white-space: nowrap; }
 .sim-used { color: var(--accent); }
 .sim-flag { margin-left: 1px; }
-.sim-courses { margin: 0 0 1rem; font-size: 0.875rem; }
-.sim-courses summary { cursor: pointer; color: var(--text-muted); min-height: 36px; display: flex; align-items: center; }
-.sim-courses .data-card { margin-top: 0.5rem; }
-.sim-panel .chart-title { margin-top: 1.75rem; }
 .sim-results .section-controls { margin-bottom: 0.5rem; }
 
 /* Plotly inlines dark-grey text and white hover boxes; follow the theme. */
@@ -94,25 +78,47 @@
     .sim-player-grid { grid-template-columns: 1fr 1fr; }
     .sim-run { min-height: 44px; width: 100%; }
     .sim-run-row { flex-wrap: wrap; }
-    .sim-settings > summary, .sim-courses summary { min-height: 44px; }
     .sim-weights-wrap { max-height: 16rem; }
     .sim-chart { height: 340px !important; }
 }
 
-/* Sampling distributions: collapsed by default, with a clear Show / Hide control. */
-.sim-disclosure > summary {
+/* Vertical rhythm. One gap (--sim-gap) between sections everywhere on the page;
+   inside a section: title, then caption, then content. */
+:root { --sim-gap: 2rem; }
+.sim-section { margin: 0 0 var(--sim-gap); }
+.sim-section:last-child { margin-bottom: 0; }
+.sim-stack { display: flex; flex-direction: column; gap: var(--sim-gap); }
+.sim-stack--tight { gap: 1rem; }
+.sim-stack .sim-section { margin: 0; }
+.sim-stack > .caption, .sim-stack > .sim-list { margin: 0; }
+.sim-section > .section-title, .sim-section > .chart-title { margin: 0 0 0.25rem; }
+.sim-section > .caption, .sim-expander > .caption { margin: 0 0 0.625rem; }
+.sim-section > .caption + .caption, .sim-expander > .caption + .caption { margin-top: -0.25rem; }
+.sim-section > .data-card + .caption, .sim-expander > .data-card + .caption { margin: 0.5rem 0 0; }
+.sim-section > .section-controls { margin: 0; }
+.sim-results .section-controls { margin: 0; }
+
+/* The one expander pattern: full-width row, title left, Show / Hide hint right. */
+.sim-expander > summary {
     list-style: none; cursor: pointer; display: flex; align-items: center;
     justify-content: space-between; gap: 1rem; min-height: 44px;
+    border-top: 1px solid var(--table-cell-border);
     border-bottom: 1px solid var(--table-cell-border);
 }
-.sim-disclosure > summary::-webkit-details-marker { display: none; }
-.sim-disclosure > summary .section-title { margin: 0; }
+.sim-expander > summary::-webkit-details-marker { display: none; }
+.sim-expander > summary .section-title { margin: 0; }
+.sim-expander > summary:hover .section-title, .sim-expander > summary:hover .sim-toggle-hint::after { color: var(--accent); }
+.sim-expander > summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .sim-toggle-hint::after {
     content: "Show \25BE"; font-size: 0.875rem; color: var(--text-secondary); white-space: nowrap;
 }
-.sim-disclosure[open] .sim-toggle-hint::after { content: "Hide \25B4"; }
-.sim-disclosure > summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
-.sim-disclosure > .caption { margin-top: 0.75rem; }
+.sim-expander[open] .sim-toggle-hint::after { content: "Hide \25B4"; }
+.sim-expander[open] > summary { margin-bottom: 0.75rem; }
+.sim-expander[open] { padding-bottom: 0.75rem; }
+.sim-expander--form { margin-top: 1.25rem; }
+.sim-expander--form .sim-grid { margin-top: 0.75rem; }
+
+.sim-hidden, .sim-panel.sim-hidden { display: none; }
 
 /* Odds table: price over its probability */
 .teg-table.sim-odds td, .teg-table.sim-odds th { text-align: center; }

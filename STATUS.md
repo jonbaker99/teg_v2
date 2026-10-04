@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-10-02 (TEGBot 5000; TEG simulator odds; player roster redesign)
+**Last updated:** 2026-10-04 (simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
+
+## 2026-10-04 — Simulator shows what handicap changes did to win chances
+
+Two new collapsed panels on `/simulation`. **Impact of handicap changes** splits each player's Stableford win chance change between TEGs into the effect of every handicap move (exact Shapley, same simulated rounds throughout). Changes are not additive, so the page also shows the sum of single changes. **Handicaps that equalise chances** gives the handicap at which each player averages 36 points a round, with win chances at those handicaps. For TEG 19 at 100k sims, Jon BAKER's handicap rise adds about 41 points to his win chance.
 
 ## 2026-10-02 — TEGBot answers predictions from the Predictatron
 

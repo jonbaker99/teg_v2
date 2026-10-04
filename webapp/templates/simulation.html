@@ -47,8 +47,9 @@
         </div>
     </div>
 
-    <details class="sim-settings">
-        <summary>Model settings</summary>
+    <details class="sim-expander sim-expander--form">
+        <summary><span class="section-title">Model settings</span><span class="sim-toggle-hint" aria-hidden="true"></span></summary>
+        <p class="caption">How the simulation builds each player's scoring. The defaults suit most uses.</p>
         <div class="sim-grid">
             <div class="sim-block">
                 <label class="sim-field"><span class="text-muted">Method</span>
@@ -129,15 +130,15 @@
     </details>
 </form>
 
-<section class="section-gap">
-    <details class="sim-disclosure" id="sim-dists-box">
+<section class="sim-section">
+    <details class="sim-expander" id="sim-dists-box">
         <summary><span class="section-title">Sampling distributions</span><span class="sim-toggle-hint" aria-hidden="true"></span></summary>
         <p class="caption">What each player's hole scores are drawn from, by par and stroke index.</p>
         <div id="sim-dists">{% include "partials/simulation_distributions.html" %}</div>
     </details>
 </section>
 
-<section class="section-gap">
+<section class="sim-section">
     <h2 class="section-title">Results</h2>
     <div id="sim-results"><p class="caption">Run the simulation to see predictions.</p></div>
 </section>

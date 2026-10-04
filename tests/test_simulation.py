@@ -504,3 +504,118 @@ def test_odds_table_prizes():
     assert o.Spoon.sum() == pytest.approx(1.0)
     # with two players, the Spoon is whoever did not win the Trophy
     assert (o.Trophy + o.Spoon).round(9).eq(1.0).all()
+
+
+# ---- handicap what-ifs
+
+def _spread_dists(players, boundaries=(4, 9, 14)):
+    """Each player draws GrossVP in 0..4 with fixed (player-specific) weights."""
+    rows = []
+    for k, pl in enumerate(players):
+        w = np.array([1.0, 3.0, 3.0, 2.0, 1.0 + k])
+        w /= w.sum()
+        for par in (3, 4, 5):
+            for b in range(len(boundaries) + 1):
+                rows += [(pl, par, b, v, float(w[v])) for v in range(5)]
+    probs = pd.DataFrame(rows, columns=["Pl", "Par", "Band", "GrossVP", "Prob"])
+    return sim.ScoreDistributions(tuple(boundaries), probs, pd.DataFrame(), [])
+
+
+def _kept(hcs, n=4000, seed=3):
+    pls = tuple(hcs)
+    t = _target(pls, hcs=hcs, pars=(3, 4, 5) * 12, sis=list(range(1, 19)) * 2)
+    return sim.run_simulation(_spread_dists(pls), t, n, seed=seed, keep_scores=True)
+
+
+def test_keep_scores_does_not_change_results():
+    hcs = {"AA": 10, "BB": 20}
+    t = _target(("AA", "BB"), hcs=hcs, pars=(3, 4, 5) * 6)
+    a = sim.run_simulation(_spread_dists(["AA", "BB"]), t, 500, seed=7)
+    b = sim.run_simulation(_spread_dists(["AA", "BB"]), t, 500, seed=7, keep_scores=True)
+    assert a.hole_vp is None and a.hole_si is None
+    assert b.hole_vp.shape == (500, 2, 18) and b.hole_si.shape == (500, 18)
+    for f in ("gross", "stableford", "gross_pos", "stableford_pos", "eagles", "blobs"):
+        assert np.array_equal(getattr(a, f), getattr(b, f))
+
+
+def test_stableford_totals_reproduces_result():
+    r = _kept({"AA": 10, "BB": 20, "CC": 37})
+    assert np.array_equal(sim.stableford_totals(r, r.handicaps), r.stableford)
+
+
+def test_stableford_totals_plus_handicap_matches_run_simulation():
+    hcs = {"AA": -2, "BB": 20, "CC": 37}
+    r = _kept(hcs)
+    assert np.array_equal(sim.stableford_totals(r, r.handicaps), r.stableford)
+
+
+def test_stableford_totals_needs_keep_scores():
+    t = _target(("AA",), pars=(4,) * 18)
+    r = sim.run_simulation(_det_dists(["AA"], {"AA": 1}), t, 5, seed=1)
+    with pytest.raises(ValueError):
+        sim.stableford_totals(r, {"AA": 0})
+
+
+def test_handicap_impact_shapley_adds_up():
+    r = _kept({"AA": 12, "BB": 20, "CC": 30})
+    imp = sim.handicap_change_impact(r, {"AA": 8, "BB": 24, "CC": 30})
+    assert imp.movers == ["AA", "BB"] and imp.no_previous == []
+    assert imp.shapley.shape == (2, 3)
+    assert np.allclose(imp.shapley.sum(axis=0), imp.total_change)
+    assert np.allclose(imp.shapley.sum(axis=1), 0.0, atol=1e-9)
+    assert np.allclose(imp.win_old.sum(), 1.0) and np.allclose(imp.win_new.sum(), 1.0)
+    assert imp.single_sum.shape == (3,)
+    assert (imp.mean_new[0] > imp.mean_old[0]) and (imp.mean_new[1] < imp.mean_old[1])
+
+
+def test_handicap_impact_zero_movers_and_missing_previous():
+    r = _kept({"AA": 12, "BB": 20})
+    imp = sim.handicap_change_impact(r, {"AA": 12})
+    assert imp.movers == [] and imp.no_previous == ["BB"]
+    assert imp.shapley.shape == (0, 2)
+    assert np.allclose(imp.total_change, 0.0)
+
+
+def test_previous_handicaps_reads_exact_row(monkeypatch):
+    raw = pd.DataFrame({"TEG": ["TEG 18", "TEG 50", "TEG 19"],
+                        "AA": [20, 9, 19], "BB": [np.nan, 0, 17]})
+    monkeypatch.setattr(sim, "_read_handicaps_raw", lambda: raw)
+    assert sim.previous_handicaps(19) == {"AA": 20}
+    assert sim.previous_handicaps(20) == {"AA": 19, "BB": 17}
+    assert sim.previous_handicaps(5) == {}
+
+
+def test_previous_handicaps_zero_means_missing_only_without_roster(monkeypatch):
+    raw = pd.DataFrame({"TEG": ["TEG 18"], "AA": [0], "BB": [17]})
+    monkeypatch.setattr(sim, "_read_handicaps_raw", lambda: raw)
+    monkeypatch.setattr(sim, "_playing_codes", lambda n: None)
+    assert sim.previous_handicaps(19) == {"BB": 17}
+    monkeypatch.setattr(sim, "_playing_codes", lambda n: {"BB"})
+    assert sim.previous_handicaps(19) == {"AA": 0, "BB": 17}
+
+
+def test_equalising_handicaps_picks_closest_integer():
+    # Every hole is gross par+1 for AA: net points per hole = 2 - (1 - strokes) = 1 + strokes.
+    # hc 18 -> 2/hole -> 36 per 18 holes; target 36 must pick hc 18.
+    t = _target(("AA",), hcs={"AA": 5}, pars=(4,) * 18)
+    r = sim.run_simulation(_det_dists(["AA"], {"AA": 1}), t, 50, seed=1, keep_scores=True)
+    df = sim.equalising_handicaps(r)
+    row = df.iloc[0]
+    assert row.EqualisingHC == 18 and row.Change == 13 and row.CurrentHC == 5
+    assert row.PtsPerRound == pytest.approx(36.0) and row.Unrounded == pytest.approx(18.0)
+    assert row.Reachable and row.WinStableford == pytest.approx(1.0)
+    # target between two integers: 18 holes, hc 9 -> 27 pts, hc 10 -> 28 pts; 27.4 picks 9
+    row = sim.equalising_handicaps(r, target_per_round=27.4).iloc[0]
+    assert row.EqualisingHC == 9 and row.Unrounded == pytest.approx(9.4)
+    # unreachable target is flagged
+    assert not sim.equalising_handicaps(r, target_per_round=100).iloc[0].Reachable
+
+
+def test_equalising_matches_direct_rescoring():
+    r = _kept({"AA": 10, "BB": 20})
+    df = sim.equalising_handicaps(r, hc_range=(0, 54))
+    for j, pl in enumerate(r.players):
+        direct = [sim._player_stableford(r, j, h).mean() / 2 for h in range(0, 55)]
+        k = int(np.argmin(np.abs(np.array(direct) - 36.0)))
+        assert df.EqualisingHC[j] == k
+        assert df.PtsPerRound[j] == pytest.approx(direct[k])
