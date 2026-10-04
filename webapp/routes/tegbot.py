@@ -357,6 +357,15 @@ def tegbot_ask(request: Request, question: str = Form(""), history: str = Form("
     return _reply(**_run_question(question, prior, past, themes, conv, visitor, False))
 
 
+def _can_dig(answer, deep_mode: bool) -> bool:
+    """Offer "Dig deeper" on answers that did real analysis or where the bot asked for it.
+    Not on deep answers, refusals/off-topic, or lookup-only answers."""
+    if deep_mode or getattr(answer, "theme", "") == "Off-topic":
+        return False
+    ran_code = any(c.name == "code" for c in answer.tool_calls)
+    return ran_code or bool(getattr(answer, "suggest_deep", False))
+
+
 def _run_question(question: str, prior: list, past: list, themes: list, conv: str,
                   visitor: str, deep_mode: bool) -> dict:
     """Ask the bot, log it, and return the answer partial's context. On failure the
@@ -389,6 +398,8 @@ def _run_question(question: str, prior: list, past: list, themes: list, conv: st
         tool_calls=workings,
         deep=deep_mode,
         suggest_deep=bool(getattr(answer, "suggest_deep", False)) and not deep_mode,
+        deep_reason=str(getattr(answer, "deep_reason", "") or "") if not deep_mode else "",
+        can_dig=_can_dig(answer, deep_mode),
         related=[{"id": p["id"], "question": p["question"]}
                  for rid in answer.related for p in past if p["id"] == rid],
     )

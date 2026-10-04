@@ -157,15 +157,13 @@
     }
     .tb-form button:hover { background: var(--tb-green-2); border-color: var(--tb-green-2); }
     .tb-form button[disabled] { opacity: 0.45; cursor: default; }
-    .tb-form .tb-deep { display: flex; flex-direction: column; justify-content: center; gap: 1px;
-        font-size: 0.8rem; cursor: pointer; line-height: 1.2; }
-    .tb-form .tb-deep input { margin-right: 4px; accent-color: var(--tb-green); }
-    .tb-form .tb-deep small { opacity: 0.6; font-size: 0.7rem; }
-    .tb-dig { margin-top: 8px; font: inherit; font-size: 0.8rem; padding: 3px 10px; cursor: pointer;
-        background: transparent; color: var(--tb-green); border: 1px solid var(--tb-green); }
-    .tb-dig:hover { background: var(--tb-green); color: var(--tb-paper); }
-    .tb-dig[disabled] { opacity: 0.45; cursor: default; }
-    .tb-dig-hint { font-size: 0.72rem; opacity: 0.6; margin-left: 6px; }
+    .tb-dig-row { margin: 8px 0 0; font-size: 0.8rem; }
+    .tb-dig { font: inherit; padding: 0; cursor: pointer; background: none; border: 0;
+        color: var(--tb-ink); opacity: 0.65; text-decoration: underline; text-underline-offset: 2px; }
+    .tb-dig:hover { opacity: 1; color: var(--tb-green); }
+    .tb-dig[disabled] { opacity: 0.4; cursor: default; }
+    .tb-dig-strong .tb-dig { color: var(--tb-green); opacity: 1; font-weight: 700; }
+    .tb-dig-why { margin-right: 6px; }
     .tb-deep-note { font-size: 0.75rem; opacity: 0.7; margin-left: 8px; }
     .tb-examples { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 0; }
     .tb-examples button {

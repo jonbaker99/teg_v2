@@ -332,10 +332,14 @@ def client(monkeypatch, tmp_path):
     def fake_ask(q, data, history=None, past=None, themes=None, deep=False):
         calls.append(deep)
         related = [p["id"] for p in (past or []) if "won" in p["question"]][:1]
-        return bot.Answer(f"You asked **{q}**. See [Honours](/honours).",
-                          [bot.ToolCall("get_honours", {}, {"counts": {}})], {},
-                          "claude-opus-5-5" if deep else "claude-sonnet-5-5", theme="Honours",
-                          related=related, suggest_deep=q.startswith("Why"), deep=deep)
+        tools = ([bot.ToolCall("code", {"command": "print(1)"}, {"stdout": "1"})]
+                 if q.startswith(("Calc", "Why")) else [bot.ToolCall("get_honours", {}, {"counts": {}})])
+        return bot.Answer(f"You asked **{q}**. See [Honours](/honours).", tools, {},
+                          "claude-opus-5-5" if deep else "claude-sonnet-5-5",
+                          theme="Off-topic" if q.startswith("Off") else "Honours",
+                          related=related, suggest_deep=q.startswith("Why") and not deep,
+                          deep_reason="several factors interact" if q.startswith("Why") else "",
+                          deep=deep)
     monkeypatch.setattr(route.bot, "ask", fake_ask)
     tc = TestClient(app)
     tc.ask_calls = calls
@@ -648,19 +652,43 @@ def test_ask_flags_suggest_deep_only_in_normal_mode(data):
     assert bot.ask("q", data, client=FakeClient([_done(reply)]), deep=True).suggest_deep is False
 
 
-def test_suggest_deep_renders_dig_deeper_button(client):
-    resp = client.post("/tegbot/ask", data={"question": "Why did Alan win?"})
-    assert 'class="tb-dig"' in resp.text and "Dig deeper" in resp.text
+def test_dig_deeper_link_rules(client):
+    ask = lambda q, **kw: client.post("/tegbot/ask", data={"question": q, **kw}).text
+    calc = ask("Calc best round")                       # code ran, no suggestion: subtle link
+    assert 'class="tb-dig"' in calc and "tb-dig-strong" not in calc
+    assert "Dig deeper" not in ask("Who won?")          # lookup only
+    assert "Dig deeper" not in ask("Off topic please")  # refused
+    deep = _finish_job(client, client.post("/tegbot/ask", data={"question": "Calc x", "deep": "1"}))
+    assert "Dig deeper" not in deep.text                # already deep
+
+
+def test_suggested_deep_shows_highlighted_variant_with_reason(client):
+    out = client.post("/tegbot/ask", data={"question": "Why did Alan win?"}).text
+    assert "tb-dig-strong" in out
+    assert "This one deserves a closer look: several factors interact." in out
     assert client.ask_calls == [False]
-    assert "Dig deeper" not in client.post("/tegbot/ask", data={"question": "Who won?"}).text
-    deep = _finish_job(client, client.post("/tegbot/ask", data={"question": "Why did Alan win?", "deep": "1"}))
-    assert "Dig deeper" not in deep.text
-    assert client.ask_calls[-1] is True
 
 
-def test_page_has_deep_toggle(client):
+def test_page_has_no_deep_toggle(client):
     html_ = client.get("/tegbot").text
-    assert 'name="deep"' in html_ and "Deep dive" in html_ and "a minute or two" in html_
+    assert 'name="deep"' not in html_ and 'id="tb-deep"' not in html_ and 'class="tb-deep"' not in html_
+    assert "Slower, more thorough" not in html_
+
+
+def test_ask_carries_deep_reason(data):
+    reply = "Roughly.\nTHEME: Why\nRELATED: none\nDEEP: yes - needs attribution"
+    answer = bot.ask("q", data, client=FakeClient([_done(reply)]))
+    assert (answer.suggest_deep, answer.deep_reason) == (True, "needs attribution")
+
+
+def test_split_trailer_deep_reason_with_and_without():
+    f = bot.split_trailer_deep
+    assert f("A\nDEEP: yes - several factors interact", [])[3:] == (True, "several factors interact")
+    assert f("A\nDEEP: Yes: small samples", [])[3:] == (True, "small samples")
+    assert f("A\nDEEP: yes", [])[3:] == (True, "")
+    assert f("A\nDEEP: no", [])[3:] == (False, "")
+    assert f("A", [])[3:] == (False, "")
+    assert f("A\nDEEP: yesterday", [])[3] is False
 
 
 def _finish_job(client, resp, timeout=5.0):

@@ -80,6 +80,8 @@ class Answer:
     related: list[str] = field(default_factory=list)
     #: the bot thinks a Deep dive would do the question justice (normal mode only)
     suggest_deep: bool = False
+    #: the bot's short reason for suggesting it (empty when absent)
+    deep_reason: str = ""
     #: this answer was produced in Deep dive mode
     deep: bool = False
     #: set when the analysis toolkit could not be built, so the bot ran without it
@@ -298,6 +300,11 @@ def split_trailer(text: str, past: list[dict]) -> tuple[str, str, list[str]]:
 
 def split_trailer_full(text: str, past: list[dict]) -> tuple[str, str, list[str], bool]:
     """As ``split_trailer`` but also returns the DEEP flag (False when absent)."""
+    return split_trailer_deep(text, past)[:4]
+
+
+def split_trailer_deep(text: str, past: list[dict]) -> tuple[str, str, list[str], bool, str]:
+    """As ``split_trailer_full`` plus the reason from ``DEEP: yes - <reason>`` ("" if none)."""
     theme, related_raw, deep_raw = "", "", ""
     # Trailer lines are usually last, but the model sometimes adds a line after them,
     # so strip them wherever they appear (the last value of each key wins).
@@ -320,8 +327,10 @@ def split_trailer_full(text: str, past: list[dict]) -> tuple[str, str, list[str]
         full = by_short.get(token[:8])
         if full and full not in related:
             related.append(full)
-    suggest = deep_raw.strip().lower().startswith("yes")
-    return "\n".join(lines).strip(), theme.strip(), related[:3], suggest
+    m = re.match(r"\s*yes\b[\s:,;.\-\u2013\u2014]*(.*)$", deep_raw, re.IGNORECASE)
+    suggest = bool(m)
+    reason = " ".join(m.group(1).split())[:120] if m else ""
+    return "\n".join(lines).strip(), theme.strip(), related[:3], suggest, reason
 
 
 def ask(question: str, data: ChatData, history: Optional[list] = None,
@@ -384,11 +393,12 @@ def ask(question: str, data: ChatData, history: Optional[list] = None,
             continue
         tool_uses = [b for b in response.content if b.type == "tool_use"]
         if response.stop_reason != "tool_use" or not tool_uses:
-            text, theme, related, suggest = split_trailer_full(_final_text(response.content), past)
+            text, theme, related, suggest, reason = split_trailer_deep(_final_text(response.content), past)
             if response.stop_reason == "max_tokens":
                 text += "\n\n_(Answer cut short.)_"
             return Answer(text or "I couldn't find an answer to that.", calls, usage, model,
                           theme=theme, related=related, suggest_deep=suggest and not deep,
+                          deep_reason=reason if suggest and not deep else "",
                           deep=deep, toolkit_error=toolkit_error)
 
         # Append the full assistant content unchanged (thinking blocks included).
