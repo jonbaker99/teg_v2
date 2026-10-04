@@ -2,11 +2,19 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-10-04 (TEGBot toolkit, Deep dive and charts; simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
+**Last updated:** 2026-10-04 (TEGBot toolkit, Dig deeper and charts; new-record markers on /records; simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
 
 ## 2026-10-04 — TEGBot runs the site's own analysis, digs deeper and draws charts
 
-TEGBot's sandbox now gets a toolkit with every question: the site's analysis code, the current data, the site's precomputed tables, and two skills. `teg-simulation` runs the Predictatron for why and what-if questions (handicap changes, which TEGs count as form, Shapley attribution, equalising handicaps). Plain odds stay on the same settings as `/simulation`. `teg-analysis` holds a short analysis playbook plus tested helpers (site definitions, tie-aware ranks, own-baseline comparisons, bootstrap ranges, handicap re-scoring). A **Deep dive** toggle runs Opus at high effort as a background job the page polls (up to 10 minutes; 5 a day per visitor, 30 in total). In normal mode the bot can suggest it with a **Dig deeper** button. Answers can include one chart, only when the shape of the data is the point: horizontal bars, or lines for trends, drawn with the site's Plotly theme. Package: `teg_analysis/chatbot/toolkit/`.
+TEGBot's sandbox now gets a toolkit with every question: the site's analysis code, the current data, the site's precomputed tables, and two skills. `teg-simulation` runs the Predictatron for why and what-if questions (handicap changes, which TEGs count as form, Shapley attribution, equalising handicaps). Plain odds stay on the same settings as `/simulation`. `teg-analysis` holds a short analysis playbook plus tested helpers (site definitions, tie-aware ranks, own-baseline comparisons, bootstrap ranges, handicap re-scoring). **Dig deeper** links under analysis answers rerun the question in Deep dive mode: Opus at high effort, as a background job the page polls (up to 10 minutes; 5 a day per visitor, 30 in total). When the bot thinks Deep dive would materially help, the link is highlighted with its reason. Answers can include one chart, only when the shape of the data is the point: horizontal bars, or lines for trends, drawn with the site's Plotly theme. Package: `teg_analysis/chatbot/toolkit/`.
+
+## 2026-10-04 — Net-vs-par TEGs drop the adjusted race chart
+
+On TEGs 1 to 7 (TEG Trophy decided on net vs par), the TEG Trophy race chart no longer offers "Adjusted scale". It was plotting vs bogey, which distorted the lines; net vs par needs no adjusting. Those TEGs open on Standard. Gross and Stableford-era charts are unchanged.
+
+## 2026-10-04 — /records marks new records and gains a New Records tab
+
+Records set in the in-progress (else last completed) TEG show a NEW pill on their row. Tabs holding any show a dot. A new first tab lists them with that TEG's personal bests and worsts. Dev lab removed.
 
 ## 2026-10-04 — Simulator shows what handicap changes did to win chances
 
