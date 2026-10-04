@@ -10,13 +10,17 @@ Prior form is ``build_distributions`` on the TEGs held before this one, weights
 ``prior_weights`` (most recent first) renormalised over the TEGs each player
 played; a player with none of them gets the field distribution. Current form is
 how far this TEG's completed rounds beat or missed what the prior distributions
-expected on those scorecards. With w = k*n / (k*n + P) (n = completed rounds):
+expected on those holes. With w = k*n / (k*n + P) (n = holes played / 18), every
+hole distribution is exponentially tilted so the expected round moves by
+w x the residual per round.
 
-- mean: every hole distribution is exponentially tilted so the expected round
-  moves by w x the average residual;
-- SD: the distributions are sharpened or flattened (p**a, then re-tilted to the
-  same means) so the round SD on the played scorecards is
-  (1 - w/2) x prior SD + w/2 x SD of the residuals (prior SD if n < 2).
+Independent holes have no good or bad days, so on their own they make rounds too
+predictable (model round SD ~5.0 vs ~6.9 actual). Two correlated offsets are
+added to the simulated holes: a TEG form offset per player (variance
+``form_var`` x (1 - w), shared by every remaining round) and a day offset per
+round (``day_var``). Defaults are a quarter of the variances estimated from
+TEGs 3-18, the dose that made the live chances move as much as a calibrated
+forecast should with no loss of accuracy (backtest TEGs 5-18).
 
 The net measure is Stableford points from TEG ``STABLEFORD_ERA_TEG`` and net vs
 par before it. Ties for the lead are shared wins, in simulations and in the
@@ -39,12 +43,13 @@ from teg_analysis.analysis.aggregation import STABLEFORD_ERA_TEG
 DEFAULT_K = 3.0
 DEFAULT_P = 6.0
 DEFAULT_PRIOR_WEIGHTS = sim.DEFAULT_RECENT_WEIGHTS  # 50/35/15, same as the Prediction tab
+DEFAULT_FORM_VAR = 3.9  # strokes² per round: TEG form uncertainty (estimated 15.6, quartered)
+DEFAULT_DAY_VAR = 1.6   # strokes² per round: day-to-day effect (estimated 6.3, quartered)
 MEASURES = ("net", "gross")  # net leads: Stableford (TEG 8+), else NetVP
 BACKTEST_KS = (1.0, 2.0, 3.0, 4.0, 6.0)
 BACKTEST_PS = (2.0, 4.0, 6.0, 9.0, 12.0)
 DEFAULT_BACKTEST_SIMS = 4_000
 _HOLES = 18
-_SPREAD_RANGE = (0.2, 5.0)  # bounds on the p**a exponent
 
 
 # ---------------------------------------------------------------- weights
@@ -72,24 +77,19 @@ def blend_weight(n: float, k: float = DEFAULT_K, P: float = DEFAULT_P) -> float:
     return float(k * n / (k * n + P)) if n > 0 else 0.0
 
 
-def blend_form(
-    prior_sd: float, residuals: Sequence[float],
-    k: float = DEFAULT_K, P: float = DEFAULT_P,
-) -> tuple[float, float, float]:
-    """(mean shift per round, target round SD, w) from this TEG's round residuals.
+def form_shift(residual: float, holes_played: int, k: float = DEFAULT_K,
+               P: float = DEFAULT_P) -> tuple[float, float]:
+    """(expected change per round, w) from this TEG's form so far.
 
-    Residual = actual round GrossVP - the prior expectation on that scorecard.
-    The blended mean is prior + w x mean residual. The SD uses w/2, since 1-3
-    rounds give a poor variance estimate; with fewer than 2 rounds the prior SD
-    is kept.
+    ``residual`` is actual GrossVP minus what the prior expected on the
+    ``holes_played`` holes. n = holes_played / 18, so w grows hole by hole; the
+    expected round moves by w x the residual per round.
     """
-    res = np.asarray(residuals, dtype=float)
-    n = len(res)
+    n = holes_played / _HOLES
+    if n <= 0:
+        return 0.0, 0.0
     w = blend_weight(n, k, P)
-    if n == 0:
-        return 0.0, float(prior_sd), 0.0
-    cur_sd = float(res.std(ddof=1)) if n >= 2 else prior_sd
-    return float(w * res.mean()), float((w / 2) * cur_sd + (1 - w / 2) * prior_sd), w
+    return float(w * residual / n), w
 
 
 def win_shares(totals: np.ndarray, higher_better: bool) -> np.ndarray:
@@ -173,40 +173,9 @@ def _moments(p: np.ndarray, support: np.ndarray) -> tuple[np.ndarray, np.ndarray
     return m, (p * support ** 2).sum(axis=1) - m ** 2
 
 
-def _round_moments(p, support, holes_per_card: list[np.ndarray]) -> tuple[float, float]:
-    """Average round mean and SD over scorecards (holes independent within a round)."""
-    m, v = _moments(p, support)
-    means = [m[h].sum() for h in holes_per_card]
-    vars_ = [v[h].sum() for h in holes_per_card]
-    return float(np.mean(means)), float(np.sqrt(np.mean(vars_)))
-
-
-def adjust_cells(
-    p: np.ndarray, support: np.ndarray, shift_per_hole: float,
-    target_sd: float | None, ref_holes: list[np.ndarray],
-) -> np.ndarray:
-    """Move every cell's mean by ``shift_per_hole`` and set the round SD on ``ref_holes``.
-
-    The spread is changed by p**a (a > 1 sharpens, a < 1 flattens; outcomes with
-    zero probability stay at zero), each cell then tilted back to its shifted
-    mean. ``target_sd=None`` keeps a = 1 (mean shift only).
-    """
-    targets = (p * support).sum(axis=1) + shift_per_hole
-
-    def make(a: float) -> np.ndarray:
-        q = np.where(p > 0, p, 0.0) ** a
-        return _tilt_rows(q / q.sum(axis=1, keepdims=True), support, targets)
-
-    if target_sd is None or not ref_holes:
-        return make(1.0)
-    lo, hi = np.log(_SPREAD_RANGE[0]), np.log(_SPREAD_RANGE[1])
-    for _ in range(30):  # round SD falls as a rises: bisect on log a
-        mid = (lo + hi) / 2
-        if _round_moments(make(np.exp(mid)), support, ref_holes)[1] > target_sd:
-            lo = mid
-        else:
-            hi = mid
-    return make(np.exp((lo + hi) / 2))
+def shift_cells(p: np.ndarray, support: np.ndarray, shift_per_hole: float) -> np.ndarray:
+    """Tilt every cell so its mean moves by ``shift_per_hole`` (zero-probability outcomes stay zero)."""
+    return _tilt_rows(p, support, (p * support).sum(axis=1) + shift_per_hole)
 
 
 def _dists_from_cells(base: sim.ScoreDistributions, support: np.ndarray,
@@ -398,22 +367,20 @@ def _add_round_offsets(out: sim.SimulationResult, tgt: sim.TargetTournament, for
 
 def win_probs_at(state: TegState, rnd: int, hole: int, k: float = DEFAULT_K,
                  P: float = DEFAULT_P, n_sims: int = sim.DEFAULT_SIMS,
-                 seed: int | None = None, *, form_var: float = 0.0, day_var: float = 0.0,
-                 sd_blend: bool = True) -> pd.DataFrame:
+                 seed: int | None = None, *, form_var: float = DEFAULT_FORM_VAR,
+                 day_var: float = DEFAULT_DAY_VAR) -> pd.DataFrame:
     """Win chances after hole ``hole`` of completed round ``rnd`` ((0, 0) = before the TEG).
 
     Rounds before ``rnd`` and holes 1..``hole`` of it are banked; the rest of the
     round and the later rounds are simulated. Current form counts played holes as
-    a fraction of a round (n = holes / 18): the mean moves by w x the residual per
-    round over all played holes; the SD uses complete rounds only. Returns a tidy
-    frame: teg, round, hole, measure, player, win_prob, mean and sd (expected
-    GrossVP per 18 remaining holes and its SD, NaN when none remain), w, banked.
+    a fraction of a round (``form_shift``). Returns a tidy frame: teg, round, hole,
+    measure, player, win_prob, mean and sd (expected GrossVP per 18 remaining holes
+    and its SD including the form and day offsets, NaN when none remain), w, banked.
 
-    ``form_var`` and ``day_var`` (strokes² per round, default 0 = off) add correlated
-    spread the independent holes lack: an uncertain TEG form offset per player
-    (posterior variance form_var x (1 - w)) and a fresh day offset per round,
-    spread over the simulated holes (``_add_round_offsets``). ``sd_blend=False``
-    skips the w/2 SD reshaping.
+    ``form_var`` and ``day_var`` (strokes² per round; 0 turns them off) add the
+    correlated spread independent holes lack: an uncertain TEG form offset per
+    player (variance form_var x (1 - w)) and a fresh day offset per round, spread
+    over the simulated holes (``_add_round_offsets``).
     """
     rnd, hole = int(rnd), int(hole)
     if rnd == 0:
@@ -424,7 +391,7 @@ def win_probs_at(state: TegState, rnd: int, hole: int, k: float = DEFAULT_K,
     bnd = state.prior.boundaries
     full = [r for r in state.done if r < rnd] + ([rnd] if hole == _HOLES else [])
     segments = [(r, _HOLES) for r in full] + ([(rnd, hole)] if rnd and hole < _HOLES else [])
-    n_eff = sum(h for _, h in segments) / _HOLES
+    holes_played = sum(h for _, h in segments)
     played = state.holes.merge(pd.DataFrame(segments, columns=["Round", "Upto"]), on="Round")
     played = played[played["Hole"] <= played["Upto"]]
     tot = played.groupby("Pl")[["GrossVP", "Net"]].sum()
@@ -434,24 +401,16 @@ def win_probs_at(state: TegState, rnd: int, hole: int, k: float = DEFAULT_K,
 
     tgt = _remaining_target(state, rnd, hole)
     rem_cards = [c for _, c in tgt.holes.groupby("Round")] if len(tgt.holes) else []
-    w = blend_weight(n_eff, k, P) if n_eff else 0.0
+    w = form_shift(0.0, holes_played, k, P)[1]
     adjusted, means, sds = {}, [], []
     for pl in state.players:
         keys, p = cells[pl]
         prior_mean = (p * support).sum(axis=1)
-        seg_cells = [_card_cells(keys, state.cards[r][state.cards[r]["Hole"] <= h], bnd)
-                     for r, h in segments]
-        res = [float(by_round.get((pl, r), 0)) - float(prior_mean[c].sum())
-               for (r, _), c in zip(segments, seg_cells)]
-        ref = [c for (_, h), c in zip(segments, seg_cells) if h == _HOLES]
-        full_res = [x for (_, h), x in zip(segments, res) if h == _HOLES]
-        q = p
-        if segments:
-            prior_sd = _round_moments(p, support, ref)[1] if ref else float("nan")
-            target_sd = None  # as blend_form: w/2 on the SD, complete rounds only
-            if sd_blend and len(full_res) >= 2:
-                target_sd = (w / 2) * float(np.std(full_res, ddof=1)) + (1 - w / 2) * prior_sd
-            q = adjust_cells(p, support, w * sum(res) / n_eff / _HOLES, target_sd, ref)
+        residual = sum(float(by_round.get((pl, r), 0)) - float(prior_mean[
+            _card_cells(keys, state.cards[r][state.cards[r]["Hole"] <= h], bnd)].sum())
+            for r, h in segments)
+        shift, _ = form_shift(residual, holes_played, k, P)
+        q = shift_cells(p, support, shift / _HOLES) if segments else p
         adjusted[pl] = (keys, q)
         qm, qv = _moments(q, support)
         hm = [qm[_card_cells(keys, c, bnd)] for c in rem_cards]
@@ -462,7 +421,8 @@ def win_probs_at(state: TegState, rnd: int, hole: int, k: float = DEFAULT_K,
             hv += [np.concatenate([qv[h] for h in pool]).reshape(-1, _HOLES).mean(axis=0)] * tgt.random_rounds
         if hm:
             means.append(float(np.concatenate(hm).mean() * _HOLES))
-            sds.append(float(np.sqrt(np.concatenate(hv).mean() * _HOLES)))
+            sds.append(float(np.sqrt(np.concatenate(hv).mean() * _HOLES
+                                     + max(form_var, 0.0) * (1 - w) + max(day_var, 0.0))))
         else:
             means.append(float("nan"))
             sds.append(float("nan"))
@@ -499,9 +459,9 @@ def win_probs_at(state: TegState, rnd: int, hole: int, k: float = DEFAULT_K,
 
 
 def _after_round(state: TegState, after: int, k: float, P: float,
-                 n_sims: int, seed: int | None) -> pd.DataFrame:
+                 n_sims: int, seed: int | None, **var_kwargs) -> pd.DataFrame:
     """Tidy rows for one after_round (both measures)."""
-    df = win_probs_at(state, after, _HOLES if after else 0, k, P, n_sims, seed)
+    df = win_probs_at(state, after, _HOLES if after else 0, k, P, n_sims, seed, **var_kwargs)
     return df.rename(columns={"round": "after_round"}).drop(columns="hole")
 
 
@@ -513,6 +473,9 @@ def win_probs_by_round(
     prior_weights: Sequence[float] = DEFAULT_PRIOR_WEIGHTS,
     n_sims: int = sim.DEFAULT_SIMS,
     seed: int | None = None,
+    *,
+    form_var: float = DEFAULT_FORM_VAR,
+    day_var: float = DEFAULT_DAY_VAR,
     **state_kwargs,
 ) -> pd.DataFrame:
     """Win probabilities after round 0 (pre-tournament), 1, 2, ... of a TEG.
@@ -527,7 +490,7 @@ def win_probs_by_round(
     """
     state = teg_num if isinstance(teg_num, TegState) else load_teg_state(
         teg_num, history, prior_weights, **state_kwargs)
-    return pd.concat([_after_round(state, r, k, P, n_sims, seed)
+    return pd.concat([_after_round(state, r, k, P, n_sims, seed, form_var=form_var, day_var=day_var)
                       for r in range(len(state.done) + 1)], ignore_index=True)
 
 

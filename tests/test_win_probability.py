@@ -66,22 +66,13 @@ def test_blend_weight_formula():
         wp.blend_weight(1, P=0)
 
 
-def test_blend_form_round_zero_is_prior():
-    assert wp.blend_form(5.0, []) == (0.0, 5.0, 0.0)
-
-
-def test_blend_form_one_round_keeps_prior_sd():
-    shift, sd, w = wp.blend_form(5.0, [9.0])
-    assert w == pytest.approx(1 / 3)
-    assert shift == pytest.approx(3.0)
-    assert sd == pytest.approx(5.0)
-
-
-def test_blend_form_sd_uses_half_weight():
-    shift, sd, w = wp.blend_form(5.0, [-10.0, -6.0])  # residual SD 2.83
-    assert w == pytest.approx(0.5)
-    assert shift == pytest.approx(-4.0)
-    assert sd == pytest.approx(0.25 * np.sqrt(8) + 0.75 * 5.0)
+def test_form_shift_grows_with_holes_played():
+    assert wp.form_shift(5.0, 0) == (0.0, 0.0)
+    shift, w = wp.form_shift(4.5, 9)  # +4.5 over 9 holes = +9 a round
+    assert w == pytest.approx(wp.blend_weight(0.5))
+    assert shift == pytest.approx(w * 9.0)
+    ws = [wp.form_shift(1.0, h)[1] for h in (1, 9, 18, 27, 36, 72)]
+    assert ws == sorted(ws) and ws[2] == pytest.approx(1 / 3) and ws[4] == pytest.approx(0.5)
 
 
 def test_prior_uses_weighted_tegs_and_field_for_newcomer():
@@ -103,21 +94,12 @@ def _spread_cells():
     return support, p, ref
 
 
-def test_adjust_cells_shifts_mean_and_keeps_zeros():
-    support, p, ref = _spread_cells()
-    q = wp.adjust_cells(p, support, 0.25, None, ref)
+def test_shift_cells_moves_mean_and_keeps_zeros():
+    support, p, _ = _spread_cells()
+    q = wp.shift_cells(p, support, 0.25)
     assert ((q * support).sum(axis=1) - (p * support).sum(axis=1)) == pytest.approx([0.25, 0.25])
     assert (q[p == 0] == 0).all()
     assert q.sum(axis=1) == pytest.approx([1, 1])
-
-
-@pytest.mark.parametrize("target", [2.5, 4.0])
-def test_adjust_cells_hits_target_round_sd(target):
-    support, p, ref = _spread_cells()
-    q = wp.adjust_cells(p, support, 0.0, target, ref)
-    mean_q, sd_q = wp._round_moments(q, support, ref)
-    assert sd_q == pytest.approx(target, abs=1e-3)
-    assert mean_q == pytest.approx(wp._round_moments(p, support, ref)[0], abs=1e-4)
 
 
 def test_win_shares_split_ties():
@@ -145,7 +127,7 @@ def test_banked_rounds_and_tidy_output():
     st = _state(_history(_current_teg()))
     st.n_rounds = 3  # round 3 not started: simulated on round 1's card
     st.cards[3] = st.cards[1]
-    df = wp.win_probs_by_round(st, n_sims=300, seed=1)
+    df = wp.win_probs_by_round(st, n_sims=300, seed=1, form_var=0, day_var=0)
     assert list(df.columns) == ["teg", "after_round", "measure", "player", "win_prob",
                                 "mean", "sd", "w", "banked"]
     assert sorted(df["after_round"].unique()) == [0, 1]
@@ -174,7 +156,7 @@ def test_stableford_from_simulated_gross_and_handicap():
     cur = [_holes(4, 1, "AA", 1, 36), _holes(4, 1, "BB", 1, 18)]
     st = _state(_history(cur, hc={"AA": 36, "BB": 18}))
     st.n_rounds, st.cards[2] = 2, st.cards[1]
-    df = wp.win_probs_by_round(st, n_sims=200, seed=1)
+    df = wp.win_probs_by_round(st, n_sims=200, seed=1, form_var=0, day_var=0)
     r0 = df[df["after_round"] == 0].set_index(["measure", "player"])["win_prob"]
     assert r0[("net", "AA")] == pytest.approx(1.0)
     assert r0[("gross", "AA")] == pytest.approx(0.5)
@@ -272,7 +254,7 @@ def test_hole_18_matches_round_checkpoint():
 def test_mid_round_net_vs_par_subtracts_strokes_on_remaining_holes():
     # AA: +2 a hole off 36 (net level); BB: +1 a hole off 18 (net level): net always tied.
     st = _two_round_teg(vp={"AA": 2, "BB": 1}, hc={"AA": 36, "BB": 18})
-    df = wp.win_probs_at(st, 1, 9, n_sims=200, seed=1)
+    df = wp.win_probs_at(st, 1, 9, n_sims=200, seed=1, form_var=0, day_var=0)
     n = df[df["measure"] == "net"].set_index("player")
     assert n.loc["AA", "banked"] == 0 and n.loc["BB", "banked"] == 0
     assert n["win_prob"].to_numpy() == pytest.approx([0.5, 0.5])
@@ -298,3 +280,16 @@ def test_round_offsets_spread_exactly_over_each_rounds_holes():
     small = np.abs(full) <= 18  # an offset of up to 18 strokes moves each hole by at most one
     assert (np.abs(hv[:, :, 6:])[small] <= 1).all()
     assert (out.hole_vp == hv).all()
+
+
+def test_day_and_form_offsets_spread_outcomes():
+    # Two identical deterministic players: without offsets every sim ties; with them, a real race.
+    st = _two_round_teg(vp={"AA": 1, "BB": 1})
+    st.n_rounds, st.cards[3] = 3, st.cards[1]
+    off = wp.win_probs_at(st, 0, 0, n_sims=400, seed=1, form_var=0, day_var=0)
+    on = wp.win_probs_at(st, 0, 0, n_sims=400, seed=1)
+    g_off = off[off["measure"] == "gross"].set_index("player")
+    g_on = on[on["measure"] == "gross"].set_index("player")
+    assert g_off["win_prob"].tolist() == [0.5, 0.5] and g_off["sd"].tolist() == [0.0, 0.0]
+    assert g_on["sd"].iloc[0] == pytest.approx(np.sqrt(wp.DEFAULT_FORM_VAR + wp.DEFAULT_DAY_VAR))
+    assert 0.35 < g_on.loc["AA", "win_prob"] < 0.65

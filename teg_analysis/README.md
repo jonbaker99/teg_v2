@@ -97,8 +97,10 @@ teg_analysis/
                      scorecards (Stableford from simulated gross and hole strokes);
                      prior = build_distributions on the 3 TEGs held before (50/35/15 as Prediction,
                      renormalised per player; field if none); current form tilts the
-                     hole distributions by w x the round residual (w = k*n/(k*n+P)) and
-                     re-spreads them to a w/2-blended round SD — load_teg_state/
+                     hole distributions by w x the residual per round (w = k*n/(k*n+P),
+                     n = holes played / 18: form_shift); correlated TEG-form and day
+                     offsets (DEFAULT_FORM_VAR/DAY_VAR) are spread over the simulated
+                     holes so rounds aren't too predictable — load_teg_state/
                      win_probs_at (any hole of a finished round; checkpoints)/
                      win_probs_by_round (tidy: teg, after_round, measure, player,
                      win_prob, mean, sd); backtest_blend (Brier of a k/P grid)
