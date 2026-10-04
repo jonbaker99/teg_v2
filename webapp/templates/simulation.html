@@ -64,18 +64,37 @@
         return g + ', net ' + (sc[1] > 0 ? '+' + sc[1] : sc[1] === 0 ? 'level' : sc[1]);
     }
 
+    // Draws every worked-out point: solid up to the slider position (d.cursor, an
+    // index into d.axis), faint after it, so Play draws the lines as it goes.
+    // The faint copies are extra traces added once per plot, out of the legend.
     function redraw(root, d) {
-        var have = d.axis.filter(function (a) { return d.points[key(a[0], a[1])]; });
-        var x = have.map(function (a) { return label(a[0], a[1]); });
-        var idx = d.players.map(function (_, i) { return i; });
+        var cur = d.cursor == null ? d.axis.length - 1 : d.cursor;
+        var have = [];
+        d.axis.forEach(function (a, i) { if (d.points[key(a[0], a[1])]) have.push([a, i]); });
+        var solid = have.filter(function (e) { return e[1] <= cur; });
+        var faint = have.filter(function (e) { return e[1] >= cur; });
+        if (faint.length < 2) faint = [];
+        var n = d.players.length;
         var drawn = true;
         root.querySelectorAll('.sim-live-plot').forEach(function (el) {
             if (!el._fullLayout || !window.Plotly) { drawn = false; return; }  // not drawn yet
             var m = el.getAttribute('data-measure');
-            var ys = d.players.map(function (p) {
-                return have.map(function (a) { return Math.round(d.points[key(a[0], a[1])][m][p] * 1000) / 10; });
-            });
-            try { Plotly.restyle(el, {x: d.players.map(function () { return x; }), y: ys}, idx); } catch (err) {}
+            try {
+                if (el.data.length === n) {
+                    Plotly.addTraces(el, el.data.map(function (t) {
+                        return {x: [], y: [], mode: 'lines', showlegend: false, hoverinfo: 'skip',
+                                opacity: 0.25, line: {color: t.line.color, width: 2}};
+                    }));
+                }
+                var xs = [], ys = [];
+                [solid, faint].forEach(function (set) {
+                    d.players.forEach(function (p) {
+                        xs.push(set.map(function (e) { return label(e[0][0], e[0][1]); }));
+                        ys.push(set.map(function (e) { return Math.round(d.points[key(e[0][0], e[0][1])][m][p] * 1000) / 10; }));
+                    });
+                });
+                Plotly.restyle(el, {x: xs, y: ys}, xs.map(function (_, i) { return i; }));
+            } catch (err) {}
         });
         return drawn;
     }
@@ -172,6 +191,8 @@
                 td[5].textContent = sc ? (VP_SHORT[String(sc[0])] || signed(sc[0])) +
                     (d.stableford ? ', ' + sc[1] + (sc[1] === 1 ? ' pt' : ' pts') : '') : '\u2013';
             });
+            d.cursor = i;
+            redraw(root, d);
             var x = label(a[0], a[1]);
             root.querySelectorAll('.sim-live-plot').forEach(function (el) {
                 if (!el._fullLayout || !window.Plotly) return;

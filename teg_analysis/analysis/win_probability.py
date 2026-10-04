@@ -368,9 +368,38 @@ def _strokes(si: np.ndarray, hc: int) -> int:
     return int((hc // _HOLES + ((hc % _HOLES) >= np.asarray(si, dtype=int))).sum())
 
 
+def _add_round_offsets(out: sim.SimulationResult, tgt: sim.TargetTournament, form_sd: float,
+                       day_sd: float, rng: np.random.Generator) -> np.ndarray:
+    """Add correlated form to kept hole draws in place; returns (sims, players, holes) GrossVP.
+
+    Per sim and player, a TEG form offset ~ N(0, form_sd) (strokes per round, shared by
+    every remaining round) plus a fresh day offset ~ N(0, day_sd) per round. Each
+    round's offset is rounded and spread one stroke at a time over random holes of
+    that round (a whole stroke on every hole when it exceeds the hole count), so the
+    hole scores, and the Stableford scored from them, carry it exactly.
+    """
+    hv = out.hole_vp.astype(np.int16)
+    n_s, n_p, _ = hv.shape
+    round_of = np.concatenate([tgt.holes["Round"].to_numpy(int),
+                               np.repeat(np.arange(tgt.random_rounds) + 10_000, _HOLES)])
+    theta = rng.normal(0.0, form_sd, (n_s, n_p)) if form_sd > 0 else np.zeros((n_s, n_p))
+    for rid in np.unique(round_of):
+        cols = np.flatnonzero(round_of == rid)
+        m = len(cols)
+        day = rng.normal(0.0, day_sd, (n_s, n_p)) if day_sd > 0 else 0.0
+        x = np.rint((theta + day) * m / _HOLES).astype(np.int64)
+        base, rem = np.divmod(x, m)
+        rank = np.argsort(np.argsort(rng.random((n_s, n_p, m)), axis=2), axis=2)
+        hv[:, :, cols] += (base[..., None] + (rank < rem[..., None])).astype(np.int16)
+    hv = np.clip(hv, -9, 20)
+    out.hole_vp = hv.astype(np.int8)
+    return hv
+
+
 def win_probs_at(state: TegState, rnd: int, hole: int, k: float = DEFAULT_K,
                  P: float = DEFAULT_P, n_sims: int = sim.DEFAULT_SIMS,
-                 seed: int | None = None) -> pd.DataFrame:
+                 seed: int | None = None, *, form_var: float = 0.0, day_var: float = 0.0,
+                 sd_blend: bool = True) -> pd.DataFrame:
     """Win chances after hole ``hole`` of completed round ``rnd`` ((0, 0) = before the TEG).
 
     Rounds before ``rnd`` and holes 1..``hole`` of it are banked; the rest of the
@@ -379,6 +408,12 @@ def win_probs_at(state: TegState, rnd: int, hole: int, k: float = DEFAULT_K,
     round over all played holes; the SD uses complete rounds only. Returns a tidy
     frame: teg, round, hole, measure, player, win_prob, mean and sd (expected
     GrossVP per 18 remaining holes and its SD, NaN when none remain), w, banked.
+
+    ``form_var`` and ``day_var`` (strokes² per round, default 0 = off) add correlated
+    spread the independent holes lack: an uncertain TEG form offset per player
+    (posterior variance form_var x (1 - w)) and a fresh day offset per round,
+    spread over the simulated holes (``_add_round_offsets``). ``sd_blend=False``
+    skips the w/2 SD reshaping.
     """
     rnd, hole = int(rnd), int(hole)
     if rnd == 0:
@@ -414,7 +449,7 @@ def win_probs_at(state: TegState, rnd: int, hole: int, k: float = DEFAULT_K,
         if segments:
             prior_sd = _round_moments(p, support, ref)[1] if ref else float("nan")
             target_sd = None  # as blend_form: w/2 on the SD, complete rounds only
-            if len(full_res) >= 2:
+            if sd_blend and len(full_res) >= 2:
                 target_sd = (w / 2) * float(np.std(full_res, ddof=1)) + (1 - w / 2) * prior_sd
             q = adjust_cells(p, support, w * sum(res) / n_eff / _HOLES, target_sd, ref)
         adjusted[pl] = (keys, q)
@@ -434,11 +469,20 @@ def win_probs_at(state: TegState, rnd: int, hole: int, k: float = DEFAULT_K,
 
     if len(tgt.holes) or tgt.random_rounds:
         dists = _dists_from_cells(state.prior, support, adjusted)
-        out = sim.run_simulation(dists, tgt, n_sims, seed)
-        vp = out.gross.astype(np.int64) - out.par_total
+        extra = form_var > 0 or day_var > 0
+        out = sim.run_simulation(dists, tgt, n_sims, seed, keep_scores=extra)
+        if extra:
+            rng = np.random.default_rng(None if seed is None else [int(seed), 104729])
+            hv = _add_round_offsets(out, tgt, float(np.sqrt(form_var * (1 - w))),
+                                    float(np.sqrt(day_var)), rng)
+            vp = hv.sum(axis=2, dtype=np.int64)
+            stab = sim.stableford_totals(out, state.handicaps)
+        else:
+            vp = out.gross.astype(np.int64) - out.par_total
+            stab = out.stableford
         gross_t = gross_b + vp
         if state.stableford:
-            net_t = net_b + out.stableford
+            net_t = net_b + stab
         else:
             fixed_si = tgt.holes["SI"].to_numpy(int)
             strokes = np.array([_strokes(fixed_si, state.handicaps[p]) + tgt.random_rounds * state.handicaps[p]

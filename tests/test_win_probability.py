@@ -281,3 +281,20 @@ def test_mid_round_net_vs_par_subtracts_strokes_on_remaining_holes():
 def test_win_probs_at_rejects_unplayed_hole():
     with pytest.raises(ValueError):
         wp.win_probs_at(_two_round_teg(), 3, 1)
+
+
+def test_round_offsets_spread_exactly_over_each_rounds_holes():
+    from types import SimpleNamespace
+
+    holes = pd.DataFrame({"Round": [2] * 6, "Hole": range(13, 19), "Par": 4, "SI": range(1, 7)})
+    tgt = SimpleNamespace(holes=holes, random_rounds=1)
+    out = SimpleNamespace(hole_vp=np.zeros((400, 2, 24), dtype=np.int8))
+    rng = np.random.default_rng(0)
+    hv = wp._add_round_offsets(out, tgt, form_sd=6.0, day_sd=0.0, rng=rng)
+    part, full = hv[:, :, :6].sum(axis=2), hv[:, :, 6:].sum(axis=2)
+    # same form offset in both: the partial round gets 6/18 of it (rounded), the full round all of it
+    assert np.abs(part - np.rint(full * 6 / 18)).max() <= 1
+    assert full.std() == pytest.approx(6.0, rel=0.15)
+    small = np.abs(full) <= 18  # an offset of up to 18 strokes moves each hole by at most one
+    assert (np.abs(hv[:, :, 6:])[small] <= 1).all()
+    assert (out.hole_vp == hv).all()
