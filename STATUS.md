@@ -4,6 +4,10 @@ Current state and next priorities. Instructions and architecture live in `CLAUDE
 
 **Last updated:** 2026-10-04 (new-record markers on /records; simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
 
+## 2026-10-04 — Net-vs-par TEGs drop the adjusted race chart
+
+On TEGs 1 to 7 (TEG Trophy decided on net vs par), the TEG Trophy race chart no longer offers "Adjusted scale". It was plotting vs bogey, which distorted the lines; net vs par needs no adjusting. Those TEGs open on Standard. Gross and Stableford-era charts are unchanged.
+
 ## 2026-10-04 — /records marks new records and gains a New Records tab
 
 Records set in the in-progress (else last completed) TEG show a NEW pill on their row. Tabs holding any show a dot. A new first tab lists them with that TEG's personal bests and worsts. Dev lab removed.
