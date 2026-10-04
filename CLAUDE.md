@@ -101,6 +101,8 @@ Use this table as a lookup. Read only sources relevant to the current task; do n
 
 **Do not read or reference `to_do_jon.md`** unless explicitly asked. It is personal draft notes, not project documentation.
 
+For anything about Jev or TypeSafe, read docs/jev.md first.
+
 When a to-do surfaces mid-conversation, add it to the right area's `TODOS.md` before ending the session.
 
 ## Isolate agent work in task worktrees
