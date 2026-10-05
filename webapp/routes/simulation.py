@@ -1,6 +1,7 @@
 """Simulation dashboard: /simulation (TEG simulator driven by analysis.simulation)."""
 
 import logging
+import threading
 from functools import lru_cache
 from pathlib import Path
 
@@ -83,6 +84,69 @@ def _live_point(teg_num: int, replay: bool, rnd: int, hole: int) -> dict:
     return point
 
 
+def _pct_label(p: float) -> str:
+    """Whole-percent display string: "<1%", "0%", ">99%" at the edges."""
+    pct = 100.0 * float(p)
+    if pct <= 0:
+        return "0%"
+    if pct < 0.5:
+        return "<1%"
+    if pct < 100 and int(pct + 0.5) >= 100:
+        return ">99%"
+    return f"{int(pct + 0.5)}%"
+
+
+def finalised_win_chances(teg_num: int) -> dict | None:
+    """{"after_round": n, "trophy": {full name: pct}, "jacket": {full name: pct}} for the TEG
+    in progress, as at its last finalised round; None if teg_num isn't in progress or it fails."""
+    try:
+        if wp.in_progress_teg() != int(teg_num):
+            return None
+        state, names = _live_state(int(teg_num), False)
+        rnd = len(state.done)
+        point = _live_point(int(teg_num), False, rnd, 18 if rnd else 0)
+
+        def label(measure: str) -> dict:
+            return {names.get(code, code): _pct_label(p) for code, p in point[measure].items()}
+
+        return {"after_round": rnd, "trophy": label("net"), "jacket": label("gross")}
+    except Exception:
+        logger.exception("finalised win chances failed")
+        return None
+
+
+_LIVE_NOW: dict[tuple, tuple] = {}  # (teg, seed, staged signature) -> (public dict, {Pl: mean})
+
+
+def _staged_for(teg_num: int):
+    """The live round's entered holes, or None (also when the registry can't be read)."""
+    from teg_analysis.analysis import live_round
+    try:
+        return live_round.staged_holes(teg_num)
+    except Exception:
+        logger.exception("staged holes unavailable")
+        return None
+
+
+def _staged_signature(staged) -> tuple:
+    if staged is None or len(staged) == 0:
+        return ()
+    return tuple(sorted(tuple(int(v) if not isinstance(v, str) else v for v in r)
+                        for r in staged.itertuples(index=False)))
+
+
+def live_snapshot() -> tuple:
+    """(TegState, Snapshot, staged holes) for the TEG in progress, entered holes included.
+
+    Raises ValueError when no TEG is in progress."""
+    teg = wp.in_progress_teg()
+    if teg is None:
+        raise wp.NoTegInProgress("No TEG is in progress.")
+    state, _ = _live_state(teg, False)
+    staged = _staged_for(teg)
+    return state, wp.snapshot(state, staged), staged
+
+
 def _completed_tegs() -> list[int]:
     return sorted(sim._tegnums(sim._read_csv(sim.COMPLETED_TEGS_CSV)))
 
@@ -90,6 +154,7 @@ def _completed_tegs() -> list[int]:
 def _clear_caches() -> None:
     _LIVE_GEN[0] += 1
     _LIVE_POINTS.clear()
+    _LIVE_NOW.clear()
     _live_state.cache_clear()
     default_prediction.cache_clear()
     _history.cache_clear()
@@ -606,6 +671,30 @@ def _live_chart_json(points: dict, measure: str, players: list[str], names: dict
     return fig.to_json()
 
 
+def _now_context(stableford: bool, done: int) -> dict | None:
+    """Rows for the "now" table while the live round has scores entered, else None."""
+    try:
+        pred, _ = _live_now()
+    except Exception:
+        logger.exception("mid-round live chances failed")
+        return None
+    if pred["live_round"] is None:
+        return None
+    rows = []
+    for p in pred["players"]:
+        net, gross = p["NetSoFar"], p["GrossVsParSoFar"]
+        rows.append({
+            "name_html": _wrap_player_name(p["Player"]),
+            "trophy": f"{p['TrophyChancePct']:.1f}%", "trophy_change": _pp(p["TrophyChangePp"]),
+            "jacket": f"{p['JacketChancePct']:.1f}%", "jacket_change": _pp(p["JacketChangePp"]),
+            "net": str(net) if stableford else _signed(net), "gross": _signed(gross),
+            "thru": p["Thru"],
+        })
+    return {"round": pred["live_round"], "rows": rows,
+            "thru": " / ".join(str(r["thru"]) for r in rows),
+            "since": "the start" if done == 0 else f"the end of round {done}"}
+
+
 def _live_context(qp) -> dict:
     """Context for the Live tab: latest win chances, plus everything the page needs
     to fill in the hole-by-hole chart."""
@@ -689,8 +778,10 @@ def _live_context(qp) -> dict:
             "axis": [[r, h] for r, h in axis], "points": clean, "scores": scores,
             "queue": [q for q in _live_queue(state.done) if _cp_key(q[0], q[1]) not in clean],
             "total": len(axis) - 1, "steps": _LIVE_STEPS}).replace("</", "<\\/")
+    now = _now_context(stableford, done) if not replay else None
     return {
-        **ctx, "teg": teg, "replay": replay, "done": done, "rows": rows, "measures": measures,
+        **ctx, "now": now, "teg": teg, "replay": replay, "done": done, "rows": rows,
+        "measures": measures,
         "newcomers": [names.get(p, p) for p in wp.newcomers(state.prior)],
         "total": len(wp.checkpoints(state)) - 1,
         "stableford": stableford, "live_data": live_data,
@@ -729,6 +820,115 @@ def default_prediction(seed: int = 1) -> dict:
         })
     return {"teg_num": res.teg_num, "simulations": res.n_sims, "players": odds,
             "notes": _status_notes(tgt)}
+
+
+def _ranks(values: dict[str, float], higher_better: bool) -> dict[str, str]:
+    """Competition ranks, ties shared ("2=")."""
+    out = {}
+    for pl, v in values.items():
+        better = sum((o > v) if higher_better else (o < v) for o in values.values())
+        ties = sum(o == v for o in values.values())
+        out[pl] = f"{better + 1}{'=' if ties > 1 else ''}"
+    return out
+
+
+_LIVE_NOW_LOCK = threading.Lock()  # one run at a time: the Live tab and TEGBot share results
+
+
+def _live_now(seed: int = 1) -> tuple:
+    """(public dict, {"gross": {Pl: expected gross vs par per 18}, "net": {Pl: expected
+    Stableford or net vs par per 18}}) for the TEG in progress, with entered holes
+    counted. Cached per staged-holes signature."""
+    teg = wp.in_progress_teg()
+    if teg is None:
+        raise wp.NoTegInProgress("No TEG is in progress.")
+    state, names = _live_state(teg, False)
+    staged = _staged_for(teg)
+    key = (int(teg), int(seed), _staged_signature(staged))
+    with _LIVE_NOW_LOCK:
+        if key not in _LIVE_NOW:
+            _compute_live_now(teg, seed, state, names, staged, key)
+        return _LIVE_NOW.get(key) or _compute_live_now(teg, seed, state, names, staged, None)
+
+
+def _compute_live_now(teg, seed, state, names, staged, key) -> tuple:
+    """Run the live simulation; store it under ``key`` (None: don't store)."""
+    gen = _LIVE_GEN[0]
+    snap = wp.snapshot(state, staged)
+    df = wp.win_probs_live(state, staged, n_sims=sim.DEFAULT_SIMS, seed=seed, spoon=True)
+    done = snap.rounds_done
+    prev = _live_point(teg, False, done, 18 if done else 0)
+    by = {m: g.set_index("player") for m, g in df.groupby("measure", sort=False)}
+    played = any(snap.holes_played.values())
+    net_rank = _ranks(snap.net, snap.stableford) if played else {}
+    gross_rank = _ranks(snap.gross, False) if played else {}
+    means = {"gross": {}, "net": {}}
+    rows = []
+    for pl in state.players:
+        for m, col, src in (("gross", "mean", "gross"), ("net", "mean_net", "net")):
+            v = by[src].loc[pl, col]
+            means[m][pl] = None if pd.isna(v) else float(v)
+        trophy, jacket = by["net"].loc[pl, "win_prob"], by["gross"].loc[pl, "win_prob"]
+        rows.append({
+            "Player": snap.names.get(pl, names.get(pl, pl)), "Pl": pl,
+            "Handicap": snap.handicaps[pl], "Thru": snap.thru[pl],
+            "HolesPlayed": snap.holes_played[pl],
+            "NetSoFar": snap.net[pl], "GrossVsParSoFar": snap.gross[pl],
+            "NetPosition": net_rank.get(pl), "GrossPosition": gross_rank.get(pl),
+            "TrophyChancePct": round(float(trophy) * 100, 1),
+            "JacketChancePct": round(float(jacket) * 100, 1),
+            "SpoonChancePct": round(float(by["spoon"].loc[pl, "win_prob"]) * 100, 1),
+            "TrophyChangePp": round((float(trophy) - prev["net"][pl]) * 100, 1) + 0.0,
+            "JacketChangePp": round((float(jacket) - prev["gross"][pl]) * 100, 1) + 0.0,
+            "ExpectedGrossVsParPer18": (None if means["gross"][pl] is None
+                                        else round(means["gross"][pl], 1)),
+        })
+    rows.sort(key=lambda r: -r["TrophyChancePct"])
+    result = {
+        "teg_num": int(teg), "rounds_done": done, "rounds_total": snap.n_rounds,
+        "live_round": snap.live_round, "simulations": sim.DEFAULT_SIMS,
+        "measure_label": "Stableford" if snap.stableford else "net vs par",
+        "players": rows,
+    }
+    if key is not None and gen == _LIVE_GEN[0]:
+        for k in [k for k in _LIVE_NOW if k[0] == key[0]]:
+            _LIVE_NOW.pop(k, None)
+        _LIVE_NOW[key] = (result, means)
+    return result, means
+
+
+def live_prediction(seed: int = 1) -> dict:
+    """Win chances now for the TEG in progress, as plain data (TEGBot and the Live tab).
+
+    Completed rounds and the live round's entered holes are banked; the rest is
+    simulated. Changes are versus the last finalised round. Raises ValueError when
+    no TEG is in progress."""
+    return _live_now(seed)[0]
+
+
+def what_it_takes(player: str | None, competition: str = "trophy",
+                  rivals: str = "same_pace") -> dict | list:
+    """What a player (name or code; None/"all" for everyone) needs to win from here."""
+    from teg_analysis.analysis import live_scenarios
+
+    state, snap, _ = live_snapshot()
+    _, means = _live_now()
+    expected = {pl: m for pl, m in means["gross"].items() if m is not None}
+    expected_net = {pl: m for pl, m in means["net"].items() if m is not None}
+    history = _history()
+    if player is None or str(player).strip().lower() in ("", "all"):
+        return live_scenarios.what_it_takes_all(snap, competition, rivals, expected, history, expected_net)
+    text = str(player).strip()
+    by_code = {c.lower(): c for c in snap.names}
+    code = by_code.get(text.lower())
+    if code is None:
+        hits = [c for c, n in snap.names.items() if n.lower() == text.lower()]
+        if not hits:
+            hits = [c for c, n in snap.names.items() if text.lower() in n.lower().split()]
+        if len(hits) != 1:
+            raise ValueError(f"No single player matches '{text}'.")
+        code = hits[0]
+    return live_scenarios.what_it_takes(snap, code, competition, rivals, expected, history, expected_net)
 
 
 # --- routes (sync def: FastAPI threadpools them) -----------------------------

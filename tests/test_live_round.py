@@ -756,3 +756,23 @@ def test_apply_admin_edits_only_if_empty_keeps_existing_score(store):
     cells = {(c["hole"], c["player"]): c["value"] for c in lr.get_scores_since(token)["cells"]}
     assert cells[(1, player)] == 4
     assert cells[(2, player)] == 3
+
+
+def test_staged_holes_scores_entered_cells_of_the_teg_live_round(store):
+    assert lr.staged_holes(10) is None  # no live round
+    row = lr.start_live_round(10, 2)
+    assert lr.staged_holes(10).empty
+    lr.apply_score_writes(row["Token"], "d1", "Phone", [
+        {"hole": 1, "player": "DM", "value": 5},   # par 4, SI 1, hc 18: 1 stroke -> net par
+        {"hole": 2, "player": "DM", "value": 3},
+        {"hole": 7, "player": "GW", "value": 6},   # hc 16, SI 7: 1 stroke -> net +1
+    ])
+    df = lr.staged_holes(10).sort_values(["Pl", "Hole"]).reset_index(drop=True)
+    assert list(df.columns) == ["Round", "Hole", "Pl", "GrossVP", "NetVP", "Stableford"]
+    assert df["Round"].tolist() == [2, 2, 2]
+    assert df[["Hole", "Pl"]].values.tolist() == [[1, "DM"], [2, "DM"], [7, "GW"]]
+    assert df["GrossVP"].tolist() == [1, -1, 2]
+    assert df["Stableford"].tolist() == [2, 4, 1]
+    assert lr.staged_holes(11) is None  # another TEG
+    lr.cancel_live_round(row["Token"])
+    assert lr.staged_holes(10) is None

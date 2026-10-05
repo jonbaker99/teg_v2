@@ -5,6 +5,7 @@ Temporary working log for the TEG 19 dry runs. Delete once every issue below is 
 - **Dry run 1:** PR #140, 29 September. Found issues 1–17.
 - **Dry run 2:** PR #150, 30 September, re-tested every fix from Batches 1A–4b and #141. All passed on data and flow. Found issues 18–22. Fix plan: `TEG19_FIX_PLAN.md` → Batch 5.
 - **Dry run 3:** PR #157, 1 October. Found issues 23–26. Fix plan: `TEG19_FIX_PLAN.md` → Batch 6.
+- **Dry run 4:** PR #177, 5 October. Tested live entry on two phones, live win chances, the Predictatron and TEGBot. Found issues 27–29, fixed in PR #178. Dry run 5 (PR #179, 5 October) passed.
 
 | # | Area | Issue | Status |
 |---|---|---|---|
@@ -34,3 +35,6 @@ Temporary working log for the TEG 19 dry runs. Delete once every issue below is 
 | 24 | Live round / entry | The score entry page has no link to the admin review page. | Fixed (Batch 6, PR A): the strip shows Review & finalise when the admin cookie is valid. Players see no trace of it. |
 | 25 | Live round / public banner | The "LIVE … Enter scores →" banner stayed up after the round was finalised. **Cause:** not reproduced in-process: finalise flips the row and clears the banner cache, and a test confirms the next page load drops it. Most likely a page loaded before finalise (pages never refresh the banner), or a load within the 30-second cache window. | Fixed (Batch 6, PR A): the banner follows the round's state. A live round shows Enter scores. Otherwise the latest finalised round shows "Round N results are in. Leaderboard →" for 7 days (not on `/leaderboard` itself). |
 | 26 | Admin / delete rounds | Deleting rounds shows only "Deleting…" for about 40s, with no step-by-step progress (issue 21's stopgap). | Fixed (Batch 6, PR B): deletion runs as a background job (`webapp/delete_jobs.py`) with finalise's step checklist. It survives a reload, refuses a second start, and still makes one commit. |
+| 27 | TEGBot / live chances | TEGBot can't see the live win chances. Worse, during a TEG `get_predictions` simulates the in-progress TEG from scratch, ignoring the rounds already played, so it gives pre-tournament odds. Most TEGBot use will be mid-tournament. | Fixed (PR #178): `get_live_win_chances`, including holes entered mid-round |
+| 28 | TEGBot / scenarios (**feature**) | TEGBot can't answer "what does X need to win". Wanted: "if A keeps scoring as so far, B needs at least X points, about Y gross", gross first. | Fixed (PR #178): `get_what_it_takes` |
+| 29 | Live round / entry | When the admin taps Finalise, the entry page keeps accepting scores until the very end of the ~40 s finalise; only then does "finalised" appear. Scores typed in that window are rejected and silently dropped. The locked state also needs to be far more obvious. | Fixed (PR #178): `finalizing` status and lock card |

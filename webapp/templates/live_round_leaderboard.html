@@ -127,7 +127,10 @@ let tab = 'net'; // 'net' | 'gross'
 
 function render() {
   const banner = document.getElementById('status-banner');
-  if (board.status !== 'active') {
+  if (board.status === 'finalizing') {
+    banner.className = 'statusbanner';
+    banner.textContent = '⏳ Finalising… results are being published.';
+  } else if (board.status !== 'active') {
     banner.className = 'statusbanner done';
     banner.textContent = board.status === 'finalized'
       ? '✅ Round finalised. These scores are now in the record.'
@@ -175,14 +178,17 @@ document.getElementById('tab-gross').addEventListener('click', () => {
 async function poll() {
   try {
     const res = await fetch(`/api/live-round/${TOKEN}/leaderboard`);
-    if (res.ok) { board = await res.json(); render(); }
+    if (res.ok) {
+      board = await res.json(); render();
+      if (board.status !== 'active' && board.status !== 'finalizing' && pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+    }
   } catch (e) { console.warn('Leaderboard poll failed (will retry):', e); }
 }
 
 let pollTimer = null;
 function startPolling() {
   if (pollTimer) clearInterval(pollTimer);
-  if (board.status === 'active') pollTimer = setInterval(poll, 10000);
+  if (board.status === 'active' || board.status === 'finalizing') pollTimer = setInterval(poll, 10000);
 }
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) { if (pollTimer) { clearInterval(pollTimer); pollTimer = null; } }

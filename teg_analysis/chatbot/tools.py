@@ -71,6 +71,11 @@ class ChatData:
     players: Callable[[], dict[str, str]] = _default_players
     #: The site's simulation of the next TEG (TEG Predictatron 3100), as plain data.
     predictions: Optional[Callable[[], dict]] = None
+    #: Win chances now for the TEG in progress, entered holes included. Raises
+    #: ValueError when no TEG is in progress.
+    live_predictions: Optional[Callable[[], dict]] = None
+    #: (player full name or None, competition, rivals) -> what it takes to win from here.
+    what_it_takes: Optional[Callable[..., Any]] = None
     #: scope ("teg" | "round" | "frontback") -> ranked frame, as /records uses.
     ranked: Callable[[str], pd.DataFrame] = None  # type: ignore[assignment]
     _memo: dict = field(default_factory=dict, repr=False)
@@ -323,8 +328,20 @@ def get_records(data: ChatData, scope: str = "round") -> dict:
 # Tool: predictions — the site's simulator (TEG Predictatron 3100)
 # ---------------------------------------------------------------------------
 def get_predictions(data: ChatData) -> dict:
+    from teg_analysis.analysis.win_probability import NoTegInProgress
+
     if data.predictions is None:
         raise ToolInputError("Predictions aren't available here.")
+    if data.live_predictions is not None:
+        try:
+            live = data.live_predictions()
+        except NoTegInProgress:
+            live = None  # no TEG in progress: pre-tournament odds are right
+        except Exception as exc:  # any fault: never fall back to pre-tournament odds mid-TEG
+            raise ToolInputError("Win chances can't be worked out right now.") from exc
+        if live:
+            raise ToolInputError(
+                f"TEG {live['teg_num']} is in progress; use get_live_win_chances for current chances.")
     try:
         pred = data.predictions()
     except ValueError as exc:
@@ -347,6 +364,62 @@ def get_predictions(data: ChatData) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Tools: live win chances and "what does X need" (a TEG in progress)
+# ---------------------------------------------------------------------------
+def get_live_win_chances(data: ChatData) -> dict:
+    if data.live_predictions is None:
+        raise ToolInputError("Live win chances aren't available here.")
+    try:
+        pred = data.live_predictions()
+    except ValueError as exc:
+        raise ToolInputError(str(exc)) from exc
+    return {
+        **pred,
+        "definition": (
+            "Win chances now for the TEG in progress. Completed rounds and the holes entered so "
+            "far in the round being played are banked at their actual scores; the rest is "
+            "simulated hole by hole from each player's form, blended with how they are playing "
+            "this TEG. Trophy = most Stableford points (net vs par before TEG 8), Green Jacket = "
+            "lowest gross, Wooden Spoon = fewest Stableford points. Change is in percentage "
+            "points since the last finalised round. Thru = holes entered in the live round."),
+        "notes": ["A prediction, not a certainty.",
+                  "Mid-round figures move as scores come in. When live_round is set they include "
+                  "scores entered but not yet finalised; otherwise they are as at the last "
+                  "finalised round.",
+                  "Positions share ties (2=)."],
+        "page": "/simulation?tab=live",
+    }
+
+
+def get_what_it_takes(data: ChatData, player: Optional[str] = None,
+                      competition: str = "trophy", rivals: str = "same_pace") -> Any:
+    if data.what_it_takes is None:
+        raise ToolInputError("This isn't available here.")
+    if competition not in ("trophy", "jacket"):
+        raise ToolInputError("competition must be 'trophy' or 'jacket'.")
+    if rivals not in ("same_pace", "expected"):
+        raise ToolInputError("rivals must be 'same_pace' or 'expected'.")
+    name = resolve_player(player, data.players()) if player and str(player).strip() else None
+    try:
+        res = data.what_it_takes(name, competition, rivals)
+    except ValueError as exc:
+        raise ToolInputError(str(exc)) from exc
+    key = "players" if name is None else "result"
+    return {
+        key: res, "competition": competition, "rivals": rivals,
+        "definition": (
+            "What the player needs over the holes still to play to win outright, or to tie. "
+            "same_pace: every rival keeps scoring at the per-hole rate they have so far. "
+            "expected: rivals score as the simulator expects. Gross targets are converted from "
+            "Stableford/net targets using the player's handicap and the remaining scorecards, so "
+            "say 'about'. Holes entered in a round in progress are counted as played."),
+        "notes": ["Check out_of_reach and reality before saying it is realistic.",
+                  "A projection from form, not a certainty."],
+        "page": "/simulation?tab=live",
+    }
+
+
+# ---------------------------------------------------------------------------
 # Tool schemas (Anthropic tool-use format) and dispatch
 # ---------------------------------------------------------------------------
 TOOL_SCHEMAS = [
@@ -359,6 +432,34 @@ TOOL_SCHEMAS = [
             "who will win, favourites, odds or forecasts for the upcoming TEG."
         ),
         "input_schema": {"type": "object", "properties": {}, "required": []},
+    },
+    {
+        "name": "get_live_win_chances",
+        "description": (
+            "Win chances right now while a TEG is in progress, from the site's live simulator: "
+            "each player's chance of the TEG Trophy, Green Jacket and Wooden Spoon, change since "
+            "the last finalised round, positions, and totals so far, including holes entered in "
+            "the round being played. Use for who will win, chances, odds, favourite or who is "
+            "winning now during a TEG. Errors if no TEG is in progress."),
+        "input_schema": {"type": "object", "properties": {}, "required": []},
+    },
+    {
+        "name": "get_what_it_takes",
+        "description": (
+            "What a player needs to win the TEG Trophy or Green Jacket from here, while a TEG is "
+            "in progress: target gross (per round and total, about) and Stableford points, to "
+            "win outright or tie, with a reality check against their own scoring. Omit player "
+            "for everyone. rivals same_pace (default): rivals keep scoring as they have so far; "
+            "expected: rivals score as the simulator expects. Never work targets out by hand."),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "player": {"type": "string"},
+                "competition": {"type": "string", "enum": ["trophy", "jacket"]},
+                "rivals": {"type": "string", "enum": ["same_pace", "expected"]},
+            },
+            "required": [],
+        },
     },
     {
         "name": "get_honours",
@@ -420,6 +521,8 @@ TOOL_SCHEMAS = [
 
 _DISPATCH = {
     "get_predictions": get_predictions,
+    "get_live_win_chances": get_live_win_chances,
+    "get_what_it_takes": get_what_it_takes,
     "get_honours": get_honours,
     "get_records": get_records,
     "get_streak_records": get_streak_records,

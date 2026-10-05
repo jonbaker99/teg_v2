@@ -44,6 +44,7 @@
     {% else %}
     <div class="pane-body">
         <div style="overflow-x:auto;">{% with standings = panel.standings %}{% include "partials/_standings_table.html" %}{% endwith %}</div>
+        {% with win_note = panel.win_note %}{% if win_note %}{% include "partials/_win_note.html" %}{% endif %}{% endwith %}
     </div>
     <a class="teaser-link pane-link" href="/leaderboard?teg={{ teg_num }}">Full leaderboard ↗</a>
     {% endif %}

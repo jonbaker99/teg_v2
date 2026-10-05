@@ -23,8 +23,31 @@
     <p class="request-feedback">Replay of TEG {{ teg }}, which has finished. Each point on the chart is the chances as they stood after that hole.</p>
     {% endif %}
     <section class="sim-section">
-    <h3 class="chart-title">TEG {{ teg }} win chances{% if done == 0 %} before the start{% elif replay %} at the finish{% else %} after round {{ done }}{% endif %}</h3>
-    <p class="caption">{% if done == 0 %}No round has been finalised yet, so these are pre-tournament chances. They update after each round is finalised.{% elif replay %}The result: the winners on 100%.{% else %}Rounds 1 to {{ done }} count at their actual scores. The rest are simulated hole by hole on their courses, with each player's form updated by how they've played so far.{% endif %}</p>
+    <h3 class="chart-title">TEG {{ teg }} win chances{% if now %} now{% elif done == 0 %} before the start{% elif replay %} at the finish{% else %} after round {{ done }}{% endif %}</h3>
+    {% if not now %}<p class="caption">{% if done == 0 %}No round has been finalised yet, so these are pre-tournament chances. They update after each round is finalised.{% elif replay %}The result: the winners on 100%.{% else %}Rounds 1 to {{ done }} count at their actual scores. The rest are simulated hole by hole on their courses, with each player's form updated by how they've played so far.{% endif %}</p>{% endif %}
+    {% if now %}
+    <p class="caption">Now: round {{ now.round }} in progress, scores entered so far (thru {{ now.thru }}). Rounds already finalised and the holes entered so far count at their actual scores; the rest is simulated.</p>
+    <div class="data-card"><div class="table-wrapper">
+    <table class="teg-table sim-live-table sim-now-table">
+        <thead><tr>
+            <th class="sim-left">Player</th><th>Thru</th>
+            <th>TEG Trophy</th><th><abbr title="Change since {{ now.since }}">Change</abbr></th>
+            <th>Green Jacket</th><th><abbr title="Change since {{ now.since }}">Change</abbr></th>
+            <th>{{ 'Stableford' if stableford else 'Net vs par' }}</th><th>Gross vs par</th>
+        </tr></thead>
+        <tbody>
+        {% for r in now.rows %}
+        <tr>
+            <td class="sim-left">{{ r.name_html | safe }}</td><td>{{ r.thru }}</td>
+            <td>{{ r.trophy }}</td><td class="text-muted">{{ r.trophy_change }}</td>
+            <td>{{ r.jacket }}</td><td class="text-muted">{{ r.jacket_change }}</td>
+            <td>{{ r.net }}</td><td>{{ r.gross }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div></div>
+    {% else %}
     <div class="data-card"><div class="table-wrapper">
     <table class="teg-table sim-live-table">
         <thead><tr>
@@ -45,8 +68,9 @@
         </tbody>
     </table>
     </div></div>
+    {% endif %}
     {% if newcomers %}<p class="request-feedback">First TEG for {{ newcomers | join(' and ') }}: no past scores, so their chances use the group's scoring centred on their handicap. Treat them as a rough guide.</p>{% endif %}
-    <p class="caption">Trophy is {{ 'Stableford' if stableford else 'net vs par' }}, Jacket is gross. {% if done %}Change is in percentage points since {{ since }}. {% endif %}A tie for the lead counts as a shared win.</p>
+    <p class="caption">Trophy is {{ 'Stableford' if stableford else 'net vs par' }}, Jacket is gross. {% if now %}Change is in percentage points since {{ now.since }}. {% elif done %}Change is in percentage points since {{ since }}. {% endif %}A tie for the lead counts as a shared win.</p>
     </section>
 
     {% if done %}

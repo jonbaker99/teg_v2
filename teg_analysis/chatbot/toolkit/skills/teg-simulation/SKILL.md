@@ -9,6 +9,8 @@ The next TEG is simulated 10,000 times from each player's recent hole-by-hole fo
 
 For a plain "who will win" or "what are the odds" question, use the `get_predictions` lookup instead. It gives the same numbers as `baseline`. Use this skill for why, what-if and attribution questions.
 
+While a TEG is in progress, this skill only knows finalised rounds and has no live staging, so its figures are the pre-tournament or last-round view. Chances now, including holes entered mid-round, come from the `get_live_win_chances` lookup. "What does X need to win" comes from `get_what_it_takes`. Use those, not `baseline`, for live and mid-TEG questions, and quote their numbers.
+
 Setup (once per container) is in the system prompt. Then:
 
 ```

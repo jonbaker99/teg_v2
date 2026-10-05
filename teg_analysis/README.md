@@ -104,13 +104,23 @@ teg_analysis/
                      holes so rounds aren't too predictable — load_teg_state/
                      win_probs_at (any hole of a finished round; checkpoints)/
                      win_probs_by_round (tidy: teg, after_round, measure, player,
-                     win_prob, mean, sd); backtest_blend (Brier of a k/P grid)
+                     win_prob, mean, sd); backtest_blend (Brier of a k/P grid);
+                     mid-round: snapshot (totals + holes left per player, from
+                     live_round.staged_holes) and win_probs_live (whole live round
+                     simulated, entered holes written over the draws; players on
+                     different holes); spoon=True adds Wooden Spoon chances
+    live_scenarios.py  What a player needs to win the Trophy or Jacket from a Snapshot:
+                     rivals projected at their pace so far (or the model's expectation),
+                     target in points and about-gross (gross_vp ≈ strokes + 2 x holes −
+                     points), checked against the player's own rounds —
+                     what_it_takes / what_it_takes_all
     live_round.py    Multi-device live round entry: registry + per-round staging CSVs,
                      server-ordered writes, conflict flagging, live leaderboard from
                      staging, finalize into execute_data_update —
                      start_live_round/apply_score_writes/get_scores_since/
                      apply_admin_edits (authoritative bulk edit; resolve_conflict wraps
-                     it)/get_live_leaderboard/finalize_live_round;
+                     it)/get_live_leaderboard/finalize_live_round; staged_holes (the
+                     TEG's live round's entered holes, scored, for win chances);
                      get/set_public_entry_enabled + get_public_round_banners (the
                      admin switch and state for the public live / "results are in"
                      banner; get_public_live_rounds = active rounds only)

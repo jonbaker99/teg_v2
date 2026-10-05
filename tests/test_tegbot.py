@@ -632,6 +632,60 @@ def test_get_predictions_wraps_the_simulator(data):
     assert "can't run yet: no handicaps" in run_tool("get_predictions", {}, data)["error"]
 
 
+def _no_live():
+    from teg_analysis.analysis.win_probability import NoTegInProgress
+    raise NoTegInProgress("No TEG is in progress.")
+
+
+def test_get_predictions_refuses_mid_teg(data):
+    data.predictions = lambda: {"teg_num": 19, "simulations": 1, "notes": [], "players": []}
+    data.live_predictions = lambda: {"teg_num": 19, "players": []}
+    err = run_tool("get_predictions", {}, data)["error"]
+    assert "TEG 19 is in progress; use get_live_win_chances" in err
+    data.live_predictions = _no_live  # no TEG in progress: pre-tournament odds are fine
+    assert "players" in run_tool("get_predictions", {}, data)
+
+    def broken():  # a real fault mid-TEG must not fall back to pre-tournament odds
+        raise ValueError("round 3 is live but has no scorecard")
+    data.live_predictions = broken
+    assert "can't be worked out" in run_tool("get_predictions", {}, data)["error"]
+
+
+def test_get_live_win_chances_passes_through(data):
+    assert "aren't available" in run_tool("get_live_win_chances", {}, data)["error"]
+    data.live_predictions = _no_live
+    assert "No TEG is in progress" in run_tool("get_live_win_chances", {}, data)["error"]
+    data.live_predictions = lambda: {"teg_num": 19, "live_round": 3,
+                                     "players": [{"Player": "Alan ALPHA", "TrophyChancePct": 41.8}]}
+    out = run_tool("get_live_win_chances", {}, data)
+    assert out["page"] == "/simulation?tab=live" and out["live_round"] == 3
+    assert out["players"][0]["TrophyChancePct"] == 41.8
+    assert "banked" in out["definition"] and out["notes"]
+
+
+def test_get_what_it_takes_validates_and_passes_through(data):
+    assert "isn't available" in run_tool("get_what_it_takes", {}, data)["error"]
+    calls = []
+
+    def fake(player, competition, rivals):
+        calls.append((player, competition, rivals))
+        return {"need": {"outright": {"gross": 168}}}
+    data.what_it_takes = fake
+    out = run_tool("get_what_it_takes", {"player": "Alpha"}, data)
+    assert calls == [("Alan ALPHA", "trophy", "same_pace")]
+    assert out["result"]["need"]["outright"]["gross"] == 168 and out["page"] == "/simulation?tab=live"
+    out = run_tool("get_what_it_takes", {"competition": "jacket", "rivals": "expected"}, data)
+    assert calls[-1] == (None, "jacket", "expected") and "players" in out
+    assert "competition" in run_tool("get_what_it_takes", {"competition": "spoon"}, data)["error"]
+    assert "rivals" in run_tool("get_what_it_takes", {"rivals": "x"}, data)["error"]
+    assert "No player called" in run_tool("get_what_it_takes", {"player": "Zed"}, data)["error"]
+
+    def none_live(*a):
+        raise ValueError("No TEG is in progress.")
+    data.what_it_takes = none_live
+    assert "No TEG is in progress" in run_tool("get_what_it_takes", {}, data)["error"]
+
+
 # --- toolkit and Deep dive -----------------------------------------------------
 
 _REAL_TOOLKIT_FILES = bot._toolkit_files
