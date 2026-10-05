@@ -115,17 +115,15 @@ Worker C builds the module and its tests (`teg_analysis/analysis/live_scenarios.
 - `python -m pytest tests/test_live_scenarios.py tests/test_tegbot.py tests/test_tegbot_toolkit.py tests/test_win_probability.py tests/test_simulation_routes.py`.
 - `python scripts/check_python_compat.py` before push.
 
-## Dry run 5 on the PR 2 preview
+## Dry run 5 on the PR preview
 
-Set up a dummy TEG, finalise rounds 1 and 2, then ask TEGBot:
+Set up a dummy TEG on the preview (not TEG 50: test TEG 50 is excluded from live chances). Then:
 
-- Who's going to win the Trophy? Who's favourite for the Jacket?
-- How much did X's chance change after round 2? Why?
-- What does X need to win the Trophy? To win the Jacket?
-- If Y keeps playing like this, what does X need to shoot?
-- Who's most likely to get the Spoon?
-
-Each answer must match the Live tab's numbers, and give targets in gross first. Add these to `scripts/tegbot_eval.py` as a `live` group that runs only when a TEG is in progress.
+1. **Round 1, before any finalise.** Go live, enter a few holes on two phones (players on different holes). Check the Live tab shows "Now: round 1 in progress" with Thru, and ask TEGBot "who's winning?" and "who'll win the Trophy?". Both must reflect the holes entered.
+2. **Finalise lock.** Keep a phone on the entry page, tap Finalise on another. The phone greys out within ~4 s with "Publishing results…", then "Results are in". Type a score just after the tap and check it's listed on the card.
+3. **Round 2 mid-round.** Ask TEGBot: "What does X need to win the Trophy?", "...the Jacket?", "If Y keeps playing like this, what does X need to shoot?", "Who's most likely to get the Spoon?", "How much did X's chance change since round 1?". Targets must lead with gross ("about 84 a round"), then points.
+4. **Final round, first group finished.** Ask about a finished player: TEGBot must call it a clubhouse position, not a win.
+5. Numbers in TEGBot must match the Live tab.
 
 ## Docs, in the same PRs
 
