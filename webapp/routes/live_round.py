@@ -42,6 +42,22 @@ class ScoreWriteRequest(BaseModel):
     cells: list[ScoreCell]
 
 
+def _with_finalizing(payload: dict | None, token: str) -> dict | None:
+    """Report "finalizing" instead of "active" while a finalise job is in flight.
+
+    The registry only flips to "finalized" at the very end of the ~40 s finalise,
+    but score writes are already refused (409) from the moment the admin taps it.
+    A done or failed job leaves the registry status alone (error -> back to active).
+    """
+    if not payload or payload.get("status") != "active":
+        return payload
+    from webapp import finalize_jobs
+
+    if finalize_jobs.is_active(finalize_jobs.read_status(token)):
+        return {**payload, "status": "finalizing"}
+    return payload
+
+
 def _is_admin(request: Request) -> bool:
     """Admin cookie present? Never lets a cookie-check failure break a player page."""
     try:
@@ -68,7 +84,7 @@ def live_round_page(request: Request, token: str):
     elif not live_ctx["players"]:
         ctx["error"] = "No players are registered for this TEG yet — ask the admin to set up the roster on TEG setup first."
     else:
-        ctx["live"] = live_ctx
+        ctx["live"] = _with_finalizing(live_ctx, token)
 
     ctx["is_admin"] = _is_admin(request)
     return templates.TemplateResponse("live_round_entry.html", ctx)
@@ -89,7 +105,7 @@ def live_round_leaderboard_page(request: Request, token: str):
     if board is None:
         ctx.setdefault("error", "This link doesn't match a live round. Check the link, or ask whoever started the round.")
     else:
-        ctx["board"] = board
+        ctx["board"] = _with_finalizing(board, token)
 
     ctx["is_admin"] = _is_admin(request)
     return templates.TemplateResponse("live_round_leaderboard.html", ctx)
@@ -102,7 +118,7 @@ def api_live_leaderboard(token: str):
     board = get_live_leaderboard(token)
     if board is None:
         raise HTTPException(status_code=404, detail="Live round not found")
-    return board
+    return _with_finalizing(board, token)
 
 
 @router.get("/api/live-round/{token}/scores")
@@ -110,7 +126,7 @@ def api_poll_scores(token: str, since: int = 0):
     from teg_analysis.analysis.live_round import get_scores_since, LiveRoundNotFoundError
 
     try:
-        return get_scores_since(token, since_seq=since)
+        return _with_finalizing(get_scores_since(token, since_seq=since), token)
     except LiveRoundNotFoundError:
         raise HTTPException(status_code=404, detail="Live round not found")
 

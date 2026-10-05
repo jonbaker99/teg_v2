@@ -193,6 +193,29 @@ table.egrid { width:100%; border-collapse:collapse; font-family:var(--font-num);
 .vsheet .vactions .apply { background:var(--accent); border-color:var(--accent); color:#fff; }
 .vsheet .vactions .apply:disabled { opacity:.4; }
 
+/* Locked (finalising / finalised / cancelled): grey the entry UI, card on top. */
+body.round-locked .totalsbar, body.round-locked .viewbar, body.round-locked .toolbar, body.round-locked .gridwrap {
+  opacity:.4; pointer-events:none; }
+body.round-locked .keypad, body.round-locked .donebanner { display:none; }
+.lockoverlay { position:fixed; left:0; right:0; bottom:0; top:calc(33px + env(safe-area-inset-top,0)); z-index:60;
+  background:rgba(0,0,0,.35); display:flex; align-items:center; justify-content:center; padding:20px 16px; }
+.lockoverlay[hidden] { display:none; }
+.lockcard { width:100%; max-width:340px; background:var(--surface); border:1px solid var(--line); border-radius:18px;
+  box-shadow:var(--shadow); padding:26px 20px 22px; text-align:center; -webkit-user-select:text; user-select:text; }
+.lockcard .lockicon { font-size:34px; color:var(--accent-text); }
+.lockcard .lockicon.spin { display:inline-block; width:30px; height:30px; border:3px solid var(--line);
+  border-top-color:var(--accent); border-radius:50%; animation:lockspin 1s linear infinite; }
+@keyframes lockspin { to { transform:rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .lockcard .lockicon.spin { animation:none; } }
+.lockcard .locktitle { margin:10px 0 0; font-size:21px; font-weight:700; line-height:1.2; }
+.lockcard .locksub { margin:6px 0 0; font-family:var(--font-data); font-size:12px; font-weight:600; color:var(--text-2); }
+.lockcard .lockunsaved { margin:16px 0 0; padding:10px 12px; text-align:left; border:1px solid var(--conflict); border-radius:11px;
+  font-family:var(--font-data); font-size:12px; line-height:1.5; color:var(--text); }
+.lockcard .lockunsaved .lw { color:var(--conflict); font-weight:700; margin:0 0 4px; }
+.lockcard .lockunsaved ul { margin:0; padding:0 0 0 16px; }
+.lockcard .lockunsaved[hidden], .lockcard .lockbtn[hidden], .lockcard .lockicon[hidden] { display:none; }
+.lockcard .lockbtn { display:inline-flex; align-items:center; justify-content:center; gap:6px; margin-top:18px; padding:12px 22px;
+  background:var(--accent); color:#fff; border-radius:11px; font-family:var(--font-data); font-size:13px; font-weight:700; text-decoration:none; }
 </style>
 </head>
 <body>
@@ -262,6 +285,17 @@ table.egrid { width:100%; border-collapse:collapse; font-family:var(--font-num);
   <div class="disabled-note" id="keypad-hint">Tap any score cell above to begin entering scores.</div>
 </div>
 
+<div class="lockoverlay" id="lock-overlay" hidden>
+  <div class="lockcard" role="status" aria-live="polite">
+    <span class="lockicon spin" id="lock-spin"></span>
+    <span class="material-symbols-outlined lockicon" id="lock-done-icon" hidden>check_circle</span>
+    <h2 class="locktitle" id="lock-title">Round complete</h2>
+    <p class="locksub" id="lock-sub"></p>
+    <div class="lockunsaved" id="lock-unsaved" hidden></div>
+    <a class="lockbtn" id="lock-btn" href="/leaderboard?teg={{ live.teg_num }}" hidden><span class="material-symbols-outlined">leaderboard</span>Leaderboard</a>
+  </div>
+</div>
+
 <div class="scrim" id="v-scrim" hidden></div>
 <div class="vsheet" id="v-sheet" hidden>
   <div class="vhead"><span class="material-symbols-outlined">mic</span><div class="tt">Voice entry</div>
@@ -300,7 +334,8 @@ let typeBuffer = '';  // digits typed on a physical keyboard, before commit
 let traversal = 'col'; // 'col' | 'row'
 let keypadMode = 'fixed'; // 'fixed' | 'relative'
 let visiblePlayers = new Set(PLAYERS);
-let liveStatus = DATA.status; // 'active' | 'finalized' | 'cancelled'
+let liveStatus = DATA.status; // 'active' | 'finalizing' | 'finalized' | 'cancelled' | 'deleted'
+let reopenNote = false; // finalise failed and the round is open again
 let seq = 0;
 let pollTimer = null;
 
@@ -396,6 +431,7 @@ function setVisiblePlayers(next) {
 
 function setActive(hole, player) {
   if (liveStatus !== 'active') return;
+  if (reopenNote) { reopenNote = false; document.getElementById('status-banner').hidden = true; }
   typeBuffer = '';
   active = { hole, player };
   document.querySelectorAll('td.cell.active').forEach(td => td.classList.remove('active'));
@@ -836,17 +872,17 @@ function savePending() {
     else localStorage.removeItem(PENDING_KEY);
   } catch (e) {}
   renderSaveBanner();
+  if (isLocked()) renderLockCard();
 }
 
 function renderSaveBanner() {
   const banner = document.getElementById('save-banner');
   const n = Object.keys(pending).length;
-  banner.hidden = !(n && (flushFailed || liveStatus !== 'active'));
+  // Once locked, the lock card reports anything unsaved instead.
+  banner.hidden = !(n && flushFailed && liveStatus === 'active');
   if (banner.hidden) return;
   const what = n === 1 ? '1 score' : n + ' scores';
-  banner.textContent = liveStatus === 'active'
-    ? `⚠️ ${what} not saved yet. Retrying, keep this page open.`
-    : `⚠️ ${what} on this phone never reached the server. Tell the organiser.`;
+  banner.textContent = `⚠️ ${what} not saved yet. Retrying, keep this page open.`;
 }
 
 function writeCells(cells) {
@@ -868,8 +904,17 @@ async function flushPending() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ device_id: DEVICE_ID, device_name: DEVICE_NAME || 'Someone', cells }),
     });
-    // 4xx (round closed, invalid cell) won't succeed on retry: drop those
-    // cells and let the next poll restore the server's view. 5xx: retry.
+    // 409: the round is closed or finalising. Keep the cells queued: the next
+    // poll locks the page and the lock card lists them (or a failed finalise
+    // reopens the round and they are sent then).
+    if (res.status === 409) {
+      flushing = false;
+      flushFailed = true;
+      renderSaveBanner();
+      return;
+    }
+    // Other 4xx (invalid cell) won't succeed on retry: drop those cells and
+    // let the next poll restore the server's view. 5xx: retry.
     if (res.ok || (res.status >= 400 && res.status < 500)) {
       if (!res.ok) console.warn('Score write rejected:', res.status, await res.text());
       sent = true;
@@ -900,6 +945,7 @@ async function pollScores() {
     const data = await res.json();
     seq = data.seq;
     if (data.status !== liveStatus) {
+      if (liveStatus === 'finalizing' && data.status === 'active') reopenNote = true;
       liveStatus = data.status;
       applyStatus();
     }
@@ -915,22 +961,67 @@ async function pollScores() {
   }
 }
 
+function isLocked() { return liveStatus !== 'active'; }
+
+// Scores typed on this phone that the server never confirmed, shown on the lock
+// card. They are not retried while locked (the server refuses them anyway).
+function renderLockCard() {
+  const fin = liveStatus === 'finalized', finalizing = liveStatus === 'finalizing';
+  document.getElementById('lock-spin').hidden = !finalizing;
+  document.getElementById('lock-done-icon').hidden = !fin;
+  document.getElementById('lock-btn').hidden = !fin;
+  document.getElementById('lock-title').textContent = (fin || finalizing) ? 'Round complete'
+    : liveStatus === 'deleted' ? 'This round was deleted.' : 'This round was cancelled.';
+  document.getElementById('lock-sub').textContent = finalizing ? 'Scores locked. Publishing results…'
+    : fin ? 'Results are in' : '';
+  const box = document.getElementById('lock-unsaved');
+  const cells = Object.values(pending);
+  box.hidden = !cells.length;
+  box.textContent = '';
+  if (!cells.length) return;
+  const head = document.createElement('p');
+  head.className = 'lw';
+  head.textContent = cells.length === 1 ? "1 score from this phone wasn't saved. Tell the admin."
+    : `${cells.length} scores from this phone weren't saved. Tell the admin.`;
+  const ul = document.createElement('ul');
+  cells.sort((x, y) => x.hole - y.hole).forEach(c => {
+    const li = document.createElement('li');
+    li.textContent = `Hole ${c.hole}: ${PLAYER_NAMES[c.player] || c.player} ${c.value == null ? '(cleared)' : c.value}`;
+    ul.appendChild(li);
+  });
+  box.append(head, ul);
+}
+
 function applyStatus() {
   const banner = document.getElementById('status-banner');
+  const locked = isLocked();
+  document.body.classList.toggle('round-locked', locked);
+  document.getElementById('lock-overlay').hidden = !locked;
+  document.getElementById('voice-btn').disabled = locked;
   renderSaveBanner();
-  if (liveStatus === 'active') {
-    banner.hidden = true;
+  if (!locked) {
+    // Back to active (a finalise that failed): reopen entry.
+    if (reopenNote) {
+      banner.hidden = false;
+      banner.textContent = "Finalise didn't complete. Scores are open again.";
+    } else banner.hidden = true;
+    const hint = document.getElementById('keypad');
+    if (!active && !hint.children.length) hint.innerHTML = '<div class="disabled-note" id="keypad-hint">Tap any score cell above to begin entering scores.</div>';
+    updateDoneState();
+    if (reopenNote) flushPending();
     return;
   }
-  if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
-  banner.hidden = false;
-  banner.textContent = liveStatus === 'finalized'
-    ? '✅ This round has been finalised. Scores are locked.'
-    : liveStatus === 'deleted' ? '⚪ This round was deleted.' : '⚪ This round was cancelled.';
+  reopenNote = false;
+  banner.hidden = true;
+  // Keep polling while finalising (it may fail and reopen); stop once final.
+  if (liveStatus !== 'finalizing' && pollTimer) { clearInterval(pollTimer); pollTimer = null; }
   active = null;
+  typeBuffer = '';
+  document.querySelectorAll('td.cell.active').forEach(td => td.classList.remove('active'));
+  closeVoice();
   document.getElementById('keypad').innerHTML = '';
-  document.getElementById('voice-btn').disabled = true;
   document.getElementById('done-banner').hidden = true;
+  renderLockCard();
 }
 
 function startPolling() {
@@ -941,7 +1032,7 @@ function startPolling() {
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
     if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
-  } else if (liveStatus === 'active') {
+  } else if (liveStatus === 'active' || liveStatus === 'finalizing') {
     startPolling();
   }
 });
@@ -965,7 +1056,7 @@ Object.entries(pending).forEach(([key, c]) => { scores[key] = c.value; renderCel
 updateTotalsAndSubtotals();
 applyStatus();
 ensureDeviceName();
-if (liveStatus === 'active') startPolling();
+if (liveStatus === 'active' || liveStatus === 'finalizing') startPolling();
 </script>
 
 {% endif %}

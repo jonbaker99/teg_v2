@@ -205,6 +205,13 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
   data on their next view (no warm-up job), the GitHub sync was the single commit, and
   the round report and PDFs aren't started automatically. Cancel still answers directly
   with `?cancelled=1`, and the core refuses a cancel while a finalise is in flight.
+  **Players see the lock at once.** While a finalise job is active, the poll, the live
+  leaderboard API and both pages' first render report status `finalizing` instead of
+  `active` (`_with_finalizing` in `routes/live_round.py`). The entry page greys out and
+  shows a "Round complete" card: "Publishing results…", then "Results are in" with a
+  Leaderboard button. It keeps polling while finalising; if the job fails, the round
+  reopens with a banner. A score refused with 409 stays queued and the card lists it,
+  so nothing typed after the admin's tap is lost silently.
   **Report readiness:** "Generate round report" shows only once
   `live_round.report_readiness(teg, round)` is ready, i.e. the round's registry row is
   `finalized` (written in the same commit as the data, after the steps the report reads:

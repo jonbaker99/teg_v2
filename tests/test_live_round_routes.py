@@ -245,3 +245,57 @@ def test_banner_absent_when_switch_off(client, monkeypatch):
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
+
+
+# --- "finalizing" status while a finalise job is in flight -------------------
+
+@pytest.fixture
+def finalize_store(tmp_path, monkeypatch):
+    from webapp import finalize_jobs
+    monkeypatch.setattr(finalize_jobs, "_store_path", lambda rel: tmp_path / rel)
+    return finalize_jobs
+
+
+def _stub_registry(monkeypatch, status="active"):
+    import teg_analysis.analysis.live_round as lrmod
+    monkeypatch.setattr(lrmod, "get_scores_since",
+                        lambda token, since_seq=0: {"seq": 1, "status": status, "cells": []})
+    monkeypatch.setattr(lrmod, "get_live_leaderboard",
+                        lambda token: {"token": token, "teg_num": 19, "round_num": 1, "status": status})
+
+
+def test_poll_reports_finalizing_while_job_active(client, monkeypatch, finalize_store):
+    _stub_registry(monkeypatch)
+    assert finalize_store.claim("tokF") is None
+    assert client.get("/api/live-round/tokF/scores").json()["status"] == "finalizing"
+    assert client.get("/api/live-round/tokF/leaderboard").json()["status"] == "finalizing"
+
+
+def test_poll_back_to_active_after_error(client, monkeypatch, finalize_store):
+    _stub_registry(monkeypatch)
+    finalize_store.claim("tokE")
+    finalize_store.write_status("tokE", state="error", error="boom")
+    assert client.get("/api/live-round/tokE/scores").json()["status"] == "active"
+    assert client.get("/api/live-round/tokE/leaderboard").json()["status"] == "active"
+
+
+def test_poll_passes_registry_status_through_otherwise(client, monkeypatch, finalize_store):
+    _stub_registry(monkeypatch)
+    assert client.get("/api/live-round/tokN/scores").json()["status"] == "active"  # no job
+    finalize_store.write_status("tokD", state="done")
+    assert client.get("/api/live-round/tokD/scores").json()["status"] == "active"  # done job
+    # A live job never overrides a non-active registry status.
+    _stub_registry(monkeypatch, status="finalized")
+    finalize_store.claim("tokX")
+    assert client.get("/api/live-round/tokX/scores").json()["status"] == "finalized"
+
+
+def test_live_round_page_renders_finalizing_status(client, monkeypatch, finalize_store):
+    import teg_analysis.analysis.live_round as lrmod
+    monkeypatch.setattr(lrmod, "get_live_round_context", lambda token: {
+        "token": token, "teg_num": 19, "round_num": 1, "status": "active", "course": "Ashdown",
+        "players": ["DM"], "player_names": {"DM": "David MULLIN"},
+        "holes": [{"hole": h, "par": 4, "si": h} for h in range(1, 19)],
+    })
+    finalize_store.claim("tokP")
+    assert '"status": "finalizing"' in client.get("/live-round/tokP").text
