@@ -1,2 +1,2 @@
-Token,TEGNum,Round,CreatedAt,Status
-jyQz-lkfbVs,19,1,2026-09-29T19:32:12.844221+00:00,active
+Token,TEGNum,Round,CreatedAt,Status,FinalizedAt,FailedSteps
+jyQz-lkfbVs,19,1,2026-09-29T19:32:12.844221+00:00,finalized,2026-10-05T12:58:27+00:00,
