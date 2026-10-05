@@ -65,6 +65,7 @@ body { font-family:var(--font-body); background:var(--bg); color:var(--text); -w
 
 .statusbanner { flex:0 0 auto; background:var(--accent-soft); color:var(--accent-text); font-family:var(--font-data);
   font-size:12px; font-weight:600; text-align:center; padding:8px 14px; border-bottom:1px solid var(--line); }
+.savebanner { color:var(--conflict); }
 .donebanner { flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:12px; background:var(--accent-soft);
   color:var(--accent-text); font-family:var(--font-data); font-size:12px; font-weight:600; text-align:center;
   padding:9px 14px; border-bottom:1px solid var(--line); }
@@ -229,6 +230,7 @@ table.egrid { width:100%; border-collapse:collapse; font-family:var(--font-num);
 </header>
 
 <div class="statusbanner" id="status-banner" hidden></div>
+<div class="statusbanner savebanner" id="save-banner" hidden></div>
 <div class="donebanner" id="done-banner" hidden>
   <span id="done-text">✅ All scores in for your group.</span>
   <a href="/live-round/{{ live.token }}/leaderboard">View leaderboard &rarr;</a>
@@ -813,24 +815,85 @@ document.getElementById('name-save').addEventListener('click', () => {
 // No client clock is ever trusted for ordering -- the server assigns each
 // write a sequence number and that's what "since" polling is keyed on. See
 // DATA_STORAGE_INGESTION_PLAN.md "Phase 3.4 design" for the full model.
-async function writeCells(cells) {
+//
+// Every entry goes into `pending` first (mirrored to localStorage, so a
+// reload or a dead battery doesn't lose it) and leaves only once the server
+// confirms it. A failed send -- no signal, a server blip -- just stays queued
+// and is retried on every poll tick. While a cell is pending, polls don't
+// overwrite it: the local value is newer than anything the server has.
+//
+// Our own writes never move the poll cursor. Jumping it to the seq a write
+// returned would skip any other device's write that landed in between.
+const PENDING_KEY = 'teg-live-round-pending-' + TOKEN;
+let pending = {};       // key "hole-player" -> {hole, player, value}
+let flushing = false;
+let flushFailed = false;
+try { pending = JSON.parse(localStorage.getItem(PENDING_KEY) || '{}') || {}; } catch (e) { pending = {}; }
+
+function savePending() {
+  try {
+    if (Object.keys(pending).length) localStorage.setItem(PENDING_KEY, JSON.stringify(pending));
+    else localStorage.removeItem(PENDING_KEY);
+  } catch (e) {}
+  renderSaveBanner();
+}
+
+function renderSaveBanner() {
+  const banner = document.getElementById('save-banner');
+  const n = Object.keys(pending).length;
+  banner.hidden = !(n && (flushFailed || liveStatus !== 'active'));
+  if (banner.hidden) return;
+  const what = n === 1 ? '1 score' : n + ' scores';
+  banner.textContent = liveStatus === 'active'
+    ? `⚠️ ${what} not saved yet. Retrying, keep this page open.`
+    : `⚠️ ${what} on this phone never reached the server. Tell the organiser.`;
+}
+
+function writeCells(cells) {
   if (liveStatus !== 'active') return;
+  cells.forEach(c => { pending[cellKey(c.hole, c.player)] = { hole: c.hole, player: c.player, value: c.value }; });
+  savePending();
+  flushPending();
+}
+
+async function flushPending() {
+  if (flushing || liveStatus !== 'active') return;
+  const cells = Object.values(pending);
+  if (!cells.length) return;
+  flushing = true;
+  let sent = false;
   try {
     const res = await fetch(`/api/live-round/${TOKEN}/scores`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ device_id: DEVICE_ID, device_name: DEVICE_NAME || 'Someone', cells }),
     });
-    if (res.ok) {
-      const data = await res.json();
-      seq = Math.max(seq, data.seq);
+    // 4xx (round closed, invalid cell) won't succeed on retry: drop those
+    // cells and let the next poll restore the server's view. 5xx: retry.
+    if (res.ok || (res.status >= 400 && res.status < 500)) {
+      if (!res.ok) console.warn('Score write rejected:', res.status, await res.text());
+      sent = true;
     }
   } catch (e) {
-    console.warn('Score write failed (will resync on next poll):', e);
+    console.warn('Score write failed (queued, will retry):', e);
+  }
+  flushing = false;
+  flushFailed = !sent;
+  if (sent) {
+    // Keep any cell re-entered while this request was in flight.
+    cells.forEach(c => {
+      const key = cellKey(c.hole, c.player);
+      if (pending[key] && pending[key].value === c.value) delete pending[key];
+    });
+    savePending();
+    if (Object.keys(pending).length) flushPending();
+  } else {
+    renderSaveBanner();
   }
 }
 
 async function pollScores() {
+  flushPending();
   try {
     const res = await fetch(`/api/live-round/${TOKEN}/scores?since=${seq}`);
     if (!res.ok) return;
@@ -842,8 +905,8 @@ async function pollScores() {
     }
     data.cells.forEach(c => {
       const key = cellKey(c.hole, c.player);
-      scores[key] = c.value;
       conflicts[key] = c.conflict;
+      if (!pending[key]) scores[key] = c.value;
       renderCell(c.hole, c.player);
     });
     if (data.cells.length) updateTotalsAndSubtotals();
@@ -854,6 +917,7 @@ async function pollScores() {
 
 function applyStatus() {
   const banner = document.getElementById('status-banner');
+  renderSaveBanner();
   if (liveStatus === 'active') {
     banner.hidden = true;
     return;
@@ -897,6 +961,7 @@ buildTotalsBar();
 buildPlayerChips();
 applyPlayerVisibility();
 document.querySelector('.toolbar .traversal').style.visibility = visiblePlayers.size === 1 ? 'hidden' : 'visible';
+Object.entries(pending).forEach(([key, c]) => { scores[key] = c.value; renderCell(c.hole, c.player); });
 updateTotalsAndSubtotals();
 applyStatus();
 ensureDeviceName();
