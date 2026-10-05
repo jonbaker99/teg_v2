@@ -616,7 +616,6 @@ def _run_context(qp) -> dict:
 # --- live win chances ---------------------------------------------------------
 
 MEASURE_KEYS = wp.MEASURES
-_LIVE_STEPS = {2: "the halfway points (hole 9)", 3: "the even holes", 4: "the odd holes"}
 
 
 def _cp_key(rnd: int, hole: int) -> str:
@@ -630,14 +629,20 @@ def _cp_label(rnd: int, hole: int) -> str:
 def _live_queue(done: list[int]) -> list[list]:
     """Hole checkpoints still to work out, in the order the page fills them in.
 
-    Round ends come with the page; then hole 9, the even holes and the odd holes,
-    latest round first within each step.
+    Round ends come with the page (for the table); the rest go in hole order,
+    so the chart draws from left to right.
     """
-    latest_first = sorted(done, reverse=True)
-    q = [[r, 9, 2] for r in latest_first]
-    q += [[r, h, 3] for r in latest_first for h in range(2, 18, 2)]
-    q += [[r, h, 4] for r in latest_first for h in range(1, 18, 2) if h != 9]
-    return q
+    return [[r, h] for r in sorted(done) for h in range(1, 18)]
+
+
+def _leading_run(points: dict, order: list[tuple[int, int]]) -> list[tuple[int, int]]:
+    """Checkpoints from the start up to the first gap: the part of the chart drawn so far."""
+    run = []
+    for r, h in order:
+        if _cp_key(r, h) not in points:
+            break
+        run.append((r, h))
+    return run
 
 
 def _live_chart_json(points: dict, measure: str, players: list[str], names: dict,
@@ -646,7 +651,7 @@ def _live_chart_json(points: dict, measure: str, players: list[str], names: dict
     import plotly.graph_objects as go
 
     labels = [_cp_label(r, h) for r, h in order]
-    have = [(r, h) for r, h in order if _cp_key(r, h) in points]
+    have = _leading_run(points, order)
     palette = px.colors.qualitative.Plotly
     fig = go.Figure()
     for i, pl in enumerate(players):
@@ -777,7 +782,7 @@ def _live_context(qp) -> dict:
             "players": players, "names": {p: names.get(p, p) for p in players},
             "axis": [[r, h] for r, h in axis], "points": clean, "scores": scores,
             "queue": [q for q in _live_queue(state.done) if _cp_key(q[0], q[1]) not in clean],
-            "total": len(axis) - 1, "steps": _LIVE_STEPS}).replace("</", "<\\/")
+            "total": len(axis) - 1}).replace("</", "<\\/")
     now = _now_context(stableford, done) if not replay else None
     return {
         **ctx, "now": now, "teg": teg, "replay": replay, "done": done, "rows": rows,

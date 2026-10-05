@@ -83,7 +83,7 @@
             {% endfor %}
         </div>
     </div>
-    <p class="caption sim-live-status" id="sim-live-status" aria-live="polite">Round ends shown. Filling in the holes&hellip;</p>
+    <p class="caption sim-live-status" id="sim-live-status" aria-live="polite">Filling in the holes&hellip;</p>
     {% for m in measures %}
     <div class="sim-panel{% if not loop.first %} sim-hidden{% endif %}" data-measure="{{ m.key }}">
         <div class="chart-container sim-chart sim-live-plot" data-measure="{{ m.key }}" data-figure="{{ m.chart_json }}" style="height:360px;"></div>

@@ -303,9 +303,7 @@ def test_live_page_queues_holes_in_order(client, fresh_live_cache):
     r = client.get("/simulation/live?teg=18")
     d = json.loads(re.search(r'id="sim-live-data">(.*?)</script>', r.text, re.S).group(1))
     assert d["total"] == 72 and set(d["points"]) == {"0-0", "1-18", "2-18", "3-18", "4-18"}
-    steps = [q[2] for q in d["queue"]]
-    assert steps == sorted(steps) and steps[:4] == [2, 2, 2, 2]  # hole 9s, then even, then odd
-    assert [q[:2] for q in d["queue"][:4]] == [[4, 9], [3, 9], [2, 9], [1, 9]]
+    assert d["queue"][:3] == [[1, 1], [1, 2], [1, 3]] and d["queue"][-1] == [4, 17]  # hole order
     assert len(d["queue"]) == 68 and d["scores"]["1-1"]
 
 
