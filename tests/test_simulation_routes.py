@@ -351,3 +351,79 @@ def test_live_flags_debutant(client, fresh_live_cache):
     r = client.get("/simulation/live?teg=7")  # Alex BAKER's first TEG
     assert "First TEG for Alex BAKER" in r.text
     assert "First TEG for" not in client.get("/simulation/live?teg=8").text
+
+
+# ---- Live chances mid-round
+
+@pytest.fixture
+def mid_round(monkeypatch, fresh_live_cache):
+    """TEG 18 as if 2 rounds were done and round 3 had holes entered (uneven thru)."""
+    import pandas as pd
+    from teg_analysis.analysis import live_round
+    h = sim.load_history(teg_nums=[50])
+    h = h[~((h["TEGNum"] == 18) & (h["Round"] > 2))]
+    monkeypatch.setattr(sim_routes, "_history", lambda: h)
+    monkeypatch.setattr(wp, "in_progress_teg", lambda: 18)
+    state, names = sim_routes._live_state(18, False)
+    state.cards = {**state.cards, 3: state.cards[2]}  # round 3 has a scorecard
+    rows = [dict(Round=3, Hole=hole, Pl=pl, GrossVP=1, NetVP=0, Stableford=2)
+            for i, pl in enumerate(state.players) for hole in range(1, 4 + i)]
+    monkeypatch.setattr(live_round, "staged_holes", lambda t: pd.DataFrame(rows))
+    sim_routes._LIVE_NOW.clear()
+    yield state
+    sim_routes._LIVE_NOW.clear()
+
+
+def test_live_prediction_counts_entered_holes(mid_round):
+    p = sim_routes.live_prediction()
+    assert p["teg_num"] == 18 and p["rounds_done"] == 2 and p["live_round"] == 3
+    assert p["measure_label"] == "Stableford"
+    rows = p["players"]
+    assert [r["Thru"] for r in sorted(rows, key=lambda r: r["Pl"])] == [
+        3 + mid_round.players.index(pl) for pl in sorted(mid_round.players)]
+    chances = [r["TrophyChancePct"] for r in rows]
+    assert chances == sorted(chances, reverse=True)
+    assert abs(sum(chances) - 100) < 0.6 and abs(sum(r["SpoonChancePct"] for r in rows) - 100) < 0.6
+    assert all(r["NetPosition"] and r["GrossPosition"] for r in rows)
+    assert all(r["HolesPlayed"] >= r["Thru"] for r in rows)
+    import json
+    json.dumps(p)  # plain data
+
+
+def test_live_prediction_caches_per_staged_signature(mid_round, monkeypatch):
+    calls = []
+    real = wp.win_probs_live
+    monkeypatch.setattr(wp, "win_probs_live", lambda *a, **k: calls.append(1) or real(*a, **k))
+    a = sim_routes.live_prediction()
+    assert sim_routes.live_prediction() is a and len(calls) == 1
+
+
+def test_live_prediction_without_a_teg_raises(monkeypatch):
+    monkeypatch.setattr(wp, "in_progress_teg", lambda: None)
+    with pytest.raises(ValueError, match="No TEG is in progress"):
+        sim_routes.live_prediction()
+
+
+def test_live_tab_shows_now_caption_and_table(client, mid_round):
+    r = client.get("/simulation/live")
+    assert r.status_code == 200
+    assert "Now: round 3 in progress, scores entered so far (thru" in r.text
+    assert "sim-now-table" in r.text and "<th>Thru</th>" in r.text
+    assert "How the chances moved, hole by hole" in r.text
+
+
+def test_what_it_takes_resolves_player_and_passes_expected(mid_round, monkeypatch):
+    from teg_analysis.analysis import live_scenarios
+    seen = {}
+
+    def fake(snap, player, competition, rivals, expected, history):
+        seen.update(player=player, competition=competition, rivals=rivals, expected=expected)
+        return {"ok": True}
+    monkeypatch.setattr(live_scenarios, "what_it_takes", fake)
+    monkeypatch.setattr(live_scenarios, "what_it_takes_all", lambda *a: [{"all": True}])
+    assert sim_routes.what_it_takes("Jon BAKER", "jacket", "expected") == {"ok": True}
+    assert seen["player"] == "JB" and seen["competition"] == "jacket"
+    assert set(seen["expected"]) == set(mid_round.players)
+    assert sim_routes.what_it_takes(None) == [{"all": True}]
+    with pytest.raises(ValueError):
+        sim_routes.what_it_takes("Nobody")

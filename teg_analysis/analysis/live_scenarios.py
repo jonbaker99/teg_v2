@@ -216,6 +216,10 @@ def what_it_takes(snap: wp.Snapshot, player: str, competition: str, rivals: str 
                      "on this projection.")
         return out
     out["already_enough"] = False
+    if pts is not None and pts < holes:
+        # Under a point a hole means several 0-point holes, which the conversion ignores.
+        notes.append("Under a point a hole on average: several holes could score 0, so the gross "
+                     "figure is a rough ceiling rather than a target.")
     per_vp = out["need"]["outright"]["gross_vp"] * _HOLES / holes
     if history is not None:
         out["reality"] = _reality(history, snap, player, per_vp)
