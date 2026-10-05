@@ -23,6 +23,7 @@ from webapp.deps import (
     get_tournament_state,
 )
 from webapp.routes.history import _standings_rows
+from webapp.routes.simulation import finalised_win_chances
 from teg_analysis.analysis.handicaps import get_next_teg_and_check_if_in_progress_fast
 from webapp.routes.latest import _current_handicap_tiles, _round_scoreboard_html
 from teg_analysis.analysis.history import get_future_tegs
@@ -138,7 +139,17 @@ ROUND_METRICS = (("Stableford", "Points"), ("GrossVP", "Gross"), ("Sc", "Score")
 
 def _standings_pane(teg_num: int) -> dict:
     """Standings (net, with a Gross column -- no separate gross line)."""
-    return _standings_table_context(teg_num)
+    ctx = _standings_table_context(teg_num)
+    win = finalised_win_chances(teg_num)
+    if win:
+        ctx["standings"]["show_win"] = True
+        ctx["standings"]["win_label"] = "Win*"
+        for r in ctx["standings"]["rows"]:
+            r["win"] = win["trophy"].get(r.get("player"), "")
+        ctx["win_note"] = {
+            "text": f"* Chance of winning the TEG Trophy after round {win['after_round']}, from the",
+            "link_text": "TEG Predictatron 3100", "href": "/simulation?tab=live"}
+    return ctx
 
 
 def _pane_context(view: str, teg_num: int, rounds_played: int, metric: str = "Stableford") -> dict:

@@ -429,3 +429,106 @@ def test_what_it_takes_resolves_player_and_passes_expected(mid_round, monkeypatc
     assert sim_routes.what_it_takes(None) == [{"all": True}]
     with pytest.raises(ValueError):
         sim_routes.what_it_takes("Nobody")
+
+
+# --- finalised win chances on /leaderboard and the home panel ---------------
+
+from teg_analysis.core.players import get_player_dict
+from webapp.routes import contents as contents_route
+from webapp.routes import history as history_route
+from webapp.routes import leaderboard as lb_route
+from webapp.routes import simulation as sim_route
+from webapp.deps import get_available_teg_numbers
+
+
+@pytest.mark.parametrize("p,label", [
+    (0.0, "0%"), (0.0004, "<1%"), (0.004, "<1%"), (0.005, "1%"), (0.42, "42%"),
+    (0.9951, ">99%"), (0.9999, ">99%"), (1.0, "100%"),
+])
+def test_pct_label(p, label):
+    assert sim_route._pct_label(p) == label
+
+
+def test_finalised_win_chances_none_when_not_in_progress(monkeypatch):
+    monkeypatch.setattr(sim_route.wp, "in_progress_teg", lambda: None)
+    assert sim_route.finalised_win_chances(19) is None
+    monkeypatch.setattr(sim_route.wp, "in_progress_teg", lambda: 20)
+    assert sim_route.finalised_win_chances(19) is None
+
+
+def test_finalised_win_chances_none_on_error(monkeypatch):
+    monkeypatch.setattr(sim_route.wp, "in_progress_teg", lambda: 19)
+
+    def boom(*a, **k):
+        raise RuntimeError("x")
+    monkeypatch.setattr(sim_route, "_live_state", boom)
+    assert sim_route.finalised_win_chances(19) is None
+
+
+def test_finalised_win_chances_formats_finalised_checkpoint(monkeypatch):
+    class State:
+        done = [1, 2]
+    calls = []
+    monkeypatch.setattr(sim_route.wp, "in_progress_teg", lambda: 19)
+    monkeypatch.setattr(sim_route, "_live_state", lambda t, r: (State(), {"AB": "Alex BAKER", "JB": "Jon BAKER"}))
+    monkeypatch.setattr(sim_route, "_live_point", lambda t, r, rnd, h: calls.append((rnd, h)) or
+                        {"net": {"AB": 0.42, "JB": 0.001}, "gross": {"AB": 0.0, "JB": 0.999}})
+    out = sim_route.finalised_win_chances(19)
+    assert calls == [(2, 18)]
+    assert out == {"after_round": 2, "trophy": {"Alex BAKER": "42%", "Jon BAKER": "<1%"},
+                   "jacket": {"Alex BAKER": "0%", "Jon BAKER": ">99%"}}
+
+
+def _fake_win(teg):
+    names = list(get_player_dict().values())
+    return {"after_round": 2, "trophy": {n: "42%" for n in names}, "jacket": {n: "17%" for n in names}}
+
+
+@pytest.fixture
+def lb_teg():
+    return get_available_teg_numbers()[-1]
+
+
+def test_leaderboard_shows_win_column_in_progress(client, monkeypatch, lb_teg):
+    monkeypatch.setattr(history_route, "_teg_is_complete", lambda t: False)
+    monkeypatch.setattr(lb_route, "finalised_win_chances", _fake_win)
+    net = client.get(f"/leaderboard/table?teg={lb_teg}&tab=net").text
+    assert "col-win" in net and "Win*" in net and "42%" in net
+    assert "TEG Trophy after round 2" in net and "TEG Predictatron 3100" in net
+    gross = client.get(f"/leaderboard/table?teg={lb_teg}&tab=gross").text
+    assert "17%" in gross and "Green Jacket after round 2" in gross
+
+
+def test_leaderboard_no_win_column_when_complete_or_unavailable(client, monkeypatch, lb_teg):
+    monkeypatch.setattr(lb_route, "finalised_win_chances", _fake_win)
+    monkeypatch.setattr(history_route, "_teg_is_complete", lambda t: True)
+    assert "col-win" not in client.get(f"/leaderboard/table?teg={lb_teg}&tab=net").text
+    monkeypatch.setattr(history_route, "_teg_is_complete", lambda t: False)
+    monkeypatch.setattr(lb_route, "finalised_win_chances", lambda t: None)
+    html = client.get(f"/leaderboard/table?teg={lb_teg}&tab=net").text
+    assert "col-win" not in html and "Predictatron" not in html
+
+
+def test_results_never_shows_win_column(client, monkeypatch, lb_teg):
+    monkeypatch.setattr(history_route, "_teg_is_complete", lambda t: False)
+    monkeypatch.setattr(lb_route, "finalised_win_chances", _fake_win)
+    html = client.get(f"/results?teg={lb_teg}").text
+    assert "col-win" not in html and "Win*" not in html
+
+
+def test_home_panel_win_column(client, monkeypatch, lb_teg):
+    monkeypatch.setattr(contents_route, "get_edition_summary", lambda *a: None)
+    monkeypatch.setattr(contents_route, "finalised_win_chances", _fake_win)
+    html = client.get("/contents/panel", params={"teg": lb_teg, "state": "in_progress", "rounds": 2}).text
+    assert "col-win" in html and "Win*" in html and "42%" in html
+    assert "TEG Trophy after round 2" in html
+    monkeypatch.setattr(contents_route, "finalised_win_chances", lambda t: None)
+    html = client.get("/contents/panel", params={"teg": lb_teg, "state": "in_progress", "rounds": 2}).text
+    assert "col-win" not in html
+
+
+def test_home_complete_panel_has_no_win_column(client, monkeypatch, lb_teg):
+    monkeypatch.setattr(contents_route, "get_edition_summary", lambda *a: None)
+    monkeypatch.setattr(contents_route, "finalised_win_chances", _fake_win)
+    html = client.get("/contents/panel", params={"teg": lb_teg, "state": "complete"}).text
+    assert "col-win" not in html

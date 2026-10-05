@@ -34,6 +34,7 @@ from teg_analysis.reporting.newspaper_edition import available_tegs, get_edition
 from webapp.deps import get_default_teg_num, get_available_teg_numbers
 from webapp.routes.history import RESULTS_CHART_TYPES, _results_context, _teg_is_complete
 from webapp.routes.scorecard import parse_scorecard_round
+from webapp.routes.simulation import finalised_win_chances
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -101,6 +102,18 @@ def _lb_context(teg_num: int, tab: str, chart_variant: str,
         return _reports_context(teg_num)
     ctx = _results_context(teg_num, tab, chart_variant, scorecard_type=scorecard_type,
                            scorecard_round=scorecard_round, scorecard_player=scorecard_player)
+    if tab in ("net", "gross") and "error" not in ctx and not ctx.get("teg_complete"):
+        win = finalised_win_chances(teg_num)
+        if win and ctx.get("standings"):
+            key = "trophy" if tab == "net" else "jacket"
+            ctx["standings"]["show_win"] = True
+            ctx["standings"]["win_label"] = "Win*"
+            for r in ctx["standings"]["rows"]:
+                r["win"] = win[key].get(r.get("player"), "")
+            ctx["win_note"] = {
+                "text": f"* Chance of winning the {'TEG Trophy' if tab == 'net' else 'Green Jacket'} "
+                        f"after round {win['after_round']}, from the",
+                "link_text": "TEG Predictatron 3100", "href": "/simulation?tab=live"}
     if tab == "scorecards" and "error" not in ctx:
         ctx["scorecards_full_link"] = "/scorecard?" + urlencode({
             "teg": teg_num, "type": ctx["selected_type"],

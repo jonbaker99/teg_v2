@@ -1,0 +1,3 @@
+{#- Footnote for the Win* column of _standings_table.html. Expects `win_note`
+    {text, link_text, href}; include only inside `{% if win_note %}`. -#}
+<p class="caption win-note">{{ win_note.text }} <a class="text-link" href="{{ win_note.href }}">{{ win_note.link_text }} &#8599;</a></p>

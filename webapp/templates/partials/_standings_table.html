@@ -10,7 +10,9 @@
     Contents' unit-aware "Points"/"vs Par") without affecting callers that
     don't set it. Contents also opts into an optional GrossVP column via
     `standings.show_gross`; other shared callers retain their existing shape.
-    Optional `r.marks` ({"R2": "best"}) boxes the TEG's best/worst round
+    An optional `standings.show_win` adds a "Win*" column after Total/Gross
+    (`standings.win_label`, per-row `r.win`: the Predictatron win chance
+    while a TEG is in progress). Optional `r.marks` ({"R2": "best"}) boxes the TEG's best/worst round
     values, in both copies; callers without it render unchanged. -#}
 {% if not standings.rows %}
 <p class="text-muted text-sm">No data available.</p>
@@ -25,6 +27,7 @@
       {% endfor %}
       <th class="col-num col-total total">{{ standings.total_label or "Total" }}</th>
       {% if standings.show_gross %}<th class="col-gross col-num">Gross</th>{% endif %}
+      {% if standings.show_win %}<th class="col-num col-win">{{ standings.win_label }}</th>{% endif %}
     </tr>
   </thead>
   <tbody>
@@ -49,6 +52,7 @@
       {% endfor %}
       <td class="col-num total col-total">{{ r.total }}</td>
       {% if standings.show_gross %}<td class="col-gross col-num">{{ r.gross }}</td>{% endif %}
+      {% if standings.show_win %}<td class="col-num col-win">{{ r.win or "" }}</td>{% endif %}
     </tr>
     {% endfor %}
   </tbody>

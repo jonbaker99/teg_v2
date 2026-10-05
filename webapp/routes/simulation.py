@@ -84,6 +84,37 @@ def _live_point(teg_num: int, replay: bool, rnd: int, hole: int) -> dict:
     return point
 
 
+def _pct_label(p: float) -> str:
+    """Whole-percent display string: "<1%", "0%", ">99%" at the edges."""
+    pct = 100.0 * float(p)
+    if pct <= 0:
+        return "0%"
+    if pct < 0.5:
+        return "<1%"
+    if pct < 100 and int(pct + 0.5) >= 100:
+        return ">99%"
+    return f"{int(pct + 0.5)}%"
+
+
+def finalised_win_chances(teg_num: int) -> dict | None:
+    """{"after_round": n, "trophy": {full name: pct}, "jacket": {full name: pct}} for the TEG
+    in progress, as at its last finalised round; None if teg_num isn't in progress or it fails."""
+    try:
+        if wp.in_progress_teg() != int(teg_num):
+            return None
+        state, names = _live_state(int(teg_num), False)
+        rnd = len(state.done)
+        point = _live_point(int(teg_num), False, rnd, 18 if rnd else 0)
+
+        def label(measure: str) -> dict:
+            return {names.get(code, code): _pct_label(p) for code, p in point[measure].items()}
+
+        return {"after_round": rnd, "trophy": label("net"), "jacket": label("gross")}
+    except Exception:
+        logger.exception("finalised win chances failed")
+        return None
+
+
 _LIVE_NOW: dict[tuple, tuple] = {}  # (teg, seed, staged signature) -> (public dict, {Pl: mean})
 
 

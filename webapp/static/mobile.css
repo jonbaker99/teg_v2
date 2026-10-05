@@ -1404,6 +1404,13 @@
     font-weight: 700;
   }
   .standings-page .leaderboard-table tr.top-rank td.col-total { color: var(--accent, forestgreen); }
+  /* Win* column (in-progress Predictatron chance): short string, so take
+     width from Player/Total rather than overflowing the fixed layout. */
+  .standings-page .leaderboard-table:has(.col-win) .col-player { width: 50%; }
+  .standings-page .leaderboard-table:has(.col-win) .col-total,
+  .standings-page .leaderboard-table:has(.col-win) thead .col-total { width: 22%; }
+  .standings-page .leaderboard-table:has(.col-win) .col-win { width: 16%; white-space: nowrap; }
+  .win-note { margin-top: 6px; }
   /* Per-row round strip, replacing the hidden .col-round cells above --
      reuses the deleted .lb-card-rounds' proven values (muted, small,
      tabular, bold value). Hidden above 640px by base-vars.css. */
