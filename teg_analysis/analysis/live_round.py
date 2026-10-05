@@ -853,6 +853,60 @@ def fill_random_scores(token: str, rng: random.Random | None = None) -> dict:
 # Live leaderboard: current standings from staging, mid-round
 # ---------------------------------------------------------------------------
 
+def _score_staged(entered: pd.DataFrame, teg_num: int, round_num: int, setup: dict,
+                  playing: list[dict]) -> pd.DataFrame:
+    """Entered staging cells scored by the real pipeline's per-hole transform
+    (``process_round_for_all_scores``), so live figures match the finalised round."""
+    from teg_analysis.analysis.data_update import process_round_for_all_scores
+
+    long_df = entered[["Hole", "Pl", "Score"]].copy()
+    long_df["Hole"] = long_df["Hole"].astype(int)
+    long_df["Score"] = long_df["Score"].astype(int)
+    long_df["TEGNum"] = teg_num
+    long_df["Round"] = round_num
+    long_df = long_df.merge(
+        pd.DataFrame(setup["holes"]).rename(columns={"hole": "Hole", "par": "Par", "si": "SI"}),
+        on="Hole", how="left",
+    )
+    hc_long = pd.DataFrame(
+        [{"TEG": f"TEG {teg_num}", "Pl": p["code"], "HC": p["handicap"] or 0} for p in playing]
+    )
+    return process_round_for_all_scores(long_df, hc_long)
+
+
+def staged_holes(teg_num: int) -> pd.DataFrame | None:
+    """Holes entered so far in the TEG's live round, scored, or None if no round is live.
+
+    One row per entered cell: Round, Hole, Pl, GrossVP, NetVP, Stableford. Players
+    can be on different holes. Read-only and lock-free, like the live leaderboard;
+    these scores aren't in the permanent record until finalise. With more than one
+    active round for the TEG (shouldn't happen), the latest round wins.
+    """
+    from teg_analysis.analysis.teg_setup import get_teg_roster_form
+    from teg_analysis.analysis.round_setup import get_round_setup_form
+
+    registry = _read_registry()
+    if registry.empty:
+        return None
+    live = registry[(registry["Status"] == "active")
+                    & (pd.to_numeric(registry["TEGNum"], errors="coerce") == int(teg_num))]
+    if live.empty:
+        return None
+    row = live.assign(_r=live["Round"].astype(int)).sort_values("_r").iloc[-1]
+    round_num = int(row["Round"])
+    staging = _read_staging(row["Token"])
+    entered = staging[staging["Score"].notna()] if not staging.empty else staging
+    cols = ["Round", "Hole", "Pl", "GrossVP", "NetVP", "Stableford"]
+    playing = [p for p in get_teg_roster_form(teg_num)["players"] if p["playing"]]
+    entered = entered[entered["Pl"].isin([p["code"] for p in playing])] if len(entered) else entered
+    if entered.empty:
+        return pd.DataFrame(columns=cols, dtype=int).assign(Round=pd.Series(dtype=int))
+    processed = _score_staged(entered, int(teg_num), round_num,
+                              get_round_setup_form(int(teg_num), round_num), playing)
+    return processed[cols].astype({"Round": int, "Hole": int, "GrossVP": int,
+                                   "NetVP": int, "Stableford": int}).reset_index(drop=True)
+
+
 def get_live_leaderboard(token: str) -> dict | None:
     """Current gross + net standings for a round in progress, from staging.
 
@@ -873,7 +927,6 @@ def get_live_leaderboard(token: str) -> dict | None:
 
     from teg_analysis.analysis.teg_setup import get_teg_roster_form
     from teg_analysis.analysis.round_setup import get_round_setup_form
-    from teg_analysis.analysis.data_update import process_round_for_all_scores
     from teg_analysis.analysis.scoring import get_net_competition_measure, format_vs_par
     from teg_analysis.core.data_loader import get_player_name
 
@@ -898,19 +951,7 @@ def get_live_leaderboard(token: str) -> dict | None:
     }
 
     if not entered.empty and playing:
-        long_df = entered[["Hole", "Pl", "Score"]].copy()
-        long_df["Hole"] = long_df["Hole"].astype(int)
-        long_df["Score"] = long_df["Score"].astype(int)
-        long_df["TEGNum"] = teg_num
-        long_df["Round"] = round_num
-        long_df = long_df.merge(
-            pd.DataFrame(setup["holes"]).rename(columns={"hole": "Hole", "par": "Par", "si": "SI"}),
-            on="Hole", how="left",
-        )
-        hc_long = pd.DataFrame(
-            [{"TEG": f"TEG {teg_num}", "Pl": p["code"], "HC": p["handicap"] or 0} for p in playing]
-        )
-        processed = process_round_for_all_scores(long_df, hc_long)
+        processed = _score_staged(entered, teg_num, round_num, setup, playing)
         agg = processed.groupby("Pl").agg(
             thru=("Sc", "size"), gross=("Sc", "sum"), gross_vp=("GrossVP", "sum"),
             netvp=("NetVP", "sum"), stableford=("Stableford", "sum"),

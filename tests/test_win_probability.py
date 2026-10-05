@@ -307,3 +307,90 @@ def test_newcomer_centred_on_handicap():
     assert cc == pytest.approx(33 / 18, abs=0.01)
     assert any(w.startswith("CC: first TEG") for w in st.prior.warnings)
     assert wp.newcomers(st.prior) == ["CC"]
+
+
+# ---- live (mid-round, players on different holes)
+
+def _staged(rnd, pl, vp, hc, holes):
+    """Staged rows (``live_round.staged_holes`` format) on the all-par-4 card."""
+    h = _holes(0, rnd, pl, vp, hc)
+    h = h[h["Hole"].isin(holes)]
+    return h[["Round", "Hole", "Pl", "GrossVP", "NetVP", "Stableford"]]
+
+
+def _live_teg(vp=None, hc=None, teg=4, tegs=(1, 2, 3)):
+    """Round 1 complete, round 2 has a scorecard and nothing banked."""
+    vp = vp or {"AA": 1, "BB": 1}
+    hc = hc or {"AA": 18, "BB": 18}
+    cur = [_holes(teg, 1, pl, v, hc[pl]) for pl, v in vp.items()]
+    st = wp.load_teg_state(teg, _history(cur, prior_vp=vp, hc=hc, tegs=tegs),
+                           from_scores=True, field_alpha=0)
+    st.n_rounds, st.cards[2] = 2, st.cards[1]
+    return st
+
+
+def test_snapshot_players_on_different_holes():
+    st = _live_teg()
+    staged = pd.concat([_staged(2, "AA", 0, 18, range(1, 13)), _staged(2, "BB", 2, 18, [10, 11, 12])])
+    snap = wp.snapshot(st, staged)
+    assert snap.live_round == 2 and snap.thru == {"AA": 12, "BB": 3}
+    assert snap.holes_played == {"AA": 30, "BB": 21}
+    assert snap.gross == {"AA": 18, "BB": 24}
+    assert len(snap.remaining["AA"]) == 6 and len(snap.remaining["BB"]) == 15
+    assert set(snap.remaining["BB"]["Hole"]) == set(range(1, 19)) - {10, 11, 12}
+    assert snap.random_rounds == 0
+
+
+def test_snapshot_ignores_staged_holes_for_other_rounds():
+    st = _live_teg()
+    snap = wp.snapshot(st, _staged(1, "AA", 0, 18, range(1, 5)))
+    assert snap.live_round is None and snap.gross == {"AA": 18, "BB": 18}
+    assert len(snap.remaining["AA"]) == 18
+
+
+def test_live_without_staged_matches_latest_checkpoint():
+    st = _live_teg(vp={"AA": 0, "BB": 1})
+    a = wp.win_probs_live(st, None, n_sims=200, seed=3)
+    b = wp.win_probs_at(st, 1, 18, n_sims=200, seed=3)
+    assert a["win_prob"].to_numpy() == pytest.approx(b["win_prob"].to_numpy())
+    assert (a["thru"] == 18).all() and (a["round"] == 1).all()
+
+
+def test_live_holes_are_banked_once_per_player():
+    # Every hole is +1 with certainty: AA thru 12 and BB thru 3, both at +1, tie exactly.
+    st = _live_teg()
+    staged = pd.concat([_staged(2, "AA", 1, 18, range(1, 13)), _staged(2, "BB", 1, 18, [1, 2, 3])])
+    df = wp.win_probs_live(st, staged, n_sims=300, seed=1, form_var=0, day_var=0)
+    g = df[df["measure"] == "gross"].set_index("player")
+    assert g.loc["AA", "banked"] == 30 and g.loc["BB", "banked"] == 21
+    assert g["win_prob"].to_numpy() == pytest.approx([0.5, 0.5])
+    assert g.loc["AA", "thru"] == 12 and g.loc["BB", "thru"] == 3
+    assert g.loc["AA", "w"] > g.loc["BB", "w"]  # w grows with each player's own holes
+
+
+def test_live_good_holes_decide_the_winner():
+    st = _live_teg()
+    staged = pd.concat([_staged(2, "AA", -1, 18, range(1, 10)), _staged(2, "BB", 1, 18, range(1, 10))])
+    df = wp.win_probs_live(st, staged, n_sims=300, seed=1, form_var=0, day_var=0, spoon=True)
+    p = df.set_index(["measure", "player"])["win_prob"]
+    assert p[("gross", "AA")] == 1.0 and p[("net", "AA")] == 1.0
+    assert p[("spoon", "BB")] == 1.0
+    assert list(df["measure"].unique()) == ["net", "gross", "spoon"]
+
+
+def test_live_stableford_counts_entered_holes_actual_points():
+    # Stableford era. AA (hc 36) +2 a hole and BB (hc 18) +1 a hole: 2 points every hole each.
+    st = _live_teg(vp={"AA": 2, "BB": 1}, hc={"AA": 36, "BB": 18}, teg=9, tegs=(6, 7, 8))
+    assert st.stableford
+    staged = pd.concat([_staged(2, "AA", 2, 36, range(1, 10)), _staged(2, "BB", 1, 18, range(5, 19))])
+    df = wp.win_probs_live(st, staged, n_sims=300, seed=1, form_var=0, day_var=0)
+    n = df[df["measure"] == "net"].set_index("player")
+    assert n.loc["AA", "banked"] == 36 + 18 and n.loc["BB", "banked"] == 36 + 28
+    assert n["win_prob"].to_numpy() == pytest.approx([0.5, 0.5])
+
+
+def test_live_round_without_scorecard_is_an_error():
+    st = _live_teg()
+    del st.cards[2]
+    with pytest.raises(ValueError, match="no scorecard"):
+        wp.snapshot(st, _staged(2, "AA", 1, 18, [1]))
