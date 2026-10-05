@@ -328,14 +328,16 @@ def get_records(data: ChatData, scope: str = "round") -> dict:
 # Tool: predictions — the site's simulator (TEG Predictatron 3100)
 # ---------------------------------------------------------------------------
 def get_predictions(data: ChatData) -> dict:
+    from teg_analysis.analysis.win_probability import NoTegInProgress
+
     if data.predictions is None:
         raise ToolInputError("Predictions aren't available here.")
     if data.live_predictions is not None:
         try:
             live = data.live_predictions()
-        except ValueError:
+        except NoTegInProgress:
             live = None  # no TEG in progress: pre-tournament odds are right
-        except Exception as exc:  # never fall back to pre-tournament odds mid-TEG
+        except Exception as exc:  # any fault: never fall back to pre-tournament odds mid-TEG
             raise ToolInputError("Win chances can't be worked out right now.") from exc
         if live:
             raise ToolInputError(

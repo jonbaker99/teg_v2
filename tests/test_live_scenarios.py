@@ -146,3 +146,37 @@ def test_already_enough_when_points_target_is_met():
                        {"AA": "AA", "BB": "BB"}, {"AA": card, "BB": card}, 0)
     r = ls.what_it_takes(snap, "AA", "trophy")
     assert r["already_enough"] is True and r["reality"] is None
+
+
+def _two(thru_a, thru_b, gross, net, rounds=2):
+    card = pd.DataFrame({"Round": rounds, "Hole": range(1, 19), "Par": 4, "SI": range(1, 19)})
+    rem = lambda n: card[card["Hole"] > n].reset_index(drop=True)  # noqa: E731
+    return wp.Snapshot(9, True, 1, rounds, rounds, {"AA": thru_a, "BB": thru_b},
+                       {"AA": 18 + thru_a, "BB": 18 + thru_b}, gross, net,
+                       {"AA": 18, "BB": 18}, {"AA": "AA", "BB": "BB"},
+                       {"AA": rem(thru_a), "BB": rem(thru_b)}, 0)
+
+
+def test_finished_player_is_not_called_leader_while_rivals_play_on():
+    # AA done on 70 points; BB thru 9 on 54 at 2 points a hole: projects to 72.
+    snap = _two(18, 9, {"AA": 36, "BB": 27}, {"AA": 70, "BB": 54})
+    r = ls.what_it_takes(snap, "AA", "trophy")
+    assert r["no_holes_left"] and r["rivals_finished"] is False
+    assert r["leading"] is False and r["tied"] is False
+
+
+def test_trophy_rivals_projected_on_points_pace_not_gross():
+    # BB's gross pace (+3 a hole, many blobs) would convert to negative points;
+    # their actual points pace (1 a hole) is what counts.
+    snap = _two(9, 9, {"AA": 27, "BB": 81}, {"AA": 54, "BB": 27 + 9})
+    r = ls.what_it_takes(snap, "AA", "trophy")
+    bb = next(p for p in r["projections"] if p["player"] == "BB")
+    assert bb["projected"] == pytest.approx(36 + 9 * 36 / 27)
+
+
+def test_expected_mode_uses_expected_points_for_trophy():
+    snap = _two(9, 9, {"AA": 27, "BB": 27}, {"AA": 54, "BB": 54})
+    r = ls.what_it_takes(snap, "AA", "trophy", rivals="expected", expected={"AA": 18, "BB": 18},
+                         expected_net={"AA": 36, "BB": 30})
+    bb = next(p for p in r["projections"] if p["player"] == "BB")
+    assert bb["projected"] == pytest.approx(54 + 30 * 9 / 18)

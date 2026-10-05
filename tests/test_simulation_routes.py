@@ -416,14 +416,16 @@ def test_what_it_takes_resolves_player_and_passes_expected(mid_round, monkeypatc
     from teg_analysis.analysis import live_scenarios
     seen = {}
 
-    def fake(snap, player, competition, rivals, expected, history):
-        seen.update(player=player, competition=competition, rivals=rivals, expected=expected)
+    def fake(snap, player, competition, rivals, expected, history, expected_net):
+        seen.update(player=player, competition=competition, rivals=rivals, expected=expected,
+                    expected_net=expected_net)
         return {"ok": True}
     monkeypatch.setattr(live_scenarios, "what_it_takes", fake)
     monkeypatch.setattr(live_scenarios, "what_it_takes_all", lambda *a: [{"all": True}])
     assert sim_routes.what_it_takes("Jon BAKER", "jacket", "expected") == {"ok": True}
     assert seen["player"] == "JB" and seen["competition"] == "jacket"
     assert set(seen["expected"]) == set(mid_round.players)
+    assert set(seen["expected_net"]) == set(mid_round.players)
     assert sim_routes.what_it_takes(None) == [{"all": True}]
     with pytest.raises(ValueError):
         sim_routes.what_it_takes("Nobody")

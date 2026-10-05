@@ -7,13 +7,15 @@ remaining holes to clear it. Users think in gross, so each target comes back in
 gross strokes as well as in the competition's own measure.
 
 Rival projection (``rivals``):
-  ``same_pace``  total so far + per-hole average so far x holes left. A player
+  ``same_pace``  total so far + per-hole average so far x holes left (points pace for
+                 the Trophy, gross pace for the Jacket). A player
                  with no holes played yet falls back to ``expected`` if given,
                  else their handicap (net par: handicap / 18 gross vs par a hole).
   ``expected``   total so far + expected gross vs par per 18 remaining holes
                  (``expected``: {player: mean}, the ``mean`` column of the gross
-                 rows of ``win_probs_live``) x holes left / 18. Missing players
-                 fall back to their handicap.
+                 rows of ``win_probs_live``) x holes left / 18; for the Trophy,
+                 ``expected_net`` (its ``mean_net`` column) instead. Missing
+                 players fall back to their handicap.
 The same rule projects the player too, so the list shows where they are heading.
 
 Measures: Trophy is Stableford points from TEG ``STABLEFORD_ERA_TEG``, net vs par
@@ -75,14 +77,31 @@ def _now(snap: wp.Snapshot, p: str, competition: str) -> int:
     return int(snap.gross[p] if competition == "jacket" else snap.net[p])
 
 
+def _known(d: dict | None, p: str) -> bool:
+    return d is not None and d.get(p) is not None and not (
+        isinstance(d[p], float) and math.isnan(d[p]))
+
+
 def _project(snap: wp.Snapshot, p: str, competition: str, rivals: str,
-             expected: dict[str, float] | None) -> float:
-    """Projected final total in the competition's measure."""
+             expected: dict[str, float] | None,
+             expected_net: dict[str, float] | None = None) -> float:
+    """Projected final total in the competition's measure.
+
+    Trophy projections use the net measure directly (points pace so far, or the
+    simulator's expected points), never gross converted to points: the linear
+    conversion counts a blob as negative points and would understate rivals.
+    """
     holes, strokes, _ = _left(snap, p)
-    g = _rem_gross_vp(snap, p, holes, rivals, expected)
     now = _now(snap, p, competition)
     if competition == "jacket":
-        return now + g
+        return now + _rem_gross_vp(snap, p, holes, rivals, expected)
+    if holes == 0:
+        return float(now)
+    if rivals == "same_pace" and snap.holes_played[p] > 0:
+        return now + snap.net[p] / snap.holes_played[p] * holes
+    if _known(expected_net, p):
+        return now + float(expected_net[p]) * holes / _HOLES
+    g = _rem_gross_vp(snap, p, holes, rivals, expected)
     if snap.stableford:
         return now + strokes + 2 * holes - g
     return now + g - strokes
@@ -143,7 +162,8 @@ def _reality(history: pd.DataFrame, snap: wp.Snapshot, p: str, per_round_vp: flo
 
 def what_it_takes(snap: wp.Snapshot, player: str, competition: str, rivals: str = "same_pace",
                   expected: dict[str, float] | None = None,
-                  history: pd.DataFrame | None = None) -> dict:
+                  history: pd.DataFrame | None = None,
+                  expected_net: dict[str, float] | None = None) -> dict:
     """What ``player`` must score over their remaining holes to win ``competition``.
 
     ``competition``: "trophy" or "jacket". See the module docstring for ``rivals``,
@@ -168,7 +188,7 @@ def what_it_takes(snap: wp.Snapshot, player: str, competition: str, rivals: str 
     higher = _higher_better(snap, competition)
     measure = _measure(snap, competition)
     name = lambda q: snap.names.get(q, q)  # noqa: E731
-    proj = {q: _project(snap, q, competition, rivals, expected) for q in snap.handicaps}
+    proj = {q: _project(snap, q, competition, rivals, expected, expected_net) for q in snap.handicaps}
     order = sorted(proj, key=lambda q: -proj[q] if higher else proj[q])
     best_pl = max(others, key=lambda q: proj[q]) if higher else min(others, key=lambda q: proj[q])
     holes, strokes, par = _left(snap, player)
@@ -199,11 +219,16 @@ def what_it_takes(snap: wp.Snapshot, player: str, competition: str, rivals: str 
                      "with strokes equal to handicap.")
 
     if holes == 0:
+        # Finished: compare with rivals' projected finishes (= their totals once they're
+        # done too), so a clubhouse lead isn't called a win while others are still out.
         mine = _now(snap, player, competition)
-        theirs = [_now(snap, q, competition) for q in others]
-        top = max(theirs) if higher else min(theirs)
+        top = max(proj[q] for q in others) if higher else min(proj[q] for q in others)
+        out["rivals_finished"] = all(_left(snap, q)[0] == 0 for q in others)
         out["leading"] = bool(mine > top if higher else mine < top)
         out["tied"] = bool(mine == top)
+        if not out["rivals_finished"]:
+            notes.append("Finished; some rivals are still playing, so this is a clubhouse position "
+                         "against their projected totals.")
         return out
 
     tg = _targets(proj[best_pl], higher)
@@ -230,6 +255,8 @@ def what_it_takes(snap: wp.Snapshot, player: str, competition: str, rivals: str 
 
 def what_it_takes_all(snap: wp.Snapshot, competition: str, rivals: str = "same_pace",
                       expected: dict[str, float] | None = None,
-                      history: pd.DataFrame | None = None) -> list[dict]:
+                      history: pd.DataFrame | None = None,
+                      expected_net: dict[str, float] | None = None) -> list[dict]:
     """``what_it_takes`` for every player, in snapshot order."""
-    return [what_it_takes(snap, p, competition, rivals, expected, history) for p in snap.handicaps]
+    return [what_it_takes(snap, p, competition, rivals, expected, history, expected_net)
+            for p in snap.handicaps]

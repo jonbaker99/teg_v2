@@ -394,3 +394,26 @@ def test_live_round_without_scorecard_is_an_error():
     del st.cards[2]
     with pytest.raises(ValueError, match="no scorecard"):
         wp.snapshot(st, _staged(2, "AA", 1, 18, [1]))
+
+
+def test_in_progress_teg_falls_back_to_active_live_round(monkeypatch):
+    # Round 1 of a TEG: nothing finalised, so in_progress_tegs.csv is empty.
+    from teg_analysis.analysis import simulation as sim, live_round
+
+    files = {sim.COMPLETED_TEGS_CSV: pd.DataFrame({"TEGNum": [17, 18]}),
+             sim.IN_PROGRESS_TEGS_CSV: pd.DataFrame({"TEGNum": []})}
+    monkeypatch.setattr(sim, "_read_csv", lambda path: files[path])
+    reg = pd.DataFrame({"Token": ["a", "b", "c"], "TEGNum": [18, 19, 50], "Round": [4, 1, 1],
+                        "CreatedAt": "", "Status": ["finalized", "active", "active"]})
+    monkeypatch.setattr(live_round, "_read_registry", lambda: reg)
+    assert wp.in_progress_teg() == 19
+    reg.loc[1, "Status"] = "cancelled"
+    assert wp.in_progress_teg() is None  # test TEG 50 never counts
+
+
+def test_live_mean_net_counts_blobs_as_zero():
+    st = _live_teg(vp={"AA": 1, "BB": 1}, hc={"AA": 0, "BB": 0}, teg=9, tegs=(6, 7, 8))
+    df = wp.win_probs_live(st, _staged(2, "AA", 1, 0, range(1, 10)), n_sims=200, seed=1,
+                           form_var=0, day_var=0)
+    n = df[df["measure"] == "net"].set_index("player")
+    assert n.loc["AA", "mean_net"] == pytest.approx(18.0)  # bogey off scratch: 1 point a hole

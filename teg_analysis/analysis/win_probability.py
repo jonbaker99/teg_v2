@@ -229,16 +229,33 @@ def _dists_from_cells(base: sim.ScoreDistributions, support: np.ndarray,
 
 # ---------------------------------------------------------------- the TEG
 
+class NoTegInProgress(ValueError):
+    """No TEG is in progress, so there are no live chances (as opposed to a fault)."""
+
+
 def in_progress_teg() -> int | None:
-    """The TEG in progress (in_progress_tegs.csv, not also completed), else None."""
+    """The TEG in progress, else None.
+
+    From in_progress_tegs.csv, or else a TEG with an active live round: during
+    round 1 nothing is finalised yet, so the TEG isn't in in_progress_tegs.csv.
+    Completed TEGs and test TEG 50 never count.
+    """
     def nums(path: str) -> list[int]:
         try:
             return sim._tegnums(sim._read_csv(path))
         except (FileNotFoundError, pd.errors.EmptyDataError):
             return []
 
-    done = set(nums(sim.COMPLETED_TEGS_CSV))
+    done = set(nums(sim.COMPLETED_TEGS_CSV)) | {50}
     live = [t for t in nums(sim.IN_PROGRESS_TEGS_CSV) if t not in done]
+    if not live:
+        try:
+            from teg_analysis.analysis import live_round
+            reg = live_round._read_registry()
+            reg = reg[reg["Status"] == "active"] if len(reg) else reg
+            live = [t for t in sim._tegnums(reg) if t not in done]
+        except Exception:  # the registry is optional here; never break the page over it
+            live = []
     return min(live) if live else None
 
 
@@ -408,7 +425,8 @@ def _add_round_offsets(out: sim.SimulationResult, tgt: sim.TargetTournament, for
 def win_probs_at(state: TegState, rnd: int, hole: int, k: float = DEFAULT_K,
                  P: float = DEFAULT_P, n_sims: int = sim.DEFAULT_SIMS,
                  seed: int | None = None, *, form_var: float = DEFAULT_FORM_VAR,
-                 day_var: float = DEFAULT_DAY_VAR, spoon: bool = False) -> pd.DataFrame:
+                 day_var: float = DEFAULT_DAY_VAR, spoon: bool = False,
+                 net_mean: bool = False) -> pd.DataFrame:
     """Win chances after hole ``hole`` of completed round ``rnd`` ((0, 0) = before the TEG).
 
     Rounds before ``rnd`` and holes 1..``hole`` of it are banked; the rest of the
@@ -424,6 +442,8 @@ def win_probs_at(state: TegState, rnd: int, hole: int, k: float = DEFAULT_K,
 
     ``spoon=True`` adds "spoon" rows after the others: the chance of the worst net
     total (fewest Stableford points, or highest net vs par), ties shared.
+    ``net_mean=True`` adds ``mean_net``: expected net measure (Stableford points or
+    net vs par) per 18 remaining holes, from the simulated draws (blobs included).
     """
     rnd, hole = int(rnd), int(hole)
     if rnd == 0:
@@ -494,10 +514,15 @@ def win_probs_at(state: TegState, rnd: int, hole: int, k: float = DEFAULT_K,
     else:
         gross_t, net_t = gross_b[None, :], net_b[None, :]
     probs = _measure_probs(state, net_t, gross_t, spoon)
-    return pd.concat([pd.DataFrame({
+    out = pd.concat([pd.DataFrame({
         "teg": state.teg_num, "round": rnd, "hole": hole, "measure": m, "player": state.players,
         "win_prob": pr, "mean": means, "sd": sds, "w": w,
         "banked": gross_b if m == "gross" else net_b}) for m, pr in probs.items()], ignore_index=True)
+    if net_mean:
+        left = len(tgt.holes) + _HOLES * tgt.random_rounds
+        mn = ((net_t - net_b).mean(axis=0) * _HOLES / left) if left else np.full(len(state.players), np.nan)
+        out["mean_net"] = np.tile(np.asarray(mn, dtype=float), len(probs))
+    return out
 
 
 def _measure_probs(state: TegState, net_t: np.ndarray, gross_t: np.ndarray,
@@ -601,14 +626,16 @@ def win_probs_live(state: TegState, staged: pd.DataFrame | None, k: float = DEFA
     Returns the ``win_probs_at`` columns with ``hole`` replaced by ``thru`` (holes
     entered in the live round): teg, round (the live round, else the last completed),
     thru, measure, player, win_prob, mean, sd, w, banked (TEG total so far, live
-    holes included).
+    holes included), mean_net (expected Stableford or net vs par per 18 remaining
+    holes, from the draws, so blobs count as 0 points).
     """
     snap = snapshot(state, staged)
-    cols = ["teg", "round", "thru", "measure", "player", "win_prob", "mean", "sd", "w", "banked"]
+    cols = ["teg", "round", "thru", "measure", "player", "win_prob", "mean", "sd", "w", "banked",
+            "mean_net"]
     if snap.live_round is None:
         done = len(state.done)
         df = win_probs_at(state, done, _HOLES if done else 0, k, P, n_sims, seed,
-                          form_var=form_var, day_var=day_var, spoon=spoon)
+                          form_var=form_var, day_var=day_var, spoon=spoon, net_mean=True)
         return df.assign(thru=_HOLES if done else 0)[cols]
 
     cur = snap.live_round
@@ -676,11 +703,15 @@ def win_probs_live(state: TegState, staged: pd.DataFrame | None, k: float = DEFA
                             for p in state.players])
         net_t = net_d + vp - strokes
     probs = _measure_probs(state, net_t, gross_t, spoon)
+    now_net = np.array([snap.net[p] for p in state.players], dtype=float)
+    left = np.array([len(snap.remaining[p]) + _HOLES * snap.random_rounds for p in state.players], dtype=float)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        mean_net = np.where(left > 0, (net_t - now_net).mean(axis=0) * _HOLES / left, np.nan)
     return pd.concat([pd.DataFrame({
         "teg": state.teg_num, "round": cur, "thru": [snap.thru[p] for p in state.players],
         "measure": m, "player": state.players, "win_prob": pr, "mean": means, "sd": sds, "w": ws,
-        "banked": [(snap.gross if m == "gross" else snap.net)[p] for p in state.players]})
-        for m, pr in probs.items()], ignore_index=True)[cols]
+        "banked": [(snap.gross if m == "gross" else snap.net)[p] for p in state.players],
+        "mean_net": mean_net}) for m, pr in probs.items()], ignore_index=True)[cols]
 
 
 def _after_round(state: TegState, after: int, k: float, P: float,

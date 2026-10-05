@@ -1,6 +1,7 @@
 """Simulation dashboard: /simulation (TEG simulator driven by analysis.simulation)."""
 
 import logging
+import threading
 from functools import lru_cache
 from pathlib import Path
 
@@ -109,7 +110,7 @@ def live_snapshot() -> tuple:
     Raises ValueError when no TEG is in progress."""
     teg = wp.in_progress_teg()
     if teg is None:
-        raise ValueError("No TEG is in progress.")
+        raise wp.NoTegInProgress("No TEG is in progress.")
     state, _ = _live_state(teg, False)
     staged = _staged_for(teg)
     return state, wp.snapshot(state, staged), staged
@@ -800,17 +801,27 @@ def _ranks(values: dict[str, float], higher_better: bool) -> dict[str, str]:
     return out
 
 
+_LIVE_NOW_LOCK = threading.Lock()  # one run at a time: the Live tab and TEGBot share results
+
+
 def _live_now(seed: int = 1) -> tuple:
-    """(public dict, {Pl: expected gross vs par per 18}) for the TEG in progress, with
-    entered holes counted. Cached per staged-holes signature."""
+    """(public dict, {"gross": {Pl: expected gross vs par per 18}, "net": {Pl: expected
+    Stableford or net vs par per 18}}) for the TEG in progress, with entered holes
+    counted. Cached per staged-holes signature."""
     teg = wp.in_progress_teg()
     if teg is None:
-        raise ValueError("No TEG is in progress.")
+        raise wp.NoTegInProgress("No TEG is in progress.")
     state, names = _live_state(teg, False)
     staged = _staged_for(teg)
     key = (int(teg), int(seed), _staged_signature(staged))
-    if key in _LIVE_NOW:
-        return _LIVE_NOW[key]
+    with _LIVE_NOW_LOCK:
+        if key not in _LIVE_NOW:
+            _compute_live_now(teg, seed, state, names, staged, key)
+        return _LIVE_NOW.get(key) or _compute_live_now(teg, seed, state, names, staged, None)
+
+
+def _compute_live_now(teg, seed, state, names, staged, key) -> tuple:
+    """Run the live simulation; store it under ``key`` (None: don't store)."""
     gen = _LIVE_GEN[0]
     snap = wp.snapshot(state, staged)
     df = wp.win_probs_live(state, staged, n_sims=sim.DEFAULT_SIMS, seed=seed, spoon=True)
@@ -820,11 +831,12 @@ def _live_now(seed: int = 1) -> tuple:
     played = any(snap.holes_played.values())
     net_rank = _ranks(snap.net, snap.stableford) if played else {}
     gross_rank = _ranks(snap.gross, False) if played else {}
-    means = {}
+    means = {"gross": {}, "net": {}}
     rows = []
     for pl in state.players:
-        mean = by["gross"].loc[pl, "mean"]
-        means[pl] = None if pd.isna(mean) else float(mean)
+        for m, col, src in (("gross", "mean", "gross"), ("net", "mean_net", "net")):
+            v = by[src].loc[pl, col]
+            means[m][pl] = None if pd.isna(v) else float(v)
         trophy, jacket = by["net"].loc[pl, "win_prob"], by["gross"].loc[pl, "win_prob"]
         rows.append({
             "Player": snap.names.get(pl, names.get(pl, pl)), "Pl": pl,
@@ -837,7 +849,8 @@ def _live_now(seed: int = 1) -> tuple:
             "SpoonChancePct": round(float(by["spoon"].loc[pl, "win_prob"]) * 100, 1),
             "TrophyChangePp": round((float(trophy) - prev["net"][pl]) * 100, 1) + 0.0,
             "JacketChangePp": round((float(jacket) - prev["gross"][pl]) * 100, 1) + 0.0,
-            "ExpectedGrossVsParPer18": None if means[pl] is None else round(means[pl], 1),
+            "ExpectedGrossVsParPer18": (None if means["gross"][pl] is None
+                                        else round(means["gross"][pl], 1)),
         })
     rows.sort(key=lambda r: -r["TrophyChancePct"])
     result = {
@@ -846,9 +859,9 @@ def _live_now(seed: int = 1) -> tuple:
         "measure_label": "Stableford" if snap.stableford else "net vs par",
         "players": rows,
     }
-    if gen == _LIVE_GEN[0]:
+    if key is not None and gen == _LIVE_GEN[0]:
         for k in [k for k in _LIVE_NOW if k[0] == key[0]]:
-            del _LIVE_NOW[k]
+            _LIVE_NOW.pop(k, None)
         _LIVE_NOW[key] = (result, means)
     return result, means
 
@@ -869,10 +882,11 @@ def what_it_takes(player: str | None, competition: str = "trophy",
 
     state, snap, _ = live_snapshot()
     _, means = _live_now()
-    expected = {pl: m for pl, m in means.items() if m is not None}
+    expected = {pl: m for pl, m in means["gross"].items() if m is not None}
+    expected_net = {pl: m for pl, m in means["net"].items() if m is not None}
     history = _history()
     if player is None or str(player).strip().lower() in ("", "all"):
-        return live_scenarios.what_it_takes_all(snap, competition, rivals, expected, history)
+        return live_scenarios.what_it_takes_all(snap, competition, rivals, expected, history, expected_net)
     text = str(player).strip()
     by_code = {c.lower(): c for c in snap.names}
     code = by_code.get(text.lower())
@@ -883,7 +897,7 @@ def what_it_takes(player: str | None, competition: str = "trophy",
         if len(hits) != 1:
             raise ValueError(f"No single player matches '{text}'.")
         code = hits[0]
-    return live_scenarios.what_it_takes(snap, code, competition, rivals, expected, history)
+    return live_scenarios.what_it_takes(snap, code, competition, rivals, expected, history, expected_net)
 
 
 # --- routes (sync def: FastAPI threadpools them) -----------------------------

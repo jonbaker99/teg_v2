@@ -633,7 +633,8 @@ def test_get_predictions_wraps_the_simulator(data):
 
 
 def _no_live():
-    raise ValueError("No TEG is in progress.")
+    from teg_analysis.analysis.win_probability import NoTegInProgress
+    raise NoTegInProgress("No TEG is in progress.")
 
 
 def test_get_predictions_refuses_mid_teg(data):
@@ -643,6 +644,11 @@ def test_get_predictions_refuses_mid_teg(data):
     assert "TEG 19 is in progress; use get_live_win_chances" in err
     data.live_predictions = _no_live  # no TEG in progress: pre-tournament odds are fine
     assert "players" in run_tool("get_predictions", {}, data)
+
+    def broken():  # a real fault mid-TEG must not fall back to pre-tournament odds
+        raise ValueError("round 3 is live but has no scorecard")
+    data.live_predictions = broken
+    assert "can't be worked out" in run_tool("get_predictions", {}, data)["error"]
 
 
 def test_get_live_win_chances_passes_through(data):
