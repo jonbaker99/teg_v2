@@ -46,8 +46,9 @@
 </section>
 <script>
 (function () {
-    // Fills in the hole-by-hole chart one checkpoint at a time, in the order the
-    // server queues (hole 9, even holes, odd holes). Updates the existing plots in
+    // Fills in the hole-by-hole chart one checkpoint at a time, in hole order, so
+    // the lines draw from left to right. Round ends come with the page for the
+    // table but join the lines only when the run reaches them. Updates the existing plots in
     // place with Plotly.restyle: nothing is swapped, so the page never jumps.
     var running = null;
     var VP = {'-3': 'an albatross', '-2': 'an eagle', '-1': 'a birdie', '0': 'a par',
@@ -64,13 +65,18 @@
         return g + ', net ' + (sc[1] > 0 ? '+' + sc[1] : sc[1] === 0 ? 'level' : sc[1]);
     }
 
-    // Draws every worked-out point: solid up to the slider position (d.cursor, an
-    // index into d.axis), faint after it, so Play draws the lines as it goes.
-    // The faint copies are extra traces added once per plot, out of the legend.
+    // Draws the worked-out points from the start up to the first gap (every point
+    // once filling in has finished, d.full): solid up to the slider position
+    // (d.cursor, an index into d.axis), faint after it, so Play draws the lines as
+    // it goes. The faint copies are extra traces added once per plot, out of the legend.
     function redraw(root, d) {
         var cur = d.cursor == null ? d.axis.length - 1 : d.cursor;
         var have = [];
-        d.axis.forEach(function (a, i) { if (d.points[key(a[0], a[1])]) have.push([a, i]); });
+        for (var i = 0; i < d.axis.length; i++) {
+            var a = d.axis[i];
+            if (d.points[key(a[0], a[1])]) have.push([a, i]);
+            else if (!d.full) break;
+        }
         var solid = have.filter(function (e) { return e[1] <= cur; });
         var faint = have.filter(function (e) { return e[1] >= cur; });
         if (faint.length < 2) faint = [];
@@ -235,6 +241,7 @@
         var refreshScrub = function () {};
         function doneCount() { return Object.keys(d.points).length - 1; }
         function finish() {
+            d.full = true;
             redrawWhenReady(root, d, 30);
             setTimeout(refreshScrub, 150);
             status.textContent = failed
@@ -246,7 +253,7 @@
             if (running !== token) return;
             if (n >= queue.length) { finish(); return; }
             var q = queue[n];
-            status.textContent = 'Step ' + (q[2]) + ' of 4, ' + d.steps[q[2]] + ': working out round ' + q[0] +
+            status.textContent = 'Working out round ' + q[0] +
                 ', hole ' + q[1] + '. ' + doneCount() + ' of ' + d.total + ' points done.';
             fetch('/simulation/live/point?teg=' + d.teg + '&round=' + q[0] + '&hole=' + q[1] + '&replay=' + (d.replay ? 1 : 0))
                 .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
