@@ -45,7 +45,27 @@ def data():
         "HMM Wooden Spoon": ["Bob BRAVO", "Bob BRAVO"],
     })
     return ChatData(all_data=lambda: df, winners=lambda: winners,
-                    completed_tegs=lambda: {8, 9}, players=lambda: PLAYERS)
+                    completed_tegs=lambda: {8, 9}, players=lambda: PLAYERS,
+                    read_ref=lambda path: REFS.get(path, pd.DataFrame()).copy())
+
+
+# Reference files: TEG 10 is set up but not started; TEG 50 is the test TEG.
+REFS = {
+    "data/round_info.csv": pd.DataFrame({
+        "TEGNum": [8, 9, 10, 10, 50], "Round": [1, 1, 1, 2, 1],
+        "Course": ["Links", "Links", "Dunes", "Links", "Test"],
+        "Date": ["01/05/2008", "01/05/2009", "10/10/2010", "11/10/2010", "01/01/2020"],
+        "Area": ["Kent"] * 5, "Year": [2008, 2009, 2010, 2010, 2020]}),
+    "data/course_info.csv": pd.DataFrame({
+        "Course": ["Links", "Dunes"], "type": ["Links", "Links"],
+        "description": ["Windy.", "Long and sandy."]}),
+    "data/course_pars.csv": pd.DataFrame({"Course": ["Dunes"], "Hole": [1], "Par": [4], "SI": [1]}),
+    "data/handicaps.csv": pd.DataFrame({"TEG": ["TEG 9", "TEG 10", "TEG 50"],
+                                        "AA": [10, 9, 1], "BB": [20, 18, 1], "BC": [None, 12, 1]}),
+    "data/teg_rosters.csv": pd.DataFrame({"TEGNum": [10, 10, 10], "Pl": ["AA", "BB", "BC"],
+                                          "Playing": [True, True, False]}),
+}
+REF_FILES = ["course_holes.csv", "courses.csv", "handicaps.csv", "schedule.csv"]
 
 
 # --- bounce-back ------------------------------------------------------------
@@ -98,7 +118,7 @@ def test_honours_counts_strip_footnote_and_combine(data):
 def test_datasets_positions_follow_era_and_blank_in_progress(data):
     data.completed_tegs = lambda: {8}
     ds = data.datasets()
-    assert set(ds) == {"holes.csv", "rounds.csv", "tegs.csv", "winners.csv"}
+    assert set(ds) == {"holes.csv", "rounds.csv", "tegs.csv", "winners.csv", *REF_FILES}
     tegs = ds["tegs.csv"].set_index(["TEGNum", "Player"])
     # TEG 8 is Stableford era: most points (Bob CHARLIE, all pars) wins the Trophy.
     assert tegs.loc[(8, "Bob CHARLIE"), "TrophyPosition"] == 1
@@ -187,10 +207,10 @@ def test_ask_uploads_datasets_once_and_attaches_them(data):
     client = FakeClient([done, done])
     bot.ask("q1", data, client=client)
     bot.ask("q2", data, client=client)
-    assert sorted(client.uploads) == ["holes.csv", "rounds.csv", "teg_data.zip", "teg_toolkit.zip",
-                                      "tegs.csv", "winners.csv"]
+    assert sorted(client.uploads) == sorted(["holes.csv", "rounds.csv", "teg_data.zip", "teg_toolkit.zip",
+                                             "tegs.csv", "winners.csv", *REF_FILES])
     content = client.calls[0]["messages"][-1]["content"]
-    assert [b["type"] for b in content] == ["text"] + ["container_upload"] * 6
+    assert [b["type"] for b in content] == ["text"] + ["container_upload"] * 10
     assert {"type": "code_execution_20260521", "name": "code_execution"} in client.calls[0]["tools"]
 
 
@@ -720,7 +740,8 @@ def test_toolkit_failure_falls_back_and_is_surfaced(data, monkeypatch, caplog):
         answer = bot.ask("q", data, client=client)
     assert answer.text == "ok"
     assert "no zip" in answer.toolkit_error
-    assert sorted(client.uploads) == ["holes.csv", "rounds.csv", "tegs.csv", "winners.csv"]
+    assert sorted(client.uploads) == sorted(["holes.csv", "rounds.csv", "tegs.csv", "winners.csv",
+                                             *REF_FILES])
     assert len(client.calls[0]["system"]) == 3  # no skills block
     assert "toolkit unavailable" in caplog.text
 
@@ -1071,3 +1092,140 @@ def test_split_trailer_full_strips_trailer_lines_not_at_end():
     assert "THEME" not in out and "DEEP" not in out
     assert out.endswith("A stray line after.")
     assert theme == "Predictions" and deep is True and related == []
+
+
+# --- web search ----------------------------------------------------------------
+
+def test_web_search_tool_is_offered_and_can_be_switched_off(data, monkeypatch):
+    done = _resp([SimpleNamespace(type="text", text="ok")], "end_turn")
+    client = FakeClient([done, done, done])
+    bot.ask("q", data, client=client)
+    bot.ask("q", data, client=client, deep=True)
+    normal, deep = ([t for t in c["tools"] if t.get("name") == "web_search"] for c in client.calls)
+    assert normal == [{"type": bot.WEB_SEARCH_TYPE, "name": "web_search",
+                       "max_uses": bot.WEB_SEARCH_USES}]
+    assert deep[0]["max_uses"] == bot.DEEP_WEB_SEARCH_USES
+    monkeypatch.setenv(bot.ENV_WEB_SEARCH, "0")
+    bot.ask("q", data, client=client)
+    assert all(t.get("name") != "web_search" for t in client.calls[2]["tools"])
+
+
+def test_web_search_recorded_with_sources_and_cost(data):
+    search = SimpleNamespace(type="server_tool_use", id="w1", name="web_search",
+                             input={"query": "Royal St Davids slope rating"})
+    found = SimpleNamespace(type="web_search_tool_result", tool_use_id="w1", content=[
+        SimpleNamespace(type="web_search_result", title="Royal St David's", url="https://rsd.example")])
+    cite = SimpleNamespace(url="https://rsd.example", title="Royal St David's")
+    final = _resp([search, found,
+                   SimpleNamespace(type="text", text="It is a links course ", citations=None),
+                   SimpleNamespace(type="text", text="rated 72.4", citations=[cite, cite]),
+                   SimpleNamespace(type="text", text=", per the club.", citations=None)], "end_turn")
+    final.usage.server_tool_use = SimpleNamespace(web_search_requests=1)
+    answer = bot.ask("How hard is Royal St David's?", data, client=FakeClient([final]))
+    assert answer.text == "It is a links course rated 72.4, per the club."
+    assert answer.sources == [{"title": "Royal St David's", "url": "https://rsd.example"}]
+    assert answer.tool_calls[0].name == "web_search"
+    assert answer.tool_calls[0].output == {"results": [{"title": "Royal St David's",
+                                                        "url": "https://rsd.example"}]}
+    assert answer.usage["web_search_requests"] == 1
+    assert "web search: Royal St Davids slope rating" in answer.method_note
+    assert answer.cost_usd > bot.WEB_SEARCH_PRICE
+
+
+def test_web_search_error_and_non_http_citations():
+    calls = []
+    bot._record_sandbox_calls([
+        SimpleNamespace(type="server_tool_use", id="w", name="web_search", input={"query": "x"}),
+        SimpleNamespace(type="web_search_tool_result", tool_use_id="w",
+                        content=SimpleNamespace(error_code="max_uses_exceeded"))], calls)
+    assert calls[0].output == {"error": "max_uses_exceeded"}
+    bad = SimpleNamespace(url="javascript:alert(1)", title="x")
+    assert bot._sources([SimpleNamespace(type="text", text="t", citations=[bad])]) == []
+
+
+def test_web_search_working_entry():
+    from webapp.routes.tegbot import _working
+    call = bot.ToolCall("web_search", {"query": "q"},
+                        {"results": [{"title": "T", "url": "https://u.example"}]})
+    assert _working(call) == {"name": "Web search", "input": "q",
+                              "output": "T — https://u.example"}
+
+
+def test_rejected_web_search_falls_back_without_it(data, monkeypatch):
+    class Rejected(Exception):
+        status_code = 400
+    monkeypatch.setattr(bot, "_web_search_rejected", False)
+    done = _resp([SimpleNamespace(type="text", text="ok")], "end_turn")
+    client = FakeClient([done])
+    real = client._create
+
+    def create(**kwargs):
+        if any(t.get("name") == "web_search" for t in kwargs["tools"]):
+            client.calls.append(kwargs)
+            raise Rejected("web_search is not enabled for this organization")
+        return real(**kwargs)
+    client.beta.messages.create = create
+    assert bot.ask("q", data, client=client).text == "ok"
+    assert not bot.web_search_enabled()
+
+
+def test_page_shows_rotating_ideas_and_recent_questions(client):
+    from teg_analysis.chatbot import qa_log
+    from webapp.routes.tegbot import EXAMPLE_QUESTIONS
+    for q, theme in (("Who won TEG 3?", "Honours"), ("Lasagne recipe?", "Off-topic"),
+                     ("Best par 3 player?", "Scoring"), ("Who won TEG 3?", "Honours")):
+        qa_log.append_entry(conv="abc12345", question=q, answer="a", workings=[], model="m",
+                            cost_usd=0.0, seconds=1.0, theme=theme, related=[], deep=False)
+    recent = qa_log.recent_questions(4)
+    assert [r["question"] for r in recent] == ["Who won TEG 3?", "Best par 3 player?"]
+    page = client.get("/tegbot").text
+    assert "Ask me anything about The El Golfo." in page
+    assert page.count('data-q="') == len(EXAMPLE_QUESTIONS)
+    assert page.count('<li hidden><button type="button" data-q=') == len(EXAMPLE_QUESTIONS) - 4
+    assert f'href="/tegbot/asked#q-{recent[0]["id"]}"' in page and "Lasagne" not in page
+    assert "outline: 2px dashed" not in page
+
+
+def test_past_answer_replays_in_chat_without_asking(client):
+    from teg_analysis.chatbot import qa_log
+    entry = qa_log.append_entry(conv="abc12345", question="Who won TEG 3?", answer="**Alan ALPHA**.",
+                                workings=[{"name": "Lookup: get_honours", "input": "{}", "output": "{}"}],
+                                model="m", cost_usd=0.0, seconds=1.0, theme="Honours")
+    page = client.get("/tegbot").text
+    assert f'hx-get="/tegbot/past/{entry["id"]}"' in page
+    out = client.get(f"/tegbot/past/{entry['id']}").text
+    assert "Saved answer, asked" in out and "<strong>Alan ALPHA</strong>" in out
+    assert 'data-answer="**Alan ALPHA**."' in out and "Lookup: get_honours" in out
+    assert client.ask_calls == []
+    assert "no longer saved" in client.get("/tegbot/past/" + "0" * 32).text
+    assert "no longer saved" in client.get("/tegbot/past/nothex").text
+
+
+def test_reference_data_covers_upcoming_teg(data):
+    sched = data.schedule()
+    assert 50 not in set(sched["TEGNum"])
+    assert dict(zip(sched["TEGNum"], sched["Status"])) == {8: "complete", 9: "complete", 10: "upcoming"}
+    courses = data.courses().set_index("Course")
+    assert courses.loc["Dunes", "TEGsUpcoming"] == "TEG 10" and courses.loc["Links", "TEGsPlayed"] == "TEG 8, TEG 9"
+    hc = data.handicaps_long()
+    assert 50 not in set(hc["TEGNum"])
+    assert hc[(hc.TEGNum == 10) & (hc.Player == "Bob CHARLIE")]["Playing"].item() is False
+    text = data.upcoming_text()
+    assert "TEG 10 (2010, Kent), upcoming" in text
+    assert "Round 1: Dunes, Sun 10 Oct 2010" in text and "Round 2: Links" in text
+    assert "Alan ALPHA (9)" in text and "Bob BRAVO (18)" in text and "Bob CHARLIE" not in text
+
+
+def test_upcoming_teg_reaches_the_system_prompt(data):
+    client = FakeClient([_resp([SimpleNamespace(type="text", text="ok")], "end_turn")])
+    bot.ask("What courses are we playing next?", data, client=client)
+    system = "\n".join(b["text"] for b in client.calls[0]["system"])
+    assert "Round 1: Dunes" in system and "schedule.csv" in system
+
+
+def test_missing_reference_files_do_not_break_answers(data):
+    data.read_ref = lambda path: pd.DataFrame()
+    assert data.upcoming_text() == ""
+    assert data.schedule().empty and data.handicaps_long().empty
+    client = FakeClient([_resp([SimpleNamespace(type="text", text="ok")], "end_turn")])
+    assert bot.ask("q", data, client=client).text == "ok"

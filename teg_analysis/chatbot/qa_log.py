@@ -158,6 +158,20 @@ def past_questions(limit: int = 300) -> list[dict]:
     return out
 
 
+def recent_questions(limit: int = 4) -> list[dict]:
+    """The latest distinct on-topic questions with their ids, newest first."""
+    seen, out = set(), []
+    for entry in reversed(read_entries()):
+        key = entry["question"].strip().lower()
+        if key in seen or entry.get("theme") == "Off-topic":
+            continue
+        seen.add(key)
+        out.append({"id": entry["id"], "question": entry["question"]})
+        if len(out) >= limit:
+            break
+    return out
+
+
 def conversations(limit: int = 50) -> list[list[dict]]:
     """Chats newest first (by latest question), each a list of entries in order."""
     threads: "OrderedDict[str, list[dict]]" = OrderedDict()

@@ -7,7 +7,18 @@
             {% if error %}
             <p class="tb-error">{{ error }}</p>
             {% else %}
+            {% if earlier %}<p class="tb-earlier">Saved answer, asked {{ earlier }}</p>{% endif %}
             {{ answer_html | safe }}
+            {% if sources %}
+            <div class="tb-related tb-sources">
+                <span class="tb-related-label">Web sources</span>
+                <ul>
+                    {% for s in sources %}
+                    <li><a href="{{ s.url }}" target="_blank" rel="noopener noreferrer nofollow">{{ s.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
             {% if related %}
             <div class="tb-related">
                 <span class="tb-related-label">Others asked</span>
