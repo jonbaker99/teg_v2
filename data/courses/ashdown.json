@@ -1,25 +1,21 @@
 {
   "course": "Ashdown",
-  "full_name": "Royal Ashdown Forest Golf Club (Old Course)",
+  "full_name": "Royal Ashdown Forest Golf Club (West Course)",
   "researched": "2026-10-06",
   "summary": [
     {
-      "text": "The Old Course at Royal Ashdown Forest is a heathland course in East Sussex with no sand bunkers, laid out in the Ashdown Forest.",
-      "source": "https://www.top100golfcourses.com/golf-course/royal-ashdown-forest-old"
+      "text": "The West Course at Royal Ashdown Forest is a par 68 woodland course in East Sussex, bunker-free like the club's Old Course and once its ladies' course.",
+      "source": "https://www.top100golfcourses.com/golf-course/royal-ashdown-forest-west"
     }
   ],
   "setting": [
     {
-      "text": "Top100golfcourses says it affords long views from the high parts across the forest and the rolling Sussex countryside.",
-      "source": "https://www.top100golfcourses.com/golf-course/royal-ashdown-forest-old"
+      "text": "The West snakes through the mature broadleaf woodland of the Ashdown Forest; the club says no earth was moved, no ponds dug and no streams diverted to build either course.",
+      "source": "https://www.royalashdown.co.uk/"
     },
     {
-      "text": "The challenge comes from undulating land, streams, heather, bracken and many trees.",
-      "source": "https://www.top100golfcourses.com/golf-course/royal-ashdown-forest-old"
-    },
-    {
-      "text": "The only bunkers are natural grassy pits.",
-      "source": "https://www.top100golfcourses.com/golf-course/royal-ashdown-forest-old"
+      "text": "Short at 5,606 yards from the back tees, but far from flat, with small greens and severe run-offs that test the short game.",
+      "source": "https://www.top100golfcourses.com/golf-course/royal-ashdown-forest-west"
     },
     {
       "text": "Ashdown Forest is protected by Acts of Parliament, so no alterations to the terrain are allowed without the conservators' approval.",
@@ -36,47 +32,37 @@
       "source": "https://www.top100golfcourses.com/golf-course/royal-ashdown-forest-old"
     },
     {
-      "text": "It was originally only about 4,900 yards and was gradually lengthened between 1910 and 1920 to over 6,400.",
-      "source": "https://www.top100golfcourses.com/golf-course/royal-ashdown-forest-old"
-    },
-    {
-      "text": "Bernard Darwin wrote that at the end of a round we realise 'with pleasurable shock that there is not a single hideous rampart or so much as a pot bunker'.",
-      "source": "https://www.top100golfcourses.com/golf-course/royal-ashdown-forest-old"
-    },
-    {
-      "text": "New drainage went into fourteen greens in 2016, alongside a ten-year tree clearing programme.",
-      "source": "https://www.top100golfcourses.com/golf-course/royal-ashdown-forest-old"
-    },
-    {
       "text": "There have been only five head professionals in the club's history, according to Top100golfcourses.",
       "source": "https://www.top100golfcourses.com/golf-course/royal-ashdown-forest-old"
+    },
+    {
+      "text": "The ladies' course was enlarged to 18 holes in 1932, becoming the longest course in the country designed for ladies' golf; Cecil Leitch, Joyce Wethered, Diana Fishwick and Wanda Morgan played the opening exhibition.",
+      "source": "https://www.top100golfcourses.com/golf-course/royal-ashdown-forest-west"
+    },
+    {
+      "text": "Army training in the forest during the Second World War left only three or four holes in play by 1945. It was restored to 18 holes from 1965 with the Ashdown Forest Hotel, and the club took full control in 2003/4.",
+      "source": "https://www.top100golfcourses.com/golf-course/royal-ashdown-forest-west"
+    },
+    {
+      "text": "After the Ashdown Forest Hotel closed, the club renumbered the holes so the West starts and ends near the clubhouse.",
+      "source": "https://www.top100golfcourses.com/golf-course/royal-ashdown-forest-west"
     }
   ],
   "trivia": [
-    {
-      "text": "Winnie the Pooh's creator A. A. Milne and his son Christopher Robin were both members, Christopher playing mainly on the West Course.",
-      "source": "https://www.top100golfcourses.com/golf-course/royal-ashdown-forest-old"
-    },
     {
       "text": "Abe Mitchell, who lost the 1920 Open to George Duncan, was a member of the club's artisan section, the Cantelupe Club.",
       "source": "https://www.top100golfcourses.com/golf-course/royal-ashdown-forest-old"
     },
     {
-      "text": "Top100golfcourses lists the course as par 72, though it measures just over 6,400 yards.",
+      "text": "Winnie the Pooh's creator A. A. Milne and his son Christopher Robin were both members, Christopher playing mainly on the West Course.",
       "source": "https://www.top100golfcourses.com/golf-course/royal-ashdown-forest-old"
     }
   ],
   "holes": {
-    "6": [
+    "11": [
       {
-        "text": "The par 3 6th is the 'Island Hole', only 125 yards from the medal tees but ringed by a deep stream and a gully, with a ridge across the green.",
-        "source": "https://www.top100golfcourses.com/golf-course/royal-ashdown-forest-old"
-      }
-    ],
-    "17": [
-      {
-        "text": "The 17th is a downhill par 4 of 480 yards from the back tees, needing a second shot across gorse, bracken and a path.",
-        "source": "https://www.top100golfcourses.com/golf-course/royal-ashdown-forest-old"
+        "text": "A long par 3 that becomes a par 4 from the ladies' tees.",
+        "source": "https://www.top100golfcourses.com/golf-course/royal-ashdown-forest-west"
       }
     ]
   },
