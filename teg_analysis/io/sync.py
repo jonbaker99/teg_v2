@@ -43,6 +43,10 @@ SYNC_FOLDERS = [
     "data/commentary/drafts",
     # Pre-rendered A4-width report PDFs, built by scripts/build_report_pdfs.py.
     "data/commentary/pdfs",
+    # Sourced course colour for the report writers (reporting/course_colour.py).
+    # Read via read_text_file, which caches to the volume on first read, so an
+    # edited file only reaches Railway by pulling it here.
+    "data/courses",
 ]
 
 # Where pre-overwrite backups of store files are kept (one dated dir per pull).
