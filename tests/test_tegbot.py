@@ -45,7 +45,27 @@ def data():
         "HMM Wooden Spoon": ["Bob BRAVO", "Bob BRAVO"],
     })
     return ChatData(all_data=lambda: df, winners=lambda: winners,
-                    completed_tegs=lambda: {8, 9}, players=lambda: PLAYERS)
+                    completed_tegs=lambda: {8, 9}, players=lambda: PLAYERS,
+                    read_ref=lambda path: REFS.get(path, pd.DataFrame()).copy())
+
+
+# Reference files: TEG 10 is set up but not started; TEG 50 is the test TEG.
+REFS = {
+    "data/round_info.csv": pd.DataFrame({
+        "TEGNum": [8, 9, 10, 10, 50], "Round": [1, 1, 1, 2, 1],
+        "Course": ["Links", "Links", "Dunes", "Links", "Test"],
+        "Date": ["01/05/2008", "01/05/2009", "10/10/2010", "11/10/2010", "01/01/2020"],
+        "Area": ["Kent"] * 5, "Year": [2008, 2009, 2010, 2010, 2020]}),
+    "data/course_info.csv": pd.DataFrame({
+        "Course": ["Links", "Dunes"], "type": ["Links", "Links"],
+        "description": ["Windy.", "Long and sandy."]}),
+    "data/course_pars.csv": pd.DataFrame({"Course": ["Dunes"], "Hole": [1], "Par": [4], "SI": [1]}),
+    "data/handicaps.csv": pd.DataFrame({"TEG": ["TEG 9", "TEG 10", "TEG 50"],
+                                        "AA": [10, 9, 1], "BB": [20, 18, 1], "BC": [None, 12, 1]}),
+    "data/teg_rosters.csv": pd.DataFrame({"TEGNum": [10, 10, 10], "Pl": ["AA", "BB", "BC"],
+                                          "Playing": [True, True, False]}),
+}
+REF_FILES = ["course_holes.csv", "courses.csv", "handicaps.csv", "schedule.csv"]
 
 
 # --- bounce-back ------------------------------------------------------------
@@ -98,7 +118,7 @@ def test_honours_counts_strip_footnote_and_combine(data):
 def test_datasets_positions_follow_era_and_blank_in_progress(data):
     data.completed_tegs = lambda: {8}
     ds = data.datasets()
-    assert set(ds) == {"holes.csv", "rounds.csv", "tegs.csv", "winners.csv"}
+    assert set(ds) == {"holes.csv", "rounds.csv", "tegs.csv", "winners.csv", *REF_FILES}
     tegs = ds["tegs.csv"].set_index(["TEGNum", "Player"])
     # TEG 8 is Stableford era: most points (Bob CHARLIE, all pars) wins the Trophy.
     assert tegs.loc[(8, "Bob CHARLIE"), "TrophyPosition"] == 1
@@ -187,10 +207,10 @@ def test_ask_uploads_datasets_once_and_attaches_them(data):
     client = FakeClient([done, done])
     bot.ask("q1", data, client=client)
     bot.ask("q2", data, client=client)
-    assert sorted(client.uploads) == ["holes.csv", "rounds.csv", "teg_data.zip", "teg_toolkit.zip",
-                                      "tegs.csv", "winners.csv"]
+    assert sorted(client.uploads) == sorted(["holes.csv", "rounds.csv", "teg_data.zip", "teg_toolkit.zip",
+                                             "tegs.csv", "winners.csv", *REF_FILES])
     content = client.calls[0]["messages"][-1]["content"]
-    assert [b["type"] for b in content] == ["text"] + ["container_upload"] * 6
+    assert [b["type"] for b in content] == ["text"] + ["container_upload"] * 10
     assert {"type": "code_execution_20260521", "name": "code_execution"} in client.calls[0]["tools"]
 
 
@@ -720,7 +740,8 @@ def test_toolkit_failure_falls_back_and_is_surfaced(data, monkeypatch, caplog):
         answer = bot.ask("q", data, client=client)
     assert answer.text == "ok"
     assert "no zip" in answer.toolkit_error
-    assert sorted(client.uploads) == ["holes.csv", "rounds.csv", "tegs.csv", "winners.csv"]
+    assert sorted(client.uploads) == sorted(["holes.csv", "rounds.csv", "tegs.csv", "winners.csv",
+                                             *REF_FILES])
     assert len(client.calls[0]["system"]) == 3  # no skills block
     assert "toolkit unavailable" in caplog.text
 
@@ -1178,3 +1199,33 @@ def test_past_answer_replays_in_chat_without_asking(client):
     assert client.ask_calls == []
     assert "no longer saved" in client.get("/tegbot/past/" + "0" * 32).text
     assert "no longer saved" in client.get("/tegbot/past/nothex").text
+
+
+def test_reference_data_covers_upcoming_teg(data):
+    sched = data.schedule()
+    assert 50 not in set(sched["TEGNum"])
+    assert dict(zip(sched["TEGNum"], sched["Status"])) == {8: "complete", 9: "complete", 10: "upcoming"}
+    courses = data.courses().set_index("Course")
+    assert courses.loc["Dunes", "TEGsUpcoming"] == "TEG 10" and courses.loc["Links", "TEGsPlayed"] == "TEG 8, TEG 9"
+    hc = data.handicaps_long()
+    assert 50 not in set(hc["TEGNum"])
+    assert hc[(hc.TEGNum == 10) & (hc.Player == "Bob CHARLIE")]["Playing"].item() is False
+    text = data.upcoming_text()
+    assert "TEG 10 (2010, Kent), upcoming" in text
+    assert "Round 1: Dunes, Sun 10 Oct 2010" in text and "Round 2: Links" in text
+    assert "Alan ALPHA (9)" in text and "Bob BRAVO (18)" in text and "Bob CHARLIE" not in text
+
+
+def test_upcoming_teg_reaches_the_system_prompt(data):
+    client = FakeClient([_resp([SimpleNamespace(type="text", text="ok")], "end_turn")])
+    bot.ask("What courses are we playing next?", data, client=client)
+    system = "\n".join(b["text"] for b in client.calls[0]["system"])
+    assert "Round 1: Dunes" in system and "schedule.csv" in system
+
+
+def test_missing_reference_files_do_not_break_answers(data):
+    data.read_ref = lambda path: pd.DataFrame()
+    assert data.upcoming_text() == ""
+    assert data.schedule().empty and data.handicaps_long().empty
+    client = FakeClient([_resp([SimpleNamespace(type="text", text="ok")], "end_turn")])
+    assert bot.ask("q", data, client=client).text == "ok"

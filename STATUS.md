@@ -10,6 +10,8 @@ TEGBot can now look things up on the web when a TEG question needs facts the dat
 
 The TEGBot page is tidier too: the question box is a solid terminal box with a `>` prompt, ideas rotate from about 40 questions ("more ideas" shows the next four), and tapping one of the four most recent questions shows its saved answer in the chat, free.
 
+TEGBot now sees the site's setup data, not just played scores: the schedule of every TEG including upcoming ones (courses, dates), course descriptions and scorecards, and handicaps with who is playing. The next TEG's courses, dates, players and handicaps are in its prompt, so "how do the TEG 19 courses compare?" works before a ball is struck.
+
 ## 2026-10-05 — TEGBot follows the live TEG; chances move mid-round; entry locks on finalise
 
 Fixes dry run 4 issues 27–29 (PR #178). Win chances now count the holes entered in the round being played, with players on different holes (`win_probability.win_probs_live`); the Live tab's table shows chances "now" while a round has scores. TEGBot gets the same chances (`get_live_win_chances`) and can say what a player needs to win the Trophy or Jacket, gross first then points, with a check against their own rounds (`get_what_it_takes`, `teg_analysis/analysis/live_scenarios.py`). It no longer quotes pre-tournament odds once a TEG has started. `/leaderboard` and the home page standings show each player's win chance (Win\*) after the last finalised round, footnoted to the TEG Predictatron 3100. On the score entry page, the round locks the moment the admin taps Finalise, under a "Round complete" card; a score refused mid-finalise is listed on the card, not dropped.

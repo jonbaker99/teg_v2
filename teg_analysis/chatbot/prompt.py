@@ -250,6 +250,20 @@ winners.csv - the official result per completed TEG: TEG ("TEG 12"), Year, TEG T
   overrides (a trailing * marks the TEG 5 Green Jacket, awarded to Stuart NEUMANN for best
   Stableford round; David MULLIN had the best gross).
 
+schedule.csv - every TEG round, played or planned: TEGNum, Year, Area, Round, Course, Date,
+  Status ("complete", "in progress" or "upcoming"). Use it for which courses a TEG will
+  play or played, including TEGs not started yet.
+
+courses.csv - one row per course: Course (as in the other files), full_name, location, type
+  (Links, Parkland, Heathland...), par, designer, description, TEGsPlayed and TEGsUpcoming.
+  Check here before searching the web about a course.
+
+course_holes.csv - each course's scorecard: Course, Hole, Par, SI.
+
+handicaps.csv - one row per player per TEG: TEGNum, Player, Pl, HC (the handicap set for
+  that TEG, including upcoming ones), Playing (True/False from the TEG roster; blank when
+  no roster was recorded).
+
 Rules for code:
 - Net competition: lowest NetVP up to TEG 7, highest Stableford from TEG 8. Green Jacket:
   lowest GrossVP. Positions use rank(method="min"), so ties share a position.
@@ -288,7 +302,7 @@ def data_context_text(holes: pd.DataFrame, complete: set[int], players: dict[str
 
 
 def build_system(holes: pd.DataFrame, complete: set[int], players: dict[str, str],
-                 skills_index: str = "") -> list[dict]:
+                 skills_index: str = "", upcoming: str = "") -> list[dict]:
     """Fixed rules + pages (cached), the toolkit's skills index (static per deploy, so it
     sits before the data context and keeps the cached prefix stable), then data context."""
     system = [
@@ -298,7 +312,10 @@ def build_system(holes: pd.DataFrame, complete: set[int], players: dict[str, str
     if skills_index:
         system.append({"type": "text", "text": "Analysis toolkit:\n" + skills_index,
                        "cache_control": {"type": "ephemeral"}})
-    system.append({"type": "text", "text": data_context_text(holes, complete, players),
+    context = data_context_text(holes, complete, players)
+    if upcoming:
+        context += "\n" + upcoming
+    system.append({"type": "text", "text": context,
                    "cache_control": {"type": "ephemeral"}})
     return system
 

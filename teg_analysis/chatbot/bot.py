@@ -499,7 +499,12 @@ def _ask(question: str, data: ChatData, history: Optional[list], client: Any,
     max_tokens = DEEP_MAX_TOKENS if deep else MAX_TOKENS
     past = past or []
     toolkit_files, skills_index, toolkit_error = _toolkit_files()
-    system = build_system(data.holes(), data.complete(), data.players(), skills_index)
+    try:
+        upcoming = data.upcoming_text()
+    except Exception:  # reference files are a bonus; never block an answer on them
+        logger.exception("TEGBot could not build the upcoming-TEG context")
+        upcoming = ""
+    system = build_system(data.holes(), data.complete(), data.players(), skills_index, upcoming)
     system.append({"type": "text", "text": past_block(past, themes or [])})
     if deep:
         system.append({"type": "text", "text": DEEP_ADDENDUM})
