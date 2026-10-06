@@ -587,8 +587,10 @@ def check_round_storyline_plan_consistency(plan: RoundStorylinePlan, bundle: dic
             warnings.append(f"{name} is thin (beat_ids={len(s.beat_ids)}, "
                              f"compelling={s.compelling_score}) — should have been left out")
 
-    # Drafting order: race_story leads on a final round.
-    order = storylines if not bundle["is_final_round"] else [storylines[1]] + storylines[2:] + [storylines[0]]
+    # Same order build_round_storyline_draft drafts in, so "already used"
+    # warnings name the storyline that actually loses the note.
+    rs, race, disc = storylines[0], storylines[1], storylines[2:]
+    order = [race] + disc + [rs] if bundle["is_final_round"] else [rs] + disc + [race]
     warnings += check_colour_selection(order, bundle["beats"], bundle.get("course_colour"))
 
     if plan.is_final_round != bundle["is_final_round"]:

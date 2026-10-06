@@ -75,13 +75,18 @@ def colour_notes(course: str, colour: dict) -> list[dict]:
 
 def build_course_colour(courses: Iterable[str]) -> dict:
     """Bundle key for the planner: `{course: {"full_name", "notes"}}`.
-    Courses without a colour file are left out."""
+    Courses without a colour file, or with a malformed one, are left out:
+    colour is optional, and a bad hand edit must not stop a report build."""
     out = {}
     for course in dict.fromkeys(courses):       # de-dupe, keep round order
         colour = load_course_colour(course)
-        if colour:
-            out[course] = {"full_name": colour.get("full_name"),
-                           "notes": colour_notes(course, colour)}
+        if not colour:
+            continue
+        try:
+            notes = colour_notes(course, colour)
+        except (KeyError, TypeError, ValueError, AttributeError):
+            continue
+        out[course] = {"full_name": colour.get("full_name"), "notes": notes}
     return out
 
 

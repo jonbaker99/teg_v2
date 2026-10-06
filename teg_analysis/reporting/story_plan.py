@@ -1577,6 +1577,9 @@ def build_story_plan(teg_num: int, mode: str = "balanced", tone: str = "house",
     """
     bundle, events = assemble_bundle(teg_num, mode=mode, tone=tone,
                                      events_cache=events_cache, venue_cache=venue_cache)
+    # The legacy editor has no course-colour rule and nothing resolves its
+    # picks; leave the notes out rather than invite stray ids into the plan.
+    bundle.pop("course_colour", None)
     user_message = ("Plan the report for the following TEG. Use ONLY this data.\n\n"
                     + json.dumps(bundle, indent=2, ensure_ascii=False,
                                  default=_json_default))

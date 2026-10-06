@@ -150,3 +150,9 @@ def test_draft_writers_carry_the_writer_rule():
 def test_colour_rules_are_not_in_each_others_prompts():
     assert prompts.COURSE_COLOUR_WRITER_RULE not in story_plan.STORYLINE_SYSTEM_PROMPT
     assert prompts.COURSE_COLOUR_PLAN_RULE not in round_storyline.round_draft_writer_system(False)
+
+
+def test_malformed_file_gives_no_colour_not_a_crash(monkeypatch):
+    monkeypatch.setattr(cc, "load_course_colour",
+                        lambda c: {"full_name": "X", "holes": {"13a": [{"text": "t", "source": "http://x"}]}})
+    assert cc.build_course_colour(["Monte Rei"]) == {}

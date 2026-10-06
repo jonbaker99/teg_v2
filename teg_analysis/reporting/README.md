@@ -498,7 +498,7 @@ How a note reaches the page, in both storyline-first pipelines (tournament `stor
 3. **Code enforces the rules.** `resolve_for_storyline` drops unknown ids, caps at `MAX_NOTES_PER_STORYLINE` (2), uses each note once per report, and passes a hole note only when one of the storyline's own beats happened on that hole of that course. `check_colour_selection` reports each drop as a plan warning.
 4. **The section writer sees only its picks**, as `context.course_colour`, with `prompts.COURSE_COLOUR_WRITER_RULE`: a clause or one sentence each, woven into the action, never description.
 
-The legacy pipelines (`StoryPlan`, `round_report.py`) are not wired: the legacy editor sees `course_colour` in its bundle but nothing resolves its picks. Interweaving (`--interweave`, off) resolves the pair's notes together, but its writer prompt does not carry the writer rule.
+The legacy pipelines (`StoryPlan`, `round_report.py`) are not wired: `build_story_plan` removes `course_colour` from its bundle, since nothing would resolve its picks. Interweaving (`--interweave`, off) resolves the pair's notes together, but its writer prompt does not carry the writer rule.
 
 Adding a course: write its JSON alongside its `course_info.csv` row. `tests/test_course_colour.py` fails until it exists, and checks every fact has a source and every hole note's par matches `course_pars.csv`.
 
