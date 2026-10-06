@@ -44,8 +44,17 @@ def data():
         "Green Jacket": ["Bob BRAVO*", "Alan ALPHA"],
         "HMM Wooden Spoon": ["Bob BRAVO", "Bob BRAVO"],
     })
+    courses = pd.DataFrame({
+        "Course": ["Links", "Royal Links"], "full_name": ["Links GC", "Royal Links GC"],
+        "par": [72, 72], "course_rating": [74.0, 70.0], "slope_rating": [140, 113],
+        "extra_strokes": [6.3, -2.0], "difficulty_band": ["brutal", "kind"],
+        "difficulty_rank": [1, 2]})
+    notes = pd.DataFrame({
+        "Course": ["Links", "Links"], "section": ["history", "hole"], "hole": [None, 18],
+        "text": ["Opened in 1900.", "A long par 4."], "source": ["http://a", "http://b"]})
     return ChatData(all_data=lambda: df, winners=lambda: winners,
-                    completed_tegs=lambda: {8, 9}, players=lambda: PLAYERS)
+                    completed_tegs=lambda: {8, 9}, players=lambda: PLAYERS,
+                    course_table=lambda: courses, course_notes=lambda: notes)
 
 
 # --- bounce-back ------------------------------------------------------------
@@ -98,7 +107,8 @@ def test_honours_counts_strip_footnote_and_combine(data):
 def test_datasets_positions_follow_era_and_blank_in_progress(data):
     data.completed_tegs = lambda: {8}
     ds = data.datasets()
-    assert set(ds) == {"holes.csv", "rounds.csv", "tegs.csv", "winners.csv"}
+    assert set(ds) == {"holes.csv", "rounds.csv", "tegs.csv", "winners.csv",
+                       "courses.csv", "course_notes.csv"}
     tegs = ds["tegs.csv"].set_index(["TEGNum", "Player"])
     # TEG 8 is Stableford era: most points (Bob CHARLIE, all pars) wins the Trophy.
     assert tegs.loc[(8, "Bob CHARLIE"), "TrophyPosition"] == 1
@@ -125,6 +135,22 @@ def test_records_lists_every_tied_holder(data, monkeypatch):
 
 def test_bounce_back_bad_teg(data):
     assert "whole number" in run_tool("get_bounce_back", {"teg": "twelve"}, data)["error"]
+
+
+def test_course_info_returns_details_notes_and_rounds(data):
+    out = run_tool("get_course_info", {"course": "links gc"}, data)
+    assert "error" in out  # matches both courses by full name
+    out = run_tool("get_course_info", {"course": "Links"}, data)
+    assert out["course"]["difficulty_band"] == "brutal"
+    assert [n["text"] for n in out["notes"]] == ["Opened in 1900.", "A long par 4."]
+    assert {r["TEGNum"] for r in out["teg_rounds_played"]} == {8, 9}
+    assert "error" in run_tool("get_course_info", {"course": "Nowhere"}, data)
+
+
+def test_course_info_is_a_listed_lookup():
+    from teg_analysis.chatbot.prompt import DATA_GUIDE, _RULES
+    assert "get_course_info" in _RULES
+    assert "courses.csv" in DATA_GUIDE and "course_notes.csv" in DATA_GUIDE
 
 
 def test_unknown_tool(data):
@@ -187,10 +213,10 @@ def test_ask_uploads_datasets_once_and_attaches_them(data):
     client = FakeClient([done, done])
     bot.ask("q1", data, client=client)
     bot.ask("q2", data, client=client)
-    assert sorted(client.uploads) == ["holes.csv", "rounds.csv", "teg_data.zip", "teg_toolkit.zip",
-                                      "tegs.csv", "winners.csv"]
+    assert sorted(client.uploads) == ["course_notes.csv", "courses.csv", "holes.csv", "rounds.csv",
+                                      "teg_data.zip", "teg_toolkit.zip", "tegs.csv", "winners.csv"]
     content = client.calls[0]["messages"][-1]["content"]
-    assert [b["type"] for b in content] == ["text"] + ["container_upload"] * 6
+    assert [b["type"] for b in content] == ["text"] + ["container_upload"] * 8
     assert {"type": "code_execution_20260521", "name": "code_execution"} in client.calls[0]["tools"]
 
 
@@ -720,7 +746,8 @@ def test_toolkit_failure_falls_back_and_is_surfaced(data, monkeypatch, caplog):
         answer = bot.ask("q", data, client=client)
     assert answer.text == "ok"
     assert "no zip" in answer.toolkit_error
-    assert sorted(client.uploads) == ["holes.csv", "rounds.csv", "tegs.csv", "winners.csv"]
+    assert sorted(client.uploads) == ["course_notes.csv", "courses.csv", "holes.csv",
+                                      "rounds.csv", "tegs.csv", "winners.csv"]
     assert len(client.calls[0]["system"]) == 3  # no skills block
     assert "toolkit unavailable" in caplog.text
 

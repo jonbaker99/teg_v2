@@ -58,6 +58,10 @@ teg_analysis/
     performance.py   Performance measure tables
     leaderboards.py  Leaderboard generation
     bestball.py      Best-ball / worst-ball competition format
+    course_difficulty.py  How hard a course plays, from course_info.csv's course/slope
+                     rating: extra strokes for an 18-index golfer vs an average course,
+                     a rough band (kind/standard/tough/brutal), and an as-of rank
+                     among TEG courses — course_difficulty, extra_strokes
     bounceback.py    Bounce-back rate (par or better on the hole after a bogey+) vs each
                      player's own par-or-better baseline — bounce_back_stats
     eclectic.py      Eclectic (best score per hole across rounds) — by-dimension
@@ -150,12 +154,13 @@ teg_analysis/
     scoring.py       3-axis combination + mode weights
 
   chatbot/           TEGBot 5000 — answers stat questions in plain English
-    tools.py         Lookups (get_honours, get_records, get_streak_records, get_bounce_back,
+    tools.py         Lookups (get_course_info, get_honours, get_records, get_streak_records, get_bounce_back,
                      get_predictions — the simulator's next-TEG odds via a ChatData provider):
                      full, tie-complete results with the site's own definitions. ChatData
                      takes the caller's cached loaders and builds the sandbox CSVs
                      (datasets(): holes, rounds with round/after-round positions, tegs
-                     with finishing positions, winners)
+                     with finishing positions, winners, courses with interpreted
+                     difficulty, sourced course notes)
     toolkit/         Code and skills for the code sandbox (see "Chatbot toolkit" below)
     prompt.py        System prompt (incl. when to judge players against their own normal
                      standard rather than raw totals), DATA_GUIDE (the CSVs' columns and rules for code) and

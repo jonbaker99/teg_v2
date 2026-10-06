@@ -4,9 +4,13 @@ Current state and next priorities. Instructions and architecture live in `CLAUDE
 
 **Last updated:** 2026-10-06 (course colour for reports; live TEGBot, mid-round chances and finalise lock; TEGBot follow-ups and dev skills; live win chances tab on /simulation; TEGBot toolkit, Dig deeper and charts; new-record markers on /records; simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
 
+## 2026-10-06 — Reports and TEGBot use what we know about courses
+
+Reports now get a judgement of how hard each course plays (extra shots for a typical TEG golfer, a rough band, where it ranks among courses TEG had played by then), not the raw ratings. The course prompts were loosened from rules into principles. TEGBot gets two new files (`courses.csv`, `course_notes.csv`) and a `get_course_info` lookup, and is told to describe difficulty in words and quote notes faithfully.
+
 ## 2026-10-06 — Course and slope ratings on file
 
-`course_info.csv` now carries the men's Course Rating and Slope Rating from the tee TEG plays (yellow or equivalent) for all 28 courses, each with a source and a note where sources disagree. Most come from rating aggregators, so they are good to about a point. Ashdown was the West Course (par 68), not the Old Course; its row and colour file are corrected. Nothing uses the ratings yet.
+`course_info.csv` now carries the men's Course Rating and Slope Rating from the tee TEG plays (yellow or equivalent) for all 28 courses, each with a source and a note where sources disagree. Most come from rating aggregators, so they are good to about a point. Ashdown was the West Course (par 68), not the Old Course; its row and colour file are corrected. 
 
 ## 2026-10-06 — Reports get sourced course colour
 

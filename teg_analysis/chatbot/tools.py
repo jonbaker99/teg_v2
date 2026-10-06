@@ -56,6 +56,34 @@ def _default_ranked(scope: str) -> pd.DataFrame:
     }[scope]()
 
 
+def _default_course_table() -> pd.DataFrame:
+    """course_info.csv plus the interpreted difficulty (analysis.course_difficulty)."""
+    from teg_analysis.analysis.course_difficulty import band, extra_strokes, load_course_table
+    t = load_course_table().copy()
+    if t.empty:
+        return t
+    t["extra_strokes"] = [extra_strokes(r.course_rating, r.slope_rating, r.par) for r in t.itertuples()]
+    t["difficulty_band"] = t["extra_strokes"].map(band)
+    t["difficulty_rank"] = t["extra_strokes"].rank(method="min", ascending=False).astype("Int64")
+    return t
+
+
+def _default_course_notes() -> pd.DataFrame:
+    """Every sourced course colour note (data/courses/*.json), one row each."""
+    from teg_analysis.reporting.course_colour import LIST_SECTIONS, load_course_colour
+    rows = []
+    for course in _default_course_table()["Course"]:
+        colour = load_course_colour(course) or {}
+        for section in LIST_SECTIONS:
+            rows += [{"Course": course, "section": section, "hole": None, **e}
+                     for e in colour.get(section) or []]
+        for hole, entries in (colour.get("holes") or {}).items():
+            rows += [{"Course": course, "section": "hole", "hole": int(hole), **e} for e in entries]
+    out = pd.DataFrame(rows, columns=["Course", "section", "hole", "text", "source"])
+    out["hole"] = out["hole"].astype("Int64")
+    return out
+
+
 def _default_players() -> dict[str, str]:
     from teg_analysis.core.players import get_player_dict
     return get_player_dict()
@@ -78,6 +106,9 @@ class ChatData:
     what_it_takes: Optional[Callable[..., Any]] = None
     #: scope ("teg" | "round" | "frontback") -> ranked frame, as /records uses.
     ranked: Callable[[str], pd.DataFrame] = None  # type: ignore[assignment]
+    #: course_info.csv plus interpreted difficulty, and the sourced course notes.
+    course_table: Callable[[], pd.DataFrame] = _default_course_table
+    course_notes: Callable[[], pd.DataFrame] = _default_course_notes
     _memo: dict = field(default_factory=dict, repr=False)
 
     def _get(self, key: str, fn: Callable[[], Any]) -> Any:
@@ -98,6 +129,12 @@ class ChatData:
 
     def complete(self) -> set[int]:
         return self._get("complete", lambda: {int(t) for t in self.completed_tegs()})
+
+    def courses(self) -> pd.DataFrame:
+        return self._get("courses", self.course_table)
+
+    def notes(self) -> pd.DataFrame:
+        return self._get("course_notes", self.course_notes)
 
     def rounds(self) -> pd.DataFrame:
         return self._get("rounds", self._build_rounds)
@@ -125,6 +162,8 @@ class ChatData:
             "rounds.csv": self.rounds(),
             "tegs.csv": self.tegs(),
             "winners.csv": winners,
+            "courses.csv": self.courses(),
+            "course_notes.csv": self.notes(),
         }
 
 
@@ -420,9 +459,60 @@ def get_what_it_takes(data: ChatData, player: Optional[str] = None,
 
 
 # ---------------------------------------------------------------------------
+# Tool: course info
+# ---------------------------------------------------------------------------
+def get_course_info(data: ChatData, course: str) -> dict:
+    """One course: details, ratings and how hard it plays, every sourced note,
+    and every TEG round played there."""
+    table = data.courses()
+    text = str(course).strip().lower()
+    if not text:
+        raise ToolInputError("Empty course name.")
+    names = list(table["Course"])
+    hay = {c: f"{c} {f}".lower() for c, f in zip(table["Course"], table["full_name"].fillna(""))}
+    match = [c for c in names if c.lower() == text] or [c for c in names if text in hay[c]]
+    if not match:
+        raise ToolInputError(f"No course matching '{course}'. Courses: {', '.join(names)}.")
+    if len(match) > 1:
+        raise ToolInputError(f"'{course}' matches several courses: {', '.join(match)}. Pick one.")
+    name = match[0]
+    row = table[table["Course"] == name]
+    notes = data.notes()
+    holes = data.holes()
+    cols = [c for c in ("TEGNum", "Round", "Date") if c in holes.columns]
+    played = (holes[holes["Course"] == name][cols]
+              .drop_duplicates().sort_values(["TEGNum", "Round"]))
+    return {
+        "course": _records(row)[0],
+        "difficulty_definition": (
+            "extra_strokes = shots an 18-handicap golfer gets here beyond an average course "
+            "(18 x slope / 113 + course rating - par - 18); difficulty_band is a rough label on "
+            "it; difficulty_rank 1 = hardest of the rated courses TEG has played."),
+        "notes": _records(notes[notes["Course"] == name].drop(columns=["Course"])),
+        "teg_rounds_played": _records(played),
+        "page": "/scoring/by-course",
+    }
+
+
+# ---------------------------------------------------------------------------
 # Tool schemas (Anthropic tool-use format) and dispatch
 # ---------------------------------------------------------------------------
 TOOL_SCHEMAS = [
+    {
+        "name": "get_course_info",
+        "description": (
+            "Everything on file about one course TEG has played: full name, location, type, par, "
+            "designer, description; men's course and slope rating from the tee TEG plays, with "
+            "an interpreted difficulty (extra strokes for a typical golfer, a rough band, rank "
+            "among TEG courses); every sourced note on its setting, history, trivia, local area "
+            "and individual holes (each with a source URL); and every TEG round played there. "
+            "Use for questions about a course or a hole on it. Partial names work."),
+        "input_schema": {
+            "type": "object",
+            "properties": {"course": {"type": "string"}},
+            "required": ["course"],
+        },
+    },
     {
         "name": "get_predictions",
         "description": (
@@ -520,6 +610,7 @@ TOOL_SCHEMAS = [
 ]
 
 _DISPATCH = {
+    "get_course_info": get_course_info,
     "get_predictions": get_predictions,
     "get_live_win_chances": get_live_win_chances,
     "get_what_it_takes": get_what_it_takes,

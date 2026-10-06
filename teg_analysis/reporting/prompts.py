@@ -538,23 +538,27 @@ SI 4–15: not noteworthy — ignore. Only invoke it when it sharpens the irony 
 
 # Course colour (course_colour.py). The editor sees every sourced note for the
 # TEG's courses; the section writer only sees the ones its storyline picked.
-COURSE_COLOUR_PLAN_RULE = """- **Course colour: pick little, pick well.** `course_colour` holds \
-sourced notes per course (setting, history, trivia, local area, and hole notes keyed by hole), \
-each with an `id`. For each storyline, put AT MOST 2 note ids in `colour_note_ids`, and only \
-notes that sharpen THIS story: the lake at the 13th when someone found it, the course's \
-reputation when the scoring mocked it, the renovation when the greens became a talking point. \
-An empty list is the normal answer for most storylines. Hole notes (`section: "hole"`) only \
-when one of the storyline's own `beat_ids` happened on that hole of that course; otherwise they \
-are dropped. Never pick the same note for two storylines. Notes are background for the writer, \
-never a reason to plan a story.
+COURSE_COLOUR_PLAN_RULE = """- **The course as part of the story.** Two inputs tell you about each \
+course. `course_colour` holds sourced notes (setting, history, trivia, local area, and hole \
+notes keyed by hole), each with an `id`. `venue.rounds[i].difficulty` (or `round_venue.difficulty`) \
+is how hard the course plays for golfers like ours, interpreted from its official ratings: \
+`extra_strokes` (shots a typical TEG golfer gets beyond an average course), a rough `band`, and, \
+when there are enough courses to compare, where it ranks among the courses TEG had played. Let \
+both inform your judgement of what happened, not just decorate it: how hard a course is changes \
+what a score means. A story may carry up to 2 note ids in `colour_note_ids`; most need none. \
+Pick a note only when it makes this story better, and vary what you reach for. A hole note \
+reaches the writer only if one of the story's own beats happened on that hole of that course, \
+and each note is used once per report. Notes are background, never a reason to plan a story.
 """
 
-COURSE_COLOUR_WRITER_RULE = """- **Course colour is seasoning.** `context.course_colour` (when \
-present) holds the few sourced course notes chosen for this section. Work each into the action \
-in a clause or at most one sentence, where it explains or flavours what happened (the ball that \
-found the lake the hole is known for). Never write a paragraph of course description, never \
-list features, and leave a note out rather than force it. A hole note is about that hole of \
-that course only. Keep its facts as given; do not embellish them.
+COURSE_COLOUR_WRITER_RULE = """- **The course, lightly.** `context.course_colour` (when present) \
+holds the sourced course notes chosen for this section; the venue's `difficulty` says how hard \
+the course plays for golfers like ours. Use either only where it changes how the action reads, \
+in your own words and in passing, never as a paragraph of description or a list of features. \
+Difficulty is for judgement, not for quoting: it can make a big number forgivable or a modest \
+one damning, and it can be conveyed without numbers (never state a course rating or slope; \
+`extra_strokes`, the band and the rank are guides, not phrases to copy). A hole note is about \
+that hole of that course only. Keep note facts as given and leave any that do not fit.
 """
 
 # Shared tail — applies to every writer prompt, so it lives with none of them.

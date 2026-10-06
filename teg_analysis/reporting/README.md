@@ -500,6 +500,8 @@ How a note reaches the page, in both storyline-first pipelines (tournament `stor
 
 The legacy pipelines (`StoryPlan`, `round_report.py`) are not wired: `build_story_plan` removes `course_colour` from its bundle, since nothing would resolve its picks. Interweaving (`--interweave`, off) resolves the pair's notes together, but its writer prompt does not carry the writer rule.
 
+**Difficulty.** Each round in `build_venue_context` carries `difficulty` from `analysis/course_difficulty.py`: `extra_strokes` (shots an 18-index golfer gets beyond an average course, from course and slope rating), a rough `band`, and, once at least eight rated courses had been played by that date, its rank among them (leak-safe for old TEGs). The raw ratings never enter a bundle. Planners and draft writers both see it; the prompts ask them to use it as judgement on what a score means, in their own words, never quoting ratings.
+
 Adding a course: write its JSON alongside its `course_info.csv` row. `tests/test_course_colour.py` fails until it exists, and checks every fact has a source and every hole note's par matches `course_pars.csv`.
 
 ### Context modules feeding the bundle

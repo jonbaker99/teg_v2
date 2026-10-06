@@ -19,6 +19,8 @@ import pandas as pd
 from teg_analysis.io import read_file
 from teg_analysis.constants import ROUND_INFO_CSV
 from teg_analysis.reporting.events import _ord
+from teg_analysis.analysis.course_difficulty import (course_difficulty, courses_played_by,
+                                                     load_course_table)
 
 COURSE_INFO_CSV = "data/course_info.csv"
 
@@ -48,6 +50,7 @@ def build_venue_context(teg_num: int, round_info: Optional[pd.DataFrame] = None,
 
     if course_info is None:
         course_info = _load_course_info()
+    course_table = load_course_table()
 
     teg_rows = ri[ri["TEGNum"] == teg_num].sort_values("Round")
     if teg_rows.empty:
@@ -89,6 +92,11 @@ def build_venue_context(teg_num: int, round_info: Optional[pd.DataFrame] = None,
             "type": info.get("type"),
             "designer": info.get("designer"),
             "description": info.get("description"),
+            # How hard the course plays, interpreted from its ratings and
+            # ranked only against courses TEG had played by this date. The
+            # raw ratings stay out: they mean little to a reader.
+            "difficulty": course_difficulty(course, course_table,
+                                            among=courses_played_by(d, ri)) if pd.notna(d) else None,
         })
 
     return {
