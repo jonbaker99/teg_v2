@@ -12,7 +12,8 @@ module turns them into an interpretation:
   much harder for a bogey golfer) and rating vs par (how hard for scratch)
   into one figure.
 - **band**: a rough verbal band on that figure (kind / standard / tough /
-  brutal). A guide for the writer, not wording to copy.
+  brutal). Internal shorthand: the prompts tell writers and TEGBot to use it
+  as a guide and describe difficulty in their own, varied words.
 - **rank** (once there are enough courses to rank against): where it sits
   among the rated courses TEG had played by a given date, so a report on an
   old TEG never compares with courses played later.

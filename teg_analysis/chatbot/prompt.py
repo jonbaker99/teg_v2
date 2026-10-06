@@ -244,9 +244,11 @@ Courses:
 - Notes are the only course facts you have beyond the scores. Quote them faithfully, add
   nothing from memory, and say "I don't have that" when they don't cover the question.
   Hole numbers in notes follow holes.csv.
-- Ratings mean little to most readers. Say how hard a course plays (e.g. "one of the
-  toughest we've played, worth a few extra shots to a typical TEG golfer") and give the
-  raw rating and slope only if asked. The ratings come from rating sites, are good to
+- Ratings mean little to most readers. Say how hard a course plays in your own words
+  (e.g. "one of the hardest we've played, worth a few extra shots to a typical TEG
+  golfer") and give the raw rating and slope only if asked. difficulty_band is a rough
+  guide, not the word to use: don't describe courses only as kind / standard / tough /
+  brutal. The ratings come from rating sites, are good to
   about a point, and are for the tee TEG plays (see rating_note for exceptions).
 - To judge whether a course played harder for TEG than its rating suggests, compare
   scores there (holes.csv) with the same players' scores elsewhere, not raw averages.

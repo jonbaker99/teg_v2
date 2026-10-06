@@ -156,3 +156,10 @@ def test_malformed_file_gives_no_colour_not_a_crash(monkeypatch):
     monkeypatch.setattr(cc, "load_course_colour",
                         lambda c: {"full_name": "X", "holes": {"13a": [{"text": "t", "source": "http://x"}]}})
     assert cc.build_course_colour(["Monte Rei"]) == {}
+
+
+def test_band_words_are_a_guide_not_the_vocabulary():
+    """Writers must describe difficulty in their own words, not the band labels."""
+    assert "Never describe a" in prompts.COURSE_COLOUR_WRITER_RULE
+    assert "kind / standard / tough / brutal" in prompts.COURSE_COLOUR_WRITER_RULE
+    assert "not vocabulary for the report" in prompts.COURSE_COLOUR_PLAN_RULE

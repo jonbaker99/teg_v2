@@ -542,8 +542,9 @@ COURSE_COLOUR_PLAN_RULE = """- **The course as part of the story.** Two inputs t
 course. `course_colour` holds sourced notes (setting, history, trivia, local area, and hole \
 notes keyed by hole), each with an `id`. `venue.rounds[i].difficulty` (or `round_venue.difficulty`) \
 is how hard the course plays for golfers like ours, interpreted from its official ratings: \
-`extra_strokes` (shots a typical TEG golfer gets beyond an average course), a rough `band`, and, \
-when there are enough courses to compare, where it ranks among the courses TEG had played. Let \
+`extra_strokes` (shots a typical TEG golfer gets beyond an average course), a rough `band` \
+(internal shorthand for where it sits, not vocabulary for the report), and, when there are \
+enough courses to compare, where it ranks among the courses TEG had played. Let \
 both inform your judgement of what happened, not just decorate it: how hard a course is changes \
 what a score means. A story may carry up to 2 note ids in `colour_note_ids`; most need none. \
 Pick a note only when it makes this story better, and vary what you reach for. A hole note \
@@ -557,8 +558,10 @@ the course plays for golfers like ours. Use either only where it changes how the
 in your own words and in passing, never as a paragraph of description or a list of features. \
 Difficulty is for judgement, not for quoting: it can make a big number forgivable or a modest \
 one damning, and it can be conveyed without numbers (never state a course rating or slope; \
-`extra_strokes`, the band and the rank are guides, not phrases to copy). A hole note is about \
-that hole of that course only. Keep note facts as given and leave any that do not fit.
+`extra_strokes`, the band and the rank are guides, not phrases to copy). Never describe a \
+course with the band's own word (kind / standard / tough / brutal); say what that difficulty \
+looks like here, in language that fits this course and this round, and vary it. A hole note \
+is about that hole of that course only. Keep note facts as given and leave any that do not fit.
 """
 
 # Shared tail — applies to every writer prompt, so it lives with none of them.
