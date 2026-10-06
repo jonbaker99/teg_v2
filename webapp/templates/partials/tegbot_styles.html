@@ -189,7 +189,11 @@
     }
     .tb-list li > button::before, .tb-list li > a::before { content: "> "; color: var(--tb-green); white-space: pre; }
     .tb-list li > button:hover, .tb-list li > a:hover { color: var(--tb-green); }
-    .tb-list li > button:hover::after, .tb-list li > a:hover::after { content: " _"; color: var(--tb-green); }
+    /* Hover cursor floats after the last character, taking no space, so it never wraps. */
+    .tb-list li > button, .tb-list li > a { position: relative; }
+    .tb-list li > button:hover::after, .tb-list li > a:hover::after {
+        content: "_"; position: absolute; margin-left: 0.3em; text-indent: 0; color: var(--tb-green);
+    }
     .tb-app .tb-more {
         margin-top: 4px; padding: 0; background: none; border: 0; cursor: pointer;
         font: 0.75rem var(--tb-mono); color: var(--tb-green); opacity: 0.8; text-decoration: none;
