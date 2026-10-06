@@ -141,21 +141,27 @@
         .tb-chase i { opacity: 0.6; }
     }
 
-    /* Input */
-    .tb-form { display: flex; gap: 8px; align-items: stretch; }
+    /* Input: a terminal prompt line. No box; focus thickens and greens the rule. */
+    .tb-form {
+        display: flex; gap: 10px; align-items: center;
+        border-bottom: 2px solid var(--tb-grey-line); padding: 4px 0 6px;
+        transition: border-color 0.15s;
+    }
+    .tb-form:focus-within { border-bottom-color: var(--tb-green); }
+    .tb-prompt { font-family: var(--tb-pixel); font-size: 1.7rem; line-height: 1.1; color: var(--tb-green); }
     .tb-form textarea {
-        flex: 1; min-height: 3rem; resize: vertical; padding: 9px 11px;
-        border: 2px solid var(--tb-green); border-radius: 3px;
-        background: var(--tb-paper); color: var(--tb-ink); font: 0.9rem/1.4 var(--tb-mono);
+        flex: 1; min-height: 0; height: calc(1.45em + 8px); resize: none; padding: 4px 0; border: 0; outline: none;
+        background: transparent; color: var(--tb-ink); font: 0.95rem/1.45 var(--tb-mono);
+        box-shadow: none;
     }
-    .tb-form textarea::placeholder { color: var(--tb-ink); opacity: 0.45; }
-    .tb-form textarea:focus { outline: 2px dashed var(--tb-green); outline-offset: 2px; }
+    .tb-form textarea:focus { outline: none; box-shadow: none; }
+    .tb-form textarea::placeholder { color: var(--tb-ink); opacity: 0.4; }
     .tb-form button {
-        padding: 0 18px; border-radius: 3px; border: 2px solid var(--tb-green);
-        background: var(--tb-green); color: var(--tb-paper);
-        font-family: var(--tb-pixel); font-size: 1.5rem; letter-spacing: 0.06em; cursor: pointer;
+        padding: 2px 10px; border: 0; border-radius: 2px; background: var(--tb-green); color: var(--tb-paper);
+        font-family: var(--tb-pixel); font-size: 1.35rem; line-height: 1.2; letter-spacing: 0.06em; cursor: pointer;
     }
-    .tb-form button:hover { background: var(--tb-green-2); border-color: var(--tb-green-2); }
+    .tb-form button:hover { background: var(--tb-green-2); }
+    .tb-form button:focus-visible { outline: 2px solid var(--tb-green); outline-offset: 2px; }
     .tb-form button[disabled] { opacity: 0.45; cursor: default; }
     .tb-dig-row { margin: 8px 0 0; font-size: 0.8rem; }
     .tb-dig { font: inherit; padding: 0; cursor: pointer; background: none; border: 0;
@@ -165,13 +171,30 @@
     .tb-dig-strong .tb-dig { color: var(--tb-green); opacity: 1; font-weight: 700; }
     .tb-dig-why { margin-right: 6px; }
     .tb-deep-note { font-size: 0.75rem; opacity: 0.7; margin-left: 8px; }
-    .tb-examples { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 0; }
-    .tb-examples button {
-        border: 1px solid var(--tb-green); background: transparent; color: var(--tb-green);
-        border-radius: 3px; padding: 3px 9px; font: 0.78rem/1.4 var(--tb-mono); cursor: pointer;
+    /* Starter lists: plain "> question" lines, no chips or boxes. */
+    .tb-starters { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 32px; margin: 22px 0 0; }
+    .tb-list h3 {
+        font-family: var(--tb-pixel); font-weight: 400; font-size: 1.15rem; color: var(--tb-green);
+        text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 4px;
     }
-    .tb-examples button:hover { background: var(--tb-green); color: var(--tb-paper); }
-    .tb-footnote { margin: 16px 0 0; font-size: 0.72rem; line-height: 1.5; opacity: 0.7; }
+    .tb-list ul { list-style: none; margin: 0; padding: 0; }
+    .tb-list li { margin: 0; }
+    .tb-list li[hidden] { display: none; }
+    .tb-list li > button, .tb-list li > a {
+        display: block; width: 100%; text-align: left; padding: 4px 0 4px 1.3em; text-indent: -1.3em;
+        background: none; border: 0; cursor: pointer; color: var(--tb-ink); text-decoration: none;
+        font: 0.82rem/1.4 var(--tb-mono);
+    }
+    .tb-list li > button::before, .tb-list li > a::before { content: "> "; color: var(--tb-green); white-space: pre; }
+    .tb-list li > button:hover, .tb-list li > a:hover { color: var(--tb-green); }
+    .tb-list li > button:hover::after, .tb-list li > a:hover::after { content: " _"; color: var(--tb-green); }
+    .tb-app .tb-more {
+        margin-top: 4px; padding: 0; background: none; border: 0; cursor: pointer;
+        font: 0.75rem var(--tb-mono); color: var(--tb-green); opacity: 0.8; text-decoration: none;
+    }
+    .tb-app .tb-more:hover { opacity: 1; text-decoration: underline; }
+    @media (max-width: 640px) { .tb-starters { grid-template-columns: 1fr; } }
+    .tb-footnote { margin: 26px 0 0; font-size: 0.72rem; line-height: 1.5; opacity: 0.7; }
 
     /* What others asked */
     .tb-views { display: flex; gap: 6px; margin: 0 0 16px; }

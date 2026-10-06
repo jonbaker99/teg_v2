@@ -67,6 +67,32 @@ EXAMPLE_QUESTIONS = [
     "What happened the last time we played Boavista?",
     "Who has improved most over the years?",
     "Who finishes strongest over the last 3 holes?",
+    "Who's the favourite for the next TEG?",
+    "Which course has been toughest for us?",
+    "How do this year's courses compare with the last few TEGs?",
+    "What handicap would Rory McIlroy need to make it fair?",
+    "Who has the most Wooden Spoons?",
+    "Who has the most birdies ever?",
+    "What's the biggest final-round comeback?",
+    "Who plays best in the final round?",
+    "Who is most consistent round to round?",
+    "What's the worst single hole score ever?",
+    "Who has the most triple bogeys?",
+    "Which hole has cost us the most shots?",
+    "Who would have won more if handicaps were lower?",
+    "Who has led after round 1 most often?",
+    "What's the best Stableford round ever?",
+    "Who has won both trophies in the same TEG?",
+    "Whose scores have dropped most since their first TEG?",
+    "Who plays par 5s best?",
+    "Which TEG was the closest finish?",
+    "Who suffers most on the front 9?",
+    "What's the record for birdies in one round?",
+    "Who has the best eclectic score?",
+    "Which course suits our group best?",
+    "Who has the longest run without a double bogey?",
+    "Who blows up most after a good hole?",
+    "What's the average winning Stableford total?",
 ]
 
 _lock = threading.Lock()
@@ -315,6 +341,13 @@ def _chat_data() -> ChatData:
                     live_predictions=live_prediction, what_it_takes=what_it_takes)
 
 
+def _recent_questions() -> list[dict]:
+    try:
+        return qa_log.recent_questions(4)
+    except OSError:
+        return []
+
+
 @router.get("/tegbot")
 def tegbot_page(request: Request):
     return templates.TemplateResponse("tegbot.html", {
@@ -322,7 +355,9 @@ def tegbot_page(request: Request):
         "active_page": "tegbot",
         "enabled": _enabled(),
         "placeholder": random.choice(EXAMPLE_QUESTIONS),
-        "examples": random.sample(EXAMPLE_QUESTIONS, 5),
+        # Shuffled per visit; the page shows four at a time and "more ideas" moves on.
+        "examples": random.sample(EXAMPLE_QUESTIONS, len(EXAMPLE_QUESTIONS)),
+        "recent": _recent_questions(),
         "max_chars": bot.MAX_QUESTION_CHARS,
     })
 

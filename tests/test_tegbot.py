@@ -1146,3 +1146,20 @@ def test_rejected_web_search_falls_back_without_it(data, monkeypatch):
     client.beta.messages.create = create
     assert bot.ask("q", data, client=client).text == "ok"
     assert not bot.web_search_enabled()
+
+
+def test_page_shows_rotating_ideas_and_recent_questions(client):
+    from teg_analysis.chatbot import qa_log
+    from webapp.routes.tegbot import EXAMPLE_QUESTIONS
+    for q, theme in (("Who won TEG 3?", "Honours"), ("Lasagne recipe?", "Off-topic"),
+                     ("Best par 3 player?", "Scoring"), ("Who won TEG 3?", "Honours")):
+        qa_log.append_entry(conv="abc12345", question=q, answer="a", workings=[], model="m",
+                            cost_usd=0.0, seconds=1.0, theme=theme, related=[], deep=False)
+    recent = qa_log.recent_questions(4)
+    assert [r["question"] for r in recent] == ["Who won TEG 3?", "Best par 3 player?"]
+    page = client.get("/tegbot").text
+    assert "Ask me anything about The El Golfo." in page
+    assert page.count('data-q="') == len(EXAMPLE_QUESTIONS)
+    assert page.count('<li hidden><button type="button" data-q=') == len(EXAMPLE_QUESTIONS) - 4
+    assert f'href="/tegbot/asked#q-{recent[0]["id"]}"' in page and "Lasagne" not in page
+    assert "outline: 2px dashed" not in page

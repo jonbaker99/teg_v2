@@ -15,11 +15,9 @@
     {{ robot(96, label="TEGBot 5000") }}
     <div>
         <h2>TEGBOT 5000</h2>
-        <p>Ask me anything about the TEG. I look it up, I do the sums with the site's own data, and I show my workings.</p>
+        <p>Ask me anything about The El Golfo.</p>
     </div>
 </div>
-
-<div class="tb-links"><a href="/tegbot/asked">What others asked →</a></div>
 
 {% if not enabled %}
 <div class="tb-answer"><p class="tb-error">TEGBot is switched off at the moment.</p></div>
@@ -46,15 +44,33 @@
 <form id="tb-form" class="tb-form"
       hx-post="/tegbot/ask" hx-target="#tb-thread" hx-swap="beforeend"
       hx-disabled-elt="#tb-send">
-    <textarea name="question" id="tb-question" maxlength="{{ max_chars }}" rows="2"
-              placeholder="e.g. {{ placeholder }}" aria-label="Your question" required></textarea>
-    <button id="tb-send" type="submit">ASK</button>
+    <span class="tb-prompt" aria-hidden="true">&gt;</span>
+    <textarea name="question" id="tb-question" maxlength="{{ max_chars }}" rows="1"
+              placeholder="{{ placeholder }}" aria-label="Your question" required></textarea>
+    <button id="tb-send" type="submit">ASK <span aria-hidden="true">&#8629;</span></button>
 </form>
 
-<div class="tb-examples" id="tb-examples">
-    {% for q in examples %}
-    <button type="button" data-q="{{ q }}">{{ q }}</button>
-    {% endfor %}
+<div class="tb-starters">
+    <section class="tb-list" id="tb-examples" aria-labelledby="tb-try-h">
+        <h3 id="tb-try-h">Try</h3>
+        <ul>
+            {% for q in examples %}
+            <li{% if loop.index > 4 %} hidden{% endif %}><button type="button" data-q="{{ q }}">{{ q }}</button></li>
+            {% endfor %}
+        </ul>
+        <button type="button" class="tb-more" id="tb-more">&#8635; more ideas</button>
+    </section>
+    {% if recent %}
+    <section class="tb-list" aria-labelledby="tb-recent-h">
+        <h3 id="tb-recent-h">Recently asked</h3>
+        <ul>
+            {% for r in recent %}
+            <li><a href="/tegbot/asked#q-{{ r.id }}">{{ r.question }}</a></li>
+            {% endfor %}
+        </ul>
+        <a class="tb-more" href="/tegbot/asked">all questions &rarr;</a>
+    </section>
+    {% endif %}
 </div>
 
 <p class="tb-footnote">
@@ -116,6 +132,17 @@
         var q = e.target.getAttribute('data-q');
         if (q) { box.value = q; form.requestSubmit(); }
     });
+    // "More ideas" shows the next four of the shuffled list, wrapping round.
+    var ideas = Array.prototype.slice.call(document.querySelectorAll('#tb-examples li')), shown = 0;
+    document.getElementById('tb-more').addEventListener('click', function () {
+        shown = (shown + 4) % ideas.length;
+        ideas.forEach(function (li, i) { li.hidden = ((i - shown + ideas.length) % ideas.length) >= 4; });
+    });
+    // The prompt line grows with the question, up to a few lines.
+    box.addEventListener('input', function () {
+        box.style.height = 'auto';
+        box.style.height = Math.min(box.scrollHeight, 160) + 'px';
+    });
     // "Dig deeper" under an answer re-asks that question with Deep dive on.
     thread.addEventListener('click', function (e) {
         var b = e.target.closest && e.target.closest('.tb-dig');
@@ -141,7 +168,7 @@
         if (digging) e.detail.parameters.deep = '1';
     });
     form.addEventListener('htmx:beforeRequest', function () {
-        startPending(box.value.trim(), digging); box.value = '';
+        startPending(box.value.trim(), digging); box.value = ''; box.style.height = '';
         digging = false;
     });
     form.addEventListener('htmx:afterRequest', function (e) {
