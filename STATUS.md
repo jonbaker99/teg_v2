@@ -8,7 +8,7 @@ Current state and next priorities. Instructions and architecture live in `CLAUDE
 
 TEGBot can now look things up on the web when a TEG question needs facts the data lacks: what a TEG course is like (style, layout, difficulty, rating and slope), comparing courses, or an outside golfer's standard ("what handicap would Rory McIlroy need?"). It still answers off-topic questions with one line. Comparisons lead with how the TEG players actually scored, then add the published picture. Web figures are quoted with their source; any sum using them runs in code. Cited pages are listed under the answer, and each search shows in the workings. Up to 3 searches a question (6 in Deep dive), about 1p each. `TEGBOT_WEB_SEARCH=0` switches it off.
 
-The TEGBot page is tidier too: the question box is a plain terminal prompt line, ideas rotate from about 40 questions ("more ideas" shows the next four), and the four most recent questions link to their answers.
+The TEGBot page is tidier too: the question box is a solid terminal box with a `>` prompt, ideas rotate from about 40 questions ("more ideas" shows the next four), and tapping one of the four most recent questions shows its saved answer in the chat, free.
 
 ## 2026-10-05 — TEGBot follows the live TEG; chances move mid-round; entry locks on finalise
 

@@ -141,13 +141,14 @@
         .tb-chase i { opacity: 0.6; }
     }
 
-    /* Input: a terminal prompt line. No box; focus thickens and greens the rule. */
+    /* Input: a solid terminal box with a ">" prompt. Focus darkens the frame;
+       no dashed outline. */
     .tb-form {
         display: flex; gap: 10px; align-items: center;
-        border-bottom: 2px solid var(--tb-grey-line); padding: 4px 0 6px;
-        transition: border-color 0.15s;
+        border: 2px solid var(--tb-green); border-radius: 3px; padding: 6px 6px 6px 12px;
+        background: var(--tb-paper); transition: box-shadow 0.15s;
     }
-    .tb-form:focus-within { border-bottom-color: var(--tb-green); }
+    .tb-form:focus-within { box-shadow: 0 0 0 1px var(--tb-green); }
     .tb-prompt { font-family: var(--tb-pixel); font-size: 1.7rem; line-height: 1.1; color: var(--tb-green); }
     .tb-form textarea {
         flex: 1; min-height: 0; height: calc(1.45em + 8px); resize: none; padding: 4px 0; border: 0; outline: none;
@@ -163,6 +164,7 @@
     .tb-form button:hover { background: var(--tb-green-2); }
     .tb-form button:focus-visible { outline: 2px solid var(--tb-green); outline-offset: 2px; }
     .tb-form button[disabled] { opacity: 0.45; cursor: default; }
+    .tb-earlier { font-size: 0.72rem; opacity: 0.6; margin-bottom: 0.5em !important; }
     .tb-dig-row { margin: 8px 0 0; font-size: 0.8rem; }
     .tb-dig { font: inherit; padding: 0; cursor: pointer; background: none; border: 0;
         color: var(--tb-ink); opacity: 0.65; text-decoration: underline; text-underline-offset: 2px; }

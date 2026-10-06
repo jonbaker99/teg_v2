@@ -1163,3 +1163,18 @@ def test_page_shows_rotating_ideas_and_recent_questions(client):
     assert page.count('<li hidden><button type="button" data-q=') == len(EXAMPLE_QUESTIONS) - 4
     assert f'href="/tegbot/asked#q-{recent[0]["id"]}"' in page and "Lasagne" not in page
     assert "outline: 2px dashed" not in page
+
+
+def test_past_answer_replays_in_chat_without_asking(client):
+    from teg_analysis.chatbot import qa_log
+    entry = qa_log.append_entry(conv="abc12345", question="Who won TEG 3?", answer="**Alan ALPHA**.",
+                                workings=[{"name": "Lookup: get_honours", "input": "{}", "output": "{}"}],
+                                model="m", cost_usd=0.0, seconds=1.0, theme="Honours")
+    page = client.get("/tegbot").text
+    assert f'hx-get="/tegbot/past/{entry["id"]}"' in page
+    out = client.get(f"/tegbot/past/{entry['id']}").text
+    assert "Saved answer, asked" in out and "<strong>Alan ALPHA</strong>" in out
+    assert 'data-answer="**Alan ALPHA**."' in out and "Lookup: get_honours" in out
+    assert client.ask_calls == []
+    assert "no longer saved" in client.get("/tegbot/past/" + "0" * 32).text
+    assert "no longer saved" in client.get("/tegbot/past/nothex").text

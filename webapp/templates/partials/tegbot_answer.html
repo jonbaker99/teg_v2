@@ -7,6 +7,7 @@
             {% if error %}
             <p class="tb-error">{{ error }}</p>
             {% else %}
+            {% if earlier %}<p class="tb-earlier">Saved answer, asked {{ earlier }}</p>{% endif %}
             {{ answer_html | safe }}
             {% if sources %}
             <div class="tb-related tb-sources">

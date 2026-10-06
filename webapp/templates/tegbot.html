@@ -65,7 +65,8 @@
         <h3 id="tb-recent-h">Recently asked</h3>
         <ul>
             {% for r in recent %}
-            <li><a href="/tegbot/asked#q-{{ r.id }}">{{ r.question }}</a></li>
+            <li><a href="/tegbot/asked#q-{{ r.id }}" hx-get="/tegbot/past/{{ r.id }}"
+                   hx-target="#tb-thread" hx-swap="beforeend">{{ r.question }}</a></li>
             {% endfor %}
         </ul>
         <a class="tb-more" href="/tegbot/asked">all questions &rarr;</a>

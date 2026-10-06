@@ -505,6 +505,28 @@ def tegbot_job(request: Request, job_id: str):
         "request": request, "question": job["question"], **job["result"]})
 
 
+_ENTRY_ID = re.compile(r"^[0-9a-f]{32}$")
+
+
+@router.get("/tegbot/past/{entry_id}")
+def tegbot_past(request: Request, entry_id: str):
+    """A logged answer, shown in the chat as if just asked. Free: no model call."""
+    entry = None
+    if _ENTRY_ID.match(entry_id):
+        try:
+            entry = next((e for e in qa_log.read_entries() if e.get("id") == entry_id), None)
+        except OSError:
+            entry = None
+    if entry is None:
+        return templates.TemplateResponse("partials/tegbot_answer.html", {
+            "request": request, "question": "", "error": "That answer is no longer saved."})
+    view = _entry_view(entry)
+    return templates.TemplateResponse("partials/tegbot_answer.html", {
+        "request": request, "question": entry["question"], "answer_text": entry.get("answer", ""),
+        "answer_html": view["answer_html"], "tool_calls": view["workings"],
+        "earlier": view["when"] or "earlier"})
+
+
 def _when(iso: str) -> str:
     try:
         dt = datetime.fromisoformat(iso)
