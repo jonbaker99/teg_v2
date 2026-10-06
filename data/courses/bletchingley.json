@@ -1,0 +1,105 @@
+{
+  "course": "Bletchingley",
+  "full_name": "Bletchingley Golf Club",
+  "researched": "2026-10-06",
+  "summary": [
+    {
+      "text": "Bletchingley is a 6,600-yard par 72 parkland course in Surrey, opened in 1993.",
+      "source": "https://top100.nationalclubgolfer.com/golfcourse/bletchingley-golf-club"
+    }
+  ],
+  "setting": [
+    {
+      "text": "The course is just off junction 6 of the M25, between Croydon and Crawley.",
+      "source": "https://top100.nationalclubgolfer.com/golfcourse/bletchingley-golf-club"
+    },
+    {
+      "text": "It plays over undulating ground with panoramic views over the North Downs and Weald.",
+      "source": "https://top100.nationalclubgolfer.com/golfcourse/bletchingley-golf-club"
+    },
+    {
+      "text": "Mixed mature trees and a stream create several water features.",
+      "source": "https://top100.nationalclubgolfer.com/golfcourse/bletchingley-golf-club"
+    }
+  ],
+  "history": [
+    {
+      "text": "National Club Golfer says the course opened in 1993.",
+      "source": "https://top100.nationalclubgolfer.com/golfcourse/bletchingley-golf-club"
+    }
+  ],
+  "trivia": [
+    {
+      "text": "National Club Golfer says it is overshadowed by nearby Walton Heath, which hosted the 1981 Ryder Cup.",
+      "source": "https://top100.nationalclubgolfer.com/golfcourse/bletchingley-golf-club"
+    }
+  ],
+  "holes": {
+    "1": [
+      {
+        "text": "The opening par 4 is 429 yards, with a generous fairway that kicks right and a second shot that plays longer than it looks.",
+        "source": "https://top100.nationalclubgolfer.com/golfcourse/bletchingley-golf-club"
+      }
+    ],
+    "2": [
+      {
+        "text": "The par 3 2nd is 173 yards to a green surrounded by bunkers, where short is better than long.",
+        "source": "https://top100.nationalclubgolfer.com/golfcourse/bletchingley-golf-club"
+      }
+    ],
+    "3": [
+      {
+        "text": "The short par 5 3rd offers a chance to pick up a shot, with a fairway bunker right and out of bounds left.",
+        "source": "https://top100.nationalclubgolfer.com/golfcourse/bletchingley-golf-club"
+      }
+    ],
+    "5": [
+      {
+        "text": "National Club Golfer calls the par 4 5th one of the best holes, with a risk-reward tee shot across trees.",
+        "source": "https://top100.nationalclubgolfer.com/golfcourse/bletchingley-golf-club"
+      }
+    ],
+    "7": [
+      {
+        "text": "The long par 3 7th looks out over the Surrey hills, with out of bounds long.",
+        "source": "https://top100.nationalclubgolfer.com/golfcourse/bletchingley-golf-club"
+      }
+    ],
+    "9": [
+      {
+        "text": "The 9th is 491 yards uphill, with out of bounds left and bunkers on the right.",
+        "source": "https://top100.nationalclubgolfer.com/golfcourse/bletchingley-golf-club"
+      }
+    ],
+    "11": [
+      {
+        "text": "The par 5 11th is 533 yards, with water lurking right of the green.",
+        "source": "https://top100.nationalclubgolfer.com/golfcourse/bletchingley-golf-club"
+      }
+    ],
+    "14": [
+      {
+        "text": "The 14th is a downhill par 3 with a spectacular view.",
+        "source": "https://top100.nationalclubgolfer.com/golfcourse/bletchingley-golf-club"
+      }
+    ],
+    "17": [
+      {
+        "text": "The par 3 17th has tall trees on both flanks, out of bounds left and water right of a small green.",
+        "source": "https://top100.nationalclubgolfer.com/golfcourse/bletchingley-golf-club"
+      }
+    ],
+    "18": [
+      {
+        "text": "The 18th is a testing par 4 with a green protected by water.",
+        "source": "https://top100.nationalclubgolfer.com/golfcourse/bletchingley-golf-club"
+      }
+    ]
+  },
+  "local": [
+    {
+      "text": "The club is on Church Lane, Bletchingley, near Redhill, Surrey.",
+      "source": "https://top100.nationalclubgolfer.com/golfcourse/bletchingley-golf-club"
+    }
+  ]
+}

@@ -66,6 +66,21 @@ def _default_read_ref(path: str) -> pd.DataFrame:
         return pd.DataFrame()
 
 
+def _add_difficulty(courses: pd.DataFrame) -> pd.DataFrame:
+    """How hard each course plays, interpreted from its ratings
+    (analysis.course_difficulty); blank where a course has no ratings."""
+    from teg_analysis.analysis.course_difficulty import band, extra_strokes
+    out = courses.copy()
+    if not {"course_rating", "slope_rating", "par"} <= set(out.columns):
+        return out
+    out["extra_strokes"] = [extra_strokes(r.course_rating, r.slope_rating, r.par)
+                            for r in out.itertuples()]
+    out["extra_strokes"] = pd.to_numeric(out["extra_strokes"])
+    out["difficulty_band"] = out["extra_strokes"].map(band)
+    out["difficulty_rank"] = out["extra_strokes"].rank(method="min", ascending=False).astype("Int64")
+    return out
+
+
 #: Reference files the bot sees besides the scores (all in data/).
 SCHEDULE_CSV = "data/round_info.csv"
 COURSES_CSV = "data/course_info.csv"
@@ -100,6 +115,8 @@ class ChatData:
     ranked: Callable[[str], pd.DataFrame] = None  # type: ignore[assignment]
     #: path -> DataFrame for the reference files (schedule, courses, handicaps, rosters).
     read_ref: Callable[[str], pd.DataFrame] = _default_read_ref
+    #: course -> its sourced colour file (data/courses/*.json), or None.
+    read_course_colour: Callable[[str], Optional[dict]] = None  # type: ignore[assignment]
     _memo: dict = field(default_factory=dict, repr=False)
 
     def _get(self, key: str, fn: Callable[[], Any]) -> Any:
@@ -173,7 +190,28 @@ class ChatData:
         out = pd.concat([info, pd.DataFrame({"Course": missing})], ignore_index=True)
         out["TEGsPlayed"] = out["Course"].map(tegs({"complete", "in progress"})).fillna("")
         out["TEGsUpcoming"] = out["Course"].map(tegs({"upcoming"})).fillna("")
+        out = _add_difficulty(out)
         return out.sort_values("Course").reset_index(drop=True)
+
+    def notes(self) -> pd.DataFrame:
+        """Every sourced course note (data/courses/*.json), one row each."""
+        return self._get("course_notes", self._build_notes)
+
+    def _build_notes(self) -> pd.DataFrame:
+        from teg_analysis.reporting.course_colour import LIST_SECTIONS, load_course_colour
+        read = self.read_course_colour or load_course_colour
+        rows = []
+        for course in self.courses()["Course"].dropna():
+            colour = read(course) or {}
+            for section in LIST_SECTIONS:
+                rows += [{"Course": course, "section": section, "hole": None, **e}
+                         for e in colour.get(section) or []]
+            for hole, entries in (colour.get("holes") or {}).items():
+                rows += [{"Course": course, "section": "hole", "hole": int(hole), **e}
+                         for e in entries]
+        out = pd.DataFrame(rows, columns=["Course", "section", "hole", "text", "source"])
+        out["hole"] = out["hole"].astype("Int64")
+        return out
 
     def handicaps_long(self) -> pd.DataFrame:
         """One row per player per TEG: TEGNum, Player, Pl, HC, Playing (roster, if set)."""
@@ -235,6 +273,7 @@ class ChatData:
             "winners.csv": winners,
             "schedule.csv": self.schedule(),
             "courses.csv": self.courses(),
+            "course_notes.csv": self.notes(),
             "course_holes.csv": self._ref(COURSE_HOLES_CSV),
             "handicaps.csv": self.handicaps_long(),
         }
@@ -532,9 +571,61 @@ def get_what_it_takes(data: ChatData, player: Optional[str] = None,
 
 
 # ---------------------------------------------------------------------------
+# Tool: course info
+# ---------------------------------------------------------------------------
+def get_course_info(data: ChatData, course: str) -> dict:
+    """One course: details, ratings and how hard it plays, every sourced note,
+    and every TEG round played there."""
+    table = data.courses()
+    text = str(course).strip().lower()
+    if not text:
+        raise ToolInputError("Empty course name.")
+    names = list(table["Course"])
+    full = table["full_name"].fillna("") if "full_name" in table.columns else [""] * len(table)
+    hay = {c: f"{c} {f}".lower() for c, f in zip(table["Course"], full)}
+    match = [c for c in names if c.lower() == text] or [c for c in names if text in hay[c]]
+    if not match:
+        raise ToolInputError(f"No course matching '{course}'. Courses: {', '.join(names)}.")
+    if len(match) > 1:
+        raise ToolInputError(f"'{course}' matches several courses: {', '.join(match)}. Pick one.")
+    name = match[0]
+    row = table[table["Course"] == name]
+    notes = data.notes()
+    holes = data.holes()
+    cols = [c for c in ("TEGNum", "Round", "Date") if c in holes.columns]
+    played = (holes[holes["Course"] == name][cols]
+              .drop_duplicates().sort_values(["TEGNum", "Round"]))
+    return {
+        "course": _records(row)[0],
+        "difficulty_definition": (
+            "extra_strokes = shots an 18-handicap golfer gets here beyond an average course "
+            "(18 x slope / 113 + course rating - par - 18); difficulty_band is a rough label on "
+            "it; difficulty_rank 1 = hardest of the rated courses TEG has played."),
+        "notes": _records(notes[notes["Course"] == name].drop(columns=["Course"])),
+        "teg_rounds_played": _records(played),
+        "page": "/scoring/by-course",
+    }
+
+
+# ---------------------------------------------------------------------------
 # Tool schemas (Anthropic tool-use format) and dispatch
 # ---------------------------------------------------------------------------
 TOOL_SCHEMAS = [
+    {
+        "name": "get_course_info",
+        "description": (
+            "Everything on file about one course TEG has played: full name, location, type, par, "
+            "designer, description; men's course and slope rating from the tee TEG plays, with "
+            "an interpreted difficulty (extra strokes for a typical golfer, a rough band, rank "
+            "among TEG courses); every sourced note on its setting, history, trivia, local area "
+            "and individual holes (each with a source URL); and every TEG round played there. "
+            "Use for questions about a course or a hole on it. Partial names work."),
+        "input_schema": {
+            "type": "object",
+            "properties": {"course": {"type": "string"}},
+            "required": ["course"],
+        },
+    },
     {
         "name": "get_predictions",
         "description": (
@@ -632,6 +723,7 @@ TOOL_SCHEMAS = [
 ]
 
 _DISPATCH = {
+    "get_course_info": get_course_info,
     "get_predictions": get_predictions,
     "get_live_win_chances": get_live_win_chances,
     "get_what_it_takes": get_what_it_takes,

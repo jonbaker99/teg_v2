@@ -485,6 +485,25 @@ worse.
 
 Sourced from `data/round_info.csv` + `data/course_info.csv` (the latter relocated from `streamlit/commentary/course_info.py` so `teg_analysis` stays UI-agnostic).
 
+Note the draft writers never see the `description` one-liner: `authoring._strip_derived_prose` removes it with the other sentence-valued fields. Course texture reaches the prose through course colour instead.
+
+### Course colour — `course_colour.py` (2026-10-06)
+
+Sourced setting, history, trivia, local-area and hole notes per course, from `data/courses/<slug>.json` (format: `DATA_FLOW.md` → Storage Layer). The aim is texture, not a brochure: a lake mentioned because someone found it, never a paragraph about the course.
+
+How a note reaches the page, in both storyline-first pipelines (tournament `story_plan.build_storyline_plan` + `scripts/storyline_full_report_experiment.py`; round `round_storyline.py`, which the webapp runs for live round reports):
+
+1. **The editor sees everything.** The bundle's `course_colour` key carries every note for the TEG's courses (the round bundle: that round's course only), each with a stable id such as `monte_rei/trivia/3` or `monte_rei/h13/2`. Sources are left out of the bundle; the file keeps them.
+2. **Each storyline picks 0-2.** `DraftedStoryline.colour_note_ids`, steered by `prompts.COURSE_COLOUR_PLAN_RULE`. An empty list is the expected answer for most storylines.
+3. **Code enforces the rules.** `resolve_for_storyline` drops unknown ids, caps at `MAX_NOTES_PER_STORYLINE` (2), uses each note once per report, and passes a hole note only when one of the storyline's own beats happened on that hole of that course. `check_colour_selection` reports each drop as a plan warning.
+4. **The section writer sees only its picks**, as `context.course_colour`, with `prompts.COURSE_COLOUR_WRITER_RULE`: a clause or one sentence each, woven into the action, never description.
+
+The legacy pipelines (`StoryPlan`, `round_report.py`) are not wired: `build_story_plan` removes `course_colour` from its bundle, since nothing would resolve its picks. Interweaving (`--interweave`, off) resolves the pair's notes together, but its writer prompt does not carry the writer rule.
+
+**Difficulty.** Each round in `build_venue_context` carries `difficulty` from `analysis/course_difficulty.py`: `extra_strokes` (shots an 18-index golfer gets beyond an average course, from course and slope rating), a rough `band`, and, once at least eight rated courses had been played by that date, its rank among them (leak-safe for old TEGs). The raw ratings never enter a bundle. Planners and draft writers both see it; the prompts ask them to use it as judgement on what a score means, in their own words, never quoting ratings.
+
+Adding a course: write its JSON alongside its `course_info.csv` row. `tests/test_course_colour.py` fails until it exists, and checks every fact has a source and every hole note's par matches `course_pars.csv`.
+
 ### Context modules feeding the bundle
 
 Five further code-only modules assemble context alongside the beats. All are pure Python — no LLM, no cost.

@@ -46,7 +46,8 @@ def data():
     })
     return ChatData(all_data=lambda: df, winners=lambda: winners,
                     completed_tegs=lambda: {8, 9}, players=lambda: PLAYERS,
-                    read_ref=lambda path: REFS.get(path, pd.DataFrame()).copy())
+                    read_ref=lambda path: REFS.get(path, pd.DataFrame()).copy(),
+                    read_course_colour=lambda c: COLOUR.get(c))
 
 
 # Reference files: TEG 10 is set up but not started; TEG 50 is the test TEG.
@@ -58,14 +59,17 @@ REFS = {
         "Area": ["Kent"] * 5, "Year": [2008, 2009, 2010, 2010, 2020]}),
     "data/course_info.csv": pd.DataFrame({
         "Course": ["Links", "Dunes"], "type": ["Links", "Links"],
-        "description": ["Windy.", "Long and sandy."]}),
+        "description": ["Windy.", "Long and sandy."], "par": [72, 72],
+        "course_rating": [74.0, None], "slope_rating": [140, None]}),
     "data/course_pars.csv": pd.DataFrame({"Course": ["Dunes"], "Hole": [1], "Par": [4], "SI": [1]}),
     "data/handicaps.csv": pd.DataFrame({"TEG": ["TEG 9", "TEG 10", "TEG 50"],
                                         "AA": [10, 9, 1], "BB": [20, 18, 1], "BC": [None, 12, 1]}),
     "data/teg_rosters.csv": pd.DataFrame({"TEGNum": [10, 10, 10], "Pl": ["AA", "BB", "BC"],
                                           "Playing": [True, True, False]}),
 }
-REF_FILES = ["course_holes.csv", "courses.csv", "handicaps.csv", "schedule.csv"]
+REF_FILES = ["course_holes.csv", "course_notes.csv", "courses.csv", "handicaps.csv", "schedule.csv"]
+COLOUR = {"Links": {"history": [{"text": "Opened in 1900.", "source": "http://a"}],
+                    "holes": {"18": [{"text": "A long par 4.", "source": "http://b"}]}}}
 
 
 # --- bounce-back ------------------------------------------------------------
@@ -147,6 +151,27 @@ def test_bounce_back_bad_teg(data):
     assert "whole number" in run_tool("get_bounce_back", {"teg": "twelve"}, data)["error"]
 
 
+def test_course_info_returns_details_notes_and_rounds(data):
+    out = run_tool("get_course_info", {"course": "Links"}, data)
+    assert out["course"]["difficulty_band"] == "brutal"
+    assert [n["text"] for n in out["notes"]] == ["Opened in 1900.", "A long par 4."]
+    assert {r["TEGNum"] for r in out["teg_rounds_played"]} == {8, 9}
+    assert "error" in run_tool("get_course_info", {"course": "Nowhere"}, data)
+
+
+def test_course_notes_dataset_and_unrated_course(data):
+    ds = data.datasets()
+    assert list(ds["course_notes.csv"]["Course"].unique()) == ["Links"]
+    dunes = ds["courses.csv"].set_index("Course").loc["Dunes"]
+    assert pd.isna(dunes["difficulty_band"])
+
+
+def test_course_info_is_a_listed_lookup():
+    from teg_analysis.chatbot.prompt import DATA_GUIDE, _RULES
+    assert "get_course_info" in _RULES
+    assert "courses.csv" in DATA_GUIDE and "course_notes.csv" in DATA_GUIDE
+
+
 def test_unknown_tool(data):
     assert "Unknown tool" in run_tool("drop_tables", {}, data)["error"]
 
@@ -210,7 +235,7 @@ def test_ask_uploads_datasets_once_and_attaches_them(data):
     assert sorted(client.uploads) == sorted(["holes.csv", "rounds.csv", "teg_data.zip", "teg_toolkit.zip",
                                              "tegs.csv", "winners.csv", *REF_FILES])
     content = client.calls[0]["messages"][-1]["content"]
-    assert [b["type"] for b in content] == ["text"] + ["container_upload"] * 10
+    assert [b["type"] for b in content] == ["text"] + ["container_upload"] * 11
     assert {"type": "code_execution_20260521", "name": "code_execution"} in client.calls[0]["tools"]
 
 

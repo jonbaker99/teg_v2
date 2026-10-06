@@ -2,7 +2,19 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-10-06 (TEGBot web search; live TEGBot, mid-round chances and finalise lock; TEGBot follow-ups and dev skills; live win chances tab on /simulation; TEGBot toolkit, Dig deeper and charts; new-record markers on /records; simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
+**Last updated:** 2026-10-06 (course colour, ratings and difficulty for reports and TEGBot; TEGBot web search; live TEGBot, mid-round chances and finalise lock; TEGBot follow-ups and dev skills; live win chances tab on /simulation; TEGBot toolkit, Dig deeper and charts; new-record markers on /records; simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
+
+## 2026-10-06 — Reports and TEGBot use what we know about courses
+
+Reports now get a judgement of how hard each course plays (extra shots for a typical TEG golfer, a rough band, where it ranks among courses TEG had played by then), not the raw ratings. The course prompts were loosened from rules into principles. TEGBot's `courses.csv` gains the ratings and interpreted difficulty, plus a new `course_notes.csv` and a `get_course_info` lookup; it checks those before searching the web, and is told to describe difficulty in words and quote notes faithfully.
+
+## 2026-10-06 — Course and slope ratings on file
+
+`course_info.csv` now carries the men's Course Rating and Slope Rating from the tee TEG plays (yellow or equivalent) for all 28 courses, each with a source and a note where sources disagree. Most come from rating aggregators, so they are good to about a point. Ashdown was the West Course (par 68), not the Old Course; its row and colour file are corrected. 
+
+## 2026-10-06 — Reports get sourced course colour
+
+Every course now has a researched file in `data/courses/` (28 files, 833 facts), each fact with a source URL. Sections cover setting, history, trivia, hole notes and the local area. The TEG and round report editors see all of it. Each story picks at most two notes, and a hole note only reaches the writer when something happened on that hole. Before this, the writer saw no course text at all: the one-line description was stripped from its context. `course_info.csv` fixes: El Prat - Azul description, Prince's Dunes/Himalayas par 72, Costa Brava is the par 73 Red Course, Royal Cinque Ports par 72, blank pars filled. Detail: `teg_analysis/reporting/README.md` → *Course colour*.
 
 ## 2026-10-06 — TEGBot can search the web for course and benchmark facts
 
