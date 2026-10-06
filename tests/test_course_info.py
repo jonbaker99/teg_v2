@@ -54,6 +54,10 @@ def test_average_course_is_zero_extra_strokes():
     assert cd.band(0.0) == "standard"
 
 
+def test_missing_figure_has_no_band():
+    assert cd.band(None) is None and cd.band(float("nan")) is None
+
+
 def test_bands_order_by_difficulty():
     bands = [cd.course_difficulty(c, TABLE)["band"] for c in ("Easy", "Average", "Hard")]
     assert bands == ["kind", "standard", "brutal"]

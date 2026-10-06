@@ -2,8 +2,9 @@
 
 The model reads the question, then either calls a lookup in ``tools.py`` or
 writes pandas code that runs in Anthropic's code-execution sandbox against
-CSVs uploaded from ``ChatData.datasets()``. It writes the answer from those
-results; it never does the maths itself.
+CSVs uploaded from ``ChatData.datasets()``. For TEG-related facts the data lacks
+(course style and difficulty, outside benchmarks) it may use Anthropic's web search.
+It writes the answer from those results; it never does the maths itself.
 
 Billing is per token on the Anthropic API (key resolved by
 ``teg_analysis.reporting.llm.get_api_key``). The anthropic SDK is imported
@@ -48,6 +49,16 @@ MAX_HISTORY_CHARS = 16000
 MAX_METHOD_CHARS = 2500
 #: Anthropic's sandbox: the model's pandas runs there, never on our server.
 CODE_TOOL = {"type": "code_execution_20260521", "name": "code_execution"}
+#: Anthropic's server-side web search, for TEG-related context the data lacks (course
+#: style and difficulty, ratings, outside benchmarks). The basic version on purpose: the
+#: newer dynamic-filtering one brings its own code sandbox, which would clash with ours.
+#: Searches bill at $10 per 1,000. TEGBOT_WEB_SEARCH=0 switches it off.
+WEB_SEARCH_TYPE = "web_search_20250305"
+ENV_WEB_SEARCH = "TEGBOT_WEB_SEARCH"
+WEB_SEARCH_USES = 3
+DEEP_WEB_SEARCH_USES = 6
+WEB_SEARCH_PRICE = 0.01
+MAX_SOURCES = 6
 
 # $ per million tokens: (input, output). Cache reads bill at 10% of input,
 # cache writes at 125%. Used only for the cost line in the logs.
@@ -86,6 +97,8 @@ class Answer:
     deep: bool = False
     #: set when the analysis toolkit could not be built, so the bot ran without it
     toolkit_error: str = ""
+    #: web pages the answer cites: [{"title", "url"}], deduplicated
+    sources: list[dict] = field(default_factory=list)
 
     @property
     def method_note(self) -> str:
@@ -96,6 +109,8 @@ class Answer:
             if call.name == "code":
                 code = call.input.get("command") or call.input.get("file_text") or ""
                 parts.append(f"code: {code.strip()}")
+            elif call.name == "web_search":
+                parts.append(f"web search: {call.input.get('query', '')}")
             else:
                 parts.append(f"lookup {call.name}({json.dumps(call.input, default=str)})")
         note = "\n".join(parts)
@@ -118,7 +133,7 @@ class Answer:
             + u.get("cache_read_input_tokens", 0) * inp * 0.1
             + u.get("cache_creation_input_tokens", 0) * inp * 1.25
             + u.get("output_tokens", 0) * out
-        ) / 1_000_000
+        ) / 1_000_000 + u.get("web_search_requests", 0) * WEB_SEARCH_PRICE
 
 
 def get_model() -> str:
@@ -127,6 +142,25 @@ def get_model() -> str:
 
 def get_deep_model() -> str:
     return os.environ.get(ENV_DEEP_MODEL) or DEEP_MODEL
+
+
+#: Set when the API rejects the web search tool (say it is off for the organisation),
+#: so later questions skip it instead of failing. Cleared by a restart.
+_web_search_rejected = False
+
+
+def web_search_enabled() -> bool:
+    if _web_search_rejected:
+        return False
+    return os.environ.get(ENV_WEB_SEARCH, "1").strip().lower() not in ("0", "false", "off", "no")
+
+
+def _tools(deep: bool) -> list[dict]:
+    tools = [*TOOL_SCHEMAS, CODE_TOOL]
+    if web_search_enabled():
+        tools.append({"type": WEB_SEARCH_TYPE, "name": "web_search",
+                      "max_uses": DEEP_WEB_SEARCH_USES if deep else WEB_SEARCH_USES})
+    return tools
 
 
 def _client(timeout: float = TIMEOUT, max_retries: int = 2):
@@ -185,6 +219,9 @@ def _add_usage(total: dict, usage: Any) -> None:
     for key in ("input_tokens", "output_tokens", "cache_read_input_tokens",
                 "cache_creation_input_tokens"):
         total[key] = total.get(key, 0) + (getattr(usage, key, 0) or 0)
+    searches = getattr(getattr(usage, "server_tool_use", None), "web_search_requests", 0)
+    if isinstance(searches, int) and searches:
+        total["web_search_requests"] = total.get("web_search_requests", 0) + searches
 
 
 _last_toolkit: Optional[tuple[dict[str, bytes], str]] = None
@@ -317,16 +354,28 @@ def _is_client_error(exc: Exception) -> bool:
 
 def _record_sandbox_calls(content: list, calls: list[ToolCall],
                           pending: Optional[dict] = None) -> None:
-    """Add the sandbox's code and output to the workings shown under the answer.
+    """Add the sandbox's code and output, and any web searches, to the workings shown
+    under the answer.
 
     ``pending`` persists across responses: when the model runs code and calls a
     lookup in the same step, the code's result only arrives in the next response."""
     pending = {} if pending is None else pending
     for block in content:
         if block.type == "server_tool_use":
-            call = ToolCall("code", dict(block.input or {}), {})
+            name = "web_search" if getattr(block, "name", "") == "web_search" else "code"
+            call = ToolCall(name, dict(block.input or {}), {})
             pending[block.id] = call
             calls.append(call)
+        elif block.type == "web_search_tool_result":
+            call = pending.pop(getattr(block, "tool_use_id", None), None)
+            if call is None:
+                continue
+            result = block.content
+            if isinstance(result, list):  # success is a list; an error is one object
+                call.output = {"results": [{"title": getattr(r, "title", ""),
+                                            "url": getattr(r, "url", "")} for r in result]}
+            else:
+                call.output = {"error": getattr(result, "error_code", "search failed")}
         elif block.type.endswith("code_execution_tool_result"):
             call = pending.pop(getattr(block, "tool_use_id", None), None)
             if call is None:
@@ -344,10 +393,26 @@ def _final_text(content: list) -> str:
     last_tool = max((i for i, b in enumerate(content)
                      if b.type in ("server_tool_use", "tool_use")
                      or b.type.endswith("_tool_result")), default=-1)
-    texts = [b.text for b in content[last_tool + 1:] if b.type == "text"]
-    if not texts:
-        texts = [b.text for b in content if b.type == "text"]
-    return "\n\n".join(texts).strip()
+    blocks = [b for b in content[last_tool + 1:] if b.type == "text"]
+    if not blocks:
+        blocks = [b for b in content if b.type == "text"]
+    # Cited web facts split one paragraph into several text blocks: rejoin them as written.
+    cited = any(getattr(b, "citations", None) for b in blocks)
+    return ("" if cited else "\n\n").join(b.text for b in blocks).strip()
+
+
+def _sources(content: list) -> list[dict]:
+    """Web pages cited in the answer's text, first-cited first, without duplicates."""
+    seen, out = set(), []
+    for block in content:
+        if block.type != "text":
+            continue
+        for cite in getattr(block, "citations", None) or []:
+            url = getattr(cite, "url", "") or ""
+            if url.startswith(("https://", "http://")) and url not in seen:
+                seen.add(url)
+                out.append({"title": (getattr(cite, "title", "") or url)[:200], "url": url})
+    return out[:MAX_SOURCES]
 
 
 _TRAILER = re.compile(r"^\s*(THEME|RELATED|DEEP)\s*:\s*(.*?)\s*$", re.IGNORECASE)
@@ -423,6 +488,7 @@ def ask(question: str, data: ChatData, history: Optional[list] = None,
 def _ask(question: str, data: ChatData, history: Optional[list], client: Any,
          model: Optional[str], past: Optional[list[dict]], themes: Optional[list[str]],
          deep: bool, conv: str, allow_reuse: bool) -> Answer:
+    global _web_search_rejected
     question = (question or "").strip()[:MAX_QUESTION_CHARS]
     if not question:
         raise ValueError("Empty question.")
@@ -433,7 +499,12 @@ def _ask(question: str, data: ChatData, history: Optional[list], client: Any,
     max_tokens = DEEP_MAX_TOKENS if deep else MAX_TOKENS
     past = past or []
     toolkit_files, skills_index, toolkit_error = _toolkit_files()
-    system = build_system(data.holes(), data.complete(), data.players(), skills_index)
+    try:
+        upcoming = data.upcoming_text()
+    except Exception:  # reference files are a bonus; never block an answer on them
+        logger.exception("TEGBot could not build the upcoming-TEG context")
+        upcoming = ""
+    system = build_system(data.holes(), data.complete(), data.players(), skills_index, upcoming)
     system.append({"type": "text", "text": past_block(past, themes or [])})
     if deep:
         system.append({"type": "text", "text": DEEP_ADDENDUM})
@@ -460,7 +531,7 @@ def _ask(question: str, data: ChatData, history: Optional[list], client: Any,
                 model=model,
                 max_tokens=max_tokens,
                 system=system,
-                tools=[*TOOL_SCHEMAS, CODE_TOOL],
+                tools=_tools(deep),
                 messages=messages,
                 # Out of steps: answer from what the tools already returned.
                 tool_choice={"type": "none" if last else "auto"},
@@ -470,6 +541,13 @@ def _ask(question: str, data: ChatData, history: Optional[list], client: Any,
                 **({"container": container} if container else {}),
             )
         except Exception as exc:
+            if (_is_client_error(exc) and "web_search" in str(exc)
+                    and web_search_enabled() and not calls):
+                # Retry this step once without web search, and stop offering it.
+                logger.warning("TEGBot web search rejected (%s); answering without it", exc)
+                _web_search_rejected = True
+                return _ask(question, data, history, client, model, past, themes, deep,
+                            conv, allow_reuse)
             if reused and _is_client_error(exc):
                 raise _ReuseFailed() from exc
             raise
@@ -494,7 +572,8 @@ def _ask(question: str, data: ChatData, history: Optional[list], client: Any,
             return Answer(text or "I couldn't find an answer to that.", calls, usage, model,
                           theme=theme, related=related, suggest_deep=suggest and not deep,
                           deep_reason=reason if suggest and not deep else "",
-                          deep=deep, toolkit_error=toolkit_error)
+                          deep=deep, toolkit_error=toolkit_error,
+                          sources=_sources(response.content))
 
         # Append the full assistant content unchanged (thinking blocks included).
         messages.append({"role": "assistant", "content": response.content})

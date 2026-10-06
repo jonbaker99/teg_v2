@@ -56,32 +56,39 @@ def _default_ranked(scope: str) -> pd.DataFrame:
     }[scope]()
 
 
-def _default_course_table() -> pd.DataFrame:
-    """course_info.csv plus the interpreted difficulty (analysis.course_difficulty)."""
-    from teg_analysis.analysis.course_difficulty import band, extra_strokes, load_course_table
-    t = load_course_table().copy()
-    if t.empty:
-        return t
-    t["extra_strokes"] = [extra_strokes(r.course_rating, r.slope_rating, r.par) for r in t.itertuples()]
-    t["difficulty_band"] = t["extra_strokes"].map(band)
-    t["difficulty_rank"] = t["extra_strokes"].rank(method="min", ascending=False).astype("Int64")
-    return t
+def _default_read_ref(path: str) -> pd.DataFrame:
+    """A reference CSV (schedule, courses, handicaps, rosters); empty if unreadable,
+    so a missing file never stops the bot answering."""
+    from teg_analysis.io.file_operations import read_file
+    try:
+        return read_file(path)
+    except Exception:
+        return pd.DataFrame()
 
 
-def _default_course_notes() -> pd.DataFrame:
-    """Every sourced course colour note (data/courses/*.json), one row each."""
-    from teg_analysis.reporting.course_colour import LIST_SECTIONS, load_course_colour
-    rows = []
-    for course in _default_course_table()["Course"]:
-        colour = load_course_colour(course) or {}
-        for section in LIST_SECTIONS:
-            rows += [{"Course": course, "section": section, "hole": None, **e}
-                     for e in colour.get(section) or []]
-        for hole, entries in (colour.get("holes") or {}).items():
-            rows += [{"Course": course, "section": "hole", "hole": int(hole), **e} for e in entries]
-    out = pd.DataFrame(rows, columns=["Course", "section", "hole", "text", "source"])
-    out["hole"] = out["hole"].astype("Int64")
+def _add_difficulty(courses: pd.DataFrame) -> pd.DataFrame:
+    """How hard each course plays, interpreted from its ratings
+    (analysis.course_difficulty); blank where a course has no ratings."""
+    from teg_analysis.analysis.course_difficulty import band, extra_strokes
+    out = courses.copy()
+    if not {"course_rating", "slope_rating", "par"} <= set(out.columns):
+        return out
+    out["extra_strokes"] = [extra_strokes(r.course_rating, r.slope_rating, r.par)
+                            for r in out.itertuples()]
+    out["extra_strokes"] = pd.to_numeric(out["extra_strokes"])
+    out["difficulty_band"] = out["extra_strokes"].map(band)
+    out["difficulty_rank"] = out["extra_strokes"].rank(method="min", ascending=False).astype("Int64")
     return out
+
+
+#: Reference files the bot sees besides the scores (all in data/).
+SCHEDULE_CSV = "data/round_info.csv"
+COURSES_CSV = "data/course_info.csv"
+COURSE_HOLES_CSV = "data/course_pars.csv"
+HANDICAPS_CSV = "data/handicaps.csv"
+ROSTERS_CSV = "data/teg_rosters.csv"
+#: The test TEG, excluded everywhere else in the bot's data.
+TEST_TEG = 50
 
 
 def _default_players() -> dict[str, str]:
@@ -106,9 +113,10 @@ class ChatData:
     what_it_takes: Optional[Callable[..., Any]] = None
     #: scope ("teg" | "round" | "frontback") -> ranked frame, as /records uses.
     ranked: Callable[[str], pd.DataFrame] = None  # type: ignore[assignment]
-    #: course_info.csv plus interpreted difficulty, and the sourced course notes.
-    course_table: Callable[[], pd.DataFrame] = _default_course_table
-    course_notes: Callable[[], pd.DataFrame] = _default_course_notes
+    #: path -> DataFrame for the reference files (schedule, courses, handicaps, rosters).
+    read_ref: Callable[[str], pd.DataFrame] = _default_read_ref
+    #: course -> its sourced colour file (data/courses/*.json), or None.
+    read_course_colour: Callable[[str], Optional[dict]] = None  # type: ignore[assignment]
     _memo: dict = field(default_factory=dict, repr=False)
 
     def _get(self, key: str, fn: Callable[[], Any]) -> Any:
@@ -130,12 +138,6 @@ class ChatData:
     def complete(self) -> set[int]:
         return self._get("complete", lambda: {int(t) for t in self.completed_tegs()})
 
-    def courses(self) -> pd.DataFrame:
-        return self._get("courses", self.course_table)
-
-    def notes(self) -> pd.DataFrame:
-        return self._get("course_notes", self.course_notes)
-
     def rounds(self) -> pd.DataFrame:
         return self._get("rounds", self._build_rounds)
 
@@ -147,6 +149,113 @@ class ChatData:
 
     def _build_tegs(self) -> pd.DataFrame:
         return build_tegs(self.holes(), self.complete())
+
+    def _ref(self, path: str) -> pd.DataFrame:
+        return self._get(f"ref:{path}", lambda: self.read_ref(path)).copy()
+
+    def schedule(self) -> pd.DataFrame:
+        """Every TEG round, played or planned: TEGNum, Year, Area, Round, Course, Date, Status."""
+        return self._get("schedule", self._build_schedule)
+
+    def _build_schedule(self) -> pd.DataFrame:
+        cols = ["TEGNum", "Year", "Area", "Round", "Course", "Date", "Status"]
+        ri = self._ref(SCHEDULE_CSV)
+        if ri.empty or not {"TEGNum", "Round", "Course"} <= set(ri.columns):
+            return pd.DataFrame(columns=cols)
+        ri["TEGNum"] = pd.to_numeric(ri["TEGNum"], errors="coerce")
+        ri = ri[ri["TEGNum"].notna() & (ri["TEGNum"] != TEST_TEG)].copy()
+        ri["TEGNum"] = ri["TEGNum"].astype(int)
+        if "Date" in ri.columns:
+            ri["Date"] = pd.to_datetime(ri["Date"], format="%d/%m/%Y", errors="coerce").dt.date
+        played = set(self.holes()["TEGNum"].astype(int))
+        complete = self.complete()
+        ri["Status"] = ri["TEGNum"].map(lambda t: "complete" if t in complete
+                                        else "in progress" if t in played else "upcoming")
+        for c in cols:
+            if c not in ri.columns:
+                ri[c] = None
+        return ri[cols].sort_values(["TEGNum", "Round"]).reset_index(drop=True)
+
+    def courses(self) -> pd.DataFrame:
+        """course_info.csv plus where and when each course was (or will be) played."""
+        info = self._ref(COURSES_CSV)
+        if info.empty or "Course" not in info.columns:
+            info = pd.DataFrame(columns=["Course"])
+        sched = self.schedule()
+        def tegs(status: set[str]):
+            rows = sched[sched["Status"].isin(status)]
+            return rows.groupby("Course")["TEGNum"].apply(
+                lambda s: ", ".join(f"TEG {t}" for t in sorted(set(s))))
+        missing = sorted(set(sched["Course"].dropna()) - set(info["Course"]))
+        out = pd.concat([info, pd.DataFrame({"Course": missing})], ignore_index=True)
+        out["TEGsPlayed"] = out["Course"].map(tegs({"complete", "in progress"})).fillna("")
+        out["TEGsUpcoming"] = out["Course"].map(tegs({"upcoming"})).fillna("")
+        out = _add_difficulty(out)
+        return out.sort_values("Course").reset_index(drop=True)
+
+    def notes(self) -> pd.DataFrame:
+        """Every sourced course note (data/courses/*.json), one row each."""
+        return self._get("course_notes", self._build_notes)
+
+    def _build_notes(self) -> pd.DataFrame:
+        from teg_analysis.reporting.course_colour import LIST_SECTIONS, load_course_colour
+        read = self.read_course_colour or load_course_colour
+        rows = []
+        for course in self.courses()["Course"].dropna():
+            colour = read(course) or {}
+            for section in LIST_SECTIONS:
+                rows += [{"Course": course, "section": section, "hole": None, **e}
+                         for e in colour.get(section) or []]
+            for hole, entries in (colour.get("holes") or {}).items():
+                rows += [{"Course": course, "section": "hole", "hole": int(hole), **e}
+                         for e in entries]
+        out = pd.DataFrame(rows, columns=["Course", "section", "hole", "text", "source"])
+        out["hole"] = out["hole"].astype("Int64")
+        return out
+
+    def handicaps_long(self) -> pd.DataFrame:
+        """One row per player per TEG: TEGNum, Player, Pl, HC, Playing (roster, if set)."""
+        cols = ["TEGNum", "Player", "Pl", "HC", "Playing"]
+        wide = self._ref(HANDICAPS_CSV)
+        if wide.empty or "TEG" not in wide.columns:
+            return pd.DataFrame(columns=cols)
+        long = wide.melt(id_vars="TEG", var_name="Pl", value_name="HC").dropna(subset=["HC"])
+        long["TEGNum"] = pd.to_numeric(long["TEG"].astype(str).str.extract(r"(\d+)")[0], errors="coerce")
+        long = long[long["TEGNum"].notna() & (long["TEGNum"] != TEST_TEG)].copy()
+        long["TEGNum"] = long["TEGNum"].astype(int)
+        names = self.players()
+        long["Player"] = long["Pl"].map(names).fillna(long["Pl"])
+        rosters = self._ref(ROSTERS_CSV)
+        playing: dict[tuple[int, str], bool] = {}
+        if not rosters.empty and {"TEGNum", "Pl", "Playing"} <= set(rosters.columns):
+            for r in rosters.itertuples(index=False):
+                try:
+                    playing[(int(r.TEGNum), str(r.Pl))] = str(r.Playing).strip().lower() == "true"
+                except (TypeError, ValueError):
+                    continue
+        long["Playing"] = [playing.get((t, pl)) for t, pl in zip(long["TEGNum"], long["Pl"])]
+        return long[cols].sort_values(["TEGNum", "Player"]).reset_index(drop=True)
+
+    def upcoming_text(self) -> str:
+        """TEGs not yet complete that have a schedule: courses, dates, who plays, handicaps."""
+        sched = self.schedule()
+        open_tegs = sched[sched["Status"] != "complete"]
+        if open_tegs.empty:
+            return ""
+        hcs = self.handicaps_long()
+        lines = ["Scheduled TEGs not yet complete (from the site's TEG setup):"]
+        for teg, rows in open_tegs.groupby("TEGNum"):
+            first = rows.iloc[0]
+            lines.append(f"- TEG {teg} ({first['Year']}, {first['Area']}), {first['Status']}:")
+            for r in rows.itertuples(index=False):
+                when = r.Date.strftime("%a %d %b %Y") if hasattr(r.Date, "strftime") else ""
+                lines.append(f"  Round {r.Round}: {r.Course}" + (f", {when}" if when else ""))
+            h = hcs[(hcs["TEGNum"] == teg) & (hcs["Playing"] != False)]  # noqa: E712
+            if not h.empty:
+                lines.append("  Playing (handicap): " + ", ".join(
+                    f"{p} ({hc:g})" if isinstance(hc, (int, float)) else f"{p} ({hc})"
+                    for p, hc in zip(h["Player"], h["HC"])))
+        return "\n".join(lines)
 
     def datasets(self) -> dict[str, pd.DataFrame]:
         """The CSVs uploaded to the code sandbox. Columns: see prompt.DATA_GUIDE."""
@@ -162,8 +271,11 @@ class ChatData:
             "rounds.csv": self.rounds(),
             "tegs.csv": self.tegs(),
             "winners.csv": winners,
+            "schedule.csv": self.schedule(),
             "courses.csv": self.courses(),
             "course_notes.csv": self.notes(),
+            "course_holes.csv": self._ref(COURSE_HOLES_CSV),
+            "handicaps.csv": self.handicaps_long(),
         }
 
 
@@ -469,7 +581,8 @@ def get_course_info(data: ChatData, course: str) -> dict:
     if not text:
         raise ToolInputError("Empty course name.")
     names = list(table["Course"])
-    hay = {c: f"{c} {f}".lower() for c, f in zip(table["Course"], table["full_name"].fillna(""))}
+    full = table["full_name"].fillna("") if "full_name" in table.columns else [""] * len(table)
+    hay = {c: f"{c} {f}".lower() for c, f in zip(table["Course"], full)}
     match = [c for c in names if c.lower() == text] or [c for c in names if text in hay[c]]
     if not match:
         raise ToolInputError(f"No course matching '{course}'. Courses: {', '.join(names)}.")

@@ -67,6 +67,32 @@ EXAMPLE_QUESTIONS = [
     "What happened the last time we played Boavista?",
     "Who has improved most over the years?",
     "Who finishes strongest over the last 3 holes?",
+    "Who's the favourite for the next TEG?",
+    "Which course has been toughest for us?",
+    "How do this year's courses compare with the last few TEGs?",
+    "What handicap would Rory McIlroy need to make it fair?",
+    "Who has the most Wooden Spoons?",
+    "Who has the most birdies ever?",
+    "What's the biggest final-round comeback?",
+    "Who plays best in the final round?",
+    "Who is most consistent round to round?",
+    "What's the worst single hole score ever?",
+    "Who has the most triple bogeys?",
+    "Which hole has cost us the most shots?",
+    "Who would have won more if handicaps were lower?",
+    "Who has led after round 1 most often?",
+    "What's the best Stableford round ever?",
+    "Who has won both trophies in the same TEG?",
+    "Whose scores have dropped most since their first TEG?",
+    "Who plays par 5s best?",
+    "Which TEG was the closest finish?",
+    "Who suffers most on the front 9?",
+    "What's the record for birdies in one round?",
+    "Who has the best eclectic score?",
+    "Which course suits our group best?",
+    "Who has the longest run without a double bogey?",
+    "Who blows up most after a good hole?",
+    "What's the average winning Stableford total?",
 ]
 
 _lock = threading.Lock()
@@ -295,6 +321,12 @@ def _working(call: "bot.ToolCall") -> dict:
         shown_out = call.output.get("stdout", "") + call.output.get("stderr", "")
         return {"name": "Code run in the sandbox", "input": shown_in[:6000],
                 "output": (shown_out or json.dumps(call.output))[:6000]}
+    if call.name == "web_search":
+        found = call.output.get("results")
+        shown_out = ("\n".join(f"{r['title']} — {r['url']}" for r in found) if found is not None
+                     else json.dumps(call.output))
+        return {"name": "Web search", "input": str(call.input.get("query", "")),
+                "output": shown_out[:6000]}
     return {"name": f"Lookup: {call.name}",
             "input": json.dumps(call.input, indent=1, default=str),
             "output": json.dumps(call.output, indent=1, default=str)[:6000]}
@@ -309,6 +341,13 @@ def _chat_data() -> ChatData:
                     live_predictions=live_prediction, what_it_takes=what_it_takes)
 
 
+def _recent_questions() -> list[dict]:
+    try:
+        return qa_log.recent_questions(4)
+    except OSError:
+        return []
+
+
 @router.get("/tegbot")
 def tegbot_page(request: Request):
     return templates.TemplateResponse("tegbot.html", {
@@ -316,7 +355,9 @@ def tegbot_page(request: Request):
         "active_page": "tegbot",
         "enabled": _enabled(),
         "placeholder": random.choice(EXAMPLE_QUESTIONS),
-        "examples": random.sample(EXAMPLE_QUESTIONS, 5),
+        # Shuffled per visit; the page shows four at a time and "more ideas" moves on.
+        "examples": random.sample(EXAMPLE_QUESTIONS, len(EXAMPLE_QUESTIONS)),
+        "recent": _recent_questions(),
         "max_chars": bot.MAX_QUESTION_CHARS,
     })
 
@@ -397,6 +438,7 @@ def _run_question(question: str, prior: list, past: list, themes: list, conv: st
         answer_text=answer.history_text(),
         answer_html=render_answer_html(answer.text),
         tool_calls=workings,
+        sources=list(getattr(answer, "sources", []) or []),
         deep=deep_mode,
         suggest_deep=bool(getattr(answer, "suggest_deep", False)) and not deep_mode,
         deep_reason=str(getattr(answer, "deep_reason", "") or "") if not deep_mode else "",
@@ -461,6 +503,28 @@ def tegbot_job(request: Request, job_id: str):
         return _working_reply(request, job_id, job["question"], time.time() - job["started"])
     return templates.TemplateResponse("partials/tegbot_answer.html", {
         "request": request, "question": job["question"], **job["result"]})
+
+
+_ENTRY_ID = re.compile(r"^[0-9a-f]{32}$")
+
+
+@router.get("/tegbot/past/{entry_id}")
+def tegbot_past(request: Request, entry_id: str):
+    """A logged answer, shown in the chat as if just asked. Free: no model call."""
+    entry = None
+    if _ENTRY_ID.match(entry_id):
+        try:
+            entry = next((e for e in qa_log.read_entries() if e.get("id") == entry_id), None)
+        except OSError:
+            entry = None
+    if entry is None:
+        return templates.TemplateResponse("partials/tegbot_answer.html", {
+            "request": request, "question": "", "error": "That answer is no longer saved."})
+    view = _entry_view(entry)
+    return templates.TemplateResponse("partials/tegbot_answer.html", {
+        "request": request, "question": entry["question"], "answer_text": entry.get("answer", ""),
+        "answer_html": view["answer_html"], "tool_calls": view["workings"],
+        "earlier": view["when"] or "earlier"})
 
 
 def _when(iso: str) -> str:

@@ -57,7 +57,7 @@ def extra_strokes(course_rating, slope_rating, par) -> Optional[float]:
 
 
 def band(extra: Optional[float]) -> Optional[str]:
-    if extra is None:
+    if extra is None or pd.isna(extra):
         return None
     return next(label for upper, label in BANDS if extra <= upper)
 
