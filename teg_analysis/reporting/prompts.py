@@ -536,5 +536,26 @@ SI 4–15: not noteworthy — ignore. Only invoke it when it sharpens the irony 
 (a birdie on the hardest hole; a double on the give-away). Don't mention SI on every hole.
 """
 
+# Course colour (course_colour.py). The editor sees every sourced note for the
+# TEG's courses; the section writer only sees the ones its storyline picked.
+COURSE_COLOUR_PLAN_RULE = """- **Course colour: pick little, pick well.** `course_colour` holds \
+sourced notes per course (setting, history, trivia, local area, and hole notes keyed by hole), \
+each with an `id`. For each storyline, put AT MOST 2 note ids in `colour_note_ids`, and only \
+notes that sharpen THIS story: the lake at the 13th when someone found it, the course's \
+reputation when the scoring mocked it, the renovation when the greens became a talking point. \
+An empty list is the normal answer for most storylines. Hole notes (`section: "hole"`) only \
+when one of the storyline's own `beat_ids` happened on that hole of that course; otherwise they \
+are dropped. Never pick the same note for two storylines. Notes are background for the writer, \
+never a reason to plan a story.
+"""
+
+COURSE_COLOUR_WRITER_RULE = """- **Course colour is seasoning.** `context.course_colour` (when \
+present) holds the few sourced course notes chosen for this section. Work each into the action \
+in a clause or at most one sentence, where it explains or flavours what happened (the ball that \
+found the lake the hole is known for). Never write a paragraph of course description, never \
+list features, and leave a note out rather than force it. A hole note is about that hole of \
+that course only. Keep its facts as given; do not embellish them.
+"""
+
 # Shared tail — applies to every writer prompt, so it lives with none of them.
 OUTPUT_RULE = """Output GitHub-flavoured markdown. No preamble, no sign-off — just the report."""

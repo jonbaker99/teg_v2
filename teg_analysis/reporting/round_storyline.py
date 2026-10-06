@@ -46,6 +46,8 @@ from pydantic import BaseModel, Field
 from teg_analysis.reporting.era import trophy_metric
 from teg_analysis.reporting.events import build_notable_events
 from teg_analysis.reporting.venue import build_venue_context
+from teg_analysis.reporting.course_colour import (build_course_colour, check_colour_selection,
+                                                  note_index, resolve_for_storyline)
 from teg_analysis.reporting.story_plan import (
     DraftedStoryline, NarrativeVehicle, PaletteVehicle, ProminentVehicle,
     _render_vehicle_menu, _render_palette_menu,
@@ -346,6 +348,9 @@ def assemble_round_storyline_bundle(teg_num: int, round_num: int, *,
         "teg": teg_num, "round": round_num, "is_final_round": is_final_round,
         "total_rounds": total_rounds, "tone": tone, "trophy_metric": trophy_metric(teg_num),
         "round_venue": round_venue,
+        # Static, sourced notes for this round's course only (leak-safe: no
+        # scores). The editor picks 0-2 per storyline. See course_colour.py.
+        "course_colour": build_course_colour([round_venue["course"]] if round_venue else []),
         "area_context": {
             "area": venue_full.get("area"), "year": venue_full.get("year"),
             "area_visit": venue_full.get("area_visit"),
@@ -401,6 +406,7 @@ WHAT IS WORTH PUTTING IN THE PLAN:
 """ + prompts.RANKING_RULE + """
 """ + prompts.NAMING_RULE + """
 """ + prompts.DESCRIPTOR_RULE + """
+""" + prompts.COURSE_COLOUR_PLAN_RULE + """
 {DOUBLE_RULE}
 THIS IS A ROUND REPORT, NOT A TOURNAMENT REPORT.
 - The round is ONE day of the tournament: 18 holes, all players.
@@ -529,6 +535,7 @@ WHAT IS WORTH SAYING, and how to name it:
 """ + prompts.STROKE_INDEX_RULE + """
 """ + prompts.SCORING_REDUNDANCY_RULE + """
 """ + prompts.SHARED_FAITHFULNESS + """
+""" + prompts.COURSE_COLOUR_WRITER_RULE + """
 """ + prompts.WEEKDAY_RULE + """
 {DOUBLE_RULE}"""
 
@@ -579,6 +586,10 @@ def check_round_storyline_plan_consistency(plan: RoundStorylinePlan, bundle: dic
         if len(s.beat_ids) < 2 or s.compelling_score < 6:
             warnings.append(f"{name} is thin (beat_ids={len(s.beat_ids)}, "
                              f"compelling={s.compelling_score}) — should have been left out")
+
+    # Drafting order: race_story leads on a final round.
+    order = storylines if not bundle["is_final_round"] else [storylines[1]] + storylines[2:] + [storylines[0]]
+    warnings += check_colour_selection(order, bundle["beats"], bundle.get("course_colour"))
 
     if plan.is_final_round != bundle["is_final_round"]:
         warnings.append("plan.is_final_round does not match the bundle")
@@ -872,11 +883,19 @@ def build_round_storyline_draft(teg_num: int, round_num: int, model: Optional[st
             (f"d{i}", s) for i, s in enumerate(plan["discovered_storylines"])
         ] + [("race", plan["race_story"])]
 
+    colour_index = note_index(bundle.get("course_colour"))
+    colour_used: set = set()
     sections = []
     for key, storyline in order:
         evidence = _evidence_for(storyline, all_beats)
         storyline_players = {p for b in evidence for p in b["players"]}
         context = _context_for(storyline_players, bundle)
+        # Picked course notes, policed in code (see course_colour.py). Added
+        # after _context_for's prose-stripping.
+        colour = resolve_for_storyline(storyline.get("colour_note_ids"), evidence,
+                                       colour_index, colour_used)
+        if colour:
+            context["course_colour"] = colour
         text = draft_section(storyline, evidence, context, is_final_round, model=model)
         anchor = f"<!-- storyline: {key} -->"
         sections.append(f"## {storyline['subject']}\n{anchor}\n\n{text}")

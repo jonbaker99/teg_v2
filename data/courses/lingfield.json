@@ -1,0 +1,99 @@
+{
+  "course": "Lingfield",
+  "full_name": "Lingfield Park Golf Club",
+  "researched": "2026-10-06",
+  "summary": [
+    {
+      "text": "Lingfield Park is a parkland course in Surrey that runs either side of the Lingfield Park racecourse, opened in 1987.",
+      "source": "https://www.golf-monthly.co.uk/courses/uk-and-ireland/lingfield-park-golf-course-review-134296"
+    }
+  ],
+  "setting": [
+    {
+      "text": "The course is set among 200 acres of Surrey parkland at Lingfield Park Racecourse, with bunkers, streams, ponds and mature trees.",
+      "source": "https://www.todaysgolfer.co.uk/courses/united-kingdom/england/south-east/surrey/lingfield-park-golf-club/"
+    },
+    {
+      "text": "It measures 6,487 yards, par 72, according to Today's Golfer.",
+      "source": "https://www.todaysgolfer.co.uk/courses/united-kingdom/england/south-east/surrey/lingfield-park-golf-club/"
+    },
+    {
+      "text": "Holes four and five run through mature woodland, and the 2nd runs alongside the railway line, according to Golf Monthly.",
+      "source": "https://www.golf-monthly.co.uk/courses/uk-and-ireland/lingfield-park-golf-course-review-134296"
+    }
+  ],
+  "history": [
+    {
+      "text": "The golf club was established in 1987.",
+      "source": "https://www.todaysgolfer.co.uk/courses/united-kingdom/england/south-east/surrey/lingfield-park-golf-club/"
+    },
+    {
+      "text": "A large hotel with spa was added later. It is managed by Arena Racing Company under the Marriott brand.",
+      "source": "https://www.golf-monthly.co.uk/courses/uk-and-ireland/lingfield-park-golf-course-review-134296"
+    },
+    {
+      "text": "The course hosted the Surrey PGA Open for three consecutive years.",
+      "source": "https://www.todaysgolfer.co.uk/courses/united-kingdom/england/south-east/surrey/lingfield-park-golf-club/"
+    }
+  ],
+  "trivia": [
+    {
+      "text": "Golf Monthly's Rob Smith, reviewing the course on its 30th birthday, said it had matured well since it opened.",
+      "source": "https://www.golf-monthly.co.uk/courses/uk-and-ireland/lingfield-park-golf-course-review-134296"
+    },
+    {
+      "text": "Players cross the racetrack twice: after the 11th to play the next five holes, and again before the short 17th.",
+      "source": "https://www.golf-monthly.co.uk/courses/uk-and-ireland/lingfield-park-golf-course-review-134296"
+    }
+  ],
+  "holes": {
+    "2": [
+      {
+        "text": "The par 5 2nd runs alongside the railway line.",
+        "source": "https://www.golf-monthly.co.uk/courses/uk-and-ireland/lingfield-park-golf-course-review-134296"
+      }
+    ],
+    "3": [
+      {
+        "text": "The par 4 3rd is very attractive, with water guarding anything short of the green.",
+        "source": "https://www.golf-monthly.co.uk/courses/uk-and-ireland/lingfield-park-golf-course-review-134296"
+      }
+    ],
+    "6": [
+      {
+        "text": "Golf Monthly calls the 6th perhaps the prettiest hole, played over a pond to a tricky two-tier green.",
+        "source": "https://www.golf-monthly.co.uk/courses/uk-and-ireland/lingfield-park-golf-course-review-134296"
+      }
+    ],
+    "13": [
+      {
+        "text": "The 13th is a pretty par 4 dogleg from right to left, with a ditch to cross on the approach.",
+        "source": "https://www.golf-monthly.co.uk/courses/uk-and-ireland/lingfield-park-golf-course-review-134296"
+      }
+    ],
+    "15": [
+      {
+        "text": "The par 5 15th is an excellent long hole that the really big hitters may try to reach in two.",
+        "source": "https://www.golf-monthly.co.uk/courses/uk-and-ireland/lingfield-park-golf-course-review-134296"
+      }
+    ],
+    "17": [
+      {
+        "text": "The 17th is a short par 4 with out of bounds left of the green and trees and a stream on the right.",
+        "source": "https://www.golf-monthly.co.uk/courses/uk-and-ireland/lingfield-park-golf-course-review-134296"
+      }
+    ],
+    "18": [
+      {
+        "text": "The closing par 5 is short and reachable but narrow, demanding straight hitting.",
+        "source": "https://www.golf-monthly.co.uk/courses/uk-and-ireland/lingfield-park-golf-course-review-134296"
+      }
+    ]
+  },
+  "local": [
+    {
+      "text": "The golf course is part of the Lingfield Park Resort in Surrey, alongside the racecourse and the Marriott hotel.",
+      "source": "https://www.golf-monthly.co.uk/courses/uk-and-ireland/lingfield-park-golf-course-review-134296"
+    }
+  ]
+}

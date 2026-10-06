@@ -23,6 +23,7 @@ from pydantic import BaseModel, Field
 from teg_analysis.reporting.era import trophy_metric
 from teg_analysis.reporting.events import build_notable_events
 from teg_analysis.reporting.venue import build_venue_context
+from teg_analysis.reporting.course_colour import build_course_colour, check_colour_selection
 from teg_analysis.reporting import llm, prompts
 
 from teg_analysis.reporting.paths import output_dir
@@ -226,6 +227,9 @@ class DraftedStoryline(BaseModel):
                             # Defaulted empty for the same reason as chosen_headline/standfirst:
                             # DraftedStoryline is also embedded in the legacy StoryPlan, whose
                             # schema has already been rejected once by the API as too large.
+    colour_note_ids: list[str] = Field(default_factory=list)  # 0-2 ids from the bundle's
+                            # `course_colour` — see prompts.COURSE_COLOUR_PLAN_RULE. Resolved
+                            # (and policed) in code by course_colour.resolve_for_storyline.
 
 
 class VehicleFitResponse(BaseModel):
@@ -798,6 +802,7 @@ WHAT IS WORTH PUTTING IN THE PLAN — the writer can only use what you select:
 """ + prompts.NAMING_RULE + """
 """ + prompts.DESCRIPTOR_RULE + """
 """ + prompts.DOUBLE_RULE + """
+""" + prompts.COURSE_COLOUR_PLAN_RULE + """
 
 THE SPINE — the report is built around the three competitions, in this priority order:
 1. The Trophy — the main event. The scoring metric varies by era: **Stableford** \
@@ -829,6 +834,8 @@ entertaining it is.
 entertainment = colour independent of the result), and hole-by-hole `holes` \
 evidence. ALWAYS refer to beats by their `id`.
 - venue: course one-liners and whether TEG has played here before.
+- course_colour: sourced notes per course (setting, history, trivia, local area, \
+hole notes), each with an `id`. See the course colour rule above.
 - tone: a requested register; default to the house voice unless this overrides it.
 - player_history: per-player cross-TEG history (win counts, last-4 finishing \
 positions, `notable_milestones`). Use the `notable_milestones` strings as factual \
@@ -1197,6 +1204,13 @@ def check_storyline_plan_consistency(plan: StorylinePlan, bundle: dict) -> list[
             "no storyline scores humour_score >= 7 — check whether a genuinely "
             "funny angle was missed (usually the Spoon or a catalogue-of-failure story)")
 
+    # Same drafting order as scripts/storyline_full_report_experiment.py, so
+    # "already used" warnings name the storyline that loses the note.
+    order = ([("trophy_storyline", plan.trophy_storyline)]
+             + [(f"discovered[{i}]", s) for i, s in enumerate(plan.discovered_storylines)]
+             + [("jacket_storyline", plan.jacket_storyline), ("spoon_storyline", plan.spoon_storyline)])
+    warnings += check_colour_selection(order, bundle.get("beats", []), bundle.get("course_colour"))
+
     if plan.body_fallback != "none" and len(plan.discovered_storylines) >= 2:
         warnings.append(
             f"body_fallback={plan.body_fallback!r} but discovered_storylines has "
@@ -1530,6 +1544,9 @@ def assemble_bundle(teg_num: int, mode: str = "balanced", tone: str = "house",
         "tone": tone,
         "trophy_metric": trophy_metric(teg_num),
         "venue": venue,
+        # Static, sourced course notes (data/courses/*.json); the editor picks
+        # 0-2 per storyline via `colour_note_ids`. See course_colour.py.
+        "course_colour": build_course_colour(r["course"] for r in venue.get("rounds", [])),
         "competition_arcs": arcs,
         "win_anatomy": win_anatomy,
         "double": double_context,

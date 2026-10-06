@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-10-05 (live TEGBot, mid-round chances and finalise lock; TEGBot follow-ups and dev skills; live win chances tab on /simulation; TEGBot toolkit, Dig deeper and charts; new-record markers on /records; simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
+**Last updated:** 2026-10-06 (course colour for reports; live TEGBot, mid-round chances and finalise lock; TEGBot follow-ups and dev skills; live win chances tab on /simulation; TEGBot toolkit, Dig deeper and charts; new-record markers on /records; simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
+
+## 2026-10-06 — Reports get sourced course colour
+
+Every course now has a researched file in `data/courses/` (28 files, 833 facts), each fact with a source URL. Sections cover setting, history, trivia, hole notes and the local area. The TEG and round report editors see all of it. Each story picks at most two notes, and a hole note only reaches the writer when something happened on that hole. Before this, the writer saw no course text at all: the one-line description was stripped from its context. `course_info.csv` fixes: El Prat - Azul description, Prince's Dunes/Himalayas par 72, Costa Brava is the par 73 Red Course, Royal Cinque Ports par 72, blank pars filled. Detail: `teg_analysis/reporting/README.md` → *Course colour*.
 
 ## 2026-10-05 — TEGBot follows the live TEG; chances move mid-round; entry locks on finalise
 

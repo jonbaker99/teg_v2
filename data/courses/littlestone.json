@@ -1,0 +1,109 @@
+{
+  "course": "Littlestone",
+  "full_name": "Littlestone Golf Club (Championship Links)",
+  "researched": "2026-10-06",
+  "summary": [
+    {
+      "text": "Littlestone is a links on a stretch of land between Romney Marsh and the English Channel, opened in 1888 and shaped by Purves, Braid and MacKenzie.",
+      "source": "https://thegolfbusiness.co.uk/2018/10/club-history-littlestone-golf-club/"
+    }
+  ],
+  "setting": [
+    {
+      "text": "The course lies between the Romney Marsh and the English Channel, where sand dunes form natural, undulating ground.",
+      "source": "https://thegolfbusiness.co.uk/2018/10/club-history-littlestone-golf-club/"
+    },
+    {
+      "text": "The area is one of the driest places in Britain, so fairways are firm and fast.",
+      "source": "https://thegolfbusiness.co.uk/2018/10/club-history-littlestone-golf-club/"
+    },
+    {
+      "text": "Thick wild rough and classic deep pot bunkers demand accurate striking.",
+      "source": "https://thegolfbusiness.co.uk/2018/10/club-history-littlestone-golf-club/"
+    },
+    {
+      "text": "Top100golfcourses says it lacks the dune-laden terrain of its Kent neighbours but has plenty of movement, between holes 8 and 17 in particular.",
+      "source": "https://www.top100golfcourses.com/golf-course/royal-cinque-ports"
+    }
+  ],
+  "history": [
+    {
+      "text": "The course opened in 1888 and was designed by William Laidlaw Purves, who also designed Royal St George's, and David Herd.",
+      "source": "https://thegolfbusiness.co.uk/2018/10/club-history-littlestone-golf-club/"
+    },
+    {
+      "text": "James Braid, then professional at Walton Heath, added bunkers to what was mostly a bunker-less course.",
+      "source": "https://thegolfbusiness.co.uk/2018/10/club-history-littlestone-golf-club/"
+    },
+    {
+      "text": "In 1924 the club asked Alister MacKenzie for ideas. He gave an extensive list of improvements, some made at once and some over the years.",
+      "source": "https://thegolfbusiness.co.uk/2018/10/club-history-littlestone-golf-club/"
+    },
+    {
+      "text": "The course has been virtually unchanged since MacKenzie, apart from tee relocation in 1997 for extra length.",
+      "source": "https://thegolfbusiness.co.uk/2018/10/club-history-littlestone-golf-club/"
+    },
+    {
+      "text": "Littlestone hosted the first ever Ladies' Championship in 1894.",
+      "source": "https://thegolfbusiness.co.uk/2018/10/club-history-littlestone-golf-club/"
+    },
+    {
+      "text": "Littlestone hosted the Ladies' Championship in 2002 and 2007, the British Ladies Amateur in 2005 and the 2011 English Girls Open Amateur Stroke Play.",
+      "source": "https://thegolfbusiness.co.uk/2018/10/club-history-littlestone-golf-club/"
+    },
+    {
+      "text": "The club also has a second course, The Warren.",
+      "source": "https://www.littlestonegolfclub.org.uk/"
+    }
+  ],
+  "trivia": [
+    {
+      "text": "A section of a Mulberry Harbour that did not make it across the Channel after D-Day in June 1944 is still visible from the 17th tee.",
+      "source": "https://thegolfbusiness.co.uk/2018/10/club-history-littlestone-golf-club/"
+    },
+    {
+      "text": "Top100golfcourses' 2015 Kent county ranking put the Championship course 4th in Kent, calling it largely eclipsed by its Open-venue neighbours.",
+      "source": "https://www.top100golfcourses.com/golf-course/royal-cinque-ports"
+    },
+    {
+      "text": "The club describes itself as 'True Links Golf Since 1888'.",
+      "source": "https://www.littlestonegolfclub.org.uk/"
+    }
+  ],
+  "holes": {
+    "6": [
+      {
+        "text": "The par 3 6th is one of MacKenzie's contributions, along with the 17th.",
+        "source": "https://thegolfbusiness.co.uk/2018/10/club-history-littlestone-golf-club/"
+      }
+    ],
+    "12": [
+      {
+        "text": "The great fairway bunker on the 12th is credited to James Braid.",
+        "source": "https://thegolfbusiness.co.uk/2018/10/club-history-littlestone-golf-club/"
+      }
+    ],
+    "16": [
+      {
+        "text": "The array of cross bunkers on the 16th is credited to James Braid.",
+        "source": "https://thegolfbusiness.co.uk/2018/10/club-history-littlestone-golf-club/"
+      }
+    ],
+    "17": [
+      {
+        "text": "The par 3 17th is one of MacKenzie's contributions, and a piece of Mulberry Harbour is visible from its tee.",
+        "source": "https://thegolfbusiness.co.uk/2018/10/club-history-littlestone-golf-club/"
+      }
+    ]
+  },
+  "local": [
+    {
+      "text": "The club is at Littlestone, New Romney, on the Kent coast.",
+      "source": "https://www.littlestonegolfclub.org.uk/"
+    },
+    {
+      "text": "Top100golfcourses calls Royal St George's, Prince's and Royal Cinque Ports its links neighbours along the Kent coastline.",
+      "source": "https://www.top100golfcourses.com/golf-course/royal-cinque-ports"
+    }
+  ]
+}

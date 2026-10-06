@@ -110,6 +110,7 @@ from teg_analysis.reporting import llm, prompts
 from teg_analysis.reporting.authoring import (WRITER_VOICE, _strip_derived_prose,
                                              load_storyline_plan, restyle_voice)
 from teg_analysis.reporting.backfill import parse_teg_spec
+from teg_analysis.reporting.course_colour import note_index, resolve_for_storyline
 from teg_analysis.reporting.paths import output_dir
 from teg_analysis.reporting.settled_facts import build_settled_facts
 from teg_analysis.reporting.story_plan import assemble_bundle, build_storyline_plan
@@ -218,6 +219,7 @@ WHAT IS WORTH SAYING, and how to name it:
 """ + prompts.NAMING_RULE + """
 """ + prompts.DOUBLE_RULE + """
 """ + prompts.SHARED_FAITHFULNESS + """
+""" + prompts.COURSE_COLOUR_WRITER_RULE + """
 """ + prompts.WEEKDAY_RULE
 
 
@@ -301,6 +303,17 @@ def build_storyline_draft(teg_num: int, model: Optional[str] = None,
     # Kept behind a flag rather than deleted: the mechanism is sound and the
     # evidence is real, so if the presentation changes again this is a flag flip,
     # not a rebuild.
+    # Course colour: each storyline's picked notes, policed in code (hole notes
+    # only where its own beats happened; each note used once). Added after
+    # `_context_for`'s prose-stripping, which would otherwise keep nothing.
+    colour_index = note_index(bundle.get("course_colour"))
+    colour_used: set = set()
+
+    def with_colour(context: dict, evidence: list, *storylines) -> dict:
+        ids = [nid for x in storylines for nid in (x.get("colour_note_ids") or [])]
+        notes = resolve_for_storyline(ids, evidence, colour_index, colour_used)
+        return {**context, "course_colour": notes} if notes else context
+
     pairs = interweave.find_overlapping_pairs(order) if interweave_sections else []
     merge_at = {i: (a, b) for a, b, i, j in pairs}       # position -> pair to merge in
     skip = {j for _, _, i, j in pairs}                    # position already covered by its pair
@@ -314,14 +327,14 @@ def build_storyline_draft(teg_num: int, model: Optional[str] = None,
             print(f"[storyline_full_report] interweaving: {a['subject'][:40]} / {b['subject'][:40]}")
             evidence_a, evidence_b = _evidence_for(a, all_beats), _evidence_for(b, all_beats)
             players = {p for beat in evidence_a + evidence_b for p in beat.get("players", [])}
-            context = _context_for(players, bundle)
+            context = with_colour(_context_for(players, bundle), evidence_a + evidence_b, a, b)
             text = interweave.draft_interwoven(a, evidence_a, b, evidence_b, context, model=model)
             sections.append(f"## {a['subject']} / {b['subject']}\n{anchor(a, b)}\n\n{text}")
             continue
         print(f"[storyline_full_report] drafting: {s['subject'][:60]}")
         evidence = _evidence_for(s, all_beats)
         storyline_players = {p for b in evidence for p in b.get("players", [])}
-        context = _context_for(storyline_players, bundle)
+        context = with_colour(_context_for(storyline_players, bundle), evidence, s)
         text = draft_section(s, evidence, context, model=model)
         sections.append(f"## {s['subject']}\n{anchor(s)}\n\n{text}")
 

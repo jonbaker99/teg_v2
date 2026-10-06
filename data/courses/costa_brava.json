@@ -1,0 +1,177 @@
+{
+  "course": "Costa Brava",
+  "full_name": "Club de Golf Costa Brava (Red Course)",
+  "researched": "2026-10-06",
+  "summary": [
+    {
+      "text": "Club de Golf Costa Brava at Santa Cristina d'Aro is one of the first golf clubs on the Costa Brava; its first 18 holes, by John Hamilton Stutt, opened in 1968.",
+      "source": "https://golfcostabrava.com/en/history/"
+    }
+  ],
+  "setting": [
+    {
+      "text": "The club says the Red Course has more water than the Green, with undulating, fast greens that test the short game.",
+      "source": "https://golfcostabrava.com/en/your-course/"
+    },
+    {
+      "text": "The club says its five par fives make the Red Course a challenge for power hitters.",
+      "source": "https://golfcostabrava.com/en/your-course/"
+    },
+    {
+      "text": "The Green Course's back nine, which forms part of the Red, is flatter and approaches the Vall d'Aro, according to the club.",
+      "source": "https://golfcostabrava.com/en/your-course/"
+    },
+    {
+      "text": "Where2golf calls the course not overly hilly or long but tight in places, on tree-lined fairways of pine and cork oak past luxury villas.",
+      "source": "https://where2golf.com/spain/club-de-golf-costa-brava"
+    },
+    {
+      "text": "The club says it uses recycled water for irrigation and electric vehicles.",
+      "source": "https://golfcostabrava.com/en/your-course/"
+    }
+  ],
+  "history": [
+    {
+      "text": "The Masia that became the clubhouse was built in 1841.",
+      "source": "https://golfcostabrava.com/en/history/"
+    },
+    {
+      "text": "Club de Golf Costa Brava was founded on 10 April 1962.",
+      "source": "https://golfcostabrava.com/en/history/"
+    },
+    {
+      "text": "The first 18 holes opened in 1968, designed by John Hamilton Stutt, whom the club credits with Turnberry and St Mellion Old.",
+      "source": "https://golfcostabrava.com/en/history/"
+    },
+    {
+      "text": "The club says the opening coincided with the social boom around S'Agaro and Platja d'Aro, drawing film stars including Sean Connery, who played the new course.",
+      "source": "https://golfcostabrava.com/en/history/"
+    },
+    {
+      "text": "Nine new holes were added in 2011, making 27 in all, designed by Jorge Soler and Eugenio Aguado, according to the club.",
+      "source": "https://golfcostabrava.com/en/history/"
+    },
+    {
+      "text": "The Red Course combines the back nine of the Green Course with the holes added in 2011, according to the club.",
+      "source": "https://golfcostabrava.com/en/your-course/"
+    },
+    {
+      "text": "About 300 people attended the 50th anniversary event on 11 August 2018.",
+      "source": "https://golfcostabrava.com/en/history/"
+    },
+    {
+      "text": "Top100golfcourses says the club was founded in 1962 but the course did not appear for another six years.",
+      "source": "https://www.top100golfcourses.com/golf-course/costa-brava/reviews/41110"
+    }
+  ],
+  "trivia": [
+    {
+      "text": "The Red Course is a par 73 with five par 5s, a test for big hitters, according to the club.",
+      "source": "https://golfcostabrava.com/en/your-course/"
+    },
+    {
+      "text": "The club calls itself the oldest and only social golf club on the Costa Brava.",
+      "source": "https://www.golfcostabrava.com/en/"
+    },
+    {
+      "text": "The club's other 18, the Green Course, is par 70 and unusual for having six par threes, according to the club.",
+      "source": "https://golfcostabrava.com/en/your-course/"
+    }
+  ],
+  "holes": {
+    "1": [
+      {
+        "text": "A par four listed at 365 metres with a pronounced dogleg left that limits the driver, and a large pine left of the fairway.",
+        "source": "https://golfcostabrava.com/en/red-course/"
+      }
+    ],
+    "2": [
+      {
+        "text": "A par five listed at 455 metres, doglegging left to right with forest down the right. The club calls it a birdie opportunity.",
+        "source": "https://golfcostabrava.com/en/red-course/"
+      }
+    ],
+    "3": [
+      {
+        "text": "A long par three listed at 205 metres needing a long iron or a wood, with two bunkers around a flat green.",
+        "source": "https://golfcostabrava.com/en/red-course/"
+      }
+    ],
+    "5": [
+      {
+        "text": "The club says it is the longest par five on the course, at 508 metres, with out of bounds left and a huge pine in the middle of the fairway.",
+        "source": "https://golfcostabrava.com/en/red-course/"
+      }
+    ],
+    "6": [
+      {
+        "text": "A straight, level par three listed at 173 metres, with a lake on the right.",
+        "source": "https://golfcostabrava.com/en/red-course/"
+      }
+    ],
+    "7": [
+      {
+        "text": "A par four listed at 383 metres that the club describes as stroke index 1, a dogleg left with a stream to avoid off the tee.",
+        "source": "https://golfcostabrava.com/en/red-course/"
+      }
+    ],
+    "8": [
+      {
+        "text": "A par four listed at 317 metres with two water hazards off the tee and a complex green with three platforms.",
+        "source": "https://golfcostabrava.com/en/red-course/"
+      }
+    ],
+    "9": [
+      {
+        "text": "A par five listed at 482 metres with a stream to cross on the second shot and a large lake left of the green.",
+        "source": "https://golfcostabrava.com/en/red-course/"
+      }
+    ],
+    "11": [
+      {
+        "text": "A short par four listed at 289 metres that the club calls a challenge filled with water, ending at a slightly elevated island green.",
+        "source": "https://golfcostabrava.com/en/red-course/"
+      }
+    ],
+    "15": [
+      {
+        "text": "A par five listed at 459 metres, with a large oak tree about 100 metres from the green.",
+        "source": "https://golfcostabrava.com/en/red-course/"
+      }
+    ],
+    "17": [
+      {
+        "text": "A short par three listed at 134 metres, where a stream winds around the right of the green and behind it.",
+        "source": "https://golfcostabrava.com/en/red-course/"
+      }
+    ],
+    "18": [
+      {
+        "text": "A par four listed at 380 metres with a century-old olive tree as a tee-shot marker, a stream down the left, and a green split into two platforms.",
+        "source": "https://golfcostabrava.com/en/red-course/"
+      },
+      {
+        "text": "The clubhouse terrace has views of the 18th hole.",
+        "source": "https://golfcostabrava.com/en/la-masia/"
+      }
+    ]
+  },
+  "local": [
+    {
+      "text": "The club is on the Costa Brava at Santa Cristina d'Aro, in the Girona area.",
+      "source": "https://golfcostabrava.com/en/history/"
+    },
+    {
+      "text": "Where2golf puts it about 30 km south-east of Girona.",
+      "source": "https://where2golf.com/spain/club-de-golf-costa-brava"
+    },
+    {
+      "text": "The club's villa-lined surroundings include S'Agaro and Platja d'Aro, per the club's history page.",
+      "source": "https://golfcostabrava.com/en/history/"
+    },
+    {
+      "text": "The clubhouse is a Catalan farmhouse the club dates to 1841, flanked by two cypress trees.",
+      "source": "https://golfcostabrava.com/en/la-masia/"
+    }
+  ]
+}

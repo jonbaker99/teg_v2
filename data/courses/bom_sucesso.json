@@ -1,0 +1,109 @@
+{
+  "course": "Bom Sucesso",
+  "full_name": "Guardian Bom Sucesso Golf",
+  "researched": "2026-10-06",
+  "summary": [
+    {
+      "text": "An 18-hole championship course beside the Lagoa de Óbidos, designed by Donald Steel and inaugurated in September 2008.",
+      "source": "https://www.bomsucessoresort.pt/en/golf/"
+    }
+  ],
+  "setting": [
+    {
+      "text": "Occupies more than 60 hectares at the Bom Sucesso Resort, next to the Lagoa de Óbidos, with views of the lagoon.",
+      "source": "https://www.bomsucessoresort.pt/en/golf/"
+    },
+    {
+      "text": "The first nine is on relatively level ground, and the back nine rises and falls over more undulating land.",
+      "source": "https://www.top100golfcourses.com/golf-course/bom-sucesso"
+    },
+    {
+      "text": "Sits within a large residential development close to the Silver Coast, about an hour north of Lisbon.",
+      "source": "https://www.top100golfcourses.com/golf-course/bom-sucesso"
+    },
+    {
+      "text": "Combines long greens, lakes and strategically placed bunkers in the manner of classic courses.",
+      "source": "https://www.bomsucessoresort.pt/en/golf/"
+    }
+  ],
+  "history": [
+    {
+      "text": "Inaugurated in September 2008.",
+      "source": "https://www.bomsucessoresort.pt/en/golf/"
+    },
+    {
+      "text": "Martin Ebert laid out the fairways when he was one of the lead architects with Donald Steel's design company.",
+      "source": "https://www.top100golfcourses.com/golf-course/bom-sucesso"
+    },
+    {
+      "text": "Top100golfcourses says many of the design elements nod to old classic layouts, such as building some randomness into the green surfaces and surrounds.",
+      "source": "https://www.top100golfcourses.com/golf-course/bom-sucesso"
+    },
+    {
+      "text": "Added to the European Tour Destinations list in April 2016.",
+      "source": "https://www.centerofportugal.com/entity/guardian-bom-sucesso-golf"
+    }
+  ],
+  "trivia": [
+    {
+      "text": "Par 72.",
+      "source": "https://www.bomsucessoresort.pt/en/golf/"
+    },
+    {
+      "text": "Top100golfcourses lists the architects as Donald Steel, Mackenzie & Ebert.",
+      "source": "https://www.top100golfcourses.com/golf-course/bom-sucesso"
+    }
+  ],
+  "holes": {
+    "2": [
+      {
+        "text": "A par 5 that doglegs right with a lake on the right, so the approach to the green has to be accurate.",
+        "source": "https://www.bomsucessoresort.pt/en/golf/"
+      }
+    ],
+    "16": [
+      {
+        "text": "A tough, uphill par 4 that opens the closing stretch, with panoramic views of the surrounding area.",
+        "source": "https://www.top100golfcourses.com/golf-course/bom-sucesso"
+      }
+    ],
+    "17": [
+      {
+        "text": "A par 5 that swings downhill on a left dogleg to a far-off green about 530 metres from the back tees, according to Top100golfcourses.",
+        "source": "https://www.top100golfcourses.com/golf-course/bom-sucesso"
+      },
+      {
+        "text": "The club calls it the most exciting hole, with superb views of the Óbidos Lagoon and steeply sloping ground down the left.",
+        "source": "https://www.bomsucessoresort.pt/en/golf/"
+      }
+    ],
+    "18": [
+      {
+        "text": "A par 4 that heads back to the clubhouse, crossing a stream and with a pond fronting the green.",
+        "source": "https://www.top100golfcourses.com/golf-course/bom-sucesso"
+      },
+      {
+        "text": "The club says the clubhouse terrace overlooks the 18th.",
+        "source": "https://www.bomsucessoresort.pt/en/golf/"
+      }
+    ]
+  },
+  "local": [
+    {
+      "text": "Beside the Lagoa de Óbidos, about an hour from Lisbon airport.",
+      "source": "https://www.centerofportugal.com/entity/guardian-bom-sucesso-golf"
+    },
+    {
+      "text": "The resort also has a hotel and spa, and designer homes.",
+      "source": "https://www.gryphongolftours.com/destination/destination-portugal/lisbon/bom-sucesso-golf-course-2/"
+    },
+    {
+      "text": "Praia D'El Rey, Royal Óbidos and West Cliffs are all nearby.",
+      "source": "https://www.top100golfcourses.com/golf-course/bom-sucesso"
+    },
+    {
+      "text": "The medieval walled town of Óbidos is close by.",
+      "source": "https://patrimonios.pt/en/obidos/"
+    }
+  ]
+}
