@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-10-05 (live TEGBot, mid-round chances and finalise lock; TEGBot follow-ups and dev skills; live win chances tab on /simulation; TEGBot toolkit, Dig deeper and charts; new-record markers on /records; simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
+**Last updated:** 2026-10-06 (TEGBot web search; live TEGBot, mid-round chances and finalise lock; TEGBot follow-ups and dev skills; live win chances tab on /simulation; TEGBot toolkit, Dig deeper and charts; new-record markers on /records; simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
+
+## 2026-10-06 — TEGBot can search the web for course and benchmark facts
+
+TEGBot can now look things up on the web when a TEG question needs facts the data lacks: what a TEG course is like (style, layout, difficulty, rating and slope), comparing courses, or an outside golfer's standard ("what handicap would Rory McIlroy need?"). It still answers off-topic questions with one line. Comparisons lead with how the TEG players actually scored, then add the published picture. Web figures are quoted with their source; any sum using them runs in code. Cited pages are listed under the answer, and each search shows in the workings. Up to 3 searches a question (6 in Deep dive), about 1p each. `TEGBOT_WEB_SEARCH=0` switches it off.
 
 ## 2026-10-05 — TEGBot follows the live TEG; chances move mid-round; entry locks on finalise
 

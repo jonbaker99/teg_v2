@@ -227,7 +227,7 @@ Two distinct phases. **Streamlit is the original architecture** — self-contain
 
 2. **`streamlit/`** — the original app, self-contained via its own `utils.py`. **Dead code kept for reference only**: not deployed, not maintained, not migrated, and nothing else in the repo depends on it. Slated for deletion. Never modify it, and don't use it as a model for new work.
 
-3. **`webapp/`** — FastAPI + HTMX + Jinja2 + Tailwind. Deployed on Railway from `main` via `railway.toml` → `uvicorn webapp.app:app`. `requirements.txt` is webapp-only (includes `pyarrow`). Needs `GITHUB_TOKEN` and a volume at `/mnt/data_repo`; `ANTHROPIC_API_KEY` for reports (`TEG_ANTHROPIC_API_KEY` is accepted as an alias), `GOOGLE_*` for data-update ingestion; optional `TEGBOT_MODEL`, `TEGBOT_DAILY_LIMIT`, `TEGBOT_ENABLED` for the chatbot. Public pages only *read* finished reports. Admins can generate them from `/admin/reports`, which runs the report pipeline in the webapp process (`webapp/report_generation.py`).
+3. **`webapp/`** — FastAPI + HTMX + Jinja2 + Tailwind. Deployed on Railway from `main` via `railway.toml` → `uvicorn webapp.app:app`. `requirements.txt` is webapp-only (includes `pyarrow`). Needs `GITHUB_TOKEN` and a volume at `/mnt/data_repo`; `ANTHROPIC_API_KEY` for reports (`TEG_ANTHROPIC_API_KEY` is accepted as an alias), `GOOGLE_*` for data-update ingestion; optional `TEGBOT_MODEL`, `TEGBOT_DAILY_LIMIT`, `TEGBOT_ENABLED`, `TEGBOT_WEB_SEARCH` for the chatbot. Public pages only *read* finished reports. Admins can generate them from `/admin/reports`, which runs the report pipeline in the webapp process (`webapp/report_generation.py`).
 
 4. **`ad_hoc_analysis/`** — Jupyter notebooks calling `teg_analysis/` directly. Start at `quickstart.ipynb`.
 

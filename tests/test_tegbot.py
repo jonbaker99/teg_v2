@@ -1071,3 +1071,78 @@ def test_split_trailer_full_strips_trailer_lines_not_at_end():
     assert "THEME" not in out and "DEEP" not in out
     assert out.endswith("A stray line after.")
     assert theme == "Predictions" and deep is True and related == []
+
+
+# --- web search ----------------------------------------------------------------
+
+def test_web_search_tool_is_offered_and_can_be_switched_off(data, monkeypatch):
+    done = _resp([SimpleNamespace(type="text", text="ok")], "end_turn")
+    client = FakeClient([done, done, done])
+    bot.ask("q", data, client=client)
+    bot.ask("q", data, client=client, deep=True)
+    normal, deep = ([t for t in c["tools"] if t.get("name") == "web_search"] for c in client.calls)
+    assert normal == [{"type": bot.WEB_SEARCH_TYPE, "name": "web_search",
+                       "max_uses": bot.WEB_SEARCH_USES}]
+    assert deep[0]["max_uses"] == bot.DEEP_WEB_SEARCH_USES
+    monkeypatch.setenv(bot.ENV_WEB_SEARCH, "0")
+    bot.ask("q", data, client=client)
+    assert all(t.get("name") != "web_search" for t in client.calls[2]["tools"])
+
+
+def test_web_search_recorded_with_sources_and_cost(data):
+    search = SimpleNamespace(type="server_tool_use", id="w1", name="web_search",
+                             input={"query": "Royal St Davids slope rating"})
+    found = SimpleNamespace(type="web_search_tool_result", tool_use_id="w1", content=[
+        SimpleNamespace(type="web_search_result", title="Royal St David's", url="https://rsd.example")])
+    cite = SimpleNamespace(url="https://rsd.example", title="Royal St David's")
+    final = _resp([search, found,
+                   SimpleNamespace(type="text", text="It is a links course ", citations=None),
+                   SimpleNamespace(type="text", text="rated 72.4", citations=[cite, cite]),
+                   SimpleNamespace(type="text", text=", per the club.", citations=None)], "end_turn")
+    final.usage.server_tool_use = SimpleNamespace(web_search_requests=1)
+    answer = bot.ask("How hard is Royal St David's?", data, client=FakeClient([final]))
+    assert answer.text == "It is a links course rated 72.4, per the club."
+    assert answer.sources == [{"title": "Royal St David's", "url": "https://rsd.example"}]
+    assert answer.tool_calls[0].name == "web_search"
+    assert answer.tool_calls[0].output == {"results": [{"title": "Royal St David's",
+                                                        "url": "https://rsd.example"}]}
+    assert answer.usage["web_search_requests"] == 1
+    assert "web search: Royal St Davids slope rating" in answer.method_note
+    assert answer.cost_usd > bot.WEB_SEARCH_PRICE
+
+
+def test_web_search_error_and_non_http_citations():
+    calls = []
+    bot._record_sandbox_calls([
+        SimpleNamespace(type="server_tool_use", id="w", name="web_search", input={"query": "x"}),
+        SimpleNamespace(type="web_search_tool_result", tool_use_id="w",
+                        content=SimpleNamespace(error_code="max_uses_exceeded"))], calls)
+    assert calls[0].output == {"error": "max_uses_exceeded"}
+    bad = SimpleNamespace(url="javascript:alert(1)", title="x")
+    assert bot._sources([SimpleNamespace(type="text", text="t", citations=[bad])]) == []
+
+
+def test_web_search_working_entry():
+    from webapp.routes.tegbot import _working
+    call = bot.ToolCall("web_search", {"query": "q"},
+                        {"results": [{"title": "T", "url": "https://u.example"}]})
+    assert _working(call) == {"name": "Web search", "input": "q",
+                              "output": "T — https://u.example"}
+
+
+def test_rejected_web_search_falls_back_without_it(data, monkeypatch):
+    class Rejected(Exception):
+        status_code = 400
+    monkeypatch.setattr(bot, "_web_search_rejected", False)
+    done = _resp([SimpleNamespace(type="text", text="ok")], "end_turn")
+    client = FakeClient([done])
+    real = client._create
+
+    def create(**kwargs):
+        if any(t.get("name") == "web_search" for t in kwargs["tools"]):
+            client.calls.append(kwargs)
+            raise Rejected("web_search is not enabled for this organization")
+        return real(**kwargs)
+    client.beta.messages.create = create
+    assert bot.ask("q", data, client=client).text == "ok"
+    assert not bot.web_search_enabled()

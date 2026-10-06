@@ -295,6 +295,12 @@ def _working(call: "bot.ToolCall") -> dict:
         shown_out = call.output.get("stdout", "") + call.output.get("stderr", "")
         return {"name": "Code run in the sandbox", "input": shown_in[:6000],
                 "output": (shown_out or json.dumps(call.output))[:6000]}
+    if call.name == "web_search":
+        found = call.output.get("results")
+        shown_out = ("\n".join(f"{r['title']} — {r['url']}" for r in found) if found is not None
+                     else json.dumps(call.output))
+        return {"name": "Web search", "input": str(call.input.get("query", "")),
+                "output": shown_out[:6000]}
     return {"name": f"Lookup: {call.name}",
             "input": json.dumps(call.input, indent=1, default=str),
             "output": json.dumps(call.output, indent=1, default=str)[:6000]}
@@ -397,6 +403,7 @@ def _run_question(question: str, prior: list, past: list, themes: list, conv: st
         answer_text=answer.history_text(),
         answer_html=render_answer_html(answer.text),
         tool_calls=workings,
+        sources=list(getattr(answer, "sources", []) or []),
         deep=deep_mode,
         suggest_deep=bool(getattr(answer, "suggest_deep", False)) and not deep_mode,
         deep_reason=str(getattr(answer, "deep_reason", "") or "") if not deep_mode else "",
