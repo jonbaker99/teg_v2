@@ -67,6 +67,12 @@ def test_unrated_course_has_no_difficulty():
     assert cd.course_difficulty("Unrated", TABLE) is None
 
 
+def test_table_without_rating_columns_has_no_difficulty():
+    # The live volume can hold a course_info.csv from before ratings existed.
+    old = pd.DataFrame({"Course": ["Easy"], "par": [72]})
+    assert cd.course_difficulty("Easy", old) is None
+
+
 def test_rank_needs_enough_courses_and_respects_the_pool(monkeypatch):
     assert "rank_hardest" not in cd.course_difficulty("Hard", TABLE)
     monkeypatch.setattr(cd, "MIN_POOL_FOR_RANK", 2)
