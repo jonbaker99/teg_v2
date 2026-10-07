@@ -72,6 +72,9 @@ def course_difficulty(course: str, table: Optional[pd.DataFrame] = None,
     `MIN_POOL_FOR_RANK` courses, where "the hardest TEG had played" is trivia.
     """
     table = load_course_table() if table is None else table
+    # A course_info.csv from before the ratings were added has no columns to rate.
+    if not {"Course", "course_rating", "slope_rating", "par"} <= set(table.columns):
+        return None
     t = table.assign(extra=[extra_strokes(r.course_rating, r.slope_rating, r.par)
                             for r in table.itertuples()])
     t = t[t["extra"].notna()]

@@ -38,8 +38,8 @@ templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templa
 def contents_page(request: Request, view: str = Query("results")):
     sections = request.state.nav_sections
     state = get_tournament_state()
-    # ?view=next is only meaningful between tournaments.
-    view_ctx = _complete_view_context(request, view, state) if state["state"] == "complete" else {}
+    # Between tournaments both views render; ?view=next opens on Next TEG.
+    view_ctx = _complete_view_context(view) if state["state"] == "complete" else {}
     return templates.TemplateResponse("contents.html", {
         **view_ctx,
         "request": request,
@@ -183,8 +183,8 @@ def _in_progress_panel(teg_num: int) -> dict:
     }
 
 
-# Complete-state views, switched in place by /contents/view: the finished
-# TEG's results, or the next TEG's rounds and handicaps.
+# Complete-state views, both rendered with the page and switched in the
+# browser: the finished TEG's results, or the next TEG's rounds and handicaps.
 COMPLETE_VIEWS = ("results", "next")
 
 
@@ -222,6 +222,10 @@ def _next_teg_context() -> dict:
         venue = build_venue_context(next_tegnum)
     except ValueError:
         venue = None  # no round_info rows yet
+    except Exception:
+        # Venue detail is extra; the area and year still come from future_tegs.
+        logger.exception("Next TEG venue unavailable for TEG %s", next_tegnum)
+        venue = None
     if venue:
         area = _text(venue["area"])
         for r in venue["rounds"]:
@@ -303,19 +307,12 @@ def contents_pane(request: Request, teg: int = Query(...), rounds: int = Query(.
     })
 
 
-@router.get("/contents/view")
-def contents_view(request: Request, view: str = Query("results")):
-    # Complete state only: swaps the whole tournament section between the
-    # finished TEG's results and the next TEG, without leaving Contents.
-    return templates.TemplateResponse("partials/_contents_complete_view.html",
-                                      _complete_view_context(request, view))
-
-
-def _complete_view_context(request: Request, view: str, state: dict | None = None) -> dict:
+def _complete_view_context(view: str) -> dict:
     view = view if view in COMPLETE_VIEWS else "results"
-    return {
-        "request": request,
-        "view": view,
-        "state": state or get_tournament_state(),
-        "next_teg": _next_teg_context() if view == "next" else None,
-    }
+    try:
+        next_teg = _next_teg_context()
+    except Exception:
+        # The Next TEG tab must never take the home page down; drop it.
+        logger.exception("Next TEG view unavailable")
+        next_teg = None
+    return {"view": view, "next_teg": next_teg}

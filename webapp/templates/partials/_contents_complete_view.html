@@ -1,23 +1,24 @@
-{# Complete-state Contents: the finished TEG's results or the next TEG,
-   swapped whole by the view tabs via GET /contents/view (outerHTML), so the
-   active state comes back with the content. ?view=next on /contents renders
-   the same markup directly, so the URL reproduces the view. #}
+{# Complete-state Contents: the finished TEG's results and the next TEG.
+   Both views render with the page; the tabs just show one and hide the
+   other in the browser, so switching is instant and needs no request.
+   ?view=next on /contents opens on the Next TEG view, and the tabs keep
+   the URL in step. Next TEG drops out if its context failed to build. #}
 <div id="complete-view">
+    {% if next_teg %}
     <div class="pane-switch view-switch" role="group" aria-label="Show">
         {% for key, label in [("results", "Last TEG"), ("next", "Next TEG")] %}
         <button type="button" class="tab-underline{% if key == view %} tab-underline--active{% endif %}"
                 aria-pressed="{{ 'true' if key == view else 'false' }}"
-                hx-get="/contents/view?view={{ key }}"
-                hx-push-url="/contents{% if key == 'next' %}?view=next{% endif %}"
-                hx-target="#complete-view" hx-swap="outerHTML">{{ label }}</button>
+                aria-controls="complete-view-{{ key }}"
+                data-complete-view="{{ key }}">{{ label }}</button>
         {% endfor %}
     </div>
 
-{% if view == "next" %}
+    <section id="complete-view-next"{% if view != "next" %} hidden{% endif %}>
     <h1 class="state-headline">Next: TEG {{ next_teg.teg_num }}</h1>
     <p class="state-context">{{ next_teg.area or "Venue TBC" }}. {{ next_teg.when or "Dates TBC" }}</p>
 
-    <div class="panel-grid two-col equal-col next-teg-grid" id="contents-panel">
+    <div class="panel-grid two-col equal-col next-teg-grid">
         <div class="surface surface-open">
             <p class="standings-heading">TEG {{ next_teg.teg_num }} schedule</p>
             {# Not a table: each round is two balanced lines, "Round N" over
@@ -53,7 +54,10 @@
             </table>
         </div>
     </div>
-{% else %}
+    </section>
+    {% endif %}
+
+    <section id="complete-view-results"{% if next_teg and view == "next" %} hidden{% endif %}>
     <h1 class="state-headline">{{ state.teg_label }} results</h1>
     <p class="state-context">{{ state.area }}. {{ state.dateline_month_year or state.year }}</p>
 
@@ -73,5 +77,22 @@
             </div>
         </div>
     </div>
-{% endif %}
+    </section>
 </div>
+<script>
+(function () {
+    var root = document.getElementById('complete-view');
+    root.addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-complete-view]');
+        if (!btn) return;
+        var key = btn.dataset.completeView;
+        root.querySelectorAll('[data-complete-view]').forEach(function (b) {
+            var on = b === btn;
+            b.classList.toggle('tab-underline--active', on);
+            b.setAttribute('aria-pressed', on ? 'true' : 'false');
+            document.getElementById(b.getAttribute('aria-controls')).hidden = !on;
+        });
+        history.replaceState(history.state, '', key === 'next' ? '/contents?view=next' : '/contents');
+    });
+})();
+</script>

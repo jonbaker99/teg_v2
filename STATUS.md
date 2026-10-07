@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-10-06 (course colour, ratings and difficulty for reports and TEGBot; TEGBot web search; live TEGBot, mid-round chances and finalise lock; TEGBot follow-ups and dev skills; live win chances tab on /simulation; TEGBot toolkit, Dig deeper and charts; new-record markers on /records; simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
+**Last updated:** 2026-10-07 (Next TEG switch fix; course colour, ratings and difficulty for reports and TEGBot; TEGBot web search; live TEGBot, mid-round chances and finalise lock; TEGBot follow-ups and dev skills; live win chances tab on /simulation; TEGBot toolkit, Dig deeper and charts; new-record markers on /records; simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
+
+## 2026-10-07 — Home page Last TEG / Next TEG switch is instant again
+
+The Next TEG tab had stopped working live: its request returned a 500 because the volume's `course_info.csv` predates the rating columns. Both views now render with the page and switch in the browser with no request. A Next TEG failure now drops the tab instead of breaking the page, and `course_difficulty()` returns nothing for a table without ratings. The volume copy of `course_info.csv` still needs pulling (`webapp/TODOS.md`).
 
 ## 2026-10-06 — Reports and TEGBot use what we know about courses
 
