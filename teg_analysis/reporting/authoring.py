@@ -967,6 +967,22 @@ def _strip_beat_ids(text: str) -> str:
     return text
 
 
+def _restore_title(source_text: str, text: str) -> str:
+    """Put the source's `# Title` back if a rewrite pass dropped it.
+
+    Styling anchors the dateline, scores and at-a-glance box on the H1, so a
+    missing title silently yields a headerless report the site cannot parse
+    (TEG 19 R1, 2026-10-10: the voice pass returned the body without it).
+    """
+    import re
+    if re.search(r"^# ", text, re.MULTILINE):
+        return text
+    m = re.search(r"^# [^\n]+$", source_text, re.MULTILINE)
+    if not m:
+        return text
+    return m.group(0) + "\n\n" + text.lstrip("\n")
+
+
 def repetition_lint(text: str, model: str = "claude-haiku-4-5",
                     label: str = "") -> Tuple[str, object]:
     """Narrow final pass: kill repeated/over-used words only. Returns (text, usage).
@@ -1140,7 +1156,7 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
                                     max_tokens=16000,
                                     stage="restyle",
                                     label=f"teg{teg_num}" + (f"r{round_num}" if round_num is not None else ""))
-    text = _strip_beat_ids(text)
+    text = _restore_title(source_text, _strip_beat_ids(text))
 
     output_path = f"{output_dir()}/{stem}_report_{label}.md"
     with open(output_path, "w") as f:
@@ -1370,7 +1386,7 @@ def apply_corrections(teg_num: int, *, source_label: str = "storylinefirst",
                                     max_tokens=16000,
                                     stage="corrections",
                                     label=f"teg{teg_num}" + (f"r{round_num}" if round_num is not None else ""))
-    text = _strip_beat_ids(text)
+    text = _restore_title(source_text, _strip_beat_ids(text))
 
     output_path = f"{output_dir()}/{stem}_report_{out_label}.md"
     with open(output_path, "w") as f:

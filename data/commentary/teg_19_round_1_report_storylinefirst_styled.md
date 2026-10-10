@@ -1,3 +1,17 @@
+# One Point After Eighteen Holes {.round-report-title}
+
+<p class="dateline">TEG 19 | Round 1 | 10/10/2026 | Quinta da Ria</p>
+
+<p class="round-scores"><span class="round-scores-header">Round Stableford:</span> JB 39 | AB 38 | GW 38 | DM 31 | JP 31</p>
+<p class="round-scores"><span class="round-scores-header">Round Gross:</span> GW +15 | JB +18 | DM +25 | AB +30 | JP +33</p>
+
+<section class="callout at-a-glance-box">
+  <p class="at-a-glance-title">RESULTS</p>
+  <p><strong>Round of the day:</strong><span> Jon BAKER (39 pts)</span></p>
+  <p><strong>Trophy lead:</strong><span> Jon BAKER, 1 ahead</span></p>
+  <p><strong>Green Jacket lead:</strong><span> Gregg WILLIAMS, 3 ahead</span></p>
+</section>
+
 ## Jon Baker's 39 points, the best round of the day, assembled out of a ruinous spell at the turn and three immaculate pars when the course opened out
 <!-- storyline: round -->
 

@@ -308,3 +308,19 @@ def test_round_glance_shows_teg12_r1_jacket_tie_as_level():
     jacket = next(r["value"] for r in rows if r["label"] == "Green Jacket lead")
     assert not is_final
     assert jacket == "Jon BAKER and Gregg WILLIAMS, level"
+
+
+def test_restore_title_puts_back_a_dropped_h1():
+    """TEG 19 R1 (2026-10-10): the voice pass dropped `# Title`, so styling
+    had no anchor and the page lost its header and results box."""
+    from teg_analysis.reporting.authoring import _restore_title
+    src = "# The Title\n\n## Section\n\nBody.\n"
+    assert _restore_title(src, "## Section\n\nNew body.\n").startswith("# The Title\n\n## Section")
+    kept = "# Other\n\n## Section\n"
+    assert _restore_title(src, kept) == kept
+
+
+def test_style_round_text_refuses_text_without_h1():
+    from teg_analysis.reporting.render import style_round_text
+    with pytest.raises(ValueError, match="no '# Title'"):
+        style_round_text(19, 1, "## Section only\n\nBody.\n")

@@ -902,6 +902,12 @@ def style_round_text(teg_num: int, round_num: int, text: str, *,
 
     Idempotent: re-running on already-styled text is a no-op.
     """
+    # The header block below hangs off the H1; without one the report would
+    # publish with no dateline, scores or results box. Fail instead.
+    if not re.search(r"^# ", text, re.MULTILINE):
+        raise ValueError(f"TEG {teg_num} R{round_num}: report text has no '# Title' "
+                         "line to hang the round header on")
+
     # Tag the H1
     def repl_h1(m):
         line = m.group(0)
