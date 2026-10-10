@@ -1,0 +1,16 @@
+{
+  "teg": 19,
+  "round": 1,
+  "label": "storylinefirst",
+  "errors": 0,
+  "warnings": 1,
+  "findings": [
+    {
+      "rule": "missed_fact",
+      "severity": "warning",
+      "detail": "not mentioned: Gregg Williams went clear in the Green Jacket (Gross) for good at R1 H7 and led it after R1",
+      "excerpt": "",
+      "source": "missed"
+    }
+  ]
+}
