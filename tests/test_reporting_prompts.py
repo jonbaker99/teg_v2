@@ -337,6 +337,8 @@ def test_em_dash_check_is_wired_into_verification():
 def test_ai_tells_ride_every_writer_path():
     """Inside SENTENCE_DISCIPLINE, so a custom `voice=` swap cannot shed them."""
     assert prompts.AI_TELLS in prompts.SENTENCE_DISCIPLINE
+    assert prompts.WRITING_STYLE in prompts.SENTENCE_DISCIPLINE
+    assert prompts.WRITING_STYLE in WRITER_SYSTEM
     assert prompts.AI_TELLS in WRITER_SYSTEM
 
 

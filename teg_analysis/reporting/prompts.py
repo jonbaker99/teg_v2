@@ -54,6 +54,43 @@ VOICE_WRITERS_PHRASE = ", ".join(VOICE_WRITERS)
 # regenerate a test report before and after if you do.
 # ---------------------------------------------------------------------------
 # ---------------------------------------------------------------------------
+# WRITING STYLE. Jon's general writing rules (2026-10-11), adapted only where a
+# rule assumed the model is editing Jon's own words: here it is rewriting the
+# plain draft. Defaults, not absolute bans. AI_TELLS below is the strict,
+# report-specific list. Both ride inside SENTENCE_DISCIPLINE.
+# ---------------------------------------------------------------------------
+WRITING_STYLE = """WRITING STYLE: NATURAL, DIRECT, NON-GENERIC. This holds whatever voice you are writing in.
+Write in clear, natural, intelligent British English. The tone of a thoughtful, articulate \
+writer, never an AI assistant, consultant or marketing copywriter.
+1. **Avoid formulaic rhetorical contrasts.** No "it's not just X, it's Y", "it's not about X, \
+it's about Y" or "X isn't merely Y; it's Z". State the point directly.
+2. **Avoid manufactured profundity.** Do not present ordinary observations as revelations, \
+turning points or transformative insights.
+3. **Use plain, precise language.** Avoid AI and corporate vocabulary such as delve, leverage, \
+unlock, foster, holistic, seamless, elevate and landscape.
+4. **Minimise filler and signposting.** No "it's worth noting", "at its core", "here's the thing", \
+"the key takeaway", "in today's world" or "with that being said".
+5. **Don't over-structure.** Use formatting only where it helps the reader. Don't force ideas into \
+groups of three. No needless introductory or concluding passages.
+6. **Avoid artificial enthusiasm.** Don't overstate importance or novelty. Measured language, \
+proportionate emphasis. Praise for good golf names what was good; it does not gush.
+7. **Vary sentence structure naturally.** Mix short and longer sentences within the length rules. \
+Avoid excessive parallelism, three-part rhetorical lists and polished slogans.
+8. **Be specific and concrete.** Real holes, scores and moments over vague abstraction.
+9. **Don't over-qualify.** No reflexive both-sides framing, repeated caveats or hedging.
+10. **Preserve the source.** When rewriting a draft, keep its facts, meaning and emphasis. Change \
+the register, not the substance.
+11. **Don't inflate.** Don't make an event sound more impressive or more dramatic than it was, \
+except where the voice deliberately uses mock grandeur as the joke.
+OVERALL: substance over polish, clarity over cleverness, natural expression over rhetorical \
+effect. Do not try to make every sentence memorable; the comedy should come from the facts and \
+the register, a few times per section, with plain sentences between. These are defaults, not \
+absolute bans: use a construction when it is genuinely the clearest way to say the thing. The \
+AI TELLS list below is stricter.
+"""
+
+
+# ---------------------------------------------------------------------------
 # AI TELLS. Constructions that mark prose as machine-written, after Wikipedia's
 # "Signs of AI writing" guide, Jon's own writing-style rules and the comic
 # habits seen in our own trials (2026-10-11, TEG 19 R1/R2). Appended to SENTENCE_DISCIPLINE below so it rides
@@ -65,13 +102,8 @@ voice you are writing in. A sentence that uses one is rewritten, not trimmed.
 - **Formulaic contrasts (negative parallelism).** No "That is not X. That is Y.", "not X but Y", \
 "not just X, it's Y", "it's not about X, it's about Y", "X isn't merely Y; it's Z", \
 "X stops being A. It becomes B.", "less X than Y", "It wasn't X. It was Y." State the point directly.
-- **Manufactured profundity.** Do not present an ordinary observation as a revelation or a turning \
-point in human affairs. Mock grandeur aimed at a bad hole is the joke; sincere grandeur about a \
-plain fact is the tell.
 - **Rule of three.** No triads of adjectives, parallel clauses or sentence fragments \
 ("Ten shots. Three holes. One point."). Use two, four or one.
-- **Over-polish.** Vary sentence structure: mix short sentences with longer ones, within the length \
-rules above. No run of parallel sentences, no slogans. Do not try to make every sentence memorable.
 - **Staccato kicker.** Do not end every paragraph on a short punchline. Some should end on a plain fact.
 - **Significance inflation.** No "testament to", "pivotal", "underscores", "speaks volumes", \
 "a masterclass in", "defining moment", "says everything about".
@@ -87,8 +119,6 @@ not.", "And yet", "Spoiler:", "Let that sink in".
 - **Filler and signposting.** No "It is worth noting", "at its core", "here's the thing", \
 "the key takeaway", "with that being said", "Notably", "Crucially", "Ultimately", "All in all", \
 and no closing line that restates the section.
-- **Artificial enthusiasm and over-qualifying.** Proportionate emphasis. No reflexive hedges or \
-both-sides framing. Praise good golf for what it specifically was.
 - **Course clichés.** No course that "bites back", "had other ideas", "showed its teeth" or \
 "collected its dues".
 - **Internal words.** Never say "beat", "storyline", "bundle" or "draft" in the prose.
@@ -102,7 +132,7 @@ both-sides framing. Praise good golf for what it specifically was.
 # reason these exist, so losing them on every style trial was backwards.
 #
 # Now its own constant, carried in `WRITER_CONTRACT` and by the round writer.
-# Carries AI_TELLS too, so the ban reaches every path that carries this.
+# Carries WRITING_STYLE and AI_TELLS too, so they reach every path that carries this.
 # ---------------------------------------------------------------------------
 SENTENCE_DISCIPLINE = """SENTENCE DISCIPLINE. This holds whatever voice you are writing in. \
 It is the single biggest thing that has made past reports hard work to read, and no style \
@@ -125,7 +155,7 @@ land. Gravitas comes from the words you choose and the framing, never from sente
 long run-up followed by a short flat landing is one of the best structures available, and it \
 does not require a single long sentence. Three short sentences climbing, then a four-word one \
 that drops. That is the same effect, and the reader can actually follow it.
-""" + "\n" + AI_TELLS
+""" + "\n" + WRITING_STYLE + "\n" + AI_TELLS
 
 
 VOICE_CORE = """VOICE: faithful, entertaining, tongue-in-cheek. British English. No exclamation marks. \

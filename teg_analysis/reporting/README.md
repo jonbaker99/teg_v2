@@ -171,7 +171,8 @@ separately because that's what they are.
   > the voice half, so a `voice=` swap silently dropped the em-dash ban and the length rules. They
   > exist because the reports were found hard to read, and that does not stop applying because the
   > register changed.
-  > Since 2026-10-11 `SENTENCE_DISCIPLINE` also carries **`prompts.AI_TELLS`**, the ban on
+  > Since 2026-10-11 `SENTENCE_DISCIPLINE` also carries **`prompts.WRITING_STYLE`** (Jon's
+  > general writing rules, defaults) and **`prompts.AI_TELLS`** (strict), the ban on
   > machine-written constructions ("not X, it's Y", triads, AI vocabulary, rhetorical set-ups).
   > D3's `no_ai_tells` (warning) catches the regex-visible subset.
   A `voice=` argument **replaces** `WRITER_VOICE` wholesale — it is a complete register description,
