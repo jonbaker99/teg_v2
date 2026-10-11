@@ -1,0 +1,111 @@
+{
+  "title": "Monte Rei Collects Its Dues",
+  "title_candidates": [
+    "Monte Rei Collects Its Dues",
+    "Four Pars to Finish",
+    "Water on Eleven Holes"
+  ],
+  "theme": "A brutal Nicklaus debut mauls all five visitors, and only Jon Baker keeps his feet long enough to stretch his Trophy lead.",
+  "tone": "house",
+  "opening_hook": "Monte Rei is the third-hardest of the 28 courses TEG has rated, water is in play on eleven of its holes, and on Sunday it took a 42-point round just to look comfortable while the other four signed for gross totals between 95 and 114.",
+  "narrative_vehicles": [
+    "ensemble",
+    "dual_narrative",
+    "catalogue"
+  ],
+  "prominent_vehicle": "ensemble",
+  "prominent_palette": "venue_character",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Jon Baker's 42 points on TEG's first visit to Monte Rei, bookended by three opening pars and four closing ones, with Gregg Williams trading the Trophy lead with him all afternoon",
+    "why_it_matters": "It is the best round of the day by four points on a course nobody had seen before and which gives a typical TEG golfer 5.3 extra strokes; it also turned a one-point Trophy lead into five.",
+    "shape": "Jon Baker opens with three straight pars for 10 points and then hands the initiative to Gregg Williams, who takes the Trophy lead at the 7th while Jon Baker is making a 7 at the same par 3. The lead changes hands four times through the back nine — level at the 10th, Jon Baker ahead at the 12th, Gregg Williams back in front at the 13th. From the 15th Jon Baker simply stops making mistakes: par, par, par, par for 14 points and the lead back for good at the 16th.",
+    "beat_ids": [
+      "r2_b27",
+      "r2_b29",
+      "r2_b39",
+      "r2_b35",
+      "r2_b42",
+      "r2_b33",
+      "r2_b34",
+      "r2_b04",
+      "r2_b07"
+    ],
+    "headline_candidates": [
+      "Jon Baker Pars His Way Home",
+      "Fourteen Points in Four Holes",
+      "Jon Baker Outlasts Gregg Williams"
+    ],
+    "chosen_headline": "Jon Baker Pars His Way Home",
+    "standfirst": "Four pars from the 15th were worth fourteen points on a course where everyone else was counting nines, and they settled a lead that had changed hands four times.",
+    "compelling_score": 8,
+    "humour_score": 5,
+    "descriptor": "JON BAKER",
+    "colour_note_ids": [
+      "monte_rei/h15/1"
+    ]
+  },
+  "race_story": {
+    "subject": "The men who went backwards on Sunday: Alex Baker's 29 points and John Patterson's 25, which widened every gap in the TEG 19 standings without changing a single leader",
+    "why_it_matters": "No leader changed hands overnight, but the shape of all three races did: Alex Baker fell from one point off the Trophy lead to fourteen, and the Wooden Spoon gap went from nothing to nine.",
+    "shape": "Alex Baker begins the day a point behind and plays the first four holes in 14 shots more than par, including a 9 at the 1st, before a septuple-bogey 10 at the 7th — his worst return on a par 3 — kills the round outright. John Patterson, level at the bottom of the Spoon after Saturday, takes 10s at the 6th and the 18th and bleeds twelve shots between the 11th and 15th. By the close Jon Baker leads the Trophy by five, Gregg Williams still holds the Green Jacket by four, and Patterson sits nine clear at the wrong end of the table.",
+    "beat_ids": [
+      "r2_b22",
+      "r2_b02",
+      "r2_b19",
+      "r2_b03",
+      "r2_b11",
+      "r2_b06",
+      "r2_b01",
+      "r2_b09",
+      "r2_b10",
+      "r2_b38"
+    ],
+    "headline_candidates": [
+      "Alex Baker Falls Fourteen Behind",
+      "Two Tens Open the Spoon Gap",
+      "The Chasers Lose Their Footing"
+    ],
+    "chosen_headline": "Alex Baker Falls Fourteen Behind",
+    "standfirst": "Nobody at the top of a race lost it on Sunday, but the men behind contrived to make every gap look a good deal more permanent.",
+    "compelling_score": 8,
+    "humour_score": 6,
+    "descriptor": "THE FALLERS",
+    "colour_note_ids": [
+      "monte_rei/h7/1"
+    ]
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Monte Rei's TEG debut: the third-hardest course TEG has rated taking its introductions from all five players in the form of nines, eights and sevens",
+      "why_it_matters": "The course is the story of the day — a first visit for every player, 5.3 extra strokes for a typical TEG golfer, and a scorecard littered with double figures that explains why 42 points was a runaway.",
+      "shape": "Nicklaus's only Portuguese design, water on eleven holes, and five men who had never seen it. David Mullin takes 9s at the 6th and the 16th, Alex Baker 9s at the 1st and the 2nd and a 7 at the 11th, and even Jon Baker contributes a 7 at the par-3 7th. Mullin's birdie at the last, curling round the lake, is the only moment all afternoon that looks like a player getting the better of the place.",
+      "beat_ids": [
+        "r2_b12",
+        "r2_b17",
+        "r2_b23",
+        "r2_b08",
+        "r2_b14",
+        "r2_b05",
+        "r2_b25",
+        "r2_b31"
+      ],
+      "headline_candidates": [
+        "Monte Rei Introduces Itself",
+        "Nicklaus Takes His Introductions",
+        "A Scorecard Full of Nines"
+      ],
+      "chosen_headline": "Monte Rei Introduces Itself",
+      "standfirst": "Five first visits, gross totals from 87 to 114, and one birdie at the last to suggest the place can be played at all.",
+      "compelling_score": 7,
+      "humour_score": 7,
+      "descriptor": "MONTE REI",
+      "colour_note_ids": [
+        "monte_rei/trivia/3",
+        "monte_rei/h18/1"
+      ]
+    }
+  ],
+  "race_state_note": "Jon Baker has posted the best Stableford score in both rounds so far and Gregg Williams the lowest gross in both, so neither leader has yet been beaten on his own metric; the Wooden Spoon gap, level on Saturday night, is now nine with two rounds left.",
+  "storyline_note": ""
+}
