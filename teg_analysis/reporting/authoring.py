@@ -491,10 +491,8 @@ CRAFT:
 abstractions — the detail is what makes it sing.
 - VARY your language. Never lean on the same dramatic word twice — do not repeat \
 "disaster", "meltdown", "catastrophe" and the like; reach for fresh, precise phrasing.
-- Vary sentence rhythm, and let a short sentence land a point. **Sentence-length \
-discipline:** average around 15 words, and no sentence past roughly 25. Where a thought \
-needs room, split it into two sentences rather than let one run on. The wit lands in \
-something short and flat, never in an unfurling clause.
+- Vary sentence rhythm naturally, mixing short and longer sentences as SENTENCE \
+DISCIPLINE describes. Let a short sentence land a point, but never write a run of them.
 """
 
 _WRITER_ECONOMY = """ECONOMY. Sentence- and paragraph-level mechanics. Write tight on the first pass; \

@@ -175,6 +175,9 @@ separately because that's what they are.
   > general writing rules, defaults) and **`prompts.AI_TELLS`** (strict), the ban on
   > machine-written constructions ("not X, it's Y", triads, AI vocabulary, rhetorical set-ups).
   > D3's `no_ai_tells` (warning) catches the regex-visible subset.
+  > The same day the length rule was relaxed (Jon: the 15/25-word cap read as stilted).
+  > Sentences now mix short and long, mostly 10 to 30 words and rarely past 35, and every clause
+  > must add a fact or a joke.
   A `voice=` argument **replaces** `WRITER_VOICE` wholesale — it is a complete register description,
   not a delta — and cannot shed the contract or the guardrails. Asserted in tests.
 

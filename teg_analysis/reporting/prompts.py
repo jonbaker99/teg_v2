@@ -72,16 +72,19 @@ unlock, foster, holistic, seamless, elevate and landscape.
 "the key takeaway", "in today's world" or "with that being said".
 5. **Don't over-structure.** Use formatting only where it helps the reader. Don't force ideas into \
 groups of three. No needless introductory or concluding passages.
-6. **Avoid artificial enthusiasm.** Don't overstate importance or novelty. Measured language, \
-proportionate emphasis. Praise for good golf names what was good; it does not gush.
+6. **Avoid artificial enthusiasm.** No hollow excitement or marketing tone. Comic, knowing \
+overstatement of good golf is different and is part of the voice: it names exactly what was done.
 7. **Vary sentence structure naturally.** Mix short and longer sentences within the length rules. \
 Avoid excessive parallelism, three-part rhetorical lists and polished slogans.
 8. **Be specific and concrete.** Real holes, scores and moments over vague abstraction.
 9. **Don't over-qualify.** No reflexive both-sides framing, repeated caveats or hedging.
-10. **Preserve the source.** When rewriting a draft, keep its facts, meaning and emphasis. Change \
-the register, not the substance.
-11. **Don't inflate.** Don't make an event sound more impressive or more dramatic than it was, \
-except where the voice deliberately uses mock grandeur as the joke.
+10. **Preserve the facts, not the wording.** When rewriting a draft, keep every fact and its \
+meaning. Rewrite the wording freely; the draft's phrasing is not a constraint.
+11. **Don't inflate sincerely.** Never claim an event was bigger, rarer or more important than \
+the facts show. Deliberate comic overstatement, the voice hamming up a fine par or a dreadful \
+nine, is the joke and is welcome. Overstate the language and the emotion, never the numbers.
+12. **Normal language.** Every sentence should sound like something an articulate, funny person \
+would actually say. No stiff constructions, no portentous filler.
 OVERALL: substance over polish, clarity over cleverness, natural expression over rhetorical \
 effect. Do not try to make every sentence memorable; the comedy should come from the facts and \
 the register, a few times per section, with plain sentences between. These are defaults, not \
@@ -142,19 +145,16 @@ brief overrides it.
    aside, a qualification or a second thought, start a new sentence instead. The em-dash is \
    how a clean fact turns into a sprawling construction the reader has to hold in their head. \
    Commas for lists. Full stops for everything else. Colons are fine, used sparingly.
-2. **Short sentences.** Average around 15 words. Anything past 25 words needs a very good \
-   reason, and "it was building an image" is not one. Split it.
-3. **One idea per sentence.** If you attach a clause that could stand on its own, make it \
-   stand on its own.
+2. **Natural sentence length.** Write the way an articulate person speaks. Mix short sentences \
+   with longer ones; most will fall between 10 and 30 words. A longer sentence is fine when it \
+   reads easily aloud and follows one line of thought. Rarely go past 35 words, and never \
+   string several events into one sentence with commas. Split a sentence when the reader \
+   would lose the thread. A run of very short sentences reads as stilted, so avoid that too.
+3. **Every clause earns its place.** Each clause adds a fact or a joke. Cut any clause that \
+   only restates, decorates or postures ("a parkland that concedes nothing").
 
-None of this reduces the comedy. It is the delivery mechanism for it. A punchline hung off the \
-end of a long sentence gets absorbed and dies. The same words, given their own short sentence, \
-land. Gravitas comes from the words you choose and the framing, never from sentence length.
-
-**If your style brief calls for an ornate or escalating build, build it ACROSS SENTENCES.** A \
-long run-up followed by a short flat landing is one of the best structures available, and it \
-does not require a single long sentence. Three short sentences climbing, then a four-word one \
-that drops. That is the same effect, and the reader can actually follow it.
+A punchline lands best at the end of a sentence, or in a short sentence after a longer build. \
+Do not bury it in the middle of a sprawling clause.
 """ + "\n" + WRITING_STYLE + "\n" + AI_TELLS
 
 

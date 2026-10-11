@@ -512,7 +512,7 @@ def test_readability_rules_survive_a_voice_swap():
 
     custom = authoring.build_writer_system("VOICE: whatever you like.")
     assert "NO EM-DASHES" in custom
-    assert "Average around 15 words" in custom
+    assert "Natural sentence length" in custom
     assert "Em-dashes are banned outright" in custom      # the ECONOMY restatement
     assert prompts.SENTENCE_DISCIPLINE in authoring.WRITER_CONTRACT
     assert prompts.SENTENCE_DISCIPLINE not in authoring.WRITER_VOICE
@@ -525,10 +525,11 @@ def test_sentence_discipline_reconciles_styles_that_want_an_ornate_build():
     """Several house styles call for a long build. The rule must say how.
 
     Without this the block simply contradicts the style brief, and the model
-    picks one at random. The resolution is that a build is made of several short
-    sentences, which is what VOICE_CORE already said about the Ronay device.
+    picks one at random. Until 2026-10-11 the resolution was to build across
+    several short sentences; Jon found that stilted, so a longer sentence that
+    reads easily aloud is now allowed outright.
     """
-    assert "ACROSS SENTENCES" in prompts.SENTENCE_DISCIPLINE
+    assert "A longer sentence is fine" in prompts.SENTENCE_DISCIPLINE
 
 
 def test_arc_scope_carries_no_editor_prose():
