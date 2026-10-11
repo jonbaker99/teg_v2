@@ -252,8 +252,9 @@ background task in `webapp/report_generation.py`.
   stage (`--from X --to X`), so it records each phase in the status file's `phase` field without
   any hook in `teg_analysis/`. The same LLM calls are made as one full run.
 - **Render check before publish:** `check_renders` parses the fresh report with the page's own
-  parser (`newspaper_edition.edition_from_text`). If it fails, the run ends in error at `publish`
-  and nothing is staged or pushed, so any earlier published version stays live.
+  parser (`newspaper_edition.edition_from_text`). If it fails, the voice stage is re-run once (one
+  LLM call; the draft is reused) and checked again. A second failure ends the run in error at
+  `publish` with nothing staged or pushed, so any earlier published version stays live.
 - **Running reports panel:** sits above the pickers, so it shows every report in flight whichever
   TEG and round is selected, each with its phases marked done / in progress / to do. It also keeps
   runs that ended in the last 15 minutes, with their outcome. It polls every 3s only while a run is

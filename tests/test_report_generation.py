@@ -216,6 +216,20 @@ def test_unrenderable_report_is_not_published(pipeline, monkeypatch):
     assert s["state"] == "error" and s["phase"] == "publish"
     assert "results block not found" in s["error"]
     assert staged == []
+    # The voice pass was retried exactly once before giving up.
+    assert [c[0] for c in pipeline.calls] == ["storylines", "draft", "voice", "voice"]
+
+
+def test_voice_retry_recovers_and_publishes(pipeline, monkeypatch):
+    checks = []
+    def flaky(teg, rnd):
+        checks.append(1)
+        if len(checks) == 1:
+            raise ValueError("title not found")
+    monkeypatch.setattr(rg, "check_renders", flaky)
+    rg.generate_report(19, 2)
+    assert rg.read_status(19, 2)["state"] == "done"
+    assert [c[0] for c in pipeline.calls] == ["storylines", "draft", "voice", "voice"]
 
 
 def test_check_renders_reads_local_artefacts(tmp_path, monkeypatch):

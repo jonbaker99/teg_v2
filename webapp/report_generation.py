@@ -366,11 +366,23 @@ def generate_report(teg: int, round_num: Optional[int]) -> None:
     # Parse the fresh report exactly as the page will. A failure here leaves
     # any previously published version in place rather than replacing it
     # with one that shows "No report available" (TEG 19 R1, 2026-10-10).
+    # The voice pass is the LLM step that has broken this before, and the
+    # draft is already on disk, so one retry of just that step is cheap.
     try:
-        check_renders(teg, round_num)
+        try:
+            check_renders(teg, round_num)
+        except Exception as e:  # noqa: BLE001
+            logger.warning(f"Generated report for {label} does not render ({e}); "
+                           f"retrying the voice pass once")
+            write_status(teg, round_num, state="running", phase="voice",
+                        message="Report failed its render check; re-applying the house voice...")
+            _run_stage(teg, round_num, "voice")
+            write_status(teg, round_num, state="running", phase="publish",
+                        message="Publishing to the site...")
+            check_renders(teg, round_num)
     except Exception as e:  # noqa: BLE001
         logger.error(f"Generated report for {label} does not render: {e}", exc_info=True)
-        write_status(teg, round_num, state="error",
+        write_status(teg, round_num, state="error", phase="publish",
                     error=f"Generated, but not published: the report page could not "
                           f"read it ({type(e).__name__}: {e})",
                     finished_at=_now())
