@@ -47,6 +47,7 @@ def pipeline(store, monkeypatch):
 
     monkeypatch.setattr(rg.llm, "get_provider", lambda: "agent")
     monkeypatch.setattr(rg.llm, "has_api_key", lambda: True)
+    monkeypatch.setattr(rg, "check_renders", lambda teg, rnd: None)
     monkeypatch.setattr(rg, "stage_artefacts_to_store",
                         lambda teg, rnd: rg.artefact_names(teg, rnd))
     monkeypatch.setattr(rg, "push_files",
@@ -201,3 +202,48 @@ def test_report_label_and_fmt_hhmm():
     assert rg.fmt_hhmm("2026-09-29T14:05:30+00:00") == "14:05"
     assert rg.fmt_hhmm("2026-09-29T14:05:30+02:00") == "12:05"
     assert rg.fmt_hhmm(None) == "?" and rg.fmt_hhmm("junk") == "?"
+
+
+def test_unrenderable_report_is_not_published(pipeline, monkeypatch):
+    def bad(teg, rnd):
+        raise ValueError("at-a-glance results block not found")
+    staged = []
+    monkeypatch.setattr(rg, "check_renders", bad)
+    monkeypatch.setattr(rg, "stage_artefacts_to_store",
+                        lambda teg, rnd: staged.append(1) or [])
+    rg.generate_report(19, 2)
+    s = rg.read_status(19, 2)
+    assert s["state"] == "error" and s["phase"] == "publish"
+    assert "results block not found" in s["error"]
+    assert staged == []
+    # The voice pass was retried exactly once before giving up.
+    assert [c[0] for c in pipeline.calls] == ["storylines", "draft", "voice", "voice"]
+
+
+def test_voice_retry_recovers_and_publishes(pipeline, monkeypatch):
+    checks = []
+    def flaky(teg, rnd):
+        checks.append(1)
+        if len(checks) == 1:
+            raise ValueError("title not found")
+    monkeypatch.setattr(rg, "check_renders", flaky)
+    rg.generate_report(19, 2)
+    assert rg.read_status(19, 2)["state"] == "done"
+    assert [c[0] for c in pipeline.calls] == ["storylines", "draft", "voice", "voice"]
+
+
+def test_check_renders_reads_local_artefacts(tmp_path, monkeypatch):
+    """Passes on a real published round report; fails once its header is gone."""
+    import shutil
+    from pathlib import Path
+    names = rg.artefact_names(19, 1)
+    for n in (names[0], names[3]):
+        shutil.copyfile(Path("data/commentary") / n, tmp_path / n)
+    monkeypatch.setattr(rg, "output_dir", lambda create=True: str(tmp_path))
+    rg.check_renders(19, 1)
+
+    styled = tmp_path / names[3]
+    md = styled.read_text()
+    styled.write_text(md[md.index("\n## "):])
+    with pytest.raises(ValueError):
+        rg.check_renders(19, 1)

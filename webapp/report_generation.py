@@ -294,6 +294,20 @@ def stage_artefacts_to_store(teg: int, round_num: Optional[int]) -> list[str]:
     return staged
 
 
+def check_renders(teg: int, round_num: Optional[int]) -> None:
+    """Raise if the freshly generated report would not render on its page.
+
+    Reads the pipeline's local output (before it is staged to the store) and
+    runs the same parser the report page uses.
+    """
+    from teg_analysis.reporting.newspaper_edition import edition_from_text
+    names = artefact_names(teg, round_num)
+    src_dir = Path(output_dir(create=False))
+    plan = json.loads((src_dir / names[0]).read_text())
+    md = (src_dir / names[3]).read_text()
+    edition_from_text(teg, round_num, md, plan)
+
+
 def _run_stage(teg: int, round_num: Optional[int], stage: str) -> None:
     """Run exactly one pipeline stage. Lazy import keeps the heavy pipeline
     (and `scripts/`) off the webapp's startup path. Later stages reuse the
@@ -349,6 +363,30 @@ def generate_report(teg: int, round_num: Optional[int]) -> None:
 
     write_status(teg, round_num, state="running", phase="publish",
                 message="Publishing to the site...")
+    # Parse the fresh report exactly as the page will. A failure here leaves
+    # any previously published version in place rather than replacing it
+    # with one that shows "No report available" (TEG 19 R1, 2026-10-10).
+    # The voice pass is the LLM step that has broken this before, and the
+    # draft is already on disk, so one retry of just that step is cheap.
+    try:
+        try:
+            check_renders(teg, round_num)
+        except Exception as e:  # noqa: BLE001
+            logger.warning(f"Generated report for {label} does not render ({e}); "
+                           f"retrying the voice pass once")
+            write_status(teg, round_num, state="running", phase="voice",
+                        message="Report failed its render check; re-applying the house voice...")
+            _run_stage(teg, round_num, "voice")
+            write_status(teg, round_num, state="running", phase="publish",
+                        message="Publishing to the site...")
+            check_renders(teg, round_num)
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Generated report for {label} does not render: {e}", exc_info=True)
+        write_status(teg, round_num, state="error", phase="publish",
+                    error=f"Generated, but not published: the report page could not "
+                          f"read it ({type(e).__name__}: {e})",
+                    finished_at=_now())
+        return
     try:
         staged = stage_artefacts_to_store(teg, round_num)
     except Exception as e:  # noqa: BLE001

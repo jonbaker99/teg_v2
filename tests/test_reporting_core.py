@@ -329,3 +329,9 @@ def test_get_teg_placings_no_override_sorts_by_score(monkeypatch):
     placings = history.get_teg_placings(df, 6)
     assert placings["trophy"] == ["Jon BAKER", "Dave MULLIN"]
     assert placings["jacket"] == ["Dave MULLIN", "Jon BAKER"]
+
+
+def test_apply_styling_refuses_text_without_h1():
+    venue = {"teg_num": 42, "area": "Berkshire", "year": 2026}
+    with pytest.raises(ValueError, match="no '# Title'"):
+        render.apply_styling("## Section only\n\nProse.\n", 42, venue)

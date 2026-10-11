@@ -1001,6 +1001,14 @@ def build_edition(teg: int, round_num: int | None = None,
     md_path, plan_path = artefact_paths(teg, round_num)
     md = read_text_file(md_path)
     plan = json.loads(read_text_file(plan_path))
+    return edition_from_text(teg, round_num, md, plan, article_filter)
+
+
+def edition_from_text(teg: int, round_num: int | None, md: str, plan: dict,
+                      article_filter: ArticleFilter | None = None) -> dict[str, Any]:
+    """`build_edition` on text already in hand. Report generation calls this
+    on the fresh artefacts before publishing, so a report the page cannot
+    parse is caught there instead of on the live site."""
     is_round = round_num is not None
     is_final_round = bool(plan.get("is_final_round")) if is_round else False
 
