@@ -159,6 +159,51 @@ def check_no_em_dashes(ctx: ReportContext) -> list[Finding]:
     return out
 
 
+# Only the patterns a regex sees without false alarms. "Not a net par among
+# them" is a plain fact; "That is not a slow start. That is a surrender." is
+# the tell, so negative parallelism needs the paired second sentence.
+_AI_TELL_PATTERNS = (
+    ("negative parallelism",
+     re.compile(r"\b(?:that|it|this) (?:is|was)(?: not|n't) [^.?]{1,60}[.;,] "
+                r"(?:that|it|this) (?:is|was)\b", re.IGNORECASE)),
+    ("negative parallelism",
+     re.compile(r"\bnot (?:just|merely|only|simply) [^.?]{1,60}?, (?:but|it'?s|it is)\b",
+                re.IGNORECASE)),
+    ("negative parallelism",
+     re.compile(r"\bstops being [^.?]{1,40}\. (?:it|that|this) becomes\b", re.IGNORECASE)),
+    ("rhetorical set-up",
+     re.compile(r"\b(?:the result|the answer|the verdict|the damage)\?", re.IGNORECASE)),
+    ("rhetorical set-up",
+     re.compile(r"(?:^|[.?] )(?:reader, |and yet\b|spoiler:|let that sink in)",
+                re.IGNORECASE | re.MULTILINE)),
+    ("AI vocabulary",
+     re.compile(r"\b(?:delve[sd]?|tapestry|testament to|intricate|interplay|garner(?:ed|s)?|"
+                r"showcase[sd]?|foster(?:ed|s)?|meticulous(?:ly)?|vibrant|nestled|"
+                r"pivotal|underscore[sd]?|speaks volumes|masterclass|something shifted|"
+                r"leverag(?:e|ed|es|ing)|holistic|seamless(?:ly)?|at its core|"
+                r"here's the thing|key takeaway|with that being said|worth noting)\b",
+                re.IGNORECASE)),
+)
+
+
+def check_no_ai_tells(ctx: ReportContext) -> list[Finding]:
+    """Constructions that mark prose as machine-written (Jon, 2026-10-11).
+
+    The prompt bans a wider list (`prompts.AI_TELLS`); this catches the subset
+    a regex can see reliably. Warnings: a tell is a style fault, not a factual
+    one. Deterministic blocks are excluded, as for em-dashes.
+    """
+    out = []
+    body = _strip_code_and_tables(ctx.text)
+    for name, pattern in _AI_TELL_PATTERNS:
+        for m in pattern.finditer(body):
+            out.append(Finding(
+                "no_ai_tells", "warning",
+                f"{name}: {m.group(0).strip()!r} reads as machine-written",
+                _excerpt(body, m.start(), m.end())))
+    return out
+
+
 _NEGATION_RE = re.compile(r"\b(no|not|never|without|nor|neither)\b", re.IGNORECASE)
 
 
@@ -396,6 +441,7 @@ def check_teg_references(ctx: ReportContext) -> list[Finding]:
 CHECKS = (
     check_no_beat_ids,
     check_no_em_dashes,
+    check_no_ai_tells,
     check_no_invented_mechanisms,
     check_not_a_week,
     check_only_participants,

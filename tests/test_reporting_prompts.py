@@ -334,6 +334,32 @@ def test_em_dash_check_is_wired_into_verification():
     assert verify.check_no_em_dashes in verify.CHECKS
 
 
+def test_ai_tells_ride_every_writer_path():
+    """Inside SENTENCE_DISCIPLINE, so a custom `voice=` swap cannot shed them."""
+    assert prompts.AI_TELLS in prompts.SENTENCE_DISCIPLINE
+    assert prompts.AI_TELLS in WRITER_SYSTEM
+
+
+@pytest.mark.parametrize("text, flagged", [
+    ("That is not a slow start. That is a surrender.", True),
+    ("It wasn't bad luck, it was a policy.", True),
+    ("It was not just a bogey, but a statement.", True),
+    ("Two tens stops being bad luck. It becomes a policy.", True),
+    ("The result? A nine.", True),
+    ("A testament to his patience.", True),
+    ("Seven shots gone in three holes, and not a net par among them.", False),
+    ("It was not a surprise. This course asks more of this field than most.", False),
+])
+def test_ai_tells_check(text, flagged):
+    from teg_analysis.reporting import verify
+
+    class Ctx:
+        pass
+    ctx = Ctx()
+    ctx.text = text
+    assert bool(verify.check_no_ai_tells(ctx)) is flagged
+
+
 @pytest.mark.parametrize("rule", [
     "countback",
     "drew level",

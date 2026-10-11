@@ -171,6 +171,9 @@ separately because that's what they are.
   > the voice half, so a `voice=` swap silently dropped the em-dash ban and the length rules. They
   > exist because the reports were found hard to read, and that does not stop applying because the
   > register changed.
+  > Since 2026-10-11 `SENTENCE_DISCIPLINE` also carries **`prompts.AI_TELLS`**, the ban on
+  > machine-written constructions ("not X, it's Y", triads, AI vocabulary, rhetorical set-ups).
+  > D3's `no_ai_tells` (warning) catches the regex-visible subset.
   A `voice=` argument **replaces** `WRITER_VOICE` wholesale — it is a complete register description,
   not a delta — and cannot shed the contract or the guardrails. Asserted in tests.
 
@@ -197,7 +200,7 @@ Assessed against the actual prompt: roughly **half of `WRITER_SYSTEM`'s 11 faith
 mechanically checkable**. D3 now checks six of them, but the prompt still carries all eleven —
 deliberate belt-and-braces, not an oversight. (The other two of D3's eight checks aren't on this list:
 `swing_claims` is arithmetic-adjacent, and `no_em_dashes` enforces a voice rule rather than a
-faithfulness one.)
+faithfulness one. `no_ai_tells`, added 2026-10-11, is a voice rule too.)
 
 | Rule | Checkable? | How |
 |---|---|---|
