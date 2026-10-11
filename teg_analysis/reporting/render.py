@@ -294,6 +294,11 @@ def apply_styling(text: str, teg_num: int, venue: dict,
     `win_counts` is passed to `_build_at_a_glance` to annotate wins with ordinal
     suffixes, e.g. "(2nd Jacket)".  Idempotent: existing hooks are not duplicated.
     """
+    # The dateline and results box hang off the H1; without one the report
+    # would publish headerless (see `style_round_text`). Fail instead.
+    if not re.search(r"^# ", text, re.MULTILINE):
+        raise ValueError(f"TEG {teg_num}: report text has no '# Title' line to "
+                         "hang the dateline and results box on")
     text = _add_report_title_class(text)
     text = _add_round_classes(text)
 
