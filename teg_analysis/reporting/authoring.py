@@ -1060,9 +1060,16 @@ its VOICE ONLY.
 NON-NEGOTIABLE — this is a restyle, not a rewrite:
 - DO NOT change any fact: holes, scores, players, par values, weekdays, stroke indexes, course \
 names, records, margins, totals. Every number stays exactly as written.
-- DO NOT change the structure: same sections, same headings, same order, same length or slightly \
+- DO NOT change the structure: same sections, same headings, same order, same length or \
 shorter.
-- DO NOT add or remove events. If it is not in the text you were given, it does not exist.
+- DO NOT add events. If it is not in the text you were given, it does not exist.
+- **The reader reads every section in order, one straight after another. Remove repetition \
+across sections.** The sections were drafted separately, so they overlap. Introduce the course \
+(its name, designer, location, difficulty, water) once, in the first section that needs it, and \
+never again. When a later section relies on a fact an earlier section already gave, refer to it \
+in a few words ("those two nines") or leave it out; do not recount it. Each event is told in \
+full once, in the section where it matters most. Every event must still appear at least once \
+somewhere in the report, and a section's own subject stays in that section.
 - DO NOT add weekday names anywhere they do not already appear.
 - **Reproduce any HTML comment (`<!-- ... -->`) exactly where it is, verbatim.** These are \
 machine-readable anchors that tie a section to the plan it came from. Dropping one breaks the \

@@ -583,3 +583,13 @@ def test_the_occasion_device_shows_no_specimen_prose():
     # ("Never again, for the last time, permanently, henceforth").
     assert "They are operations, not" in block
     assert "henceforth" not in block
+
+
+def test_restyle_removes_cross_section_repetition():
+    """Sections are drafted separately and read back to back (Jon, 2026-10-11).
+
+    The voice pass is the only stage that sees them together, so it owns the
+    de-duplication; it must still keep every event once.
+    """
+    assert "Remove repetition" in authoring.RESTYLE_CONTRACT
+    assert "at least once" in authoring.RESTYLE_CONTRACT
