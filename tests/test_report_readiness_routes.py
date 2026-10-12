@@ -119,3 +119,17 @@ def test_tournament_gated_on_tournament_readiness(client, monkeypatch):
     resp = client.post("/admin/reports/generate", data={"kind": "tournament", "teg": 19})
     assert "Round 3" in resp.text and "finalised" in resp.text
     assert None in seen
+
+
+def test_round_select_refreshes_the_panel():
+    """Changing the round must re-render the panel for that round (Jon, 2026-10-12).
+
+    Only the TEG select used to, so the Generate button's readiness block and
+    last-run status stayed on whichever round the page loaded with.
+    """
+    import re
+    from pathlib import Path
+    html = Path("webapp/templates/partials/admin_report_panel.html").read_text()
+    select = re.search(r'<select name="round"[^>]*>', html).group(0)
+    assert 'hx-get="/admin/reports/panel"' in select
+    assert 'hx-trigger="change"' in select

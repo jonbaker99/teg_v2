@@ -1,0 +1,126 @@
+{
+  "title": "Records and Ruin at Monte Rei",
+  "title_candidates": [
+    "Records and Ruin at Monte Rei",
+    "The Nicklaus Examination",
+    "Five Pars, One Ten, Two Races"
+  ],
+  "theme": "On the third-hardest course TEG has ever rated, Alex Baker posted the day's best score with two blank holes on his card, Jon Baker equalled the course record, and the Green Jacket race shrank to two shots.",
+  "tone": "house",
+  "opening_hook": "Monte Rei hands a typical TEG golfer 5.3 shots beyond an average course — the third-hardest of the 28 courses TEG has rated — with water on eleven holes and a Nicklaus green waiting behind most of it. It duly produced, in a single Monday, a ten, a nine, an equalled course record and a Green Jacket lead cut in half.",
+  "narrative_vehicles": [
+    "redemption_arc",
+    "dual_narrative",
+    "ensemble"
+  ],
+  "prominent_vehicle": "redemption_arc",
+  "prominent_palette": "course_history",
+  "is_final_round": false,
+  "round_story": {
+    "subject": "Alex Baker's 43 points, the best score of the day at Monte Rei, assembled around a ten at the 2nd and a nine at the 12th",
+    "why_it_matters": "It is the first round of the TEG 19 Trophy in which Alex Baker has been the best scorer, it came 14 points better than his round two, and his 98 gross is a personal best at Monte Rei, 16 shots better than his only previous visit to the course. He is now on 110 and 13 behind Jon Baker with one round to play.",
+    "shape": "Setup: Alex Baker arrives at Monte Rei off a 29-point round two and immediately takes ten on the par-5 2nd, a hole worth nothing at all. Turn: from the 6th to the 9th he gathers 13 points — par, bogey, bogey, par — and keeps going despite another blank, a nine at the horseshoe par-4 12th. Resolution: 43 points, 98 gross, the best round of the day by one, a course personal best by 16 shots, and still only third in the Trophy.",
+    "beat_ids": [
+      "r3_b03",
+      "r3_b01",
+      "r3_b09",
+      "r3_b12"
+    ],
+    "headline_candidates": [
+      "Alex Baker's Best Despite a Ten",
+      "Forty-Three Points and Two Blanks",
+      "A Ten, a Nine, the Day's Best"
+    ],
+    "chosen_headline": "Alex Baker's Best Despite a Ten",
+    "standfirst": "Two holes yielded him nothing whatsoever on a course that gives TEG golfers 5.3 extra shots, and he still finished the day a point clear of the field.",
+    "compelling_score": 8,
+    "humour_score": 7,
+    "descriptor": "ALEX BAKER",
+    "colour_note_ids": [
+      "monte_rei/h12/1",
+      "monte_rei/trivia/3"
+    ]
+  },
+  "race_story": {
+    "subject": "The TEG 19 Green Jacket cut from four shots to two by a birdie at the last, while the Trophy lead doubled to ten",
+    "why_it_matters": "Gregg Williams went into the round four clear on gross and came out two clear, having been caught twice on the back nine; Jon Baker's 15-over 87 took him to within two with one round left, while on Stableford the same round pushed Jon Baker's Trophy lead from five to ten over Williams.",
+    "shape": "Setup: Gregg Williams leads the Jacket by four and sits five behind in the Trophy, then loses nine shots to par in four holes from the 9th — triple, double, double, double. Turn: Jon Baker draws level for the gross lead at the 15th, Williams edges back in front at the 16th, and Jon Baker levels again at the 17th. Resolution: Williams birdies the par-5 18th to finish on 47 to Jon Baker's 49, a Jacket lead halved to two, while the Trophy gap he is chasing has doubled to ten.",
+    "beat_ids": [
+      "r3_b13",
+      "r3_b23",
+      "r3_b27",
+      "r3_b28",
+      "r3_b05",
+      "r3_b10",
+      "r3_b21",
+      "r3_b20"
+    ],
+    "headline_candidates": [
+      "A Birdie at the Last Saves Williams",
+      "Williams Holds the Jacket by Two",
+      "Four Shots Become Two at Monte Rei"
+    ],
+    "chosen_headline": "A Birdie at the Last Saves Williams",
+    "standfirst": "Jon Baker drew level for the gross lead twice on the back nine and finished two behind, even as his Stableford advantage over Williams doubled.",
+    "compelling_score": 8,
+    "humour_score": 5,
+    "descriptor": "JACKET AND TROPHY",
+    "colour_note_ids": [
+      "monte_rei/h9/1",
+      "monte_rei/h18/2"
+    ]
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Jon Baker's 87 at Monte Rei, equalling the course record and built on five consecutive pars from the 11th to the 15th",
+      "why_it_matters": "It is the course record equalled on the third-hardest course TEG has rated, and a personal best for Jon Baker at Monte Rei by one shot; the standing mark of 87 is the number Gregg Williams's own best here sits on, which is why the Jacket is now a two-shot argument.",
+      "shape": "Setup: Jon Baker drops seven shots in three holes from the 2nd — triple, double, double — and the round looks like an ordinary Monte Rei mugging. Turn: from the 11th to the 15th he does not drop a single shot to par, five straight pars including the signature downhill 13th and the lake-edge 14th, worth 16 points. Resolution: the run ends with a double bogey at the par-5 16th, but 87 gross is on the card, equalling the course record and bettering his own previous best here by one.",
+      "beat_ids": [
+        "cr01",
+        "r3_b17",
+        "r3_b02",
+        "r3_b07",
+        "r3_b04"
+      ],
+      "headline_candidates": [
+        "Five Pars and a Course Record",
+        "Jon Baker Matches Monte Rei's Best",
+        "Eighty-Seven on the Brutal One"
+      ],
+      "chosen_headline": "Five Pars and a Course Record",
+      "standfirst": "Seven shots disappeared in three holes early on; from the 11th to the 15th not one more was dropped.",
+      "compelling_score": 8,
+      "humour_score": 5,
+      "descriptor": "JON BAKER",
+      "colour_note_ids": [
+        "monte_rei/h13/3",
+        "monte_rei/h14/1"
+      ]
+    },
+    {
+      "subject": "The TEG 19 Wooden Spoon tightens as John Patterson's 36 points meets David Mullin's 30, the worst score of the day",
+      "why_it_matters": "Patterson began the round nine points adrift at the foot of the Trophy table and ends it three behind Mullin, having shot 97 gross for a personal best at Monte Rei, 14 shots better than his previous visit; Mullin, on an identical 97, went backwards.",
+      "shape": "Setup: John Patterson takes eight at the bunkered par-5 6th and is bogeying his way home, eleven points worse off than Mullin after two rounds. Turn: he birdies the 10th, adds 11 points to his round-two total, and matches Mullin shot for shot at 97 gross. Resolution: Mullin's 30 points is the worst round of the day, salvaged only by a birdie at the last after a triple at the 17th, and the Spoon gap closes from nine to three with one round left.",
+      "beat_ids": [
+        "r3_b08",
+        "r3_b14",
+        "r3_b26"
+      ],
+      "headline_candidates": [
+        "Patterson Closes the Spoon Gap",
+        "Nine Points Become Three",
+        "Patterson Birdies, Mullin Bleeds"
+      ],
+      "chosen_headline": "Patterson Closes the Spoon Gap",
+      "standfirst": "Both men signed for 97 gross; only one of them had ever played Monte Rei better than this.",
+      "compelling_score": 7,
+      "humour_score": 6,
+      "descriptor": "WOODEN SPOON",
+      "colour_note_ids": [
+        "monte_rei/h6/1"
+      ]
+    }
+  ],
+  "race_state_note": "With one round to play Jon Baker leads the Trophy by ten yet trails the Jacket by two, and Alex Baker — third in the Trophy on 110 — sits bottom of the gross table on 98 over par, the two competitions measuring entirely different things.",
+  "storyline_note": ""
+}
