@@ -44,7 +44,7 @@ from teg_analysis.reporting.paths import output_dir
 _BANNED_MECHANISMS = [
     ("countback", r"\bcountback\b"),
     ("tiebreaker", r"\btie[\s-]?break(?:er|ers)?\b"),
-    ("playoff", r"\bplay[\s-]?off\b"),
+    ("playoff", r"\bplay-?offs?\b"),
     ("sudden death", r"\bsudden[\s-]death\b"),
 ]
 

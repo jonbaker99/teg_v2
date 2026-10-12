@@ -1,69 +1,69 @@
 {
-  "title": "One Point After Eighteen Holes",
+  "title": "One Point in It at Quinta da Ria",
   "title_candidates": [
-    "One Point After Eighteen Holes",
-    "Five Lead Changes at Quinta da Ria",
-    "Nobody Tames the Ria Formosa"
+    "One Point in It at Quinta da Ria",
+    "TEG 19 Opens in the Eastern Algarve",
+    "Nine at the Tenth, Thirty-Nine for Jon Baker"
   ],
-  "theme": "On a tough course none of them had ever seen, the TEG 19 Trophy lead changed hands five times and finished separated by a single point.",
+  "theme": "A new course nobody had seen before, a tenth hole that ruined three cards, and a Trophy lead that changed hands four times before the last green.",
   "tone": "house",
-  "opening_hook": "The lead in the TEG 19 Trophy changed hands five times on Saturday — at the 4th, the 5th, the 12th, the 17th and finally the 18th — on a course TEG had never played before, and at the end of all that movement Jon Baker held it by one point.",
+  "opening_hook": "TEG 19 began on a Saturday at Quinta da Ria, 12km from Tavira and new to every man in the field, and the Trophy lead changed hands four times between the 5th and the 18th before Jon Baker parred the last to take it by a single point.",
   "narrative_vehicles": [
-    "ensemble",
-    "motif",
-    "dual_narrative"
+    "dual_narrative",
+    "catalogue",
+    "ensemble"
   ],
-  "prominent_vehicle": "ensemble",
+  "prominent_vehicle": "dual_narrative",
   "prominent_palette": "venue_character",
   "is_final_round": false,
   "round_story": {
-    "subject": "Jon Baker's 39 points, the best round of the day, assembled out of a ruinous spell at the turn and three immaculate pars when the course opened out",
-    "why_it_matters": "It is the only round of the five to break 39 and it put Jon Baker on top of the TEG 19 Trophy at the end of day one, despite him losing seven gross shots in three holes on the way out.",
-    "shape": "Jon Baker led as early as the 4th, then bled seven shots across the 8th, 9th and 10th — double, double, triple — and was third with eight holes left. From the 11th, where the course turns towards the sea, he made three straight pars for nine points and retook the lead at the 12th; a par at the last restored it for good. Ninety gross, 39 points, one clear: a day of damage control rather than brilliance, and the writer should say so.",
+    "subject": "Jon Baker's 39 points, the best score of the opening day, salvaged from a three-hole wobble at the 8th, 9th and 10th",
+    "why_it_matters": "It is the highest Stableford score of the round and it puts Jon Baker at the top of the TEG 19 Trophy after day one, on a course playing 1.6 shots harder than the average TEG venue and seen by nobody in the field before Saturday morning.",
+    "shape": "Jon Baker was at or near the front from the 4th, where a par took him clear. He then dropped seven gross shots across the 8th, 9th and 10th, doubles at both par fours and a triple at the long 10th, and stood third after the 17th. Three straight pars from the 11th steadied him, and a par at the 18th, worth four points on stroke index 3, took the lead back on the last green.",
     "beat_ids": [
-      "r1_b32",
-      "r1_b24",
-      "r1_b25",
-      "r1_b14",
-      "r1_b16",
-      "r1_b26",
-      "r1_b03"
+      "r1_b31",
+      "r1_b17",
+      "r1_b19",
+      "r1_b10",
+      "r1_b15",
+      "r1_b29",
+      "r1_b21"
     ],
     "headline_candidates": [
-      "Jon Baker's Par at the Last",
-      "Thirty-Nine Points the Hard Way",
-      "Three Pars Rebuild a Round"
+      "Jon Baker Posts Thirty-Nine at Quinta da Ria",
+      "Jon Baker Recovers for Thirty-Nine Points",
+      "A Par at the Last for Jon Baker"
     ],
-    "chosen_headline": "Jon Baker's Par at the Last",
-    "standfirst": "Seven gross shots went missing across the 8th, 9th and 10th before three consecutive pars from the 11th turned the day around.",
+    "chosen_headline": "Jon Baker Posts Thirty-Nine at Quinta da Ria",
+    "standfirst": "Seven gross shots went in three holes around the turn, and he still finished 90 on a course none of the five had played before.",
     "compelling_score": 7,
-    "humour_score": 6,
+    "humour_score": 5,
     "descriptor": "JON BAKER",
     "colour_note_ids": [
       "quinta_da_ria/setting/5"
     ]
   },
   "race_story": {
-    "subject": "The three races as Quinta da Ria left them, told from the vantage of Alex Baker, who held the Trophy lead walking to the 18th tee and did not hold it walking off",
-    "why_it_matters": "Round one sets the board: two points cover the top three in the TEG 19 Trophy, Gregg Williams has a three-shot cushion in the TEG 19 Green Jacket, and David Mullin and John Patterson begin the TEG 19 Wooden Spoon dead level on 31.",
-    "shape": "Alex Baker was the day's most persistent leader — out in front at the 5th, level at the 14th, outright again with a par at the 17th — having already survived a nine at the 10th and ten dropped shots in three holes. He finished on 38 and was passed at the last, tied with Gregg Williams, whose 87 was the day's lowest gross and gave him the Green Jacket lead he had held since the 3rd. At the bottom, David Mullin's bogey at the 18th dropped him level with John Patterson on 31, so nothing at either end of the field is yet settled.",
+    "subject": "Alex Baker led the Trophy standing on the 18th tee and finished a point short, while Gregg Williams's 87 opened a three-shot Green Jacket lead",
+    "why_it_matters": "Three of the five are within a point of each other in the TEG 19 Trophy, the Green Jacket already has a clear leader, and the Wooden Spoon is shared, so almost nothing is settled going into Sunday.",
+    "shape": "Alex Baker went to the front at the 5th with a par worth four points, having taken 13 points from the 3rd to the 6th, then gave away ten gross shots across the 10th, 11th and 12th, including a nine at the 10th. He drew level again at the 14th and led outright after a par at the 17th. He signed for 38, one behind, level with Gregg Williams, whose 87 gross leads the Green Jacket by three from Jon Baker.",
     "beat_ids": [
-      "r1_b28",
-      "r1_b15",
-      "r1_b07",
-      "r1_b17",
-      "r1_b31",
-      "r1_b30",
-      "r1_b02",
-      "r1_b38"
+      "r1_b04",
+      "r1_b16",
+      "r1_b09",
+      "r1_b23",
+      "r1_b11",
+      "r1_b34",
+      "r1_b32",
+      "r1_b24"
     ],
     "headline_candidates": [
-      "Three Men Within One Point",
-      "Alex Baker Leads at the Seventeenth",
-      "Williams Alone in the Gross"
+      "Alex Baker Leads With One Hole Left",
+      "A Point Between Three Men After Saturday",
+      "Gregg Williams Takes the Green Jacket Lead"
     ],
-    "chosen_headline": "Three Men Within One Point",
-    "standfirst": "Gregg Williams's 87 is the only sub-90 gross of the day and worth three shots in the Green Jacket, while David Mullin and John Patterson start level at the foot of the field on 31.",
+    "chosen_headline": "Alex Baker Leads With One Hole Left",
+    "standfirst": "Gregg Williams matched his 38 points and went three clear in the gross with an 87, and David Mullin and John Patterson share the bottom on 31 apiece.",
     "compelling_score": 7,
     "humour_score": 5,
     "descriptor": "THE THREE RACES",
@@ -71,25 +71,49 @@
   },
   "discovered_storylines": [
     {
-      "subject": "John Patterson's round of violent extremes: nines at the 7th and the 14th, eleven shots gone in three holes, and in between a four-hole burst of twelve points",
-      "why_it_matters": "He finished on 31, level with David Mullin at the bottom of the TEG 19 Wooden Spoon, which badly understates a round that contained both the day's best scoring stretch and its worst.",
-      "shape": "A quintuple bogey nine at the 7th, in the middle of ten shots dropped across the 5th, 6th and 7th, had him at the foot of the Spoon before the turn. He then played the 8th to the 11th in par-bogey-bogey-bogey for twelve points, the biggest haul of the afternoon, and was back in the room. The 14th to the 16th took eleven shots back — a second nine, then two triple bogeys — and returned him to the bottom with a round of 105.",
+      "subject": "The 10th at Quinta da Ria, a 462-yard par four with water and out of bounds, took a nine, an eight and a seven from the field",
+      "why_it_matters": "Three of the five players lost their round's worst hole at the same place on their first ever visit, and two of the three races moved there.",
+      "shape": "Alex Baker went first with a nine, five over par and no points on stroke index 1. David Mullin followed with an eight, which dropped him to the bottom of the Wooden Spoon race, and Jon Baker took a seven as the last of three dropped holes. None of the three had seen the hole before Saturday.",
       "beat_ids": [
-        "r1_b27",
-        "r1_b10",
-        "r1_b11",
         "r1_b01",
-        "r1_b06",
-        "r1_b05",
-        "r1_b08"
+        "r1_b08",
+        "r1_b20",
+        "r1_b17"
       ],
       "headline_candidates": [
-        "Twelve Points, Then Eleven Shots",
-        "John Patterson's Two Nines",
-        "A Round in Two Directions"
+        "Nine, Eight and Seven at the Tenth",
+        "The Tenth Collects a Nine and an Eight",
+        "Three Cards Damaged at the Same Hole"
       ],
-      "chosen_headline": "Twelve Points, Then Eleven Shots",
-      "standfirst": "The best four-hole stretch of the day and the worst three-hole stretch of the day belonged to the same man, in that order.",
+      "chosen_headline": "Nine, Eight and Seven at the Tenth",
+      "standfirst": "Out of bounds runs the whole left side and a lake sits in front of the green from 110 yards, which the field discovered one at a time.",
+      "compelling_score": 8,
+      "humour_score": 7,
+      "descriptor": "QUINTA DA RIA'S 10TH",
+      "colour_note_ids": [
+        "quinta_da_ria/h10/1",
+        "quinta_da_ria/h10/2"
+      ]
+    },
+    {
+      "subject": "John Patterson's 105, built from two nines and a ruinous finish, with the best four-hole scoring run of the day in the middle of it",
+      "why_it_matters": "He took the day's worst gross score and still finished level with David Mullin on 31 points at the bottom of the TEG 19 Trophy, so the Wooden Spoon starts the week shared.",
+      "shape": "John Patterson dropped ten shots across the 5th, 6th and 7th, the last of them a nine at the stroke index 2 par four. He then took 12 points from the 8th to the 11th, three apiece, the best four-hole run anyone managed all day. A second nine at the 14th and triples at the 15th and 16th cost him 11 shots in three holes and put him back on the floor of the Spoon race.",
+      "beat_ids": [
+        "r1_b05",
+        "r1_b14",
+        "r1_b03",
+        "r1_b02",
+        "r1_b06",
+        "r1_b18"
+      ],
+      "headline_candidates": [
+        "John Patterson's Two Nines and Twelve Points",
+        "Twelve Points, Then Eleven Shots Gone",
+        "John Patterson Takes Nine Twice on Saturday"
+      ],
+      "chosen_headline": "John Patterson's Two Nines and Twelve Points",
+      "standfirst": "The 14th doglegs around a lake and the 16th runs between the two biggest ones, and he found both of them expensive.",
       "compelling_score": 7,
       "humour_score": 7,
       "descriptor": "JOHN PATTERSON",
@@ -97,32 +121,8 @@
         "quinta_da_ria/h14/1",
         "quinta_da_ria/h16/1"
       ]
-    },
-    {
-      "subject": "The 10th at Quinta da Ria, a 462-yard par 4 that took a nine, an eight and a seven from three of the five players in a single pass",
-      "why_it_matters": "The hole did more damage in one visit than any other on the card, cost Alex Baker and David Mullin a combined eleven shots to par, and sent Mullin to the bottom of the Wooden Spoon on the spot.",
-      "shape": "Out of bounds all down the left, a lake guarding the green from a hundred metres: the stroke-index one hole was always going to collect, and it collected immediately. Alex Baker took nine, David Mullin took eight and dropped straight to the foot of the Spoon race, Jon Baker took seven in the middle of his worst stretch of the day. Only two of the five got past it without losing at least three shots to par, which is the clearest statement the new course made all afternoon.",
-      "beat_ids": [
-        "r1_b04",
-        "r1_b09",
-        "r1_b13",
-        "r1_b24"
-      ],
-      "headline_candidates": [
-        "Nine, Eight and Seven",
-        "The Tenth Collects Its Dues",
-        "A Par Worth Celebrating"
-      ],
-      "chosen_headline": "Nine, Eight and Seven",
-      "standfirst": "Out of bounds left, a lake short of the green and stroke index one: TEG's first look at the hardest hole on its newest course went about as expected.",
-      "compelling_score": 7,
-      "humour_score": 7,
-      "descriptor": "QUINTA DA RIA'S 10TH",
-      "colour_note_ids": [
-        "quinta_da_ria/h10/1"
-      ]
     }
   ],
-  "race_state_note": "Round one of four, so nothing is decided: eight points cover the whole Trophy field from 39 down to 31, and the Wooden Spoon is a dead heat between David Mullin and John Patterson.",
+  "race_state_note": "Three rounds remain. David Mullin and John Patterson are exactly level on 31 points at the foot of the Trophy, so the Spoon is shared rather than owned; Gregg Williams sits second on Stableford and first on gross, three clear of Jon Baker in the Jacket.",
   "storyline_note": ""
 }

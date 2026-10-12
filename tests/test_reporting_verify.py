@@ -496,3 +496,12 @@ def test_earlier_teg_competition_is_a_warning():
 
 def test_plain_earlier_teg_reference_passes():
     assert _teg_refs("His 94 beat the 96 he posted in TEG 12.") == []
+
+
+def test_in_play_off_the_tee_is_not_a_playoff():
+    """TEG 19 R2 (2026-10-12): 'a lake which is in play off the tee' was flagged."""
+    import re
+    from teg_analysis.reporting.verify import _BANNED_MECHANISMS
+    pattern = dict(_BANNED_MECHANISMS)["playoff"]
+    assert not re.search(pattern, "a lake which is in play off the tee", re.IGNORECASE)
+    assert re.search(pattern, "a play-off", re.IGNORECASE)
