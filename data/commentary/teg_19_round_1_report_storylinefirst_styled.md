@@ -28,10 +28,10 @@ Then the reverse. From the 8th to the 11th he posted a par and three bogeys for 
 
 The second collapse was worse. A quintuple bogey 9 at the 14th, a par 4 doglegging around a lake. A triple at the 15th followed. Then another at the 16th, the par 5 that threads between the two biggest lakes. Eleven shots in three holes. One point salvaged, and it was the only thing on the card with a pulse. The 14th also carried him past David Mullin to the bottom of the 2026 TEG Wooden Spoon race. He finished with 105, 33 over, last in the 2026 TEG Green Jacket, and 31 points, level with Mullin at the foot of the Trophy.
 
-## The 10th at Quinta da Ria, a 422-metre par 4 that took a nine, an eight and a seven from three of the five players in a single pass
+## The 10th at Quinta da Ria, a 462-yard par 4 that took a nine, an eight and a seven from three of the five players in a single pass
 <!-- storyline: d1 -->
 
-Quinta da Ria's 10th is the sort of hole that explains why the course bites. It runs 422 metres, stroke index 1, with out of bounds the whole way down the left and a lake in front of the green from 100 metres out. A par there is worth celebrating. In a single pass, three of the five players failed to get within three shots of one.
+Quinta da Ria's 10th is the sort of hole that explains why the course bites. It runs 462 yards, stroke index 1, with out of bounds the whole way down the left and a lake in front of the green from 110 yards out. A par there is worth celebrating. In a single pass, three of the five players failed to get within three shots of one.
 
 Alex Baker took nine, five over and no Stableford points. David Mullin took eight, also for nothing, and the damage moved him from second-worst to the bottom of the 2026 TEG Wooden Spoon standings. Jon Baker escaped with seven, which only capped a wider slide. Doubles at the 8th and 9th sat either side of it, seven shots dropped across three holes.
 

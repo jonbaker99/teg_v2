@@ -204,6 +204,24 @@ def check_no_ai_tells(ctx: ReportContext) -> list[Finding]:
     return out
 
 
+def check_no_metres(ctx: ReportContext) -> list[Finding]:
+    """Distances are given in yards (Jon, 2026-10-12).
+
+    Course notes are converted as they load (`course_colour.metres_to_yards`),
+    so a metre here came from somewhere else, most likely the model's own
+    knowledge of the course. Warning: a unit fault, not a scoring one.
+    """
+    from teg_analysis.reporting.course_colour import METRE_RE
+    out = []
+    body = _strip_code_and_tables(ctx.text)
+    for m in METRE_RE.finditer(body):
+        out.append(Finding(
+            "no_metres", "warning",
+            f"distance in metres {m.group(0)!r}; reports use yards",
+            _excerpt(body, m.start(), m.end())))
+    return out
+
+
 _NEGATION_RE = re.compile(r"\b(no|not|never|without|nor|neither)\b", re.IGNORECASE)
 
 
@@ -442,6 +460,7 @@ CHECKS = (
     check_no_beat_ids,
     check_no_em_dashes,
     check_no_ai_tells,
+    check_no_metres,
     check_no_invented_mechanisms,
     check_not_a_week,
     check_only_participants,

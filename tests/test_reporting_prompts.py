@@ -593,3 +593,29 @@ def test_restyle_removes_cross_section_repetition():
     """
     assert "Remove repetition" in authoring.RESTYLE_CONTRACT
     assert "at least once" in authoring.RESTYLE_CONTRACT
+
+
+@pytest.mark.parametrize("text, expected", [
+    ("a 422-metre par 4", "a 462-yard par 4"),
+    ("a lake from 100 metres out", "a lake from 110 yards out"),
+    ("plays 6,314 metres from the white tees", "plays 6,905 yards from the white tees"),
+    ("a green just 22 metres wide", "a green just 24 yards wide"),
+    ("a 1 metre putt", "a 1 yard putt"),
+    ("a 400-yard par 4", "a 400-yard par 4"),
+])
+def test_course_note_metres_become_yards(text, expected):
+    from teg_analysis.reporting.course_colour import metres_to_yards
+    assert metres_to_yards(text) == expected
+
+
+def test_course_notes_reach_the_writer_in_yards():
+    from teg_analysis.reporting.course_colour import build_course_colour
+    notes = build_course_colour(["Quinta da Ria"])["Quinta da Ria"]["notes"]
+    texts = " ".join(n["text"] for n in notes)
+    assert "metre" not in texts
+    assert "462-yard par 4" in texts
+
+
+def test_metre_check_is_wired_into_verification():
+    from teg_analysis.reporting import verify
+    assert verify.check_no_metres in verify.CHECKS

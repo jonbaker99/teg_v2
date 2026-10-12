@@ -505,6 +505,8 @@ How a note reaches the page, in both storyline-first pipelines (tournament `stor
 3. **Code enforces the rules.** `resolve_for_storyline` drops unknown ids, caps at `MAX_NOTES_PER_STORYLINE` (2), uses each note once per report, and passes a hole note only when one of the storyline's own beats happened on that hole of that course. `check_colour_selection` reports each drop as a plan warning.
 4. **The section writer sees only its picks**, as `context.course_colour`, with `prompts.COURSE_COLOUR_WRITER_RULE`: a clause or one sentence each, woven into the action, never description.
 
+**Distances are in yards.** Notes may be sourced in metres; `colour_notes` converts them on load (`metres_to_yards`: a round hundred to the nearest 10 yards, anything else to the yard), so no writer sees a metre. D3's `no_metres` warns if one reaches the prose anyway. The source files keep the original units.
+
 The legacy pipelines (`StoryPlan`, `round_report.py`) are not wired: `build_story_plan` removes `course_colour` from its bundle, since nothing would resolve its picks. Interweaving (`--interweave`, off) resolves the pair's notes together, but its writer prompt does not carry the writer rule.
 
 **Difficulty.** Each round in `build_venue_context` carries `difficulty` from `analysis/course_difficulty.py`: `extra_strokes` (shots an 18-index golfer gets beyond an average course, from course and slope rating), a rough `band`, and, once at least eight rated courses had been played by that date, its rank among them (leak-safe for old TEGs). The raw ratings never enter a bundle. Planners and draft writers both see it; the prompts ask them to use it as judgement on what a score means, in their own words, never quoting ratings.

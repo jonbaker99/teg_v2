@@ -53,6 +53,30 @@ def load_course_colour(course: str) -> Optional[dict]:
         return None
 
 
+# Reports give distances in yards (Jon, 2026-10-12); several course notes are
+# sourced in metres. Converted here, as the notes are loaded, so no writer ever
+# sees a metre and no model does the arithmetic.
+METRE_RE = re.compile(r"\b(\d[\d,]*)(-| )(metres?|meters?)\b", re.IGNORECASE)
+_YARDS_PER_METRE = 1.0936133
+
+
+def metres_to_yards(text: str) -> str:
+    """Rewrite '422-metre' as '462-yard' and '100 metres' as '110 yards'.
+
+    A round hundred is usually an estimate ("100 metres out"), so it rounds to
+    the nearest 10 yards; anything else is a measured length, to the yard.
+    """
+    def convert(m: re.Match) -> str:
+        metres = int(m.group(1).replace(",", ""))
+        yards = metres * _YARDS_PER_METRE
+        yards = round(yards, -1) if metres % 100 == 0 else round(yards)
+        yards = f"{int(yards):,}"
+        if m.group(2) == "-":
+            return f"{yards}-yard"
+        return f"{yards} yard" + ("" if yards == "1" else "s")
+    return METRE_RE.sub(convert, text)
+
+
 def colour_notes(course: str, colour: dict) -> list[dict]:
     """Flatten one course file into id'd notes, sources dropped (the writer
     never needs a URL; the file keeps it for fact-checking).
@@ -65,11 +89,11 @@ def colour_notes(course: str, colour: dict) -> list[dict]:
     for section in LIST_SECTIONS:
         for i, entry in enumerate(colour.get(section) or [], 1):
             notes.append({"id": f"{slug}/{section}/{i}", "section": section,
-                          "text": entry["text"]})
+                          "text": metres_to_yards(entry["text"])})
     for hole, entries in sorted((colour.get("holes") or {}).items(), key=lambda kv: int(kv[0])):
         for i, entry in enumerate(entries, 1):
             notes.append({"id": f"{slug}/h{int(hole)}/{i}", "section": "hole",
-                          "hole": int(hole), "text": entry["text"]})
+                          "hole": int(hole), "text": metres_to_yards(entry["text"])})
     return notes
 
 
