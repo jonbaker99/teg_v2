@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-10-07 (Next TEG switch fix; course colour, ratings and difficulty for reports and TEGBot; TEGBot web search; live TEGBot, mid-round chances and finalise lock; TEGBot follow-ups and dev skills; live win chances tab on /simulation; TEGBot toolkit, Dig deeper and charts; new-record markers on /records; simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
+**Last updated:** 2026-10-12 (report voice is now modern Wodehouse, with new writing rules; Next TEG switch fix; course colour, ratings and difficulty for reports and TEGBot; TEGBot web search; live TEGBot, mid-round chances and finalise lock; TEGBot follow-ups and dev skills; live win chances tab on /simulation; TEGBot toolkit, Dig deeper and charts; new-record markers on /records; simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
+
+## 2026-10-12 — Reports in a new voice: modern Wodehouse, with new writing rules
+
+Storyline-first reports, the ones the site generates, now write in a modern Wodehouse voice (`prompts.HOUSE_VOICE`). Good golf is hammed up, bad golf is named plainly, and there are no similes or period language. Every writer prompt also carries Jon's writing-style rules, a ban on AI tells and a looser sentence-length rule. The voice pass removes repetition between sections, and course notes are converted from metres to yards. The admin report page's round picker now refreshes the panel. TEG 19 R1 to R3 were regenerated in the new voice; the volume needs a `data/commentary` pull to show them. Trial copies live in `docs/voice_trials/`.
 
 ## 2026-10-07 — Home page Last TEG / Next TEG switch is instant again
 

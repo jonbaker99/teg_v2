@@ -26,9 +26,9 @@ first, voice second) plus the writer-richness fix from the context A/B:
    otherwise both write. Plain, unstyled prose — this stage's only job is
    structure + facts.
 2. **Voice pass** — `authoring.restyle_voice` rewrites that draft in the
-   CURRENT house voice (`authoring.WRITER_VOICE` — Herron/Ronay/Armstrong/
-   Iannucci, em-dash ban, humour6, faithfulness rules), the same function and
-   the same voice constant production would use. D3-verified; `new_findings`
+   CURRENT house voice (`prompts.HOUSE_VOICE`, modern Wodehouse since
+   2026-10-12, plus the restyle contract and faithfulness rules), the same
+   function and the same voice constant production uses. D3-verified; `new_findings`
    isolates faults the voice pass introduced vs inherited from the draft.
 
 This is still an experiment, not a pipeline change: nothing in `backfill.py`
@@ -107,7 +107,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 
 from teg_analysis.reporting import llm, prompts
-from teg_analysis.reporting.authoring import (WRITER_VOICE, _strip_derived_prose,
+from teg_analysis.reporting.authoring import (_strip_derived_prose,
                                              load_storyline_plan, restyle_voice)
 from teg_analysis.reporting.backfill import parse_teg_spec
 from teg_analysis.reporting.course_colour import note_index, resolve_for_storyline
@@ -351,7 +351,7 @@ def run_voice_pass(teg_num: int, model: Optional[str] = None) -> dict:
     the available `source_label`s if the draft is missing.
     """
     print("[storyline_full_report] applying house voice (restyle_voice)...")
-    result = restyle_voice(teg_num, WRITER_VOICE, label="storylinefirst",
+    result = restyle_voice(teg_num, prompts.HOUSE_VOICE, label="storylinefirst",
                            source_label="storylinedraft", model=model)
     print(f"[storyline_full_report] wrote voiced report: {result['output_path']}")
     print(f"[storyline_full_report] wrote styled report: {result['styled_path']}")
