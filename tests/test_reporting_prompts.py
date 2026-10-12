@@ -619,3 +619,16 @@ def test_course_notes_reach_the_writer_in_yards():
 def test_metre_check_is_wired_into_verification():
     from teg_analysis.reporting import verify
     assert verify.check_no_metres in verify.CHECKS
+
+
+def test_site_pipelines_write_in_the_house_voice():
+    """Modern Wodehouse is the house voice for the storyline pipelines (Jon, 2026-10-12).
+
+    These are the scripts the webapp's Generate button runs.
+    """
+    from pathlib import Path
+    assert "modern Wodehouse" in prompts.HOUSE_VOICE
+    for script in ("scripts/storyline_round_report_experiment.py",
+                   "scripts/storyline_full_report_experiment.py"):
+        src = Path(script).read_text()
+        assert "restyle_voice(teg_num, prompts.HOUSE_VOICE" in src, script

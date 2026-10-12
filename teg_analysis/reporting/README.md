@@ -612,10 +612,10 @@ Runs end to end via `scripts/storyline_full_report_experiment.py --tegs N`. Not 
    presented as a newspaper edition of separate articles, which wants one subject per section. **This file is plain, factual, unvoiced prose —
    the right input for any tone/voice experiment.** Never start a voice A/B from an already-styled
    report; iterating on "slightly funnier than the finished piece" compounds instead of comparing.
-3. **Voice pass** — `authoring.restyle_voice(teg, WRITER_VOICE, label="storylinefirst",
+3. **Voice pass** — `authoring.restyle_voice(teg, prompts.HOUSE_VOICE, label="storylinefirst",
    source_label="storylinedraft")` → `teg_N_report_storylinefirst.md` (+ `_styled.md`). Rewrites stage
-   2's draft in the current house voice — the same `WRITER_VOICE` constant and the same function
-   production uses for legacy-pipeline restyles. D3-verified; `new_findings` isolates faults the voice
+   2's draft in the house voice: modern Wodehouse since 2026-10-12 (`prompts.HOUSE_VOICE`). The legacy
+   five-stage chain still writes in `authoring.WRITER_VOICE`. D3-verified; `new_findings` isolates faults the voice
    pass introduced vs. inherited from the draft.
 
 To test a tone variant: draft once per TEG (stage 1+2, expensive relative to stage 3), then run stage

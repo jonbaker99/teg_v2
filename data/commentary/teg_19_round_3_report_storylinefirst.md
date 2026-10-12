@@ -3,35 +3,35 @@
 ## Alex Baker's 43 points, the best score of the day at Monte Rei, assembled around a ten at the 2nd and a nine at the 12th
 <!-- storyline: round -->
 
-Monte Rei is a Nicklaus parkland with water in play on eleven of its eighteen holes, and the TEG books rate it the third-hardest of the 28 courses the group has played. Alex Baker went round it in 43 points, the best score of the day, three clear of anyone else in the five-man field and 13 better than the worst card returned.
+Alex Baker's 43 points was the best score of the round at Monte Rei, three clear of anyone else in the five-man field and 13 better than the worst return of the day. The remarkable part is the luggage he carried round with him. A quintuple-bogey 10 at the 2nd produced no points at all, and a 9 at the 12th, the horseshoe par 4 that bends around the water, produced none either. Two blanks on a Jack Nicklaus parkland where water is in play on eleven of the eighteen holes and the scoring is as unforgiving as anywhere the group plays.
 
-He assembled that total around two holes that gave him nothing at all. At the 2nd he took a quintuple-bogey 10. At the 12th, the horseshoe par 4 that bends around the water, he took a 9. No points from either, and no visible effect on the rest of his afternoon. A man who posts a 10 and a 9 and still wins the day by three has made a private peace with something.
-
-Everything in between paid. Holes 6 to 9 were worth 13 points on their own, pars at the 6th and the 9th with bogeys either side of them. The 43 was 14 points better than the 29 he managed in Round 2, and his gross 98 took 16 strokes off the 114 he signed for on his only previous visit here. He sits third in the 2026 TEG Trophy on 110.
+Everything in between paid him back with interest. From the 6th to the 9th he took 13 points, with pars at the 6th and the 9th and bogeys either side, which is about as good as four consecutive holes get out there. The 43 was 14 points better than the 29 he managed in Round 2, and his gross 98 took 16 strokes off the 114 he signed for on his only previous visit. He sits third in the 2026 TEG Trophy on 110.
 
 ## Jon Baker's 87 at Monte Rei, equalling the course record and built on five consecutive pars from the 11th to the 15th
 <!-- storyline: d0 -->
 
-The Monday round produced the lowest gross score the course has ever given up in TEG. Jon Baker's 87 equalled the record of 87 set across the five previous rounds played there, and bettered his own 88 from his first visit by a shot.
+The Monday round produced the best gross score Monte Rei has ever surrendered in TEG. Jon Baker's 87 equalled the record of 87 set across the five previous rounds played there, and took a shot off his own 88 from his first visit.
 
-For a while it threatened to be something else entirely. He went triple bogey, double, double from the 2nd to the 4th, seven shots surrendered in three holes, the 6 at the 3rd arriving on one of the hardest holes on the card. At that point the record was not in anybody's thoughts.
+Nothing about the opening stretch suggested any of this was coming. He went triple bogey, double, double from the 2nd to the 4th, seven shots gone in three holes, and the 6 at the 3rd arrived on one of the hardest holes on the card. Bad golf, efficiently delivered, and apparently got out of the system.
 
-Then came five consecutive pars from the 11th to the 15th, worth 16 Stableford points, a stretch of golf conducted with the calm of a man reading a timetable on a burning platform. The 13th gave him a par where even a short approach usually refuses one. At the 14th he took the safe line over the corner of the lake, which on this course counts as a philosophical position. The 15th, the toughest hole out there, yielded four points. A double bogey 7 at the 16th stopped the run, by which time it had already done the work.
+What followed was five straight pars from the 11th to the 15th, worth 16 Stableford points, and the group will be discussing them for some time. The par at the 13th came on a hole where even a short approach rarely yields one. At the 14th he put his tee shot safely past the corner of the lake, which is the whole job. The 15th, the toughest hole out there, gave up four points to him. A double bogey 7 at the 16th finally stopped the run, and after that spell it felt like an imposition.
+
+His lead in the 2026 TEG Trophy got considerably more comfortable.
 
 ## The TEG 19 Wooden Spoon tightens as John Patterson's 36 points meets David Mullin's 30, the worst score of the day
 <!-- storyline: d1 -->
 
-The TEG 19 Wooden Spoon narrowed considerably. John Patterson has occupied last place since the ninth hole of Round 2, a tenancy he has so far shown no urgency about ending, and he posted 36 points, eleven better than the 25 he managed in Round 2. David Mullin returned 30, the lowest score in the field of five.
+The TEG 19 Wooden Spoon narrowed sharply. John Patterson, who has been last since the ninth hole of Round 2, posted 36 points, eleven better than the 25 he managed that day, while David Mullin returned 30, the lowest score in the field of five.
 
-Patterson's recovery followed a wobble. A triple bogey at the 6th, where vast bunkers guard an offset green, started a run of four consecutive holes dropped to the card, before he birdied the 10th and resumed behaving like a golfer. Mullin's trouble came later and cost him more. Triple bogey at the 13th, then bogey, bogey, double and another triple through the 17th: ten shots over par in five holes, delivered without complaint. He birdied the last, which is one way of signing off.
+Patterson's recovery needed one first. A triple bogey at the 6th, where the vast bunkers guard an offset green, started a run of four holes dropped to the card, which he ended by birdieing the 10th. Mullin's trouble came later and was more expensive: a triple bogey at the 13th, then bogey, bogey, double and another triple through the 17th. Ten shots over par in five holes is a hard thing to watch, and the birdie at the last arrived far too late to be of any practical use.
 
-Both men handed in 97, which for Patterson was fourteen strokes better than his only previous visit. He remains bottom, but the gap to fourth has come down from nine points to three.
+Both men signed for 97, and for Patterson that was fourteen strokes better than his only previous visit. He is still bottom, but the gap to fourth has come down from nine points to three.
 
 ## The TEG 19 Green Jacket cut from four shots to two by a birdie at the last, while the Trophy lead doubled to ten
 <!-- storyline: race -->
 
-The middle of the round undid Gregg Williams. He dropped nine shots in four holes from the 9th: a triple bogey at the short 9th, the sole par 3 out there and theoretically the one place a man can draw breath, followed by doubles at the 10th, 11th and 12th. Through all of it he held his shape, in the manner of someone walking steadily away from a building he has just reversed into.
+Gregg Williams had a middle section of the round he will want to forget. He dropped nine shots in four holes from the 9th: a triple bogey at the short 9th, the one par 3 on the course meant to offer a breather, followed by doubles at the 10th, 11th and 12th. Four holes, and the TEG 19 Green Jacket swung with them.
 
-It opened the TEG 19 Green Jacket. A par at the 15th, stroke index 1, drew Jon Baker level with him for the first time. Williams edged back in front with a bogey at the 16th, Jon Baker drew level again with a bogey at the 17th, and then Williams birdied the par-5 18th over the water to finish the round two clear rather than four. A lead of four reduced to two is still a lead, and he will take it.
+Jon Baker drew level for the first time with a par at the 15th, stroke index 1, a hole that has no business handing out pars to anyone. Williams edged back in front with a bogey at the 16th, Jon Baker levelled again with a bogey at the 17th, and then Williams birdied the par-5 18th, over the water, to finish the round two clear rather than four.
 
-The TEG 19 Trophy went the other way. Jon Baker took the outright lead with a par at the 8th and never handed it back, turning five points into ten.
+The Trophy went the other way entirely. Jon Baker took the outright lead with a par at the 8th and never handed it back, turning five points into ten.

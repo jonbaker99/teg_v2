@@ -61,8 +61,8 @@ from typing import Optional
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
 
-from teg_analysis.reporting import llm
-from teg_analysis.reporting.authoring import WRITER_VOICE, restyle_voice
+from teg_analysis.reporting import llm, prompts
+from teg_analysis.reporting.authoring import restyle_voice
 from teg_analysis.reporting.backfill import parse_teg_spec
 from teg_analysis.reporting.paths import output_dir
 from teg_analysis.reporting.round_storyline import (
@@ -75,7 +75,7 @@ from teg_analysis.reporting.round_storyline import (
 def run_voice_pass(teg_num: int, round_num: int, model: Optional[str] = None) -> dict:
     """Stage 3 alone: rewrite the frozen structural draft in the house voice."""
     print(f"[storyline_round_report] TEG {teg_num} R{round_num}: applying house voice...")
-    result = restyle_voice(teg_num, WRITER_VOICE, label="storylinefirst",
+    result = restyle_voice(teg_num, prompts.HOUSE_VOICE, label="storylinefirst",
                            source_label="storylinedraft", model=model, round_num=round_num)
     print(f"[storyline_round_report] wrote voiced report: {result['output_path']}")
     print(f"[storyline_round_report] wrote styled report: {result['styled_path']}")
