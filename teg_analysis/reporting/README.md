@@ -171,6 +171,13 @@ separately because that's what they are.
   > the voice half, so a `voice=` swap silently dropped the em-dash ban and the length rules. They
   > exist because the reports were found hard to read, and that does not stop applying because the
   > register changed.
+  > Since 2026-10-11 `SENTENCE_DISCIPLINE` also carries **`prompts.WRITING_STYLE`** (Jon's
+  > general writing rules, defaults) and **`prompts.AI_TELLS`** (strict), the ban on
+  > machine-written constructions ("not X, it's Y", triads, AI vocabulary, rhetorical set-ups).
+  > D3's `no_ai_tells` (warning) catches the regex-visible subset.
+  > The same day the length rule was relaxed (Jon: the 15/25-word cap read as stilted).
+  > Sentences now mix short and long, mostly 10 to 30 words and rarely past 35, and every clause
+  > must add a fact or a joke.
   A `voice=` argument **replaces** `WRITER_VOICE` wholesale — it is a complete register description,
   not a delta — and cannot shed the contract or the guardrails. Asserted in tests.
 
@@ -197,7 +204,7 @@ Assessed against the actual prompt: roughly **half of `WRITER_SYSTEM`'s 11 faith
 mechanically checkable**. D3 now checks six of them, but the prompt still carries all eleven —
 deliberate belt-and-braces, not an oversight. (The other two of D3's eight checks aren't on this list:
 `swing_claims` is arithmetic-adjacent, and `no_em_dashes` enforces a voice rule rather than a
-faithfulness one.)
+faithfulness one. `no_ai_tells`, added 2026-10-11, is a voice rule too.)
 
 | Rule | Checkable? | How |
 |---|---|---|
@@ -497,6 +504,8 @@ How a note reaches the page, in both storyline-first pipelines (tournament `stor
 2. **Each storyline picks 0-2.** `DraftedStoryline.colour_note_ids`, steered by `prompts.COURSE_COLOUR_PLAN_RULE`. An empty list is the expected answer for most storylines.
 3. **Code enforces the rules.** `resolve_for_storyline` drops unknown ids, caps at `MAX_NOTES_PER_STORYLINE` (2), uses each note once per report, and passes a hole note only when one of the storyline's own beats happened on that hole of that course. `check_colour_selection` reports each drop as a plan warning.
 4. **The section writer sees only its picks**, as `context.course_colour`, with `prompts.COURSE_COLOUR_WRITER_RULE`: a clause or one sentence each, woven into the action, never description.
+
+**Distances are in yards.** Notes may be sourced in metres; `colour_notes` converts them on load (`metres_to_yards`: a round hundred to the nearest 10 yards, anything else to the yard), so no writer sees a metre. D3's `no_metres` warns if one reaches the prose anyway. The source files keep the original units.
 
 The legacy pipelines (`StoryPlan`, `round_report.py`) are not wired: `build_story_plan` removes `course_colour` from its bundle, since nothing would resolve its picks. Interweaving (`--interweave`, off) resolves the pair's notes together, but its writer prompt does not carry the writer rule.
 

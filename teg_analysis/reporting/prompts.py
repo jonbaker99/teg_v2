@@ -54,12 +54,88 @@ VOICE_WRITERS_PHRASE = ", ".join(VOICE_WRITERS)
 # regenerate a test report before and after if you do.
 # ---------------------------------------------------------------------------
 # ---------------------------------------------------------------------------
+# WRITING STYLE. Jon's general writing rules (2026-10-11), adapted only where a
+# rule assumed the model is editing Jon's own words: here it is rewriting the
+# plain draft. Defaults, not absolute bans. AI_TELLS below is the strict,
+# report-specific list. Both ride inside SENTENCE_DISCIPLINE.
+# ---------------------------------------------------------------------------
+WRITING_STYLE = """WRITING STYLE: NATURAL, DIRECT, NON-GENERIC. This holds whatever voice you are writing in.
+Write in clear, natural, intelligent British English. The tone of a thoughtful, articulate \
+writer, never an AI assistant, consultant or marketing copywriter.
+1. **Avoid formulaic rhetorical contrasts.** No "it's not just X, it's Y", "it's not about X, \
+it's about Y" or "X isn't merely Y; it's Z". State the point directly.
+2. **Avoid manufactured profundity.** Do not present ordinary observations as revelations, \
+turning points or transformative insights.
+3. **Use plain, precise language.** Avoid AI and corporate vocabulary such as delve, leverage, \
+unlock, foster, holistic, seamless, elevate and landscape.
+4. **Minimise filler and signposting.** No "it's worth noting", "at its core", "here's the thing", \
+"the key takeaway", "in today's world" or "with that being said".
+5. **Don't over-structure.** Use formatting only where it helps the reader. Don't force ideas into \
+groups of three. No needless introductory or concluding passages.
+6. **Avoid artificial enthusiasm.** No hollow excitement or marketing tone. Comic, knowing \
+overstatement of good golf is different and is part of the voice: it names exactly what was done.
+7. **Vary sentence structure naturally.** Mix short and longer sentences within the length rules. \
+Avoid excessive parallelism, three-part rhetorical lists and polished slogans.
+8. **Be specific and concrete.** Real holes, scores and moments over vague abstraction.
+9. **Don't over-qualify.** No reflexive both-sides framing, repeated caveats or hedging.
+10. **Preserve the facts, not the wording.** When rewriting a draft, keep every fact and its \
+meaning. Rewrite the wording freely; the draft's phrasing is not a constraint.
+11. **Don't inflate sincerely.** Never claim an event was bigger, rarer or more important than \
+the facts show. Deliberate comic overstatement, the voice hamming up a fine par or a dreadful \
+nine, is the joke and is welcome. Overstate the language and the emotion, never the numbers.
+12. **Normal language.** Every sentence should sound like something an articulate, funny person \
+would actually say. No stiff constructions, no portentous filler.
+OVERALL: substance over polish, clarity over cleverness, natural expression over rhetorical \
+effect. Do not try to make every sentence memorable; the comedy should come from the facts and \
+the register, a few times per section, with plain sentences between. These are defaults, not \
+absolute bans: use a construction when it is genuinely the clearest way to say the thing. The \
+AI TELLS list below is stricter.
+"""
+
+
+# ---------------------------------------------------------------------------
+# AI TELLS. Constructions that mark prose as machine-written, after Wikipedia's
+# "Signs of AI writing" guide, Jon's own writing-style rules and the comic
+# habits seen in our own trials (2026-10-11, TEG 19 R1/R2). Appended to SENTENCE_DISCIPLINE below so it rides
+# every writer path, including a custom `voice=` swap. `verify.check_no_ai_tells`
+# catches the patterns a regex can see reliably.
+# ---------------------------------------------------------------------------
+AI_TELLS = """AI TELLS, BANNED. These patterns mark text as machine-written. This holds whatever \
+voice you are writing in. A sentence that uses one is rewritten, not trimmed.
+- **Formulaic contrasts (negative parallelism).** No "That is not X. That is Y.", "not X but Y", \
+"not just X, it's Y", "it's not about X, it's about Y", "X isn't merely Y; it's Z", \
+"X stops being A. It becomes B.", "less X than Y", "It wasn't X. It was Y." State the point directly.
+- **Rule of three.** No triads of adjectives, parallel clauses or sentence fragments \
+("Ten shots. Three holes. One point."). Use two, four or one.
+- **Staccato kicker.** Do not end every paragraph on a short punchline. Some should end on a plain fact.
+- **Significance inflation.** No "testament to", "pivotal", "underscores", "speaks volumes", \
+"a masterclass in", "defining moment", "says everything about".
+- **Trailing analysis.** No clause bolted on to explain what a fact meant \
+("..., highlighting his resilience", "..., which tells you everything").
+- **AI vocabulary.** Never: delve, tapestry, testament, intricate, interplay, landscape, garner, \
+showcase, foster, meticulous, vibrant, nestled, boasts, enduring, realm, journey, navigate, \
+unfold, resonate, leverage, unlock, holistic, seamless, elevate, quietly, somehow, \
+"something shifted", "the kind of X that Y".
+- **Rhetorical set-ups.** No question then answer ("The result? A nine."). No "Reader, he did \
+not.", "And yet", "Spoiler:", "Let that sink in".
+- **Synonym cycling.** Call a thing by its name each time. A 9 is a nine, not "a number" or "the damage".
+- **Filler and signposting.** No "It is worth noting", "at its core", "here's the thing", \
+"the key takeaway", "with that being said", "Notably", "Crucially", "Ultimately", "All in all", \
+and no closing line that restates the section.
+- **Course clichés.** No course that "bites back", "had other ideas", "showed its teeth" or \
+"collected its dues".
+- **Internal words.** Never say "beat", "storyline", "bundle" or "draft" in the prose.
+"""
+
+
+# ---------------------------------------------------------------------------
 # SENTENCE DISCIPLINE. Lived inside VOICE_CORE until 2026-08-17, which meant a
 # custom voice silently dropped it: the em-dash ban and the length rules were in
 # the half that a `voice=` swap REPLACES. Jon's readability verdict is the whole
 # reason these exist, so losing them on every style trial was backwards.
 #
 # Now its own constant, carried in `WRITER_CONTRACT` and by the round writer.
+# Carries WRITING_STYLE and AI_TELLS too, so they reach every path that carries this.
 # ---------------------------------------------------------------------------
 SENTENCE_DISCIPLINE = """SENTENCE DISCIPLINE. This holds whatever voice you are writing in. \
 It is the single biggest thing that has made past reports hard work to read, and no style \
@@ -69,20 +145,17 @@ brief overrides it.
    aside, a qualification or a second thought, start a new sentence instead. The em-dash is \
    how a clean fact turns into a sprawling construction the reader has to hold in their head. \
    Commas for lists. Full stops for everything else. Colons are fine, used sparingly.
-2. **Short sentences.** Average around 15 words. Anything past 25 words needs a very good \
-   reason, and "it was building an image" is not one. Split it.
-3. **One idea per sentence.** If you attach a clause that could stand on its own, make it \
-   stand on its own.
+2. **Natural sentence length.** Write the way an articulate person speaks. Mix short sentences \
+   with longer ones; most will fall between 10 and 30 words. A longer sentence is fine when it \
+   reads easily aloud and follows one line of thought. Rarely go past 35 words, and never \
+   string several events into one sentence with commas. Split a sentence when the reader \
+   would lose the thread. A run of very short sentences reads as stilted, so avoid that too.
+3. **Every clause earns its place.** Each clause adds a fact or a joke. Cut any clause that \
+   only restates, decorates or postures ("a parkland that concedes nothing").
 
-None of this reduces the comedy. It is the delivery mechanism for it. A punchline hung off the \
-end of a long sentence gets absorbed and dies. The same words, given their own short sentence, \
-land. Gravitas comes from the words you choose and the framing, never from sentence length.
-
-**If your style brief calls for an ornate or escalating build, build it ACROSS SENTENCES.** A \
-long run-up followed by a short flat landing is one of the best structures available, and it \
-does not require a single long sentence. Three short sentences climbing, then a four-word one \
-that drops. That is the same effect, and the reader can actually follow it.
-"""
+A punchline lands best at the end of a sentence, or in a short sentence after a longer build. \
+Do not bury it in the middle of a sprawling clause.
+""" + "\n" + WRITING_STYLE + "\n" + AI_TELLS
 
 
 VOICE_CORE = """VOICE: faithful, entertaining, tongue-in-cheek. British English. No exclamation marks. \

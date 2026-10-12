@@ -491,10 +491,8 @@ CRAFT:
 abstractions — the detail is what makes it sing.
 - VARY your language. Never lean on the same dramatic word twice — do not repeat \
 "disaster", "meltdown", "catastrophe" and the like; reach for fresh, precise phrasing.
-- Vary sentence rhythm, and let a short sentence land a point. **Sentence-length \
-discipline:** average around 15 words, and no sentence past roughly 25. Where a thought \
-needs room, split it into two sentences rather than let one run on. The wit lands in \
-something short and flat, never in an unfurling clause.
+- Vary sentence rhythm naturally, mixing short and longer sentences as SENTENCE \
+DISCIPLINE describes. Let a short sentence land a point, but never write a run of them.
 """
 
 _WRITER_ECONOMY = """ECONOMY. Sentence- and paragraph-level mechanics. Write tight on the first pass; \
@@ -1062,9 +1060,18 @@ its VOICE ONLY.
 NON-NEGOTIABLE — this is a restyle, not a rewrite:
 - DO NOT change any fact: holes, scores, players, par values, weekdays, stroke indexes, course \
 names, records, margins, totals. Every number stays exactly as written.
-- DO NOT change the structure: same sections, same headings, same order, same length or slightly \
-shorter.
-- DO NOT add or remove events. If it is not in the text you were given, it does not exist.
+- DO NOT change the structure: same sections, same headings, same order. Length: about the \
+same as the text you were given. Words saved by removing repetition (below) go back into the \
+events already in the text: more detail on how a hole went wrong or right, more of the voice. \
+Never into new events.
+- DO NOT add events. If it is not in the text you were given, it does not exist.
+- **The reader reads every section in order, one straight after another. Remove repetition \
+across sections.** The sections were drafted separately, so they overlap. Introduce the course \
+(its name, designer, location, difficulty, water) once, in the first section that needs it, and \
+never again. When a later section relies on a fact an earlier section already gave, refer to it \
+in a few words ("those two nines") or leave it out; do not recount it. Each event is told in \
+full once, in the section where it matters most. Every event must still appear at least once \
+somewhere in the report, and a section's own subject stays in that section.
 - DO NOT add weekday names anywhere they do not already appear.
 - **Reproduce any HTML comment (`<!-- ... -->`) exactly where it is, verbatim.** These are \
 machine-readable anchors that tie a section to the plan it came from. Dropping one breaks the \

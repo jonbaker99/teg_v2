@@ -334,6 +334,34 @@ def test_em_dash_check_is_wired_into_verification():
     assert verify.check_no_em_dashes in verify.CHECKS
 
 
+def test_ai_tells_ride_every_writer_path():
+    """Inside SENTENCE_DISCIPLINE, so a custom `voice=` swap cannot shed them."""
+    assert prompts.AI_TELLS in prompts.SENTENCE_DISCIPLINE
+    assert prompts.WRITING_STYLE in prompts.SENTENCE_DISCIPLINE
+    assert prompts.WRITING_STYLE in WRITER_SYSTEM
+    assert prompts.AI_TELLS in WRITER_SYSTEM
+
+
+@pytest.mark.parametrize("text, flagged", [
+    ("That is not a slow start. That is a surrender.", True),
+    ("It wasn't bad luck, it was a policy.", True),
+    ("It was not just a bogey, but a statement.", True),
+    ("Two tens stops being bad luck. It becomes a policy.", True),
+    ("The result? A nine.", True),
+    ("A testament to his patience.", True),
+    ("Seven shots gone in three holes, and not a net par among them.", False),
+    ("It was not a surprise. This course asks more of this field than most.", False),
+])
+def test_ai_tells_check(text, flagged):
+    from teg_analysis.reporting import verify
+
+    class Ctx:
+        pass
+    ctx = Ctx()
+    ctx.text = text
+    assert bool(verify.check_no_ai_tells(ctx)) is flagged
+
+
 @pytest.mark.parametrize("rule", [
     "countback",
     "drew level",
@@ -484,7 +512,7 @@ def test_readability_rules_survive_a_voice_swap():
 
     custom = authoring.build_writer_system("VOICE: whatever you like.")
     assert "NO EM-DASHES" in custom
-    assert "Average around 15 words" in custom
+    assert "Natural sentence length" in custom
     assert "Em-dashes are banned outright" in custom      # the ECONOMY restatement
     assert prompts.SENTENCE_DISCIPLINE in authoring.WRITER_CONTRACT
     assert prompts.SENTENCE_DISCIPLINE not in authoring.WRITER_VOICE
@@ -497,10 +525,11 @@ def test_sentence_discipline_reconciles_styles_that_want_an_ornate_build():
     """Several house styles call for a long build. The rule must say how.
 
     Without this the block simply contradicts the style brief, and the model
-    picks one at random. The resolution is that a build is made of several short
-    sentences, which is what VOICE_CORE already said about the Ronay device.
+    picks one at random. Until 2026-10-11 the resolution was to build across
+    several short sentences; Jon found that stilted, so a longer sentence that
+    reads easily aloud is now allowed outright.
     """
-    assert "ACROSS SENTENCES" in prompts.SENTENCE_DISCIPLINE
+    assert "A longer sentence is fine" in prompts.SENTENCE_DISCIPLINE
 
 
 def test_arc_scope_carries_no_editor_prose():
@@ -554,3 +583,39 @@ def test_the_occasion_device_shows_no_specimen_prose():
     # ("Never again, for the last time, permanently, henceforth").
     assert "They are operations, not" in block
     assert "henceforth" not in block
+
+
+def test_restyle_removes_cross_section_repetition():
+    """Sections are drafted separately and read back to back (Jon, 2026-10-11).
+
+    The voice pass is the only stage that sees them together, so it owns the
+    de-duplication; it must still keep every event once.
+    """
+    assert "Remove repetition" in authoring.RESTYLE_CONTRACT
+    assert "at least once" in authoring.RESTYLE_CONTRACT
+
+
+@pytest.mark.parametrize("text, expected", [
+    ("a 422-metre par 4", "a 462-yard par 4"),
+    ("a lake from 100 metres out", "a lake from 110 yards out"),
+    ("plays 6,314 metres from the white tees", "plays 6,905 yards from the white tees"),
+    ("a green just 22 metres wide", "a green just 24 yards wide"),
+    ("a 1 metre putt", "a 1 yard putt"),
+    ("a 400-yard par 4", "a 400-yard par 4"),
+])
+def test_course_note_metres_become_yards(text, expected):
+    from teg_analysis.reporting.course_colour import metres_to_yards
+    assert metres_to_yards(text) == expected
+
+
+def test_course_notes_reach_the_writer_in_yards():
+    from teg_analysis.reporting.course_colour import build_course_colour
+    notes = build_course_colour(["Quinta da Ria"])["Quinta da Ria"]["notes"]
+    texts = " ".join(n["text"] for n in notes)
+    assert "metre" not in texts
+    assert "462-yard par 4" in texts
+
+
+def test_metre_check_is_wired_into_verification():
+    from teg_analysis.reporting import verify
+    assert verify.check_no_metres in verify.CHECKS
