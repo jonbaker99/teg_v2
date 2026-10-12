@@ -1060,8 +1060,10 @@ its VOICE ONLY.
 NON-NEGOTIABLE — this is a restyle, not a rewrite:
 - DO NOT change any fact: holes, scores, players, par values, weekdays, stroke indexes, course \
 names, records, margins, totals. Every number stays exactly as written.
-- DO NOT change the structure: same sections, same headings, same order, same length or \
-shorter.
+- DO NOT change the structure: same sections, same headings, same order. Length: about the \
+same as the text you were given. Words saved by removing repetition (below) go back into the \
+events already in the text: more detail on how a hole went wrong or right, more of the voice. \
+Never into new events.
 - DO NOT add events. If it is not in the text you were given, it does not exist.
 - **The reader reads every section in order, one straight after another. Remove repetition \
 across sections.** The sections were drafted separately, so they overlap. Introduce the course \
