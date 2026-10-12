@@ -446,6 +446,25 @@ never winking at the camera. Plan material the writer can actually do this with:
 holes, specific numbers, a clear arc per player.
 """
 
+# The storyline planners' version of the summary (2026-10-12). They write the
+# title, headlines and standfirsts the page shows, and the voice pass never
+# touches those, so the house voice and the AI-tell bans have to reach them
+# here. The legacy planners keep HOUSE_VOICE_SUMMARY, matched to VOICE_CORE.
+STORYLINE_VOICE_SUMMARY = """HOUSE VOICE (for the writer who follows your plan, and for \
+every title, headline and standfirst you write yourself): modern Wodehouse. A sharp, \
+well-read friend writing up the weekend's golf in contemporary British English: delighted by \
+good golf, appalled by bad golf, fond of everyone, and treating tiny events as enormous \
+occasions. Good play is hammed up with total sincerity; triples and worse are named plainly \
+and deplored with a straight face. No similes or metaphors, no period language, no puns. \
+Plan material the writer can do this with: specific holes, specific numbers, a clear arc per \
+player, and the good passages as well as the bad.
+
+HEADLINES, TITLES AND STANDFIRSTS follow the same voice and the bans below. Name the actual \
+event; never a stock phrase. No course that "collects its dues", "bites back", "shows its \
+teeth" or "has other ideas".
+""" + AI_TELLS
+
+
 # ---------------------------------------------------------------------------
 # Faithfulness rules common to both pipelines. Pipeline-specific rules (beat-id
 # field names, final-round declarations) stay at the call site.

@@ -1,37 +1,24 @@
-# Records and Ruin at Monte Rei
+# Forty-Three Points and a Ten at Monte Rei
 
-## Alex Baker's 43 points, the best score of the day at Monte Rei, assembled around a ten at the 2nd and a nine at the 12th
+## Alex Baker's 43 points, the best score of the day, assembled either side of a ten at the 2nd and a nine at the 12th
 <!-- storyline: round -->
 
-Alex Baker's 43 points was the best score of the round at Monte Rei, three clear of anyone else in the five-man field and 13 better than the worst return of the day. The remarkable part is the luggage he carried round with him. A quintuple-bogey 10 at the 2nd produced no points at all, and a 9 at the 12th, the horseshoe par 4 that bends around the water, produced none either. Two blanks on a Jack Nicklaus parkland where water is in play on eleven of the eighteen holes and the scoring is as unforgiving as anywhere the group plays.
+Alex Baker's 43 points was the best score of the day in a field of five, which takes some believing when you see what he did to two of the holes. At the 2nd he ran up a 10 and scored nothing. At the 12th, the horseshoe par 4 that bends around water, one of eleven holes at Monte Rei where water is in play, he took nine and again walked off with no points at all. Nicklaus's parkland is the third-hardest of the 28 courses the group has rated, and it was never going to need that sort of assistance.
 
-Everything in between paid him back with interest. From the 6th to the 9th he took 13 points, with pars at the 6th and the 9th and bogeys either side, which is about as good as four consecutive holes get out there. The 43 was 14 points better than the 29 he managed in Round 2, and his gross 98 took 16 strokes off the 114 he signed for on his only previous visit. He sits third in the 2026 TEG Trophy on 110.
+Everything in between paid for the pair of them. Holes 6 to 9 brought in 13 points: a par at the 6th worth four, then bogeys at the 7th and 8th and a par at the 9th, three apiece. Four holes, 13 points, on a course that hands out nothing to anybody. That is the stretch of scoring the rest of them will be grumbling about for years.
 
-## Jon Baker's 87 at Monte Rei, equalling the course record and built on five consecutive pars from the 11th to the 15th
+The 43 was 14 points better than the 29 he posted in Round 2, and his gross 98 knocked 16 strokes off his previous best at Monte Rei, a personal best at the course. For all that, he sits third in the 2026 TEG Trophy.
+
+## John Patterson's 36 points and 97 gross, a fourteen-shot course best that cuts the Wooden Spoon gap from nine to three
 <!-- storyline: d0 -->
 
-The Monday round produced the best gross score Monte Rei has ever surrendered in TEG. Jon Baker's 87 equalled the record of 87 set across the five previous rounds played there, and took a shot off his own 88 from his first visit.
+John Patterson's Monday round began the way most of his tournament had, with doubles at the 2nd, the 3rd and the 4th. Six shots gone in three holes, and the one at the 3rd came on one of the hardest holes out there, which explains it without making it any easier to look at. A triple bogey at the 6th followed, then bogeys at the 7th, the long par 3 with its narrow channel and deep hollows, the 8th, and the 9th, the easiest hole on the card. Seven holes, and not one of them went right.
 
-Nothing about the opening stretch suggested any of this was coming. He went triple bogey, double, double from the 2nd to the 4th, seven shots gone in three holes, and the 6 at the 3rd arrived on one of the hardest holes on the card. Bad golf, efficiently delivered, and apparently got out of the system.
+Then he birdied the 10th for five points and the whole afternoon changed its manners. From there he held on for 36 points and a gross 97, fourteen strokes better than his only previous round here and a course best. It also drags the 2026 TEG Wooden Spoon back within escaping distance: his deficit to David Mullin was nine after two rounds, and it is now three.
 
-What followed was five straight pars from the 11th to the 15th, worth 16 Stableford points, and the group will be discussing them for some time. The par at the 13th came on a hole where even a short approach rarely yields one. At the 14th he put his tee shot safely past the corner of the lake, which is the whole job. The 15th, the toughest hole out there, gave up four points to him. A double bogey 7 at the 16th finally stopped the run, and after that spell it felt like an imposition.
-
-His lead in the 2026 TEG Trophy got considerably more comfortable.
-
-## The TEG 19 Wooden Spoon tightens as John Patterson's 36 points meets David Mullin's 30, the worst score of the day
-<!-- storyline: d1 -->
-
-The TEG 19 Wooden Spoon narrowed sharply. John Patterson, who has been last since the ninth hole of Round 2, posted 36 points, eleven better than the 25 he managed that day, while David Mullin returned 30, the lowest score in the field of five.
-
-Patterson's recovery needed one first. A triple bogey at the 6th, where the vast bunkers guard an offset green, started a run of four holes dropped to the card, which he ended by birdieing the 10th. Mullin's trouble came later and was more expensive: a triple bogey at the 13th, then bogey, bogey, double and another triple through the 17th. Ten shots over par in five holes is a hard thing to watch, and the birdie at the last arrived far too late to be of any practical use.
-
-Both men signed for 97, and for Patterson that was fourteen strokes better than his only previous visit. He is still bottom, but the gap to fourth has come down from nine points to three.
-
-## The TEG 19 Green Jacket cut from four shots to two by a birdie at the last, while the Trophy lead doubled to ten
+## Jon Baker's record-equalling 87 stretches the Trophy lead to ten while Gregg Williams loses nine shots in four holes and keeps the Jacket by two
 <!-- storyline: race -->
 
-Gregg Williams had a middle section of the round he will want to forget. He dropped nine shots in four holes from the 9th: a triple bogey at the short 9th, the one par 3 on the course meant to offer a breather, followed by doubles at the 10th, 11th and 12th. Four holes, and the TEG 19 Green Jacket swung with them.
+Jon Baker played the best golf of his trip and had the decency to do it on the hardest ground available: an 87 that equalled the course record and beat his own previous best here by a shot. The spine of it was five straight pars from the 11th, worth 16 Stableford points, the last of them at the 15th, the hardest hole on the card. Five pars in a row on this course is a golden age, and the par that ended it drew him level with Gregg Williams at the top of the 2026 TEG Green Jacket. The run then stopped dead with a double bogey 7 at the 16th.
 
-Jon Baker drew level for the first time with a par at the 15th, stroke index 1, a hole that has no business handing out pars to anyone. Williams edged back in front with a bogey at the 16th, Jon Baker levelled again with a bogey at the 17th, and then Williams birdied the par-5 18th, over the water, to finish the round two clear rather than four.
-
-The Trophy went the other way entirely. Jon Baker took the outright lead with a par at the 8th and never handed it back, turning five points into ten.
+Williams was busy with troubles of his own, losing nine shots in four holes from the 9th. A triple bogey at the short 9th got it going, and three consecutive doubles finished the job. Four holes of bad golf, and he had the Jacket in his hands while he played them. His answer came at the 18th, where a birdie took the lead back outright, and he holds it by two. In the 2026 TEG Trophy, Jon Baker took the outright lead with a par at the 8th and never gave it back, and his advantage grew from five points to ten.

@@ -796,7 +796,7 @@ AUDIENCE: the players themselves — insiders who know each other, the courses, 
 the history. They will spot any factual error instantly, and they enjoy reliving \
 the tournament and being gently ribbed.
 
-""" + prompts.HOUSE_VOICE_SUMMARY + """
+""" + prompts.STORYLINE_VOICE_SUMMARY + """
 WHAT IS WORTH PUTTING IN THE PLAN — the writer can only use what you select:
 """ + prompts.RANKING_RULE + """
 """ + prompts.NAMING_RULE + """

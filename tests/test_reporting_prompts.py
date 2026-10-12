@@ -59,6 +59,8 @@ PLANNER_PROMPTS = {
     "round storyline editor": ROUND_STORYLINE_SYSTEM_PROMPT,
 }
 ALL_PROMPTS = {**WRITER_PROMPTS, **PLANNER_PROMPTS}
+# Planners for the storyline pipelines, which write in prompts.HOUSE_VOICE.
+_STORYLINE_PLANNERS = {"round storyline editor"}
 
 # The round storyline draft writer, like the tournament's `DRAFT_WRITER_SYSTEM`
 # (scripts/storyline_full_report_experiment.py), is deliberately voiceless —
@@ -85,8 +87,15 @@ def test_draft_writer_never_carries_descriptor_rule(name):
 
 @pytest.mark.parametrize("name", sorted(ALL_PROMPTS))
 def test_every_prompt_names_the_current_voice(name):
-    """All four prompts describe the same register — the drift that started this."""
+    """All four prompts describe the same register — the drift that started this.
+
+    The storyline editor plans for the Wodehouse voice since 2026-10-12, so it
+    must name that instead of the legacy four writers.
+    """
     prompt = ALL_PROMPTS[name]
+    if name in _STORYLINE_PLANNERS:
+        assert "modern Wodehouse" in prompt
+        return
     for writer in VOICE_WRITERS:
         assert writer in prompt, f"{name} does not name {writer}"
 
@@ -116,8 +125,25 @@ def test_both_writers_share_the_faithfulness_rules_verbatim(name):
 
 
 @pytest.mark.parametrize("name", sorted(PLANNER_PROMPTS))
-def test_both_planners_share_the_house_voice_summary(name):
-    assert prompts.HOUSE_VOICE_SUMMARY in PLANNER_PROMPTS[name]
+def test_each_planner_carries_its_pipelines_voice_summary(name):
+    """Legacy planners describe VOICE_CORE; storyline planners describe the
+    Wodehouse HOUSE_VOICE their writer uses (2026-10-12)."""
+    if name in _STORYLINE_PLANNERS:
+        assert prompts.STORYLINE_VOICE_SUMMARY in PLANNER_PROMPTS[name]
+        assert prompts.HOUSE_VOICE_SUMMARY not in PLANNER_PROMPTS[name]
+    else:
+        assert prompts.HOUSE_VOICE_SUMMARY in PLANNER_PROMPTS[name]
+
+
+def test_storyline_planners_write_headlines_in_the_house_voice():
+    """Titles and headlines come from the plan, which the voice pass never
+    touches, so "Monte Rei Collects Its Dues" survived every voice change."""
+    from teg_analysis.reporting.story_plan import STORYLINE_SYSTEM_PROMPT
+    for prompt in (STORYLINE_SYSTEM_PROMPT, ROUND_STORYLINE_SYSTEM_PROMPT):
+        assert prompts.STORYLINE_VOICE_SUMMARY in prompt
+        assert prompts.AI_TELLS in prompt
+    assert "modern Wodehouse" in prompts.STORYLINE_VOICE_SUMMARY
+    assert "collects its dues" in prompts.STORYLINE_VOICE_SUMMARY
 
 
 @pytest.mark.parametrize("name", sorted(PLANNER_PROMPTS))

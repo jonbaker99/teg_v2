@@ -1,26 +1,33 @@
-# Monte Rei Collects Its Dues
+# Forty-Two at Monte Rei
 
-## Jon Baker's 42 points on TEG's first visit to Monte Rei, bookended by three opening pars and four closing ones, with Gregg Williams trading the Trophy lead with him all afternoon
+## Jon Baker's 42 points at Monte Rei, built on three opening pars, surviving a seven at the par-3 seventh, and closed out with four straight pars for 14 points from the 15th
 <!-- storyline: round -->
 
-The Sunday round took TEG to Monte Rei for the first time, a Nicklaus parkland in the East Algarve that concedes nothing — only two rated courses play harder for golfers of this standard. Jon Baker opened with three pars worth 10 Stableford points, the third of them a four-pointer at one of the hardest holes out there.
+Jon Baker's 42 points at Monte Rei was the best score in the field on Sunday, and on a Nicklaus course that ranks as the third hardest of the 28 they have rated, it came from an unusually plain scorecard: pars, and plenty of them.
 
-From there the 2026 TEG Trophy lead changed hands repeatedly. Gregg Williams went outright ahead at the 7th with a par, Jon Baker took it back at the 12th with another, and Williams reclaimed it at the 13th despite a bogey. Jon drew level at the 15th — the mid-length par 4 that tracks a lake from tee to green, and the hardest hole on the course — with a par worth four points, then moved clear at the 16th.
+He opened with three, worth 10 points — including four at the 3rd, one of the hardest holes on the course. The damage came at the par-3 7th, where a quadruple bogey 7 wiped out his points and handed the 2026 TEG Trophy lead to Gregg Williams. The two then traded it: Jon Baker back in front at the 12th, Williams again at the 13th.
 
-He parred the last four holes for 14 points without dropping a gross shot, signing for 42, the best Trophy score of the round. His overnight lead went from one point to five.
+The finish settled it. Four straight pars from the 15th, the mid-length par 4 that runs alongside a lake from tee to green and carries stroke index 1, returned 14 points. The par at the 16th took the Trophy lead outright, and he closed the round 88 gross and five clear.
 
-## Monte Rei's TEG debut: the third-hardest course TEG has rated taking its introductions from all five players in the form of nines, eights and sevens
+## Alex Baker's 114 at Monte Rei: nines at the first and second, a ten at the par-3 seventh, a birdie at the eighth, an eight at the seventeenth, and a fall from second to third in the Trophy
 <!-- storyline: d0 -->
 
-The Sunday round was Monte Rei's first appearance in TEG, and the Jack Nicklaus parkland on the East Algarve — with water in play on eleven of its eighteen holes — introduced itself as the third-hardest of the 28 courses TEG has rated.
+Alex Baker signed for 114 at Monte Rei on the Sunday, and the damage was done before he had settled. The opening par 4, played from an elevated tee to a fairway doglegging right between big bunkers, cost him a 9; the second cost him another, a quadruple bogey. Add a 7 at the third and a 6 at the fourth and he was 14 shots over par after four holes, with not a single net par among them. The seventh, the hardest of Monte Rei's par 3s at over 230 yards with deep hollows either side of a narrow entrance, took a 10 — the worst hole of his TEG career relative to par. He answered it immediately with a birdie at the eighth, then gave away nine more shots across the ninth, tenth and eleventh before a tidy run of three holes from the twelfth yielded nine Stableford points. An 8 at the 17th, one of the course's hardest holes, closed it out. He began the round second in the 2026 TEG Trophy and ended it third, on 67 points, 14 behind Jon Baker.
 
-Alex Baker got the worst of it early: a quintuple-bogey 9 at the 1st, another 9 at the 2nd, and later a quadruple-bogey 7 at the 11th. Jon Baker was not spared either, taking a 7 at the par-3 7th. David Mullin's damage came in clusters — a 9 at the par-5 6th began a run of three holes that cost him eight shots to par, and a second 9 arrived at the 16th.
+## Monte Rei's five par 5s and the 18 shots David Mullin and John Patterson gave away on four of them
+<!-- storyline: d1 -->
 
-Mullin at least found an ending. Having gone a stretch without beating a bogey, he followed the 16th with a bogey at the 17th and then a birdie at the last, the short par 5 that bends round a lake. It was the only genuinely good news the course handed out in these beats.
+Monte Rei sets out five par 5s, which on a Jack Nicklaus layout of over 7,200 yards from the back tees reads as the only stretch where shots might be recovered rather than shed. On the Sunday round, David Mullin and John Patterson between them gave away 18 strokes on three of them.
 
-## The men who went backwards on Sunday: Alex Baker's 29 points and John Patterson's 25, which widened every gap in the TEG 19 standings without changing a single leader
+The 6th accounted for two: Patterson a 10, Mullin a 9, both worth nothing at all in Stableford terms. Mullin added a quadruple bogey 9 at the 16th. Patterson closed with another 10 at the 18th, a reachable par 5 that bends round a lake which is in play on the second and third shots as well as the drive.
+
+It left Mullin round in 95 and Patterson in 111 on a course that ranks third hardest of the 28 the group has rated. Patterson finished the day bottom of the 2026 TEG Wooden Spoon standings, nine behind the next man up, having been level with Mullin at the start of the round.
+
+## The day from the vantage of those who lost ground: Gregg Williams twice held the Trophy lead and finished five behind, Alex Baker slid from one off the lead to fourteen, and John Patterson's 25 points opened a nine-point gap at the bottom
 <!-- storyline: race -->
 
-Monte Rei ranks as the third-hardest course in the TEG's rated set, and it showed at the bottom of the field. Alex Baker was 14 over par after four holes — a 9 at the first, another at the second, then a triple and a double — and at the 7th, the course's longest and meanest par 3, he signed for a 10, the worst he has made on a par 3. Three more holes from the 9th cost him nine shots. A run of bogey-bogey-par from the 12th brought nine points in three holes, but a quadruple bogey at the 17th, one of the hardest holes here, closed the door. He finished with 29 points.
+Gregg Williams opened the Sunday round at Monte Rei with two bogeys before a birdie at the 3rd, one of the hardest holes on the course, steadied him. A par at the 7th carried him to the outright lead in the 2026 TEG Trophy; he still held it at the 11th, lost it to Jon Baker at the 12th, took it straight back at the 13th, and then gave it up for good at the 16th. He finished the day five points adrift on 76, with the consolation of a four-shot lead in the 2026 TEG Green Jacket.
 
-John Patterson had 25, the lowest in the field. A 10 at the 6th started it; a triple at the 8th took him level with David Mullin at the foot of the TEG 19 Wooden Spoon, and a double at the 9th left him there alone. Five holes from the 11th leaked 12 shots, and he closed with another 10 at the 18th. No leader changed, but the gaps did: Jon Baker's TEG 19 Trophy lead grew from one to five, and Patterson's Spoon margin from nothing to nine.
+Alex Baker, a single point off the lead after R1, is now fourteen behind on 67.
+
+John Patterson's 25 points were the lowest of the five. A triple bogey at the 8th put him level with David Mullin at the bottom of the 2026 TEG Wooden Spoon, and the 9th left him there alone. Holes 11 to 15 then cost him 12 shots, closing with a triple at the 15th, the hardest hole here. He trails Mullin by nine.
