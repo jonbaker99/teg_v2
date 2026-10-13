@@ -1,0 +1,121 @@
+{
+  "title": "A Record 83 at Monte Rei, and the Trophy by Four",
+  "title_candidates": [
+    "A Record 83 at Monte Rei, and the Trophy by Four",
+    "Gregg Williams Rewrites Monte Rei While Jon Baker Holds On",
+    "Six Points Closer and Four Points Short"
+  ],
+  "theme": "The last day at Monte Rei gave up the best round TEG has played there and the worst holes of the week, and sent the Trophy and the Green Jacket home with different men.",
+  "tone": "house",
+  "opening_hook": "Gregg Williams went round Monte Rei in 83, the lowest gross any TEG player has managed there, and still ended the afternoon four points short of the TEG 19 Trophy.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "catalogue",
+    "ensemble"
+  ],
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "records",
+  "is_final_round": true,
+  "round_story": {
+    "subject": "Gregg Williams's 83 gross at Monte Rei, a new course record and 42 Stableford points on the final day",
+    "why_it_matters": "Monte Rei is the third hardest of the 28 courses TEG has rated, worth 5.3 extra strokes to a typical player, and Williams went round it in 83 gross for 42 points, beating the previous best of 87 set across ten prior visits and taking four shots off his own best there. It is the second lowest gross round of his 71 TEG rounds.",
+    "shape": "Williams began the day two gross shots clear in the Green Jacket and ten points adrift in the Trophy, with only one of those two realistically in reach. Pars at the 4th, 5th and 6th set the tone, and the round never gave a shot back in bunches. He finished with a par at the 17th and a birdie at the 18th, round the lake, to sign for 83.",
+    "beat_ids": [
+      "cr01",
+      "r4_b16",
+      "r4_b18",
+      "r4_b14"
+    ],
+    "headline_candidates": [
+      "Gregg Williams Posts 83 at Monte Rei",
+      "A New Monte Rei Record of Eighty-Three",
+      "Forty-Two Points on the Hardest Ground"
+    ],
+    "chosen_headline": "Gregg Williams Posts 83 at Monte Rei",
+    "standfirst": "The previous best gross at Monte Rei, 87, had stood across ten TEG visits to a course that gives a typical player 5.3 shots more than average.",
+    "compelling_score": 9,
+    "humour_score": 5,
+    "descriptor": "GREGG WILLIAMS",
+    "colour_note_ids": [
+      "monte_rei/h18/1",
+      "monte_rei/trivia/1"
+    ]
+  },
+  "race_story": {
+    "subject": "Jon Baker's final round at Monte Rei, where a ten-point Trophy lead shrank to four and still held, with the Jacket and Spoon settled behind him",
+    "why_it_matters": "This is the resolution of TEG 19: Jon Baker wins the Trophy on 159 points to Gregg Williams's 155, Williams takes the TEG 19 Green Jacket on 346 gross, twelve clear of Baker's 358, and John Patterson takes the Wooden Spoon on 123, seven behind David Mullin. Jon Baker's sixth Trophy comes from the worst round of his week.",
+    "shape": "Jon Baker arrived at Monte Rei ten points clear and spent the day going backwards, with three straight double bogeys from the 7th to the 9th and a quadruple-bogey eight at the 17th. Williams's 42 points to his 36 cut the margin by six, and the Trophy was decided by the three rounds already in the book rather than by this one. Behind them, John Patterson's nine at the 2nd and nine at the 16th finished the Spoon argument.",
+    "beat_ids": [
+      "r4_b07",
+      "r4_b13",
+      "r4_b10",
+      "r4_b11",
+      "r4_b02",
+      "r4_b04"
+    ],
+    "headline_candidates": [
+      "Jon Baker Wins the Trophy by Four",
+      "Four Points Spare for Jon Baker",
+      "The Lead Halved, the Trophy Kept"
+    ],
+    "chosen_headline": "Jon Baker Wins the Trophy by Four",
+    "standfirst": "Jon Baker beat Gregg Williams head-to-head in three of the four rounds and lost the final one by six points, which was still two points more than he needed.",
+    "compelling_score": 9,
+    "humour_score": 5,
+    "descriptor": "TROPHY",
+    "colour_note_ids": []
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Monte Rei's 7th, the long par three that took a ten off John Patterson and sixes off two others in one afternoon",
+      "why_it_matters": "The 7th is the hardest of five strong par threes, over 230 yards with deep hollows either side, and on the final day it produced John Patterson's ten, the worst score against par he has recorded on any hole in TEG, plus sixes for Alex Baker and David Mullin and a five for Jon Baker.",
+      "shape": "Four of the five players walked off the 7th green having given shots away, and for three of them the hole sat in the middle of a longer slide. Patterson's seven-over ten was the day's single worst hole; Mullin followed his six with a triple bogey at the 8th and Alex Baker dropped thirteen shots across the 4th to the 8th. Jon Baker's five there began the three doubles that cost him most of his Trophy cushion.",
+      "beat_ids": [
+        "r4_b01",
+        "r4_b19",
+        "r4_b17",
+        "r4_b12"
+      ],
+      "headline_candidates": [
+        "Ten, Six, Six and Five",
+        "The Seventh Takes Four Players",
+        "John Patterson's Ten at the Seventh"
+      ],
+      "chosen_headline": "Ten, Six, Six and Five",
+      "standfirst": "Only Gregg Williams left the long seventh without visible damage on a hole measuring over 230 yards from the back tee.",
+      "compelling_score": 7,
+      "humour_score": 7,
+      "descriptor": "MONTE REI'S SEVENTH",
+      "colour_note_ids": [
+        "monte_rei/h7/1"
+      ]
+    },
+    {
+      "subject": "Alex Baker's final round of 33 points at Monte Rei, ten fewer than his 43 on Monday, and a 106 gross",
+      "why_it_matters": "Alex Baker had posted the best Trophy score in the field in round three and arrived third in the race; he lost ten points off that round, shot 106, eight worse than his last visit to Monte Rei, and finished level with John Patterson on 420 gross for the week.",
+      "shape": "The damage was done in a stretch from the 4th to the 7th where he managed a single point, and an eight at the horseshoe 12th, round the water, took away any chance of repair. Pars at the 13th and 14th showed what the round might have been. Three more double bogeys from the 15th closed it out.",
+      "beat_ids": [
+        "r4_b24",
+        "r4_b22",
+        "r4_b21",
+        "r4_b08",
+        "r4_b25"
+      ],
+      "headline_candidates": [
+        "Thirty-Three Follows Forty-Three for Alex Baker",
+        "An Eight at the Twelfth",
+        "Alex Baker Signs for 106"
+      ],
+      "chosen_headline": "Thirty-Three Follows Forty-Three for Alex Baker",
+      "standfirst": "He still finished third in the TEG 19 Trophy on 143 points, which says more about Monday than about Tuesday.",
+      "compelling_score": 6,
+      "humour_score": 6,
+      "descriptor": "ALEX BAKER",
+      "colour_note_ids": [
+        "monte_rei/h12/1"
+      ]
+    }
+  ],
+  "race_state_note": "The Trophy and the Green Jacket went to different players this year; Gregg Williams finished four points short on Stableford and twelve shots clear on gross, and Alex Baker and John Patterson ended level on 420 gross.",
+  "storyline_note": ""
+}

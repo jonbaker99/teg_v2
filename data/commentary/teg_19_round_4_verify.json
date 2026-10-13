@@ -1,0 +1,30 @@
+{
+  "teg": 19,
+  "round": 4,
+  "label": "storylinefirst",
+  "errors": 3,
+  "warnings": 0,
+  "findings": [
+    {
+      "rule": "teg_references",
+      "severity": "error",
+      "detail": "'TEG 2026' uses a year as the TEG number; this is TEG 19",
+      "excerpt": "shots to the close. He finished third in the TEG 2026 Trophy on 143 points.  ## Gregg Williams's 8",
+      "source": "mechanical"
+    },
+    {
+      "rule": "weekdays",
+      "severity": "error",
+      "detail": "Monday is not a round day of TEG 19 (actual: Tuesday)",
+      "excerpt": "oints at Monte Rei, ten fewer than his 43 on Monday, and a 106 gross <!-- storyline: d1 -->  Ale",
+      "source": "mechanical"
+    },
+    {
+      "rule": "weekdays",
+      "severity": "error",
+      "detail": "Monday is not a round day of TEG 19 (actual: Tuesday)",
+      "excerpt": "6 gross <!-- storyline: d1 -->  Alex Baker's Monday 43 was the best golf of his trip by a distan",
+      "source": "mechanical"
+    }
+  ]
+}
