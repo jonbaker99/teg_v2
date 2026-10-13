@@ -776,3 +776,33 @@ def test_staged_holes_scores_entered_cells_of_the_teg_live_round(store):
     assert lr.staged_holes(11) is None  # another TEG
     lr.cancel_live_round(row["Token"])
     assert lr.staged_holes(10) is None
+
+
+def test_live_leaderboard_adds_earlier_rounds_for_tournament_standings(store):
+    store["data/all-scores.parquet"] = pd.DataFrame([
+        {"TEGNum": 10, "Round": 1, "Pl": "DM", "GrossVP": 10, "NetVP": 0, "Stableford": 30},
+        {"TEGNum": 10, "Round": 1, "Pl": "GW", "GrossVP": 2, "NetVP": -5, "Stableford": 40},
+        {"TEGNum": 9, "Round": 1, "Pl": "DM", "GrossVP": 99, "NetVP": 99, "Stableford": 99},  # other TEG
+    ])
+    row = lr.start_live_round(10, 2)
+    lr.apply_score_writes(row["Token"], "d1", "Phone", [
+        {"hole": 1, "player": "DM", "value": 5},   # GrossVP +1, 2 pts
+        {"hole": 2, "player": "DM", "value": 3},   # GrossVP -1, 4 pts
+    ])
+    board = lr.get_live_leaderboard(row["Token"])
+    net = {r["code"]: r for r in board["teg_net"]}
+    assert net["DM"]["teg_net_value"] == 36 and net["GW"]["teg_net_value"] == 40
+    assert [r["code"] for r in board["teg_net"]] == ["GW", "DM"]  # GW leads without a hole in yet
+    assert net["GW"]["pos_fmt"] == "1" and net["GW"]["thru"] == 0
+    gross = {r["code"]: r for r in board["teg_gross"]}
+    assert gross["DM"]["teg_gross_vp_fmt"] == "+10" and gross["GW"]["teg_gross_vp_fmt"] == "+2"
+    # The round-only standings are unchanged: GW hasn't started.
+    assert board["net"][0]["code"] == "DM" and board["net"][1]["pos_fmt"] == "–"
+
+
+def test_live_leaderboard_survives_missing_all_scores(store):
+    row = lr.start_live_round(10, 1)
+    lr.apply_score_writes(row["Token"], "d1", "Phone", [{"hole": 1, "player": "DM", "value": 4}])
+    board = lr.get_live_leaderboard(row["Token"])
+    dm = next(r for r in board["teg_net"] if r["code"] == "DM")
+    assert dm["teg_net_value"] == dm["net_value"]

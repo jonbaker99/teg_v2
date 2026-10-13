@@ -2,7 +2,11 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-10-12 (report voice is now modern Wodehouse, with new writing rules; Next TEG switch fix; course colour, ratings and difficulty for reports and TEGBot; TEGBot web search; live TEGBot, mid-round chances and finalise lock; TEGBot follow-ups and dev skills; live win chances tab on /simulation; TEGBot toolkit, Dig deeper and charts; new-record markers on /records; simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
+**Last updated:** 2026-10-13 (live leaderboard shows tournament standings; report voice is now modern Wodehouse, with new writing rules; Next TEG switch fix; course colour, ratings and difficulty for reports and TEGBot; TEGBot web search; live TEGBot, mid-round chances and finalise lock; TEGBot follow-ups and dev skills; live win chances tab on /simulation; TEGBot toolkit, Dig deeper and charts; new-record markers on /records; simulator handicap what-ifs; TEGBot 5000; TEG simulator odds; player roster redesign)
+
+## 2026-10-13 — Live leaderboard shows tournament standings
+
+The live round leaderboard now opens on a Tournament view: the TEG's finalised earlier rounds (from `all-scores`) plus this round's holes so far, for both the TEG Trophy and the Green Jacket. A Round toggle shows this round only, as before. The choice is remembered per phone.
 
 ## 2026-10-12 — Reports in a new voice: modern Wodehouse, with new writing rules
 

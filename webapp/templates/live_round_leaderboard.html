@@ -112,6 +112,10 @@ table.lb { width:100%; border-collapse:collapse; font-family:var(--font-data); b
 <div class="statusbanner" id="status-banner"></div>
 
 <div class="tabbar">
+  <button id="scope-teg" class="on">Tournament</button>
+  <button id="scope-round">Round {{ board.round_num }}</button>
+</div>
+<div class="tabbar">
   <button id="tab-net" class="on">TEG Trophy</button>
   <button id="tab-gross">Green Jacket</button>
 </div>
@@ -124,6 +128,8 @@ const BOARD_INIT = JSON.parse(document.getElementById('live-board-data').textCon
 const TOKEN = BOARD_INIT.token;
 let board = BOARD_INIT;
 let tab = 'net'; // 'net' | 'gross'
+let scope = 'teg'; // 'teg' (tournament totals) | 'round' (this round only)
+try { if (localStorage.getItem('liveLbScope') === 'round') scope = 'round'; } catch (e) {}
 
 function render() {
   const banner = document.getElementById('status-banner');
@@ -143,23 +149,33 @@ function render() {
     banner.textContent = '✅ All scores in. An admin will finalise the round to add it to the record.';
   }
 
-  const rows = tab === 'net' ? board.net : board.gross;
-  const head = tab === 'net'
-    ? `<tr><th class="l">Pos</th><th class="l">Player</th><th>Thru</th><th>${board.net_label}</th></tr>`
-    : `<tr><th class="l">Pos</th><th class="l">Player</th><th>Thru</th><th>Gross</th><th>vs Par</th></tr>`;
+  const teg = scope === 'teg' && board.teg_net;
+  const rows = teg ? (tab === 'net' ? board.teg_net : board.teg_gross) : (tab === 'net' ? board.net : board.gross);
+  let head;
+  if (teg) {
+    head = `<tr><th class="l">Pos</th><th class="l">Player</th><th>Thru</th><th>Rd ${board.round_num}</th><th>TEG</th></tr>`;
+  } else {
+    head = tab === 'net'
+      ? `<tr><th class="l">Pos</th><th class="l">Player</th><th>Thru</th><th>${board.net_label}</th></tr>`
+      : `<tr><th class="l">Pos</th><th class="l">Player</th><th>Thru</th><th>Gross</th><th>vs Par</th></tr>`;
+  }
   const body = rows.map(r => {
-    const waiting = r.thru === 0 ? ' waiting' : '';
+    const waiting = (teg ? r.pos == null : r.thru === 0) ? ' waiting' : '';
     const thru = r.thru === 0 ? '–' : (r.thru === 18 ? '<span class="done-tick">F</span>' : r.thru);
-    if (tab === 'net') {
-      return `<tr class="${waiting}"><td class="pos">${r.pos_fmt}</td><td class="nm">${r.name}</td>` +
-        `<td class="thru">${thru}</td><td class="big">${r.net_fmt}</td></tr>`;
+    const lead = `<tr class="${waiting}"><td class="pos">${r.pos_fmt}</td><td class="nm">${r.name}</td><td class="thru">${thru}</td>`;
+    if (teg) {
+      return tab === 'net'
+        ? lead + `<td>${r.net_fmt}</td><td class="big">${r.teg_net_fmt}</td></tr>`
+        : lead + `<td>${r.gross_vp_fmt}</td><td class="big">${r.teg_gross_vp_fmt}</td></tr>`;
     }
+    if (tab === 'net') return lead + `<td class="big">${r.net_fmt}</td></tr>`;
     const gross = r.gross == null ? '–' : r.gross;
-    return `<tr class="${waiting}"><td class="pos">${r.pos_fmt}</td><td class="nm">${r.name}</td>` +
-      `<td class="thru">${thru}</td><td>${gross}</td><td class="big">${r.gross_vp_fmt}</td></tr>`;
+    return lead + `<td>${gross}</td><td class="big">${r.gross_vp_fmt}</td></tr>`;
   }).join('');
   document.getElementById('lb').innerHTML = '<thead>' + head + '</thead><tbody>' + body + '</tbody>';
-  document.getElementById('foot').textContent = 'Updates automatically · "F" = finished 18';
+  document.getElementById('foot').textContent = teg
+    ? `TEG = earlier rounds + Round ${board.round_num} so far. "F" = finished 18. Updates automatically.`
+    : 'Updates automatically · "F" = finished 18';
 }
 
 document.getElementById('tab-net').addEventListener('click', () => {
@@ -174,6 +190,16 @@ document.getElementById('tab-gross').addEventListener('click', () => {
   document.getElementById('tab-net').classList.remove('on');
   render();
 });
+
+function setScope(s) {
+  scope = s;
+  document.getElementById('scope-teg').classList.toggle('on', s === 'teg');
+  document.getElementById('scope-round').classList.toggle('on', s === 'round');
+  try { localStorage.setItem('liveLbScope', s); } catch (e) {}
+  render();
+}
+document.getElementById('scope-teg').addEventListener('click', () => setScope('teg'));
+document.getElementById('scope-round').addEventListener('click', () => setScope('round'));
 
 async function poll() {
   try {
@@ -195,7 +221,7 @@ document.addEventListener('visibilitychange', () => {
   else { poll(); startPolling(); }
 });
 
-render();
+setScope(scope);
 startPolling();
 </script>
 
