@@ -907,6 +907,27 @@ def staged_holes(teg_num: int) -> pd.DataFrame | None:
                                    "NetVP": int, "Stableford": int}).reset_index(drop=True)
 
 
+def _prior_round_totals(teg_num: int, round_num: int) -> pd.DataFrame:
+    """GrossVP / NetVP / Stableford per player over the TEG's finalised rounds before
+    ``round_num``, from all-scores. Empty if the file can't be read (a missing
+    tournament total must never take the live round leaderboard down with it)."""
+    from teg_analysis.io import read_file
+    from teg_analysis.constants import ALL_SCORES_PARQUET
+
+    cols = ["GrossVP", "NetVP", "Stableford"]
+    try:
+        scores = read_file(ALL_SCORES_PARQUET)
+        mask = ((pd.to_numeric(scores["TEGNum"], errors="coerce") == teg_num)
+                & (pd.to_numeric(scores["Round"], errors="coerce") < round_num))
+        prior = scores.loc[mask, ["Pl", "Round"] + cols]
+    except Exception as e:  # noqa: BLE001
+        logger.warning(f"Live leaderboard: no prior-round totals for TEG {teg_num}: {e}")
+        return pd.DataFrame(columns=["rounds"] + cols)
+    agg = prior.groupby("Pl")[cols].sum()
+    agg["rounds"] = prior.groupby("Pl")["Round"].nunique()
+    return agg
+
+
 def get_live_leaderboard(token: str) -> dict | None:
     """Current gross + net standings for a round in progress, from staging.
 
@@ -917,6 +938,9 @@ def get_live_leaderboard(token: str) -> dict | None:
     match what the finalized round will show. Partial cards are fine: metrics
     are summed over whatever holes are in so far, with ``thru`` giving the hole
     count for context.
+
+    ``teg_gross`` / ``teg_net`` are the tournament standings: the TEG's finalised
+    earlier rounds (from all-scores) plus this round's holes so far.
 
     Returns None if the token doesn't exist. ``in_progress`` is True until every
     playing player has all 18 holes entered.
@@ -946,6 +970,7 @@ def get_live_leaderboard(token: str) -> dict | None:
             "code": p["code"], "name": get_player_name(p["code"]), "thru": 0,
             "gross": None, "gross_vp": None, "netvp": None, "stableford": None,
             "net_value": None,
+            "prior_rounds": 0, "teg_gross_vp": None, "teg_net_value": None,
         }
         for p in playing
     }
@@ -967,36 +992,49 @@ def get_live_leaderboard(token: str) -> dict | None:
             r["stableford"] = int(a["stableford"])
             r["net_value"] = r["stableford"] if net_measure == "Stableford" else r["netvp"]
 
-    def _standings(net: bool) -> list[dict]:
+    # Tournament totals: finalised earlier rounds plus this round so far.
+    prior = _prior_round_totals(teg_num, round_num)
+    for code, r in rows.items():
+        has_prior = code in prior.index
+        if not has_prior and r["thru"] == 0:
+            continue
+        pg = int(prior.at[code, "GrossVP"]) if has_prior else 0
+        pn = int(prior.at[code, "Stableford" if net_measure == "Stableford" else "NetVP"]) if has_prior else 0
+        r["prior_rounds"] = int(prior.at[code, "rounds"]) if has_prior else 0
+        r["teg_gross_vp"] = pg + (r["gross_vp"] or 0)
+        r["teg_net_value"] = pn + (r["net_value"] or 0)
+
+    def _fmt(v, vs_par: bool) -> str:
+        if v is None:
+            return "–"
+        return format_vs_par(v) if vs_par else str(v)
+
+    def _standings(net: bool, teg: bool = False) -> list[dict]:
         # Higher Stableford wins; lower gross-vp / net-vp wins. Players with no
         # scores yet sort last regardless.
+        field = ("teg_net_value" if net else "teg_gross_vp") if teg else ("net_value" if net else "gross_vp")
+        waiting = (lambda r: r[field] is None) if teg else (lambda r: r["thru"] == 0)
         if net and net_measure == "Stableford":
-            key = lambda r: (r["thru"] == 0, -(r["net_value"] or 0), -r["thru"])
-            rank_val = lambda r: r["net_value"]
-        elif net:
-            key = lambda r: (r["thru"] == 0, r["net_value"] if r["net_value"] is not None else 0, -r["thru"])
-            rank_val = lambda r: r["net_value"]
+            key = lambda r: (waiting(r), -(r[field] or 0), -r["thru"])
         else:
-            key = lambda r: (r["thru"] == 0, r["gross_vp"] if r["gross_vp"] is not None else 0, -r["thru"])
-            rank_val = lambda r: r["gross_vp"]
+            key = lambda r: (waiting(r), r[field] if r[field] is not None else 0, -r["thru"])
 
         ordered = sorted(rows.values(), key=key)
         out, last_val, last_pos = [], object(), 0
         for i, r in enumerate(ordered, start=1):
             row = dict(r)
-            if r["thru"] == 0:
+            if waiting(r):
                 row["pos"] = None
             else:
-                v = rank_val(r)
+                v = r[field]
                 if v != last_val:
                     last_pos, last_val = i, v
                 row["pos"] = last_pos
-            if not net:
-                row["gross_vp_fmt"] = format_vs_par(r["gross_vp"]) if r["gross_vp"] is not None else "–"
-            elif net_measure == "NetVP":
-                row["net_fmt"] = format_vs_par(r["net_value"]) if r["net_value"] is not None else "–"
-            else:
-                row["net_fmt"] = str(r["net_value"]) if r["net_value"] is not None else "–"
+            net_vp = net_measure == "NetVP"
+            row["gross_vp_fmt"] = _fmt(r["gross_vp"], True)
+            row["net_fmt"] = _fmt(r["net_value"], net_vp)
+            row["teg_gross_vp_fmt"] = _fmt(r["teg_gross_vp"], True)
+            row["teg_net_fmt"] = _fmt(r["teg_net_value"], net_vp)
             out.append(row)
         # Mark shared positions with a trailing '=' like the rest of the app.
         counts = {}
@@ -1027,6 +1065,8 @@ def get_live_leaderboard(token: str) -> dict | None:
         "in_progress": in_progress,
         "gross": _standings(net=False),
         "net": _standings(net=True),
+        "teg_gross": _standings(net=False, teg=True),
+        "teg_net": _standings(net=True, teg=True),
     }
 
 
