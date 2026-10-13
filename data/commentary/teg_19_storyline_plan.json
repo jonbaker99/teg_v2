@@ -1,0 +1,190 @@
+{
+  "title": "Jon Baker Takes the TEG 19 Trophy, Gregg Williams the Jacket",
+  "title_candidates": [
+    "Jon Baker Takes the TEG 19 Trophy, Gregg Williams the Jacket",
+    "One Each at TEG 19: Trophy to Jon Baker, Jacket to Gregg Williams",
+    "Four Points at TEG 19, and Three Rounds at Monte Rei"
+  ],
+  "theme": "Jon Baker and Gregg Williams split the two honours between them over four days in the eastern Algarve, while Monte Rei — the third-hardest course TEG has rated, worth 5.3 extra strokes to a player like ours — handed out tens to everybody else.",
+  "tone": "house",
+  "opening_hook": "Open in Round 4 at Monte Rei with Gregg Williams six points better than Jon Baker on the day and the Trophy lead down from ten to four, holes running out — then go back and show how the ten was built. The finish is the most interesting thing that happened and the margin was four, so lead with it rather than with Round 1.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "counterfactual",
+    "catalogue"
+  ],
+  "competitions": [
+    {
+      "name": "TEG 19 Trophy (Stableford)",
+      "winner_or_loser": "Jon Baker"
+    },
+    {
+      "name": "TEG 19 Green Jacket (Gross)",
+      "winner_or_loser": "Gregg Williams"
+    },
+    {
+      "name": "TEG 19 Wooden Spoon",
+      "winner_or_loser": "John Patterson"
+    }
+  ],
+  "trophy_storyline": {
+    "subject": "Jon Baker leads the TEG 19 Trophy after every round, builds a ten-point cushion at Monte Rei, then holds on through a six-point Round 4 swing",
+    "why_it_matters": "A year after taking the Wooden Spoon at TEG 18, Jon Baker won the Trophy for the fifth time, and he needed nearly all of the lead he had built to do it.",
+    "shape": "Setup: Jon Baker finishes 39 points clear by one at Quinta da Ria, then wins Round 2 outright with 42 — the last four holes at Monte Rei worth 14 points, all four played in regulation gross figures — and by the end of Round 3 he is ten clear, having gone 11 through 15 without dropping a gross shot for 16 points, the 15th (SI 1) included. Turn: the run ends with a double bogey at the 16th, and in Round 4 he goes 7, 8 and 9 in double bogeys for six shots dropped and adds a quadruple-bogey eight at the 17th, scoring 36 while Gregg Williams posts 42. Resolution: Williams closes from ten back to four and runs out of holes; Jon Baker wins on 159 points, having won two rounds outright and beaten Williams head-to-head in three of the four.",
+    "beat_ids": [
+      "b03",
+      "b23",
+      "b37",
+      "b09",
+      "b17",
+      "b19",
+      "b24",
+      "b25",
+      "b29",
+      "b34",
+      "b11"
+    ],
+    "headline_candidates": [
+      "Jon Baker Holds Off Williams By Four",
+      "Five Straight Pars Build Jon Baker's Lead",
+      "Jon Baker Leads From First Round To Last"
+    ],
+    "chosen_headline": "Jon Baker Holds Off Williams By Four",
+    "standfirst": "The reigning Wooden Spoon holder led after every round and found he needed almost all of the ten points he carried into the final day at Monte Rei.",
+    "compelling_score": 8,
+    "humour_score": 4,
+    "descriptor": "TROPHY",
+    "colour_note_ids": [
+      "monte_rei/h13/3",
+      "monte_rei/h15/1"
+    ]
+  },
+  "jacket_storyline": {
+    "subject": "Gregg Williams leads the TEG 19 Green Jacket from the third hole of Round 1, is caught twice in Round 3, and answers both times",
+    "why_it_matters": "Williams wins the Jacket at +58 by twelve shots, the best gross total of his TEG career and his fourth Jacket.",
+    "shape": "Setup: Williams takes the gross lead at the 3rd hole of Round 1 and posts 15 over par at Quinta da Ria, then 15 again at Monte Rei. Turn: in Round 3 he drops nine shots across the 9th to the 12th, four holes without a net par, and Jon Baker draws level at the 15th and again at the 17th; Williams birdies the 13th to stop it, retakes the lead at the 16th and takes it outright again at the 18th. Resolution: Round 4 is his best of the tournament, 11 over par for a gross 83 at Monte Rei, with three pars from the 4th to the 6th and a birdie at the closing par 5.",
+    "beat_ids": [
+      "b04",
+      "b16",
+      "b26",
+      "b30",
+      "b50",
+      "b41",
+      "b11"
+    ],
+    "headline_candidates": [
+      "Williams Retakes The Lead At The Last",
+      "Gregg Williams Answers Twice In Round Three",
+      "Williams Closes With Eighty-Three At Monte Rei"
+    ],
+    "chosen_headline": "Williams Retakes The Lead At The Last",
+    "standfirst": "Jon Baker drew level on the gross twice on the back nine of Round 3, and both times Gregg Williams had a reply before the card was signed.",
+    "compelling_score": 7,
+    "humour_score": 3,
+    "descriptor": "GREEN JACKET",
+    "colour_note_ids": [
+      "monte_rei/h18/2"
+    ]
+  },
+  "spoon_storyline": {
+    "subject": "John Patterson takes the TEG 19 Wooden Spoon on 123 points, last in three of the four rounds, with three tens and a Round 3 that only delayed matters",
+    "why_it_matters": "Patterson finishes seven adrift of David Mullin, the next worst, having been bottom of the race outright from the ninth hole of Round 2 onwards.",
+    "shape": "Setup: 31 points at Quinta da Ria with quintuple-bogey nines at the 7th and the 14th already has him propping up the field. Turn: Round 2 at Monte Rei brings 25 points, a ten at the 6th, twelve shots dropped between the 11th and the 15th and another ten at the 18th, and he is last outright by the turn. Resolution: he answers with 36 points in Round 3, a birdie at the 10th ending the run of bogeys, and then in Round 4 drops eleven shots over the first four holes, takes a ten at the par-three 7th — the worst he has ever made against par — and drops nine more from the 15th to the 17th, with nine points between the 11th and 13th the only consolation.",
+    "beat_ids": [
+      "b22",
+      "b20",
+      "b21",
+      "b13",
+      "b08",
+      "b35",
+      "b32",
+      "b27",
+      "b36",
+      "b14",
+      "b10",
+      "b15",
+      "b01",
+      "b05",
+      "b07",
+      "b06",
+      "b02",
+      "b44",
+      "b45"
+    ],
+    "headline_candidates": [
+      "John Patterson Takes Ten Three Times",
+      "Seven Adrift: John Patterson's Four Days",
+      "John Patterson Signs For Twenty-Five Points"
+    ],
+    "chosen_headline": "John Patterson Takes Ten Three Times",
+    "standfirst": "Two of them came at Monte Rei in Round 2 and the third at the short seventh in Round 4, by which point the only question was the size of the gap.",
+    "compelling_score": 8,
+    "humour_score": 9,
+    "descriptor": "WOODEN SPOON",
+    "colour_note_ids": [
+      "monte_rei/trivia/3"
+    ]
+  },
+  "discovered_storylines": [
+    {
+      "subject": "The seventh at Monte Rei, a par three of over 230 yards, takes a ten from Alex Baker in Round 2 and a ten from John Patterson in Round 4",
+      "why_it_matters": "One short hole accounted for two tens and a scattering of dropped shots from the rest of the field across three days at the same course.",
+      "shape": "Setup: Alex Baker reaches the 7th in Round 2 and leaves with a ten, seven over par on a hole of 3. Turn: two days later John Patterson does precisely the same thing, a ten at the same par three, the worst score he has made against par anywhere. Resolution: in that same Round 4 David Mullin triple-bogeys it in the middle of three holes without a net par, and Jon Baker double-bogeys it on his way to dropping six shots from the 7th to the 9th.",
+      "beat_ids": [
+        "b42",
+        "b01",
+        "b49",
+        "b25",
+        "b29"
+      ],
+      "headline_candidates": [
+        "Two Tens At Monte Rei's Seventh",
+        "The Short Hole That Cost Fourteen Shots",
+        "Monte Rei's Seventh Collects Two Tens"
+      ],
+      "chosen_headline": "Two Tens At Monte Rei's Seventh",
+      "standfirst": "Alex Baker went first in Round 2, John Patterson followed in Round 4, and David Mullin and Jon Baker both left shots there on the same afternoon.",
+      "compelling_score": 7,
+      "humour_score": 8,
+      "descriptor": "MONTE REI'S SEVENTH",
+      "colour_note_ids": [
+        "monte_rei/h7/1"
+      ]
+    },
+    {
+      "subject": "Alex Baker, the defending Trophy champion, swings from 29 points to 43 between Round 2 and Round 3 with a ten on the card in each",
+      "why_it_matters": "The man who won the TEG 18 Trophy spent TEG 19 alternating between the best golf of the day and the worst, and gave the Trophy race nothing.",
+      "shape": "Setup: 13 points from the 3rd to the 6th at Quinta da Ria in Round 1 suggests the champion has arrived in order. Turn: Round 2 at Monte Rei produces 29 points and a ten at the 7th, then Round 3 produces 43, a fourteen-point swing, with 13 points from the 6th to the 9th — and a quintuple-bogey ten at the 2nd on the same card. Resolution: Round 4 unravels again, thirteen shots gone between the 4th and the 8th and four holes without a net par, with two pars at the 13th and 14th the only clean golf he plays all afternoon.",
+      "beat_ids": [
+        "b43",
+        "b42",
+        "b38",
+        "b33",
+        "b18",
+        "b67",
+        "b12"
+      ],
+      "headline_candidates": [
+        "Alex Baker Scores Twenty-Nine, Then Forty-Three",
+        "The Defending Champion Takes Ten Twice",
+        "Alex Baker's Fourteen-Point Swing At Monte Rei"
+      ],
+      "chosen_headline": "Alex Baker Scores Twenty-Nine, Then Forty-Three",
+      "standfirst": "Twenty-nine points in Round 2, forty-three in Round 3, and a ten on the card in both of them from the player who won the TEG 18 Trophy.",
+      "compelling_score": 7,
+      "humour_score": 7,
+      "descriptor": "ALEX BAKER",
+      "colour_note_ids": []
+    }
+  ],
+  "body_fallback": "none",
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "cross_teg_career",
+  "vehicle_fit_response": {
+    "top_scored_vehicle": "dual_narrative",
+    "taken_up": true,
+    "note": "Taken up and made the frame: the close-finish rule applies (final margin 4), and the two men who carried the finish took one honour each — Jon Baker the Trophy by four, Gregg Williams the Jacket by twelve — with Round 3 and Round 4 at Monte Rei reading as one story told from two cards."
+  },
+  "why_the_champion_won": "Jon Baker won two rounds outright and beat Gregg Williams head-to-head in three of the four, building a ten-point cushion across Round 2 and Round 3 that just covered a Round 4 of 36 in which Williams took six points back off him.",
+  "storyline_note": ""
+}

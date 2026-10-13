@@ -1,0 +1,16 @@
+{
+  "teg": 19,
+  "round": null,
+  "label": "storylinefirst",
+  "errors": 0,
+  "warnings": 1,
+  "findings": [
+    {
+      "rule": "missed_fact",
+      "severity": "warning",
+      "detail": "not mentioned: Jon Baker went clear in the Trophy (Stableford) for good at R3 H8 and won it",
+      "excerpt": "",
+      "source": "missed"
+    }
+  ]
+}
